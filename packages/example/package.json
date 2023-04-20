@@ -1,0 +1,34 @@
+{
+  "private": true,
+  "name": "@portkey/example",
+  "version": "0.0.1-alpha.1.4",
+  "scripts": {
+    "start": "cross-env craco start",
+    "pin": "sh -c '{ for X in {core,empty}; do lerna add @web3-react/$X --exact --no-bootstrap --scope=example-cra; done }'"
+  },
+  "dependencies": {
+    "@types/react-dom": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "react-scripts": "^5.0.1",
+    "@portkey/did": "^0.0.1-alpha.2.1",
+    "aelf-sdk": "^3.2.40",
+    "@portkey/did-ui-react": "^0.0.1-alpha.2.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "@craco/craco": "^6.4.2",
+    "ts-loader": "^9.4.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
