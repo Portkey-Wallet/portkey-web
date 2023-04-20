@@ -1,0 +1,14 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/setup
+      - run: yarn build
+      - run: yarn test
+      - run: yarn make-badges
