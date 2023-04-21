@@ -8,13 +8,21 @@ import './index.less';
 
 interface SocialContentProps {
   type: RegisterType;
+  hasPortkey?: boolean;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
   onFinish?: SocialLoginFinishHandler;
   onError?: OnErrorFunc;
 }
 
-export default function SocialContent({ type, socialLogin, isErrorTip, onFinish, onError }: SocialContentProps) {
+export default function SocialContent({
+  type,
+  hasPortkey,
+  socialLogin,
+  isErrorTip,
+  onFinish,
+  onError,
+}: SocialContentProps) {
   const onFinishRef = useRef<SocialContentProps['onFinish']>(onFinish);
   useEffect(() => {
     onFinishRef.current = onFinish;
@@ -89,51 +97,25 @@ export default function SocialContent({ type, socialLogin, isErrorTip, onFinish,
     }
   }, [isErrorTip, login, onError, socialLogin?.Apple]);
 
+  const onPortkeySuccess = useCallback(async () => {
+    //
+    window.location.href = 'portkey.did://';
+  }, []);
+
   return (
     <div className="social-content-wrapper">
+      {hasPortkey && (
+        <Button className={clsx('social-login-btn')} onClick={onPortkeySuccess}>
+          <CustomSvg type="Portkey-login" />
+          {`${type} with Portkey`}
+        </Button>
+      )}
       <Button
         className={clsx('social-login-btn', !socialLogin?.Google && 'social-login-disabled-button')}
         onClick={onGoogleSuccess}>
         <CustomSvg type="Google" />
         {`${type} with Google`}
       </Button>
-      {/* {socialLogin?.Google?.customLoginHandler ? GoogleButton(() => login('Google')) : GoogleButton(onGoogleSuccess)} */}
-      {/* <LoginSocialGoogle
-        {...(socialLogin?.Google as any)}
-        onResolve={onGoogleSuccess}
-        onReject={(res) =>
-          errorTip(
-            {
-              errorFields: 'socialLogin Google',
-              error: res,
-            },
-            isErrorTip,
-            onError,
-          )
-        }>
-        {GoogleButton()}
-      </LoginSocialGoogle> */}
-      {/* {socialLogin?.Apple?.customLoginHandler ? (
-        AppleButton(() => login('Apple'))
-      ) : (
-        <LoginSocialApple
-          client_id={socialLogin?.Apple?.clientId || ''}
-          scope={'name email' + (socialLogin?.Apple?.scope ?? '')}
-          redirect_uri={socialLogin?.Apple?.redirectURI || ''}
-          onReject={(res) =>
-            errorTip(
-              {
-                errorFields: 'socialLogin Apple',
-                error: res,
-              },
-              isErrorTip,
-              onError,
-            )
-          }>
-          {AppleButton()}
-        </LoginSocialApple>
-      )} */}
-
       <Button
         className={clsx('social-login-btn', !socialLogin?.Google && 'social-login-disabled-button')}
         onClick={onAppleSuccess}>

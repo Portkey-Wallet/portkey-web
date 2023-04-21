@@ -20,3 +20,10 @@ export interface Storage {
 export type ValidatorHandler = (value?: string) => Promise<any>;
 
 export type OpacityType = number; // 0-1
+
+export interface LoadingInfo {
+  text?: string;
+  cancelable?: boolean;
+}
+
+export type LoadingInfoType = LoadingInfo | string;

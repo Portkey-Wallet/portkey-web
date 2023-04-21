@@ -27,7 +27,6 @@ export { default as CommonTooltip } from './CommonTooltip';
 export { default as ConfirmPassword } from './ConfirmPassword';
 export { default as CustomPassword } from './CustomPassword';
 export { default as EmailInput } from './EmailInput';
-export { default as EmailLogin } from './EmailLogin';
 export { default as EmailTab } from './EmailTab';
 export { default as InputInfo } from './InputInfo';
 export { default as InputLogin } from './InputLogin';

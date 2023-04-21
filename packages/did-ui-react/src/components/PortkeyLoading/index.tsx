@@ -3,14 +3,23 @@ import { OpacityType } from '../../types';
 import { useMemo } from 'react';
 import Loading from '../Loading';
 import './index.less';
+import CustomSvg from '../CustomSvg';
 
 export interface PortkeyLoadingProps {
   loading?: boolean | OpacityType;
   loadingText?: string;
+  cancelable?: boolean;
   className?: string;
+  onCancel?: () => void;
 }
 
-export default function PortkeyLoading({ loading, loadingText = 'Loading...', className }: PortkeyLoadingProps) {
+export default function PortkeyLoading({
+  loading,
+  loadingText = 'Loading...',
+  cancelable,
+  className,
+  onCancel,
+}: PortkeyLoadingProps) {
   const style = useMemo(
     () =>
       typeof loading !== 'number'
@@ -23,6 +32,7 @@ export default function PortkeyLoading({ loading, loadingText = 'Loading...', cl
 
   return loading ? (
     <div className={clsx('fix-max-content portkey-ui-loading-wrapper', className)} style={style}>
+      {cancelable && <CustomSvg className="close-icon" type="BackLeft" onClick={onCancel} />}
       <Loading />
       <div className="loading-text">{loadingText}</div>
     </div>

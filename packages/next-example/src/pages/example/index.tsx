@@ -10,9 +10,10 @@ import {
   GuardianApproval,
   PortkeyQRCode,
   AreaCode,
+  PortkeyLoading,
 } from '@portkey/did-ui-react';
 import { IStorageSuite } from '@portkey/types';
-import { useState, useEffect } from 'react';
+import { useState, useRef, useCallback } from 'react';
 
 export class Store implements IStorageSuite {
   async getItem(key: string) {
@@ -59,22 +60,47 @@ function Example() {
   const [open, setOpen] = useState<boolean>();
 
   const [isLoading, setLoading] = useState<any>();
+  const isV = useRef<boolean>();
+
+  const call = useCallback(() => {
+    try {
+      console.log('window.location111');
+      // alert('1');
+      const timer = setTimeout(() => {
+        window.location.href = 'portkey.did://33333';
+      }, 1000);
+      isV.current = false;
+      const visibilitychange = function () {
+        if (isV.current) return;
+        isV.current = true;
+        alert('1');
+        console.log('firstvisibilitychange');
+        const tag = document.hidden || (document as any)?.webkitHidden;
+        tag && clearTimeout(timer);
+      };
+
+      document.addEventListener('visibilitychange', visibilitychange, false);
+      document.addEventListener('webkitvisibilitychange', visibilitychange, false);
+      window.addEventListener(
+        'pagehide',
+        function () {
+          clearTimeout(timer);
+        },
+        false,
+      );
+      console.log('window.location');
+      return () => {
+        document.removeEventListener('visibilitychange', visibilitychange);
+        document.removeEventListener('webkitvisibilitychange', visibilitychange);
+      };
+    } catch (error) {
+      console.log(error, 'GoogleAuth===error');
+    }
+  }, []);
 
   return (
     <div>
-      <button
-        style={{ width: '100px', height: '100px' }}
-        onClick={async () => {
-          try {
-            const res = await googleAuthAccessToken({
-              clientId: process.env.NEXT_PUBLIC_GG_APP_ID || '',
-              scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
-            });
-            console.log(res, 'res==GoogleAuth1');
-          } catch (error) {
-            console.log(error, 'GoogleAuth===error');
-          }
-        }}>
+      <button style={{ width: '100px', height: '100px' }} onClick={call}>
         GoogleAuthAccessToken
       </button>
       <button
@@ -101,7 +127,12 @@ function Example() {
       </button>
       <PortkeyQRCode value={'value'} logoImage="https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/Minerva.png" />
 
-      {/* {&& <PortkeyLoading loading={isLoading} loadingText={'This is loading'} />} */}
+      <PortkeyLoading
+        loading={isLoading}
+        loadingText={'This is loading'}
+        cancelable
+        onCancel={() => setLoading(false)}
+      />
       {/* <SignIn
         uiType="Modal"
         defaultChainId="tDVV"
@@ -119,9 +150,9 @@ function Example() {
 
       <button
         onClick={async () => {
-          setOpen(true);
+          setLoading(true);
         }}>
-        SignIn
+        ShowLoading
       </button>
       {/* <SignIn
         uiType="Full"
@@ -180,7 +211,7 @@ function Example() {
         />
         <SetPinAndAddManager
           guardianApprovedList={[]}
-          verificationType={0}
+          type={'recovery'}
           guardianIdentifier={'105383420233267798964'}
           onError={(error: any) => {
             console.log(error, 'onError SetPinAndAddManager===');
