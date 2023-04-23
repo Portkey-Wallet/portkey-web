@@ -23,6 +23,7 @@ import type {
   IPhoneCountry,
   CreatePendingInfo,
   AddManagerType,
+  LoginFinishWithoutPin,
 } from '../types';
 import type { ChainId } from '@portkey/types';
 import type { GuardiansApproved } from '@portkey/services';
@@ -31,6 +32,7 @@ import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, Step2SignUpLifeCycleT
 import { portkeyDidUIPrefix } from '../../constants';
 import qs from 'query-string';
 import clsx from 'clsx';
+import { errorTip } from '../../utils';
 import './index.less';
 
 const step1Storage = `${portkeyDidUIPrefix}step1Storage`;
@@ -119,7 +121,7 @@ const SignIn = forwardRef(
     const [_open, setOpen] = useState<boolean>(false);
 
     const refSetOpen = useCallback((v: boolean) => {
-      if (!v) setStep('SignIn');
+      setStep('SignIn');
       setOpen(v);
     }, []);
     useImperativeHandle(ref, () => ({ setOpen: refSetOpen }));
@@ -225,6 +227,13 @@ const SignIn = forwardRef(
       ConfigProvider.config.storageMethod?.removeItem(step3Storage);
     }, []);
 
+    const [walletWithoutPin, setWalletWithoutPin] = useState<Omit<DIDWalletInfo, 'pin'>>();
+
+    const onLoginFinishWithoutPin: LoginFinishWithoutPin = useCallback((wallet) => {
+      setWalletWithoutPin(wallet);
+      setStep('Step3');
+    }, []);
+
     const [lifeCycle, setLifeCycle] = useState<LifeCycleType>('Login');
 
     const onSignUpStepChange = useCallback((v: Step2SignUpLifeCycleType) => setLifeCycle(v), []);
@@ -237,13 +246,26 @@ const SignIn = forwardRef(
     }, []);
 
     const onStep3Finish = useCallback(
-      (v: DIDWalletInfo) => {
-        onFinishRef?.current?.(v);
+      (v: DIDWalletInfo | string) => {
+        if (typeof v === 'string') {
+          if (!walletWithoutPin)
+            return errorTip(
+              {
+                errorFields: 'SetPinAndAddManagerCom',
+                error: 'set pin error',
+              },
+              isErrorTip,
+              onError,
+            );
+          onFinishRef?.current?.({ ...walletWithoutPin, pin: v });
+        } else {
+          onFinishRef?.current?.(v);
+        }
         setOpen(false);
         setStep('SignIn');
         clearStorage();
       },
-      [clearStorage],
+      [clearStorage, isErrorTip, onError, walletWithoutPin],
     );
 
     useUpdateEffect(() => {
@@ -289,6 +311,7 @@ const SignIn = forwardRef(
               onNetworkChange={onNetworkChangeRef?.current}
               onStepChange={onSignInStepChange}
               onChainIdChange={onOriginChainIdChange}
+              onLoginFinishWithoutPin={onLoginFinishWithoutPin}
               termsOfServiceUrl={termsOfServiceUrl}
             />
           )}
@@ -323,10 +346,11 @@ const SignIn = forwardRef(
             />
           )}
 
-          {_step === 'Step3' && guardianIdentifierInfo && (
+          {_step === 'Step3' && (
             <Step3
               guardianIdentifierInfo={guardianIdentifierInfo}
-              type={guardianIdentifierInfo.isLoginIdentifier ? 'recovery' : 'register'}
+              onlyGetPin={Boolean(walletWithoutPin)}
+              type={guardianIdentifierInfo?.isLoginIdentifier ? 'recovery' : 'register'}
               guardianApprovedList={approvedList || []}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
@@ -348,15 +372,17 @@ const SignIn = forwardRef(
       onSignInFinished,
       onSignInStepChange,
       onOriginChainIdChange,
+      onLoginFinishWithoutPin,
       termsOfServiceUrl,
       guardianIdentifierInfo,
+      sandboxId,
+      networkItem?.walletType,
+      _chainInfo,
       onSignUpStepChange,
       onStep2WithSignUpFinish,
       onStep2Cancel,
       approvedList,
-      _chainInfo,
-      sandboxId,
-      networkItem?.walletType,
+      walletWithoutPin,
       onStep3Finish,
       onStep3Cancel,
       onCreatePending,

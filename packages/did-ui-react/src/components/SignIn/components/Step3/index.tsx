@@ -8,7 +8,7 @@ import { AddManagerType, SignInSuccess } from '../../../types';
 import './index.less';
 
 interface Step3Props extends Omit<SetPinAndAddManagerProps, 'chainId' | 'guardianIdentifier'> {
-  guardianIdentifierInfo: SignInSuccess;
+  guardianIdentifierInfo?: SignInSuccess;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   onCancel?: (type?: AddManagerType) => void;
@@ -27,6 +27,7 @@ function Step3({
   onCancel,
   onError,
   onCreatePending,
+  ...props
 }: PartialOption<Step3Props, 'type'>) {
   const [returnOpen, setReturnOpen] = useState<boolean>(false);
 
@@ -42,10 +43,11 @@ function Step3({
     <div className="step-page-wrapper">
       <BackHeader onBack={onBackHandler} />
       <SetPinAndAddManagerCom
+        {...props}
         className="step-set-pin content-padding"
-        chainId={guardianIdentifierInfo.chainId}
-        accountType={guardianIdentifierInfo.accountType}
-        guardianIdentifier={guardianIdentifierInfo.identifier}
+        chainId={guardianIdentifierInfo?.chainId}
+        accountType={guardianIdentifierInfo?.accountType}
+        guardianIdentifier={guardianIdentifierInfo?.identifier}
         type={type}
         guardianApprovedList={guardianApprovedList}
         isErrorTip={isErrorTip}

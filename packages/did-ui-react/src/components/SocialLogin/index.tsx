@@ -7,7 +7,7 @@ import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
 import SocialContent from '../SocialContent';
 import TermsOfServiceItem from '../TermsOfServiceItem';
-import { CreateWalletType } from '../types';
+import { CreateWalletType, LoginFinishWithoutPin } from '../types';
 import './index.less';
 
 interface SocialLoginProps {
@@ -16,10 +16,13 @@ interface SocialLoginProps {
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
   termsOfServiceUrl?: string;
+  hasPortkey?: boolean;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
   switchGuardinType?: () => void;
   switchType?: (type: CreateWalletType) => void;
+  onLoginByPortkey?: LoginFinishWithoutPin;
+
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
 }
@@ -27,6 +30,7 @@ interface SocialLoginProps {
 export default function SocialLogin({
   type,
   className,
+  hasPortkey,
   isShowScan,
   isErrorTip,
   socialLogin,
@@ -35,6 +39,7 @@ export default function SocialLogin({
   onError,
   onFinish,
   switchGuardinType,
+  onLoginByPortkey,
   switchType,
 }: SocialLoginProps) {
   const { t } = useTranslation();
@@ -63,10 +68,12 @@ export default function SocialLogin({
         </h1>
         <div className="social-login-content">
           <SocialContent
+            hasPortkey={hasPortkey}
             isErrorTip={isErrorTip}
             socialLogin={socialLogin}
             type={type}
             onFinish={onFinishRef?.current}
+            onLoginByPortkey={onLoginByPortkey}
             onError={onError}
           />
           <DividerCenter />

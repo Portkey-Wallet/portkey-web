@@ -34,5 +34,6 @@ export { default as PhoneTab } from './PhoneTab';
 export { default as Loading } from './Loading';
 export { default as SocialLogin } from './SocialLogin';
 export { default as SocialVerifierButton } from './SocialVerifierButton';
+export { default as WakeUpPortkey } from './WakeUpPortkey';
 
 export * from './types';

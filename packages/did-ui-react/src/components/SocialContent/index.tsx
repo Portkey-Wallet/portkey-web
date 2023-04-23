@@ -4,6 +4,8 @@ import { useCallback, useRef, useEffect } from 'react';
 import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
 import { appleAuthIdToken, errorTip, googleAuthAccessToken, handleErrorMessage, setLoading } from '../../utils';
 import CustomSvg from '../CustomSvg';
+import { LoginFinishWithoutPin } from '../types';
+import WakeUpPortkey from '../WakeUpPortkey';
 import './index.less';
 
 interface SocialContentProps {
@@ -11,6 +13,7 @@ interface SocialContentProps {
   hasPortkey?: boolean;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
+  onLoginByPortkey?: LoginFinishWithoutPin;
   onFinish?: SocialLoginFinishHandler;
   onError?: OnErrorFunc;
 }
@@ -21,6 +24,7 @@ export default function SocialContent({
   socialLogin,
   isErrorTip,
   onFinish,
+  onLoginByPortkey,
   onError,
 }: SocialContentProps) {
   const onFinishRef = useRef<SocialContentProps['onFinish']>(onFinish);
@@ -97,19 +101,9 @@ export default function SocialContent({
     }
   }, [isErrorTip, login, onError, socialLogin?.Apple]);
 
-  const onPortkeySuccess = useCallback(async () => {
-    //
-    window.location.href = 'portkey.did://';
-  }, []);
-
   return (
     <div className="social-content-wrapper">
-      {hasPortkey && (
-        <Button className={clsx('social-login-btn')} onClick={onPortkeySuccess}>
-          <CustomSvg type="Portkey-login" />
-          {`${type} with Portkey`}
-        </Button>
-      )}
+      {hasPortkey && <WakeUpPortkey type={type} onFinish={onLoginByPortkey} />}
       <Button
         className={clsx('social-login-btn', !socialLogin?.Google && 'social-login-disabled-button')}
         onClick={onGoogleSuccess}>

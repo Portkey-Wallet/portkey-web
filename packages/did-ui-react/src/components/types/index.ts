@@ -31,3 +31,5 @@ export interface CreatePendingInfo {
 }
 
 export type AddManagerType = 'register' | 'recovery';
+
+export type LoginFinishWithoutPin = (info: Omit<DIDWalletInfo, 'pin'>) => void;

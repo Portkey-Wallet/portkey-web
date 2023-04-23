@@ -15,11 +15,12 @@ export interface SetPinAndAddManagerProps {
   className?: string;
   accountType?: AccountType;
   chainId?: ChainId;
-  guardianIdentifier: string;
+  guardianIdentifier?: string;
+  onlyGetPin?: boolean;
   guardianApprovedList: GuardiansApproved[];
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
-  onFinish?: (values: DIDWalletInfo) => void;
+  onFinish?: (values: DIDWalletInfo | string) => void;
   onCreatePending?: (pendingInfo: CreatePendingInfo) => void;
 }
 
@@ -28,6 +29,7 @@ export default function SetPinAndAddManager({
   chainId = 'AELF',
   className,
   isErrorTip,
+  onlyGetPin,
   accountType = 'Email',
   guardianIdentifier,
   guardianApprovedList,
@@ -166,6 +168,7 @@ export default function SetPinAndAddManager({
   const onCreate = useCallback(
     async (pin: string) => {
       try {
+        if (onlyGetPin) return onFinish?.(pin);
         if (!guardianIdentifier) throw 'Missing account!!!';
         did.reset();
         setLoading(true, 'Creating address on the chain...');
@@ -224,7 +227,7 @@ export default function SetPinAndAddManager({
         setLoading(false);
       }
     },
-    [guardianIdentifier, chainId, type, requestRegisterWallet, requestRecoveryWallet, isErrorTip],
+    [onlyGetPin, onFinish, guardianIdentifier, type, isErrorTip, chainId, requestRegisterWallet, requestRecoveryWallet],
   );
 
   return (

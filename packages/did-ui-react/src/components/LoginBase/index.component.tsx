@@ -3,9 +3,7 @@ import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHan
 import ConfigProvider from '../config-provider';
 import InputLogin from '../InputLogin';
 import SocialLogin from '../SocialLogin';
-import { CreateWalletType, GuardianInputInfo } from '../types';
-// import useNetworkList from '../../hooks/useNetworkList';
-// import ConfigProvider from '../config-provider';
+import { CreateWalletType, GuardianInputInfo, LoginFinishWithoutPin } from '../types';
 import { IPhoneCountry } from '../types';
 import './index.less';
 
@@ -15,6 +13,8 @@ export interface LoginBaseProps {
   phoneCountry?: IPhoneCountry;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
+  hasPortkey?: boolean;
+  onLoginByPortkey?: LoginFinishWithoutPin;
   onInputFinish?: (data: GuardianInputInfo) => void;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
@@ -32,6 +32,7 @@ export default function LoginCard({
   isShowScan,
   phoneCountry,
   isErrorTip,
+  hasPortkey,
   socialLogin,
   termsOfServiceUrl,
   onStep,
@@ -39,6 +40,7 @@ export default function LoginCard({
   onInputFinish,
   validateEmail,
   validatePhone,
+  onLoginByPortkey,
   onSocialLoginFinish,
   onNetworkChange,
 }: LoginBaseProps) {
@@ -82,6 +84,7 @@ export default function LoginCard({
         <SocialLogin
           className="flex-1"
           type="Login"
+          hasPortkey={hasPortkey}
           socialLogin={_socialLogin}
           isShowScan={isShowScan}
           isErrorTip={isErrorTip}
@@ -89,6 +92,7 @@ export default function LoginCard({
           switchType={onStep}
           switchGuardinType={() => setStep(STEP.inputLogin)}
           termsOfServiceUrl={termsOfServiceUrl}
+          onLoginByPortkey={onLoginByPortkey}
           onError={onError}
         />
       )}

@@ -2,7 +2,7 @@ import LoginCard from '../LoginBase/index.component';
 import ScanCard from '../ScanCard/index.component';
 import SignUpBase from '../SignUpBase/index.component';
 import { useState, useMemo, useRef, useCallback, useEffect, CSSProperties } from 'react';
-import type { CreateWalletType, DIDWalletInfo } from '../types';
+import type { CreateWalletType, LoginFinishWithoutPin } from '../types';
 import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
 import { useUpdateEffect } from 'react-use';
@@ -35,13 +35,14 @@ export interface SignUpAndLoginProps {
   // socialLogin porps
   socialLogin?: ISocialLoginConfig; // social login config
   appleIdToken?: string; // apple authorized
+  hasPortkey?: boolean;
   //
   onError?: OnErrorFunc;
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone
   onSignTypeChange?: (type: CreateWalletType) => void;
   onSuccess?: (value: SignInSuccess) => void;
-  onFinish?: (walletInfo: DIDWalletInfo) => void; // Only for scan
+  onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
   onNetworkChange?: (network: string) => void; // When network changed
   onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
 }
@@ -51,6 +52,7 @@ export default function SignUpAndLoginBaseCom({
   style,
   defaultChainId = 'AELF',
   className,
+  hasPortkey,
   isErrorTip,
   isShowScan,
   phoneCountry,
@@ -59,12 +61,12 @@ export default function SignUpAndLoginBaseCom({
   termsOfServiceUrl,
   onError,
   onSuccess,
-  onFinish,
   validateEmail,
   validatePhone,
   onSignTypeChange,
   onNetworkChange,
   onChainIdChange,
+  onLoginFinishWithoutPin,
 }: SignUpAndLoginProps) {
   const validateEmailRef = useRef<SignUpAndLoginProps['validateEmail']>(validateEmail);
   const validatePhoneRef = useRef<SignUpAndLoginProps['validatePhone']>(validatePhone);
@@ -237,6 +239,8 @@ export default function SignUpAndLoginBaseCom({
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           termsOfServiceUrl={termsOfServiceUrl}
+          hasPortkey={hasPortkey}
+          onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
           onBack={() => setType('Login')}
@@ -252,7 +256,7 @@ export default function SignUpAndLoginBaseCom({
           chainType={currentNetwork?.walletType}
           netWorkType={network}
           onBack={() => setType('Login')}
-          onFinish={onFinish}
+          onFinish={onLoginFinishWithoutPin}
           isErrorTip={isErrorTip}
           onError={onError}
         />
@@ -264,6 +268,8 @@ export default function SignUpAndLoginBaseCom({
           socialLogin={_socialLogin}
           isShowScan={_isShowScan}
           termsOfServiceUrl={termsOfServiceUrl}
+          hasPortkey={hasPortkey}
+          onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={_onSuccess}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}

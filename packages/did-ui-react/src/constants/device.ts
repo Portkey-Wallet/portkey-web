@@ -54,3 +54,5 @@ export const getDeviceInfo = (deviceType: DeviceType): DeviceInfoType => {
     }
   }
 };
+
+export const isSafariBrowser = () => /Safari/.test(navigator.userAgent) && !/Chrome/.test(navigator.userAgent);

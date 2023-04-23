@@ -11,6 +11,7 @@ import {
   PortkeyQRCode,
   AreaCode,
   PortkeyLoading,
+  WakeUpPortkey,
 } from '@portkey/did-ui-react';
 import { IStorageSuite } from '@portkey/types';
 import { useState, useRef, useCallback } from 'react';
@@ -60,64 +61,11 @@ function Example() {
   const [open, setOpen] = useState<boolean>();
 
   const [isLoading, setLoading] = useState<any>();
-  const isV = useRef<boolean>();
-
-  const call = useCallback(() => {
-    try {
-      console.log('window.location111');
-      // alert('1');
-      const timer = setTimeout(() => {
-        window.location.href = 'portkey.did://33333';
-      }, 1000);
-      isV.current = false;
-      const visibilitychange = function () {
-        if (isV.current) return;
-        isV.current = true;
-        alert('1');
-        console.log('firstvisibilitychange');
-        const tag = document.hidden || (document as any)?.webkitHidden;
-        tag && clearTimeout(timer);
-      };
-
-      document.addEventListener('visibilitychange', visibilitychange, false);
-      document.addEventListener('webkitvisibilitychange', visibilitychange, false);
-      window.addEventListener(
-        'pagehide',
-        function () {
-          clearTimeout(timer);
-        },
-        false,
-      );
-      console.log('window.location');
-      return () => {
-        document.removeEventListener('visibilitychange', visibilitychange);
-        document.removeEventListener('webkitvisibilitychange', visibilitychange);
-      };
-    } catch (error) {
-      console.log(error, 'GoogleAuth===error');
-    }
-  }, []);
 
   return (
     <div>
-      <button style={{ width: '100px', height: '100px' }} onClick={call}>
-        GoogleAuthAccessToken
-      </button>
-      <button
-        style={{ width: '100px', height: '100px' }}
-        onClick={async () => {
-          try {
-            const res = await appleAuthIdToken({
-              clientId: 'https://localtest-applesign.portkey.finance', // process.env.NEXT_PUBLIC_APP_APPLE_ID || '',
-              redirectURI: process.env.NEXT_PUBLIC_APP_APPLE_REDIRECT_URI,
-            });
-            console.log(res, 'res==GoogleAuthApple');
-          } catch (error) {
-            console.log(error, 'GoogleAuth===error');
-          }
-        }}>
-        AppleAuthAccessToken
-      </button>
+      <WakeUpPortkey type="Login" />
+
       <button
         onClick={async () => {
           const info = await did.services.getChainsInfo();

@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
 import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
 import InputLogin from '../InputLogin';
-import { IPhoneCountry } from '../types';
+import { IPhoneCountry, LoginFinishWithoutPin } from '../types';
 import SocialLogin from '../SocialLogin';
 import { GuardianInputInfo } from '../types/signIn';
 import clsx from 'clsx';
@@ -19,6 +19,8 @@ export interface SignUpBaseProps {
   isErrorTip?: boolean;
   wrapperClassName?: string;
   termsOfServiceUrl?: string;
+  hasPortkey?: boolean;
+  onLoginByPortkey?: LoginFinishWithoutPin;
   onBack?: () => void;
   onError?: OnErrorFunc;
   onInputFinish?: (data: GuardianInputInfo) => void;
@@ -31,6 +33,7 @@ export default function SignUpBase({
   socialLogin,
   phoneCountry,
   isErrorTip,
+  hasPortkey,
   wrapperClassName,
   termsOfServiceUrl,
   onBack,
@@ -39,6 +42,7 @@ export default function SignUpBase({
   validateEmail,
   validatePhone,
   onSocialSignFinish,
+  onLoginByPortkey,
 }: SignUpBaseProps) {
   const [step, setStep] = useState<STEP>(STEP.socialLogin);
 
@@ -67,6 +71,7 @@ export default function SignUpBase({
         />
       ) : (
         <SocialLogin
+          hasPortkey={hasPortkey}
           type="Sign up"
           className="flex-1"
           termsOfServiceUrl={termsOfServiceUrl}
@@ -76,6 +81,7 @@ export default function SignUpBase({
           switchGuardinType={() => setStep(STEP.inputLogin)}
           onBack={_onBack}
           onError={onError}
+          onLoginByPortkey={onLoginByPortkey}
         />
       )}
     </div>
