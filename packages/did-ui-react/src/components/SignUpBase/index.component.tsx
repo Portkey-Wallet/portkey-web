@@ -19,7 +19,7 @@ export interface SignUpBaseProps {
   isErrorTip?: boolean;
   wrapperClassName?: string;
   termsOfServiceUrl?: string;
-  hasPortkey?: boolean;
+  networkType?: string;
   onLoginByPortkey?: LoginFinishWithoutPin;
   onBack?: () => void;
   onError?: OnErrorFunc;
@@ -33,7 +33,7 @@ export default function SignUpBase({
   socialLogin,
   phoneCountry,
   isErrorTip,
-  hasPortkey,
+  networkType,
   wrapperClassName,
   termsOfServiceUrl,
   onBack,
@@ -71,11 +71,11 @@ export default function SignUpBase({
         />
       ) : (
         <SocialLogin
-          hasPortkey={hasPortkey}
           type="Sign up"
           className="flex-1"
           termsOfServiceUrl={termsOfServiceUrl}
           isErrorTip={isErrorTip}
+          networkType={networkType}
           socialLogin={_socialLogin}
           onFinish={onSocialSignFinish}
           switchGuardinType={() => setStep(STEP.inputLogin)}

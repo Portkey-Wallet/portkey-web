@@ -62,7 +62,7 @@ function Step2WithSignUp({
       setVerifierList(list);
     } catch (error) {
       onErrorRef?.current?.({
-        errorFields: 'VerifierList',
+        errorFields: 'Get verifierList',
         error: error,
       });
     }

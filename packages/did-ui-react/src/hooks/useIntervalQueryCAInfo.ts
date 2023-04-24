@@ -7,7 +7,7 @@ import useInterval from './useInterval';
 export function useIntervalQueryCAInfo({ address }: { address?: string; chainId?: ChainId }) {
   const [info, setInfo] = useState<{ info: CAInfo; chainId: ChainId }>();
   const caInfo = useMemo(() => (address && info ? info : undefined), [info, address]);
-  useInterval(
+  const intervalHandler = useInterval(
     async () => {
       if (!address || caInfo) return;
       try {
@@ -30,5 +30,5 @@ export function useIntervalQueryCAInfo({ address }: { address?: string; chainId?
     3000,
     [caInfo, address],
   );
-  return caInfo;
+  return [caInfo, intervalHandler] as const;
 }

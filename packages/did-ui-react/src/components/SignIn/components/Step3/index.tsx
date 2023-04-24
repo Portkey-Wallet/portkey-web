@@ -27,17 +27,22 @@ function Step3({
   onCancel,
   onError,
   onCreatePending,
+  onlyGetPin,
   ...props
 }: PartialOption<Step3Props, 'type'>) {
   const [returnOpen, setReturnOpen] = useState<boolean>(false);
 
   const onBackHandler = useCallback(() => {
+    if (onlyGetPin) {
+      onCancel?.('onlyGetPin');
+      return;
+    }
     if (type === 'register') {
       setReturnOpen(true);
     } else {
       onCancel?.(type);
     }
-  }, [onCancel, type]);
+  }, [onCancel, onlyGetPin, type]);
 
   return (
     <div className="step-page-wrapper">
@@ -51,6 +56,7 @@ function Step3({
         type={type}
         guardianApprovedList={guardianApprovedList}
         isErrorTip={isErrorTip}
+        onlyGetPin={onlyGetPin}
         onFinish={onFinish}
         onError={onError}
         onCreatePending={onCreatePending}

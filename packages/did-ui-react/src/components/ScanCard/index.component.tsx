@@ -15,7 +15,7 @@ import clsx from 'clsx';
 export interface ScanCardProps {
   chainId?: ChainId;
   backIcon?: ReactNode;
-  netWorkType?: string;
+  networkType?: string;
   chainType?: ChainType;
   isErrorTip?: boolean;
   wrapperClassName?: string;
@@ -30,7 +30,7 @@ export default function ScanCard({
   backIcon,
   isErrorTip,
   chainType,
-  netWorkType,
+  networkType,
   wrapperClassName,
   onError,
   onBack,
@@ -39,7 +39,7 @@ export default function ScanCard({
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
 
-  const caWallet = useIntervalQueryCAInfo({
+  const [caWallet] = useIntervalQueryCAInfo({
     address: managementAccount?.address,
     chainId,
   });
@@ -74,11 +74,11 @@ export default function ScanCard({
 
   const qrData = useMemo(() => {
     if (!managementAccount) return '';
-    if (!netWorkType) return '';
+    if (!networkType) return '';
     const data: LoginQRData = {
       type: 'login',
       address: managementAccount.address,
-      netWorkType: netWorkType,
+      netWorkType: networkType,
       chainType: chainType ?? 'aelf',
       extraData: {
         deviceInfo,
@@ -86,7 +86,7 @@ export default function ScanCard({
       },
     };
     return JSON.stringify(data);
-  }, [chainType, deviceInfo, managementAccount, netWorkType]);
+  }, [chainType, deviceInfo, managementAccount, networkType]);
 
   useEffect(() => {
     caWallet &&

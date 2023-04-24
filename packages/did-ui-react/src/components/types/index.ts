@@ -30,6 +30,6 @@ export interface CreatePendingInfo {
   walletInfo: portkey.WalletAccount;
 }
 
-export type AddManagerType = 'register' | 'recovery';
+export type AddManagerType = 'register' | 'recovery' | 'onlyGetPin';
 
 export type LoginFinishWithoutPin = (info: Omit<DIDWalletInfo, 'pin'>) => void;

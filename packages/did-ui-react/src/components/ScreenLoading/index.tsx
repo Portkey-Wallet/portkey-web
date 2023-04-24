@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { eventBus } from '../../utils';
+import { eventBus, setLoading } from '../../utils';
 import { SET_GLOBAL_LOADING } from '../../constants/events';
 import { LoadingInfo, LoadingInfoType, OpacityType } from '../../types';
 import PortkeyLoading from '../PortkeyLoading';
@@ -9,7 +9,7 @@ interface ScreenLoadingInfo extends Partial<LoadingInfo> {
 }
 
 export default function ScreenLoading() {
-  const [loadingInfo, setLoading] = useState<ScreenLoadingInfo>();
+  const [loadingInfo, setLoadingInfo] = useState<ScreenLoadingInfo>();
 
   const setLoadingHandler = useCallback((loading: boolean | OpacityType, loadingInfo?: LoadingInfoType) => {
     let info;
@@ -18,7 +18,7 @@ export default function ScreenLoading() {
     } else {
       loadingInfo ? (info = { text: loadingInfo }) : '';
     }
-    setLoading({
+    setLoadingInfo({
       loading,
       ...info,
     });
@@ -32,8 +32,9 @@ export default function ScreenLoading() {
   }, [setLoadingHandler]);
 
   const onCancel = useCallback(() => {
-    setLoading({ loading: false });
-  }, []);
+    setLoading(false);
+    loadingInfo?.onCancel?.();
+  }, [loadingInfo]);
 
   return (
     <PortkeyLoading

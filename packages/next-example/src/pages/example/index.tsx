@@ -12,9 +12,12 @@ import {
   AreaCode,
   PortkeyLoading,
   WakeUpPortkey,
+  Unlock,
+  CustomSvg,
 } from '@portkey/did-ui-react';
 import { IStorageSuite } from '@portkey/types';
-import { useState, useRef, useCallback } from 'react';
+import { message } from 'antd';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 export class Store implements IStorageSuite {
   async getItem(key: string) {
@@ -64,7 +67,7 @@ function Example() {
 
   return (
     <div>
-      <WakeUpPortkey type="Login" />
+      {/* <WakeUpPortkey type="Login" /> */}
 
       <button
         onClick={async () => {
@@ -77,7 +80,7 @@ function Example() {
 
       <PortkeyLoading
         loading={isLoading}
-        loadingText={'This is loading'}
+        loadingText={'Synchronizing on-chain account information...'}
         cancelable
         onCancel={() => setLoading(false)}
       />
@@ -129,6 +132,10 @@ function Example() {
             },
             Google: {
               clientId: process.env.NEXT_PUBLIC_GG_APP_ID || '',
+            },
+            Portkey: {
+              websiteName: 'website demo name',
+              websiteIcon: '',
             },
           }}
           // // socialLogin porps
@@ -205,6 +212,16 @@ function Example() {
               key: '',
             },
           ]}
+        />
+        <Unlock
+          uiType="Full"
+          value={'value'}
+          onChange={e => {
+            //
+          }}
+          onUnlock={() => {
+            //
+          }}
         />
       </div>
     </div>

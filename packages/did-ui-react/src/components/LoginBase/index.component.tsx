@@ -13,7 +13,7 @@ export interface LoginBaseProps {
   phoneCountry?: IPhoneCountry;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
-  hasPortkey?: boolean;
+  networkType?: string;
   onLoginByPortkey?: LoginFinishWithoutPin;
   onInputFinish?: (data: GuardianInputInfo) => void;
   validateEmail?: ValidatorHandler;
@@ -32,8 +32,8 @@ export default function LoginCard({
   isShowScan,
   phoneCountry,
   isErrorTip,
-  hasPortkey,
   socialLogin,
+  networkType,
   termsOfServiceUrl,
   onStep,
   onError,
@@ -84,7 +84,7 @@ export default function LoginCard({
         <SocialLogin
           className="flex-1"
           type="Login"
-          hasPortkey={hasPortkey}
+          networkType={networkType}
           socialLogin={_socialLogin}
           isShowScan={isShowScan}
           isErrorTip={isErrorTip}

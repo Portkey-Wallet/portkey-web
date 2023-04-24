@@ -24,6 +24,7 @@ export type OpacityType = number; // 0-1
 export interface LoadingInfo {
   text?: string;
   cancelable?: boolean;
+  onCancel?: () => void;
 }
 
 export type LoadingInfoType = LoadingInfo | string;

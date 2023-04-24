@@ -16,7 +16,7 @@ interface SocialLoginProps {
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
   termsOfServiceUrl?: string;
-  hasPortkey?: boolean;
+  networkType?: string;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
   switchGuardinType?: () => void;
@@ -30,10 +30,10 @@ interface SocialLoginProps {
 export default function SocialLogin({
   type,
   className,
-  hasPortkey,
   isShowScan,
   isErrorTip,
   socialLogin,
+  networkType,
   termsOfServiceUrl,
   onBack,
   onError,
@@ -68,8 +68,8 @@ export default function SocialLogin({
         </h1>
         <div className="social-login-content">
           <SocialContent
-            hasPortkey={hasPortkey}
             isErrorTip={isErrorTip}
+            networkType={networkType}
             socialLogin={socialLogin}
             type={type}
             onFinish={onFinishRef?.current}

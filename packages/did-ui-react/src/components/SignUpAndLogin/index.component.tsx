@@ -35,7 +35,6 @@ export interface SignUpAndLoginProps {
   // socialLogin porps
   socialLogin?: ISocialLoginConfig; // social login config
   appleIdToken?: string; // apple authorized
-  hasPortkey?: boolean;
   //
   onError?: OnErrorFunc;
   validateEmail?: ValidatorHandler; // validate email
@@ -52,7 +51,6 @@ export default function SignUpAndLoginBaseCom({
   style,
   defaultChainId = 'AELF',
   className,
-  hasPortkey,
   isErrorTip,
   isShowScan,
   phoneCountry,
@@ -239,7 +237,7 @@ export default function SignUpAndLoginBaseCom({
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           termsOfServiceUrl={termsOfServiceUrl}
-          hasPortkey={hasPortkey}
+          networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
@@ -254,7 +252,7 @@ export default function SignUpAndLoginBaseCom({
           chainId={defaultChainId}
           backIcon={<CustomSvg type="PC" />}
           chainType={currentNetwork?.walletType}
-          netWorkType={network}
+          networkType={network}
           onBack={() => setType('Login')}
           onFinish={onLoginFinishWithoutPin}
           isErrorTip={isErrorTip}
@@ -268,7 +266,7 @@ export default function SignUpAndLoginBaseCom({
           socialLogin={_socialLogin}
           isShowScan={_isShowScan}
           termsOfServiceUrl={termsOfServiceUrl}
-          hasPortkey={hasPortkey}
+          networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={_onSuccess}
           validatePhone={_validatePhone}

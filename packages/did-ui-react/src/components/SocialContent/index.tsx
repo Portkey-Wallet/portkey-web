@@ -1,8 +1,9 @@
 import { Button, message } from 'antd';
 import clsx from 'clsx';
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect, useMemo } from 'react';
 import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
 import { appleAuthIdToken, errorTip, googleAuthAccessToken, handleErrorMessage, setLoading } from '../../utils';
+import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
 import { LoginFinishWithoutPin } from '../types';
 import WakeUpPortkey from '../WakeUpPortkey';
@@ -10,9 +11,9 @@ import './index.less';
 
 interface SocialContentProps {
   type: RegisterType;
-  hasPortkey?: boolean;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
+  networkType?: string;
   onLoginByPortkey?: LoginFinishWithoutPin;
   onFinish?: SocialLoginFinishHandler;
   onError?: OnErrorFunc;
@@ -20,9 +21,9 @@ interface SocialContentProps {
 
 export default function SocialContent({
   type,
-  hasPortkey,
   socialLogin,
   isErrorTip,
+  networkType,
   onFinish,
   onLoginByPortkey,
   onError,
@@ -101,9 +102,24 @@ export default function SocialContent({
     }
   }, [isErrorTip, login, onError, socialLogin?.Apple]);
 
+  const isMobile = useMemo(() => {
+    try {
+      return isMobileDevices();
+    } catch (error) {
+      return false;
+    }
+  }, []);
+
   return (
     <div className="social-content-wrapper">
-      {hasPortkey && <WakeUpPortkey type={type} onFinish={onLoginByPortkey} />}
+      {socialLogin?.Portkey && isMobile && (
+        <WakeUpPortkey
+          type={type}
+          networkType={networkType}
+          websiteInfo={socialLogin?.Portkey}
+          onFinish={onLoginByPortkey}
+        />
+      )}
       <Button
         className={clsx('social-login-btn', !socialLogin?.Google && 'social-login-disabled-button')}
         onClick={onGoogleSuccess}>
