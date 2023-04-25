@@ -33,7 +33,7 @@
     "pub": "npm publish"
   },
   "dependencies": {
-    "@portkey/did": "^0.0.1-alpha.2.8",
+    "@portkey/did": "^0.0.1-alpha.2.9",
     "aelf-sdk": "^3.2.40",
     "antd": "4.24.4",
     "antd-mobile": "5.26.0",
@@ -43,6 +43,7 @@
     "react-qrcode-logo": "2.9.0",
     "react-use": "^17.4.0",
     "reactjs-social-login": "^2.6.2",
+    "@matt-block/react-recaptcha-v2": "^2.0.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

@@ -109,15 +109,24 @@ const GuardianApproval = forwardRef(
           guardianList: UserGuardianStatus[];
         } = JSON.parse(infoStr);
         const localGuardianList = info.guardianList;
-        if (info.expiredTime <= Date.now())
-          return ConfigProvider.config.storageMethod?.removeItem(GuardianListStorageKey);
+        if (info.expiredTime <= Date.now()) {
+          ConfigProvider.config.storageMethod?.removeItem(GuardianListStorageKey);
+        }
         const guardianListTem: UserGuardianStatus[] = [];
+        let isSameGuardian = true;
         guardianList?.forEach((item, index) => {
           if (item.identifier === localGuardianList[index].identifier) {
             const guardian = localGuardianList[index];
             guardianListTem.push(guardian);
+          } else {
+            isSameGuardian = false;
           }
         });
+        if (!isSameGuardian) {
+          setGuardianList(guardianList as UserGuardianStatus[]);
+          getAppleApproved(guardianList as UserGuardianStatus[]);
+          return;
+        }
         setGuardianList(guardianListTem);
         getAppleApproved(guardianListTem);
       } catch (error) {

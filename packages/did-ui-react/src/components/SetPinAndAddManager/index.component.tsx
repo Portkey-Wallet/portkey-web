@@ -183,7 +183,7 @@ export default function SetPinAndAddManager({
         }
 
         if (walletResult.error) {
-          return errorTip(
+          errorTip(
             {
               errorFields: 'SetPinAndAddManager',
               ...walletResult,
@@ -192,17 +192,21 @@ export default function SetPinAndAddManager({
             isErrorTip,
             onErrorRef.current,
           );
+          throw walletResult;
         }
 
-        if (!walletResult.status?.caAddress || !walletResult.status?.caHash)
-          return errorTip(
+        if (!walletResult.status?.caAddress || !walletResult.status?.caHash) {
+          errorTip(
             {
               errorFields: 'SetPinAndAddManager',
-              error: walletResult,
+              ...walletResult,
+              error: 'Missing "caAddress" or "caHash"',
             },
             isErrorTip,
             onErrorRef.current,
           );
+          throw walletResult;
+        }
 
         onFinishRef?.current?.({
           caInfo: {

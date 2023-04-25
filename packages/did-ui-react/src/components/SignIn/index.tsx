@@ -225,6 +225,7 @@ const SignIn = forwardRef(
       ConfigProvider.config.storageMethod?.removeItem(currentStep);
       ConfigProvider.config.storageMethod?.removeItem(step1Storage);
       ConfigProvider.config.storageMethod?.removeItem(step3Storage);
+      ConfigProvider.config.storageMethod?.removeItem(`${portkeyDidUIPrefix}GuardianListInfo`);
     }, []);
 
     const [walletWithoutPin, setWalletWithoutPin] = useState<Omit<DIDWalletInfo, 'pin'>>();
