@@ -16,7 +16,7 @@ import {
 import {
   SendAppleUserExtraInfoParams,
   SendAppleUserExtraInfoResult,
-  SendVerificationCodeParams,
+  SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
   VerifyGoogleTokenParams,
@@ -48,11 +48,11 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
-  getVerificationCode(params: SendVerificationCodeParams): Promise<SendVerificationCodeResult> {
+  getVerificationCode(requestParams: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/sendVerificationRequest',
-      params,
+      ...requestParams,
     });
   }
   verifyVerificationCode(params: VerifyVerificationCodeParams): Promise<VerifyVerificationCodeResult> {

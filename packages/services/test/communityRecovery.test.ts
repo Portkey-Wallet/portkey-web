@@ -38,10 +38,15 @@ describe('communityRecovery describe', () => {
 
   test('test getVerificationCode', async () => {
     const result = await communityRecovery.getVerificationCode({
-      chainId: 'AELF',
-      type: 'Email',
-      verifierId: 'verifierId_mock',
-      guardianIdentifier: 'guardianIdentifier_mock',
+      params: {
+        chainId: 'AELF',
+        type: 'Email',
+        verifierId: 'verifierId_mock',
+        guardianIdentifier: 'guardianIdentifier_mock',
+      },
+      headers: {
+        reCaptchaToken: 'xxxx',
+      },
     });
     expect(result).toHaveProperty('verifierSessionId');
   });

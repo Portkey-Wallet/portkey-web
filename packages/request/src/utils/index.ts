@@ -19,18 +19,13 @@ const formatResponse = (response: string) => {
   }
 };
 
+const defaultHeaders = {
+  Accept: 'text/plain;v=1.0',
+  'Content-Type': 'application/json',
+};
+
 export const fetchFormat = async (config: RequestOpts, signal: IAbortSignal) => {
-  let {
-    url: uri,
-    method = 'GET',
-    headers = {
-      Accept: 'text/plain;v=1.0',
-      'Content-Type': 'application/json',
-    },
-    query,
-    body,
-    params,
-  } = config;
+  let { url: uri, method = 'GET', headers, query, body, params } = config;
 
   // TODO: adjust no url
   if (!uri) throw new Error('no url');
@@ -49,9 +44,11 @@ export const fetchFormat = async (config: RequestOpts, signal: IAbortSignal) => 
 
   // TODO:fix headers
 
+  const myHeaders = { ...defaultHeaders, ...headers };
+
   const result = await fetch(uri, {
     method,
-    headers,
+    headers: myHeaders,
     body,
     signal,
   });
