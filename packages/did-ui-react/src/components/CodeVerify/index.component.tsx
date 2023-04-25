@@ -5,12 +5,13 @@ import { DIGIT_CODE } from '../../constants/misc';
 import clsx from 'clsx';
 import VerifierPair from '../VerifierPair';
 import { useTranslation } from 'react-i18next';
-import { errorTip, verifyErrorHandler, setLoading, did, verification, handleErrorMessage } from '../../utils';
+import { errorTip, verifyErrorHandler, setLoading, did, handleErrorMessage, verification } from '../../utils';
 import { useEffectOnce } from 'react-use';
 import { OnErrorFunc } from '../../types';
 import type { ChainId } from '@portkey/types';
 import type { AccountType } from '@portkey/services';
 import type { VerifierItem } from '@portkey/did';
+import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import './index.less';
 
 const MAX_TIMER = 60;
@@ -90,15 +91,24 @@ export default function CodeVerify({
     [_verifierSessionId, guardianIdentifier, verifier.id, chainId, onSuccess, isErrorTip, onError],
   );
 
+  const reCaptchaHandler = useReCaptchaModal();
+
   const resendCode = useCallback(async () => {
     try {
       if (!guardianIdentifier) throw Error('Missing loginGuardianType');
+      const reCaptchaInfo = await reCaptchaHandler(true);
+      if (reCaptchaInfo.type !== 'success') throw reCaptchaInfo;
       setLoading(true);
       const result = await verification.sendVerificationCode({
-        type: accountType,
-        guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
-        verifierId: verifier.id,
-        chainId,
+        params: {
+          type: accountType,
+          guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
+          verifierId: verifier.id,
+          chainId,
+        },
+        headers: {
+          reCaptchaToken: reCaptchaInfo.message,
+        },
       });
       setLoading(false);
       if (result.verifierSessionId) {
@@ -118,7 +128,7 @@ export default function CodeVerify({
         onError,
       );
     }
-  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, onReSend, verifier]);
+  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, onReSend, reCaptchaHandler, verifier]);
 
   useEffect(() => {
     if (timer !== MAX_TIMER) return;

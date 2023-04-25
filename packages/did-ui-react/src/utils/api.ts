@@ -1,4 +1,4 @@
-import { SendVerificationCodeParams } from '@portkey/services';
+import { SendVerificationCodeRequestParams } from '@portkey/services';
 import { IStorageSuite } from '@portkey/types';
 import { did } from './did';
 import { BaseAsyncStorage } from './BaseAsyncStorage';
@@ -58,8 +58,10 @@ export class Verification extends StorageBaseLoader {
     this.verifierMap[key] = value;
     await this.save();
   }
-  public async sendVerificationCode(config: SendVerificationCodeParams) {
-    const { guardianIdentifier, verifierId } = config;
+  public async sendVerificationCode(config: SendVerificationCodeRequestParams) {
+    const {
+      params: { guardianIdentifier, verifierId },
+    } = config;
     const key = guardianIdentifier || '' + verifierId || '';
     try {
       const req = await did.services.getVerificationCode(config);
