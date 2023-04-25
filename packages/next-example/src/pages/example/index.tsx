@@ -44,6 +44,9 @@ ConfigProvider.setGlobalConfig({
       clientId: process.env.NEXT_PUBLIC_GG_APP_ID || '',
     },
   },
+  reCaptchaConfig: {
+    siteKey: process.env.NEXT_PUBLIC_GG_RECAPTCHATOKEN_SITE_KEY,
+  },
   network: {
     defaultNetwork: 'TESTNET',
     networkList: [
