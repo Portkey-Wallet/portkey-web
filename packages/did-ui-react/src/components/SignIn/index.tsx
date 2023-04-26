@@ -131,11 +131,12 @@ const SignIn = forwardRef(
       [network, networkList],
     );
     const [originChainId, setOriginChainId] = useState<ChainId>();
+    const [approvedList, setApprovedList] = useState<GuardiansApproved[]>();
+    const [walletWithoutPin, setWalletWithoutPin] = useState<Omit<DIDWalletInfo, 'pin'>>();
+    const [lifeCycle, setLifeCycle] = useState<LifeCycleType>('Login');
 
     const chainId = useMemo(() => originChainId || defaultChainId, [originChainId, defaultChainId]);
     const _chainInfo = useChainInfo(chainId, onErrorRef?.current);
-
-    const [approvedList, setApprovedList] = useState<GuardiansApproved[]>();
 
     const getStorageGuardianApproved = useCallback(async () => {
       const storageStr = await ConfigProvider.config.storageMethod?.getItem(step3Storage);
@@ -226,16 +227,16 @@ const SignIn = forwardRef(
       ConfigProvider.config.storageMethod?.removeItem(step1Storage);
       ConfigProvider.config.storageMethod?.removeItem(step3Storage);
       ConfigProvider.config.storageMethod?.removeItem(`${portkeyDidUIPrefix}GuardianListInfo`);
+      setWalletWithoutPin(undefined);
+      setGuardianIdentifierInfo(undefined);
+      setOriginChainId(undefined);
+      setApprovedList(undefined);
     }, []);
-
-    const [walletWithoutPin, setWalletWithoutPin] = useState<Omit<DIDWalletInfo, 'pin'>>();
 
     const onLoginFinishWithoutPin: LoginFinishWithoutPin = useCallback((wallet) => {
       setWalletWithoutPin(wallet);
       setStep('Step3');
     }, []);
-
-    const [lifeCycle, setLifeCycle] = useState<LifeCycleType>('Login');
 
     const onSignUpStepChange = useCallback((v: Step2SignUpLifeCycleType) => setLifeCycle(v), []);
 

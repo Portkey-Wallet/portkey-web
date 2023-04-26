@@ -1,7 +1,7 @@
 import { Button } from 'antd';
 import { forwardRef, useCallback, useImperativeHandle, useState, useRef, useEffect } from 'react';
 import { CountryItem, ValidatorHandler } from '../../types';
-import { handleErrorMessage } from '../../utils';
+import { handleErrorMessage, setLoading } from '../../utils';
 import PhoneNumberInput from '../PhoneNumberInput';
 import { IPhoneCountry } from '../types';
 import './index.less';
@@ -62,6 +62,7 @@ const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: 
               phoneNumber,
             });
           } catch (error) {
+            setLoading(false);
             const msg = handleErrorMessage(error);
             setError(msg);
           }
