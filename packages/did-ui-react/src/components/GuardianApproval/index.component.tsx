@@ -285,13 +285,15 @@ const GuardianApproval = forwardRef(
     );
 
     const onConfirmHandler = useCallback(() => {
-      const verificationList = _guardianList.map((item) => ({
-        type: item.guardianType,
-        identifier: item.identifier || item.identifierHash || '',
-        verifierId: item.verifier?.id || '',
-        verificationDoc: item.verificationDoc || '',
-        signature: item.signature || '',
-      }));
+      const verificationList = _guardianList
+        .filter((item) => Boolean(item.signature && item.verificationDoc))
+        .map((item) => ({
+          type: item.guardianType,
+          identifier: item.identifier || item.identifierHash || '',
+          verifierId: item.verifier?.id || '',
+          verificationDoc: item.verificationDoc || '',
+          signature: item.signature || '',
+        }));
       onConfirmRef.current?.(verificationList);
       ConfigProvider.config.storageMethod?.removeItem(GuardianListStorageKey);
     }, [_guardianList]);

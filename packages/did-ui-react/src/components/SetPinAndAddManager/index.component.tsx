@@ -133,9 +133,14 @@ export default function SetPinAndAddManager({
       const clientId = managerAddress;
 
       const extraData = await extraDataEncode(getDeviceInfo(DEVICE_TYPE), '');
+
+      const _guardianApprovedList = guardianApprovedList.filter((item) =>
+        Boolean(item.signature && item.verificationDoc),
+      );
+
       const params = {
         loginGuardianIdentifier: guardianIdentifier.replaceAll(/\s/g, ''),
-        guardiansApproved: guardianApprovedList,
+        guardiansApproved: _guardianApprovedList,
         extraData,
         chainId,
         context: {
