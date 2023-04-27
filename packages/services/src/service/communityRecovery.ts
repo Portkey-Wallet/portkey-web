@@ -34,6 +34,12 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     super(request);
     this._didGraphQL = didGraphQL;
   }
+  checkGoogleRecaptcha(): Promise<boolean> {
+    return this._request.send({
+      method: 'POST',
+      url: 'api/app/account/isGoogleRecaptchaOpen',
+    });
+  }
   getHolderInfo(params: GetHolderInfoParams): Promise<IHolderInfo> {
     return this._request.send({
       method: 'GET',

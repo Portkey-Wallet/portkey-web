@@ -16,6 +16,12 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
   extends BaseService<T>
   implements IVerificationService
 {
+  checkGoogleRecaptcha(): Promise<boolean> {
+    return this._request.send({
+      method: 'POST',
+      url: 'api/app/account/isGoogleRecaptchaOpen',
+    });
+  }
   getVerificationCode(requestParams: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult> {
     return this._request.send({
       method: 'POST',

@@ -62,4 +62,5 @@ export interface IVerificationService {
   sendAppleUserExtraInfo(params: SendAppleUserExtraInfoParams): Promise<SendAppleUserExtraInfoResult>;
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
+  checkGoogleRecaptcha(): Promise<boolean>;
 }

@@ -215,7 +215,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       const info = req[0];
       // get current manager info
       if (info && _manager === this.managementAccount?.address && info.caAddress && info.caHash) {
-        this.caInfo[chainId] = { caAddress: info.caAddress, caHash: info.caHash };
+        this.caInfo[info.chainId || chainId] = { caAddress: info.caAddress, caHash: info.caHash };
         const loginAccount = info.loginGuardianInfo[0]?.loginGuardian?.identifierHash;
         if (!this.accountInfo.loginAccount && loginAccount) this.accountInfo = { loginAccount: loginAccount };
       }
