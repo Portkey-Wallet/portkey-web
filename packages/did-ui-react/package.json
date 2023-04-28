@@ -1,0 +1,54 @@
+{
+  "name": "@portkey/did-ui-react",
+  "keywords": [
+    "antd",
+    "portkey"
+  ],
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "version": "0.0.1-alpha.5.2",
+  "main": "dist/index.js",
+  "types": "dist/_types/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "start": "tsc --watch",
+    "lint": "eslint . --ext .tsx,.ts",
+    "lint:md": "remark . -f -q",
+    "build:clean": "rm -rf dist",
+    "build:types": "tsc --emitDeclarationOnly",
+    "build:source": "rollup --silent --config rollup.config.js",
+    "build:svg": "cd ./src/assets && node getSvg1.cjs",
+    "build": "npm run build:clean; npm run build:types & npm run build:source",
+    "dev": "rollup --config rollup.config.js --watch",
+    "release": "yarn version && yarn build",
+    "pub": "npm publish"
+  },
+  "dependencies": {
+    "@portkey/did": "^0.0.1-alpha.2.8",
+    "aelf-sdk": "^3.2.40",
+    "antd": "4.24.4",
+    "antd-mobile": "5.26.0",
+    "bignumber.js": "^9.1.0",
+    "clsx": "^1.2.1",
+    "react-i18next": "^11.18.6",
+    "react-qrcode-logo": "2.9.0",
+    "react-use": "^17.4.0",
+    "reactjs-social-login": "^2.6.2",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "@types/uuid": "^8.3.4",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "less": "^4.1.3"
+  }
+}

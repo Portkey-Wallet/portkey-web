@@ -1,0 +1,17 @@
+@import './color.less';
+
+@card-height: 566px;
+
+@box-shadow1: 0 3px 10px 0 rgb(77 78 89 / 24%);
+
+.text-overflow(@n) {
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  /* stylelint-disable-next-line declaration-block-no-duplicate-properties */
+  text-overflow: ellipsis;
+  /* stylelint-disable-next-line value-no-vendor-prefix */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  line-clamp: @n;
+  -webkit-line-clamp: @n;
+}

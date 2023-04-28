@@ -1,0 +1,32 @@
+{
+  "private": true,
+  "name": "@portkey/next-example",
+  "version": "0.0.1-alpha.1.4",
+  "scripts": {
+    "dev": "PORT=4000 next dev",
+    "start": "next start",
+    "lint": "next lint",
+    "dev:analyze": "PORT=4000 ANALYZE=true next dev"
+  },
+  "dependencies": {
+    "next": "12.2.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "@portkey/did": "^0.0.1-alpha.2.2",
+    "next-transpile-modules": "^10.0.0",
+    "@portkey/did-ui-react": "^0.0.1-alpha.3.0"
+  },
+  "devDependencies": {},
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

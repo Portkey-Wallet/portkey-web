@@ -1,0 +1,24 @@
+{
+  "extends": "@tsconfig/recommended/tsconfig.json",
+  "compilerOptions": {
+    "module": "commonjs",
+    "declaration": true,
+    "moduleResolution": "node",
+    "newLine": "lf",
+    "resolveJsonModule": true,
+    "forceConsistentCasingInFileNames": true,
+    "target": "es2016",
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "pretty": true,
+    "removeComments": true,
+    "sourceMap": true,
+    "declarationMap": true,
+    "strict": false,
+    "strictNullChecks": true,
+    "esModuleInterop": true
+  },
+  "include": ["index.d.ts"]
+}

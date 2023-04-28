@@ -1,0 +1,131 @@
+@import '../../assets/theme/color.less';
+.guardian-list-wrapper {
+  .guardian-list-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .guardian-list-description {
+    margin-bottom: 42px;
+    text-align: center;
+    color: @font-11;
+  }
+  .guardian-list-title {
+    font-size: 40px;
+    color: @font-11;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .approve-count {
+    line-height: 20px;
+    font-size: 14px;
+    margin-bottom: 8px;
+    padding-bottom: 12px;
+    color: @font-13;
+    border-bottom: 1px solid @border-2;
+    .tooltip-icon {
+      margin-left: 8px;
+      width: 14px;
+      height: 14px;
+    }
+    .already-approval {
+      color: @font-9;
+    }
+    .common-tooltip {
+      max-width: 272px;
+    }
+  }
+
+  .verifier-item {
+    position: relative;
+    padding: 24px 0;
+    border-bottom: 1px solid @border-2;
+    &:last-of-type {
+      border-bottom: none;
+    }
+    &.verifier-item-disabled {
+      &::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background-color: @bg-11;
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+    }
+    .account-text {
+      margin-left: 12px;
+      line-height: 20px;
+      color: @font-11;
+      font-size: 14px;
+    }
+    .not-verified,
+    .verifying,
+    .ant-btn-text {
+      width: auto;
+      display: block;
+    }
+    .not-verified,
+    .verifying {
+      border-radius: 6px;
+      line-height: 24px;
+      font-size: 12px;
+      padding: 0 12px;
+    }
+    .ant-btn-text {
+      color: @font-9;
+      padding: 0;
+      &.verified {
+        color: @font-15;
+      }
+      &.expired {
+        color: @font-12;
+      }
+      &:hover {
+        background-color: transparent;
+      }
+      span {
+        line-height: 20px;
+        font-size: 14px;
+      }
+    }
+  }
+
+  .verifier-content {
+    flex: 1;
+
+    .btn-wrap {
+      padding-top: 24px;
+    }
+  }
+
+  .login-icon {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-bottom-right-radius: 9px;
+    border-top-left-radius: 9px;
+    line-height: 18px;
+    background-color: @bg-4;
+    padding: 0 8px;
+    text-align: center;
+    color: @font-8;
+    font-size: 12px;
+  }
+
+  .recovery-wallet-btn {
+    line-height: 44px;
+    border-radius: 22px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .guardian-list-wrapper {
+    .guardian-list-title {
+      font-size: 32px;
+      line-height: 38px;
+    }
+  }
+}

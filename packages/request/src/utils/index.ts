@@ -1,0 +1,65 @@
+import { RequestOpts } from '@portkey/types';
+import { stringify } from 'query-string';
+import { IAbortSignal } from '../types';
+
+export const timeoutPromise = (delay?: number) => {
+  return new Promise<{ type: string }>(_resolve => {
+    const ids = setTimeout(() => {
+      clearTimeout(ids);
+      _resolve({ type: 'timeout' });
+    }, delay);
+  });
+};
+
+const formatResponse = (response: string) => {
+  try {
+    return JSON.parse(response);
+  } catch (e) {
+    return response;
+  }
+};
+
+export const fetchFormat = async (config: RequestOpts, signal: IAbortSignal) => {
+  let {
+    url: uri,
+    method = 'GET',
+    headers = {
+      Accept: 'text/plain;v=1.0',
+      'Content-Type': 'application/json',
+    },
+    query,
+    body,
+    params,
+  } = config;
+
+  // TODO: adjust no url
+  if (!uri) throw new Error('no url');
+
+  if (!body && params) {
+    body = JSON.stringify(params);
+  }
+
+  if (method === 'GET' || method === 'DELETE') {
+    const _query = query || params;
+    if (_query) {
+      uri = Object.keys(_query).length > 0 ? `${uri}?${stringify(_query)}` : uri;
+    }
+    body = undefined;
+  }
+
+  // TODO:fix headers
+
+  const result = await fetch(uri, {
+    method,
+    headers,
+    body,
+    signal,
+  });
+  const text = await result.text();
+  const res = formatResponse(text);
+
+  if ((result.status as number).toString()[0] !== '2' || !result.ok) {
+    throw res ? res : result.statusText;
+  }
+  return res;
+};

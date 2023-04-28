@@ -1,0 +1,48 @@
+@import '../../assets/theme/color.less';
+.set-pin-wrapper {
+  height: 100%;
+  .set-pin-title {
+    font-size: 40px;
+    text-align: center;
+    font-weight: 400;
+    color: @font-11;
+    margin-bottom: 40px;
+  }
+
+  .set-pin-content {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    > .title {
+      margin-bottom: 40px;
+    }
+    .ant-form-vertical {
+      flex: 1;
+      position: relative;
+      .ant-form-item-row {
+        flex: 1;
+      }
+      .submit-btn-form-item {
+        margin: 0;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+    }
+
+    .portkey-form-item-label {
+      padding-bottom: 4px;
+    }
+    .submit-btn {
+      border-radius: 22px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .set-pin-wrapper .set-pin-title {
+    font-size: 32px;
+    line-height: 38px;
+  }
+}
