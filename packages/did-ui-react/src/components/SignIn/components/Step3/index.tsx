@@ -2,16 +2,16 @@ import { Button } from 'antd';
 import BackHeader from '../../../BackHeader';
 import CommonModal from '../../../CommonModal';
 import { memo, useCallback, useState } from 'react';
-import { VerificationType, OnErrorFunc } from '../../../../types';
+import { OnErrorFunc } from '../../../../types';
 import SetPinAndAddManagerCom, { SetPinAndAddManagerProps } from '../../../SetPinAndAddManager/index.component';
-import { SignInSuccess } from '../../../types';
+import { AddManagerType, SignInSuccess } from '../../../types';
 import './index.less';
 
 interface Step3Props extends Omit<SetPinAndAddManagerProps, 'chainId' | 'guardianIdentifier'> {
-  guardianIdentifierInfo: SignInSuccess;
+  guardianIdentifierInfo?: SignInSuccess;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
-  onCancel?: (v?: VerificationType) => void;
+  onCancel?: (type?: AddManagerType) => void;
 }
 
 type PartialOption<T, K extends keyof T> = Omit<T, K> & {
@@ -20,35 +20,43 @@ type PartialOption<T, K extends keyof T> = Omit<T, K> & {
 
 function Step3({
   guardianIdentifierInfo,
-  verificationType = VerificationType.register,
+  type = 'register',
   guardianApprovedList = [],
   isErrorTip,
   onFinish,
   onCancel,
   onError,
   onCreatePending,
-}: PartialOption<Step3Props, 'verificationType'>) {
+  onlyGetPin,
+  ...props
+}: PartialOption<Step3Props, 'type'>) {
   const [returnOpen, setReturnOpen] = useState<boolean>(false);
 
   const onBackHandler = useCallback(() => {
-    if (verificationType === VerificationType.register) {
+    if (onlyGetPin) {
+      onCancel?.('onlyGetPin');
+      return;
+    }
+    if (type === 'register') {
       setReturnOpen(true);
     } else {
-      onCancel?.(verificationType);
+      onCancel?.(type);
     }
-  }, [onCancel, verificationType]);
+  }, [onCancel, onlyGetPin, type]);
 
   return (
     <div className="step-page-wrapper">
       <BackHeader onBack={onBackHandler} />
       <SetPinAndAddManagerCom
+        {...props}
         className="step-set-pin content-padding"
-        chainId={guardianIdentifierInfo.chainId}
-        accountType={guardianIdentifierInfo.accountType}
-        guardianIdentifier={guardianIdentifierInfo.identifier}
-        verificationType={verificationType}
+        chainId={guardianIdentifierInfo?.chainId}
+        accountType={guardianIdentifierInfo?.accountType}
+        guardianIdentifier={guardianIdentifierInfo?.identifier}
+        type={type}
         guardianApprovedList={guardianApprovedList}
         isErrorTip={isErrorTip}
+        onlyGetPin={onlyGetPin}
         onFinish={onFinish}
         onError={onError}
         onCreatePending={onCreatePending}
@@ -63,7 +71,7 @@ function Step3({
         <p className="modal-content">Are you sure you want to leave this page? All changes will not be saved.</p>
         <div className="btn-wrapper">
           <Button onClick={() => setReturnOpen(false)}>No</Button>
-          <Button type="primary" onClick={() => onCancel?.(VerificationType.register)}>
+          <Button type="primary" onClick={() => onCancel?.('register')}>
             Yes
           </Button>
         </div>

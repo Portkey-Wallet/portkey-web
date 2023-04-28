@@ -10,9 +10,14 @@ import {
   GuardianApproval,
   PortkeyQRCode,
   AreaCode,
+  PortkeyLoading,
+  WakeUpPortkey,
+  Unlock,
+  CustomSvg,
 } from '@portkey/did-ui-react';
 import { IStorageSuite } from '@portkey/types';
-import { useState, useEffect } from 'react';
+import { message } from 'antd';
+import { useState, useRef, useCallback, useEffect } from 'react';
 
 export class Store implements IStorageSuite {
   async getItem(key: string) {
@@ -62,36 +67,8 @@ function Example() {
 
   return (
     <div>
-      <button
-        style={{ width: '100px', height: '100px' }}
-        onClick={async () => {
-          try {
-            const res = await googleAuthAccessToken({
-              clientId: process.env.NEXT_PUBLIC_GG_APP_ID || '',
-              scope: 'https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile',
-            });
-            console.log(res, 'res==GoogleAuth1');
-          } catch (error) {
-            console.log(error, 'GoogleAuth===error');
-          }
-        }}>
-        GoogleAuthAccessToken
-      </button>
-      <button
-        style={{ width: '100px', height: '100px' }}
-        onClick={async () => {
-          try {
-            const res = await appleAuthIdToken({
-              clientId: 'https://localtest-applesign.portkey.finance', // process.env.NEXT_PUBLIC_APP_APPLE_ID || '',
-              redirectURI: process.env.NEXT_PUBLIC_APP_APPLE_REDIRECT_URI,
-            });
-            console.log(res, 'res==GoogleAuthApple');
-          } catch (error) {
-            console.log(error, 'GoogleAuth===error');
-          }
-        }}>
-        AppleAuthAccessToken
-      </button>
+      {/* <WakeUpPortkey type="Login" /> */}
+
       <button
         onClick={async () => {
           const info = await did.services.getChainsInfo();
@@ -101,7 +78,12 @@ function Example() {
       </button>
       <PortkeyQRCode value={'value'} logoImage="https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/Minerva.png" />
 
-      {/* {&& <PortkeyLoading loading={isLoading} loadingText={'This is loading'} />} */}
+      <PortkeyLoading
+        loading={isLoading}
+        loadingText={'Synchronizing on-chain account information...'}
+        cancelable
+        onCancel={() => setLoading(false)}
+      />
       {/* <SignIn
         uiType="Modal"
         defaultChainId="tDVV"
@@ -119,9 +101,9 @@ function Example() {
 
       <button
         onClick={async () => {
-          setOpen(true);
+          setLoading(true);
         }}>
-        SignIn
+        ShowLoading
       </button>
       {/* <SignIn
         uiType="Full"
@@ -150,6 +132,10 @@ function Example() {
             },
             Google: {
               clientId: process.env.NEXT_PUBLIC_GG_APP_ID || '',
+            },
+            Portkey: {
+              websiteName: 'website demo name',
+              websiteIcon: '',
             },
           }}
           // // socialLogin porps
@@ -180,7 +166,7 @@ function Example() {
         />
         <SetPinAndAddManager
           guardianApprovedList={[]}
-          verificationType={0}
+          type={'recovery'}
           guardianIdentifier={'105383420233267798964'}
           onError={(error: any) => {
             console.log(error, 'onError SetPinAndAddManager===');
@@ -226,6 +212,16 @@ function Example() {
               key: '',
             },
           ]}
+        />
+        <Unlock
+          uiType="Full"
+          value={'value'}
+          onChange={e => {
+            //
+          }}
+          onUnlock={() => {
+            //
+          }}
         />
       </div>
     </div>

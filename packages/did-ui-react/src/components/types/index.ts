@@ -27,4 +27,9 @@ export interface CreatePendingInfo {
   requestId: string;
   clientId: string;
   pin: string;
+  walletInfo: portkey.WalletAccount;
 }
+
+export type AddManagerType = 'register' | 'recovery' | 'onlyGetPin';
+
+export type LoginFinishWithoutPin = (info: Omit<DIDWalletInfo, 'pin'>) => void;

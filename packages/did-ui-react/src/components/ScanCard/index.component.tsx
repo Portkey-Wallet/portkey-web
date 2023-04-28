@@ -4,11 +4,10 @@ import { useIntervalQueryCAInfo } from '../../hooks/useIntervalQueryCAInfo';
 import { ReactNode } from 'react';
 import type { LoginQRData, OnErrorFunc } from '../../types';
 import ScanBase from '../ScanBase';
-import SetPin from './components/SetPin';
-import { DIDWalletInfo } from '../types';
+import { LoginFinishWithoutPin } from '../types';
 import type { ChainId, ChainType } from '@portkey/types';
 import type { portkey } from '@portkey/accounts';
-import { did, WalletError, errorTip } from '../../utils';
+import { did, errorTip } from '../../utils';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
 import './index.less';
 import clsx from 'clsx';
@@ -16,19 +15,14 @@ import clsx from 'clsx';
 export interface ScanCardProps {
   chainId?: ChainId;
   backIcon?: ReactNode;
-  netWorkType?: string;
+  networkType?: string;
   chainType?: ChainType;
   isErrorTip?: boolean;
   wrapperClassName?: string;
   onError?: OnErrorFunc;
   onBack?: () => void;
-  onFinish?: (walletInfo: DIDWalletInfo) => void;
+  onFinish?: LoginFinishWithoutPin;
   onFinishFailed?: (errorInfo: any) => void;
-}
-
-enum ScanStep {
-  Scan = 'Scan',
-  SetPin = 'SetPin',
 }
 
 export default function ScanCard({
@@ -36,18 +30,16 @@ export default function ScanCard({
   backIcon,
   isErrorTip,
   chainType,
-  netWorkType,
+  networkType,
   wrapperClassName,
   onError,
   onBack,
   onFinish,
-  onFinishFailed,
 }: ScanCardProps) {
-  const [step, setStep] = useState<ScanStep>(ScanStep.Scan);
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
 
-  const caWallet = useIntervalQueryCAInfo({
+  const [caWallet] = useIntervalQueryCAInfo({
     address: managementAccount?.address,
     chainId,
   });
@@ -82,11 +74,11 @@ export default function ScanCard({
 
   const qrData = useMemo(() => {
     if (!managementAccount) return '';
-    if (!netWorkType) return '';
+    if (!networkType) return '';
     const data: LoginQRData = {
       type: 'login',
       address: managementAccount.address,
-      netWorkType: netWorkType,
+      netWorkType: networkType,
       chainType: chainType ?? 'aelf',
       extraData: {
         deviceInfo,
@@ -94,32 +86,21 @@ export default function ScanCard({
       },
     };
     return JSON.stringify(data);
-  }, [chainType, deviceInfo, managementAccount, netWorkType]);
+  }, [chainType, deviceInfo, managementAccount, networkType]);
 
   useEffect(() => {
-    if (caWallet) setStep(ScanStep.SetPin);
-  }, [caWallet]);
-
-  const onFinishHandler = useCallback(
-    (pin: string) => {
-      if (!managementAccount) throw Error(WalletError.noCreateWallet);
-      if (!caWallet) throw Error(WalletError.noCreateWallet);
+    caWallet &&
+      managementAccount &&
       onFinish?.({
-        pin,
         chainId: caWallet.chainId,
         caInfo: caWallet.info,
         walletInfo: managementAccount,
       });
-    },
-    [caWallet, managementAccount, onFinish],
-  );
+  }, [caWallet, managementAccount, onFinish]);
 
   return (
     <div className={clsx('scan-base-wrapper', wrapperClassName)}>
-      {step === ScanStep.Scan && <ScanBase backIcon={backIcon} onBack={onBack} qrData={qrData} />}
-      {step === ScanStep.SetPin && (
-        <SetPin onFinish={onFinishHandler} onFinishFailed={onFinishFailed} onCancel={() => setStep(ScanStep.Scan)} />
-      )}
+      <ScanBase backIcon={backIcon} onBack={onBack} qrData={qrData} />
     </div>
   );
 }

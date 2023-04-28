@@ -1,25 +1,28 @@
 import { useEffect, useState, useCallback } from 'react';
-import { eventBus } from '../../utils';
+import { eventBus, setLoading } from '../../utils';
 import { SET_GLOBAL_LOADING } from '../../constants/events';
-import { OpacityType } from '../../types';
+import { LoadingInfo, LoadingInfoType, OpacityType } from '../../types';
 import PortkeyLoading from '../PortkeyLoading';
 
-interface LoadingInfo {
+interface ScreenLoadingInfo extends Partial<LoadingInfo> {
   loading: boolean | OpacityType;
-  loadingText?: string;
 }
 
 export default function ScreenLoading() {
-  const [loadingInfo, setLoading] = useState<LoadingInfo>();
+  const [loadingInfo, setLoadingInfo] = useState<ScreenLoadingInfo>();
 
-  const setLoadingHandler = useCallback(
-    (loading: boolean | OpacityType, loadingText?: string) =>
-      setLoading({
-        loading,
-        loadingText,
-      }),
-    [],
-  );
+  const setLoadingHandler = useCallback((loading: boolean | OpacityType, loadingInfo?: LoadingInfoType) => {
+    let info;
+    if (typeof loadingInfo === 'object') {
+      info = loadingInfo;
+    } else {
+      loadingInfo ? (info = { text: loadingInfo }) : '';
+    }
+    setLoadingInfo({
+      loading,
+      ...info,
+    });
+  }, []);
 
   useEffect(() => {
     eventBus.addListener(SET_GLOBAL_LOADING, setLoadingHandler);
@@ -28,5 +31,17 @@ export default function ScreenLoading() {
     };
   }, [setLoadingHandler]);
 
-  return <PortkeyLoading {...loadingInfo} />;
+  const onCancel = useCallback(() => {
+    setLoading(false);
+    loadingInfo?.onCancel?.();
+  }, [loadingInfo]);
+
+  return (
+    <PortkeyLoading
+      loading={loadingInfo?.loading}
+      loadingText={loadingInfo?.text}
+      cancelable={loadingInfo?.cancelable}
+      onCancel={onCancel}
+    />
+  );
 }

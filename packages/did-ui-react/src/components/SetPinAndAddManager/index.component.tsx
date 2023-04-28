@@ -2,8 +2,8 @@ import { randomId, setLoading, errorTip, did, extraDataEncode } from '../../util
 import { useCallback, useRef, useEffect } from 'react';
 import SetPinBase from '../SetPinBase/index.component';
 import clsx from 'clsx';
-import { CreatePendingInfo, DIDWalletInfo } from '../types';
-import { OnErrorFunc, VerificationType } from '../../types';
+import { AddManagerType, CreatePendingInfo, DIDWalletInfo } from '../types';
+import { OnErrorFunc } from '../../types';
 import type { AccountType, GuardiansApproved } from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import { LoginResult, RegisterResult } from '@portkey/did';
@@ -11,25 +11,27 @@ import { RegisterStatusResult, RecoverStatusResult } from '@portkey/services';
 import { DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
 
 export interface SetPinAndAddManagerProps {
+  type: AddManagerType;
   className?: string;
   accountType?: AccountType;
   chainId?: ChainId;
-  guardianIdentifier: string;
-  verificationType: VerificationType;
+  guardianIdentifier?: string;
+  onlyGetPin?: boolean;
   guardianApprovedList: GuardiansApproved[];
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
-  onFinish?: (values: DIDWalletInfo) => void;
+  onFinish?: (values: DIDWalletInfo | string) => void;
   onCreatePending?: (pendingInfo: CreatePendingInfo) => void;
 }
 
 export default function SetPinAndAddManager({
+  type,
   chainId = 'AELF',
   className,
   isErrorTip,
+  onlyGetPin,
   accountType = 'Email',
   guardianIdentifier,
-  verificationType,
   guardianApprovedList,
   onError,
   onFinish,
@@ -44,10 +46,10 @@ export default function SetPinAndAddManager({
   });
 
   const getRequestStatus = useCallback(
-    async ({ sessionId, chainId, type }: { sessionId: string; chainId: ChainId; type: VerificationType }) => {
+    async ({ sessionId, chainId, type }: { sessionId: string; chainId: ChainId; type: AddManagerType }) => {
       let status, error: Error | undefined;
       try {
-        if (type === VerificationType.register) {
+        if (type === 'register') {
           status = await did.didWallet.getRegisterStatus({
             sessionId,
             chainId,
@@ -108,12 +110,13 @@ export default function SetPinAndAddManager({
         requestId,
         clientId,
         pin,
+        walletInfo: wallet as any,
       });
 
       return getRequestStatus({
         chainId,
         sessionId,
-        type: VerificationType.register,
+        type: 'register',
       }) as Promise<RegisterResult>;
     },
     [guardianIdentifier, accountType, guardianApprovedList, chainId, onCreatePending, getRequestStatus],
@@ -151,11 +154,12 @@ export default function SetPinAndAddManager({
         requestId,
         clientId,
         pin,
+        walletInfo: wallet as any,
       });
       return getRequestStatus({
         chainId,
         sessionId,
-        type: VerificationType.communityRecovery,
+        type: 'recovery',
       }) as Promise<LoginResult>;
     },
     [guardianIdentifier, accountType, guardianApprovedList, chainId, onCreatePending, getRequestStatus],
@@ -164,17 +168,18 @@ export default function SetPinAndAddManager({
   const onCreate = useCallback(
     async (pin: string) => {
       try {
+        if (onlyGetPin) return onFinish?.(pin);
         if (!guardianIdentifier) throw 'Missing account!!!';
         did.reset();
         setLoading(true, 'Creating address on the chain...');
 
         let walletResult: RegisterResult | LoginResult;
-        if (verificationType === VerificationType.register) {
+        if (type === 'register') {
           walletResult = await requestRegisterWallet(pin);
-        } else if (verificationType === VerificationType.communityRecovery) {
+        } else if (type === 'recovery') {
           walletResult = await requestRecoveryWallet(pin);
         } else {
-          throw 'VerificationType error';
+          throw 'Param "type" error';
         }
 
         if (walletResult.error) {
@@ -222,7 +227,7 @@ export default function SetPinAndAddManager({
         setLoading(false);
       }
     },
-    [guardianIdentifier, chainId, verificationType, requestRegisterWallet, requestRecoveryWallet, isErrorTip],
+    [onlyGetPin, onFinish, guardianIdentifier, type, isErrorTip, chainId, requestRegisterWallet, requestRecoveryWallet],
   );
 
   return (
@@ -232,7 +237,7 @@ export default function SetPinAndAddManager({
       onFinishFailed={(err) =>
         errorTip(
           {
-            errorFields: 'SetPinAndAddManager',
+            errorFields: 'SetPinAndAddManager Form',
             error: `Form Error: ${err.errorFields[0].name}`,
           },
           isErrorTip,

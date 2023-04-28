@@ -1,20 +1,33 @@
 import { Button, message } from 'antd';
 import clsx from 'clsx';
-import { useCallback, useRef, useEffect } from 'react';
+import { useCallback, useRef, useEffect, useMemo } from 'react';
 import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
 import { appleAuthIdToken, errorTip, googleAuthAccessToken, handleErrorMessage, setLoading } from '../../utils';
+import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
+import { LoginFinishWithoutPin } from '../types';
+import WakeUpPortkey from '../WakeUpPortkey';
 import './index.less';
 
 interface SocialContentProps {
   type: RegisterType;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
+  networkType?: string;
+  onLoginByPortkey?: LoginFinishWithoutPin;
   onFinish?: SocialLoginFinishHandler;
   onError?: OnErrorFunc;
 }
 
-export default function SocialContent({ type, socialLogin, isErrorTip, onFinish, onError }: SocialContentProps) {
+export default function SocialContent({
+  type,
+  socialLogin,
+  isErrorTip,
+  networkType,
+  onFinish,
+  onLoginByPortkey,
+  onError,
+}: SocialContentProps) {
   const onFinishRef = useRef<SocialContentProps['onFinish']>(onFinish);
   useEffect(() => {
     onFinishRef.current = onFinish;
@@ -89,51 +102,30 @@ export default function SocialContent({ type, socialLogin, isErrorTip, onFinish,
     }
   }, [isErrorTip, login, onError, socialLogin?.Apple]);
 
+  const isMobile = useMemo(() => {
+    try {
+      return isMobileDevices();
+    } catch (error) {
+      return false;
+    }
+  }, []);
+
   return (
     <div className="social-content-wrapper">
+      {socialLogin?.Portkey && isMobile && (
+        <WakeUpPortkey
+          type={type}
+          networkType={networkType}
+          websiteInfo={socialLogin?.Portkey}
+          onFinish={onLoginByPortkey}
+        />
+      )}
       <Button
         className={clsx('social-login-btn', !socialLogin?.Google && 'social-login-disabled-button')}
         onClick={onGoogleSuccess}>
         <CustomSvg type="Google" />
         {`${type} with Google`}
       </Button>
-      {/* {socialLogin?.Google?.customLoginHandler ? GoogleButton(() => login('Google')) : GoogleButton(onGoogleSuccess)} */}
-      {/* <LoginSocialGoogle
-        {...(socialLogin?.Google as any)}
-        onResolve={onGoogleSuccess}
-        onReject={(res) =>
-          errorTip(
-            {
-              errorFields: 'socialLogin Google',
-              error: res,
-            },
-            isErrorTip,
-            onError,
-          )
-        }>
-        {GoogleButton()}
-      </LoginSocialGoogle> */}
-      {/* {socialLogin?.Apple?.customLoginHandler ? (
-        AppleButton(() => login('Apple'))
-      ) : (
-        <LoginSocialApple
-          client_id={socialLogin?.Apple?.clientId || ''}
-          scope={'name email' + (socialLogin?.Apple?.scope ?? '')}
-          redirect_uri={socialLogin?.Apple?.redirectURI || ''}
-          onReject={(res) =>
-            errorTip(
-              {
-                errorFields: 'socialLogin Apple',
-                error: res,
-              },
-              isErrorTip,
-              onError,
-            )
-          }>
-          {AppleButton()}
-        </LoginSocialApple>
-      )} */}
-
       <Button
         className={clsx('social-login-btn', !socialLogin?.Google && 'social-login-disabled-button')}
         onClick={onAppleSuccess}>

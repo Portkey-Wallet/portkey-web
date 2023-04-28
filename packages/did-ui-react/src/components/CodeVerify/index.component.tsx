@@ -94,7 +94,6 @@ export default function CodeVerify({
     try {
       if (!guardianIdentifier) throw Error('Missing loginGuardianType');
       setLoading(true);
-      console.log(guardianIdentifier.replaceAll(/\s+/g, ''), 'resendCode');
       const result = await verification.sendVerificationCode({
         type: accountType,
         guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),

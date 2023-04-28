@@ -15,8 +15,16 @@ import { ModalProps } from 'antd';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
 import useChainInfo from '../../hooks/useChainInfo';
 import useNetworkList from '../../hooks/useNetworkList';
-import { OnErrorFunc, ValidatorHandler, VerificationType } from '../../types';
-import type { IVerifyInfo, DIDWalletInfo, SignInSuccess, IPhoneCountry, CreatePendingInfo } from '../types';
+import { OnErrorFunc, ValidatorHandler } from '../../types';
+import type {
+  IVerifyInfo,
+  DIDWalletInfo,
+  SignInSuccess,
+  IPhoneCountry,
+  CreatePendingInfo,
+  AddManagerType,
+  LoginFinishWithoutPin,
+} from '../types';
 import type { ChainId } from '@portkey/types';
 import type { GuardiansApproved } from '@portkey/services';
 import type { VerifierItem } from '@portkey/did';
@@ -24,11 +32,12 @@ import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, Step2SignUpLifeCycleT
 import { portkeyDidUIPrefix } from '../../constants';
 import qs from 'query-string';
 import clsx from 'clsx';
+import { errorTip } from '../../utils';
 import './index.less';
 
 const step1Storage = `${portkeyDidUIPrefix}step1Storage`;
 const currentStep = `${portkeyDidUIPrefix}currentStep`;
-const Step3Storage = `${portkeyDidUIPrefix}step3`;
+const step3Storage = `${portkeyDidUIPrefix}step3`;
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   SignIn: ['SignUp', 'Login', 'LoginByScan'],
@@ -112,7 +121,7 @@ const SignIn = forwardRef(
     const [_open, setOpen] = useState<boolean>(false);
 
     const refSetOpen = useCallback((v: boolean) => {
-      if (!v) setStep('SignIn');
+      setStep('SignIn');
       setOpen(v);
     }, []);
     useImperativeHandle(ref, () => ({ setOpen: refSetOpen }));
@@ -129,13 +138,17 @@ const SignIn = forwardRef(
     const [approvedList, setApprovedList] = useState<GuardiansApproved[]>();
 
     const getStorageGuardianApproved = useCallback(async () => {
-      const storageStr = await ConfigProvider.config.storageMethod?.getItem(Step3Storage);
+      const storageStr = await ConfigProvider.config.storageMethod?.getItem(step3Storage);
       if (!storageStr) return;
       const approvedStorageList: GuardiansApproved[] = JSON.parse(storageStr);
       if (!approvedList) setApprovedList(approvedStorageList);
     }, [approvedList]);
 
     const dealStep = useCallback(async () => {
+      // When the location.search has an id_token, we think it is authorized by Apple and returned to the page
+      const { id_token } = qs.parse(location.search);
+      if (uiType === 'Modal' && id_token) setOpen(true);
+
       const currentlifeCycle = await ConfigProvider.config.storageMethod?.getItem(currentStep);
       if (!currentlifeCycle) {
         setStep('SignIn');
@@ -150,8 +163,6 @@ const SignIn = forwardRef(
           setStep(_key);
           if (_key === 'Step3') getStorageGuardianApproved();
         }
-        const { id_token } = qs.parse(location.search);
-        if (uiType === 'Modal' && id_token) setOpen(true);
       });
     }, [getStorageGuardianApproved, uiType]);
 
@@ -199,11 +210,11 @@ const SignIn = forwardRef(
       setApprovedList(undefined);
     }, []);
 
-    const onStep3Cancel = useCallback((v?: VerificationType) => {
-      if (v === VerificationType.register) {
+    const onStep3Cancel = useCallback((v?: AddManagerType) => {
+      if (v === 'register') {
         setStep('Step2WithSignUp');
         setApprovedList(undefined);
-      } else if (v === VerificationType.communityRecovery) {
+      } else if (v === 'recovery') {
         setStep('Step2WithSignIn');
       } else {
         setStep('SignIn');
@@ -213,18 +224,54 @@ const SignIn = forwardRef(
     const clearStorage = useCallback(() => {
       ConfigProvider.config.storageMethod?.removeItem(currentStep);
       ConfigProvider.config.storageMethod?.removeItem(step1Storage);
-      ConfigProvider.config.storageMethod?.removeItem(Step3Storage);
+      ConfigProvider.config.storageMethod?.removeItem(step3Storage);
     }, []);
+
+    const [walletWithoutPin, setWalletWithoutPin] = useState<Omit<DIDWalletInfo, 'pin'>>();
+
+    const onLoginFinishWithoutPin: LoginFinishWithoutPin = useCallback((wallet) => {
+      setWalletWithoutPin(wallet);
+      setStep('Step3');
+    }, []);
+
     const [lifeCycle, setLifeCycle] = useState<LifeCycleType>('Login');
 
     const onSignUpStepChange = useCallback((v: Step2SignUpLifeCycleType) => setLifeCycle(v), []);
 
     const onSignInStepChange = useCallback((v: SignInLifeCycleType) => setLifeCycle(v), []);
 
+    const onOriginChainIdChange = useCallback((v?: ChainId) => {
+      v && setOriginChainId(v);
+      v && onChainIdChangeRef?.current?.(v);
+    }, []);
+
+    const onStep3Finish = useCallback(
+      (v: DIDWalletInfo | string) => {
+        if (typeof v === 'string') {
+          if (!walletWithoutPin)
+            return errorTip(
+              {
+                errorFields: 'SetPinAndAddManagerCom',
+                error: 'set pin error',
+              },
+              isErrorTip,
+              onError,
+            );
+          onFinishRef?.current?.({ ...walletWithoutPin, pin: v });
+        } else {
+          onFinishRef?.current?.(v);
+        }
+        setOpen(false);
+        setStep('SignIn');
+        clearStorage();
+      },
+      [clearStorage, isErrorTip, onError, walletWithoutPin],
+    );
+
     useUpdateEffect(() => {
-      onLifeCycleChange?.(lifeCycle);
-      ConfigProvider.config.storageMethod?.setItem(currentStep, lifeCycle);
-    }, [lifeCycle]);
+      if (!approvedList) ConfigProvider.config.storageMethod?.removeItem(step3Storage);
+      approvedList && ConfigProvider.config.storageMethod?.setItem(step3Storage, JSON.stringify(approvedList));
+    }, [approvedList]);
 
     useUpdateEffect(() => {
       if (_step === 'SignIn') {
@@ -236,25 +283,10 @@ const SignIn = forwardRef(
       if (_step === 'Step3') setLifeCycle('SetPinAndAddManager');
     }, [_step]);
 
-    const onOriginChainIdChange = useCallback((v?: ChainId) => {
-      v && setOriginChainId(v);
-      v && onChainIdChangeRef?.current?.(v);
-    }, []);
-
-    const onStep3Finish = useCallback(
-      (v: DIDWalletInfo) => {
-        onFinishRef?.current?.(v);
-        clearStorage();
-        setOpen(false);
-        setStep('SignIn');
-      },
-      [clearStorage],
-    );
-
     useUpdateEffect(() => {
-      if (!approvedList) ConfigProvider.config.storageMethod?.removeItem(Step3Storage);
-      approvedList && ConfigProvider.config.storageMethod?.setItem(Step3Storage, JSON.stringify(approvedList));
-    }, [approvedList]);
+      onLifeCycleChange?.(lifeCycle);
+      ConfigProvider.config.storageMethod?.setItem(currentStep, lifeCycle);
+    }, [lifeCycle]);
 
     const onModalCancel = useCallback(() => {
       onCancel?.();
@@ -279,6 +311,7 @@ const SignIn = forwardRef(
               onNetworkChange={onNetworkChangeRef?.current}
               onStepChange={onSignInStepChange}
               onChainIdChange={onOriginChainIdChange}
+              onLoginFinishWithoutPin={onLoginFinishWithoutPin}
               termsOfServiceUrl={termsOfServiceUrl}
             />
           )}
@@ -313,14 +346,11 @@ const SignIn = forwardRef(
             />
           )}
 
-          {_step === 'Step3' && guardianIdentifierInfo && (
+          {_step === 'Step3' && (
             <Step3
               guardianIdentifierInfo={guardianIdentifierInfo}
-              verificationType={
-                guardianIdentifierInfo.isLoginIdentifier
-                  ? VerificationType.communityRecovery
-                  : VerificationType.register
-              }
+              onlyGetPin={Boolean(walletWithoutPin)}
+              type={guardianIdentifierInfo?.isLoginIdentifier ? 'recovery' : 'register'}
               guardianApprovedList={approvedList || []}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
@@ -342,15 +372,17 @@ const SignIn = forwardRef(
       onSignInFinished,
       onSignInStepChange,
       onOriginChainIdChange,
+      onLoginFinishWithoutPin,
       termsOfServiceUrl,
       guardianIdentifierInfo,
+      sandboxId,
+      networkItem?.walletType,
+      _chainInfo,
       onSignUpStepChange,
       onStep2WithSignUpFinish,
       onStep2Cancel,
       approvedList,
-      _chainInfo,
-      sandboxId,
-      networkItem?.walletType,
+      walletWithoutPin,
       onStep3Finish,
       onStep3Cancel,
       onCreatePending,

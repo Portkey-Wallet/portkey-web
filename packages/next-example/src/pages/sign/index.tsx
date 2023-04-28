@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { IStorageSuite } from '@portkey/types';
 import phoneCountry from './phoneCountry.json';
+import { message } from 'antd';
 import { ConfigProvider, SignIn, SignInInterface } from '@portkey/did-ui-react';
 
 export class Store implements IStorageSuite {
@@ -29,6 +30,10 @@ export default function Sign() {
           },
           Google: {
             clientId: process.env.NEXT_PUBLIC_GG_APP_ID || '',
+          },
+          Portkey: {
+            websiteName: 'website demo',
+            websiteIcon: '',
           },
         },
 
@@ -75,7 +80,7 @@ export default function Sign() {
         className="sign-in"
         termsOfServiceUrl="https://www.portkey.finance"
         phoneCountry={{
-          country: 'China',
+          country: 'any',
           countryList: phoneCountry.countryCode,
         }}
         onFinish={res => {

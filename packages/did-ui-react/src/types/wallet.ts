@@ -60,9 +60,15 @@ export interface IAppleLoginConfig extends BaseAppleLoginConfig {
   customLoginHandler?: TSocialLoginHandler;
 }
 
+interface IPortkeyLoginConfig {
+  websiteName: string;
+  websiteIcon?: string;
+}
+
 export interface ISocialLoginConfig {
   Google?: IGoogleLoginConfig;
   Apple?: IAppleLoginConfig;
+  Portkey?: IPortkeyLoginConfig;
 }
 
 export interface AppleAuthorized {

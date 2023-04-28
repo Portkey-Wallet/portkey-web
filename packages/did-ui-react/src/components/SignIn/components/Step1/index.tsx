@@ -36,18 +36,6 @@ function Step1({ onStepChange, onSignInFinished, ...props }: Step1Props) {
     [onSignInFinished],
   );
 
-  const _onFinish = useCallback(
-    (walletInfo: any) => {
-      onSignInFinished?.({
-        isFinished: true,
-        result: {
-          value: walletInfo,
-        },
-      });
-    },
-    [onSignInFinished],
-  );
-
   useUpdateEffect(() => {
     onStepChange?.(createType);
   }, [createType]);
@@ -65,13 +53,7 @@ function Step1({ onStepChange, onSignInFinished, ...props }: Step1Props) {
   }, []);
 
   return (
-    <SignUpAndLogin
-      {...props}
-      appleIdToken={appleIdToken}
-      onSignTypeChange={setCreateType}
-      onSuccess={onSuccess}
-      onFinish={_onFinish}
-    />
+    <SignUpAndLogin {...props} appleIdToken={appleIdToken} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
   );
 }
 export default memo(Step1);
