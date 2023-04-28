@@ -2,12 +2,11 @@ import 'isomorphic-fetch';
 import { describe, expect, test } from '@jest/globals';
 import FetchRequestMock from './__mocks__/request';
 import { CommunityRecovery } from '../src/service/communityRecovery';
-import { getGraphQLClientProvider } from '@portkey/graphql';
 import DIDGraphQLMock from './__mocks__/didGraphQL';
 
 const request = new FetchRequestMock({});
 const didGraphQL = new DIDGraphQLMock({
-  client: getGraphQLClientProvider(''),
+  client: {} as any,
 });
 const communityRecovery = new CommunityRecovery(request, didGraphQL);
 
