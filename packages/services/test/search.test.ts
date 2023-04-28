@@ -26,14 +26,115 @@ describe('search describe', () => {
   });
 
   test('test getRegisterStatus', async () => {
-    const result = await search.getRegisterStatus('id_mock');
+    let times = 0;
+    const request = {
+      send: () => {
+        switch (times) {
+          case 0:
+            times++;
+            return {
+              items: [],
+            };
+          case 1:
+            times++;
+            return {
+              items: [
+                {
+                  caAddress: 'caAddress_mock',
+                  caHash: 'caHash_mock',
+                  registerStatus: 'pending',
+                  registerMessage: 'registerMessage_mock',
+                },
+              ],
+            };
+          default:
+            return {
+              items: [
+                {
+                  caAddress: 'caAddress_mock',
+                  caHash: 'caHash_mock',
+                  registerStatus: 'pass',
+                  registerMessage: 'registerMessage_mock',
+                },
+              ],
+            };
+        }
+      },
+    };
+    const search = new Search(request as any);
+
+    const result = await search.getRegisterStatus('id_mock', {
+      interval: 50,
+      reCount: 0,
+      maxCount: 20,
+    });
     expect(result).toHaveProperty('registerStatus');
     expect(result).toHaveProperty('registerMessage');
+
+    try {
+      await search.getRegisterStatus('id_mock', {
+        interval: 50,
+        reCount: 1,
+        maxCount: 0,
+      });
+    } catch (error) {
+      expect(error).not.toBeUndefined();
+    }
   });
 
   test('test getRecoverStatus', async () => {
-    const result = await search.getRecoverStatus('id_mock');
+    let times = 0;
+    const request = {
+      send: () => {
+        switch (times) {
+          case 0:
+            times++;
+            return {
+              items: [],
+            };
+          case 1:
+            times++;
+            return {
+              items: [
+                {
+                  caAddress: 'caAddress_mock',
+                  caHash: 'caHash_mock',
+                  recoveryStatus: 'pending',
+                  recoveryMessage: 'recoveryMessage_mock',
+                },
+              ],
+            };
+          default:
+            return {
+              items: [
+                {
+                  caAddress: 'caAddress_mock',
+                  caHash: 'caHash_mock',
+                  recoveryStatus: 'pass',
+                  recoveryMessage: 'recoveryMessage_mock',
+                },
+              ],
+            };
+        }
+      },
+    };
+    const search = new Search(request as any);
+    const result = await search.getRecoverStatus('id_mock', {
+      interval: 50,
+      reCount: 0,
+      maxCount: 20,
+    });
     expect(result).toHaveProperty('recoveryStatus');
     expect(result).toHaveProperty('recoveryMessage');
+
+    try {
+      await search.getRecoverStatus('id_mock', {
+        interval: 50,
+        reCount: 1,
+        maxCount: 0,
+      });
+    } catch (error) {
+      expect(error).not.toBeUndefined();
+    }
   });
 });

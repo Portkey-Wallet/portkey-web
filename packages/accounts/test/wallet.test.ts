@@ -17,17 +17,23 @@ describe('wallet describe', () => {
     expect(wallet.length).toEqual(2);
   });
 
+  test('test clear', () => {
+    wallet.clear();
+    expect(wallet.length).toEqual(0);
+  });
+
   test('test add', () => {
+    wallet.clear();
     wallet.add(accountProvider.create());
-    expect(wallet.length).toEqual(3);
+    expect(wallet.length).toEqual(1);
 
     wallet.add(privateKey);
-    expect(wallet.length).toEqual(4);
-    expect(wallet[3].privateKey).toEqual(privateKey);
+    expect(wallet.length).toEqual(2);
+    expect(wallet[1].privateKey).toEqual(privateKey);
 
     const firstAddress = wallet[0].address;
     wallet.add(wallet[0]);
-    expect(wallet.length).toEqual(4);
+    expect(wallet.length).toEqual(2);
     expect(wallet[0].address).toEqual(firstAddress);
   });
 
@@ -44,10 +50,12 @@ describe('wallet describe', () => {
   });
 
   test('test remove', () => {
+    wallet.clear();
+    wallet.create(3);
     let firstAddress = wallet[0].address;
     let flag = wallet.remove(firstAddress);
     expect(flag).toBeTruthy();
-    expect(wallet.length).toEqual(3);
+    expect(wallet.length).toEqual(2);
     expect(wallet[0].address).not.toEqual(firstAddress);
 
     flag = wallet.remove('noWallet');
@@ -56,7 +64,7 @@ describe('wallet describe', () => {
     firstAddress = wallet[0].address;
     flag = wallet.remove(0);
     expect(flag).toBeTruthy();
-    expect(wallet.length).toEqual(2);
+    expect(wallet.length).toEqual(1);
     expect(wallet[0].address).not.toEqual(firstAddress);
 
     flag = wallet.remove(5);
@@ -64,6 +72,8 @@ describe('wallet describe', () => {
   });
 
   test('test encrypt', async () => {
+    wallet.clear();
+    wallet.create(2);
     const keystoreList = await wallet.encrypt(defaultPassword);
     expect(keystoreList.length).toEqual(2);
     const { privateKey } = AElf.wallet.keyStore.unlockKeystore(keystoreList[0], defaultPassword);
@@ -71,6 +81,8 @@ describe('wallet describe', () => {
   });
 
   test('test decrypt', async () => {
+    wallet.clear();
+    wallet.create(2);
     const keystoreList = await wallet.encrypt(defaultPassword);
     const newWallet = new Wallet(accountProvider, store);
     await newWallet.decrypt(keystoreList, defaultPassword);
@@ -79,6 +91,8 @@ describe('wallet describe', () => {
   });
 
   test('test save', async () => {
+    wallet.clear();
+    wallet.create(2);
     await wallet.save(defaultPassword);
     expect(store.getItem('portkey_sdk_wallet')).toBeTruthy();
 
@@ -87,6 +101,8 @@ describe('wallet describe', () => {
   });
 
   test('test load', async () => {
+    wallet.clear();
+    wallet.create(2);
     await wallet.save(defaultPassword);
     wallet.clear();
     expect(wallet.length).toEqual(0);
@@ -109,8 +125,28 @@ describe('wallet describe', () => {
     expect(wallet.length).toEqual(0);
   });
 
-  test('test clear', () => {
-    wallet.clear();
-    expect(wallet.length).toEqual(0);
+  test('test no storage', async () => {
+    const wallet = new Wallet(accountProvider, undefined as any);
+    wallet.create(2);
+    try {
+      await wallet.save(defaultPassword);
+    } catch (error) {
+      expect(error).not.toBeUndefined();
+    }
+
+    try {
+      await wallet.load(defaultPassword);
+    } catch (error) {
+      expect(error).not.toBeUndefined();
+    }
+  });
+
+  test('test add branch', () => {
+    const wallet = new Wallet(accountProvider, store);
+    wallet.create(2);
+    (wallet as any)._addressMap.clear();
+    wallet.get = () => ({} as any);
+    wallet.add(wallet[0]);
+    expect(wallet.length).toEqual(3);
   });
 });

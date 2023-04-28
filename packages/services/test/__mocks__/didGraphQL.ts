@@ -2,7 +2,6 @@ import { BaseGraphQL, CaHolderWithGuardian, IDIDGraphQL, IGraphQLClient } from '
 import { GetCaHolderManagerInfoDto } from '@portkey/graphql/dist/did/__generated__/types';
 
 class DIDGraphQLMock<T extends IGraphQLClient = IGraphQLClient> extends BaseGraphQL<T> implements IDIDGraphQL {
-  // TODO IDID config
   protected _config?: any;
   protected readonly _client: T;
 

@@ -44,19 +44,25 @@ export class Wallet<T extends IBaseWalletAccount = IBaseWalletAccount> extends B
     return this[addressOrIndex];
   }
   public remove(addressOrIndex: string | number): boolean {
+    let index: number;
     if (typeof addressOrIndex === 'string') {
-      const index = this._addressMap.get(addressOrIndex.toLowerCase());
-      if (isNullish(index)) {
+      const mapIndex = this._addressMap.get(addressOrIndex.toLowerCase());
+
+      if (isNullish(mapIndex)) {
         return false;
       }
-      this._addressMap.delete(addressOrIndex.toLowerCase());
-      this.splice(index, 1);
 
-      return true;
+      index = mapIndex;
+    } else {
+      index = addressOrIndex;
     }
 
-    if (this[addressOrIndex]) {
-      this.splice(addressOrIndex, 1);
+    if (this[index]) {
+      this.splice(index, 1);
+      this._addressMap.clear();
+      this.forEach((account, index) => {
+        this._addressMap.set(account.address.toLowerCase(), index);
+      });
       return true;
     }
 

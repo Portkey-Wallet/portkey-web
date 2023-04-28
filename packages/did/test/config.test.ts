@@ -1,6 +1,6 @@
 import 'isomorphic-fetch';
 import { describe, expect, test } from '@jest/globals';
-import { DIDConfig } from '../src/config';
+import { DIDConfig, RequestDefaultsConfig } from '../src/config';
 import { StorageMock } from './__mocks__/storageMock';
 
 const config = new DIDConfig();
@@ -19,6 +19,7 @@ describe('config describe', () => {
     await config.storageMethod.setItem('testSave', '100');
     const value = await config.storageMethod.getItem('testSave');
     expect(value).toBe('100');
+    await config.storageMethod.removeItem('testSave');
   });
 
   test('test change store', async () => {
@@ -44,5 +45,38 @@ describe('config describe', () => {
       },
     });
     expect(config.requestConfig.baseURL).toBe('baseURL');
+  });
+
+  test('test RequestDefaultsConfig', () => {
+    const requestDefaultsConfig = new RequestDefaultsConfig({
+      url: 'url_mock',
+    });
+    expect(requestDefaultsConfig.url).toBe('url_mock');
+  });
+
+  test('test no storage', async () => {
+    const noStorageConfig = new DIDConfig();
+    try {
+      await noStorageConfig.storageMethod.setItem('key_mock', '100');
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+    try {
+      await noStorageConfig.storageMethod.getItem('key_mock');
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+    try {
+      await noStorageConfig.storageMethod.removeItem('key_mock');
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test setConfig no value', () => {
+    const config = new DIDConfig({
+      requestDefaults: undefined,
+    });
+    expect(config.requestDefaults).toBeUndefined();
   });
 });

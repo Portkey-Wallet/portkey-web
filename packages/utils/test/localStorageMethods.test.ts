@@ -1,7 +1,7 @@
 // example：https://blog.itsjavi.com/how-to-mock-typescript-interfaces-with-jest
 // storage example: https://robertmarshall.dev/blog/how-to-mock-local-storage-in-jest-tests/
 import { describe, expect, test } from '@jest/globals';
-import { IStorageSuite } from '../util.type';
+import { IStorageSuite } from '../src/util.type';
 
 export class StorageMock implements IStorageSuite {
   store: { [key: string]: any };

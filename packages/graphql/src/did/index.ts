@@ -13,17 +13,18 @@ export class DIDGraphQL<T extends IGraphQLClient = IGraphQLClient> extends BaseG
     this._config = config;
   }
   public async getHolderInfoByManager(
-    params: Required<Pick<GetCaHolderManagerInfoDto, 'manager' | 'chainId'>>,
+    params: Partial<Omit<GetCaHolderManagerInfoDto, 'manager' | 'chainId'>> &
+      Required<Pick<GetCaHolderManagerInfoDto, 'manager' | 'chainId'>>,
   ): Promise<{ caHolderManagerInfo: CaHolderWithGuardian[] }> {
     const client = this._config?.graphQLClient || this._client;
-
     const caResult = await getCAHolderManagerInfo(client, {
       dto: {
-        ...params,
         skipCount: 0,
         maxResultCount: 1,
+        ...params,
       },
     });
+
     if (caResult.error) throw caResult.error;
     const result: {
       caHolderManagerInfo: CaHolderWithGuardian[];

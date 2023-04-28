@@ -93,7 +93,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (status?.recoveryStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
       try {
         const info = await this.getHolderInfo({ caHash: status.caHash, chainId });
-        const currentInfo = info.managerInfos.find(i => i.address === this.managementAccount?.address);
+        const address = this.managementAccount.address;
+        const currentInfo = info.managerInfos.find(i => i.address === address);
         if (currentInfo) {
           this.accountInfo = {
             loginAccount: info.guardianList.guardians[0].guardianIdentifier,
@@ -139,7 +140,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (status?.registerStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
       try {
         const info = await this.getHolderInfo({ caHash: status.caHash, chainId });
-        const currentInfo = info.managerInfos.find(i => i.address === this.managementAccount?.address);
+        const address = this.managementAccount.address;
+        const currentInfo = info.managerInfos.find(i => i.address === address);
         if (currentInfo) {
           this.accountInfo = {
             loginAccount: info.guardianList.guardians[0].guardianIdentifier,
@@ -156,15 +158,15 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (!this.managementAccount) this.create();
     const contract = await this.getContractByChainInfo(chainId);
     const req = await contract.callViewMethod('GetVerifierServers', '');
-    if (req?.error) throw req?.error;
-    return req?.data.verifierServers;
+    if (req.error) throw req.error;
+    return req.data?.verifierServers;
   }
   public async getContract({ contractAddress, rpcUrl }: { contractAddress: string; rpcUrl: string }) {
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
-    const key = contractAddress + rpcUrl + this.managementAccount?.address;
+    const key = contractAddress + rpcUrl + this.managementAccount.address;
     if (!this.contracts[key])
       this.contracts[key] = await getContractBasic({
-        account: this.managementAccount?.wallet,
+        account: this.managementAccount.wallet,
         rpcUrl,
         contractAddress,
       });
@@ -184,7 +186,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const { chainId, ...contractParams } = params;
     const contract = await this.getContractByChainInfo(chainId);
     const req = await contract.callSendMethod('AddManager', this.managementAccount.address, contractParams);
-    if (req?.error) throw req?.error;
+    if (req.error) throw req.error;
     return req.data;
   }
   public async removeManager(params: EditManagerParams) {
@@ -192,7 +194,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const { chainId, ...contractParams } = params;
     const contract = await this.getContractByChainInfo(chainId);
     const req = await contract.callSendMethod('RemoveManager', this.managementAccount.address, contractParams);
-    if (req?.error) throw req?.error;
+    if (req.error) throw req.error;
     // delete current manager
     if (
       params.managerInfo?.address === this.managementAccount.address &&
@@ -201,7 +203,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.caInfo = {};
       this.accountInfo = {};
     }
-    return req?.data;
+    return req.data;
   }
   getHolderInfo(params: Pick<GetHolderInfoParams, 'manager' | 'chainId'>): Promise<GetCAHolderByManagerResult>;
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
@@ -236,7 +238,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   async getHolderInfoByContract(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo> {
     const contract = await this.getContractByChainInfo(params.chainId);
     const req = await contract.callViewMethod('GetHolderInfo', { caHash: params.caHash });
-    if (req?.error) throw req?.error;
+    if (req.error) throw req.error;
     return req.data;
   }
   public async getChainsInfo() {
