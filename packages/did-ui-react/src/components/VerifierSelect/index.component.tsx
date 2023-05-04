@@ -17,6 +17,7 @@ import ConfigProvider from '../config-provider';
 import { portkeyDidUIPrefix } from '../../constants';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import useChainInfo from '../../hooks/useChainInfo';
+import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 
 type SelectVerifierStorageInfo = {
   verifier: VerifierItem;
@@ -129,6 +130,8 @@ export default function VerifierSelect({
 
   const verifyToken = useVerifyToken();
 
+  const reCaptchaHandler = useReCaptchaModal();
+
   const verifyHandler: MouseEventHandler<HTMLElement> = useCallback(async () => {
     try {
       if (!selectItem)
@@ -140,14 +143,21 @@ export default function VerifierSelect({
           isErrorTip,
           onError,
         );
-
+      const reCaptchaInfo = await reCaptchaHandler(true);
+      if (reCaptchaInfo.type !== 'success') throw reCaptchaInfo;
       setLoading(true);
       const result = await verification.sendVerificationCode({
-        type: accountType,
-        guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
-        verifierId: selectItem.id,
-        chainId,
+        params: {
+          type: accountType,
+          guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
+          verifierId: selectItem.id,
+          chainId,
+        },
+        headers: {
+          reCaptchaToken: reCaptchaInfo.message,
+        },
       });
+
       setLoading(false);
       setOpen(false);
       if (result.verifierSessionId) {
@@ -167,7 +177,7 @@ export default function VerifierSelect({
         onError,
       );
     }
-  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, selectItem]);
+  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, reCaptchaHandler, selectItem]);
 
   const onConfirmAuth = useCallback(async () => {
     try {

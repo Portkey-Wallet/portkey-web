@@ -8,6 +8,14 @@ export type SendVerificationCodeParams = {
   chainId: ChainId;
 };
 
+export type SendVerificationCodeRequestParams = {
+  params: SendVerificationCodeParams;
+  headers: {
+    reCaptchaToken: string;
+    [x: string]: string;
+  };
+};
+
 export type SendVerificationCodeResult = {
   verifierSessionId: string;
 };
@@ -49,9 +57,10 @@ export type VerifyAppleTokenParams = {
 
 export type SendAppleUserExtraInfoResult = { userId: string };
 export interface IVerificationService {
-  getVerificationCode(params: SendVerificationCodeParams): Promise<SendVerificationCodeResult>;
+  getVerificationCode(params: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult>;
   verifyVerificationCode(params: VerifyVerificationCodeParams): Promise<VerifyVerificationCodeResult>;
   sendAppleUserExtraInfo(params: SendAppleUserExtraInfoParams): Promise<SendAppleUserExtraInfoResult>;
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
+  checkGoogleRecaptcha(): Promise<boolean>;
 }

@@ -37,10 +37,15 @@ describe('communityRecovery describe', () => {
 
   test('test getVerificationCode', async () => {
     const result = await communityRecovery.getVerificationCode({
-      chainId: 'AELF',
-      type: 'Email',
-      verifierId: 'verifierId_mock',
-      guardianIdentifier: 'guardianIdentifier_mock',
+      params: {
+        chainId: 'AELF',
+        type: 'Email',
+        verifierId: 'verifierId_mock',
+        guardianIdentifier: 'guardianIdentifier_mock',
+      },
+      headers: {
+        reCaptchaToken: 'xxxx',
+      },
     });
     expect(result).toHaveProperty('verifierSessionId');
   });
@@ -136,5 +141,10 @@ describe('communityRecovery describe', () => {
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
+  });
+
+  test('test checkGoogleRecaptcha', async () => {
+    const result = await communityRecovery.checkGoogleRecaptcha();
+    expect(typeof result).toEqual('boolean');
   });
 });

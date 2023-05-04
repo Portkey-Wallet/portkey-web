@@ -295,17 +295,22 @@ did.getVerifierServers({
 send verification code.
 
 ```ts
-getVerificationCode(params: SendVerificationCodeParams): Promise<SendVerificationCodeResult>;
+getVerificationCode(params: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult>;
 ```
 
 Example
 
 ```ts
 did.services.getVerificationCode({
-  chainId: 'chainId',
-  guardianIdentifier: 'guardianIdentifier',
-  type: 'Email',
-  verifierId: 'verifierId',
+  params:{
+    chainId: 'chainId',
+    guardianIdentifier: 'guardianIdentifier',
+    type: 'Email',
+    verifierId: 'verifierId',
+  },
+  headers: {
+    reCaptchaToken: 'reCaptchaToken'
+  }
 });
 ```
 

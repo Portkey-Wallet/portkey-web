@@ -121,6 +121,9 @@ class FetchRequestMock {
           userId: 'userId_mock',
         } as SendAppleUserExtraInfoResult;
         break;
+      case 'api/app/account/isGoogleRecaptchaOpen':
+        result = true;
+        break;
 
       default:
         break;
