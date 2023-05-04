@@ -1,6 +1,6 @@
 {
   "name": "@portkey/did",
-  "version": "0.0.1-alpha.2.8",
+  "version": "0.0.1-alpha.3.1",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -28,9 +28,9 @@
   "dependencies": {
     "aelf-sdk": "^3.2.44",
     "@portkey/types": "^0.0.1-alpha.1.5",
-    "@portkey/request": "^0.0.1-alpha.1.5",
+    "@portkey/request": "^0.0.1-alpha.1.6",
     "@portkey/accounts": "^0.0.1-alpha.1.4",
-    "@portkey/services": "^0.0.1-alpha.1.9",
+    "@portkey/services": "^0.0.1-alpha.2.1",
     "@portkey/contracts": "^0.0.1-alpha.1.6",
     "@portkey/graphql": "^0.0.1-alpha.1.6",
     "@portkey/utils": "^0.0.1-alpha.1.7",

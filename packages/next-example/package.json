@@ -14,7 +14,7 @@
     "react-dom": "18.2.0",
     "@portkey/did": "^0.0.1-alpha.2.2",
     "next-transpile-modules": "^10.0.0",
-    "@portkey/did-ui-react": "^0.0.1-alpha.3.0"
+    "@portkey/did-ui-react": "^0.0.1-alpha.7.0"
   },
   "devDependencies": {},
   "browserslist": {
