@@ -1,6 +1,5 @@
-import type { portkey } from '@portkey/accounts';
 import { CAInfo } from '@portkey/did';
-import { ChainId } from '@portkey/types';
+import { ChainId, IBlockchainWallet } from '@portkey/types';
 export * from './verify';
 export * from './signIn';
 export * from './reCaptcha';
@@ -11,7 +10,7 @@ export interface DIDWalletInfo {
   caInfo: CAInfo;
   pin: string;
   chainId: ChainId;
-  walletInfo: portkey.WalletAccount;
+  walletInfo: IBlockchainWallet;
 }
 
 export type ObjectType = {
@@ -28,7 +27,7 @@ export interface CreatePendingInfo {
   requestId: string;
   clientId: string;
   pin: string;
-  walletInfo: portkey.WalletAccount;
+  walletInfo: IBlockchainWallet;
 }
 
 export type AddManagerType = 'register' | 'recovery' | 'onlyGetPin';

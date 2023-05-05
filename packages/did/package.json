@@ -11,6 +11,12 @@
   "files": [
     "dist/*"
   ],
+  "homepage": "https://portkey.finance/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Portkey-Wallet/portkey-web.git",
+    "directory": "packages/did"
+  },
   "type": "commonjs",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",

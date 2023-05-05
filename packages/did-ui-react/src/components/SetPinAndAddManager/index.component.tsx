@@ -80,7 +80,7 @@ export default function SetPinAndAddManager({
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
       if (!guardianApprovedList?.length) throw 'Missing guardianApproved';
       const wallet = did.didWallet.create();
-      const managerAddress = wallet.managementAccount?.address as string;
+      const managerAddress = wallet.managementAccount!.address;
       const requestId = randomId();
 
       const clientId = managerAddress;
@@ -110,7 +110,7 @@ export default function SetPinAndAddManager({
         requestId,
         clientId,
         pin,
-        walletInfo: wallet as any,
+        walletInfo: wallet.managementAccount!.wallet,
       });
 
       return getRequestStatus({
@@ -127,7 +127,7 @@ export default function SetPinAndAddManager({
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
 
       const wallet = did.didWallet.create();
-      const managerAddress = wallet.managementAccount?.address as string;
+      const managerAddress = wallet.managementAccount!.address;
       const requestId = randomId();
 
       const clientId = managerAddress;
@@ -159,7 +159,7 @@ export default function SetPinAndAddManager({
         requestId,
         clientId,
         pin,
-        walletInfo: wallet as any,
+        walletInfo: wallet.managementAccount!.wallet,
       });
       return getRequestStatus({
         chainId,
@@ -220,7 +220,7 @@ export default function SetPinAndAddManager({
           },
           chainId,
           pin,
-          walletInfo: did.didWallet.managementAccount as any,
+          walletInfo: did.didWallet.managementAccount!.wallet,
         });
       } catch (error: any) {
         setLoading(false);
