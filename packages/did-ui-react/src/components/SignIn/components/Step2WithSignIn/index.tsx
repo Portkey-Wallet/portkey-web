@@ -1,8 +1,8 @@
 import type { ChainType } from '@portkey/types';
-import { did, VerifierItem } from '@portkey/did';
+import { VerifierItem } from '@portkey/did';
 import { ChainInfo, GuardiansApproved } from '@portkey/services';
 import { memo, useMemo, useState, useEffect, useCallback, useRef } from 'react';
-import { contractErrorHandler, errorTip, setLoading } from '../../../../utils';
+import { contractErrorHandler, did, errorTip, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';
 import GuardianApproval from '../../../GuardianApproval/index.component';
 import { BaseGuardianItem, VerifyStatus, OnErrorFunc } from '../../../../types';

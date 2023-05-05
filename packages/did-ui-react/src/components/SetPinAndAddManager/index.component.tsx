@@ -133,9 +133,14 @@ export default function SetPinAndAddManager({
       const clientId = managerAddress;
 
       const extraData = await extraDataEncode(getDeviceInfo(DEVICE_TYPE), '');
+
+      const _guardianApprovedList = guardianApprovedList.filter((item) =>
+        Boolean(item.signature && item.verificationDoc),
+      );
+
       const params = {
         loginGuardianIdentifier: guardianIdentifier.replaceAll(/\s/g, ''),
-        guardiansApproved: guardianApprovedList,
+        guardiansApproved: _guardianApprovedList,
         extraData,
         chainId,
         context: {
@@ -183,7 +188,7 @@ export default function SetPinAndAddManager({
         }
 
         if (walletResult.error) {
-          return errorTip(
+          errorTip(
             {
               errorFields: 'SetPinAndAddManager',
               ...walletResult,
@@ -192,17 +197,21 @@ export default function SetPinAndAddManager({
             isErrorTip,
             onErrorRef.current,
           );
+          throw walletResult;
         }
 
-        if (!walletResult.status?.caAddress || !walletResult.status?.caHash)
-          return errorTip(
+        if (!walletResult.status?.caAddress || !walletResult.status?.caHash) {
+          errorTip(
             {
               errorFields: 'SetPinAndAddManager',
-              error: walletResult,
+              ...walletResult,
+              error: 'Missing "caAddress" or "caHash"',
             },
             isErrorTip,
             onErrorRef.current,
           );
+          throw walletResult;
+        }
 
         onFinishRef?.current?.({
           caInfo: {

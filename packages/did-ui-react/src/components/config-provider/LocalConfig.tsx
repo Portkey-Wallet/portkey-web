@@ -1,5 +1,5 @@
 import { GlobalConfigProps } from './types';
-import { setVerification, did, setNetwork, setNetworkInfo, setServiceConfig } from '../../utils';
+import { setVerification, did, setNetwork, setNetworkInfo, setServiceConfig, setReCaptchaConfig } from '../../utils';
 
 const defaultConfig: GlobalConfigProps = {
   network: {
@@ -50,6 +50,9 @@ class LocalConfigProvider {
       did.setConfig({
         graphQLUrl: _config['graphQLUrl'],
       });
+    }
+    if ('reCaptchaConfig' in _config) {
+      _config['reCaptchaConfig'] && setReCaptchaConfig(_config['reCaptchaConfig']);
     }
     this.config = { ...this.config, ..._config };
   };
