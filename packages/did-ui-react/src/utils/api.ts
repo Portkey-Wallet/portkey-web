@@ -1,8 +1,10 @@
-import { SendVerificationCodeParams } from '@portkey/services';
+import { SendVerificationCodeRequestParams, VerifyVerificationCodeParams } from '@portkey/services';
 import { IStorageSuite } from '@portkey/types';
 import { did } from './did';
 import { BaseAsyncStorage } from './BaseAsyncStorage';
 import { portkeyDidUIPrefix } from '../constants';
+import { ReCaptchaType } from '../components';
+import { setLoading } from './loading';
 
 export abstract class StorageBaseLoader {
   protected readonly _store: IStorageSuite;
@@ -22,7 +24,7 @@ type VerifierInfo = {
 
 export class Verification extends StorageBaseLoader {
   private readonly _defaultKeyName = `${portkeyDidUIPrefix}verification`;
-  private readonly _expirationTime = 60 * 1000;
+  private readonly _expirationTime = 58 * 1000;
   public verifierMap: {
     [key: string]: VerifierInfo;
   };
@@ -50,27 +52,62 @@ export class Verification extends StorageBaseLoader {
     if (endTime > Date.now()) {
       return info;
     } else {
-      delete this.verifierMap[key];
-      this.save();
+      this.delete(key);
     }
+  }
+  public delete(key: string) {
+    delete this.verifierMap[key];
+    this.save();
   }
   public async set(key: string, value: VerifierInfo) {
     this.verifierMap[key] = value;
     await this.save();
   }
-  public async sendVerificationCode(config: SendVerificationCodeParams) {
-    const { guardianIdentifier, verifierId } = config;
-    const key = guardianIdentifier || '' + verifierId || '';
+
+  public async sendVerificationCode(
+    /** @alpha  */
+    config: { params: SendVerificationCodeRequestParams['params'] } & {
+      headers?: { reCaptchaToken: string; version?: string };
+    },
+    recaptchaHandler: (open?: boolean | undefined) => Promise<{
+      type: ReCaptchaType;
+      message?: any;
+    }>,
+  ) {
+    const { guardianIdentifier, verifierId } = config.params;
+    const key = (guardianIdentifier || '') + (verifierId || '');
+
     try {
-      const req = await did.services.getVerificationCode(config);
-      await this.set(key, { ...req, time: Date.now() });
-      return req;
+      const item = this.get(key);
+      if (item) {
+        return item;
+      } else {
+        const reCaptchaToken = await recaptchaHandler(true);
+        if (reCaptchaToken.type !== 'success') throw reCaptchaToken.message;
+        config.headers = {
+          reCaptchaToken: reCaptchaToken.message,
+          version: 'v1.2.5',
+        };
+        setLoading(true);
+        const req = await did.services.getVerificationCode(config as SendVerificationCodeRequestParams);
+        setLoading(false);
+        await this.set(key, { ...req, time: Date.now() });
+        return req;
+      }
     } catch (error: any) {
+      setLoading(false);
       const { message } = error?.error || error || {};
       const item = this.get(key);
       if (message === IntervalErrorMessage && item) return item;
       throw error;
     }
+  }
+  public async checkVerificationCode(config: VerifyVerificationCodeParams) {
+    const { guardianIdentifier, verifierId } = config || {};
+    const key = (guardianIdentifier || '') + (verifierId || '');
+    const req = await did.services.verifyVerificationCode(config);
+    this.delete(key);
+    return req;
   }
 }
 

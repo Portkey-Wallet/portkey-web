@@ -10,10 +10,15 @@ const verification = new Verification(request);
 describe('verification describe', () => {
   test('test getVerificationCode', async () => {
     const result = await verification.getVerificationCode({
-      chainId: 'AELF',
-      type: 'Email',
-      verifierId: 'verifierId_mock',
-      guardianIdentifier: 'guardianIdentifier_mock',
+      params: {
+        chainId: 'AELF',
+        type: 'Email',
+        verifierId: 'verifierId_mock',
+        guardianIdentifier: 'guardianIdentifier_mock',
+      },
+      headers: {
+        reCaptchaToken: 'xxxx',
+      },
     });
     expect(result).toHaveProperty('verifierSessionId');
   });
@@ -62,5 +67,10 @@ describe('verification describe', () => {
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
+  });
+
+  test('test checkGoogleRecaptcha', async () => {
+    const result = await verification.checkGoogleRecaptcha();
+    expect(typeof result).toEqual('boolean');
   });
 });

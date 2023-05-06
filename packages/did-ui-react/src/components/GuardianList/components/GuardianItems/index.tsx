@@ -2,10 +2,11 @@ import { Button } from 'antd';
 import VerifierPair from '../../../VerifierPair';
 import { useCallback, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { setLoading, verification, errorTip } from '../../../../utils';
+import { setLoading, verification, errorTip, handleErrorMessage } from '../../../../utils';
 import clsx from 'clsx';
 import { ChainId } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
+import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
 
 interface GuardianItemProps {
   chainId: ChainId;
@@ -56,19 +57,23 @@ function GuardianItems({
     }
   }, []);
 
+  const reCaptchaHandler = useReCaptchaModal();
+
   const SendCode = useCallback(
     async (item: UserGuardianItem) => {
       try {
-        setLoading(true);
+        const result = await verification.sendVerificationCode(
+          {
+            params: {
+              type: item.guardianType,
+              guardianIdentifier: (item.identifier || item.identifierHash || '').replaceAll(/\s/g, ''),
+              verifierId: item.verifier?.id || '',
+              chainId,
+            },
+          },
+          reCaptchaHandler,
+        );
 
-        const result = await verification.sendVerificationCode({
-          type: item.guardianType,
-          guardianIdentifier: (item.identifier || item.identifierHash || '').replaceAll(/\s/g, ''),
-          verifierId: item.verifier?.id || '',
-          chainId,
-        });
-
-        setLoading(false);
         if (result.verifierSessionId) {
           onSend?.({
             ...item,
@@ -83,14 +88,14 @@ function GuardianItems({
         return errorTip(
           {
             errorFields: 'GuardianItems',
-            error: error?.error?.message ?? error ?? 'Something error',
+            error: handleErrorMessage(error),
           },
           isErrorTip,
           onError,
         );
       }
     },
-    [chainId, onSend, isErrorTip, onError],
+    [reCaptchaHandler, chainId, onSend, isErrorTip, onError],
   );
 
   const verifyingHandler = useCallback(

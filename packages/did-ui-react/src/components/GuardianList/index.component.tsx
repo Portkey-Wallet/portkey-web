@@ -41,7 +41,7 @@ function GuardianList({
   }, [guardianList.length]);
 
   const alreadyApprovalLength = useMemo(
-    () => guardianList.filter((item) => item?.status === VerifyStatus.Verified).length,
+    () => guardianList?.filter((item) => item?.status === VerifyStatus.Verified).length,
     [guardianList],
   );
 

@@ -3,6 +3,7 @@ import type { ConfigProviderProps } from 'antd/lib/config-provider';
 // import localConfigProvider from './index';
 import ScreenLoading from '../ScreenLoading';
 import { useEffectOnce } from 'react-use';
+import ReCaptchaModal from '../ReCaptchaModal';
 
 export default function BaseConfigProvider({ children }: { children: ConfigProviderProps['children'] }) {
   // const config = useMemo(() => localConfigProvider.getGlobalConfig(), []);
@@ -29,6 +30,7 @@ export default function BaseConfigProvider({ children }: { children: ConfigProvi
           //</ConfigProvider>style={{ fontFamily: 'portkey-ui-font' }}
         >
           <ScreenLoading />
+          <ReCaptchaModal />
           {children}
         </div>
       </ConfigProvider>

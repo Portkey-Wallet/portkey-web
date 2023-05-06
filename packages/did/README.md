@@ -1,6 +1,6 @@
 <p align="center">
   <a href="https://portkeydocs.readthedocs.io/en/pre-release/PortkeyDIDSDK/index.html">
-    <img width="200" src= "../../logo.png"/>
+    <img width="200" src= "https://raw.githubusercontent.com/Portkey-Wallet/portkey-web/master/logo.png"/>
   </a>
 </p>
 
@@ -295,17 +295,22 @@ did.getVerifierServers({
 send verification code.
 
 ```ts
-getVerificationCode(params: SendVerificationCodeParams): Promise<SendVerificationCodeResult>;
+getVerificationCode(params: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult>;
 ```
 
 Example
 
 ```ts
 did.services.getVerificationCode({
-  chainId: 'chainId',
-  guardianIdentifier: 'guardianIdentifier',
-  type: 'Email',
-  verifierId: 'verifierId',
+  params:{
+    chainId: 'chainId',
+    guardianIdentifier: 'guardianIdentifier',
+    type: 'Email',
+    verifierId: 'verifierId',
+  },
+  headers: {
+    reCaptchaToken: 'reCaptchaToken'
+  }
 });
 ```
 
