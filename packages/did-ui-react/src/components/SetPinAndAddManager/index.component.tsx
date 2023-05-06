@@ -80,7 +80,7 @@ export default function SetPinAndAddManager({
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
       if (!guardianApprovedList?.length) throw 'Missing guardianApproved';
       const wallet = did.didWallet.create();
-      const managerAddress = wallet.managementAccount?.address as string;
+      const managerAddress = wallet.managementAccount!.address;
       const requestId = randomId();
 
       const clientId = managerAddress;
@@ -110,7 +110,7 @@ export default function SetPinAndAddManager({
         requestId,
         clientId,
         pin,
-        walletInfo: wallet as any,
+        walletInfo: wallet.managementAccount!.wallet,
       });
 
       return getRequestStatus({
@@ -127,15 +127,20 @@ export default function SetPinAndAddManager({
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
 
       const wallet = did.didWallet.create();
-      const managerAddress = wallet.managementAccount?.address as string;
+      const managerAddress = wallet.managementAccount!.address;
       const requestId = randomId();
 
       const clientId = managerAddress;
 
       const extraData = await extraDataEncode(getDeviceInfo(DEVICE_TYPE), '');
+
+      const _guardianApprovedList = guardianApprovedList.filter((item) =>
+        Boolean(item.signature && item.verificationDoc),
+      );
+
       const params = {
         loginGuardianIdentifier: guardianIdentifier.replaceAll(/\s/g, ''),
-        guardiansApproved: guardianApprovedList,
+        guardiansApproved: _guardianApprovedList,
         extraData,
         chainId,
         context: {
@@ -154,7 +159,7 @@ export default function SetPinAndAddManager({
         requestId,
         clientId,
         pin,
-        walletInfo: wallet as any,
+        walletInfo: wallet.managementAccount!.wallet,
       });
       return getRequestStatus({
         chainId,
@@ -183,7 +188,7 @@ export default function SetPinAndAddManager({
         }
 
         if (walletResult.error) {
-          return errorTip(
+          errorTip(
             {
               errorFields: 'SetPinAndAddManager',
               ...walletResult,
@@ -192,18 +197,22 @@ export default function SetPinAndAddManager({
             isErrorTip,
             onErrorRef.current,
           );
+          throw walletResult;
         }
 
-        if (!walletResult.status?.caAddress || !walletResult.status?.caHash)
-          return errorTip(
+        if (!walletResult.status?.caAddress || !walletResult.status?.caHash) {
+          errorTip(
             {
               errorFields: 'SetPinAndAddManager',
-              error: walletResult,
+              ...walletResult,
+              error: 'Missing "caAddress" or "caHash"',
             },
             isErrorTip,
             onErrorRef.current,
           );
-
+          throw walletResult;
+        }
+        const wallet = did.didWallet.managementAccount!.wallet;
         onFinishRef?.current?.({
           caInfo: {
             caAddress: walletResult.status.caAddress,
@@ -211,7 +220,7 @@ export default function SetPinAndAddManager({
           },
           chainId,
           pin,
-          walletInfo: did.didWallet.managementAccount as any,
+          walletInfo: { ...wallet, wallet },
         });
       } catch (error: any) {
         setLoading(false);

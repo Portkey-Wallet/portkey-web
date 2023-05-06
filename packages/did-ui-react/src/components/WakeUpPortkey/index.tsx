@@ -37,7 +37,10 @@ export default function WakeUpPortkey({
       onFinish?.({
         chainId: caWallet.chainId,
         caInfo: caWallet.info,
-        walletInfo: managementAccount,
+        walletInfo: {
+          ...managementAccount.wallet,
+          wallet: managementAccount.wallet,
+        },
       });
       setLoading(false);
     }

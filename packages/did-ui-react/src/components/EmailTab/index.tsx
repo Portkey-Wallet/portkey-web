@@ -17,7 +17,6 @@ export default function EmailTab({ confirmText, validate, onFinish }: EmailTabPr
   const emailInputInstance = useRef<EmailInputInstance>();
   const onClick = useCallback(async () => {
     try {
-      setLoading(true, 'Checking account on the chain...');
       await emailInputInstance?.current?.validateEmail(val);
       val && onFinish?.(val);
     } catch (error: any) {

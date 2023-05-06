@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { IStorageSuite } from '@portkey/types';
 import phoneCountry from './phoneCountry.json';
-import { message } from 'antd';
 import { ConfigProvider, SignIn, SignInInterface } from '@portkey/did-ui-react';
 
 export class Store implements IStorageSuite {
@@ -38,31 +37,33 @@ export default function Sign() {
         },
 
         graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
-
+        reCaptchaConfig: {
+          siteKey: process.env.NEXT_PUBLIC_GG_RECAPTCHATOKEN_SITE_KEY,
+        },
         network: {
           defaultNetwork: 'TESTNET',
-          networkList: [
-            {
-              name: 'aelf Testnet',
-              walletType: 'aelf',
-              networkType: 'TESTNET',
-              isActive: true,
-              apiUrl: 'http://192.168.66.240:15577',
-              graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
-              connectUrl: 'http://192.168.66.240:8080',
-              tokenClaimContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',
-            },
-            {
-              name: 'aelf Mainnet',
-              walletType: 'aelf',
-              networkType: 'MAIN',
-              isActive: true,
-              apiUrl: 'https://did-portkey-test.portkey.finance',
-              graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
-              connectUrl: 'https://auth-portkey-test.portkey.finance',
-              tokenClaimContractAddress: '233wFn5JbyD4i8R5Me4cW4z6edfFGRn5bpWnGuY8fjR7b2kRsD',
-            },
-          ],
+          // networkList: [
+          //   {
+          //     name: 'aelf Testnet',
+          //     walletType: 'aelf',
+          //     networkType: 'TESTNET',
+          //     isActive: true,
+          //     apiUrl: 'http://192.168.66.240:15577',
+          //     graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
+          //     connectUrl: 'http://192.168.66.240:8080',
+          //     tokenClaimContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',
+          //   },
+          //   {
+          //     name: 'aelf Mainnet',
+          //     walletType: 'aelf',
+          //     networkType: 'MAIN',
+          //     isActive: true,
+          //     apiUrl: 'https://did-portkey-test.portkey.finance',
+          //     graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
+          //     connectUrl: 'https://auth-portkey-test.portkey.finance',
+          //     tokenClaimContractAddress: '233wFn5JbyD4i8R5Me4cW4z6edfFGRn5bpWnGuY8fjR7b2kRsD',
+          //   },
+          // ],
         },
       });
     } catch (error) {
@@ -101,13 +102,6 @@ export default function Sign() {
           ref?.current.setOpen(true);
         }}>
         setOpen
-      </button>
-      <button
-        onClick={() => {
-          // setNetwork(net === 'MAIN' ? 'TESTNET' : 'MAIN');
-          // setNet(v => (v === 'MAIN' ? 'TESTNET' : 'MAIN'));
-        }}>
-        setNetwork
       </button>
     </div>
   );

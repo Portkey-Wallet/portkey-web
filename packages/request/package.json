@@ -1,6 +1,6 @@
 {
   "name": "@portkey/request",
-  "version": "0.0.1-alpha.1.5",
+  "version": "0.0.1-alpha.1.7",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -11,6 +11,12 @@
   "files": [
     "dist/*"
   ],
+  "homepage": "https://portkey.finance/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Portkey-Wallet/portkey-web.git",
+    "directory": "packages/request"
+  },
   "type": "commonjs",
   "types": "./dist/index.d.ts",
   "main": "./dist/index.js",
@@ -26,6 +32,6 @@
   },
   "dependencies": {
     "query-string": "^6.14.1",
-    "@portkey/types": "^0.0.1-alpha.1.4"
+    "@portkey/types": "^0.0.1-alpha.1.6"
   }
 }
