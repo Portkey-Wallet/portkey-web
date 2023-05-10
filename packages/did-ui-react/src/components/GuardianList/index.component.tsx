@@ -98,7 +98,7 @@ function GuardianList({
             <div className="btn-wrap">
               <Button
                 type="primary"
-                className="recovery-wallet-btn"
+                className="confirm-approve-btn"
                 disabled={alreadyApprovalLength <= 0 || alreadyApprovalLength !== approvalLength}
                 onClick={onConfirm}>
                 {t('Confirm')}
