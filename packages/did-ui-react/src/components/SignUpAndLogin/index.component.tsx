@@ -1,7 +1,7 @@
 import LoginCard from '../LoginBase/index.component';
 import ScanCard from '../ScanCard/index.component';
 import SignUpBase from '../SignUpBase/index.component';
-import { useState, useMemo, useRef, useCallback, useEffect, CSSProperties } from 'react';
+import { useState, useMemo, useRef, useCallback, useEffect, CSSProperties, ReactNode } from 'react';
 import type { CreateWalletType, LoginFinishWithoutPin } from '../types';
 import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
@@ -30,8 +30,11 @@ export interface SignUpAndLoginProps {
   style?: CSSProperties;
   isErrorTip?: boolean;
   isShowScan?: boolean; // show scan button
+  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
   termsOfServiceUrl?: string;
+  termsOfService?: ReactNode;
   phoneCountry?: IPhoneCountry; // phone country code info
+  extraElement?: ReactNode; // extra element
   // socialLogin porps
   socialLogin?: ISocialLoginConfig; // social login config
   appleIdToken?: string; // apple authorized
@@ -56,7 +59,9 @@ export default function SignUpAndLoginBaseCom({
   phoneCountry,
   socialLogin,
   appleIdToken,
+  extraElement,
   termsOfServiceUrl,
+  termsOfService,
   onError,
   onSuccess,
   validateEmail,
@@ -236,7 +241,8 @@ export default function SignUpAndLoginBaseCom({
           isErrorTip={isErrorTip}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
-          termsOfServiceUrl={termsOfServiceUrl}
+          extraElement={extraElement}
+          termsOfService={termsOfService || termsOfServiceUrl}
           networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
@@ -265,7 +271,8 @@ export default function SignUpAndLoginBaseCom({
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           isShowScan={_isShowScan}
-          termsOfServiceUrl={termsOfServiceUrl}
+          extraElement={extraElement}
+          termsOfService={termsOfService || termsOfServiceUrl}
           networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={_onSuccess}
