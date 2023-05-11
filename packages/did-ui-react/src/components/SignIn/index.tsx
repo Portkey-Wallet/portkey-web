@@ -5,7 +5,7 @@
  */
 
 import BaseModal from './components/BaseModal';
-import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle, ReactNode } from 'react';
 import ConfigProvider, { BaseConfigProvider } from '../config-provider';
 import Step1, { OnSignInFinishedFun } from './components/Step1';
 import Step2WithSignUp from './components/Step2WithSignUp';
@@ -57,7 +57,10 @@ export interface SignInProps {
   // Login
   isShowScan?: boolean;
   phoneCountry?: IPhoneCountry;
+  extraElement?: ReactNode; // extra element
+  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
   termsOfServiceUrl?: string;
+  termsOfService?: ReactNode;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
   onNetworkChange?: (network: string) => void;
@@ -87,6 +90,8 @@ const SignIn = forwardRef(
       isShowScan,
       sandboxId,
       phoneCountry,
+      extraElement,
+      termsOfService,
       termsOfServiceUrl,
       validateEmail,
       validatePhone,
@@ -307,6 +312,7 @@ const SignIn = forwardRef(
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
               phoneCountry={phoneCountry}
+              extraElement={extraElement}
               validateEmail={validateEmail}
               validatePhone={validatePhone}
               onSignInFinished={onSignInFinished}
@@ -314,7 +320,7 @@ const SignIn = forwardRef(
               onStepChange={onSignInStepChange}
               onChainIdChange={onOriginChainIdChange}
               onLoginFinishWithoutPin={onLoginFinishWithoutPin}
-              termsOfServiceUrl={termsOfServiceUrl}
+              termsOfService={termsOfService || termsOfServiceUrl}
             />
           )}
 
@@ -369,12 +375,14 @@ const SignIn = forwardRef(
       defaultChainId,
       isErrorTip,
       phoneCountry,
+      extraElement,
       validateEmail,
       validatePhone,
       onSignInFinished,
       onSignInStepChange,
       onOriginChainIdChange,
       onLoginFinishWithoutPin,
+      termsOfService,
       termsOfServiceUrl,
       guardianIdentifierInfo,
       sandboxId,
