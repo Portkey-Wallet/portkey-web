@@ -84,10 +84,18 @@ export type GetRegisterInfoParams = {
 
 export type RegisterInfo = { originChainId: ChainId };
 
+export interface CountryItem {
+  country: string;
+  code: string;
+  iso: string;
+}
+
 export interface ICommunityRecoveryService extends IVerificationService, ISearchService {
   register(params: RegisterParams): Promise<RegisterResult>;
   recovery(params: RecoveryParams): Promise<RecoveryResult>;
   getHolderInfo(params: GetHolderInfoParams): Promise<IHolderInfo>;
   getHolderInfoByManager(params: GetCAHolderByManagerParams): Promise<GetCAHolderByManagerResult>;
   getRegisterInfo(params: GetRegisterInfoParams): Promise<RegisterInfo>;
+  checkGoogleRecaptcha(): Promise<boolean>;
+  getPhoneCountryCode(): Promise<CountryItem[]>;
 }
