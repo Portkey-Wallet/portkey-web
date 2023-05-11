@@ -124,6 +124,11 @@ class FetchRequestMock {
       case '/api/app/account/isGoogleRecaptchaOpen':
         result = true;
         break;
+      case '/api/app/phone/phone_info':
+        result = {
+          data: [{ country: 'Singapore', code: '65', iso: 'SG' }],
+        };
+        break;
 
       default:
         break;
