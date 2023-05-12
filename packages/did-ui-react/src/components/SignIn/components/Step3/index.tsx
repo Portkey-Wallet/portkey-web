@@ -34,7 +34,7 @@ function Step3({
 
   const onBackHandler = useCallback(() => {
     if (onlyGetPin) {
-      onCancel?.('onlyGetPin');
+      onCancel?.('addManager');
       return;
     }
     if (type === 'register') {
