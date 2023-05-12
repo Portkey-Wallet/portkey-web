@@ -32,7 +32,7 @@ import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, Step2SignUpLifeCycleT
 import { portkeyDidUIPrefix } from '../../constants';
 import qs from 'query-string';
 import clsx from 'clsx';
-import { errorTip } from '../../utils';
+import { did, errorTip } from '../../utils';
 import './index.less';
 
 const step1Storage = `${portkeyDidUIPrefix}step1Storage`;
@@ -129,6 +129,7 @@ const SignIn = forwardRef(
       setStep('SignIn');
       setOpen(v);
     }, []);
+
     useImperativeHandle(ref, () => ({ setOpen: refSetOpen }));
 
     const networkItem = useMemo(
@@ -302,6 +303,32 @@ const SignIn = forwardRef(
       setStep('SignIn');
     }, [clearStorage, onCancel]);
 
+    const [_phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(phoneCountry);
+
+    const getPhoneCountry = useCallback(async () => {
+      try {
+        const countryList = await did.services.getPhoneCountryCode();
+        setPhoneCountry((v) => ({
+          ...v,
+          countryList,
+        }));
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'getPhoneCountry',
+            error,
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+    }, [isErrorTip, onError]);
+
+    useEffect(() => {
+      // Get phoneCountry by service, update _phoneCountry
+      getPhoneCountry();
+    }, [getPhoneCountry]);
+
     const mainContent = useCallback(() => {
       return (
         <>
@@ -311,7 +338,7 @@ const SignIn = forwardRef(
               defaultChainId={defaultChainId}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
-              phoneCountry={phoneCountry}
+              phoneCountry={_phoneCountry}
               extraElement={extraElement}
               validateEmail={validateEmail}
               validatePhone={validatePhone}
@@ -374,7 +401,7 @@ const SignIn = forwardRef(
       isShowScan,
       defaultChainId,
       isErrorTip,
-      phoneCountry,
+      _phoneCountry,
       extraElement,
       validateEmail,
       validatePhone,
