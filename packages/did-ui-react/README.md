@@ -85,6 +85,12 @@ ConfigProvider.setGlobalConfig({
 
 ```
 
+### Example
+
+[Bingogame](https://bingogame-pro.portkey.finance/)
+
+[Bingogame Github](https://github.com/Portkey-Wallet/portkey-bingo-game)
+
 ### TypeScript
 
 `@portkey/did-ui-react` is written in TypeScript with complete definitions.

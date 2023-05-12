@@ -79,9 +79,10 @@ export default function Sign() {
         ref={ref}
         uiType="Modal"
         className="sign-in"
+        isShowScan
         termsOfServiceUrl="https://www.portkey.finance"
         phoneCountry={{
-          country: 'any',
+          country: 'United States',
           countryList: phoneCountry.countryCode,
         }}
         onFinish={res => {

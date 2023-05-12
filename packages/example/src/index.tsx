@@ -73,7 +73,6 @@ function App() {
         @portkey/did-ui-react
       </button>
       <SignIn
-        open={open}
         onFinish={didWallet => {
           console.log(didWallet, 'didWallet====onFinish');
         }}

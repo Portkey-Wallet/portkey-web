@@ -38,7 +38,7 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   async getPhoneCountryCode(): Promise<CountryItem[]> {
     const result = await this._request.send({
       method: 'GET',
-      url: '/api/app/phone/phone_info',
+      url: '/api/app/phone/info',
     });
     return result?.data || [];
   }
