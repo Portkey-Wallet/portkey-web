@@ -4,7 +4,7 @@ import type { DIDWalletInfo, GuardianInputInfo, SignInSuccess } from '../../../t
 import type { SignInLifeCycleType } from '../../types';
 import { useUpdateEffect } from 'react-use';
 import qs from 'query-string';
-import LoginModal from '../LoginModal';
+import LoginModal from '../../../LoginModal';
 
 export type OnSignInFinishedFun = (values: {
   isFinished: boolean;

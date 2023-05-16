@@ -1,10 +1,20 @@
 import { CAInfo } from '@portkey/did';
+import { AccountType } from '@portkey/services';
 import { ChainId, IBlockchainWallet } from '@portkey/types';
 export * from './verify';
 export * from './signIn';
 export * from './reCaptcha';
 
 export type CreateWalletType = 'SignUp' | 'Login' | 'LoginByScan';
+
+export type AddManagerType = 'register' | 'recovery' | 'addManager';
+
+export type ManagerInfoType = {
+  managerUniqueId: string;
+  guardianIdentifier: string;
+  accountType: AccountType;
+  type: AddManagerType;
+};
 
 export interface DIDWalletInfo {
   caInfo: CAInfo;
@@ -14,6 +24,7 @@ export interface DIDWalletInfo {
     /** @deprecated `wallet` will delete, `walletInfo` is already the previous `walletInfo.wallet`  */
     wallet: IBlockchainWallet;
   };
+  accountInfo: ManagerInfoType;
 }
 
 export type ObjectType = {
@@ -32,7 +43,5 @@ export interface CreatePendingInfo {
   pin: string;
   walletInfo: IBlockchainWallet;
 }
-
-export type AddManagerType = 'register' | 'recovery' | 'onlyGetPin';
 
 export type LoginFinishWithoutPin = (info: Omit<DIDWalletInfo, 'pin'>) => void;

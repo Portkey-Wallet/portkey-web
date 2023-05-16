@@ -20,7 +20,7 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/did-ui-react"
   },
-  "version": "0.0.1-alpha.7.4",
+  "version": "0.0.1-alpha.7.5",
   "main": "dist/index.js",
   "types": "dist/_types/index.d.ts",
   "type": "module",
@@ -46,12 +46,12 @@
     "antd-mobile": "5.26.0",
     "bignumber.js": "^9.1.0",
     "clsx": "^1.2.1",
+    "lottie-web": "5.9.6",
     "query-string": "^6.14.1",
     "react-i18next": "^11.18.6",
     "react-qrcode-logo": "2.9.0",
     "react-use": "^17.4.0",
     "reactjs-social-login": "^2.6.2",
-    "lottie-web": "5.9.6",
     "uuid": "^8.3.2"
   },
   "devDependencies": {

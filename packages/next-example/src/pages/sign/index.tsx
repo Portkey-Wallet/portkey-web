@@ -78,6 +78,7 @@ export default function Sign() {
       <SignIn
         ref={ref}
         uiType="Modal"
+        isShowScan
         className="sign-in"
         isShowScan
         termsOfServiceUrl="https://www.portkey.finance"

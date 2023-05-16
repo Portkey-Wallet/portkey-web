@@ -143,8 +143,6 @@ const GuardianApproval = forwardRef(
       async (item: UserGuardianStatus, index: number) => {
         try {
           if (!expiredTime) setExpiredTime(getExpiredTime());
-
-          setVerifyAccountIndex(index);
           setGuardianList((v) => {
             v[index] = {
               ...item,
@@ -154,6 +152,7 @@ const GuardianApproval = forwardRef(
 
             return v;
           });
+          setVerifyAccountIndex(index);
         } catch (error: any) {
           console.log(error, 'error===');
           return errorTip(

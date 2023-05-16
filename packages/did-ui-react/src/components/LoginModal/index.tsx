@@ -1,6 +1,6 @@
 import { Button } from 'antd';
-import CommonModal from '../../../CommonModal';
-import { CreateWalletType } from '../../../types';
+import { CreateWalletType } from '../types';
+import CommonModal from '../CommonModal';
 
 export default function LoginModal({
   open,
