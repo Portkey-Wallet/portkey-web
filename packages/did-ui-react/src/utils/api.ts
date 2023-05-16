@@ -83,7 +83,6 @@ export class Verification extends StorageBaseLoader {
         if (reCaptchaToken.type !== 'success') throw reCaptchaToken.message;
         config.headers = {
           reCaptchaToken: reCaptchaToken.message,
-          version: 'v1.2.5',
         };
         setLoading(true);
         const req = await did.services.getVerificationCode(config as SendVerificationCodeRequestParams);

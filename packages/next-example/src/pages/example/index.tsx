@@ -125,6 +125,7 @@ function Example() {
       /> */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
         <SignUpAndLogin
+          extraElement={<>233</>}
           phoneCountry={{ country: 'any', countryList: [{ code: '56', country: 'any' }] }}
           style={{ height: 600 }}
           termsOfServiceUrl={'termsOfServiceUrl'}
