@@ -18,6 +18,7 @@ import {
 import { IStorageSuite } from '@portkey/types';
 import { message } from 'antd';
 import { useState, useRef, useCallback, useEffect } from 'react';
+import phoneCountry from '../sign/phoneCountry.json';
 
 export class Store implements IStorageSuite {
   async getItem(key: string) {
@@ -125,10 +126,27 @@ function Example() {
       /> */}
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
         <SignUpAndLogin
-          extraElement={<>233</>}
-          phoneCountry={{ country: 'any', countryList: [{ code: '56', country: 'any' }] }}
+          phoneCountry={{
+            country: 'United States',
+            countryList: phoneCountry.countryCode,
+          }}
           style={{ height: 600 }}
-          termsOfServiceUrl={'termsOfServiceUrl'}
+          termsOfServiceUrl="https://www.portkey.finance"
+          termsOfService={
+            <>
+              termsOfService: <a href="https://www.portkey.finance"></a>
+            </>
+          }
+          extraElement={
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+            </div>
+          }
           socialLogin={{
             Apple: {
               clientId: process.env.NEXT_PUBLIC_APP_APPLE_ID || '',

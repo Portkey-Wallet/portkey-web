@@ -95,6 +95,7 @@ export default function ScanCard({
         chainId: caWallet.chainId,
         caInfo: caWallet.info,
         walletInfo: { ...managementAccount.wallet, wallet: managementAccount.wallet },
+        accountInfo: caWallet.accountInfo,
       });
   }, [caWallet, managementAccount, onFinish]);
 

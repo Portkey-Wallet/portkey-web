@@ -17,8 +17,8 @@ export interface SignInSuccess extends GuardianInputInfo {
 }
 
 export interface IPhoneCountry {
-  country: CountryItem['country'];
-  countryList: CountryItem[];
+  country?: CountryItem['country'];
+  countryList?: CountryItem[];
 }
 
 export type SignInInterface = {

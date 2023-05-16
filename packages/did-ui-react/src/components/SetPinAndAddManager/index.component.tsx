@@ -218,6 +218,12 @@ export default function SetPinAndAddManager({
             caAddress: walletResult.status.caAddress,
             caHash: walletResult.status.caHash,
           },
+          accountInfo: {
+            managerUniqueId: walletResult.sessionId,
+            guardianIdentifier,
+            accountType,
+            type,
+          },
           chainId,
           pin,
           walletInfo: { ...wallet, wallet },
@@ -236,7 +242,17 @@ export default function SetPinAndAddManager({
         setLoading(false);
       }
     },
-    [onlyGetPin, onFinish, guardianIdentifier, type, isErrorTip, chainId, requestRegisterWallet, requestRecoveryWallet],
+    [
+      onlyGetPin,
+      onFinish,
+      guardianIdentifier,
+      type,
+      accountType,
+      chainId,
+      requestRegisterWallet,
+      requestRecoveryWallet,
+      isErrorTip,
+    ],
   );
 
   return (
