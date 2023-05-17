@@ -24,7 +24,7 @@ function GuardianItems({
   disabled,
   item,
   isExpired,
-  isErrorTip,
+  isErrorTip = true,
   onError,
   onSend,
   onVerifying,

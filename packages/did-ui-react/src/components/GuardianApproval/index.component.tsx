@@ -29,7 +29,16 @@ export interface GuardianApprovalProps {
 
 const GuardianApproval = forwardRef(
   (
-    { header, chainId, className, guardianList, isErrorTip, appleIdToken, onError, onConfirm }: GuardianApprovalProps,
+    {
+      header,
+      chainId,
+      className,
+      guardianList,
+      isErrorTip = true,
+      appleIdToken,
+      onError,
+      onConfirm,
+    }: GuardianApprovalProps,
     ref,
   ) => {
     const [verifyAccountIndex, setVerifyAccountIndex] = useState<number | undefined>();

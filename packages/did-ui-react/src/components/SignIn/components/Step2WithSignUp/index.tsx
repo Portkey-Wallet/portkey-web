@@ -32,7 +32,7 @@ interface Step2WithSignUpProps {
 }
 
 function Step2WithSignUp({
-  isErrorTip,
+  isErrorTip = true,
   sandboxId,
   chainInfo,
   chainType,

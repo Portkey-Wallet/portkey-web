@@ -35,7 +35,7 @@ export interface SignUpBaseProps {
 export default function SignUpBase({
   socialLogin,
   phoneCountry,
-  isErrorTip,
+  isErrorTip = true,
   networkType,
   wrapperClassName,
   extraElement,

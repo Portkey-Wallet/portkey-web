@@ -34,7 +34,7 @@ enum STEP {
 export default function LoginCard({
   isShowScan,
   phoneCountry,
-  isErrorTip,
+  isErrorTip = true,
   socialLogin,
   networkType,
   extraElement,

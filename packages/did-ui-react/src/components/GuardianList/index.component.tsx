@@ -26,7 +26,7 @@ function GuardianList({
   className,
   guardianList = [],
   expiredTime,
-  isErrorTip,
+  isErrorTip = true,
   onError,
   onConfirm,
   onSend,

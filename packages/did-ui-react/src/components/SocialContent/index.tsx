@@ -22,7 +22,7 @@ interface SocialContentProps {
 export default function SocialContent({
   type,
   socialLogin,
-  isErrorTip,
+  isErrorTip = true,
   networkType,
   onFinish,
   onLoginByPortkey,

@@ -28,7 +28,7 @@ export interface ScanCardProps {
 export default function ScanCard({
   chainId = 'AELF',
   backIcon,
-  isErrorTip,
+  isErrorTip = true,
   chainType,
   networkType,
   wrapperClassName,

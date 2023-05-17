@@ -35,7 +35,7 @@ export default function CodeVerify({
   chainId,
   verifier,
   className,
-  isErrorTip,
+  isErrorTip = true,
   isCountdownNow,
   isLoginAccount,
   guardianIdentifier,

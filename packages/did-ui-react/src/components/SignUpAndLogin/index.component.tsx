@@ -54,7 +54,7 @@ export default function SignUpAndLoginBaseCom({
   style,
   defaultChainId = 'AELF',
   className,
-  isErrorTip,
+  isErrorTip = true,
   isShowScan,
   phoneCountry,
   socialLogin,

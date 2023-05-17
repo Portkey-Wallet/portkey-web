@@ -28,7 +28,7 @@ export default function SetPinAndAddManager({
   type,
   chainId = 'AELF',
   className,
-  isErrorTip,
+  isErrorTip = true,
   onlyGetPin,
   accountType = 'Email',
   guardianIdentifier,

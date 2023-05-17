@@ -32,7 +32,7 @@ export default function SocialLogin({
   type,
   className,
   isShowScan,
-  isErrorTip,
+  isErrorTip = true,
   socialLogin,
   networkType,
   extraElement,
