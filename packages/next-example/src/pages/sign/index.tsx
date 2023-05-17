@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { IStorageSuite } from '@portkey/types';
 import phoneCountry from './phoneCountry.json';
-import { ConfigProvider, SignIn, SignInInterface } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, SignInInterface, PortkeyConfigProvider } from '@portkey/did-ui-react';
 
 export class Store implements IStorageSuite {
   async getItem(key: string) {
@@ -80,7 +80,6 @@ export default function Sign() {
         uiType="Modal"
         isShowScan
         className="sign-in"
-        isShowScan
         termsOfServiceUrl="https://www.portkey.finance"
         phoneCountry={{
           country: 'United States',

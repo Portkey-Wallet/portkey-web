@@ -14,6 +14,7 @@ import {
   WakeUpPortkey,
   Unlock,
   CustomSvg,
+  PortkeyConfigProvider,
 } from '@portkey/did-ui-react';
 import { IStorageSuite } from '@portkey/types';
 import { message } from 'antd';

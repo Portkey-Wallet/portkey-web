@@ -6,7 +6,7 @@
 
 import BaseModal from './components/BaseModal';
 import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle, ReactNode } from 'react';
-import ConfigProvider, { BaseConfigProvider } from '../config-provider';
+import ConfigProvider from '../config-provider';
 import Step1, { OnSignInFinishedFun } from './components/Step1';
 import Step2WithSignUp from './components/Step2WithSignUp';
 import Step2WithSignIn from './components/Step2WithSignIn';
@@ -425,21 +425,12 @@ const SignIn = forwardRef(
       onCreatePending,
     ]);
 
-    return (
-      <BaseConfigProvider>
-        {uiType === 'Full' ? (
-          <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
-        ) : (
-          <BaseModal
-            destroyOnClose
-            className={className}
-            open={_open}
-            getContainer={getContainer}
-            onCancel={onModalCancel}>
-            {mainContent()}
-          </BaseModal>
-        )}
-      </BaseConfigProvider>
+    return uiType === 'Full' ? (
+      <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
+    ) : (
+      <BaseModal destroyOnClose className={className} open={_open} getContainer={getContainer} onCancel={onModalCancel}>
+        {mainContent()}
+      </BaseModal>
     );
   },
 );
