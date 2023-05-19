@@ -213,6 +213,7 @@ export default function SetPinAndAddManager({
           throw walletResult;
         }
         const wallet = did.didWallet.managementAccount!.wallet;
+        setLoading(false);
         onFinishRef?.current?.({
           caInfo: {
             caAddress: walletResult.status.caAddress,
@@ -238,8 +239,6 @@ export default function SetPinAndAddManager({
           isErrorTip,
           onErrorRef.current,
         );
-      } finally {
-        setLoading(false);
       }
     },
     [

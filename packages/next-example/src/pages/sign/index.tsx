@@ -81,10 +81,11 @@ export default function Sign() {
         isShowScan
         className="sign-in"
         termsOfServiceUrl="https://www.portkey.finance"
-        phoneCountry={{
-          country: 'United States',
-          countryList: phoneCountry.countryCode,
-        }}
+        termsOfService={<div>termsOfService:https://www.portkey.finance</div>}
+        // phoneCountry={{
+        //   country: 'United States',
+        //   countryList: phoneCountry.countryCode,
+        // }}
         onFinish={res => {
           console.log(res, 'onFinish====');
         }}

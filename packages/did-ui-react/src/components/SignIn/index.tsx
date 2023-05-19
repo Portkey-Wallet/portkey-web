@@ -33,6 +33,7 @@ import { portkeyDidUIPrefix } from '../../constants';
 import qs from 'query-string';
 import clsx from 'clsx';
 import { did, errorTip } from '../../utils';
+import BaseStyleProvider from '../BaseStyleProvider';
 import './index.less';
 
 const step1Storage = `${portkeyDidUIPrefix}step1Storage`;
@@ -425,12 +426,21 @@ const SignIn = forwardRef(
       onCreatePending,
     ]);
 
-    return uiType === 'Full' ? (
-      <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
-    ) : (
-      <BaseModal destroyOnClose className={className} open={_open} getContainer={getContainer} onCancel={onModalCancel}>
-        {mainContent()}
-      </BaseModal>
+    return (
+      <BaseStyleProvider>
+        {uiType === 'Full' ? (
+          <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
+        ) : (
+          <BaseModal
+            destroyOnClose
+            className={className}
+            open={_open}
+            getContainer={getContainer}
+            onCancel={onModalCancel}>
+            {mainContent()}
+          </BaseModal>
+        )}
+      </BaseStyleProvider>
     );
   },
 );

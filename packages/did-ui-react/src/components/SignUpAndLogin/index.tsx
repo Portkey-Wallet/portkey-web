@@ -1,5 +1,10 @@
+import BaseStyleProvider from '../BaseStyleProvider';
 import SignUpAndLoginCom, { SignUpAndLoginProps } from './index.component';
 
 export default function SignUpAndLogin(props?: SignUpAndLoginProps) {
-  return <SignUpAndLoginCom {...props} />;
+  return (
+    <BaseStyleProvider>
+      <SignUpAndLoginCom {...props} />
+    </BaseStyleProvider>
+  );
 }
