@@ -58,7 +58,7 @@ export default function SocialContent({
       const response = await socialLoginAuth({
         type: 'Google',
         clientId: socialLogin?.Google?.clientId,
-        redirectURI: socialLogin?.Google?.redirectUri,
+        redirectURI: socialLogin?.Google?.redirectURI,
       });
       if (!response?.token) throw new Error('Google login failed');
       onFinishRef?.current?.({

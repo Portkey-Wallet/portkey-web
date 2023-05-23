@@ -34,26 +34,13 @@ export type TSocialResponseData = {
 };
 
 export interface IGoogleLoginConfig {
-  scope?: string;
-  prompt?: string;
-  uxMode?: string;
-  clientId: string;
-  loginHint?: string;
-  accessType?: string;
-  autoSelect?: boolean;
-  redirectUri?: string;
-  cookiePolicy?: string;
-  hostedDomain?: string;
-  discoveryDocs?: string;
-  children?: React.ReactNode;
-  isOnlyGetToken?: boolean;
-  fetchBasicProfile?: boolean;
+  clientId?: string;
+  redirectURI?: string;
   // custom social login callback
   customLoginHandler?: TSocialLoginHandler;
 }
 interface BaseAppleLoginConfig {
-  scope?: string;
-  clientId: string;
+  clientId?: string;
   redirectURI?: string;
 }
 export interface IAppleLoginConfig extends BaseAppleLoginConfig {
