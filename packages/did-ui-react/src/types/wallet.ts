@@ -28,7 +28,8 @@ export interface AuthenticationInfo {
 export type ISocialLogin = 'Google' | 'Apple';
 
 export type TSocialResponseData = {
-  accessToken: string;
+  accessToken?: string;
+  token?: string;
   [x: string]: any;
 };
 
