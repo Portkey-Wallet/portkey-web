@@ -323,7 +323,8 @@ const SignIn = forwardRef(
           onError,
         );
       }
-    }, [isErrorTip, onError]);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     useEffect(() => {
       // Get phoneCountry by service, update _phoneCountry
