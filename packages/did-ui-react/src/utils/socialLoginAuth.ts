@@ -2,6 +2,7 @@ import { ISocialLogin } from '../types';
 import { stringify } from 'query-string';
 // const loginUrl = 'https://openlogin.portkey.finance';
 const testLoginUrl = 'https://openlogin-test.portkey.finance';
+// const localLoginUrl = 'http://localhost:3000';
 
 export const socialLoginAuth = ({
   type,

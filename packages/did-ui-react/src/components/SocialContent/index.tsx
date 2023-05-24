@@ -90,7 +90,7 @@ export default function SocialContent({
       });
       if (res?.token) {
         onFinishRef?.current?.({
-          type: 'Google',
+          type: 'Apple',
           data: { ...res, accessToken: res?.token },
         });
       }
