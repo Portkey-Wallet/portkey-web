@@ -159,4 +159,12 @@ describe('communityRecovery describe', () => {
     const result2 = await mockCommunityRecovery.getPhoneCountryCode();
     expect(result2.length === 0).toBeTruthy();
   });
+
+  test('test getPhoneCountryCodeWithLocal', async () => {
+    const result = await communityRecovery.getPhoneCountryCodeWithLocal();
+    expect(Array.isArray(result.data)).toBeTruthy();
+    expect(result.locateData).toHaveProperty('country');
+    expect(result.locateData).toHaveProperty('code');
+    expect(result.locateData).toHaveProperty('iso');
+  });
 });

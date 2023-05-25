@@ -126,6 +126,7 @@ class FetchRequestMock {
         break;
       case '/api/app/phone/info':
         result = {
+          locateData: { country: 'Singapore', code: '65', iso: 'SG' },
           data: [{ country: 'Singapore', code: '65', iso: 'SG' }],
         };
         break;

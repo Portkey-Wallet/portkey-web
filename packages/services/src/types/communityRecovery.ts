@@ -90,6 +90,11 @@ export interface CountryItem {
   iso: string;
 }
 
+export interface GetPhoneCountryCodeResult {
+  data?: CountryItem[];
+  locateData?: CountryItem;
+}
+
 export interface ICommunityRecoveryService extends IVerificationService, ISearchService {
   register(params: RegisterParams): Promise<RegisterResult>;
   recovery(params: RecoveryParams): Promise<RecoveryResult>;
@@ -98,4 +103,5 @@ export interface ICommunityRecoveryService extends IVerificationService, ISearch
   getRegisterInfo(params: GetRegisterInfoParams): Promise<RegisterInfo>;
   checkGoogleRecaptcha(): Promise<boolean>;
   getPhoneCountryCode(): Promise<CountryItem[]>;
+  getPhoneCountryCodeWithLocal(): Promise<GetPhoneCountryCodeResult>;
 }

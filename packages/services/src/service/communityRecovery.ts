@@ -13,6 +13,7 @@ import {
   GetRegisterInfoParams,
   RegisterInfo,
   CountryItem,
+  GetPhoneCountryCodeResult,
 } from '../types/communityRecovery';
 import {
   SendAppleUserExtraInfoParams,
@@ -41,6 +42,12 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       url: '/api/app/phone/info',
     });
     return result?.data || [];
+  }
+  async getPhoneCountryCodeWithLocal(): Promise<GetPhoneCountryCodeResult> {
+    return await this._request.send({
+      method: 'GET',
+      url: '/api/app/phone/info',
+    });
   }
   checkGoogleRecaptcha(): Promise<boolean> {
     return this._request.send({
