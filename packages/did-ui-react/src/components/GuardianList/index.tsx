@@ -1,10 +1,10 @@
+import BaseStyleProvider from '../BaseStyleProvider';
 import GuardianListCom, { GuardianListProps } from './index.component';
-import { BaseConfigProvider } from '../config-provider';
 
 export default function GuardianList(props: GuardianListProps) {
   return (
-    <BaseConfigProvider>
+    <BaseStyleProvider>
       <GuardianListCom {...props} />
-    </BaseConfigProvider>
+    </BaseStyleProvider>
   );
 }

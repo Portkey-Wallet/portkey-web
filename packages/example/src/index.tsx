@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { did } from '@portkey/did';
 import { IStorageSuite } from '@portkey/types';
-import { SignIn } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, SignInInterface } from '@portkey/did-ui-react';
 import '@portkey/did-ui-react/dist/assets/index.css';
 import './index.css';
 
@@ -20,13 +20,23 @@ export class Store implements IStorageSuite {
 
 const myStore = new Store();
 
-did.setConfig({
-  graphQLUrl: 'http://192.168.67.84:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
+ConfigProvider.setGlobalConfig({
   storageMethod: myStore,
+  socialLogin: {
+    Portkey: {
+      websiteName: 'website demo',
+      websiteIcon: '',
+    },
+  },
+
+  graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
+  network: {
+    defaultNetwork: 'TESTNET',
+  },
 });
 
 function App() {
-  const [open, setOpen] = useState<boolean>();
+  const ref = useRef<SignInInterface>();
   return (
     <div>
       did example
@@ -66,21 +76,31 @@ function App() {
         }}>
         managerAccount
       </button>
-      <button
-        onClick={() => {
-          setOpen(v => !v);
-        }}>
-        @portkey/did-ui-react
-      </button>
       <SignIn
-        open={open}
-        onFinish={didWallet => {
-          console.log(didWallet, 'didWallet====onFinish');
+        ref={ref}
+        uiType="Modal"
+        isShowScan
+        className="sign-in-wrapper"
+        termsOfService={'https://www.portkey.finance'}
+        onFinish={res => {
+          console.log(res, 'onFinish====');
+        }}
+        onError={error => {
+          console.log(error, 'onError====error');
         }}
         onCancel={() => {
-          setOpen(false);
+          ref?.current.setOpen(false);
+        }}
+        onCreatePending={info => {
+          console.log(info, 'onCreatePending====info');
         }}
       />
+      <button
+        onClick={() => {
+          ref?.current.setOpen(true);
+        }}>
+        setOpen
+      </button>
     </div>
   );
 }

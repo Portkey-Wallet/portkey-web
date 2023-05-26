@@ -35,7 +35,7 @@ export default function CodeVerify({
   chainId,
   verifier,
   className,
-  isErrorTip,
+  isErrorTip = true,
   isCountdownNow,
   isLoginAccount,
   guardianIdentifier,
@@ -59,7 +59,7 @@ export default function CodeVerify({
     async (code: string) => {
       try {
         if (code && code.length === 6) {
-          if (!_verifierSessionId) throw Error('Missing verifierSessionId!!!');
+          if (!_verifierSessionId) throw Error(`VerifierSessionId(${_verifierSessionId}) is invalid`);
           setLoading(true);
           const result = await verification.checkVerificationCode({
             verifierSessionId: _verifierSessionId,

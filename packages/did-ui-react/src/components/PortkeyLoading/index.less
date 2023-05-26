@@ -8,12 +8,24 @@
   align-items: center;
   flex-direction: column;
 
-  .loading-text {
-    margin-top: 24px;
+  .loading-indicator {
+    width: 250px;
+    padding: 16px;
+    background-color: @bg-11;
+    border-radius: 6px;
+    min-height: 120px;
     text-align: center;
-    line-height: 22px;
-    color: @font-5;
-    font-size: 16px;
+    .loading {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .loading-text {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    color: @font-11;
   }
   .display-none {
     display: none;
@@ -25,8 +37,5 @@
     cursor: pointer;
     width: 24px;
     height: 24px;
-    // path {
-    //   fill: @font-5;
-    // }
   }
 }

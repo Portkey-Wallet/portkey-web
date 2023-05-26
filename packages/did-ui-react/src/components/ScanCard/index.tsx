@@ -1,10 +1,10 @@
+import BaseStyleProvider from '../BaseStyleProvider';
 import ScanCardCom, { ScanCardProps } from './index.component';
-import { BaseConfigProvider } from '../config-provider';
 
 export default function ScanCard(props?: ScanCardProps) {
   return (
-    <BaseConfigProvider>
+    <BaseStyleProvider>
       <ScanCardCom {...props} />
-    </BaseConfigProvider>
+    </BaseStyleProvider>
   );
 }

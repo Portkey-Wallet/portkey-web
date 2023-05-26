@@ -24,7 +24,7 @@ function GuardianItems({
   disabled,
   item,
   isExpired,
-  isErrorTip,
+  isErrorTip = true,
   onError,
   onSend,
   onVerifying,
@@ -39,17 +39,17 @@ function GuardianItems({
     switch (guardian.guardianType) {
       case 'Email':
       case 'Phone':
-        return <div className="account-text">{guardian.identifier || guardian.identifierHash}</div>;
+        return <div className="account-text account-text-one-row">{guardian.identifier}</div>;
       case 'Google':
         return (
-          <div className="account-text">
+          <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
             <div className="detail">{guardian.thirdPartyEmail}</div>
           </div>
         );
       case 'Apple':
         return (
-          <div className="account-text">
+          <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
             <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail}</div>
           </div>
@@ -108,7 +108,7 @@ function GuardianItems({
   return (
     <li className={clsx('flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
       {item.isLoginAccount && <div className="login-icon">{t('Login Account')}</div>}
-      <div className="flex-between-center">
+      <div className="w-100 flex-between-center">
         <VerifierPair
           guardianType={item.guardianType}
           verifierSrc={item.verifier?.imageUrl}

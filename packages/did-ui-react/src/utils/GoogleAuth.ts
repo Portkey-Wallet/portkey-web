@@ -11,7 +11,7 @@ interface GoogleAuthProps {
   loginHint?: string;
   accessType?: string;
   autoSelect?: boolean;
-  redirectUri?: string;
+  redirectURI?: string;
   cookiePolicy?: string;
   hostedDomain?: string;
   discoveryDocs?: string;
@@ -88,7 +88,7 @@ const googleAccountsInitTokenClient = ({
   accessType,
   prompt,
   hostedDomain,
-  redirectUri,
+  redirectURI,
   cookiePolicy,
   discoveryDocs,
   fetchBasicProfile,
@@ -105,7 +105,7 @@ const googleAccountsInitTokenClient = ({
       login_hint: loginHint,
       access_type: accessType,
       hosted_domain: hostedDomain,
-      redirect_uri: redirectUri,
+      redirect_uri: redirectURI,
       cookie_policy: cookiePolicy,
       discoveryDocs,
       immediate: true,
@@ -150,7 +150,7 @@ export const googleAuthAccessToken = async (
     className: '',
     loginHint: '',
     accessType: 'online',
-    redirectUri: '/',
+    redirectURI: '/',
     autoSelect: false,
     isOnlyGetToken: false,
     cookiePolicy: 'single_host_origin',

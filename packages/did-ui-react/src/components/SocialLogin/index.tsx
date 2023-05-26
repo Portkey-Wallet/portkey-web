@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { useMemo, useRef, useEffect } from 'react';
+import { useMemo, useRef, useEffect, ReactNode } from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
@@ -15,7 +15,8 @@ interface SocialLoginProps {
   className?: string;
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
-  termsOfServiceUrl?: string;
+  termsOfService?: ReactNode;
+  extraElement?: ReactNode; // extra element
   networkType?: string;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
@@ -31,10 +32,11 @@ export default function SocialLogin({
   type,
   className,
   isShowScan,
-  isErrorTip,
+  isErrorTip = true,
   socialLogin,
   networkType,
-  termsOfServiceUrl,
+  extraElement,
+  termsOfService,
   onBack,
   onError,
   onFinish,
@@ -58,7 +60,7 @@ export default function SocialLogin({
 
   return (
     <>
-      <div className={clsx('social-login-wrapper', className)}>
+      <div className={clsx('flex-column', 'social-login-wrapper', className)}>
         <h1 className="flex-between-center social-login-title">
           {!isLogin && <CustomSvg type="BackLeft" onClick={onBackRef?.current} />}
           {isLogin && <span></span>}
@@ -66,7 +68,7 @@ export default function SocialLogin({
           {isLogin && isShowScan && <CustomSvg type="QRCode" onClick={() => switchTypeRef?.current?.('LoginByScan')} />}
           {!isLogin && <span className="empty"></span>}
         </h1>
-        <div className="social-login-content">
+        <div className="flex-column flex-1 social-login-content">
           <SocialContent
             isErrorTip={isErrorTip}
             networkType={networkType}
@@ -80,6 +82,8 @@ export default function SocialLogin({
           <Button type="primary" className="login-by-input-btn" onClick={switchGuardinTypeRef?.current}>
             {t(`${type} with Phone / Email`)}
           </Button>
+          {extraElement}
+
           {isLogin && (
             <div className="go-sign-up">
               <span>{t('No account?')}</span>
@@ -94,7 +98,8 @@ export default function SocialLogin({
           )}
         </div>
       </div>
-      <TermsOfServiceItem termsOfServiceUrl={termsOfServiceUrl} />
+
+      <TermsOfServiceItem termsOfService={termsOfService} />
     </>
   );
 }

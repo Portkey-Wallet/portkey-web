@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { ISocialLogin, VerifyTokenParams } from '../types';
-import { appleAuthIdToken, did, getGoogleUserInfo, googleAuthAccessToken, parseAppleIdentityToken } from '../utils';
+import { did, getGoogleUserInfo, parseAppleIdentityToken, socialLoginAuth } from '../utils';
 // import { request } from '@portkey-wallet/api/api-did';
 
 interface BaseAuthProps {
@@ -27,10 +27,15 @@ export function useVerifyGoogleToken() {
         if (result.error) throw result.error;
         googleInfo = result.data;
       } else {
-        googleInfo = await googleAuthAccessToken({ clientId: params.clientId });
+        googleInfo = await socialLoginAuth({
+          type: 'Google',
+          clientId: params.clientId,
+          redirectURI: params.redirectURI,
+        });
       }
-      if (!googleInfo?.accessToken) throw new Error('Can not get accessToken');
-      accessToken = googleInfo?.accessToken;
+      const _token = googleInfo?.token || (googleInfo as any)?.accessToken;
+      if (!_token) throw new Error('Can not get accessToken');
+      accessToken = _token;
       const { id } = await getGoogleUserInfo(accessToken as string);
       if (id !== params.id) throw new Error('Account does not match your guardian');
     }
@@ -50,12 +55,13 @@ export function useVerifyAppleToken() {
         if (result.error) throw result.error;
         accessToken = result.data?.accessToken;
       } else {
-        const authRes: any = await appleAuthIdToken({
+        const authRes: any = await socialLoginAuth({
+          type: 'Apple',
           clientId: params.clientId,
           redirectURI: params.redirectURI,
         });
-        if (!authRes) return;
-        accessToken = authRes?.identityToken;
+        if (!authRes) throw new Error('Missing Response');
+        accessToken = authRes?.token;
       }
     }
     if (!accessToken) throw new Error('accessToken is not defined');

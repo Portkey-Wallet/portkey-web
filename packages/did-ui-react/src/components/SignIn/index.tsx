@@ -5,8 +5,8 @@
  */
 
 import BaseModal from './components/BaseModal';
-import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import ConfigProvider, { BaseConfigProvider } from '../config-provider';
+import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle, ReactNode } from 'react';
+import ConfigProvider from '../config-provider';
 import Step1, { OnSignInFinishedFun } from './components/Step1';
 import Step2WithSignUp from './components/Step2WithSignUp';
 import Step2WithSignIn from './components/Step2WithSignIn';
@@ -32,7 +32,8 @@ import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, Step2SignUpLifeCycleT
 import { portkeyDidUIPrefix } from '../../constants';
 import qs from 'query-string';
 import clsx from 'clsx';
-import { errorTip } from '../../utils';
+import { did, errorTip } from '../../utils';
+import BaseStyleProvider from '../BaseStyleProvider';
 import './index.less';
 
 const step1Storage = `${portkeyDidUIPrefix}step1Storage`;
@@ -57,7 +58,10 @@ export interface SignInProps {
   // Login
   isShowScan?: boolean;
   phoneCountry?: IPhoneCountry;
+  extraElement?: ReactNode; // extra element
+  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
   termsOfServiceUrl?: string;
+  termsOfService?: ReactNode;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
   onNetworkChange?: (network: string) => void;
@@ -87,6 +91,8 @@ const SignIn = forwardRef(
       isShowScan,
       sandboxId,
       phoneCountry,
+      extraElement,
+      termsOfService,
       termsOfServiceUrl,
       validateEmail,
       validatePhone,
@@ -124,6 +130,7 @@ const SignIn = forwardRef(
       setStep('SignIn');
       setOpen(v);
     }, []);
+
     useImperativeHandle(ref, () => ({ setOpen: refSetOpen }));
 
     const networkItem = useMemo(
@@ -297,6 +304,30 @@ const SignIn = forwardRef(
       setStep('SignIn');
     }, [clearStorage, onCancel]);
 
+    const [_phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(phoneCountry);
+
+    const getPhoneCountry = useCallback(async () => {
+      try {
+        const countryData = await did.services.getPhoneCountryCodeWithLocal();
+        setPhoneCountry({ country: countryData.locateData?.country || '', countryList: countryData.data || [] });
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'getPhoneCountry',
+            error,
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+      // Get phoneCountry by service, update _phoneCountry
+      getPhoneCountry();
+    }, [getPhoneCountry]);
+
     const mainContent = useCallback(() => {
       return (
         <>
@@ -306,7 +337,8 @@ const SignIn = forwardRef(
               defaultChainId={defaultChainId}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
-              phoneCountry={phoneCountry}
+              phoneCountry={_phoneCountry}
+              extraElement={extraElement}
               validateEmail={validateEmail}
               validatePhone={validatePhone}
               onSignInFinished={onSignInFinished}
@@ -314,7 +346,7 @@ const SignIn = forwardRef(
               onStepChange={onSignInStepChange}
               onChainIdChange={onOriginChainIdChange}
               onLoginFinishWithoutPin={onLoginFinishWithoutPin}
-              termsOfServiceUrl={termsOfServiceUrl}
+              termsOfService={termsOfService || termsOfServiceUrl}
             />
           )}
 
@@ -368,13 +400,15 @@ const SignIn = forwardRef(
       isShowScan,
       defaultChainId,
       isErrorTip,
-      phoneCountry,
+      _phoneCountry,
+      extraElement,
       validateEmail,
       validatePhone,
       onSignInFinished,
       onSignInStepChange,
       onOriginChainIdChange,
       onLoginFinishWithoutPin,
+      termsOfService,
       termsOfServiceUrl,
       guardianIdentifierInfo,
       sandboxId,
@@ -391,7 +425,7 @@ const SignIn = forwardRef(
     ]);
 
     return (
-      <BaseConfigProvider>
+      <BaseStyleProvider>
         {uiType === 'Full' ? (
           <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
         ) : (
@@ -404,7 +438,7 @@ const SignIn = forwardRef(
             {mainContent()}
           </BaseModal>
         )}
-      </BaseConfigProvider>
+      </BaseStyleProvider>
     );
   },
 );
