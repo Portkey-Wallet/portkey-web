@@ -1,8 +1,8 @@
 import { ISocialLogin } from '../types';
 import { stringify } from 'query-string';
-// const loginUrl = 'https://openlogin.portkey.finance';
-const testLoginUrl = 'https://openlogin-test.portkey.finance';
-// const localLoginUrl = 'http://localhost:3000';
+const loginPlatform = 'https://openlogin.portkey.finance';
+// const loginPlatform = 'https://openlogin-test.portkey.finance';
+// const loginPlatform = 'http://localhost:3000';
 
 export const socialLoginAuth = ({
   type,
@@ -28,5 +28,5 @@ export const socialLoginAuth = ({
       window.removeEventListener('message', onMessage);
     };
     window.addEventListener('message', onMessage);
-    window.open(`${testLoginUrl}/social-login/${type}?${stringify({ clientId, redirectURI })}`);
+    window.open(`${loginPlatform}/social-login/${type}?${stringify({ clientId, redirectURI })}`);
   });
