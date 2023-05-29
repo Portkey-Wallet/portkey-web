@@ -210,13 +210,13 @@ export default function SignUpAndLoginBaseCom({
           throw Error(`AccountType:${type} is not support`);
         }
       } catch (error) {
+        setLoading(false);
+
         const msg = handleErrorMessage(error);
         onErrorRef?.current?.({
           errorFields: 'onSocialFinish',
           error: msg,
         });
-      } finally {
-        setLoading(false);
       }
     },
     [_onSuccess, validateIdentifier],

@@ -55,11 +55,13 @@ export default function SocialContent({
 
     try {
       if (socialLogin?.Google?.customLoginHandler) return login('Google');
+      setLoading(true);
       const response = await socialLoginAuth({
         type: 'Google',
         clientId: socialLogin?.Google?.clientId,
         redirectURI: socialLogin?.Google?.redirectURI,
       });
+      setLoading(false);
       if (!response?.token) throw new Error('Google login failed');
       onFinishRef?.current?.({
         type: 'Google',
@@ -74,20 +76,21 @@ export default function SocialContent({
         isErrorTip,
         onError,
       );
-    } finally {
       setLoading(false);
     }
   }, [isErrorTip, login, onError, socialLogin?.Google]);
 
   const onAppleSuccess = useCallback(async () => {
-    setLoading(true);
     try {
+      setLoading(true);
+
       if (socialLogin?.Apple?.customLoginHandler) return login('Apple');
       const res = await socialLoginAuth({
         type: 'Apple',
         clientId: socialLogin?.Apple?.clientId,
         redirectURI: socialLogin?.Apple?.redirectURI,
       });
+      setLoading(false);
       if (res?.token) {
         onFinishRef?.current?.({
           type: 'Apple',
@@ -103,7 +106,6 @@ export default function SocialContent({
         isErrorTip,
         onError,
       );
-    } finally {
       setLoading(false);
     }
   }, [isErrorTip, login, onError, socialLogin?.Apple]);
