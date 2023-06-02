@@ -32,7 +32,7 @@ describe('config describe', () => {
   });
 
   test('test connectUrl', () => {
-    expect(config.connectUrl).toEqual(configOptions.connectUrl);
+    expect(config.connectRequestConfig.baseURL).toEqual(configOptions.connectUrl);
   });
 
   test('test graphQLUrl', () => {
