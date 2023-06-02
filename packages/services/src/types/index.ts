@@ -20,3 +20,4 @@ export abstract class BaseService<T = IBaseRequest> {
 export * from './communityRecovery';
 export * from './search';
 export * from './verification';
+export * from './connect';

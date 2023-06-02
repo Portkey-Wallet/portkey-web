@@ -1,8 +1,10 @@
 import { ContractBasic, getContractBasic } from '@portkey/contracts';
 import {
+  CAHolderInfo,
   ChainInfo,
   GetCAHolderByManagerResult,
   ICommunityRecoveryService,
+  IConnectService,
   IHolderInfo,
   RecoverStatusResult,
   RegisterParams,
@@ -29,21 +31,25 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   private readonly _defaultKeyName = 'portkey_sdk_did_wallet';
   public managementAccount?: T;
   public services: ICommunityRecoveryService;
+  public connectServices?: IConnectService;
   public contracts: { [key: string]: ContractBasic };
   public chainsInfo: { [key: string]: ChainInfo };
   public caInfo: { [key: string]: CAInfo };
-  public accountInfo: { loginAccount?: string };
+  public accountInfo: { loginAccount?: string; nickName?: string };
   constructor({
     accountProvider,
     storage,
     service,
+    connectService,
   }: {
     accountProvider: IAccountProvider<T>;
     storage?: IStorageSuite;
     service: ICommunityRecoveryService;
+    connectService?: IConnectService;
   }) {
     super(accountProvider, storage);
     this.services = service;
+    this.connectServices = connectService;
     this.contracts = {};
     this.caInfo = {};
     this.accountInfo = {};
@@ -262,6 +268,31 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const req = await this.removeManager(params);
     if (req.error) throw req.error;
     return true;
+  }
+  public async getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo> {
+    if (!this.connectServices) throw new Error('connectServices does not exist');
+    if (!this.managementAccount) throw new Error('managerAccount does not exist');
+    const caHash = this.caInfo[originChainId]?.caHash;
+    if (!caHash) throw new Error('caHash does not exist');
+    const timestamp = Date.now();
+    const message = Buffer.from(`${this.managementAccount?.address}-${timestamp}`).toString('hex');
+    const signature = this.managementAccount.sign(message).toString('hex');
+    const pubkey = this.managementAccount.wallet.keyPair.getPublic('hex');
+    const config = {
+      grant_type: 'signature',
+      client_id: 'CAServer_App',
+      scope: 'CAServer',
+      signature: signature,
+      pubkey,
+      timestamp,
+      ca_hash: caHash,
+      chain_id: originChainId,
+    };
+    const info = await this.connectServices.getConnectToken(config);
+
+    const caHolderInfo = await this.services.getCAHolderInfo(`Bearer ${info.access_token}`, caHash);
+    if (caHolderInfo.nickName) this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
+    return caHolderInfo;
   }
   public async signTransaction<T extends Record<string, unknown>>(
     tx: Record<string, unknown>,

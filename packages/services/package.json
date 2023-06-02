@@ -1,6 +1,6 @@
 {
   "name": "@portkey/services",
-  "version": "0.0.1-alpha.2.5",
+  "version": "0.0.1-alpha.2.7",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -35,8 +35,9 @@
   "dependencies": {
     "@portkey/graphql": "^0.0.1-alpha.1.8",
     "@portkey/request": "^0.0.1-alpha.1.7",
-    "@portkey/types": "^0.0.1-alpha.1.6",
-    "aelf-sdk": "^3.2.44"
+    "@portkey/types": "^0.0.1-alpha.1.7",
+    "aelf-sdk": "^3.2.44",
+    "query-string": "^7.1.1"
   },
   "devDependencies": {
     "@jest/globals": "^29.3.1",

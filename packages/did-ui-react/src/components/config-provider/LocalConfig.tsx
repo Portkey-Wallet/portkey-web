@@ -51,6 +51,11 @@ class LocalConfigProvider {
         graphQLUrl: _config['graphQLUrl'],
       });
     }
+    if ('connectUrl' in _config) {
+      did.setConfig({
+        connectUrl: _config['connectUrl'],
+      });
+    }
     if ('reCaptchaConfig' in _config) {
       _config['reCaptchaConfig'] && setReCaptchaConfig(_config['reCaptchaConfig']);
     }

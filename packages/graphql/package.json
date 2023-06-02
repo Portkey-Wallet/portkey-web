@@ -31,7 +31,7 @@
     "@apollo/client": "^3.7.3",
     "graphql": "^16.6.0",
     "subscriptions-transport-ws": "^0.11.0",
-    "@portkey/types": "^0.0.1-alpha.1.4"
+    "@portkey/types": "^0.0.1-alpha.1.7"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.16.2",

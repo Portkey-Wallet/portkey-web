@@ -35,6 +35,6 @@
     "aelf-sdk": "^3.2.44",
     "@portkey/validator": "^0.0.1-alpha.1.5",
     "@portkey/utils": "^0.0.1-alpha.1.8",
-    "@portkey/types": "^0.0.1-alpha.1.6"
+    "@portkey/types": "^0.0.1-alpha.1.7"
   }
 }
