@@ -1,6 +1,6 @@
 {
   "name": "@portkey/did",
-  "version": "0.0.1-alpha.3.8",
+  "version": "0.0.1-alpha.8.7",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -32,13 +32,13 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey/accounts": "^0.0.1-alpha.1.6",
-    "@portkey/contracts": "^0.0.1-alpha.1.8",
-    "@portkey/graphql": "^0.0.1-alpha.1.8",
-    "@portkey/request": "^0.0.1-alpha.1.7",
-    "@portkey/services": "^0.0.1-alpha.2.7",
-    "@portkey/types": "^0.0.1-alpha.1.7",
-    "@portkey/utils": "^0.0.1-alpha.1.8",
+    "@portkey/accounts": "^0.0.1-alpha.8.7",
+    "@portkey/contracts": "^0.0.1-alpha.8.7",
+    "@portkey/graphql": "^0.0.1-alpha.8.7",
+    "@portkey/request": "^0.0.1-alpha.8.7",
+    "@portkey/services": "^0.0.1-alpha.8.7",
+    "@portkey/types": "^0.0.1-alpha.8.7",
+    "@portkey/utils": "^0.0.1-alpha.8.7",
     "aelf-sdk": "^3.2.44",
     "react": "^18.2.0"
   },
