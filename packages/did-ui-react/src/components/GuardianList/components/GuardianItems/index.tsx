@@ -106,9 +106,9 @@ function GuardianItems({
   );
 
   return (
-    <li className={clsx('flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
+    <li className={clsx('portkey-ui-flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
       {item.isLoginAccount && <div className="login-icon">{t('Login Account')}</div>}
-      <div className="w-100 flex-between-center">
+      <div className="portkey-ui-w-100 portkey-ui-flex-between-center">
         <VerifierPair
           guardianType={item.guardianType}
           verifierSrc={item.verifier?.imageUrl}

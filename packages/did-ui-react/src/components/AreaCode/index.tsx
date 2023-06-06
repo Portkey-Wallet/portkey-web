@@ -51,7 +51,7 @@ export default function AreaCode({ open, value, areaList, onChange, onCancel }: 
     (countryItem: CountryItem) => (
       <li
         key={countryItem.iso}
-        className={clsx('flex-between-center area-code-item', value === countryItem.iso && 'active-item')}
+        className={clsx('portkey-ui-flex-between-center area-code-item', value === countryItem.iso && 'active-item')}
         onClick={() => onChange?.(countryItem)}>
         <span>{countryItem.country}</span>
         <span>+ {countryItem.code}</span>
@@ -62,7 +62,10 @@ export default function AreaCode({ open, value, areaList, onChange, onCancel }: 
 
   const allList = useMemo(() => areaList?.map((country) => item(country)), [areaList, item]);
 
-  const noDate = useMemo(() => <div className="flex-center no-search-result">There is no search result.</div>, []);
+  const noDate = useMemo(
+    () => <div className="portkey-ui-flex-center no-search-result">There is no search result.</div>,
+    [],
+  );
 
   const filterList = useMemo(() => {
     const list = countryCodeFilter(searchVal, areaList);

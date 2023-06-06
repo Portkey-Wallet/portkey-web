@@ -33,10 +33,10 @@ export default function PhoneNumberInput({
 
   return (
     <div className="phone-number-input-wrapper">
-      <div className="flex phone-number-input">
+      <div className="portkey-ui-flex phone-number-input">
         <div className="addon-content">
           <div
-            className="flex-between-center input-addon"
+            className="portkey-ui-flex-between-center input-addon"
             onClick={(e) => {
               e.stopPropagation();
               setOpen((v) => !v);

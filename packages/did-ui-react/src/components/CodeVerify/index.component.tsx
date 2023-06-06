@@ -144,7 +144,7 @@ export default function CodeVerify({
   return (
     <div className={clsx('verifier-account-wrapper', className)}>
       {isLoginAccount && <div className="login-icon">{t('Login Account')}</div>}
-      <div className="flex-row-center login-account-wrapper">
+      <div className="portkey-ui-flex-row-center login-account-wrapper">
         <VerifierPair guardianType={accountType} verifierSrc={verifier.imageUrl} verifierName={verifier.name} />
         <span className="login-account">{guardianIdentifier || ''}</span>
       </div>
@@ -167,7 +167,7 @@ export default function CodeVerify({
           type="text"
           disabled={!!timer}
           onClick={resendCode}
-          className={clsx('text-center resend-btn', timer && 'resend-after-btn')}>
+          className={clsx('portkey-ui-text-center resend-btn', timer && 'resend-after-btn')}>
           {timer ? `Resend after ${timer}s` : t('Resend')}
         </Button>
       </div>

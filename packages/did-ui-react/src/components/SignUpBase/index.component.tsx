@@ -77,7 +77,7 @@ export default function SignUpBase({
       ) : (
         <SocialLogin
           type="Sign up"
-          className="flex-1"
+          className="portkey-ui-flex-1"
           extraElement={extraElement}
           termsOfService={termsOfService || termsOfServiceUrl}
           isErrorTip={isErrorTip}

@@ -65,8 +65,8 @@ function GuardianList({
       <div className="guardian-list-content">
         <div className="guardian-list-title">{t('Guardian Approval')}</div>
         <p className="guardian-list-description">{isExpired ? t('Expired') : t('Expire after 1 hour')}</p>
-        <div className="flex-between-center approve-count">
-          <span className="flex-row-center">
+        <div className="portkey-ui-flex-between-center approve-count">
+          <span className="portkey-ui-flex-row-center">
             {t("Guardians' approval")}
             <CommonTooltip
               placement="top"

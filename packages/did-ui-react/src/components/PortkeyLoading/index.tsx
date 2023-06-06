@@ -31,9 +31,9 @@ export default function PortkeyLoading({
   );
 
   return loading ? (
-    <div className={clsx('fix-max-content portkey-ui-loading-wrapper', className)} style={style}>
+    <div className={clsx('portkey-ui-fix-max-content portkey-ui-loading-wrapper', className)} style={style}>
       {cancelable && <CustomSvg className="close-icon" type="Close" onClick={onCancel} />}
-      <div className="loading-indicator flex-column-center">
+      <div className="loading-indicator portkey-ui-flex-column-center">
         <Loading />
         <div className="loading-text">{loadingText}</div>
       </div>

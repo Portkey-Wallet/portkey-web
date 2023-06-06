@@ -24,7 +24,7 @@ export default function InputLogin({
 
   return (
     <div className="login-content">
-      <h1 className="flex-between-center login-title">
+      <h1 className="portkey-ui-flex-between-center login-title">
         <CustomSvg type="BackLeft" onClick={onBack} />
         <span>{t(type)}</span>
         <span className="empty"></span>

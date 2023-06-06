@@ -75,7 +75,7 @@ export default function LoginCard({
   const [step, setStep] = useState<STEP>(STEP.socialLogin);
 
   return (
-    <div className="flex-column login-ui-card">
+    <div className="portkey-ui-flex-column login-ui-card">
       {step === STEP.inputLogin ? (
         <InputLogin
           type="Login"
@@ -87,7 +87,7 @@ export default function LoginCard({
         />
       ) : (
         <SocialLogin
-          className="flex-1"
+          className="portkey-ui-flex-1"
           type="Login"
           networkType={networkType}
           socialLogin={_socialLogin}

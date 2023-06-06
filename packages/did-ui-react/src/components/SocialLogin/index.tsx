@@ -60,15 +60,15 @@ export default function SocialLogin({
 
   return (
     <>
-      <div className={clsx('flex-column', 'social-login-wrapper', className)}>
-        <h1 className="flex-between-center social-login-title">
+      <div className={clsx('portkey-ui-flex-column', 'social-login-wrapper', className)}>
+        <h1 className="portkey-ui-flex-between-center social-login-title">
           {!isLogin && <CustomSvg type="BackLeft" onClick={onBackRef?.current} />}
           {isLogin && <span></span>}
           <span className="title">{t(type)}</span>
           {isLogin && isShowScan && <CustomSvg type="QRCode" onClick={() => switchTypeRef?.current?.('LoginByScan')} />}
           {!isLogin && <span className="empty"></span>}
         </h1>
-        <div className="flex-column flex-1 social-login-content">
+        <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
           <SocialContent
             isErrorTip={isErrorTip}
             networkType={networkType}
