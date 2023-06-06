@@ -34,7 +34,7 @@ const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: 
   return (
     <div className="phone-tab-wrapper">
       <PhoneNumberInput
-        country={countryCode?.country ?? phoneCountry?.country}
+        iso={countryCode?.iso ?? phoneCountry?.iso}
         countryList={phoneCountry?.countryList}
         phoneNumber={phoneNumber}
         onAreaChange={(v) => {

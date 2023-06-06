@@ -90,7 +90,7 @@ const SignIn = forwardRef(
       // If you set isShowScan to true, make sure you configure ConfigProvider.setGlobalConfig `network`
       isShowScan,
       sandboxId,
-      phoneCountry,
+      phoneCountry: defaultPhoneCountry,
       extraElement,
       termsOfService,
       termsOfServiceUrl,
@@ -143,7 +143,7 @@ const SignIn = forwardRef(
     const [lifeCycle, setLifeCycle] = useState<LifeCycleType>('Login');
 
     const chainId = useMemo(() => originChainId || defaultChainId, [originChainId, defaultChainId]);
-    const _chainInfo = useChainInfo(chainId, onErrorRef?.current);
+    const chainInfo = useChainInfo(chainId, onErrorRef?.current);
 
     const getStorageGuardianApproved = useCallback(async () => {
       const storageStr = await ConfigProvider.config.storageMethod?.getItem(step3Storage);
@@ -304,12 +304,12 @@ const SignIn = forwardRef(
       setStep('SignIn');
     }, [clearStorage, onCancel]);
 
-    const [_phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(phoneCountry);
+    const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
 
     const getPhoneCountry = useCallback(async () => {
       try {
         const countryData = await did.services.getPhoneCountryCodeWithLocal();
-        setPhoneCountry({ country: countryData.locateData?.country || '', countryList: countryData.data || [] });
+        setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
       } catch (error) {
         errorTip(
           {
@@ -324,7 +324,7 @@ const SignIn = forwardRef(
     }, []);
 
     useEffect(() => {
-      // Get phoneCountry by service, update _phoneCountry
+      // Get phoneCountry by service, update phoneCountry
       getPhoneCountry();
     }, [getPhoneCountry]);
 
@@ -337,7 +337,7 @@ const SignIn = forwardRef(
               defaultChainId={defaultChainId}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
-              phoneCountry={_phoneCountry}
+              phoneCountry={phoneCountry}
               extraElement={extraElement}
               validateEmail={validateEmail}
               validatePhone={validatePhone}
@@ -356,7 +356,7 @@ const SignIn = forwardRef(
               isErrorTip={isErrorTip}
               sandboxId={sandboxId}
               chainType={networkItem?.walletType}
-              chainInfo={_chainInfo}
+              chainInfo={chainInfo}
               onStepChange={onSignUpStepChange}
               onError={onErrorRef?.current}
               onFinish={onStep2WithSignUpFinish}
@@ -368,7 +368,7 @@ const SignIn = forwardRef(
               approvedList={approvedList}
               sandboxId={sandboxId}
               chainType={networkItem?.walletType}
-              chainInfo={_chainInfo}
+              chainInfo={chainInfo}
               guardianIdentifierInfo={guardianIdentifierInfo}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
@@ -400,7 +400,7 @@ const SignIn = forwardRef(
       isShowScan,
       defaultChainId,
       isErrorTip,
-      _phoneCountry,
+      phoneCountry,
       extraElement,
       validateEmail,
       validatePhone,
@@ -413,7 +413,7 @@ const SignIn = forwardRef(
       guardianIdentifierInfo,
       sandboxId,
       networkItem?.walletType,
-      _chainInfo,
+      chainInfo,
       onSignUpStepChange,
       onStep2WithSignUpFinish,
       onStep2Cancel,

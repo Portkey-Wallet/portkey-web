@@ -9,7 +9,7 @@ import { IPhoneCountry } from '../types';
 import './index.less';
 
 interface PhoneNumberInputProps {
-  country?: IPhoneCountry['country'];
+  iso?: IPhoneCountry['iso'];
   countryList?: IPhoneCountry['countryList'];
   phoneNumber?: string;
   onAreaChange?: (v: CountryItem) => void;
@@ -18,7 +18,7 @@ interface PhoneNumberInputProps {
 }
 
 export default function PhoneNumberInput({
-  country,
+  iso,
   countryList,
   phoneNumber,
   onAreaChange,
@@ -26,7 +26,7 @@ export default function PhoneNumberInput({
   onPhoneNumberChange,
 }: PhoneNumberInputProps) {
   const [open, setOpen] = useState<boolean>();
-  const currentArea = useMemo(() => countryList?.find((v) => v.country === country), [country, countryList]);
+  const currentArea = useMemo(() => countryList?.find((v) => v.iso === iso), [iso, countryList]);
   useEffectOnce(() => {
     currentArea && onAreaChange?.(currentArea);
   });
@@ -54,7 +54,7 @@ export default function PhoneNumberInput({
       </div>
       <AreaCode
         open={open}
-        value={country}
+        value={iso}
         areaList={countryList}
         onCancel={() => {
           onCancel?.();
