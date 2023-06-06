@@ -1,9 +1,10 @@
 import React, { useRef } from 'react';
-import { ConfigProvider, SignIn, SignInInterface } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, SignInInterface, did } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 
 const myStore = new Store();
 ConfigProvider.setGlobalConfig({
+  connectUrl: 'https://auth-portkey-test.portkey.finance',
   storageMethod: myStore,
   socialLogin: {
     Portkey: {
@@ -11,9 +12,9 @@ ConfigProvider.setGlobalConfig({
       websiteIcon: '',
     },
   },
-  // requestDefaults: {
-  //   baseURL: '/portkey',
-  // },
+  requestDefaults: {
+    timeout: 30000,
+  },
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
@@ -35,8 +36,10 @@ export default function Sign() {
         isShowScan
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
-        onFinish={res => {
+        onFinish={async res => {
           console.log(res, 'onFinish====');
+          const CAHolderInfo = await did.getCAHolderInfo(res.chainId);
+          console.log(CAHolderInfo, CAHolderInfo.nickName, 'result====onFinish');
         }}
         onError={error => {
           console.log(error, 'onError====error');

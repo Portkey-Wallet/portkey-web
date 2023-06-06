@@ -8,7 +8,7 @@ import './index.less';
 
 interface AreaCodeProps {
   open?: boolean;
-  value?: CountryItem['country'];
+  value?: CountryItem['iso'];
   areaList?: CountryItem[];
   onCancel?: () => void;
   onChange?: (item: CountryItem) => void;
@@ -50,8 +50,8 @@ export default function AreaCode({ open, value, areaList, onChange, onCancel }: 
   const item = useCallback(
     (countryItem: CountryItem) => (
       <li
-        key={countryItem.country}
-        className={clsx('flex-between-center area-code-item', value === countryItem.country && 'active-item')}
+        key={countryItem.iso}
+        className={clsx('flex-between-center area-code-item', value === countryItem.iso && 'active-item')}
         onClick={() => onChange?.(countryItem)}>
         <span>{countryItem.country}</span>
         <span>+ {countryItem.code}</span>
