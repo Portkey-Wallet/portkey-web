@@ -191,7 +191,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
     const { chainId, ...contractParams } = params;
     const contract = await this.getContractByChainInfo(chainId);
-    const req = await contract.callSendMethod('AddManager', this.managementAccount.address, contractParams);
+    const req = await contract.callSendMethod('AddManagerInfo', this.managementAccount.address, contractParams);
     if (req.error) throw req.error;
     return req.data;
   }
@@ -199,7 +199,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
     const { chainId, ...contractParams } = params;
     const contract = await this.getContractByChainInfo(chainId);
-    const req = await contract.callSendMethod('RemoveManager', this.managementAccount.address, contractParams);
+    const req = await contract.callSendMethod('RemoveManagerInfo', this.managementAccount.address, contractParams);
     if (req.error) throw req.error;
     // delete current manager
     if (

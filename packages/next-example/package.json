@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@portkey/next-example",
-  "version": "0.0.1-alpha.1.4",
+  "version": "0.0.1-alpha.8.7",
   "scripts": {
     "dev": "PORT=4000 next dev",
     "start": "next start",
@@ -9,13 +9,12 @@
     "dev:analyze": "PORT=4000 ANALYZE=true next dev"
   },
   "dependencies": {
+    "@portkey/did-ui-react": "^0.0.1-alpha.8.7",
     "next": "12.2.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
     "next-transpile-modules": "^10.0.0",
-    "@portkey/did-ui-react": "^0.0.1-alpha.8.4"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
-  "devDependencies": {},
   "browserslist": {
     "production": [
       ">0.2%",
