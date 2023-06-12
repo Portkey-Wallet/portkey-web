@@ -1,6 +1,6 @@
 import { AccountType } from '@portkey/services';
 import { ChainId } from '@portkey/types';
-import { CountryItem } from '../../types';
+import { ICountryItem } from '../../types';
 
 export interface GuardianInputInfo {
   identifier: string; // account
@@ -18,11 +18,11 @@ export interface SignInSuccess extends GuardianInputInfo {
 
 export interface IPhoneCountry {
   /** @deprecated Use `iso` replacement */
-  country?: CountryItem['country'];
-  iso?: CountryItem['iso'];
-  countryList?: CountryItem[];
+  country?: ICountryItem['country'];
+  iso?: ICountryItem['iso'];
+  countryList?: ICountryItem[];
 }
-
-export type SignInInterface = {
+export type ISignIn = {
   setOpen: (open: boolean) => void;
 };
+export type SignInInterface = ISignIn;

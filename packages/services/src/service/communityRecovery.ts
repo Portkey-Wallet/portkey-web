@@ -12,8 +12,8 @@ import {
   RegisterResult,
   GetRegisterInfoParams,
   RegisterInfo,
-  CountryItem,
-  GetPhoneCountryCodeResult,
+  ICountryItem,
+  IPhoneCountryCodeResult,
 } from '../types/communityRecovery';
 import {
   SendAppleUserExtraInfoParams,
@@ -36,14 +36,14 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     super(request);
     this._didGraphQL = didGraphQL;
   }
-  async getPhoneCountryCode(): Promise<CountryItem[]> {
+  async getPhoneCountryCode(): Promise<ICountryItem[]> {
     const result = await this._request.send({
       method: 'GET',
       url: '/api/app/phone/info',
     });
     return result?.data || [];
   }
-  async getPhoneCountryCodeWithLocal(): Promise<GetPhoneCountryCodeResult> {
+  async getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult> {
     return await this._request.send({
       method: 'GET',
       url: '/api/app/phone/info',

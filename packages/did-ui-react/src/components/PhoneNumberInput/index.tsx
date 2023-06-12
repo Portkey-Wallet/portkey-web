@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import clsx from 'clsx';
 import { useState, useMemo } from 'react';
 import { useEffectOnce } from 'react-use';
-import { CountryItem } from '../../types';
+import { ICountryItem } from '../../types';
 import AreaCode from '../AreaCode';
 import CustomSvg from '../CustomSvg';
 import { IPhoneCountry } from '../types';
@@ -12,7 +12,7 @@ interface PhoneNumberInputProps {
   iso?: IPhoneCountry['iso'];
   countryList?: IPhoneCountry['countryList'];
   phoneNumber?: string;
-  onAreaChange?: (v: CountryItem) => void;
+  onAreaChange?: (v: ICountryItem) => void;
   onPhoneNumberChange?: (v: string) => void;
   onCancel?: () => void;
 }
@@ -60,8 +60,8 @@ export default function PhoneNumberInput({
           onCancel?.();
           setOpen(false);
         }}
-        onChange={(CountryItem) => {
-          onAreaChange?.(CountryItem);
+        onChange={(countryItem) => {
+          onAreaChange?.(countryItem);
           setOpen(false);
         }}
       />

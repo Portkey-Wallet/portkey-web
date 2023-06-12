@@ -30,11 +30,11 @@ yarn add "@portkey/did-ui-react
 ## 🔨 Usage
 
 ```tsx
-import { SignIn, PortkeyConfigProvider, DIDWalletInfo, SignInInterface } from '@portkey/did-ui-react';
+import { SignIn, PortkeyConfigProvider, DIDWalletInfo, ISignIn } from '@portkey/did-ui-react';
 import { useRef, useCallback } from 'react';
 
 const App = () => {
-  const ref = useRef<SignInInterface>();
+  const ref = useRef<ISignIn>();
 
   const onFinish = useCallback((didWallet: DIDWalletInfo) => {
     console.log('didWallet:', didWallet);

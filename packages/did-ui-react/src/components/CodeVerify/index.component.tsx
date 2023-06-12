@@ -40,7 +40,7 @@ export default function CodeVerify({
   isLoginAccount,
   guardianIdentifier,
   accountType = 'Email',
-  verifierSessionId,
+  verifierSessionId: defalutVerifierSessionId,
   onError,
   onReSend,
   onSuccess,
@@ -48,7 +48,7 @@ export default function CodeVerify({
   const [timer, setTimer] = useState<number>(0);
   const [pinVal, setPinVal] = useState<string>();
   const timerRef = useRef<NodeJS.Timer>();
-  const [_verifierSessionId, setVerifierSessionId] = useState<string>(verifierSessionId);
+  const [verifierSessionId, setVerifierSessionId] = useState<string>(defalutVerifierSessionId);
   const { t } = useTranslation();
 
   useEffectOnce(() => {
@@ -59,10 +59,10 @@ export default function CodeVerify({
     async (code: string) => {
       try {
         if (code && code.length === 6) {
-          if (!_verifierSessionId) throw Error(`VerifierSessionId(${_verifierSessionId}) is invalid`);
+          if (!verifierSessionId) throw Error(`VerifierSessionId(${verifierSessionId}) is invalid`);
           setLoading(true);
           const result = await verification.checkVerificationCode({
-            verifierSessionId: _verifierSessionId,
+            verifierSessionId,
             verificationCode: code,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
@@ -72,6 +72,8 @@ export default function CodeVerify({
 
           if (result.signature) return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
           setPinVal('');
+        } else {
+          throw Error('Please check if the PIN code is entered correctly');
         }
       } catch (error: any) {
         setLoading(false);
@@ -88,7 +90,7 @@ export default function CodeVerify({
       }
     },
 
-    [_verifierSessionId, guardianIdentifier, verifier.id, chainId, onSuccess, isErrorTip, onError],
+    [verifierSessionId, guardianIdentifier, verifier.id, chainId, onSuccess, isErrorTip, onError],
   );
 
   const reCaptchaHandler = useReCaptchaModal();
@@ -107,11 +109,11 @@ export default function CodeVerify({
         },
         reCaptchaHandler,
       );
-      if (result.verifierSessionId) {
-        setTimer(MAX_TIMER);
-        onReSend?.({ verifier, ...result });
-        setVerifierSessionId(result.verifierSessionId);
-      }
+      if (!result.verifierSessionId)
+        return console.warn('The request was rejected, please check whether the parameters are correct');
+      setTimer(MAX_TIMER);
+      onReSend?.({ verifier, ...result });
+      setVerifierSessionId(result.verifierSessionId);
     } catch (error: any) {
       const msg = handleErrorMessage(error);
       errorTip(

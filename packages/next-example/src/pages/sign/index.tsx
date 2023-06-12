@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ConfigProvider, SignIn, SignInInterface, did } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 
 const myStore = new Store();
@@ -26,7 +26,7 @@ ConfigProvider.setGlobalConfig({
 });
 
 export default function Sign() {
-  const ref = useRef<SignInInterface>();
+  const ref = useRef<ISignIn>();
 
   return (
     <div>
