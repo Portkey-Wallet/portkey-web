@@ -36,6 +36,7 @@
     "build": "npm run build:clean && npm run build:types && npm run build:source",
     "dev": "rollup --config rollup.config.js --watch",
     "release": "yarn version && yarn build",
+    "modified:less": "lessc --js --modify-var='ant-prefix=portkey-ant' src/assets/theme/antd.less src/assets/theme/modified.antd.css",
     "pub": "npm publish"
   },
   "dependencies": {
