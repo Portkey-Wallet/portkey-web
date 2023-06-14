@@ -11,7 +11,7 @@ import { SignInSuccess } from '../../../types';
 import qs from 'query-string';
 import './index.less';
 
-interface Step2WithSignInProps {
+interface Step2OfLoginProps {
   sandboxId?: string;
   chainInfo?: ChainInfo;
   chainType?: ChainType;
@@ -24,7 +24,7 @@ interface Step2WithSignInProps {
   onError?: OnErrorFunc;
 }
 
-function Step2WithSignIn({
+function Step2OfLogin({
   sandboxId,
   chainType,
   chainInfo,
@@ -34,7 +34,7 @@ function Step2WithSignIn({
   onFinish,
   onCancel,
   onError,
-}: Step2WithSignInProps) {
+}: Step2OfLoginProps) {
   const [guardianList, setGuardianList] = useState<BaseGuardianItem[] | undefined>();
 
   const getVerifierListHandler = useCallback(async () => {
@@ -166,4 +166,4 @@ function Step2WithSignIn({
   );
 }
 
-export default memo(Step2WithSignIn);
+export default memo(Step2OfLogin);

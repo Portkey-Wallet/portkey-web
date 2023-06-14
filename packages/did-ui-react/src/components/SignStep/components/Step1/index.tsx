@@ -1,10 +1,11 @@
 import SignUpAndLogin, { SignUpAndLoginProps } from '../../../SignUpAndLogin/index.component';
 import { useCallback, useState, memo, useEffect, useRef } from 'react';
 import type { DIDWalletInfo, GuardianInputInfo, SignInSuccess } from '../../../types';
-import type { SignInLifeCycleType } from '../../types';
+import type { SignInLifeCycleType, TStepFirstType } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import qs from 'query-string';
 import LoginModal from '../../../LoginModal';
+import UserInput from '../../../UserInput/index.component';
 
 export type OnSignInFinishedFun = (values: {
   isFinished: boolean;
@@ -15,11 +16,12 @@ export type OnSignInFinishedFun = (values: {
 }) => void;
 
 interface Step1Props extends SignUpAndLoginProps {
+  stepFirstType?: TStepFirstType;
   onSignInFinished: OnSignInFinishedFun;
   onStepChange?: (v: SignInLifeCycleType) => void;
 }
 
-function Step1({ onStepChange, onSignInFinished, ...props }: Step1Props) {
+function Step1({ stepFirstType, onStepChange, onSignInFinished, ...props }: Step1Props) {
   const [createType, setCreateType] = useState<SignInLifeCycleType>('Login');
   const [open, setOpen] = useState<boolean>();
 
@@ -42,7 +44,7 @@ function Step1({ onStepChange, onSignInFinished, ...props }: Step1Props) {
   );
 
   useUpdateEffect(() => {
-    onStepChange?.(createType);
+    createType && onStepChange?.(createType);
   }, [createType]);
 
   const [appleIdToken, setAppleIdToken] = useState<string>();
@@ -59,7 +61,11 @@ function Step1({ onStepChange, onSignInFinished, ...props }: Step1Props) {
 
   return (
     <>
-      <SignUpAndLogin {...props} appleIdToken={appleIdToken} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
+      {stepFirstType === 'connectFirst' && <UserInput {...props} appleIdToken={appleIdToken} onSuccess={onSuccess} />}
+      {stepFirstType !== 'connectFirst' && (
+        <SignUpAndLogin {...props} appleIdToken={appleIdToken} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
+      )}
+
       <LoginModal
         open={open}
         type={createType}
