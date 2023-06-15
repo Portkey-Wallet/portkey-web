@@ -19,7 +19,7 @@ export type LifeCycleType =
   | SetPinAndAddManagerCycleType;
 
 export type UI_TYPE = 'Modal' | 'Full';
-export type TStepFirstType = 'normal' | 'connectFirst';
+export type TDesign = 'SocialDesign' | 'CryptoDesign';
 
 export interface SignInProps {
   defaultChainId?: ChainId;
@@ -32,7 +32,7 @@ export interface SignInProps {
   phoneCountry?: IPhoneCountry;
   extraElement?: ReactNode; // extra element
   termsOfService?: ReactNode;
-  stepFirstType?: TStepFirstType;
+  design?: TDesign;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
   onNetworkChange?: (network: string) => void;

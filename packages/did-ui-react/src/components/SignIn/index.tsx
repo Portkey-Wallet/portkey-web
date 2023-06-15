@@ -60,7 +60,7 @@ const SignIn = forwardRef(
       phoneCountry: defaultPhoneCountry,
       extraElement,
       termsOfService,
-      stepFirstType = 'normal',
+      design = 'CryptoDesign',
       validateEmail,
       validatePhone,
       uiType = 'Modal',
@@ -301,7 +301,7 @@ const SignIn = forwardRef(
           {step === 'SignIn' && (
             <Step1
               isShowScan={isShowScan}
-              stepFirstType={stepFirstType}
+              design={design}
               defaultChainId={defaultChainId}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
@@ -380,7 +380,7 @@ const SignIn = forwardRef(
       guardianIdentifierInfo,
       sandboxId,
       networkItem,
-      stepFirstType,
+      design,
       chainInfo,
       onSignUpStepChange,
       onStep2OfSignUpFinish,

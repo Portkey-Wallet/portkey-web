@@ -1,7 +1,7 @@
 import SignUpAndLogin, { SignUpAndLoginProps } from '../../../SignUpAndLogin/index.component';
 import { useCallback, useState, memo, useEffect, useRef } from 'react';
 import type { DIDWalletInfo, GuardianInputInfo, SignInSuccess } from '../../../types';
-import type { SignInLifeCycleType, TStepFirstType } from '../../../SignStep/types';
+import type { SignInLifeCycleType, TDesign } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import qs from 'query-string';
 import LoginModal from '../../../LoginModal';
@@ -16,12 +16,12 @@ export type OnSignInFinishedFun = (values: {
 }) => void;
 
 interface Step1Props extends SignUpAndLoginProps {
-  stepFirstType?: TStepFirstType;
+  design?: TDesign;
   onSignInFinished: OnSignInFinishedFun;
   onStepChange?: (v: SignInLifeCycleType) => void;
 }
 
-function Step1({ stepFirstType, onStepChange, onSignInFinished, ...props }: Step1Props) {
+function Step1({ design, onStepChange, onSignInFinished, ...props }: Step1Props) {
   const [createType, setCreateType] = useState<SignInLifeCycleType>('Login');
   const [open, setOpen] = useState<boolean>();
 
@@ -61,8 +61,8 @@ function Step1({ stepFirstType, onStepChange, onSignInFinished, ...props }: Step
 
   return (
     <>
-      {stepFirstType === 'connectFirst' && <UserInput {...props} appleIdToken={appleIdToken} onSuccess={onSuccess} />}
-      {stepFirstType !== 'connectFirst' && (
+      {design === 'SocialDesign' && <UserInput {...props} appleIdToken={appleIdToken} onSuccess={onSuccess} />}
+      {design !== 'SocialDesign' && (
         <SignUpAndLogin {...props} appleIdToken={appleIdToken} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
       )}
 

@@ -68,10 +68,10 @@ export default function Sign() {
       <SignIn
         ref={ref1}
         uiType="Modal"
-        stepFirstType="connectFirst"
+        design="SocialDesign"
         isShowScan
         className="sign-in-wrapper"
-        termsOfService={'https://portkey.finance/terms-of-service'}
+        // termsOfService={'https://portkey.finance/terms-of-service'}
         onFinish={async res => {
           console.log(res, 'onFinish====');
           const CAHolderInfo = await did.getCAHolderInfo(res.chainId);

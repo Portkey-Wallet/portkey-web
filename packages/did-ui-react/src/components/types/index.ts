@@ -20,10 +20,7 @@ export interface DIDWalletInfo {
   caInfo: CAInfo;
   pin: string;
   chainId: ChainId;
-  walletInfo: IBlockchainWallet & {
-    /** @deprecated `wallet` will delete, `walletInfo` is already the previous `walletInfo.wallet`  */
-    wallet: IBlockchainWallet;
-  };
+  walletInfo: IBlockchainWallet;
   accountInfo: ManagerInfoType;
 }
 

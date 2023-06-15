@@ -56,7 +56,7 @@ export default function Overview({ isShowScan, extraElement, termsOfService, onA
         </div>
       </div>
 
-      <TermsOfServiceItem termsOfService={termsOfService} />
+      {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} />}
     </div>
   );
 }

@@ -9,8 +9,6 @@ import './index.less';
 
 export interface LoginBaseProps {
   isShowScan?: boolean;
-  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
-  termsOfServiceUrl?: string;
   termsOfService?: ReactNode;
   extraElement?: ReactNode; // extra element
   phoneCountry?: IPhoneCountry;
@@ -39,7 +37,6 @@ export default function LoginCard({
   networkType,
   extraElement,
   termsOfService,
-  termsOfServiceUrl,
   onStep,
   onError,
   onInputFinish,
@@ -97,7 +94,7 @@ export default function LoginCard({
           switchType={onStep}
           switchGuardinType={() => setStep(STEP.inputLogin)}
           extraElement={extraElement}
-          termsOfService={termsOfService || termsOfServiceUrl}
+          termsOfService={termsOfService}
           onLoginByPortkey={onLoginByPortkey}
           onError={onError}
         />

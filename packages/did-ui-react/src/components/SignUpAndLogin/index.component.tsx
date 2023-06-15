@@ -30,8 +30,6 @@ export interface SignUpAndLoginProps {
   style?: CSSProperties;
   isErrorTip?: boolean;
   isShowScan?: boolean; // show scan button
-  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
-  termsOfServiceUrl?: string;
   termsOfService?: ReactNode;
   phoneCountry?: IPhoneCountry; // phone country code info
   extraElement?: ReactNode; // extra element
@@ -60,7 +58,6 @@ export default function SignUpAndLoginBaseCom({
   socialLogin,
   appleIdToken,
   extraElement,
-  termsOfServiceUrl,
   termsOfService,
   onError,
   onSuccess,
@@ -240,7 +237,7 @@ export default function SignUpAndLoginBaseCom({
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           extraElement={extraElement}
-          termsOfService={termsOfService || termsOfServiceUrl}
+          termsOfService={termsOfService}
           networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
@@ -270,7 +267,7 @@ export default function SignUpAndLoginBaseCom({
           socialLogin={_socialLogin}
           isShowScan={isShowScan}
           extraElement={extraElement}
-          termsOfService={termsOfService || termsOfServiceUrl}
+          termsOfService={termsOfService}
           networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={_onSuccess}
