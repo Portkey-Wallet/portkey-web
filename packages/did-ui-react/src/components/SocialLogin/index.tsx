@@ -61,7 +61,7 @@ export default function SocialLogin({
   return (
     <>
       <div className={clsx('portkey-ui-flex-column', 'social-login-wrapper', className)}>
-        <h1 className="portkey-ui-flex-between-center social-login-title">
+        <h1 className="portkey-ui-flex-between-center font-medium social-login-title">
           {!isLogin && <CustomSvg type="BackLeft" onClick={onBackRef?.current} />}
           {isLogin && <span></span>}
           <span className="title">{t(type)}</span>

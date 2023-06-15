@@ -30,7 +30,7 @@ export default function InputLogin({
 
   return (
     <div className={clsx('login-content', className)}>
-      <h1 className="portkey-ui-flex-between-center login-title">
+      <h1 className="portkey-ui-flex-between-center font-medium login-title">
         <CustomSvg type="BackLeft" onClick={onBack} />
         <span>{t(type)}</span>
         <span className="empty"></span>

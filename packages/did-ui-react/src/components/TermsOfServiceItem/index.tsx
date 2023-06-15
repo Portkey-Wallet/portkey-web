@@ -10,7 +10,7 @@ export default function TermsOfServiceItem({ termsOfService }: TermsOfServicePro
       {typeof termsOfService === 'string' ? (
         <div className="terms-of-service-item">
           <span>Use the application according to</span>
-          <a href={termsOfService} target="_blank" rel="noreferrer" className="terms-text">
+          <a href={termsOfService} target="_blank" rel="noreferrer" className="font-medium terms-text">
             Terms of service
           </a>
         </div>

@@ -13,7 +13,7 @@ interface ScanCardProps {
 export default function ScanCard({ qrData, backIcon, isShowIcon = true, wrapperClassName, onBack }: ScanCardProps) {
   return (
     <div className={clsx('scan-card-wrapper', wrapperClassName)}>
-      <h2 className="scan-title">
+      <h2 className="font-medium scan-title">
         Scan code to log in
         {isShowIcon && backIcon && (
           <div className="back-icon-wrapper" onClick={onBack}>
