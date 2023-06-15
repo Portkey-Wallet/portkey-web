@@ -1,5 +1,5 @@
 /**
- * @file
+ * @remarks
  *
  * First you have to configure networkList using ConfigProvider.setGlobalConfig
  */

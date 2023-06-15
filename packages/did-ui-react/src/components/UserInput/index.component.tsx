@@ -216,7 +216,7 @@ function UserInput({
         setLoading(false);
         errorTip(
           {
-            errorFields: 'socialLogin Google',
+            errorFields: 'onAccountTypeChange',
             error: handleErrorMessage(error),
           },
           isErrorTip,
