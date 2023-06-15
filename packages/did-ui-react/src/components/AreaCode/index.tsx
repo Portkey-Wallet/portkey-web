@@ -2,16 +2,16 @@ import { Input } from 'antd';
 import clsx from 'clsx';
 import { ChangeEvent, MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CustomSvg from '../CustomSvg';
-import { CountryItem } from '../../types';
+import { ICountryItem } from '../../types';
 import { countryCodeFilter } from '../../constants/country';
 import './index.less';
 
 interface AreaCodeProps {
   open?: boolean;
-  value?: CountryItem['iso'];
-  areaList?: CountryItem[];
+  value?: ICountryItem['iso'];
+  areaList?: ICountryItem[];
   onCancel?: () => void;
-  onChange?: (item: CountryItem) => void;
+  onChange?: (item: ICountryItem) => void;
 }
 
 export default function AreaCode({ open, value, areaList, onChange, onCancel }: AreaCodeProps) {
@@ -48,7 +48,7 @@ export default function AreaCode({ open, value, areaList, onChange, onCancel }: 
   }, []);
 
   const item = useCallback(
-    (countryItem: CountryItem) => (
+    (countryItem: ICountryItem) => (
       <li
         key={countryItem.iso}
         className={clsx('portkey-ui-flex-between-center area-code-item', value === countryItem.iso && 'active-item')}

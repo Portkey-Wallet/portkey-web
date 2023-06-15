@@ -6,6 +6,7 @@ import { NetworkInfo } from '../types';
 
 export default function useNetworkList() {
   const [networkInfo, setNetworkInfo] = useState<NetworkInfo>(ConfigProvider.config?.network);
+
   const setHandler = useCallback(
     (networkType: string) => {
       const networkItem = networkInfo?.networkList?.find((item) => item.networkType === networkType);
@@ -22,6 +23,7 @@ export default function useNetworkList() {
     },
     [networkInfo?.networkList],
   );
+
   const setNetworkHandler = useCallback(
     (v: NetworkInfo) => {
       setNetworkInfo(v);

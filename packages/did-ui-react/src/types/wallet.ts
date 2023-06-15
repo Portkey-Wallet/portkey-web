@@ -1,5 +1,5 @@
 import { ChainType } from '@portkey/types';
-import { CountryItem } from './country';
+import { ICountryItem } from './country';
 import { DeviceType, QRExtraDataType } from './device';
 
 export interface QRData {
@@ -16,7 +16,7 @@ export interface LoginQRData extends QRData {
 }
 export interface ISelectCountryCode {
   index: string;
-  country: CountryItem;
+  country: ICountryItem;
 }
 
 export type RegisterType = 'Login' | 'Sign up';

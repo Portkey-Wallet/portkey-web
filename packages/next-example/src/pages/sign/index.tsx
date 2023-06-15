@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { ConfigProvider, SignIn, SignInInterface, did } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 
 const myStore = new Store();
@@ -19,15 +19,15 @@ ConfigProvider.setGlobalConfig({
   // reCaptchaConfig: {
   //   siteKey: '',
   // },
-  graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
+  graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
   network: {
     defaultNetwork: 'TESTNET',
   },
 });
 
 export default function Sign() {
-  const ref = useRef<SignInInterface>();
-
+  const ref = useRef<ISignIn>();
+  const ref1 = useRef<ISignIn>();
   return (
     <div>
       <SignIn
@@ -57,6 +57,36 @@ export default function Sign() {
         }}>
         setOpen
       </button>
+      <div></div>
+      <button
+        onClick={() => {
+          ref1?.current.setOpen(true);
+        }}>
+        setOpen connectFirst
+      </button>
+
+      <SignIn
+        ref={ref1}
+        uiType="Modal"
+        stepFirstType="connectFirst"
+        isShowScan
+        className="sign-in-wrapper"
+        termsOfService={'https://portkey.finance/terms-of-service'}
+        onFinish={async res => {
+          console.log(res, 'onFinish====');
+          const CAHolderInfo = await did.getCAHolderInfo(res.chainId);
+          console.log(CAHolderInfo, CAHolderInfo.nickName, 'result====onFinish');
+        }}
+        onError={error => {
+          console.log(error, 'onError====error');
+        }}
+        onCancel={() => {
+          ref1?.current.setOpen(false);
+        }}
+        onCreatePending={info => {
+          console.log(info, 'onCreatePending====info');
+        }}
+      />
     </div>
   );
 }

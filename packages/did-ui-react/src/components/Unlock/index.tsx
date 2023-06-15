@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
-import BaseModal from '../SignIn/components/BaseModal';
+import BaseModal from '../SignStep/components/BaseModal';
 import CustomPassword from '../CustomPassword';
 import CustomSvg from '../CustomSvg';
 import BaseStyleProvider from '../BaseStyleProvider';

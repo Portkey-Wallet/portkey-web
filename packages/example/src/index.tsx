@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import { createRoot } from 'react-dom/client';
 import { did } from '@portkey/did';
 import { IStorageSuite } from '@portkey/types';
-import { ConfigProvider, SignIn, SignInInterface } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn } from '@portkey/did-ui-react';
 import '@portkey/did-ui-react/dist/assets/index.css';
 import './index.css';
 
@@ -36,7 +36,7 @@ ConfigProvider.setGlobalConfig({
 });
 
 function App() {
-  const ref = useRef<SignInInterface>();
+  const ref = useRef<ISignIn>();
   return (
     <div>
       did example
