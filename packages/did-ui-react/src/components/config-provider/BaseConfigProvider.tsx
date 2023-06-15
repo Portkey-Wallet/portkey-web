@@ -7,11 +7,11 @@ import ReCaptchaModal from '../ReCaptchaModal';
 
 export default function BaseConfigProvider({ children }: { children: ConfigProviderProps['children'] }) {
   // const config = useMemo(() => localConfigProvider.getGlobalConfig(), []);
-  // useEffectOnce(() => {
-  //   ConfigProvider.config({
-  //     prefixCls: 'antd',
-  //   });
-  // });
+  useEffectOnce(() => {
+    ConfigProvider.config({
+      prefixCls: 'portkey-ant',
+    });
+  });
   useEffectOnce(() => {
     // TODO
     // const fontFamily400 = config?.fontFamily400;
@@ -24,7 +24,7 @@ export default function BaseConfigProvider({ children }: { children: ConfigProvi
 
   return (
     <>
-      <ConfigProvider>
+      <ConfigProvider prefixCls="portkey-ant">
         <div>
           {children}
           <ScreenLoading />
