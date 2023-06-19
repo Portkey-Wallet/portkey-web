@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
 import { ISocialLoginConfig, OnErrorFunc } from '../../types';
 import { ChainId } from '@portkey/types';
-import type { AccountType } from '@portkey/services';
+import { AccountType, RecaptchaType } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { verification, setLoading, errorTip, verifyErrorHandler, handleErrorMessage } from '../../utils';
 import './index.less';
@@ -42,6 +42,8 @@ export interface VerifierSelectProps {
   className?: string;
   accountType?: AccountType;
   isErrorTip?: boolean;
+  operationType?: RecaptchaType;
+
   // socialLogin porps
   appleIdToken?: string; // apple authorized
   googleAccessToken?: string; // google authorized
@@ -61,6 +63,7 @@ export default function VerifierSelect({
   defaultVerifier,
   appleIdToken,
   googleAccessToken,
+  operationType = RecaptchaType.register,
   onError,
   onConfirm,
 }: VerifierSelectProps) {
@@ -150,6 +153,7 @@ export default function VerifierSelect({
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: selectItem.id,
             chainId,
+            operationType,
           },
         },
         reCaptchaHandler,
@@ -172,7 +176,7 @@ export default function VerifierSelect({
         onError,
       );
     }
-  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, reCaptchaHandler, selectItem]);
+  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, operationType, reCaptchaHandler, selectItem]);
 
   const onConfirmAuth = useCallback(async () => {
     try {

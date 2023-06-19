@@ -10,6 +10,7 @@ import {
 } from '@portkey/did-ui-react';
 import { useState } from 'react';
 import { Store } from '../../utils';
+import { RecaptchaType } from '@portkey/services';
 
 const myStore = new Store();
 ConfigProvider.setGlobalConfig({
@@ -81,6 +82,7 @@ function Example() {
           }}
         />
         <VerifierSelect
+          operationType={RecaptchaType.register}
           guardianIdentifier={'105383420233267798964'}
           accountType={'Google'}
           onError={(error: any) => {
@@ -123,6 +125,7 @@ function Example() {
         />
         <GuardianApproval
           chainId="AELF"
+          operationType={RecaptchaType.communityRecovery}
           guardianList={[
             {
               isLoginAccount: true,

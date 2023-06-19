@@ -1,6 +1,6 @@
 import type { ChainType } from '@portkey/types';
 import { VerifierItem } from '@portkey/did';
-import { ChainInfo, GuardiansApproved } from '@portkey/services';
+import { ChainInfo, GuardiansApproved, RecaptchaType } from '@portkey/services';
 import { memo, useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { contractErrorHandler, did, errorTip, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';
@@ -154,6 +154,7 @@ function Step2OfLogin({
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
         ref={ref}
+        operationType={RecaptchaType.communityRecovery}
         chainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={_onCancel} />}
         appleIdToken={appleIdToken}
