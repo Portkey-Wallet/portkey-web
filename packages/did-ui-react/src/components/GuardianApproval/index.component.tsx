@@ -7,6 +7,7 @@ import type { ChainId } from '@portkey/types';
 import { HOUR, MINUTE, portkeyDidUIPrefix } from '../../constants';
 import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
 import type { GuardiansApproved } from '@portkey/services';
+import { RecaptchaType } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
@@ -23,6 +24,7 @@ export interface GuardianApprovalProps {
   guardianList?: BaseGuardianItem[];
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
+  operationType?: RecaptchaType;
   appleIdToken?: string; // apple social login id token
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => void;
@@ -38,6 +40,7 @@ const GuardianApproval = forwardRef(
       isErrorTip = true,
       appleIdToken,
       wrapperStyle,
+      operationType = RecaptchaType.communityRecovery,
       onError,
       onConfirm,
     }: GuardianApprovalProps,
@@ -328,6 +331,7 @@ const GuardianApproval = forwardRef(
         {typeof verifyAccountIndex === 'number' ? (
           <VerifierPage
             chainId={chainId}
+            operationType={operationType}
             onBack={() => setVerifyAccountIndex(undefined)}
             guardianIdentifier={_guardianList[verifyAccountIndex].identifier || ''}
             verifierSessionId={_guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
@@ -346,6 +350,7 @@ const GuardianApproval = forwardRef(
             <GuardianList
               chainId={chainId}
               expiredTime={expiredTime}
+              operationType={operationType}
               guardianList={_guardianList}
               isErrorTip={isErrorTip}
               onSend={onSendCodeHandler}

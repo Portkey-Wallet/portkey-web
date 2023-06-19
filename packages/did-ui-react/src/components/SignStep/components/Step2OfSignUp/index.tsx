@@ -1,5 +1,5 @@
 import { useState, useCallback, memo, useEffect, useRef } from 'react';
-import { AccountTypeEnum } from '@portkey/services';
+import { AccountTypeEnum, RecaptchaType } from '@portkey/services';
 import VerifierSelect, { VerifierSelectConfirmResult } from '../../../VerifierSelect/index.component';
 import CodeVerify from '../../../CodeVerify/index.component';
 import { IVerifyInfo } from '../../../types/verify';
@@ -122,6 +122,7 @@ function Step2WithSignUp({
       <BackHeader onBack={onBackHandler} />
       {signUpStep === 'VerifierSelect' && (
         <VerifierSelect
+          operationType={RecaptchaType.register}
           chainId={guardianIdentifierInfo.chainId}
           className="content-padding"
           guardianIdentifier={guardianIdentifierInfo.identifier}

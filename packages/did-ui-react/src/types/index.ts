@@ -28,3 +28,9 @@ export interface LoadingInfo {
 }
 
 export type LoadingInfoType = LoadingInfo | string;
+
+export enum UseRecaptcha {
+  register = 0,
+  communityRecovery = 1,
+  optGuardian = 2,
+}
