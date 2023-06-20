@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { ChainId } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
+import { RecaptchaType } from '@portkey/services';
 
 interface GuardianItemProps {
   chainId: ChainId;
@@ -14,6 +15,7 @@ interface GuardianItemProps {
   isExpired?: boolean;
   item: UserGuardianStatus;
   isErrorTip?: boolean;
+  operationType?: RecaptchaType;
   onError?: OnErrorFunc;
   onSend?: (item: UserGuardianItem) => void;
   onVerifying?: (item: UserGuardianItem) => void;
@@ -25,6 +27,7 @@ function GuardianItems({
   item,
   isExpired,
   isErrorTip = true,
+  operationType = RecaptchaType.communityRecovery,
   onError,
   onSend,
   onVerifying,
@@ -69,6 +72,7 @@ function GuardianItems({
               guardianIdentifier: (item.identifier || item.identifierHash || '').replaceAll(/\s/g, ''),
               verifierId: item.verifier?.id || '',
               chainId,
+              operationType,
             },
           },
           reCaptchaHandler,
@@ -95,7 +99,7 @@ function GuardianItems({
         );
       }
     },
-    [reCaptchaHandler, chainId, onSend, isErrorTip, onError],
+    [chainId, operationType, reCaptchaHandler, onSend, isErrorTip, onError],
   );
 
   const verifyingHandler = useCallback(

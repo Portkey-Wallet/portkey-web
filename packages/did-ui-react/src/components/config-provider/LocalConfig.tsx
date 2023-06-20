@@ -36,9 +36,14 @@ class LocalConfigProvider {
       // throw "The current version does not support switching networks, please use 'setGlobalConfig.requestDefaults' or 'setGlobalConfig.graphQLUrl' to configure the network";
     }
     if ('requestDefaults' in _config) {
-      did.setConfig({ requestDefaults: _config['requestDefaults'] });
-      setServiceConfig(_config['requestDefaults']);
-      _config.requestDefaults && setServiceConfig(_config.requestDefaults);
+      const requestDefaults = _config['requestDefaults'];
+      if (requestDefaults) {
+        if (!requestDefaults.headers) requestDefaults.headers = {};
+        requestDefaults.headers.version = 'v1.3.0';
+        did.setConfig({ requestDefaults: requestDefaults });
+        setServiceConfig(_config['requestDefaults']);
+        _config.requestDefaults && setServiceConfig(_config.requestDefaults);
+      }
     }
     if ('storageMethod' in _config && _config.storageMethod) {
       setVerification(_config.storageMethod);

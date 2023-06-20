@@ -1,9 +1,9 @@
-import { SendVerificationCodeRequestParams, VerifyVerificationCodeParams } from '@portkey/services';
+import { RecaptchaType, SendVerificationCodeRequestParams, VerifyVerificationCodeParams } from '@portkey/services';
 import { IStorageSuite } from '@portkey/types';
 import { did } from './did';
 import { BaseAsyncStorage } from './BaseAsyncStorage';
 import { portkeyDidUIPrefix } from '../constants';
-import { ReCaptchaType } from '../components';
+import { ReCaptchaResponseType } from '../components';
 import { setLoading } from './loading';
 
 export abstract class StorageBaseLoader {
@@ -66,12 +66,15 @@ export class Verification extends StorageBaseLoader {
 
   public async sendVerificationCode(
     config: SendVerificationCodeRequestParams,
-    recaptchaHandler: (open?: boolean | undefined) => Promise<{
-      type: ReCaptchaType;
+    recaptchaHandler: (
+      open?: boolean | undefined,
+      operationType?: RecaptchaType,
+    ) => Promise<{
+      type: ReCaptchaResponseType;
       message?: any;
     }>,
   ) {
-    const { guardianIdentifier, verifierId } = config.params;
+    const { guardianIdentifier, verifierId, operationType } = config.params;
     const key = (guardianIdentifier || '') + (verifierId || '');
 
     try {
@@ -79,13 +82,13 @@ export class Verification extends StorageBaseLoader {
       if (item) {
         return item;
       } else {
-        const reCaptchaToken = await recaptchaHandler(true);
+        const reCaptchaToken = await recaptchaHandler(true, operationType);
         if (reCaptchaToken.type !== 'success') throw reCaptchaToken.message;
         config.headers = {
           reCaptchaToken: reCaptchaToken.message,
         };
         setLoading(true);
-        const req = await did.services.getVerificationCode(config as SendVerificationCodeRequestParams);
+        const req = await did.services.getVerificationCode(config);
         setLoading(false);
         await this.set(key, { ...req, time: Date.now() });
         return req;
