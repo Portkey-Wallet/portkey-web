@@ -1,4 +1,5 @@
 @import '../../assets/theme/color.less';
+@import '../../assets/theme/constants.less';
 
 .scan-card-wrapper {
   text-align: center;
@@ -33,7 +34,7 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width:  @screen-max-w-768) {
   .scan-card-wrapper {
     .scan-card-content {
       padding: 0 16px 16px;

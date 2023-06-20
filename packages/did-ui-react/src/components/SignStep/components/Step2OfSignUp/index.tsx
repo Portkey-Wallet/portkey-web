@@ -92,8 +92,6 @@ function Step2WithSignUp({
     [guardianIdentifierInfo.accountType, onFinish],
   );
 
-  // useE
-
   const onCodeVerifySuccess = useCallback(
     (res: IVerifyInfo) => {
       if (!sendCodeInfo?.verifier) throw 'No verifier Info';

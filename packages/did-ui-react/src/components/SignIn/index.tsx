@@ -395,7 +395,7 @@ const SignIn = forwardRef(
     return (
       <BaseStyleProvider>
         {uiType === 'Full' ? (
-          <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
+          <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
         ) : (
           <BaseModal
             destroyOnClose
