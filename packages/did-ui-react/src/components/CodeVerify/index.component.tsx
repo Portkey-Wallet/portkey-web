@@ -22,7 +22,7 @@ export interface CodeVerifyProps {
   className?: string;
   accountType?: AccountType;
   isCountdownNow?: boolean;
-  isLoginAccount?: boolean;
+  isLoginGuardian?: boolean;
   guardianIdentifier: string;
   verifierSessionId: string;
   isErrorTip?: boolean;
@@ -38,7 +38,7 @@ export default function CodeVerify({
   className,
   isErrorTip = true,
   isCountdownNow,
-  isLoginAccount,
+  isLoginGuardian,
   guardianIdentifier,
   accountType = 'Email',
   operationType = RecaptchaType.register,
@@ -158,7 +158,7 @@ export default function CodeVerify({
 
   return (
     <div className={clsx('verifier-account-wrapper', className)}>
-      {isLoginAccount && <div className="login-icon">{t('Login Account')}</div>}
+      {isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
       <div className="portkey-ui-flex-row-center login-account-wrapper">
         <VerifierPair guardianType={accountType} verifierSrc={verifier.imageUrl} verifierName={verifier.name} />
         <span className="login-account">{guardianIdentifier || ''}</span>

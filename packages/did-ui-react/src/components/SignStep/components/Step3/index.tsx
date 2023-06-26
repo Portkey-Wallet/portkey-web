@@ -4,11 +4,11 @@ import CommonModal from '../../../CommonModal';
 import { memo, useCallback, useState } from 'react';
 import { OnErrorFunc } from '../../../../types';
 import SetPinAndAddManagerCom, { SetPinAndAddManagerProps } from '../../../SetPinAndAddManager/index.component';
-import { AddManagerType, SignInSuccess } from '../../../types';
+import { AddManagerType, IGuardianIdentifierInfo } from '../../../types';
 import './index.less';
 
 interface Step3Props extends Omit<SetPinAndAddManagerProps, 'chainId' | 'guardianIdentifier'> {
-  guardianIdentifierInfo?: SignInSuccess;
+  guardianIdentifierInfo?: IGuardianIdentifierInfo;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   onCancel?: (type?: AddManagerType) => void;

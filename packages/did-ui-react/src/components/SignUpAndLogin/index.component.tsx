@@ -17,7 +17,7 @@ import {
   parseAppleIdentityToken,
   setLoading,
 } from '../../utils';
-import { GuardianInputInfo, SignInSuccess } from '../types';
+import { GuardianInputInfo, IGuardianIdentifierInfo } from '../types';
 import type { IPhoneCountry } from '../types';
 import { AccountType, AccountTypeEnum } from '@portkey/services';
 import ConfigProvider from '../config-provider';
@@ -41,7 +41,7 @@ export interface SignUpAndLoginProps {
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone
   onSignTypeChange?: (type: CreateWalletType) => void;
-  onSuccess?: (value: SignInSuccess) => void;
+  onSuccess?: (value: IGuardianIdentifierInfo) => void;
   onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
   onNetworkChange?: (network: string) => void; // When network changed
   onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
@@ -106,7 +106,7 @@ export default function SignUpAndLoginBaseCom({
   const isHasAccount = useRef<boolean>(false);
 
   const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
-    let isLoginIdentifier = false;
+    let isLoginGuardian = false;
     try {
       const { originChainId } = await did.services.getRegisterInfo({
         loginGuardianIdentifier: identifier,
@@ -117,17 +117,17 @@ export default function SignUpAndLoginBaseCom({
         chainId: originChainId,
       });
       if (payload?.guardianList?.guardians?.length > 0) {
-        isLoginIdentifier = true;
+        isLoginGuardian = true;
       }
     } catch (error: any) {
       if (handleErrorCode(error) === '3002') {
-        isLoginIdentifier = false;
+        isLoginGuardian = false;
       } else {
         throw handleErrorMessage(error || 'GetHolderInfo error');
       }
     }
 
-    isHasAccount.current = isLoginIdentifier;
+    isHasAccount.current = isLoginGuardian;
   }, []);
 
   const _validateEmail = useCallback(
@@ -165,12 +165,13 @@ export default function SignUpAndLoginBaseCom({
     [defaultChainId],
   );
 
-  const _onSuccess = useCallback(
+  const onFinish = useCallback(
     async (value: GuardianInputInfo) => {
+      setLoading(true);
       const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
       onChainIdChangeRef?.current?.(chainId);
       setLoading(false);
-      onSuccess?.({ ...value, isLoginIdentifier: isHasAccount.current, chainId });
+      onSuccess?.({ ...value, isLoginGuardian: isHasAccount.current, chainId });
     },
     [getIdentifierChainId, onSuccess],
   );
@@ -184,7 +185,7 @@ export default function SignUpAndLoginBaseCom({
           const userInfo = await getGoogleUserInfo(data?.accessToken);
           if (!userInfo?.id) throw userInfo;
           await validateIdentifier(userInfo.id);
-          _onSuccess({
+          onFinish({
             identifier: userInfo.id,
             accountType: AccountTypeEnum[AccountTypeEnum.Google] as AccountType,
             authenticationInfo: { googleAccessToken: data?.accessToken },
@@ -193,7 +194,7 @@ export default function SignUpAndLoginBaseCom({
           const userInfo = parseAppleIdentityToken(data?.accessToken);
           if (userInfo) {
             await validateIdentifier(userInfo.userId);
-            _onSuccess({
+            onFinish({
               identifier: userInfo.userId,
               accountType: AccountTypeEnum[AccountTypeEnum.Apple] as AccountType,
               authenticationInfo: { appleIdToken: data?.accessToken },
@@ -214,7 +215,7 @@ export default function SignUpAndLoginBaseCom({
         });
       }
     },
-    [_onSuccess, validateIdentifier],
+    [onFinish, validateIdentifier],
   );
 
   useUpdateEffect(() => {
@@ -243,7 +244,7 @@ export default function SignUpAndLoginBaseCom({
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
           onBack={() => setType('Login')}
-          onInputFinish={_onSuccess}
+          onInputFinish={onFinish}
           onError={onError}
           onSocialSignFinish={onSocialFinish}
         />
@@ -270,7 +271,7 @@ export default function SignUpAndLoginBaseCom({
           termsOfService={termsOfService}
           networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
-          onInputFinish={_onSuccess}
+          onInputFinish={onFinish}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
           onStep={LoginCardOnStep}

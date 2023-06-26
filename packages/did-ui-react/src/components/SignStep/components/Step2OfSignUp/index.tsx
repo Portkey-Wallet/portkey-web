@@ -5,16 +5,12 @@ import CodeVerify from '../../../CodeVerify/index.component';
 import { IVerifyInfo } from '../../../types/verify';
 import BackHeader from '../../../BackHeader';
 import { OnErrorFunc } from '../../../../types/error';
-import type { ChainInfo } from '@portkey/services';
 import { ChainType } from '@portkey/types';
 import { VerifierItem } from '@portkey/did';
-import { useUpdateEffect } from 'react-use';
-import { Step2SignUpLifeCycleType } from '../../../SignStep/types';
-import { getVerifierList } from '../../../../utils/sandboxUtil/getVerifierList';
-import { SignInSuccess } from '../../../types';
+import { Step2SignUpLifeCycleType, TStep2SignUpLifeCycle } from '../../../SignStep/types';
+import { IGuardianIdentifierInfo } from '../../../types';
 import { portkeyDidUIPrefix } from '../../../../constants';
 import ConfigProvider from '../../../config-provider';
-import { setLoading } from '../../../../utils';
 
 const step2Storage = `${portkeyDidUIPrefix}step1Storage`;
 
@@ -22,63 +18,42 @@ type Step2FinishParams = { verifier: VerifierItem } & IVerifyInfo;
 
 interface Step2WithSignUpProps {
   sandboxId?: string;
-  chainInfo?: ChainInfo;
   chainType?: ChainType;
+  defaultSignUpStep?: Step2SignUpLifeCycleType;
+  defaultCodeInfo?: VerifierSelectConfirmResult;
   isErrorTip?: boolean;
-  guardianIdentifierInfo: SignInSuccess;
-  onCancel?: () => void;
-  onFinish?: (values: Step2FinishParams) => void;
+  guardianIdentifierInfo: IGuardianIdentifierInfo;
+  onCancel?(): void;
+  onFinish?(values: Step2FinishParams): void;
   onError?: OnErrorFunc;
-  onStepChange?: (step: Step2SignUpLifeCycleType) => void;
+  onStepChange?(step: 'VerifierSelect', info: TStep2SignUpLifeCycle['VerifierSelect']): void;
+  onStepChange?(step: 'SignUpCodeVerify', info: TStep2SignUpLifeCycle['SignUpCodeVerify']): void;
 }
 
 function Step2WithSignUp({
   isErrorTip = true,
   sandboxId,
-  chainInfo,
   chainType,
+  defaultSignUpStep,
+  defaultCodeInfo,
   guardianIdentifierInfo,
   onFinish,
   onCancel,
   onError,
   onStepChange,
 }: Step2WithSignUpProps) {
-  const [signUpStep, setSignUpStep] = useState<Step2SignUpLifeCycleType>('VerifierSelect');
-  const [sendCodeInfo, setSendCodeInfo] = useState<VerifierSelectConfirmResult>();
+  const [signUpStep, setSignUpStep] = useState<Step2SignUpLifeCycleType>(
+    defaultCodeInfo ? defaultSignUpStep || 'VerifierSelect' : 'VerifierSelect',
+  );
+  const [sendCodeInfo, setSendCodeInfo] = useState<VerifierSelectConfirmResult | undefined>(defaultCodeInfo);
   const onErrorRef = useRef<Step2WithSignUpProps['onError']>(onError);
-  const [verifierList, setVerifierList] = useState<VerifierItem[]>();
+
   useEffect(() => {
     onErrorRef.current = onError;
   });
 
-  const getVerifierListHandler = useCallback(async () => {
-    try {
-      setLoading(true);
-      const list = await getVerifierList({
-        sandboxId,
-        chainId: guardianIdentifierInfo.chainId,
-        rpcUrl: chainInfo?.endPoint,
-        chainType: chainType ?? 'aelf',
-        address: chainInfo?.caContractAddress,
-      });
-      setVerifierList(list);
-    } catch (error) {
-      onErrorRef?.current?.({
-        errorFields: 'Get verifierList',
-        error: error,
-      });
-    } finally {
-      setLoading(false);
-    }
-  }, [chainInfo, chainType, guardianIdentifierInfo.chainId, sandboxId]);
-
-  useEffect(() => {
-    getVerifierListHandler();
-  }, [getVerifierListHandler]);
-
   const onVerifierSelectConfirm = useCallback(
     (info: VerifierSelectConfirmResult) => {
-      setSendCodeInfo(info);
       ConfigProvider.config.storageMethod?.setItem(step2Storage, JSON.stringify(info));
       if (
         guardianIdentifierInfo.accountType === AccountTypeEnum[AccountTypeEnum.Apple] ||
@@ -87,9 +62,20 @@ function Step2WithSignUp({
         onFinish?.(info as Step2FinishParams);
         return;
       }
-      setSignUpStep('CodeVerify');
+      setSendCodeInfo((preInfo) => {
+        if (preInfo?.verifierSessionId === info.verifierSessionId) return preInfo;
+        if (info.verifierSessionId) {
+          const verifierSelectResult = {
+            verifierSessionId: info.verifierSessionId,
+            verifier: info.verifier,
+          };
+          onStepChange?.('SignUpCodeVerify', { guardianIdentifierInfo, verifierSelectResult });
+        }
+        return info;
+      });
+      setSignUpStep('SignUpCodeVerify');
     },
-    [guardianIdentifierInfo.accountType, onFinish],
+    [guardianIdentifierInfo, onFinish, onStepChange],
   );
 
   const onCodeVerifySuccess = useCallback(
@@ -104,27 +90,41 @@ function Step2WithSignUp({
   );
 
   const onBackHandler = useCallback(() => {
-    if (signUpStep === 'CodeVerify') {
+    if (signUpStep === 'SignUpCodeVerify') {
       setSignUpStep('VerifierSelect');
+      onStepChange?.('VerifierSelect', { guardianIdentifierInfo });
     } else {
       onCancel?.();
     }
-  }, [onCancel, signUpStep]);
+  }, [guardianIdentifierInfo, onCancel, onStepChange, signUpStep]);
 
-  useUpdateEffect(() => {
-    onStepChange?.(signUpStep);
-  }, [signUpStep]);
+  const onReSend = useCallback(
+    (info: VerifierSelectConfirmResult) => {
+      setSendCodeInfo((preInfo) => {
+        if (preInfo?.verifierSessionId === info.verifierSessionId) return preInfo;
+        if (info.verifierSessionId) {
+          const verifierSelectResult = {
+            verifierSessionId: info.verifierSessionId,
+            verifier: info.verifier,
+          };
+          onStepChange?.('SignUpCodeVerify', { guardianIdentifierInfo, verifierSelectResult });
+        }
+      });
+    },
+    [guardianIdentifierInfo, onStepChange],
+  );
 
   return (
     <div className="step-page-wrapper">
       <BackHeader onBack={onBackHandler} />
       {signUpStep === 'VerifierSelect' && (
         <VerifierSelect
+          sandboxId={sandboxId}
+          chainType={chainType}
           operationType={RecaptchaType.register}
           chainId={guardianIdentifierInfo.chainId}
           className="content-padding"
           guardianIdentifier={guardianIdentifierInfo.identifier}
-          verifierList={verifierList}
           isErrorTip={isErrorTip}
           onError={onError}
           accountType={guardianIdentifierInfo.accountType}
@@ -133,7 +133,7 @@ function Step2WithSignUp({
           googleAccessToken={guardianIdentifierInfo.authenticationInfo?.googleAccessToken}
         />
       )}
-      {signUpStep === 'CodeVerify' && sendCodeInfo?.verifierSessionId ? (
+      {signUpStep === 'SignUpCodeVerify' && sendCodeInfo?.verifierSessionId ? (
         <CodeVerify
           chainId={guardianIdentifierInfo.chainId}
           className="content-padding"
@@ -141,15 +141,15 @@ function Step2WithSignUp({
           verifier={sendCodeInfo.verifier}
           accountType={guardianIdentifierInfo.accountType}
           isCountdownNow={true}
-          isLoginAccount={true}
+          isLoginGuardian={true}
           verifierSessionId={sendCodeInfo.verifierSessionId}
           isErrorTip={isErrorTip}
           onError={onError}
           onSuccess={onCodeVerifySuccess}
-          onReSend={(result) => setSendCodeInfo(result)}
+          onReSend={onReSend}
         />
       ) : (
-        signUpStep === 'CodeVerify' && 'Missing sendCodeInfo'
+        signUpStep === 'SignUpCodeVerify' && 'Missing sendCodeInfo'
       )}
     </div>
   );

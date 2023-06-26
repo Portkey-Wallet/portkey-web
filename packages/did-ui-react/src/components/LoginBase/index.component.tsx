@@ -33,7 +33,7 @@ export default function LoginCard({
   isShowScan,
   phoneCountry,
   isErrorTip = true,
-  socialLogin: defalutSocialLogin,
+  socialLogin: defaultSocialLogin,
   networkType,
   extraElement,
   termsOfService,
@@ -51,7 +51,7 @@ export default function LoginCard({
   useEffect(() => {
     onNetworkChangeRef.current = onNetworkChange;
   });
-  const socialLogin = useMemo(() => defalutSocialLogin || ConfigProvider.getSocialLoginConfig(), [defalutSocialLogin]);
+  const socialLogin = useMemo(() => defaultSocialLogin || ConfigProvider.getSocialLoginConfig(), [defaultSocialLogin]);
 
   // const selectItems = useMemo(
   //   () =>

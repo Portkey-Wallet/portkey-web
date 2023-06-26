@@ -111,7 +111,7 @@ function GuardianItems({
 
   return (
     <li className={clsx('portkey-ui-flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
-      {item.isLoginAccount && <div className="login-icon">{t('Login Account')}</div>}
+      {item.isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
       <div className="portkey-ui-w-100 portkey-ui-flex-between-center">
         <VerifierPair
           guardianType={item.guardianType}
