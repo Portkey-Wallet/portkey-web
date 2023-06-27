@@ -1,6 +1,6 @@
 {
   "name": "@portkey/services",
-  "version": "0.0.1-alpha.8.9",
+  "version": "0.0.1-alpha.9.0",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -33,9 +33,9 @@
     "pub": "yarn version && yarn build && npm publish"
   },
   "dependencies": {
-    "@portkey/graphql": "^0.0.1-alpha.8.9",
-    "@portkey/request": "^0.0.1-alpha.8.9",
-    "@portkey/types": "^0.0.1-alpha.8.9",
+    "@portkey/graphql": "^0.0.1-alpha.9.0",
+    "@portkey/request": "^0.0.1-alpha.9.0",
+    "@portkey/types": "^0.0.1-alpha.9.0",
     "aelf-sdk": "^3.2.44",
     "query-string": "^7.1.1"
   },

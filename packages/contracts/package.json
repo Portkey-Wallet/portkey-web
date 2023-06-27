@@ -1,6 +1,6 @@
 {
   "name": "@portkey/contracts",
-  "version": "0.0.1-alpha.8.9",
+  "version": "0.0.1-alpha.9.0",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -31,7 +31,7 @@
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@portkey/utils": "^0.0.1-alpha.8.9",
+    "@portkey/utils": "^0.0.1-alpha.9.0",
     "aelf-sdk": "^3.2.44"
   }
 }
