@@ -95,7 +95,7 @@ export default function VerifierSelect({
           errorTip(
             {
               errorFields: 'getVerifierServers',
-              error: err,
+              error: err || 'Get verifierList error by contract',
             },
             isErrorTip,
             onError,

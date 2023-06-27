@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did, PortkeyStyleProvider } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
+import { Spin, Button, message } from 'antd';
 
 const myStore = new Store();
 ConfigProvider.setGlobalConfig({
@@ -30,6 +31,21 @@ export default function Sign() {
   const ref1 = useRef<ISignIn>();
   return (
     <div>
+      <Spin spinning />
+      <Button
+        onClick={() => {
+          message.error('button', 10000000);
+        }}>
+        button
+      </Button>
+      <PortkeyStyleProvider>
+        <Button
+          onClick={() => {
+            message.error('PortkeyStyleProvider button', 1000000);
+          }}>
+          button
+        </Button>
+      </PortkeyStyleProvider>
       <SignIn
         ref={ref}
         uiType="Modal"

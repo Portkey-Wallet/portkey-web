@@ -1,10 +1,10 @@
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import GuardianListCom, { GuardianListProps } from './index.component';
 
 export default function GuardianList(props: GuardianListProps) {
   return (
-    <BaseStyleProvider>
+    <PortkeyStyleProvider>
       <GuardianListCom {...props} />
-    </BaseStyleProvider>
+    </PortkeyStyleProvider>
   );
 }

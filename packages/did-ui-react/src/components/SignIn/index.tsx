@@ -36,7 +36,7 @@ import { portkeyDidUIPrefix } from '../../constants';
 import qs from 'query-string';
 import clsx from 'clsx';
 import { did, errorTip } from '../../utils';
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import './index.less';
 import { currentStep, step1Storage, step3Storage } from '../SignStep/contsants';
 
@@ -393,7 +393,7 @@ const SignIn = forwardRef(
     ]);
 
     return (
-      <BaseStyleProvider>
+      <PortkeyStyleProvider>
         {uiType === 'Full' ? (
           <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
         ) : (
@@ -406,7 +406,7 @@ const SignIn = forwardRef(
             {mainContent()}
           </BaseModal>
         )}
-      </BaseStyleProvider>
+      </PortkeyStyleProvider>
     );
   },
 );
