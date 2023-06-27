@@ -28,7 +28,7 @@ function Step2WithSignIn({
   sandboxId,
   chainType,
   chainInfo,
-  isErrorTip,
+  isErrorTip = true,
   approvedList,
   guardianIdentifierInfo,
   onFinish,

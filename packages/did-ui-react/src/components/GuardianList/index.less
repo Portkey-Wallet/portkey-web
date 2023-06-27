@@ -1,4 +1,6 @@
 @import '../../assets/theme/color.less';
+@import '../../assets/theme/constants.less';
+
 .guardian-list-wrapper {
   .guardian-list-content {
     height: 100%;
@@ -60,7 +62,15 @@
       line-height: 20px;
       color: @font-11;
       font-size: 14px;
+      flex: 1;
+      width: 0;
+      .detail {
+        font-size: 12px;
+        line-height: 16px;
+        color: @font-13;
+      }
     }
+
     .not-verified,
     .verifying,
     .ant-btn-text {
@@ -93,6 +103,18 @@
     }
   }
 
+  .account-text-one-row {
+    word-wrap: break-word;
+    .text-overflow(2);
+  }
+  .account-text-two-row {
+    .name,
+    .detail {
+      word-wrap: break-word;
+      .text-overflow(1);
+    }
+  }
+
   .verifier-content {
     flex: 1;
 
@@ -115,7 +137,7 @@
     font-size: 12px;
   }
 
-  .recovery-wallet-btn {
+  .confirm-approve-btn {
     line-height: 44px;
     border-radius: 22px;
   }

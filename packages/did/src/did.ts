@@ -19,6 +19,9 @@ import {
   RecoverStatusResult,
   RegisterParams,
   RegisterStatusResult,
+  Connect,
+  IConnectService,
+  CAHolderInfo,
 } from '@portkey/services';
 import { FetchRequest } from '@portkey/request';
 import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
@@ -27,21 +30,29 @@ import { DIDConfig } from './config';
 export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public didWallet: DIDWallet<portkey.WalletAccount>;
   public services: ICommunityRecoveryService;
+  public connectServices: IConnectService;
   public config: DIDConfig;
   public didGraphQL: IDIDGraphQL;
   public fetchRequest: IBaseRequest;
+  public connectRequest: IBaseRequest;
   public accountProvider: portkey.AccountProvider;
   constructor() {
     this.accountProvider = new portkey.AccountProvider();
     this.config = new DIDConfig();
     this.fetchRequest = new FetchRequest(this.config.requestConfig);
+    this.connectRequest = new FetchRequest(this.config.connectRequestConfig);
     this.didGraphQL = new DIDGraphQL({ config: this.config });
+    this.connectServices = new Connect(this.connectRequest);
     this.services = new CommunityRecovery(this.fetchRequest, this.didGraphQL);
     this.didWallet = new DIDWallet({
       accountProvider: this.accountProvider,
       service: this.services,
       storage: this.config.storageMethod,
+      connectService: this.connectServices,
     });
+  }
+  getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo> {
+    return this.didWallet.getCAHolderInfo(originChainId);
   }
   async getLoginStatus(params: { chainId: ChainId; sessionId: string }): Promise<RecoverStatusResult> {
     return this.didWallet.getLoginStatus(params);

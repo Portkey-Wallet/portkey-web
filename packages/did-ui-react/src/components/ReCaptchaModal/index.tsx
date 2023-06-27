@@ -6,6 +6,7 @@ import { SET_RECAPTCHA_MODAL } from '../../constants/events';
 import { BaseReCaptchaHandler } from '../types';
 import CommonModal from '../CommonModal';
 import { setReCaptchaModal } from '../../utils/reCaptcha';
+import { defaultReCaptchaSiteKey } from '../../constants/reCaptcha';
 import './index.less';
 
 export default function ReCaptchaModal() {
@@ -48,7 +49,7 @@ export default function ReCaptchaModal() {
           <GoogleReCaptcha
             theme={reCaptchaInfo?.theme || 'light'}
             size={reCaptchaInfo?.size || 'normal'}
-            siteKey={reCaptchaInfo?.siteKey || ''}
+            siteKey={reCaptchaInfo?.siteKey || defaultReCaptchaSiteKey}
             onSuccess={(res) => {
               modalInfo?.onSuccess?.(res);
               setReCaptchaModal(false);

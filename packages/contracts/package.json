@@ -1,6 +1,6 @@
 {
   "name": "@portkey/contracts",
-  "version": "0.0.1-alpha.1.8",
+  "version": "0.0.1-alpha.8.9",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -26,12 +26,12 @@
     "prebuild": "yarn clean",
     "build": "tsc",
     "lint": "eslint --ext .js,.ts .",
-		"lint:fix": "eslint --fix --ext .js,.ts .",
-		"format": "prettier --write '**/*'",
+    "lint:fix": "eslint --fix --ext .js,.ts .",
+    "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
   "dependencies": {
-    "aelf-sdk": "^3.2.44",
-    "@portkey/utils": "^0.0.1-alpha.1.8"
+    "@portkey/utils": "^0.0.1-alpha.8.9",
+    "aelf-sdk": "^3.2.44"
   }
 }

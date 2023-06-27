@@ -14,7 +14,7 @@ export default function CommonSelect({ items, className, ...props }: CommonSelec
         value: item.value,
         disabled: item.disabled,
         label: (
-          <div className="flex-row-center label-item">
+          <div className="portkey-ui-flex-row-center label-item">
             <div className="label-icon">{item.icon}</div>
             <div className="title">{item.label}</div>
           </div>

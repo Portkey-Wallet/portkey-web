@@ -1,10 +1,10 @@
+import BaseStyleProvider from '../BaseStyleProvider';
 import SignUpBaseCom, { SignUpBaseProps } from './index.component';
-import { BaseConfigProvider } from '../config-provider';
 
 export default function SignUpBase(props?: SignUpBaseProps) {
   return (
-    <BaseConfigProvider>
+    <BaseStyleProvider>
       <SignUpBaseCom {...props} />
-    </BaseConfigProvider>
+    </BaseStyleProvider>
   );
 }

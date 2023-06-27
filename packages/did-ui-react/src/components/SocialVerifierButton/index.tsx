@@ -22,7 +22,7 @@ export default function SocialVerifierButton({ type, buttonProps, Google, Apple 
       {type === AccountTypeEnum[AccountTypeEnum.Apple] && (
         <LoginSocialApple
           client_id={Apple?.clientId || ''}
-          scope={'name email' + (Apple?.scope ?? '')}
+          scope={'name email'}
           redirect_uri={Apple?.redirectURI || ''}>
           <Button {...buttonProps} />
         </LoginSocialApple>

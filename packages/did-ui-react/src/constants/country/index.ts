@@ -1,8 +1,8 @@
-import { CountryItem } from '../../types/country';
+import { ICountryItem } from '../../types/country';
 import { codeJSON } from './codeJSON';
 
-export const getCountryCodeJSON = (countryCode: CountryItem[]) => {
-  const country: { [x: string]: CountryItem[] } = {};
+export const getCountryCodeJSON = (countryCode: ICountryItem[]) => {
+  const country: { [x: string]: ICountryItem[] } = {};
   countryCode.forEach((item) => {
     const first = item.country[0];
     if (country[first]) country[first].push(item);
@@ -11,7 +11,7 @@ export const getCountryCodeJSON = (countryCode: CountryItem[]) => {
   return country;
 };
 
-export const getCountryCodeIndex = (countryCode: CountryItem[]) => {
+export const getCountryCodeIndex = (countryCode: ICountryItem[]) => {
   return Object.entries(getCountryCodeJSON(countryCode));
 };
 
@@ -21,7 +21,7 @@ export const countryCode = getCountryCodeJSON(countryCodeList);
 
 export const countryCodeIndex = getCountryCodeIndex(countryCodeList);
 
-export const countryCodeFilter = (filterFelid?: string, countryCodeList?: CountryItem[]) => {
+export const countryCodeFilter = (filterFelid?: string, countryCodeList?: ICountryItem[]) => {
   if (!countryCodeList) return [];
   if (!filterFelid) return countryCodeList;
   filterFelid = filterFelid.toLocaleLowerCase();
@@ -33,7 +33,7 @@ export const countryCodeFilter = (filterFelid?: string, countryCodeList?: Countr
       .match(/[^0-9]/g)
       ?.join('')
       .trim();
-    const list: CountryItem[] = [];
+    const list: ICountryItem[] = [];
     if (numStr) {
       list.push(...countryCodeList.filter((country) => country.code.includes(numStr)));
     }

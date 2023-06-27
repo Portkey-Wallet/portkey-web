@@ -1,10 +1,10 @@
+import BaseStyleProvider from '../BaseStyleProvider';
 import LoginBaseCom, { LoginBaseProps } from './index.component';
-import { BaseConfigProvider } from '../config-provider';
 
 export default function LoginBase(props?: LoginBaseProps) {
   return (
-    <BaseConfigProvider>
+    <BaseStyleProvider>
       <LoginBaseCom {...props} />
-    </BaseConfigProvider>
+    </BaseStyleProvider>
   );
 }

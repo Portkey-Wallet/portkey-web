@@ -36,5 +36,7 @@ export { default as SocialLogin } from './SocialLogin';
 export { default as SocialVerifierButton } from './SocialVerifierButton';
 export { default as WakeUpPortkey } from './WakeUpPortkey';
 export { default as GoogleReCaptcha } from './GoogleReCaptcha';
+export { default as LoginModal } from './LoginModal';
+export { PortkeyConfigProvider } from './config-provider';
 
 export * from './types';

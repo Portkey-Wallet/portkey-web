@@ -1,4 +1,7 @@
 /* eslint-disable */
+const path = require('path')
+const resolve = dir => path.resolve(__dirname, dir);
+const webpack = require('webpack');
 
 module.exports = {
   devServer: {
@@ -10,4 +13,20 @@ module.exports = {
       },
     },
   },
+  webpack: {
+    configure: {
+      resolve: {
+        fallback: {
+          buffer: require.resolve('buffer'),
+        },
+      },
+    },
+    plugins: {
+      add: [
+        new webpack.ProvidePlugin({
+          Buffer: ['buffer', 'Buffer'],
+        }),
+      ],
+    },
+  }
 };

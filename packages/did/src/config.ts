@@ -30,6 +30,7 @@ export class RequestDefaultsConfig {
   public url?: string;
   public method?: HTTPMethod;
   public timeout?: number;
+  public connectUrl?: string;
   constructor(config?: IRequestDefaults) {
     if (config) {
       Object.entries(config).forEach(([key, value]) => {
@@ -49,12 +50,15 @@ export class RequestDefaultsConfig {
 export class DIDConfig implements IDIDConfig {
   public requestDefaults: IRequestDefaults;
   public requestConfig: RequestDefaultsConfig;
+  public connectRequestConfig: RequestDefaultsConfig;
   public graphQLClient: IGraphQLClient;
   public graphQLUrl?: string;
+  public connectUrl?: string;
   public storageMethod: StorageConfig;
   constructor(options?: IConfig) {
     this.storageMethod = new StorageConfig();
     this.requestConfig = new RequestDefaultsConfig();
+    this.connectRequestConfig = new RequestDefaultsConfig();
     if (options) this.setConfig(options);
   }
   setConfig(options: IConfig) {
@@ -66,6 +70,14 @@ export class DIDConfig implements IDIDConfig {
           break;
         case 'requestDefaults':
           this.requestConfig.setConfig(value);
+          this.requestDefaults = value;
+          break;
+        case 'connectUrl':
+          this.connectRequestConfig.setConfig({
+            ...this.requestDefaults,
+            ...(options.requestDefaults || {}),
+            baseURL: value,
+          });
           break;
         default:
           if (key === 'graphQLUrl' && typeof value === 'string') {

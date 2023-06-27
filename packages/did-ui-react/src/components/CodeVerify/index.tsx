@@ -1,10 +1,10 @@
+import BaseStyleProvider from '../BaseStyleProvider';
 import CodeVerifyCom, { CodeVerifyProps } from './index.component';
-import { BaseConfigProvider } from '../config-provider';
 
 export default function CodeVerify(props: CodeVerifyProps) {
   return (
-    <BaseConfigProvider>
+    <BaseStyleProvider>
       <CodeVerifyCom {...props} />
-    </BaseConfigProvider>
+    </BaseStyleProvider>
   );
 }

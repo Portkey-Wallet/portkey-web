@@ -11,7 +11,7 @@ export interface CustomSvgProps {
 export default function CustomSvg({ type, className, ...props }: CustomSvgProps) {
   return (
     <div
-      className={clsx('custom-svg', `${type.toLocaleLowerCase()}-icon`, className)}
+      className={clsx('portkey-ui-custom-svg', `${type.toLocaleLowerCase()}-icon`, className)}
       dangerouslySetInnerHTML={{ __html: svgsList[type] }}
       {...props}></div>
   );

@@ -25,13 +25,10 @@ export default function BaseConfigProvider({ children }: { children: ConfigProvi
   return (
     <>
       <ConfigProvider>
-        <div
-          className="portkey-ui-wrapper"
-          //</ConfigProvider>style={{ fontFamily: 'portkey-ui-font' }}
-        >
+        <div>
+          {children}
           <ScreenLoading />
           <ReCaptchaModal />
-          {children}
         </div>
       </ConfigProvider>
     </>

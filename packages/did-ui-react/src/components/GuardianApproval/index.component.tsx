@@ -22,6 +22,7 @@ export interface GuardianApprovalProps {
   className?: string;
   guardianList?: BaseGuardianItem[];
   isErrorTip?: boolean;
+  wrapperStyle?: React.CSSProperties;
   appleIdToken?: string; // apple social login id token
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => void;
@@ -29,7 +30,17 @@ export interface GuardianApprovalProps {
 
 const GuardianApproval = forwardRef(
   (
-    { header, chainId, className, guardianList, isErrorTip, appleIdToken, onError, onConfirm }: GuardianApprovalProps,
+    {
+      header,
+      chainId,
+      className,
+      guardianList,
+      isErrorTip = true,
+      appleIdToken,
+      wrapperStyle,
+      onError,
+      onConfirm,
+    }: GuardianApprovalProps,
     ref,
   ) => {
     const [verifyAccountIndex, setVerifyAccountIndex] = useState<number | undefined>();
@@ -143,8 +154,6 @@ const GuardianApproval = forwardRef(
       async (item: UserGuardianStatus, index: number) => {
         try {
           if (!expiredTime) setExpiredTime(getExpiredTime());
-
-          setVerifyAccountIndex(index);
           setGuardianList((v) => {
             v[index] = {
               ...item,
@@ -154,6 +163,7 @@ const GuardianApproval = forwardRef(
 
             return v;
           });
+          setVerifyAccountIndex(index);
         } catch (error: any) {
           console.log(error, 'error===');
           return errorTip(
@@ -314,7 +324,7 @@ const GuardianApproval = forwardRef(
     );
 
     return (
-      <div className={clsx('ui-guardian-approval-wrapper', className)}>
+      <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
         {typeof verifyAccountIndex === 'number' ? (
           <VerifierPage
             chainId={chainId}

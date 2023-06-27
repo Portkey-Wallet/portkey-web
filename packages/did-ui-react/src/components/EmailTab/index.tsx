@@ -17,13 +17,14 @@ export default function EmailTab({ confirmText, validate, onFinish }: EmailTabPr
   const emailInputInstance = useRef<EmailInputInstance>();
   const onClick = useCallback(async () => {
     try {
+      setLoading(true);
       await emailInputInstance?.current?.validateEmail(val);
+      setLoading(false);
       val && onFinish?.(val);
     } catch (error: any) {
+      setLoading(false);
       const msg = handleErrorMessage(error);
       setError(msg);
-    } finally {
-      setLoading(false);
     }
   }, [onFinish, val]);
 

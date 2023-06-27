@@ -11,3 +11,4 @@ export * from './GoogleAuth';
 export * from './AppleAuth';
 export * from './device';
 export * from './lib';
+export * from './socialLoginAuth';

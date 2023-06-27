@@ -1,6 +1,13 @@
 import { IBaseRequest } from '@portkey/types';
 import { BaseService } from '../types';
-import { ChainInfo, ISearchService, QueryOptions, RecoverStatusResult, RegisterStatusResult } from '../types/search';
+import {
+  CAHolderInfo,
+  ChainInfo,
+  ISearchService,
+  QueryOptions,
+  RecoverStatusResult,
+  RegisterStatusResult,
+} from '../types/search';
 import { sleep } from '@portkey/utils';
 
 const DefaultQueryOptions: QueryOptions = {
@@ -48,5 +55,16 @@ export class Search<T extends IBaseRequest = IBaseRequest> extends BaseService<T
       return this.getRecoverStatus(id, { ...options, reCount: ++options.reCount });
     }
     return result;
+  }
+  async getCAHolderInfo(Authorization: string, caHash: string): Promise<CAHolderInfo> {
+    const req = await this._request.send({
+      headers: { Authorization },
+      method: searchMethod,
+      url: '/api/app/search/caholderindex',
+      params: {
+        filter: `caHash: ${caHash}`,
+      },
+    });
+    return req.items[0];
   }
 }

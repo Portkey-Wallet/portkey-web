@@ -1,6 +1,6 @@
 {
   "name": "@portkey/validator",
-  "version": "0.0.1-alpha.1.5",
+  "version": "0.0.1-alpha.8.9",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -29,7 +29,5 @@
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
-  },
-  "dependencies": {},
-  "devDependencies": {}
+  }
 }

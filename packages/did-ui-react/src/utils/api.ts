@@ -65,10 +65,7 @@ export class Verification extends StorageBaseLoader {
   }
 
   public async sendVerificationCode(
-    /** @alpha  */
-    config: { params: SendVerificationCodeRequestParams['params'] } & {
-      headers?: { reCaptchaToken: string; version?: string };
-    },
+    config: SendVerificationCodeRequestParams,
     recaptchaHandler: (open?: boolean | undefined) => Promise<{
       type: ReCaptchaType;
       message?: any;
@@ -86,7 +83,6 @@ export class Verification extends StorageBaseLoader {
         if (reCaptchaToken.type !== 'success') throw reCaptchaToken.message;
         config.headers = {
           reCaptchaToken: reCaptchaToken.message,
-          version: 'v1.2.5',
         };
         setLoading(true);
         const req = await did.services.getVerificationCode(config as SendVerificationCodeRequestParams);

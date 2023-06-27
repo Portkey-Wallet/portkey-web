@@ -45,13 +45,13 @@ export default function ImgLoading({
       )}
 
       {(!isLoad || notReady) && (
-        <div className="flex-center loading-image-default-wrapper">
+        <div className="portkey-ui-flex-center loading-image-default-wrapper">
           {loadEle ? loadEle : <>{/* default loading */}</>}
         </div>
       )}
 
       {isError && (
-        <div className="flex-center loading-image-default-wrapper">
+        <div className="portkey-ui-flex-center loading-image-default-wrapper">
           {errorEle ? errorEle : <>{/* default error element */}</>}
         </div>
       )}
