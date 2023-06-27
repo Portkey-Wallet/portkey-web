@@ -1,6 +1,6 @@
 {
   "name": "@portkey/request",
-  "version": "0.0.1-alpha.8.9",
+  "version": "0.0.1-alpha.9.0",
   "description": "",
   "author": "",
   "license": "ISC",
@@ -31,7 +31,7 @@
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@portkey/types": "^0.0.1-alpha.8.9",
+    "@portkey/types": "^0.0.1-alpha.9.0",
     "query-string": "^6.14.1"
   }
 }

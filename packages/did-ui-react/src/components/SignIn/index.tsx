@@ -1,84 +1,51 @@
 /**
- * @file
+ * @remarks
  *
  * First you have to configure networkList using ConfigProvider.setGlobalConfig
  */
 
-import BaseModal from './components/BaseModal';
-import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle, ReactNode } from 'react';
+import BaseModal from '../SignStep/components/BaseModal';
+import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import ConfigProvider from '../config-provider';
-import Step1, { OnSignInFinishedFun } from './components/Step1';
-import Step2WithSignUp from './components/Step2WithSignUp';
-import Step2WithSignIn from './components/Step2WithSignIn';
-import Step3 from './components/Step3';
-import { ModalProps } from 'antd';
+import Step1, { OnSignInFinishedFun } from '../SignStep/components/Step1';
+import Step2OfSignUp from '../SignStep/components/Step2OfSignUp';
+import Step2OfLogin from '../SignStep/components/Step2OfLogin';
+import Step3 from '../SignStep/components/Step3';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
 import useChainInfo from '../../hooks/useChainInfo';
 import useNetworkList from '../../hooks/useNetworkList';
-import { OnErrorFunc, ValidatorHandler } from '../../types';
 import type {
   IVerifyInfo,
   DIDWalletInfo,
   SignInSuccess,
   IPhoneCountry,
-  CreatePendingInfo,
   AddManagerType,
   LoginFinishWithoutPin,
 } from '../types';
 import type { ChainId } from '@portkey/types';
 import type { GuardiansApproved } from '@portkey/services';
 import type { VerifierItem } from '@portkey/did';
-import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, Step2SignUpLifeCycleType } from './types';
+import {
+  LifeCycleType,
+  SignInLifeCycleType,
+  SIGN_IN_STEP,
+  Step2SignUpLifeCycleType,
+  SignInProps,
+} from '../SignStep/types';
 import { portkeyDidUIPrefix } from '../../constants';
 import qs from 'query-string';
 import clsx from 'clsx';
 import { did, errorTip } from '../../utils';
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import './index.less';
-
-const step1Storage = `${portkeyDidUIPrefix}step1Storage`;
-const currentStep = `${portkeyDidUIPrefix}currentStep`;
-const step3Storage = `${portkeyDidUIPrefix}step3`;
+import { currentStep, step1Storage, step3Storage } from '../SignStep/contsants';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   SignIn: ['SignUp', 'Login', 'LoginByScan'],
-  Step2WithSignUp: ['VerifierSelect', 'CodeVerify'],
-  Step2WithSignIn: ['GuardianApproval'],
+  Step2OfSignUp: ['VerifierSelect', 'CodeVerify'],
+  Step2OfLogin: ['GuardianApproval'],
   Step3: ['SetPinAndAddManager'],
 };
-
-type UI_TYPE = 'Modal' | 'Full';
-
-export interface SignInProps {
-  defaultChainId?: ChainId;
-
-  sandboxId?: string;
-  isErrorTip?: boolean;
-
-  // Login
-  isShowScan?: boolean;
-  phoneCountry?: IPhoneCountry;
-  extraElement?: ReactNode; // extra element
-  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
-  termsOfServiceUrl?: string;
-  termsOfService?: ReactNode;
-  validateEmail?: ValidatorHandler;
-  validatePhone?: ValidatorHandler;
-  onNetworkChange?: (network: string) => void;
-  onChainIdChange?: (chainId?: ChainId) => void;
-  onLifeCycleChange?: (liftCycle: LifeCycleType) => void;
-  onFinish?: (didWallet: DIDWalletInfo) => void;
-  onCreatePending?: (createPendingInfo: CreatePendingInfo) => void;
-
-  // UI config
-  uiType?: UI_TYPE;
-
-  // Modal config
-  className?: string;
-  getContainer?: ModalProps['getContainer'];
-  onCancel?: () => void;
-  onError?: OnErrorFunc;
-}
 
 type TSignUpVerifier = { verifier: VerifierItem } & IVerifyInfo;
 
@@ -93,7 +60,7 @@ const SignIn = forwardRef(
       phoneCountry: defaultPhoneCountry,
       extraElement,
       termsOfService,
-      termsOfServiceUrl,
+      design = 'CryptoDesign',
       validateEmail,
       validatePhone,
       uiType = 'Modal',
@@ -109,7 +76,7 @@ const SignIn = forwardRef(
     }: SignInProps,
     ref,
   ) => {
-    const [_step, setStep] = useState<SIGN_IN_STEP>();
+    const [step, setStep] = useState<SIGN_IN_STEP>();
     const [guardianIdentifierInfo, setGuardianIdentifierInfo] = useState<SignInSuccess>();
     const onErrorRef = useRef<SignInProps['onError']>(onError);
     const onFinishRef = useRef<SignInProps['onFinish']>(onFinish);
@@ -124,7 +91,7 @@ const SignIn = forwardRef(
     });
 
     const { network, networkList } = useNetworkList();
-    const [_open, setOpen] = useState<boolean>(false);
+    const [open, setOpen] = useState<boolean>(false);
 
     const refSetOpen = useCallback((v: boolean) => {
       setStep('SignIn');
@@ -185,9 +152,9 @@ const SignIn = forwardRef(
         onFinishRef?.current?.(value as DIDWalletInfo);
       } else {
         if (type === 'SignUp') {
-          setStep('Step2WithSignUp');
+          setStep('Step2OfSignUp');
         } else {
-          setStep('Step2WithSignIn');
+          setStep('Step2OfLogin');
         }
         setApprovedList(undefined);
         setGuardianIdentifierInfo(value as SignInSuccess);
@@ -195,7 +162,7 @@ const SignIn = forwardRef(
       }
     }, []);
 
-    const onStep2WithSignUpFinish = useCallback(
+    const onStep2OfSignUpFinish = useCallback(
       (res: TSignUpVerifier) => {
         if (!guardianIdentifierInfo) return console.error('No guardianIdentifier!');
         const list = [
@@ -220,10 +187,10 @@ const SignIn = forwardRef(
 
     const onStep3Cancel = useCallback((v?: AddManagerType) => {
       if (v === 'register') {
-        setStep('Step2WithSignUp');
+        setStep('Step2OfSignUp');
         setApprovedList(undefined);
       } else if (v === 'recovery') {
-        setStep('Step2WithSignIn');
+        setStep('Step2OfLogin');
       } else {
         setStep('SignIn');
       }
@@ -283,14 +250,14 @@ const SignIn = forwardRef(
     }, [approvedList]);
 
     useUpdateEffect(() => {
-      if (_step === 'SignIn') {
+      if (step === 'SignIn') {
         setLifeCycle('Login');
         ConfigProvider.config.storageMethod?.removeItem(step1Storage);
       }
-      if (_step === 'Step2WithSignIn') setLifeCycle('GuardianApproval');
-      if (_step === 'Step2WithSignUp') setLifeCycle('VerifierSelect');
-      if (_step === 'Step3') setLifeCycle('SetPinAndAddManager');
-    }, [_step]);
+      if (step === 'Step2OfLogin') setLifeCycle('GuardianApproval');
+      if (step === 'Step2OfSignUp') setLifeCycle('VerifierSelect');
+      if (step === 'Step3') setLifeCycle('SetPinAndAddManager');
+    }, [step]);
 
     useUpdateEffect(() => {
       onLifeCycleChange?.(lifeCycle);
@@ -331,9 +298,10 @@ const SignIn = forwardRef(
     const mainContent = useCallback(() => {
       return (
         <>
-          {_step === 'SignIn' && (
+          {step === 'SignIn' && (
             <Step1
               isShowScan={isShowScan}
+              design={design}
               defaultChainId={defaultChainId}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
@@ -346,12 +314,12 @@ const SignIn = forwardRef(
               onStepChange={onSignInStepChange}
               onChainIdChange={onOriginChainIdChange}
               onLoginFinishWithoutPin={onLoginFinishWithoutPin}
-              termsOfService={termsOfService || termsOfServiceUrl}
+              termsOfService={termsOfService}
             />
           )}
 
-          {_step === 'Step2WithSignUp' && guardianIdentifierInfo && (
-            <Step2WithSignUp
+          {step === 'Step2OfSignUp' && guardianIdentifierInfo && (
+            <Step2OfSignUp
               guardianIdentifierInfo={guardianIdentifierInfo}
               isErrorTip={isErrorTip}
               sandboxId={sandboxId}
@@ -359,12 +327,12 @@ const SignIn = forwardRef(
               chainInfo={chainInfo}
               onStepChange={onSignUpStepChange}
               onError={onErrorRef?.current}
-              onFinish={onStep2WithSignUpFinish}
+              onFinish={onStep2OfSignUpFinish}
               onCancel={onStep2Cancel}
             />
           )}
-          {_step === 'Step2WithSignIn' && guardianIdentifierInfo && (
-            <Step2WithSignIn
+          {step === 'Step2OfLogin' && guardianIdentifierInfo && (
+            <Step2OfLogin
               approvedList={approvedList}
               sandboxId={sandboxId}
               chainType={networkItem?.walletType}
@@ -380,7 +348,7 @@ const SignIn = forwardRef(
             />
           )}
 
-          {_step === 'Step3' && (
+          {step === 'Step3' && (
             <Step3
               guardianIdentifierInfo={guardianIdentifierInfo}
               onlyGetPin={Boolean(walletWithoutPin)}
@@ -396,7 +364,7 @@ const SignIn = forwardRef(
         </>
       );
     }, [
-      _step,
+      step,
       isShowScan,
       defaultChainId,
       isErrorTip,
@@ -409,13 +377,13 @@ const SignIn = forwardRef(
       onOriginChainIdChange,
       onLoginFinishWithoutPin,
       termsOfService,
-      termsOfServiceUrl,
       guardianIdentifierInfo,
       sandboxId,
-      networkItem?.walletType,
+      networkItem,
+      design,
       chainInfo,
       onSignUpStepChange,
-      onStep2WithSignUpFinish,
+      onStep2OfSignUpFinish,
       onStep2Cancel,
       approvedList,
       walletWithoutPin,
@@ -425,20 +393,20 @@ const SignIn = forwardRef(
     ]);
 
     return (
-      <BaseStyleProvider>
+      <PortkeyStyleProvider>
         {uiType === 'Full' ? (
           <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
         ) : (
           <BaseModal
             destroyOnClose
             className={className}
-            open={_open}
+            open={open}
             getContainer={getContainer}
             onCancel={onModalCancel}>
             {mainContent()}
           </BaseModal>
         )}
-      </BaseStyleProvider>
+      </PortkeyStyleProvider>
     );
   },
 );

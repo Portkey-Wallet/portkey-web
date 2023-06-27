@@ -227,7 +227,7 @@ export default function SetPinAndAddManager({
           },
           chainId,
           pin,
-          walletInfo: { ...wallet, wallet },
+          walletInfo: wallet,
         });
       } catch (error: any) {
         setLoading(false);

@@ -1,6 +1,6 @@
 import type { ChainType } from '@portkey/types';
 import { VerifierItem } from '@portkey/did';
-import { ChainInfo, GuardiansApproved } from '@portkey/services';
+import { ChainInfo, GuardiansApproved, RecaptchaType } from '@portkey/services';
 import { memo, useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { contractErrorHandler, did, errorTip, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';
@@ -11,7 +11,7 @@ import { SignInSuccess } from '../../../types';
 import qs from 'query-string';
 import './index.less';
 
-interface Step2WithSignInProps {
+interface Step2OfLoginProps {
   sandboxId?: string;
   chainInfo?: ChainInfo;
   chainType?: ChainType;
@@ -24,7 +24,7 @@ interface Step2WithSignInProps {
   onError?: OnErrorFunc;
 }
 
-function Step2WithSignIn({
+function Step2OfLogin({
   sandboxId,
   chainType,
   chainInfo,
@@ -34,7 +34,7 @@ function Step2WithSignIn({
   onFinish,
   onCancel,
   onError,
-}: Step2WithSignInProps) {
+}: Step2OfLoginProps) {
   const [guardianList, setGuardianList] = useState<BaseGuardianItem[] | undefined>();
 
   const getVerifierListHandler = useCallback(async () => {
@@ -154,6 +154,7 @@ function Step2WithSignIn({
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
         ref={ref}
+        operationType={RecaptchaType.communityRecovery}
         chainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={_onCancel} />}
         appleIdToken={appleIdToken}
@@ -166,4 +167,4 @@ function Step2WithSignIn({
   );
 }
 
-export default memo(Step2WithSignIn);
+export default memo(Step2OfLogin);

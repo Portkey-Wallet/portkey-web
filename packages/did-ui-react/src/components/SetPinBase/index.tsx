@@ -1,11 +1,11 @@
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import SetPinCom, { SetPinBaseProps } from './index.component';
 import './index.less';
 
 export default function SetPinAndAddManager(props?: SetPinBaseProps) {
   return (
-    <BaseStyleProvider>
+    <PortkeyStyleProvider>
       <SetPinCom {...props} />
-    </BaseStyleProvider>
+    </PortkeyStyleProvider>
   );
 }

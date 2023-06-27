@@ -82,6 +82,16 @@ export type GetRegisterInfoParams = {
   caHash?: string;
 };
 
+export enum RecaptchaType {
+  register = 0,
+  communityRecovery = 1,
+  optGuardian = 2,
+}
+
+export type CheckGoogleRecaptchaParams = {
+  operationType: RecaptchaType;
+};
+
 export type RegisterInfo = { originChainId: ChainId };
 
 export interface ICountryItem {
@@ -101,7 +111,7 @@ export interface ICommunityRecoveryService extends IVerificationService, ISearch
   getHolderInfo(params: GetHolderInfoParams): Promise<IHolderInfo>;
   getHolderInfoByManager(params: GetCAHolderByManagerParams): Promise<GetCAHolderByManagerResult>;
   getRegisterInfo(params: GetRegisterInfoParams): Promise<RegisterInfo>;
-  checkGoogleRecaptcha(): Promise<boolean>;
+  checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getPhoneCountryCode(): Promise<ICountryItem[]>;
   getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult>;
 }

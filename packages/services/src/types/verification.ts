@@ -1,11 +1,12 @@
 import { ChainId } from '@portkey/types';
-import { AccountType } from '.';
+import { AccountType, CheckGoogleRecaptchaParams, RecaptchaType } from '.';
 
 export type SendVerificationCodeParams = {
   type: AccountType;
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
+  operationType: RecaptchaType;
 };
 
 export type SendVerificationCodeRequestParams = {
@@ -62,5 +63,5 @@ export interface IVerificationService {
   sendAppleUserExtraInfo(params: SendAppleUserExtraInfoParams): Promise<SendAppleUserExtraInfoResult>;
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
-  checkGoogleRecaptcha(): Promise<boolean>;
+  checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
 }

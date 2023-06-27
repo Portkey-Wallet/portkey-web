@@ -1,8 +1,8 @@
 import { eventBus } from './index';
 import { SET_RECAPTCHA_MODAL } from '../constants/events';
-import { ReCaptchaType } from '../components';
+import { ReCaptchaResponseType } from '../components';
 
-export const setReCaptchaModal: (open?: boolean) => Promise<{ type: ReCaptchaType; message?: any }> = (
+export const setReCaptchaModal: (open?: boolean) => Promise<{ type: ReCaptchaResponseType; message?: any }> = (
   open?: boolean,
 ) =>
   new Promise((resolve, reject) => {

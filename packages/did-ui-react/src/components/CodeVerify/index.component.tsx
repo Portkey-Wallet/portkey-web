@@ -9,7 +9,7 @@ import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verificat
 import { useEffectOnce } from 'react-use';
 import { OnErrorFunc } from '../../types';
 import type { ChainId } from '@portkey/types';
-import type { AccountType } from '@portkey/services';
+import { AccountType, RecaptchaType } from '@portkey/services';
 import type { VerifierItem } from '@portkey/did';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import './index.less';
@@ -26,6 +26,7 @@ export interface CodeVerifyProps {
   guardianIdentifier: string;
   verifierSessionId: string;
   isErrorTip?: boolean;
+  operationType?: RecaptchaType;
   onError?: OnErrorFunc;
   onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
   onReSend?: (result: { verifier: VerifierItem; verifierSessionId: string }) => void;
@@ -40,6 +41,7 @@ export default function CodeVerify({
   isLoginAccount,
   guardianIdentifier,
   accountType = 'Email',
+  operationType = RecaptchaType.register,
   verifierSessionId: defalutVerifierSessionId,
   onError,
   onReSend,
@@ -105,6 +107,7 @@ export default function CodeVerify({
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
             chainId,
+            operationType,
           },
         },
         reCaptchaHandler,
@@ -125,7 +128,17 @@ export default function CodeVerify({
         onError,
       );
     }
-  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, onReSend, reCaptchaHandler, verifier]);
+  }, [
+    accountType,
+    chainId,
+    guardianIdentifier,
+    isErrorTip,
+    onError,
+    onReSend,
+    operationType,
+    reCaptchaHandler,
+    verifier,
+  ]);
 
   useEffect(() => {
     if (timer !== MAX_TIMER) return;

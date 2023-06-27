@@ -1,10 +1,10 @@
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import GuardianApprovalCom, { GuardianApprovalProps } from './index.component';
 
 export default function GuardianApproval(props: GuardianApprovalProps) {
   return (
-    <BaseStyleProvider>
+    <PortkeyStyleProvider>
       <GuardianApprovalCom {...props} />
-    </BaseStyleProvider>
+    </PortkeyStyleProvider>
   );
 }

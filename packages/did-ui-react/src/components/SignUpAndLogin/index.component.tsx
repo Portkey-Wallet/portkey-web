@@ -30,8 +30,6 @@ export interface SignUpAndLoginProps {
   style?: CSSProperties;
   isErrorTip?: boolean;
   isShowScan?: boolean; // show scan button
-  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
-  termsOfServiceUrl?: string;
   termsOfService?: ReactNode;
   phoneCountry?: IPhoneCountry; // phone country code info
   extraElement?: ReactNode; // extra element
@@ -55,12 +53,11 @@ export default function SignUpAndLoginBaseCom({
   defaultChainId = 'AELF',
   className,
   isErrorTip = true,
-  isShowScan,
+  isShowScan: showScan = true,
   phoneCountry,
   socialLogin,
   appleIdToken,
   extraElement,
-  termsOfServiceUrl,
   termsOfService,
   onError,
   onSuccess,
@@ -96,12 +93,10 @@ export default function SignUpAndLoginBaseCom({
     [network, networkList],
   );
 
-  const _isShowScan = useMemo(
+  const isShowScan = useMemo(
     () =>
-      typeof isShowScan === 'undefined'
-        ? Boolean(currentNetwork?.networkType && currentNetwork.walletType)
-        : isShowScan,
-    [currentNetwork, isShowScan],
+      typeof showScan === 'undefined' ? Boolean(currentNetwork?.networkType && currentNetwork.walletType) : showScan,
+    [currentNetwork, showScan],
   );
 
   useUpdateEffect(() => {
@@ -139,7 +134,7 @@ export default function SignUpAndLoginBaseCom({
     async (email?: string) => {
       setLoading(true, 'Checking account on the chain...');
       await validateIdentifier(email);
-      return validatePhoneRef?.current?.(email);
+      return validateEmailRef?.current?.(email);
     },
     [validateIdentifier],
   );
@@ -242,7 +237,7 @@ export default function SignUpAndLoginBaseCom({
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           extraElement={extraElement}
-          termsOfService={termsOfService || termsOfServiceUrl}
+          termsOfService={termsOfService}
           networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
@@ -270,9 +265,9 @@ export default function SignUpAndLoginBaseCom({
           isErrorTip={isErrorTip}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
-          isShowScan={_isShowScan}
+          isShowScan={isShowScan}
           extraElement={extraElement}
-          termsOfService={termsOfService || termsOfServiceUrl}
+          termsOfService={termsOfService}
           networkType={network}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={_onSuccess}

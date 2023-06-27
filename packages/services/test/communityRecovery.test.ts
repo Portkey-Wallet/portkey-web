@@ -42,6 +42,7 @@ describe('communityRecovery describe', () => {
         type: 'Email',
         verifierId: 'verifierId_mock',
         guardianIdentifier: 'guardianIdentifier_mock',
+        operationType: 0,
       },
       headers: {
         reCaptchaToken: 'xxxx',
@@ -144,7 +145,9 @@ describe('communityRecovery describe', () => {
   });
 
   test('test checkGoogleRecaptcha', async () => {
-    const result = await communityRecovery.checkGoogleRecaptcha();
+    const result = await communityRecovery.checkGoogleRecaptcha({
+      operationType: 0,
+    });
     expect(typeof result).toEqual('boolean');
   });
 

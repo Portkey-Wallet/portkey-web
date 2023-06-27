@@ -11,6 +11,7 @@ import './index.less';
 export interface InputInfoProps {
   confirmText: string;
   phoneCountry?: IPhoneCountry;
+  defaultActiveKey?: AccountType;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
   onFinish?: (v: GuardianInputInfo) => void;
@@ -19,6 +20,7 @@ export interface InputInfoProps {
 export default function InputInfo({
   confirmText,
   phoneCountry,
+  defaultActiveKey = 'Phone',
   onFinish,
   validateEmail,
   validatePhone,
@@ -64,7 +66,7 @@ export default function InputInfo({
 
   return (
     <div className="input-info-wrapper">
-      <Tabs defaultActiveKey={AccountTypeEnum[AccountTypeEnum.Phone]} items={items} />
+      <Tabs defaultActiveKey={defaultActiveKey} items={items} />
     </div>
   );
 }

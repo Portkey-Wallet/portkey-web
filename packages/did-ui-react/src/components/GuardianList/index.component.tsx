@@ -8,6 +8,7 @@ import GuardianItems from './components/GuardianItems';
 import { ChainId } from '@portkey/types';
 import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
 import './index.less';
+import { RecaptchaType } from '@portkey/services';
 
 export interface GuardianListProps {
   chainId?: ChainId;
@@ -15,6 +16,7 @@ export interface GuardianListProps {
   guardianList?: UserGuardianStatus[];
   expiredTime?: number;
   isErrorTip?: boolean;
+  operationType?: RecaptchaType;
   onError?: OnErrorFunc;
   onConfirm?: () => void;
   onSend?: (item: UserGuardianStatus, index: number) => void;
@@ -27,6 +29,7 @@ function GuardianList({
   guardianList = [],
   expiredTime,
   isErrorTip = true,
+  operationType = RecaptchaType.communityRecovery,
   onError,
   onConfirm,
   onSend,
@@ -85,6 +88,7 @@ function GuardianList({
             <GuardianItems
               chainId={chainId}
               key={item.key}
+              operationType={operationType}
               disabled={alreadyApprovalLength >= approvalLength && item.status !== VerifyStatus.Verified}
               isExpired={isExpired}
               item={item}

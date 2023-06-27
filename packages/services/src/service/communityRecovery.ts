@@ -14,6 +14,7 @@ import {
   RegisterInfo,
   ICountryItem,
   IPhoneCountryCodeResult,
+  CheckGoogleRecaptchaParams,
 } from '../types/communityRecovery';
 import {
   SendAppleUserExtraInfoParams,
@@ -49,10 +50,11 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       url: '/api/app/phone/info',
     });
   }
-  checkGoogleRecaptcha(): Promise<boolean> {
+  checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/isGoogleRecaptchaOpen',
+      params,
     });
   }
   getHolderInfo(params: GetHolderInfoParams): Promise<IHolderInfo> {

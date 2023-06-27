@@ -38,5 +38,11 @@ export { default as WakeUpPortkey } from './WakeUpPortkey';
 export { default as GoogleReCaptcha } from './GoogleReCaptcha';
 export { default as LoginModal } from './LoginModal';
 export { PortkeyConfigProvider } from './config-provider';
+export { default as UserInput } from './UserInput';
+export { default as Step1OfSignIn } from './SignStep/components/Step1';
+export { default as Step2OfLogin } from './SignStep/components/Step2OfLogin';
+export { default as Step2OfSignUp } from './SignStep/components/Step2OfSignUp';
+export { default as Step3OfSign } from './SignStep/components/Step3';
+export { default as PortkeyStyleProvider } from './PortkeyStyleProvider';
 
 export * from './types';

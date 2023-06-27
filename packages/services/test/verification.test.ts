@@ -15,6 +15,7 @@ describe('verification describe', () => {
         type: 'Email',
         verifierId: 'verifierId_mock',
         guardianIdentifier: 'guardianIdentifier_mock',
+        operationType: 0,
       },
       headers: {
         reCaptchaToken: 'xxxx',
@@ -70,7 +71,9 @@ describe('verification describe', () => {
   });
 
   test('test checkGoogleRecaptcha', async () => {
-    const result = await verification.checkGoogleRecaptcha();
+    const result = await verification.checkGoogleRecaptcha({
+      operationType: 0,
+    });
     expect(typeof result).toEqual('boolean');
   });
 });
