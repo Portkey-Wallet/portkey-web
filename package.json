@@ -6,7 +6,7 @@
   ],
   "scripts": {
     "lint": "eslint . --ext .tsx,.ts",
-    "publish:npm": "lerna publish --conventional-commits",
+    "publish:npm": "lerna publish --conventional-commits --force-publish",
     "postinstall": "husky install",
     "version": "yarn run bootstrap && yarn build",
     "bootstrap": "lerna bootstrap",
