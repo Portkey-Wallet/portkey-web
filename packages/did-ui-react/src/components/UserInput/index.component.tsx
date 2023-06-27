@@ -1,6 +1,6 @@
 import { ChainId } from '@portkey/types';
 import { CSSProperties, ReactNode, memo, useMemo, useState, useCallback, useRef } from 'react';
-import { GuardianInputInfo, IPhoneCountry, LoginFinishWithoutPin, SignInSuccess } from '../types';
+import { GuardianInputInfo, IPhoneCountry, LoginFinishWithoutPin, IGuardianIdentifierInfo } from '../types';
 import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
 import { AccountType, AccountTypeEnum } from '@portkey/services';
 import Overview from './compontents/Overview';
@@ -40,7 +40,7 @@ export interface UserInputProps {
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone
   // onSignTypeChange?: (type: CreateWalletType) => void;
-  onSuccess?: (value: SignInSuccess) => void;
+  onSuccess?: (value: IGuardianIdentifierInfo) => void;
   onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
   onNetworkChange?: (network: string) => void; // When network changed
   onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
@@ -84,7 +84,7 @@ function UserInput({
   const isHasAccount = useRef<boolean>(false);
 
   const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
-    let isLoginIdentifier = false;
+    let isLoginGuardian = false;
     try {
       const { originChainId } = await did.services.getRegisterInfo({
         loginGuardianIdentifier: identifier,
@@ -95,17 +95,17 @@ function UserInput({
         chainId: originChainId,
       });
       if (payload?.guardianList?.guardians?.length > 0) {
-        isLoginIdentifier = true;
+        isLoginGuardian = true;
       }
     } catch (error: any) {
       if (handleErrorCode(error) === '3002') {
-        isLoginIdentifier = false;
+        isLoginGuardian = false;
       } else {
         throw handleErrorMessage(error || 'GetHolderInfo error');
       }
     }
 
-    isHasAccount.current = isLoginIdentifier;
+    isHasAccount.current = isLoginGuardian;
   }, []);
 
   const validateEmail = useCallback(
@@ -149,7 +149,7 @@ function UserInput({
       const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
       onChainIdChangeRef?.current?.(chainId);
       setLoading(false);
-      onSuccess?.({ ...value, isLoginIdentifier: isHasAccount.current, chainId });
+      onSuccess?.({ ...value, isLoginGuardian: isHasAccount.current, chainId });
     },
     [getIdentifierChainId, onSuccess],
   );

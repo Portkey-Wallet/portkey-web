@@ -1,4 +1,6 @@
 @import '../../assets/theme/color.less';
+@import '../../assets/theme/constants.less';
+
 .set-pin-wrapper {
   height: 100%;
   .set-pin-title {
@@ -40,7 +42,7 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width:  @screen-max-w-768) {
   .set-pin-wrapper .set-pin-title {
     font-size: 32px;
     line-height: 38px;

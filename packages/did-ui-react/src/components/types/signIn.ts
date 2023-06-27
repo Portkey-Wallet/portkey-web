@@ -3,7 +3,7 @@ import { ChainId } from '@portkey/types';
 import { ICountryItem } from '../../types';
 
 export interface GuardianInputInfo {
-  identifier: string; // account
+  identifier: string;
   accountType: AccountType;
   authenticationInfo?: {
     appleIdToken?: string;
@@ -11,9 +11,9 @@ export interface GuardianInputInfo {
   };
 }
 
-export interface SignInSuccess extends GuardianInputInfo {
+export interface IGuardianIdentifierInfo extends GuardianInputInfo {
   chainId: ChainId;
-  isLoginIdentifier?: boolean;
+  isLoginGuardian?: boolean;
 }
 
 export interface IPhoneCountry {
