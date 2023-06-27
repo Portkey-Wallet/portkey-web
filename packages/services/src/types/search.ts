@@ -43,4 +43,13 @@ export interface ISearchService {
   getRegisterStatus(id: string, queryOptions?: QueryOptions): Promise<RegisterStatusResult>;
   getRecoverStatus(id: string, queryOptions?: QueryOptions): Promise<RecoverStatusResult>;
   getChainsInfo(): Promise<ChainInfo[]>;
+  getCAHolderInfo(Authorization: string, caHash: string): Promise<CAHolderInfo>;
 }
+
+export type CAHolderInfo = {
+  userId: string;
+  caAddress: string;
+  caHash: string;
+  id: string;
+  nickName: string;
+};

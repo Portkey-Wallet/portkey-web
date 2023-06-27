@@ -30,21 +30,27 @@ yarn add "@portkey/did-ui-react
 ## 🔨 Usage
 
 ```tsx
-import { SignIn , DIDWalletInfo} from '@portkey/did-ui-react';
-import { useState, useEffect, useCallback } from 'react';
+import { SignIn, PortkeyConfigProvider, DIDWalletInfo, ISignIn } from '@portkey/did-ui-react';
+import { useRef, useCallback } from 'react';
 
 const App = () => {
-  const [open, setOpen] = useState<boolean>();
-
-  useEffect(() => {
-    setOpen(true);
-  }, []);
+  const ref = useRef<ISignIn>();
 
   const onFinish = useCallback((didWallet: DIDWalletInfo) => {
-    console.log('didWallet:', didWallet)
+    console.log('didWallet:', didWallet);
   }, []);
 
-  return (<SignIn open={open} onFinish={onFinish} />);
+  return (
+    <PortkeyConfigProvider>
+      <button
+        onClick={() => {
+          ref.current?.setOpen(true);
+        }}>
+        Sign In
+      </button>
+      <SignIn ref={ref} onFinish={onFinish} />
+    </PortkeyConfigProvider>
+  );
 };
 
 ```
@@ -56,13 +62,13 @@ please configure your provider address using ```ConfigProvider.setGlobalConfig``
 
 ```tsx
 
-import {ConfigProvider} from '@portkey/did-ui-react';
+import { ConfigProvider } from '@portkey/did-ui-react';
 
 ConfigProvider.setGlobalConfig({
   requestDefaults: {
     baseURL: 'http://localhost:3000',
   },
-  graphQLUrl: 'http://localhost:3000/graphQL'
+  graphQLUrl: 'http://localhost:3000/graphQL',
 });
 
 ```
@@ -83,6 +89,18 @@ ConfigProvider.setGlobalConfig({
   storageMethod: new IStorageSuite()
 })
 
+```
+
+### Example
+
+[Bingogame](https://bingogame-pro.portkey.finance/)
+
+[Bingogame Github](https://github.com/Portkey-Wallet/portkey-bingo-game)
+
+You can also use the ```next-example``` in the current project
+
+```bash
+  yarn next-example dev
 ```
 
 ### TypeScript

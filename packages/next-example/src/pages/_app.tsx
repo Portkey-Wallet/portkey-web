@@ -1,5 +1,10 @@
 import '@portkey/did-ui-react/dist/assets/index.css';
+import { PortkeyConfigProvider } from '@portkey/did-ui-react';
 
 export default function APP({ Component, pageProps }: any) {
-  return <Component {...pageProps} />;
+  return (
+    <PortkeyConfigProvider>
+      <Component {...pageProps} />
+    </PortkeyConfigProvider>
+  );
 }

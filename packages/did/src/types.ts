@@ -6,6 +6,7 @@ import {
   RegisterParams,
   RegisterStatusResult,
   IHolderInfo,
+  CAHolderInfo,
 } from '@portkey/services';
 import {
   IAccountMethods,
@@ -71,6 +72,7 @@ export interface IDIDAccountMethods extends IAccountMethods {
   getHolderInfo(params: Pick<GetHolderInfoParams, 'manager' | 'chainId'>): Promise<GetCAHolderByManagerResult>;
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   getVerifierServers(chainId: ChainId): Promise<VerifierItem[]>;
+  getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo>;
 }
 
 export interface IDIDWallet extends IDIDBaseWallet, IDIDAccountMethods {}

@@ -1,6 +1,6 @@
 import { Button } from 'antd';
 import { forwardRef, useCallback, useImperativeHandle, useState, useRef, useEffect } from 'react';
-import { CountryItem, ValidatorHandler } from '../../types';
+import { ICountryItem, ValidatorHandler } from '../../types';
 import { handleErrorMessage, setLoading } from '../../utils';
 import PhoneNumberInput from '../PhoneNumberInput';
 import { IPhoneCountry } from '../types';
@@ -15,7 +15,7 @@ interface PhoneTabProps {
 }
 
 const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: PhoneTabProps, ref) => {
-  const [countryCode, setCountryCode] = useState<CountryItem | undefined>();
+  const [countryCode, setCountryCode] = useState<ICountryItem | undefined>();
   const [error, setError] = useState<string>();
   const validateRef = useRef<PhoneTabProps['validate']>();
   const onFinishRef = useRef<PhoneTabProps['onFinish']>();
@@ -34,7 +34,7 @@ const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: 
   return (
     <div className="phone-tab-wrapper">
       <PhoneNumberInput
-        country={countryCode?.country ?? phoneCountry?.country}
+        iso={countryCode?.iso ?? phoneCountry?.iso}
         countryList={phoneCountry?.countryList}
         phoneNumber={phoneNumber}
         onAreaChange={(v) => {

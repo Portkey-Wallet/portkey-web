@@ -2,7 +2,7 @@ import { Button, message } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useRef, useEffect, useMemo } from 'react';
 import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
-import { appleAuthIdToken, errorTip, googleAuthAccessToken, handleErrorMessage, setLoading } from '../../utils';
+import { errorTip, handleErrorMessage, setLoading, socialLoginAuth } from '../../utils';
 import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
 import { LoginFinishWithoutPin } from '../types';
@@ -22,7 +22,7 @@ interface SocialContentProps {
 export default function SocialContent({
   type,
   socialLogin,
-  isErrorTip,
+  isErrorTip = true,
   networkType,
   onFinish,
   onLoginByPortkey,
@@ -54,13 +54,18 @@ export default function SocialContent({
     setLoading(true);
 
     try {
-      if (!socialLogin?.Google) return;
       if (socialLogin?.Google?.customLoginHandler) return login('Google');
-      const response = await googleAuthAccessToken({ ...socialLogin?.Google });
-      if (!response?.accessToken) throw new Error('Google login failed');
+      setLoading(true);
+      const response = await socialLoginAuth({
+        type: 'Google',
+        clientId: socialLogin?.Google?.clientId,
+        redirectURI: socialLogin?.Google?.redirectURI,
+      });
+      setLoading(false);
+      if (!response?.token) throw new Error('Google login failed');
       onFinishRef?.current?.({
         type: 'Google',
-        data: { ...response, accessToken: response.accessToken },
+        data: { ...response, accessToken: response.token },
       });
     } catch (error) {
       errorTip(
@@ -71,21 +76,25 @@ export default function SocialContent({
         isErrorTip,
         onError,
       );
-    } finally {
       setLoading(false);
     }
   }, [isErrorTip, login, onError, socialLogin?.Google]);
 
   const onAppleSuccess = useCallback(async () => {
-    setLoading(true);
     try {
-      if (!socialLogin?.Apple) return;
+      setLoading(true);
+
       if (socialLogin?.Apple?.customLoginHandler) return login('Apple');
-      const res = await appleAuthIdToken(socialLogin?.Apple);
-      if (res?.identityToken) {
+      const res = await socialLoginAuth({
+        type: 'Apple',
+        clientId: socialLogin?.Apple?.clientId,
+        redirectURI: socialLogin?.Apple?.redirectURI,
+      });
+      setLoading(false);
+      if (res?.token) {
         onFinishRef?.current?.({
-          type: 'Google',
-          data: { ...res, accessToken: res?.identityToken },
+          type: 'Apple',
+          data: { ...res, accessToken: res?.token },
         });
       }
     } catch (error) {
@@ -97,7 +106,6 @@ export default function SocialContent({
         isErrorTip,
         onError,
       );
-    } finally {
       setLoading(false);
     }
   }, [isErrorTip, login, onError, socialLogin?.Apple]);
@@ -112,7 +120,7 @@ export default function SocialContent({
 
   return (
     <div className="social-content-wrapper">
-      {socialLogin?.Portkey && isMobile && (
+      {socialLogin?.Portkey && type !== 'Sign up' && isMobile && (
         <WakeUpPortkey
           type={type}
           networkType={networkType}
@@ -120,15 +128,11 @@ export default function SocialContent({
           onFinish={onLoginByPortkey}
         />
       )}
-      <Button
-        className={clsx('social-login-btn', !socialLogin?.Google && 'social-login-disabled-button')}
-        onClick={onGoogleSuccess}>
+      <Button className={clsx('social-login-btn')} onClick={onGoogleSuccess}>
         <CustomSvg type="Google" />
         {`${type} with Google`}
       </Button>
-      <Button
-        className={clsx('social-login-btn', !socialLogin?.Google && 'social-login-disabled-button')}
-        onClick={onAppleSuccess}>
+      <Button className={clsx('social-login-btn')} onClick={onAppleSuccess}>
         <CustomSvg type="Apple" />
         {`${type} with Apple`}
       </Button>

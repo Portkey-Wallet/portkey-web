@@ -27,7 +27,7 @@ export default function VerifierPair({
   wrapperClassName,
 }: VerifierPairProps) {
   return (
-    <div className={clsx('flex-row-center icon-pair', wrapperClassName)}>
+    <div className={clsx('portkey-ui-flex-row-center icon-pair', wrapperClassName)}>
       <CustomSvg type={GuardianTypeIcon[guardianType]} style={{ width: size, height: size }} />
       <BaseVerifierIcon src={verifierSrc} fallback={verifierName?.[0]} />
     </div>

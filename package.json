@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "scripts": {
+    "publish:npm": "lerna publish --conventional-commits",
     "postinstall": "husky install",
     "version": "yarn run bootstrap && yarn build",
     "bootstrap": "lerna bootstrap",

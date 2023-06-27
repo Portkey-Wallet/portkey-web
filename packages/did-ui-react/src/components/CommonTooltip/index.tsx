@@ -1,11 +1,11 @@
+import BaseStyleProvider from '../BaseStyleProvider';
 import CommonTooltipCom from './index.component';
 import { TooltipProps } from 'antd';
-import { BaseConfigProvider } from '../config-provider';
 
 export default function CommonTooltip(props?: TooltipProps) {
   return (
-    <BaseConfigProvider>
+    <BaseStyleProvider>
       <CommonTooltipCom {...props} />
-    </BaseConfigProvider>
+    </BaseStyleProvider>
   );
 }

@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, ReactNode } from 'react';
 import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
 import ConfigProvider from '../config-provider';
 import InputLogin from '../InputLogin';
@@ -9,7 +9,10 @@ import './index.less';
 
 export interface LoginBaseProps {
   isShowScan?: boolean;
+  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
   termsOfServiceUrl?: string;
+  termsOfService?: ReactNode;
+  extraElement?: ReactNode; // extra element
   phoneCountry?: IPhoneCountry;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
@@ -31,9 +34,11 @@ enum STEP {
 export default function LoginCard({
   isShowScan,
   phoneCountry,
-  isErrorTip,
+  isErrorTip = true,
   socialLogin,
   networkType,
+  extraElement,
+  termsOfService,
   termsOfServiceUrl,
   onStep,
   onError,
@@ -70,7 +75,7 @@ export default function LoginCard({
   const [step, setStep] = useState<STEP>(STEP.socialLogin);
 
   return (
-    <div className="flex-column login-ui-card">
+    <div className="portkey-ui-flex-column login-ui-card">
       {step === STEP.inputLogin ? (
         <InputLogin
           type="Login"
@@ -82,7 +87,7 @@ export default function LoginCard({
         />
       ) : (
         <SocialLogin
-          className="flex-1"
+          className="portkey-ui-flex-1"
           type="Login"
           networkType={networkType}
           socialLogin={_socialLogin}
@@ -91,7 +96,8 @@ export default function LoginCard({
           onFinish={onSocialLoginFinish}
           switchType={onStep}
           switchGuardinType={() => setStep(STEP.inputLogin)}
-          termsOfServiceUrl={termsOfServiceUrl}
+          extraElement={extraElement}
+          termsOfService={termsOfService || termsOfServiceUrl}
           onLoginByPortkey={onLoginByPortkey}
           onError={onError}
         />

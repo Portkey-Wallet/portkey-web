@@ -4,6 +4,7 @@ import { Button } from 'antd';
 import BaseModal from '../SignIn/components/BaseModal';
 import CustomPassword from '../CustomPassword';
 import CustomSvg from '../CustomSvg';
+import BaseStyleProvider from '../BaseStyleProvider';
 
 import './index.less';
 
@@ -64,7 +65,7 @@ export default function UnLock({
   }, [value, t, isWrongPassword, onChange, onUnlock]);
 
   return (
-    <div>
+    <BaseStyleProvider>
       {uiType === 'Full' ? (
         <div className="step-page-full-wrapper">{mainContent()}</div>
       ) : (
@@ -72,6 +73,6 @@ export default function UnLock({
           {mainContent()}
         </BaseModal>
       )}
-    </div>
+    </BaseStyleProvider>
   );
 }

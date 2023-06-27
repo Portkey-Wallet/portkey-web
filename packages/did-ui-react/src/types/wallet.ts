@@ -1,5 +1,5 @@
 import { ChainType } from '@portkey/types';
-import { CountryItem } from './country';
+import { ICountryItem } from './country';
 import { DeviceType, QRExtraDataType } from './device';
 
 export interface QRData {
@@ -16,7 +16,7 @@ export interface LoginQRData extends QRData {
 }
 export interface ISelectCountryCode {
   index: string;
-  country: CountryItem;
+  country: ICountryItem;
 }
 
 export type RegisterType = 'Login' | 'Sign up';
@@ -28,31 +28,19 @@ export interface AuthenticationInfo {
 export type ISocialLogin = 'Google' | 'Apple';
 
 export type TSocialResponseData = {
-  accessToken: string;
+  accessToken?: string;
+  token?: string;
   [x: string]: any;
 };
 
 export interface IGoogleLoginConfig {
-  scope?: string;
-  prompt?: string;
-  uxMode?: string;
-  clientId: string;
-  loginHint?: string;
-  accessType?: string;
-  autoSelect?: boolean;
-  redirectUri?: string;
-  cookiePolicy?: string;
-  hostedDomain?: string;
-  discoveryDocs?: string;
-  children?: React.ReactNode;
-  isOnlyGetToken?: boolean;
-  fetchBasicProfile?: boolean;
+  clientId?: string;
+  redirectURI?: string;
   // custom social login callback
   customLoginHandler?: TSocialLoginHandler;
 }
 interface BaseAppleLoginConfig {
-  scope?: string;
-  clientId: string;
+  clientId?: string;
   redirectURI?: string;
 }
 export interface IAppleLoginConfig extends BaseAppleLoginConfig {

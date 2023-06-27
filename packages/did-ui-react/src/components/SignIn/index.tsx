@@ -5,8 +5,8 @@
  */
 
 import BaseModal from './components/BaseModal';
-import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
-import ConfigProvider, { BaseConfigProvider } from '../config-provider';
+import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle, ReactNode } from 'react';
+import ConfigProvider from '../config-provider';
 import Step1, { OnSignInFinishedFun } from './components/Step1';
 import Step2WithSignUp from './components/Step2WithSignUp';
 import Step2WithSignIn from './components/Step2WithSignIn';
@@ -32,7 +32,8 @@ import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, Step2SignUpLifeCycleT
 import { portkeyDidUIPrefix } from '../../constants';
 import qs from 'query-string';
 import clsx from 'clsx';
-import { errorTip } from '../../utils';
+import { did, errorTip } from '../../utils';
+import BaseStyleProvider from '../BaseStyleProvider';
 import './index.less';
 
 const step1Storage = `${portkeyDidUIPrefix}step1Storage`;
@@ -57,7 +58,10 @@ export interface SignInProps {
   // Login
   isShowScan?: boolean;
   phoneCountry?: IPhoneCountry;
+  extraElement?: ReactNode; // extra element
+  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
   termsOfServiceUrl?: string;
+  termsOfService?: ReactNode;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
   onNetworkChange?: (network: string) => void;
@@ -86,7 +90,9 @@ const SignIn = forwardRef(
       // If you set isShowScan to true, make sure you configure ConfigProvider.setGlobalConfig `network`
       isShowScan,
       sandboxId,
-      phoneCountry,
+      phoneCountry: defaultPhoneCountry,
+      extraElement,
+      termsOfService,
       termsOfServiceUrl,
       validateEmail,
       validatePhone,
@@ -124,6 +130,7 @@ const SignIn = forwardRef(
       setStep('SignIn');
       setOpen(v);
     }, []);
+
     useImperativeHandle(ref, () => ({ setOpen: refSetOpen }));
 
     const networkItem = useMemo(
@@ -136,7 +143,7 @@ const SignIn = forwardRef(
     const [lifeCycle, setLifeCycle] = useState<LifeCycleType>('Login');
 
     const chainId = useMemo(() => originChainId || defaultChainId, [originChainId, defaultChainId]);
-    const _chainInfo = useChainInfo(chainId, onErrorRef?.current);
+    const chainInfo = useChainInfo(chainId, onErrorRef?.current);
 
     const getStorageGuardianApproved = useCallback(async () => {
       const storageStr = await ConfigProvider.config.storageMethod?.getItem(step3Storage);
@@ -297,6 +304,30 @@ const SignIn = forwardRef(
       setStep('SignIn');
     }, [clearStorage, onCancel]);
 
+    const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
+
+    const getPhoneCountry = useCallback(async () => {
+      try {
+        const countryData = await did.services.getPhoneCountryCodeWithLocal();
+        setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'getPhoneCountry',
+            error,
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
+    useEffect(() => {
+      // Get phoneCountry by service, update phoneCountry
+      getPhoneCountry();
+    }, [getPhoneCountry]);
+
     const mainContent = useCallback(() => {
       return (
         <>
@@ -307,6 +338,7 @@ const SignIn = forwardRef(
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
               phoneCountry={phoneCountry}
+              extraElement={extraElement}
               validateEmail={validateEmail}
               validatePhone={validatePhone}
               onSignInFinished={onSignInFinished}
@@ -314,7 +346,7 @@ const SignIn = forwardRef(
               onStepChange={onSignInStepChange}
               onChainIdChange={onOriginChainIdChange}
               onLoginFinishWithoutPin={onLoginFinishWithoutPin}
-              termsOfServiceUrl={termsOfServiceUrl}
+              termsOfService={termsOfService || termsOfServiceUrl}
             />
           )}
 
@@ -324,7 +356,7 @@ const SignIn = forwardRef(
               isErrorTip={isErrorTip}
               sandboxId={sandboxId}
               chainType={networkItem?.walletType}
-              chainInfo={_chainInfo}
+              chainInfo={chainInfo}
               onStepChange={onSignUpStepChange}
               onError={onErrorRef?.current}
               onFinish={onStep2WithSignUpFinish}
@@ -336,7 +368,7 @@ const SignIn = forwardRef(
               approvedList={approvedList}
               sandboxId={sandboxId}
               chainType={networkItem?.walletType}
-              chainInfo={_chainInfo}
+              chainInfo={chainInfo}
               guardianIdentifierInfo={guardianIdentifierInfo}
               isErrorTip={isErrorTip}
               onError={onErrorRef?.current}
@@ -369,17 +401,19 @@ const SignIn = forwardRef(
       defaultChainId,
       isErrorTip,
       phoneCountry,
+      extraElement,
       validateEmail,
       validatePhone,
       onSignInFinished,
       onSignInStepChange,
       onOriginChainIdChange,
       onLoginFinishWithoutPin,
+      termsOfService,
       termsOfServiceUrl,
       guardianIdentifierInfo,
       sandboxId,
       networkItem?.walletType,
-      _chainInfo,
+      chainInfo,
       onSignUpStepChange,
       onStep2WithSignUpFinish,
       onStep2Cancel,
@@ -391,7 +425,7 @@ const SignIn = forwardRef(
     ]);
 
     return (
-      <BaseConfigProvider>
+      <BaseStyleProvider>
         {uiType === 'Full' ? (
           <div className={clsx('step-page-full-wrapper', className)}>{mainContent()}</div>
         ) : (
@@ -404,7 +438,7 @@ const SignIn = forwardRef(
             {mainContent()}
           </BaseModal>
         )}
-      </BaseConfigProvider>
+      </BaseStyleProvider>
     );
   },
 );
