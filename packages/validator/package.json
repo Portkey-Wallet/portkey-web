@@ -38,5 +38,6 @@
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
-  }
+  },
+  "gitHead": "8175df23e1a9922676b754ffc2d93c83eaedbaf5"
 }

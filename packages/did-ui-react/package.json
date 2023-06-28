@@ -61,5 +61,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "less": "^4.1.3",
     "postcss": "^8.4.21"
-  }
+  },
+  "gitHead": "8175df23e1a9922676b754ffc2d93c83eaedbaf5"
 }

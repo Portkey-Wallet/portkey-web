@@ -6,9 +6,9 @@
   "npmClient": "yarn",
   "changelogPreset": {
     "name": "conventionalcommits",
-    "commitUrlFormat": "github.com/{{owner}}/{{repository}}/commit/{{hash}}",
-    "compareUrlFormat": "github.com/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
-    "issueUrlFormat": "github.com/{{owner}}/{{repository}}/issues/{{id}}",
+    "commitUrlFormat": "https://github.com/{{owner}}/{{repository}}/commit/{{hash}}",
+    "compareUrlFormat": "https://github.com/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
+    "issueUrlFormat": "https://github.com/{{owner}}/{{repository}}/issues/{{id}}",
     "issuePrefixes": ["#"],
     "types": [
       {
@@ -67,6 +67,6 @@
         "hidden": true
       }
     ],
-    "userUrlFormat": "{{host}}/{{user}}"
+    "userUrlFormat": "https://github.com/{{user}}"
   }
 }
