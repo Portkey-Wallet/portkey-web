@@ -3,5 +3,10 @@
   "useWorkspaces": true,
   "version": "1.0.0-alpha.0",
   "packages": ["packages/*"],
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "changelogPreset": {
+    "commitUrlFormat": "github.com/{{owner}}/{{repository}}/commit/{{hash}}",
+    "compareUrlFormat": "github.com/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
+    "issueUrlFormat": "github.com/{{owner}}/{{repository}}/issues/{{id}}"
+  }
 }
