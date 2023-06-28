@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
-import BaseModal from '../SignIn/components/BaseModal';
+import BaseModal from '../SignStep/components/BaseModal';
 import CustomPassword from '../CustomPassword';
 import CustomSvg from '../CustomSvg';
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 
 import './index.less';
 
@@ -65,7 +65,7 @@ export default function UnLock({
   }, [value, t, isWrongPassword, onChange, onUnlock]);
 
   return (
-    <BaseStyleProvider>
+    <PortkeyStyleProvider>
       {uiType === 'Full' ? (
         <div className="step-page-full-wrapper">{mainContent()}</div>
       ) : (
@@ -73,6 +73,6 @@ export default function UnLock({
           {mainContent()}
         </BaseModal>
       )}
-    </BaseStyleProvider>
+    </PortkeyStyleProvider>
   );
 }

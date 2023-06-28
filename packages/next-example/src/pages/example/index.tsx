@@ -6,9 +6,11 @@ import {
   CodeVerify,
   GuardianApproval,
   PortkeyLoading,
+  UserInput,
 } from '@portkey/did-ui-react';
 import { useState } from 'react';
 import { Store } from '../../utils';
+import { RecaptchaType } from '@portkey/services';
 
 const myStore = new Store();
 ConfigProvider.setGlobalConfig({
@@ -80,6 +82,7 @@ function Example() {
           }}
         />
         <VerifierSelect
+          operationType={RecaptchaType.register}
           guardianIdentifier={'105383420233267798964'}
           accountType={'Google'}
           onError={(error: any) => {
@@ -122,6 +125,7 @@ function Example() {
         />
         <GuardianApproval
           chainId="AELF"
+          operationType={RecaptchaType.communityRecovery}
           guardianList={[
             {
               isLoginAccount: true,
@@ -137,6 +141,26 @@ function Example() {
               key: '',
             },
           ]}
+        />
+        <UserInput
+          style={{ height: 600, border: '1px solid red' }}
+          termsOfService={'https://portkey.finance/terms-of-service'}
+          extraElement={
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+              <button>button</button>
+            </div>
+          }
+          onError={(error: any) => {
+            console.log('onError', error);
+          }}
+          onSuccess={(value: any) => {
+            console.log('onSuccess:', value);
+          }}
         />
       </div>
     </div>

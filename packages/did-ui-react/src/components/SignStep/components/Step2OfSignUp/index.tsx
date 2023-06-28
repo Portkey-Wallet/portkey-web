@@ -1,5 +1,5 @@
 import { useState, useCallback, memo, useEffect, useRef } from 'react';
-import { AccountTypeEnum } from '@portkey/services';
+import { AccountTypeEnum, RecaptchaType } from '@portkey/services';
 import VerifierSelect, { VerifierSelectConfirmResult } from '../../../VerifierSelect/index.component';
 import CodeVerify from '../../../CodeVerify/index.component';
 import { IVerifyInfo } from '../../../types/verify';
@@ -9,11 +9,12 @@ import type { ChainInfo } from '@portkey/services';
 import { ChainType } from '@portkey/types';
 import { VerifierItem } from '@portkey/did';
 import { useUpdateEffect } from 'react-use';
-import { Step2SignUpLifeCycleType } from '../../types';
+import { Step2SignUpLifeCycleType } from '../../../SignStep/types';
 import { getVerifierList } from '../../../../utils/sandboxUtil/getVerifierList';
 import { SignInSuccess } from '../../../types';
 import { portkeyDidUIPrefix } from '../../../../constants';
 import ConfigProvider from '../../../config-provider';
+import { setLoading } from '../../../../utils';
 
 const step2Storage = `${portkeyDidUIPrefix}step1Storage`;
 
@@ -52,6 +53,7 @@ function Step2WithSignUp({
 
   const getVerifierListHandler = useCallback(async () => {
     try {
+      setLoading(true);
       const list = await getVerifierList({
         sandboxId,
         chainId: guardianIdentifierInfo.chainId,
@@ -65,6 +67,8 @@ function Step2WithSignUp({
         errorFields: 'Get verifierList',
         error: error,
       });
+    } finally {
+      setLoading(false);
     }
   }, [chainInfo, chainType, guardianIdentifierInfo.chainId, sandboxId]);
 
@@ -118,6 +122,7 @@ function Step2WithSignUp({
       <BackHeader onBack={onBackHandler} />
       {signUpStep === 'VerifierSelect' && (
         <VerifierSelect
+          operationType={RecaptchaType.register}
           chainId={guardianIdentifierInfo.chainId}
           className="content-padding"
           guardianIdentifier={guardianIdentifierInfo.identifier}

@@ -9,8 +9,6 @@ import './index.less';
 
 export interface LoginBaseProps {
   isShowScan?: boolean;
-  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
-  termsOfServiceUrl?: string;
   termsOfService?: ReactNode;
   extraElement?: ReactNode; // extra element
   phoneCountry?: IPhoneCountry;
@@ -35,11 +33,10 @@ export default function LoginCard({
   isShowScan,
   phoneCountry,
   isErrorTip = true,
-  socialLogin,
+  socialLogin: defalutSocialLogin,
   networkType,
   extraElement,
   termsOfService,
-  termsOfServiceUrl,
   onStep,
   onError,
   onInputFinish,
@@ -54,7 +51,7 @@ export default function LoginCard({
   useEffect(() => {
     onNetworkChangeRef.current = onNetworkChange;
   });
-  const _socialLogin = useMemo(() => socialLogin || ConfigProvider.getSocialLoginConfig(), [socialLogin]);
+  const socialLogin = useMemo(() => defalutSocialLogin || ConfigProvider.getSocialLoginConfig(), [defalutSocialLogin]);
 
   // const selectItems = useMemo(
   //   () =>
@@ -90,14 +87,14 @@ export default function LoginCard({
           className="portkey-ui-flex-1"
           type="Login"
           networkType={networkType}
-          socialLogin={_socialLogin}
+          socialLogin={socialLogin}
           isShowScan={isShowScan}
           isErrorTip={isErrorTip}
           onFinish={onSocialLoginFinish}
           switchType={onStep}
           switchGuardinType={() => setStep(STEP.inputLogin)}
           extraElement={extraElement}
-          termsOfService={termsOfService || termsOfServiceUrl}
+          termsOfService={termsOfService}
           onLoginByPortkey={onLoginByPortkey}
           onError={onError}
         />

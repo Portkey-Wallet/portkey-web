@@ -19,8 +19,6 @@ export interface SignUpBaseProps {
   isErrorTip?: boolean;
   wrapperClassName?: string;
   extraElement?: ReactNode; // extra element
-  /** @deprecated will be removed in v0.0.1-alpha.7.5, Please use `termsOfService` instead  */
-  termsOfServiceUrl?: string;
   termsOfService?: ReactNode;
   networkType?: string;
   onLoginByPortkey?: LoginFinishWithoutPin;
@@ -39,7 +37,6 @@ export default function SignUpBase({
   networkType,
   wrapperClassName,
   extraElement,
-  termsOfServiceUrl,
   termsOfService,
   onBack,
   onError,
@@ -79,7 +76,7 @@ export default function SignUpBase({
           type="Sign up"
           className="portkey-ui-flex-1"
           extraElement={extraElement}
-          termsOfService={termsOfService || termsOfServiceUrl}
+          termsOfService={termsOfService}
           isErrorTip={isErrorTip}
           networkType={networkType}
           socialLogin={_socialLogin}
