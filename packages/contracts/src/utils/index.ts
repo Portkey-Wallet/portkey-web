@@ -1,4 +1,4 @@
-import { ContractBasic } from '../contractBasic';
+import { ContractBasic } from '../contract';
 import AElf from 'aelf-sdk';
 import { IBlockchainWallet } from '@portkey/types';
 import { sleep } from '@portkey/utils';
@@ -22,6 +22,7 @@ export async function getContractBasic({
   if (!instance) throw new Error('Get instance error');
   const aelfContract = await instance.chain.contractAt(contractAddress, account);
   return new ContractBasic({
+    type: 'aelf',
     aelfContract,
     contractAddress,
     aelfInstance: instance,
