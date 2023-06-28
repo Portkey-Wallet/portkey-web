@@ -5,6 +5,7 @@
   "packages": ["packages/*"],
   "npmClient": "yarn",
   "changelogPreset": {
+    "name": "conventionalcommits",
     "commitUrlFormat": "github.com/{{owner}}/{{repository}}/commit/{{hash}}",
     "compareUrlFormat": "github.com/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
     "issueUrlFormat": "github.com/{{owner}}/{{repository}}/issues/{{id}}"
