@@ -5,6 +5,9 @@
 [![NPM Package Version][npm-image-version]][npm-url]
 
 
+It is already possible to follow [the standard abp tutorial](https://docs.abp.io/en/abp/latest/SignalR-Integration) to add [SignalR](https://docs.abp.io/en/abp/latest/SignalR-Integration) to your application. However, Portkey provides SignalR integration packages those simplify the integration and usage.
+
+
 ## Installation
 
 ### Using NPM
