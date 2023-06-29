@@ -1,4 +1,4 @@
-# `@portkey/services`
+# `@portkey/socket`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -10,13 +10,13 @@
 ### Using NPM
 
 ```bash
-npm install @portkey/services
+npm install @portkey/socket
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/services
+yarn add @portkey/socket
 ```
 
 ## Prerequisites
@@ -34,7 +34,18 @@ yarn add @portkey/services
 | lint:fix | Uses `eslint` to check and fix any warnings        |
 | format   | Uses `prettier` to format the code                 |
 
-## Usage
+# Basic Usage
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/services
-[npm-url]: https://npmjs.org/package/@portkey/services
+```typescript
+import { DIDSignalr } from '@portkey/socket'
+
+// new signalr instance
+const didSignalr = new DIDSignalr();
+// open link
+didSignalr.doOpen({ url: 'your did signalr url', clientId: 'your clientId' });
+// Scan code feedback
+didSignalr.onScanLogin(({ body }) => console.log(body));
+```
+
+[npm-image-version]: https://img.shields.io/npm/v/@portkey/socket
+[npm-url]: https://npmjs.org/package/@portkey/socket

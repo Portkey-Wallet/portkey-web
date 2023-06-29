@@ -1,8 +1,22 @@
 import { BaseSignalr } from './signalr';
-import { BaseSocketMessage } from './types';
-import { CaAccountRecoverResult, CaAccountRegisterResult } from './types/did';
+import {
+  BaseSocketMessage,
+  ISignalrOptions,
+  CaAccountRecoverResult,
+  CaAccountRegisterResult,
+  DefaultDIDListenList,
+  DefaultDIDListenListType,
+  IDIDSignalr,
+} from './types';
 
-export class DIDSignalr<T = any> extends BaseSignalr<T> {
+export class DIDSignalr<T extends DefaultDIDListenListType = DefaultDIDListenListType>
+  extends BaseSignalr<T>
+  implements IDIDSignalr<T>
+{
+  constructor(options?: ISignalrOptions<T>) {
+    const { listenList = DefaultDIDListenList as T } = options || {};
+    super({ listenList });
+  }
   public Ack(clientId: string, requestId: string) {
     this.invoke('Ack', clientId, requestId);
   }

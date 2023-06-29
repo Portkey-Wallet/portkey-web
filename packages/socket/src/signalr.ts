@@ -1,21 +1,21 @@
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
 import { randomId } from '@portkey/utils';
-import { IMessageMap, ISignalrOption, Receive, SocketError } from './types';
+import { IListen, IMessageMap, ISignalr, ISignalrOptions, Receive, SocketError } from './types';
 
-export class BaseSignalr<ListenList = any> {
+export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {
   public url?: string;
   public signalr: HubConnection | null;
   public connectionId: string;
   private _messageMap: IMessageMap;
   private _listenList: ListenList;
-  constructor({ listenList }: ISignalrOption<ListenList>) {
+  constructor({ listenList }: ISignalrOptions<ListenList>) {
     this.connectionId = '';
     this._messageMap = {};
     this.signalr = null;
     this._listenList = listenList;
   }
 
-  doOpen = async ({ url, clientId }: { url: string; clientId: string }) => {
+  public doOpen = async ({ url, clientId }: { url: string; clientId: string }) => {
     const signalr = new HubConnectionBuilder().withUrl(url).withAutomaticReconnect().build();
     this._listener(signalr);
     if (this.signalr) await this.signalr.stop();
@@ -27,7 +27,7 @@ export class BaseSignalr<ListenList = any> {
     return signalr;
   };
 
-  public listen = (name: ListenList[keyof ListenList], handler: (data?: any) => void) => {
+  public listen = (name: ListenList[keyof ListenList], handler: (data?: any) => void): IListen => {
     const key = randomId();
     let _name = name as string;
     if (!this._messageMap[_name]) this._messageMap[_name] = {};
@@ -37,6 +37,10 @@ export class BaseSignalr<ListenList = any> {
         delete this._messageMap[_name][key];
       },
     };
+  };
+
+  public start: HubConnection['start'] = (...args) => {
+    return this._checkSignalr().start(...args);
   };
 
   public on: HubConnection['on'] = (...args) => {
