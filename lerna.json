@@ -1,7 +1,72 @@
 {
   "$schema": "node_modules/lerna/schemas/lerna-schema.json",
   "useWorkspaces": true,
-  "version": "0.0.1-alpha.9.0",
+  "version": "1.0.0-alpha.1",
   "packages": ["packages/*"],
-  "npmClient": "yarn"
+  "npmClient": "yarn",
+  "changelogPreset": {
+    "name": "conventionalcommits",
+    "commitUrlFormat": "https://github.com/{{owner}}/{{repository}}/commit/{{hash}}",
+    "compareUrlFormat": "https://github.com/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
+    "issueUrlFormat": "https://github.com/{{owner}}/{{repository}}/issues/{{id}}",
+    "issuePrefixes": ["#"],
+    "types": [
+      {
+        "type": "feat",
+        "section": "Features"
+      },
+      {
+        "type": "feature",
+        "section": "Features"
+      },
+      {
+        "type": "fix",
+        "section": "Bug Fixes"
+      },
+      {
+        "type": "perf",
+        "section": "Performance Improvements"
+      },
+      {
+        "type": "revert",
+        "section": "Reverts"
+      },
+      {
+        "type": "docs",
+        "section": "Documentation",
+        "hidden": true
+      },
+      {
+        "type": "style",
+        "section": "Styles",
+        "hidden": true
+      },
+      {
+        "type": "chore",
+        "section": "Miscellaneous Chores",
+        "hidden": true
+      },
+      {
+        "type": "refactor",
+        "section": "Code Refactoring",
+        "hidden": true
+      },
+      {
+        "type": "test",
+        "section": "Tests",
+        "hidden": true
+      },
+      {
+        "type": "build",
+        "section": "Build System",
+        "hidden": true
+      },
+      {
+        "type": "ci",
+        "section": "Continuous Integration",
+        "hidden": true
+      }
+    ],
+    "userUrlFormat": "https://github.com/{{user}}"
+  }
 }

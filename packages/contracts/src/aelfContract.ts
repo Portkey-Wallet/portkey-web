@@ -1,61 +1,25 @@
-import { sleep } from '@portkey/utils';
-import { getTxResult, handleContractError, handleContractParams, handleFunctionName } from '.';
-import { AElfCallSendMethod, AElfCallViewMethod, CallSendMethod, CallViewMethod, ContractProps } from './types';
-import { aelf } from '@portkey/utils';
-export class ContractBasic {
-  public address?: string;
-  public callContract: Web3ContractBasic | AElfContractBasic;
-  public chainType: 'aelf' | 'ethereum';
-  public rpcUrl: string;
-  constructor(options: ContractProps) {
-    this.address = options.contractAddress;
-    this.rpcUrl = options.rpcUrl;
-    const isELF = true;
-    // TODO :ethereum
-    this.callContract = isELF ? new AElfContractBasic(options) : new Web3ContractBasic();
-    this.chainType = isELF ? 'aelf' : 'ethereum';
-  }
+import { ChainId, ChainType } from '@portkey/types';
+import { CallOptions, ContractProps, IPortkeyContract, SendOptions, SendResult, ViewResult } from './types';
+import { getTxResult, handleContractError, handleContractParams, handleFunctionName } from './utils';
+import { aelf, sleep } from '@portkey/utils';
 
-  public callViewMethod: CallViewMethod = async (
-    functionName,
-    paramsOption,
-    _callOptions = { defaultBlock: 'latest' },
-  ) => {
-    if (this.callContract instanceof AElfContractBasic)
-      return this.callContract.callViewMethod(functionName, paramsOption);
-
-    // TODO WEB3 Contract
-    return { data: '' };
-  };
-
-  public callSendMethod: CallSendMethod = async (functionName, _account, paramsOption, sendOptions) => {
-    if (this.callContract instanceof AElfContractBasic)
-      return this.callContract.callSendMethod(functionName, paramsOption, sendOptions);
-
-    // TODO WEB3 Contract
-    return { data: '' };
-  };
-  public encodedTx: CallViewMethod = async (functionName, paramsOption) => {
-    if (this.callContract instanceof AElfContractBasic) return this.callContract.encodedTx(functionName, paramsOption);
-
-    // TODO WEB3 Contract
-    return { data: '' };
-  };
-}
-
-export class Web3ContractBasic {}
-
-export class AElfContractBasic {
+export class AElfContract implements IPortkeyContract {
   public aelfContract: any;
   public address: string;
   public aelfInstance?: any;
+  public chainId?: ChainId;
+  public type: ChainType;
   constructor(options: ContractProps) {
     const { aelfContract, contractAddress, aelfInstance } = options;
     this.address = contractAddress;
     this.aelfContract = aelfContract;
     this.aelfInstance = aelfInstance;
   }
-  public callViewMethod: AElfCallViewMethod = async (functionName, paramsOption) => {
+  public async callViewMethod<T = any>(
+    functionName: string,
+    paramsOption?: any,
+    _callOptions?: CallOptions,
+  ): Promise<ViewResult<T>> {
     const contract = this.aelfContract;
     if (!contract) return { error: { code: 401, message: 'Contract init error1' } };
     try {
@@ -65,9 +29,14 @@ export class AElfContractBasic {
     } catch (error) {
       return { error: handleContractError(error) };
     }
-  };
+  }
 
-  public callSendMethod: AElfCallSendMethod = async (functionName, paramsOption, sendOptions) => {
+  public async callSendMethod<T = any>(
+    functionName: string,
+    _account: string,
+    paramsOption?: any,
+    sendOptions?: SendOptions | undefined,
+  ): Promise<SendResult<T>> {
     if (!this.aelfContract) return { error: { code: 401, message: 'Contract init error' } };
     try {
       const { onMethod = 'receipt' } = sendOptions || {};
@@ -98,9 +67,13 @@ export class AElfContractBasic {
     } catch (error) {
       return { error: handleContractError(error) };
     }
-  };
+  }
 
-  public encodedTx: AElfCallViewMethod = async (functionName, paramsOption) => {
+  public async encodedTx<T = any>(
+    functionName: string,
+    paramsOption?: any,
+    _callOptions?: CallOptions,
+  ): Promise<ViewResult<T>> {
     if (!this.aelfContract) return { error: { code: 401, message: 'Contract init error' } };
     if (!this.aelfInstance) return { error: { code: 401, message: 'instance init error' } };
     try {
@@ -110,9 +83,9 @@ export class AElfContractBasic {
         functionName,
         paramsOption,
       });
-      return raw;
+      return { data: raw };
     } catch (error) {
       return handleContractError(error);
     }
-  };
+  }
 }

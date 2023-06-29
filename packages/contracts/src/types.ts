@@ -1,3 +1,5 @@
+import { ChainId, ChainType, IAElfRPCMethods } from '@portkey/types';
+
 export type SendOptions = {
   from?: string;
   gasPrice?: string;
@@ -7,50 +9,52 @@ export type SendOptions = {
   onMethod: 'transactionHash' | 'receipt' | 'confirmation';
 };
 
-export interface ContractProps {
-  contractAddress: string;
-  aelfContract?: any;
-  aelfInstance?: any;
-  rpcUrl: string;
-}
-
 export interface ErrorMsg {
   name?: string;
   code?: number;
   message?: string;
 }
-export interface ViewResult {
-  data?: any;
+export interface ViewResult<T = any> {
+  data?: T;
   error?: ErrorMsg;
 }
 
-export interface SendResult extends ViewResult {
+export interface SendResult<T = any> extends ViewResult<T> {
   transactionId?: string;
 }
 
-export type CallViewMethod = (
-  functionName: string,
-  paramsOption?: any,
-  callOptions?: {
-    defaultBlock: number | string;
-    options?: any;
-    callback?: any;
-  },
-) => Promise<ViewResult>;
-
-export type CallSendMethod = (
-  functionName: string,
-  account: string,
-  paramsOption?: any,
-  sendOptions?: SendOptions,
-) => Promise<SendResult>;
-
 export type ContractBasicErrorMsg = ErrorMsg;
 
-export type AElfCallViewMethod = (functionName: string, paramsOption?: any) => Promise<ViewResult>;
+export type CallOptions = {
+  defaultBlock: number | string;
+  options?: any;
+  callback?: any;
+};
+export interface IContract {
+  address?: string;
+  chainId?: ChainId;
+  type: ChainType;
+  callViewMethod<T = any>(functionName: string, paramsOption?: any, callOptions?: CallOptions): Promise<ViewResult<T>>;
+  callSendMethod<T = any>(
+    functionName: string,
+    account: string,
+    paramsOption?: any,
+    sendOptions?: SendOptions,
+  ): Promise<SendResult<T>>;
+}
 
-export type AElfCallSendMethod = (
-  functionName: string,
-  paramsOption?: any,
-  sendOptions?: SendOptions,
-) => Promise<SendResult>;
+export interface IPortkeyContract extends IContract {
+  encodedTx<T = any>(functionName: string, paramsOption?: any): Promise<ViewResult<T>>;
+}
+
+export interface BaseContractOptions {
+  chainId?: ChainId;
+  contractAddress: string;
+  type: ChainType;
+  rpcUrl: string;
+}
+
+export interface ContractProps extends BaseContractOptions {
+  aelfContract?: any;
+  aelfInstance?: IAElfRPCMethods;
+}

@@ -8352,6 +8352,13 @@ find-up@^5.0.0:
     locate-path "^6.0.0"
     path-exists "^4.0.0"
 
+fix-esm-import-path@^1.4.0:
+  version "1.4.0"
+  resolved "https://registry.npmjs.org/fix-esm-import-path/-/fix-esm-import-path-1.4.0.tgz#c0e2fb583bb98eac9a816cd8f52931137ef4bc52"
+  integrity sha512-xTkmzlotSgZwn3mNOZA6R6IK0Ow1uQvtdeGS8hqRa1nl8rwdtxZPWktorKcwvsUDpCPnqFbkfsya9P3MG6rTcg==
+  dependencies:
+    debug "^4.3.2"
+
 flat-cache@^3.0.4:
   version "3.0.4"
   resolved "https://registry.npmjs.org/flat-cache/-/flat-cache-3.0.4.tgz#61b0338302b2fe9f957dcc32fc2a87f1c3048b11"

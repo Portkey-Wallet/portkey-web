@@ -1,4 +1,3 @@
-import { ConfigProvider } from 'antd';
 import type { ConfigProviderProps } from 'antd/lib/config-provider';
 // import localConfigProvider from './index';
 import ScreenLoading from '../ScreenLoading';
@@ -7,11 +6,7 @@ import ReCaptchaModal from '../ReCaptchaModal';
 
 export default function BaseConfigProvider({ children }: { children: ConfigProviderProps['children'] }) {
   // const config = useMemo(() => localConfigProvider.getGlobalConfig(), []);
-  useEffectOnce(() => {
-    ConfigProvider.config({
-      prefixCls: 'portkey-ant',
-    });
-  });
+
   useEffectOnce(() => {
     // TODO
     // const fontFamily400 = config?.fontFamily400;
@@ -24,13 +19,13 @@ export default function BaseConfigProvider({ children }: { children: ConfigProvi
 
   return (
     <>
-      <ConfigProvider prefixCls="portkey-ant">
-        <div>
-          {children}
-          <ScreenLoading />
-          <ReCaptchaModal />
-        </div>
-      </ConfigProvider>
+      {/* <ConfigProvider prefixCls="portkey-ant"> */}
+      <div>
+        {children}
+        <ScreenLoading />
+        <ReCaptchaModal />
+      </div>
+      {/* </ConfigProvider> */}
     </>
   );
 }

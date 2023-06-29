@@ -32,7 +32,7 @@ import {
 } from '../SignStep/types';
 import clsx from 'clsx';
 import { did, errorTip } from '../../utils';
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import './index.less';
 import { UserGuardianStatus } from '../../types';
 
@@ -435,7 +435,7 @@ const SignIn = forwardRef(
     ]);
 
     return (
-      <BaseStyleProvider>
+      <PortkeyStyleProvider>
         {uiType === 'Full' ? (
           <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
         ) : (
@@ -448,7 +448,7 @@ const SignIn = forwardRef(
             {mainContent()}
           </BaseModal>
         )}
-      </BaseStyleProvider>
+      </PortkeyStyleProvider>
     );
   },
 );

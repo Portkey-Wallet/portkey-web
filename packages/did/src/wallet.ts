@@ -1,4 +1,4 @@
-import { ContractBasic, getContractBasic } from '@portkey/contracts';
+import { IPortkeyContract, getContractBasic } from '@portkey/contracts';
 import {
   CAHolderInfo,
   ChainInfo,
@@ -32,7 +32,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public managementAccount?: T;
   public services: ICommunityRecoveryService;
   public connectServices?: IConnectService;
-  public contracts: { [key: string]: ContractBasic };
+  public contracts: { [key: string]: IPortkeyContract };
   public chainsInfo: { [key: string]: ChainInfo };
   public caInfo: { [key: string]: CAInfo };
   public accountInfo: { loginAccount?: string; nickName?: string };
