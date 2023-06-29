@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2023-06-29)
+
+### Features
+
+- 🎸 socket ([5d456a0](https://github.com/Portkey-Wallet/portkey-web/commit/5d456a0aa157c5e307b55b9ae0e6fc10be337590))
+
+### Bug Fixes
+
+- 🐛 host ([8252fda](https://github.com/Portkey-Wallet/portkey-web/commit/8252fda775f9e0a11a50184c6a6c08be9a17b822))
+- 🐛 test ([9be6f40](https://github.com/Portkey-Wallet/portkey-web/commit/9be6f40571361a092ec2e444b9cb03d84fed719a))
+
 ## [1.0.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2023-06-28)
 
 **Note:** Version bump only for package @portkey/services
