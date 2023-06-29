@@ -1,3 +1,4 @@
+export * from './baseContract';
 export * from './aelfContract';
 export * from './web3Contract';
 export * from './contract';
