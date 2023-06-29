@@ -6,7 +6,6 @@ import { GetCaHolderManagerInfoDto } from './__generated__/types';
 export class DIDGraphQL<T extends IGraphQLClient = IGraphQLClient> extends BaseGraphQL<T> implements IDIDGraphQL {
   // TODO IDID config
   protected _config?: any;
-  protected readonly _client: T;
 
   constructor({ client, config }: { client?: T; config?: any }) {
     super(client as any);

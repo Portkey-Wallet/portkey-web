@@ -1,10 +1,9 @@
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId } from '@portkey/types';
 import { CallOptions, IPortkeyContract, SendOptions, SendResult, ViewResult } from './types';
+import { BaseContract } from './baseContract';
 
-export class Web3Contract implements IPortkeyContract {
-  address?: string;
+export class Web3Contract extends BaseContract implements IPortkeyContract {
   chainId?: ChainId;
-  type: ChainType;
 
   encodedTx<T = any>(_functionName: string, _paramsOption?: any): Promise<ViewResult<T>> {
     throw new Error('Method not implemented.');

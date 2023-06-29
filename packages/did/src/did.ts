@@ -51,6 +51,11 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
       connectService: this.connectServices,
     });
   }
+  public async signTransaction<T extends Record<string, unknown>>(
+    tx: Record<string, unknown>,
+  ): Promise<T & ISignature> {
+    return this.didWallet.signTransaction(tx as any);
+  }
   getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo> {
     return this.didWallet.getCAHolderInfo(originChainId);
   }
@@ -90,7 +95,6 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public async getHolderInfo(params: any): Promise<any> {
     return this.didWallet.getHolderInfo(params);
   }
-  signTransaction: <T extends Record<string, unknown>>(tx: T) => Promise<T & ISignature>;
   sign(data: string): Buffer {
     return this.didWallet.sign(data);
   }

@@ -1,15 +1,16 @@
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId } from '@portkey/types';
 import { CallOptions, ContractProps, IPortkeyContract, SendOptions, SendResult, ViewResult } from './types';
 import { getTxResult, handleContractError, handleContractParams, handleFunctionName } from './utils';
 import { aelf, sleep } from '@portkey/utils';
+import { BaseContract } from './baseContract';
 
-export class AElfContract implements IPortkeyContract {
+export class AElfContract extends BaseContract implements IPortkeyContract {
   public aelfContract: any;
   public address: string;
   public aelfInstance?: any;
   public chainId?: ChainId;
-  public type: ChainType;
   constructor(options: ContractProps) {
+    super(options);
     const { aelfContract, contractAddress, aelfInstance } = options;
     this.address = contractAddress;
     this.aelfContract = aelfContract;

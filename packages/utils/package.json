@@ -42,5 +42,8 @@
   "dependencies": {
     "aelf-sdk": "^3.2.44"
   },
+  "devDependencies": {
+    "@types/crypto-js": "^4.1.1"
+  },
   "gitHead": "8175df23e1a9922676b754ffc2d93c83eaedbaf5"
 }
