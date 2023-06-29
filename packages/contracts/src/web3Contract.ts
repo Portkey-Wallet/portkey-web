@@ -1,5 +1,5 @@
-import { ChainId } from '@portkey/types';
-import { CallOptions, IPortkeyContract, SendOptions, SendResult, ViewResult } from './types';
+import { CallOptions, ChainId, SendOptions, SendResult, ViewResult } from '@portkey/types';
+import { IPortkeyContract } from './types';
 import { BaseContract } from './baseContract';
 
 export class Web3Contract extends BaseContract implements IPortkeyContract {

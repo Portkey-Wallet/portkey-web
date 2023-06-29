@@ -1,5 +1,5 @@
-import { ChainId } from '@portkey/types';
-import { CallOptions, ContractProps, IPortkeyContract, SendOptions, SendResult, ViewResult } from './types';
+import { CallOptions, ChainId, SendOptions, SendResult, ViewResult } from '@portkey/types';
+import { ContractProps, IPortkeyContract } from './types';
 import { getTxResult, handleContractError, handleContractParams, handleFunctionName } from './utils';
 import { aelf, sleep } from '@portkey/utils';
 import { BaseContract } from './baseContract';
