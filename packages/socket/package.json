@@ -41,6 +41,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@abp/signalr": "^7.0.0"
+    "@abp/signalr": "^7.0.0",
+    "@portkey/utils": "1.0.0-alpha.1"
   }
 }
