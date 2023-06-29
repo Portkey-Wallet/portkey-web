@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import PortkeyQRCode from '../PortkeyQRCode';
 import './index.less';
+import ScanLoading from './components/ScanLoading';
 
 interface ScanCardProps {
   isShowIcon?: boolean;
@@ -24,6 +25,10 @@ export default function ScanCard({ qrData, backIcon, isShowIcon = true, wrapperC
       <div className="scan-card-content">
         <p className="description">Please use the portkey Dapp to scan the QR code</p>
         <div className="scan-content">{qrData && <PortkeyQRCode value={qrData} />}</div>
+        <div className="portkey-ui-flex-center waiting-wrapper">
+          <ScanLoading />
+          <p className="waiting-text">Waiting for authorization...</p>
+        </div>
       </div>
     </div>
   );
