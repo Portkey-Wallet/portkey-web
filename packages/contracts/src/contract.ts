@@ -7,7 +7,7 @@ export class ContractBasic extends BaseContract implements IPortkeyContract {
   public callContract: IPortkeyContract;
   constructor(options: ContractProps) {
     super(options);
-    this.callContract = this.type === 'aelf' ? new AElfContract(options) : new Web3Contract();
+    this.callContract = this.type === 'aelf' ? new AElfContract(options) : new Web3Contract(options);
   }
   public callViewMethod<T = any>(
     functionName: string,
@@ -26,7 +26,7 @@ export class ContractBasic extends BaseContract implements IPortkeyContract {
     return this.callContract.callSendMethod(functionName, account, paramsOption, sendOptions);
   }
 
-  public encodedTx = async (functionName, paramsOption) => {
+  public encodedTx<T = any>(functionName: string, paramsOption?: any): Promise<ViewResult<T>> {
     return this.callContract.encodedTx(functionName, paramsOption);
-  };
+  }
 }

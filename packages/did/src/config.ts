@@ -34,24 +34,24 @@ export class RequestDefaultsConfig {
   constructor(config?: IRequestDefaults) {
     if (config) {
       Object.entries(config).forEach(([key, value]) => {
-        this[key] = value;
+        this[key as keyof IRequestDefaults] = value;
       });
     }
   }
   setConfig(config?: IRequestDefaults) {
     if (config) {
       Object.entries(config).forEach(([key, value]) => {
-        this[key] = value;
+        this[key as keyof IRequestDefaults] = value;
       });
     }
   }
 }
 
 export class DIDConfig implements IDIDConfig {
-  public requestDefaults: IRequestDefaults;
+  public requestDefaults?: IRequestDefaults;
   public requestConfig: RequestDefaultsConfig;
   public connectRequestConfig: RequestDefaultsConfig;
-  public graphQLClient: IGraphQLClient;
+  public graphQLClient: IGraphQLClient | undefined;
   public graphQLUrl?: string;
   public connectUrl?: string;
   public storageMethod: StorageConfig;
@@ -83,7 +83,7 @@ export class DIDConfig implements IDIDConfig {
           if (key === 'graphQLUrl' && typeof value === 'string') {
             this.graphQLClient = getGraphQLClientProvider(value);
           }
-          this[key] = value;
+          this[key as keyof IConfig] = value;
           break;
       }
     });

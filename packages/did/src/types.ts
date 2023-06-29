@@ -99,6 +99,6 @@ export interface VerifierItem {
 }
 
 export interface IDIDConfig extends IConfig {
-  graphQLClient: IGraphQLClient;
+  graphQLClient?: IGraphQLClient;
   setConfig(options: IConfig): void;
 }
