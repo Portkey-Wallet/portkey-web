@@ -107,7 +107,7 @@ export default function Sign() {
         onClick={async () => {
           // Mock pin: 111111
           const wallet = await did.load(PIN);
-          console.log(wallet, 'wallet==');
+          console.log('wallet:', wallet);
           // Mock chainId: 'AELF'
           did.logout({ chainId: CHAIN_ID });
         }}>
