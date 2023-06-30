@@ -275,7 +275,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const caHash = this.caInfo[originChainId]?.caHash;
     if (!caHash) throw new Error('caHash does not exist');
     const timestamp = Date.now();
-    const message = Buffer.from(`${this.managementAccount?.address}-${timestamp}`).toString('hex');
+    const message = Buffer.from(`${this.managementAccount.address}-${timestamp}`).toString('hex');
     const signature = this.managementAccount.sign(message).toString('hex');
     const pubkey = this.managementAccount.wallet.keyPair.getPublic('hex');
     const config = {

@@ -62,6 +62,19 @@ class FetchRequestMock {
           ] as RecoverStatusResult[],
         };
         break;
+      case '/api/app/search/caholderindex':
+        result = {
+          items: [
+            {
+              userId: 'userId_mock',
+              caAddress: 'caAddress_mock',
+              caHash: 'caHash_mock',
+              id: 'id_mock',
+              nickName: 'nickName_mock',
+            },
+          ],
+        };
+        break;
 
       // communityRecovery & verification
       case '/api/app/account/guardianIdentifiers':
@@ -128,6 +141,15 @@ class FetchRequestMock {
         result = {
           locateData: { country: 'Singapore', code: '65', iso: 'SG' },
           data: [{ country: 'Singapore', code: '65', iso: 'SG' }],
+        };
+        break;
+
+      // connect
+      case '/connect/token':
+        result = {
+          access_token: 'access_token_mock',
+          token_type: 'token_type_mock',
+          expires_in: 'expires_in_mock',
         };
         break;
 
