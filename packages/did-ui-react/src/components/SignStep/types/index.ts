@@ -86,7 +86,7 @@ export interface SignInProps {
   onCreatePending?(createPendingInfo: CreatePendingInfo): void;
 
   onLifeCycleChange?<T = any>(liftCycle: LifeCycleType, nextLifeCycleProps: T): void;
-  onLifeCycleChange?(nextLifeCycle: SignInLifeCycleType, nextLifeCycleProps: undefined): void;
+  onLifeCycleChange?(nextLifeCycle: SignInLifeCycleType, nextLifeCycleProps: undefined | null): void;
   onLifeCycleChange?(
     nextLifeCycle: 'VerifierSelect',
     nextLifeCycleProps: TStep2SignUpLifeCycle['VerifierSelect'],

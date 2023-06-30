@@ -1,10 +1,10 @@
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import VerifierSelectCom, { VerifierSelectProps } from './index.component';
 
 export default function VerifierSelect(props: VerifierSelectProps) {
   return (
-    <BaseStyleProvider>
+    <PortkeyStyleProvider>
       <VerifierSelectCom {...props} />
-    </BaseStyleProvider>
+    </PortkeyStyleProvider>
   );
 }

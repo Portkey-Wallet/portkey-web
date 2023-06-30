@@ -1,4 +1,4 @@
-import { ContractBasic, getContractBasic } from '@portkey/contracts';
+import { IPortkeyContract, getContractBasic } from '@portkey/contracts';
 import {
   CAHolderInfo,
   ChainInfo,
@@ -32,8 +32,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public managementAccount?: T;
   public services: ICommunityRecoveryService;
   public connectServices?: IConnectService;
-  public contracts: { [key: string]: ContractBasic };
-  public chainsInfo: { [key: string]: ChainInfo };
+  public contracts: { [key: string]: IPortkeyContract };
+  public chainsInfo?: { [key: string]: ChainInfo };
   public caInfo: { [key: string]: CAInfo };
   public accountInfo: { loginAccount?: string; nickName?: string };
   constructor({
@@ -120,7 +120,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       ...params,
       manager: this.managementAccount?.address as string,
     });
-    let status, error;
+    let status, error: any;
     try {
       status = await this.services.getRegisterStatus(sessionId);
       const { caAddress, caHash, registerStatus } = status;
@@ -180,7 +180,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }
   public async getContractByChainInfo(chainId: string) {
     if (!this.chainsInfo) await this.getChainsInfo();
-    const chainInfo = this.chainsInfo[chainId];
+    const chainInfo = this.chainsInfo?.[chainId];
     if (!chainInfo) throw new Error(`${chainId} chainInfo does not exist`);
     return this.getContract({
       contractAddress: chainInfo.caContractAddress,
@@ -249,10 +249,11 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }
   public async getChainsInfo() {
     const chainList = await this.services.getChainsInfo();
-    if (!this.chainsInfo) this.chainsInfo = {};
+    const chainsInfo = {};
     chainList.forEach(chainInfo => {
-      this.chainsInfo[chainInfo.chainId] = chainInfo;
+      chainsInfo[chainInfo.chainId] = chainInfo;
     });
+    this.chainsInfo = chainsInfo;
     return this.chainsInfo;
   }
   async logout(params: EditManagerParams): Promise<boolean> {

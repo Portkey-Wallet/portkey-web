@@ -25,5 +25,5 @@
     "declaration": true
   },
   "include": ["global.d.ts", "src", "index.ts"],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["./dist", "node_modules"]
 }

@@ -1,14 +1,8 @@
-import {
-  AElfContractBasic,
-  CallSendMethod,
-  CallViewMethod,
-  ContractProps,
-  Web3ContractBasic,
-} from '@portkey/contracts';
+import { ContractProps, IPortkeyContract } from '@portkey/contracts';
 
 export class ContractBasicMock {
   public address?: string;
-  public callContract: Web3ContractBasic | AElfContractBasic;
+  public callContract: IPortkeyContract;
   public chainType: 'aelf' | 'ethereum';
   public rpcUrl: string;
   constructor(_options: ContractProps) {
@@ -17,7 +11,7 @@ export class ContractBasicMock {
     this.rpcUrl = _options.rpcUrl;
   }
 
-  public callViewMethod: CallViewMethod = async (
+  public callViewMethod: IPortkeyContract['callViewMethod'] = async (
     functionName,
     _paramsOption,
     _callOptions = { defaultBlock: 'latest' },
@@ -48,15 +42,15 @@ export class ContractBasicMock {
     return result;
   };
 
-  public callSendMethod: CallSendMethod = async (functionName, _account, _paramsOption, _sendOptions) => {
+  public callSendMethod = async (functionName, _account, _paramsOption, _sendOptions) => {
     switch (functionName) {
       case 'AddManager':
       default:
         break;
     }
-    return { data: true };
+    return { data: true, transactionId: '' };
   };
-  public encodedTx: CallViewMethod = async (_functionName, _paramsOption) => {
+  public encodedTx = async (_functionName, _paramsOption) => {
     return { data: true };
   };
 }

@@ -1,10 +1,10 @@
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import SignUpBaseCom, { SignUpBaseProps } from './index.component';
 
 export default function SignUpBase(props?: SignUpBaseProps) {
   return (
-    <BaseStyleProvider>
+    <PortkeyStyleProvider>
       <SignUpBaseCom {...props} />
-    </BaseStyleProvider>
+    </PortkeyStyleProvider>
   );
 }

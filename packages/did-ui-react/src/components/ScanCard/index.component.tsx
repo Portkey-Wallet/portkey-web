@@ -7,10 +7,12 @@ import ScanBase from '../ScanBase';
 import { LoginFinishWithoutPin } from '../types';
 import type { ChainId, ChainType } from '@portkey/types';
 import type { portkey } from '@portkey/accounts';
-import { did, errorTip } from '../../utils';
+import { dealURLLastChar, did, errorTip } from '../../utils';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
 import './index.less';
 import clsx from 'clsx';
+import { DIDSignalr } from '@portkey/socket';
+import { randomId } from '@portkey/utils';
 
 export interface ScanCardProps {
   chainId?: ChainId;
@@ -38,6 +40,7 @@ export default function ScanCard({
 }: ScanCardProps) {
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
+  const [isWaitingAuth, setIsWaitingAuth] = useState<boolean>();
 
   const [caWallet] = useIntervalQueryCAInfo({
     address: managementAccount?.address,
@@ -73,11 +76,11 @@ export default function ScanCard({
   });
 
   const qrData = useMemo(() => {
-    if (!managementAccount) return '';
-    if (!networkType) return '';
+    if (!managementAccount || !networkType) return '{}';
     const data: LoginQRData = {
       type: 'login',
       address: managementAccount.address,
+      id: randomId(),
       netWorkType: networkType,
       chainType: chainType ?? 'aelf',
       extraData: {
@@ -85,8 +88,21 @@ export default function ScanCard({
         version: DEVICE_INFO_VERSION,
       },
     };
+
     return JSON.stringify(data);
   }, [chainType, deviceInfo, managementAccount, networkType]);
+
+  // Listen whether the user is authorized
+  useEffect(() => {
+    const data: LoginQRData = JSON.parse(qrData);
+    if (!data?.id) return;
+    const clientId = `${data.address}_${data.id}`;
+    const didSignalr = new DIDSignalr();
+    didSignalr.doOpen({ url: `${dealURLLastChar(did.config.requestDefaults?.baseURL || '')}/ca`, clientId });
+    didSignalr.onScanLogin(() => {
+      setIsWaitingAuth(true);
+    });
+  }, [qrData]);
 
   useEffect(() => {
     caWallet &&
@@ -101,7 +117,7 @@ export default function ScanCard({
 
   return (
     <div className={clsx('scan-base-wrapper', wrapperClassName)}>
-      <ScanBase backIcon={backIcon} onBack={onBack} qrData={qrData} />
+      <ScanBase isWaitingAuth={isWaitingAuth} backIcon={backIcon} onBack={onBack} qrData={qrData} />
     </div>
   );
 }

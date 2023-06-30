@@ -32,7 +32,7 @@ import {
 } from '../SignStep/types';
 import clsx from 'clsx';
 import { did, errorTip } from '../../utils';
-import BaseStyleProvider from '../BaseStyleProvider';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import './index.less';
 import { UserGuardianStatus } from '../../types';
 
@@ -130,12 +130,13 @@ const SignIn = forwardRef(
                 // uiType === 'Modal' && setOpen(true);
                 break;
               default:
-                changeLifeCycle('Login', undefined);
+                changeLifeCycle(defaultLifeCycle, null);
                 break;
             }
             setLifeCycle(defaultLifeCycle);
           }
         });
+        console.log(defaultLifeCycle, 'defaultLifeCycle===');
       } catch (error) {
         console.error('dealStep', error);
         setLifeCycle('Login');
@@ -208,7 +209,7 @@ const SignIn = forwardRef(
     );
 
     const onStep2Cancel = useCallback(() => {
-      changeLifeCycle('Login', undefined);
+      changeLifeCycle('Login', null);
       setApprovedList(undefined);
     }, [changeLifeCycle]);
 
@@ -220,7 +221,7 @@ const SignIn = forwardRef(
         } else if (v === 'recovery') {
           changeLifeCycle('GuardianApproval', { guardianIdentifierInfo });
         } else {
-          changeLifeCycle('Login', undefined);
+          changeLifeCycle('Login', null);
         }
       },
       [changeLifeCycle, guardianIdentifierInfo],
@@ -236,13 +237,16 @@ const SignIn = forwardRef(
     const onLoginFinishWithoutPin: LoginFinishWithoutPin = useCallback(
       (wallet) => {
         setWalletWithoutPin(wallet);
-        changeLifeCycle('SetPinAndAddManager', undefined);
+        changeLifeCycle('SetPinAndAddManager', null);
       },
       [changeLifeCycle],
     );
 
     const onSignInStepChange = useCallback(
-      (v: SignInLifeCycleType) => changeLifeCycle(v, undefined),
+      (v: SignInLifeCycleType) => {
+        console.log(v, 'onSignInStepChange===');
+        changeLifeCycle(v, null);
+      },
       [changeLifeCycle],
     );
 
@@ -269,7 +273,7 @@ const SignIn = forwardRef(
         }
         setOpen(false);
         // TODO
-        changeLifeCycle('Login', undefined);
+        changeLifeCycle('Login', null);
         // setLifeCycle('Login');
         clearStorage();
       },
@@ -280,7 +284,7 @@ const SignIn = forwardRef(
       onCancel?.();
       clearStorage();
       setOpen(false);
-      changeLifeCycle('Login', undefined);
+      changeLifeCycle('Login', null);
     }, [changeLifeCycle, clearStorage, onCancel]);
 
     const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
@@ -333,6 +337,7 @@ const SignIn = forwardRef(
       if (LifeCycleMap['SignIn'].includes(lifeCycle))
         return (
           <Step1
+            type={lifeCycle as any}
             isShowScan={isShowScan}
             design={design}
             defaultChainId={defaultChainId}
@@ -435,7 +440,7 @@ const SignIn = forwardRef(
     ]);
 
     return (
-      <BaseStyleProvider>
+      <PortkeyStyleProvider>
         {uiType === 'Full' ? (
           <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
         ) : (
@@ -448,7 +453,7 @@ const SignIn = forwardRef(
             {mainContent()}
           </BaseModal>
         )}
-      </BaseStyleProvider>
+      </PortkeyStyleProvider>
     );
   },
 );

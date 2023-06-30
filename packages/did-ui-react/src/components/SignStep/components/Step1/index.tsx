@@ -21,10 +21,9 @@ interface Step1Props extends SignUpAndLoginProps {
   onStepChange?: (v: SignInLifeCycleType) => void;
 }
 
-function Step1({ design, onStepChange, onSignInFinished, ...props }: Step1Props) {
-  const [createType, setCreateType] = useState<SignInLifeCycleType>('Login');
+function Step1({ design, onStepChange, onSignInFinished, type, ...props }: Step1Props) {
+  const [createType, setCreateType] = useState<SignInLifeCycleType>(type || 'Login');
   const [open, setOpen] = useState<boolean>();
-
   const signInSuccessRef = useRef<IGuardianIdentifierInfo>();
 
   const onSuccess = useCallback(
@@ -61,9 +60,22 @@ function Step1({ design, onStepChange, onSignInFinished, ...props }: Step1Props)
 
   return (
     <>
-      {design === 'SocialDesign' && <UserInput {...props} appleIdToken={appleIdToken} onSuccess={onSuccess} />}
+      {design === 'SocialDesign' && (
+        <UserInput
+          {...props}
+          type={type === 'LoginByScan' ? 'Scan' : null}
+          appleIdToken={appleIdToken}
+          onSuccess={onSuccess}
+        />
+      )}
       {design !== 'SocialDesign' && (
-        <SignUpAndLogin {...props} appleIdToken={appleIdToken} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
+        <SignUpAndLogin
+          {...props}
+          type={type}
+          appleIdToken={appleIdToken}
+          onSignTypeChange={setCreateType}
+          onSuccess={onSuccess}
+        />
       )}
 
       <LoginModal

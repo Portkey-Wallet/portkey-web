@@ -1,7 +1,16 @@
 {
   "name": "@portkey/contracts",
-  "version": "0.0.1-alpha.9.0",
+  "version": "1.0.0-alpha.1",
   "description": "",
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
+  },
   "author": "",
   "license": "ISC",
   "publishConfig": {
@@ -17,21 +26,23 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/contracts"
   },
-  "type": "commonjs",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
-  "exports": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
     "prebuild": "yarn clean",
-    "build": "tsc",
+    "build": "yarn build:cjs & yarn build:esm & yarn build:types",
+    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && yarn esm:fix",
+    "build:types": "tsc --build tsconfig.types.json",
+    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
     "lint": "eslint --ext .js,.ts .",
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@portkey/utils": "^0.0.1-alpha.9.0",
+    "@portkey/types": "^1.0.0-alpha.1",
+    "@portkey/utils": "^1.0.0-alpha.1",
     "aelf-sdk": "^3.2.44"
-  }
+  },
+  "gitHead": "8175df23e1a9922676b754ffc2d93c83eaedbaf5"
 }

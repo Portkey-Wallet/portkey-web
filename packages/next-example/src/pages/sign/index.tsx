@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did, PortkeyStyleProvider } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 import { ChainId } from '@portkey/types';
-import { sleep } from '@portkey/utils';
+import { Spin, Button, message } from 'antd';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
@@ -41,6 +41,21 @@ export default function Sign() {
 
   return (
     <div>
+      <Spin spinning />
+      <Button
+        onClick={() => {
+          message.error('button', 10000000);
+        }}>
+        button
+      </Button>
+      <PortkeyStyleProvider>
+        <Button
+          onClick={() => {
+            message.error('PortkeyStyleProvider button', 1000000);
+          }}>
+          button
+        </Button>
+      </PortkeyStyleProvider>
       <SignIn
         ref={ref}
         uiType="Modal"
@@ -63,7 +78,13 @@ export default function Sign() {
         }}
         defaultLifeCycle={defaultLifeCycle}
         onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
-          console.log('onLifeCycleChange:', lifeCycle, nextLifeCycleProps);
+          console.log(
+            'onLifeCycleChange:',
+            lifeCycle,
+            nextLifeCycleProps,
+            { [lifeCycle]: nextLifeCycleProps },
+            JSON.stringify({ [lifeCycle]: nextLifeCycleProps }),
+          );
           localStorage.setItem('portkeyLifeCycle', JSON.stringify({ [lifeCycle]: nextLifeCycleProps }));
         }}
       />
