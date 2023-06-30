@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2023-06-30)
+
+### Features
+
+- 🎸 use ca contract ([6d75231](https://github.com/Portkey-Wallet/portkey-web/commit/6d75231a1ccae515b982be003a4a33b0462fc560))
+
 ## [1.0.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2023-06-29)
 
 **Note:** Version bump only for package @portkey/contracts
