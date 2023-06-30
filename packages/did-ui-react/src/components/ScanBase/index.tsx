@@ -5,13 +5,21 @@ import ScanLoading from './components/ScanLoading';
 
 interface ScanCardProps {
   isShowIcon?: boolean;
+  isWaitingAuth?: boolean;
   qrData?: string; // JSON.stringify(LoginQRData)
   backIcon?: React.ReactNode;
   wrapperClassName?: string;
   onBack?: () => void;
 }
 
-export default function ScanCard({ qrData, backIcon, isShowIcon = true, wrapperClassName, onBack }: ScanCardProps) {
+export default function ScanCard({
+  qrData,
+  backIcon,
+  isWaitingAuth = false,
+  isShowIcon = true,
+  wrapperClassName,
+  onBack,
+}: ScanCardProps) {
   return (
     <div className={clsx('scan-card-wrapper', wrapperClassName)}>
       <h2 className="font-medium scan-title">
@@ -25,10 +33,12 @@ export default function ScanCard({ qrData, backIcon, isShowIcon = true, wrapperC
       <div className="scan-card-content">
         <p className="description">Please use the portkey Dapp to scan the QR code</p>
         <div className="scan-content">{qrData && <PortkeyQRCode value={qrData} />}</div>
-        <div className="portkey-ui-flex-center waiting-wrapper">
-          <ScanLoading />
-          <p className="waiting-text">Waiting for authorization...</p>
-        </div>
+        {isWaitingAuth && (
+          <div className="portkey-ui-flex-center waiting-wrapper">
+            <ScanLoading />
+            <p className="waiting-text">Waiting for authorization...</p>
+          </div>
+        )}
       </div>
     </div>
   );

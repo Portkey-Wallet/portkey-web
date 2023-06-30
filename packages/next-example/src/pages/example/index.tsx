@@ -112,6 +112,7 @@ function Example() {
           }}
           verifierSessionId={'080bbdcd-73f5-45a6-b65b-0d067474756f'}
           guardianIdentifier={'+852 12233333'}
+          verifierCodeOperation={1}
           onError={(error: any) => {
             console.log('SetPinAndAddManager:onError', error);
           }}
@@ -123,6 +124,7 @@ function Example() {
           chainId="AELF"
           operationType={RecaptchaType.communityRecovery}
           wrapperStyle={{ height: 600 }}
+          verifierCodeOperation={2}
           guardianList={[
             {
               isLoginGuardian: true,

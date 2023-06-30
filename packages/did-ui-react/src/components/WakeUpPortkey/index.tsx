@@ -11,6 +11,7 @@ import CustomSvg from '../CustomSvg';
 import { DIDWalletInfo } from '../types';
 import { stringifyUrl } from 'query-string';
 import './index.less';
+import { randomId } from '@portkey/utils';
 
 export default function WakeUpPortkey({
   type,
@@ -101,6 +102,7 @@ export default function WakeUpPortkey({
       const data: LoginQRData = {
         type: 'login',
         address: managementAccount?.wallet.address as string,
+        id: randomId(),
         netWorkType: networkType,
         chainType: 'aelf',
         extraData: {

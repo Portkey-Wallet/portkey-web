@@ -1,6 +1,6 @@
 import type { ChainId, ChainType } from '@portkey/types';
 import { VerifierItem } from '@portkey/did';
-import { GuardiansApproved, RecaptchaType } from '@portkey/services';
+import { GuardiansApproved, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
 import { memo, useState, useCallback } from 'react';
 import { did, errorTip, handleErrorMessage, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';
@@ -144,6 +144,7 @@ function Step2OfLogin({
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}
         isErrorTip={isErrorTip}
+        verifierCodeOperation={VerifierCodeOperationType.communityRecovery}
         onConfirm={onFinish}
         onError={onError}
         onGuardianListChange={onGuardianListChange}

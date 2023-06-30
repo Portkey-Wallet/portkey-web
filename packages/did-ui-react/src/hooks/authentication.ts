@@ -1,7 +1,11 @@
 import { useCallback } from 'react';
 import { ISocialLogin, VerifyTokenParams } from '../types';
 import { did, getGoogleUserInfo, parseAppleIdentityToken, socialLoginAuth } from '../utils';
-// import { request } from '@portkey-wallet/api/api-did';
+import { VerifierCodeOperationType } from '@portkey/services';
+
+interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
+  verifierCodeOperation: VerifierCodeOperationType;
+}
 
 interface BaseAuthProps {
   clientId: string;
@@ -9,7 +13,7 @@ interface BaseAuthProps {
 }
 
 export function useVerifyGoogleToken() {
-  return useCallback(async (params: VerifyTokenParams & BaseAuthProps) => {
+  return useCallback(async (params: VerifySocialLoginParams) => {
     let accessToken = params.accessToken;
     let isRequest = !accessToken;
     if (accessToken) {
@@ -41,12 +45,17 @@ export function useVerifyGoogleToken() {
     }
     if (!accessToken) throw new Error('accessToken is not defined');
 
-    return did.services.verifyGoogleToken({ verifierId: params.verifierId, chainId: params.chainId, accessToken });
+    return did.services.verifyGoogleToken({
+      verifierId: params.verifierId,
+      chainId: params.chainId,
+      accessToken,
+      verifierCodeOperation: params.verifierCodeOperation,
+    });
   }, []);
 }
 
 export function useVerifyAppleToken() {
-  return useCallback(async (params: VerifyTokenParams & BaseAuthProps) => {
+  return useCallback(async (params: VerifySocialLoginParams) => {
     let accessToken = params.accessToken;
     const { isExpired: tokenIsExpired } = parseAppleIdentityToken(accessToken) || {};
     if (!accessToken || tokenIsExpired) {
@@ -71,6 +80,7 @@ export function useVerifyAppleToken() {
       verifierId: params.verifierId,
       chainId: params.chainId,
       identityToken: accessToken,
+      verifierCodeOperation: params.verifierCodeOperation,
     });
   }, []);
 }
@@ -79,7 +89,7 @@ export function useVerifyToken() {
   const verifyGoogleToken = useVerifyGoogleToken();
   const verifyAppleToken = useVerifyAppleToken();
   return useCallback(
-    (type: ISocialLogin, params: VerifyTokenParams & BaseAuthProps) => {
+    (type: ISocialLogin, params: VerifySocialLoginParams) => {
       return (type === 'Apple' ? verifyAppleToken : verifyGoogleToken)(params);
     },
     [verifyAppleToken, verifyGoogleToken],

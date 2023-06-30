@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
 import { ISocialLoginConfig, OnErrorFunc } from '../../types';
 import { ChainId, ChainType } from '@portkey/types';
-import { AccountType, RecaptchaType } from '@portkey/services';
+import { AccountType, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { verification, setLoading, errorTip, verifyErrorHandler, handleErrorMessage } from '../../utils';
 import { useVerifyToken } from '../../hooks/authentication';
@@ -215,6 +215,7 @@ export default function VerifierSelect({
         chainId,
         clientId: clientId ?? '',
         redirectURI,
+        verifierCodeOperation: VerifierCodeOperationType.register,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);
