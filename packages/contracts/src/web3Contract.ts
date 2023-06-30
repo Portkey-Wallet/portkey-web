@@ -1,4 +1,5 @@
 import { CallOptions, ChainId, SendOptions, SendResult, ViewResult } from '@portkey/types';
+
 import { IPortkeyContract } from './types';
 import { BaseContract } from './baseContract';
 

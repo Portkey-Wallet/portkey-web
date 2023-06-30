@@ -1,9 +1,10 @@
 import { SandboxEventTypes, SandboxEventService, SandboxErrorCode } from '../utils/sandboxService';
 import { aelf } from '@portkey/utils';
 import { FetchRequest } from '@portkey/request';
-import { ContractBasic, getContractBasic } from '@portkey/contracts';
+import { IPortkeyContract, getContractBasic } from '@portkey/contracts';
 import { getMissParams, handleErrorMessage } from '../utils/errorHandler';
 import { COMMON_PRIVATE } from '../constants';
+import { IContract } from '@portkey/types';
 
 type SendBack = (
   event: MessageEvent<any>,
@@ -17,8 +18,8 @@ type SendBack = (
 type RpcUrl = string;
 type ContractAddress = string;
 type FromAccountPrivateKey = string;
-const contracts: Record<RpcUrl, Record<ContractAddress, ContractBasic>> = {};
-const accountContracts: Record<RpcUrl, Record<FromAccountPrivateKey, Record<ContractAddress, ContractBasic>>> = {};
+const contracts: Record<RpcUrl, Record<ContractAddress, IContract>> = {};
+const accountContracts: Record<RpcUrl, Record<FromAccountPrivateKey, Record<ContractAddress, IPortkeyContract>>> = {};
 
 class SandboxUtil {
   constructor() {

@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@portkey/types": "^1.0.0-alpha.4",
+    "@portkey/provider-types": "^1.0.1-alpha.0",
     "@portkey/utils": "^1.0.0-alpha.4",
     "aelf-sdk": "^3.2.44"
   },
