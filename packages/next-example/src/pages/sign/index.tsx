@@ -102,7 +102,6 @@ export default function Sign() {
         }}>
         setOpen connectFirst
       </button>
-      <div></div>
       <button
         onClick={async () => {
           // Mock pin: 111111
@@ -113,11 +112,14 @@ export default function Sign() {
         }}>
         logout
       </button>
+      <div id="wrapper"></div>
+
       <SignIn
         ref={ref1}
-        uiType="Modal"
+        uiType="Full"
         design="SocialDesign"
         isShowScan
+        // getContainer="#wrapper"
         className="sign-in-wrapper"
         // termsOfService={'https://portkey.finance/terms-of-service'}
         onFinish={async res => {

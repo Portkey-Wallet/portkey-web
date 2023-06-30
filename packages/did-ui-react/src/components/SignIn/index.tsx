@@ -35,6 +35,7 @@ import { did, errorTip } from '../../utils';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import './index.less';
 import { UserGuardianStatus } from '../../types';
+import Container from '../Container';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -442,7 +443,9 @@ const SignIn = forwardRef(
     return (
       <PortkeyStyleProvider>
         {uiType === 'Full' ? (
-          <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
+          <Container getContainer={getContainer}>
+            <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
+          </Container>
         ) : (
           <BaseModal
             destroyOnClose
