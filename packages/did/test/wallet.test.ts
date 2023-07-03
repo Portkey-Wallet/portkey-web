@@ -186,6 +186,17 @@ describe('DIDWallet describe', () => {
     } catch (error) {
       expect(error).toBeTruthy();
     }
+
+    const wallet1 = await getLoggedInWallet();
+    wallet1.getChainsInfo = (() => {
+      wallet1.chainsInfo = undefined;
+    }) as any;
+    wallet1.chainsInfo = undefined;
+    try {
+      await wallet1.getContractByChainInfo('AELF');
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
   });
 
   test('test getCAHolderInfo', async () => {

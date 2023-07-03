@@ -1,12 +1,12 @@
 import { ChainId } from '@portkey/types';
-import { AccountType, CheckGoogleRecaptchaParams, RecaptchaType } from '.';
+import { AccountType, CheckGoogleRecaptchaParams, OperationTypeEnum } from '.';
 
 export type SendVerificationCodeParams = {
   type: AccountType;
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
-  operationType: RecaptchaType;
+  operationType: OperationTypeEnum;
 };
 
 export type SendVerificationCodeRequestParams = {
@@ -21,23 +21,13 @@ export type SendVerificationCodeResult = {
   verifierSessionId: string;
 };
 
-export enum VerifierCodeOperationType {
-  unknown = 0,
-  register = 1,
-  communityRecovery = 2,
-  addGuardian = 3,
-  deleteGuardian = 4,
-  editGuardian = 5,
-  removeOtherManager = 6,
-}
-
 export type VerifyVerificationCodeParams = {
   verifierSessionId: string;
   verificationCode: string;
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
-  verifierCodeOperation: VerifierCodeOperationType;
+  operationType: OperationTypeEnum;
 };
 
 export type VerifyVerificationCodeResult = {
@@ -60,14 +50,14 @@ export type VerifyGoogleTokenParams = {
   accessToken: string;
   verifierId: string;
   chainId: ChainId;
-  verifierCodeOperation: VerifierCodeOperationType;
+  operationType: OperationTypeEnum;
 };
 
 export type VerifyAppleTokenParams = {
   identityToken: string;
   verifierId: string;
   chainId: ChainId;
-  verifierCodeOperation: VerifierCodeOperationType;
+  operationType: OperationTypeEnum;
 };
 
 export type SendAppleUserExtraInfoResult = { userId: string };
