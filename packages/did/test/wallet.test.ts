@@ -3,7 +3,7 @@ import { describe, expect, test, jest } from '@jest/globals';
 
 import AElf from 'aelf-sdk';
 import { portkey } from '@portkey/accounts';
-import { CommunityRecovery } from '@portkey/services';
+import { CommunityRecovery, Connect } from '@portkey/services';
 import { IBlockchainWallet } from '@portkey/types';
 
 import FetchRequestMock from '@portkey/services/test/__mocks__/request';
@@ -43,12 +43,18 @@ const didGraphQL = new DIDGraphQLMock({
   client: {} as any,
 });
 const service = new CommunityRecovery(request, didGraphQL);
+const connectService = new Connect(request);
 
 const privateKey = '03bd0cea9730bcfc8045248fd7f4841ea19315995c44801a3dfede0ca872f808';
-const wallet = new DIDWallet({ accountProvider, storage, service });
+const wallet = new DIDWallet({ accountProvider, storage, service, connectService });
 
 const getLoggedInWallet = async () => {
-  const wallet = new DIDWallet({ accountProvider, storage, service });
+  const wallet = new DIDWallet({
+    accountProvider,
+    storage,
+    service,
+    connectService,
+  });
   await wallet.login('loginAccount', {
     loginGuardianIdentifier: 'loginGuardianIdentifier_mock',
     guardiansApproved: [],
@@ -177,6 +183,45 @@ describe('DIDWallet describe', () => {
 
     try {
       await wallet.getContractByChainInfo('tDVV');
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+
+    const wallet1 = await getLoggedInWallet();
+    wallet1.getChainsInfo = (() => {
+      wallet1.chainsInfo = undefined;
+    }) as any;
+    wallet1.chainsInfo = undefined;
+    try {
+      await wallet1.getContractByChainInfo('AELF');
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test getCAHolderInfo', async () => {
+    const result = await wallet.getCAHolderInfo('AELF');
+    expect(result).toHaveProperty('caAddress');
+
+    const wallet1 = await getLoggedInWallet();
+
+    wallet1.caInfo = {};
+    try {
+      await wallet1.getCAHolderInfo('AELF');
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+
+    wallet1.managementAccount = undefined;
+    try {
+      await wallet1.getCAHolderInfo('AELF');
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+
+    wallet1.connectServices = undefined;
+    try {
+      await wallet1.getCAHolderInfo('AELF');
     } catch (error) {
       expect(error).toBeTruthy();
     }

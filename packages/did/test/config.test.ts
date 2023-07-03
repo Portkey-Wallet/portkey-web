@@ -84,4 +84,14 @@ describe('config describe', () => {
     });
     expect(config.requestDefaults).toBeUndefined();
   });
+
+  test('test setConfig connectUrl', () => {
+    const config = new DIDConfig({
+      requestDefaults: undefined,
+    });
+    config.setConfig({
+      connectUrl: 'connectUrl_mock',
+    });
+    expect(config.connectRequestConfig.baseURL).toEqual('connectUrl_mock');
+  });
 });
