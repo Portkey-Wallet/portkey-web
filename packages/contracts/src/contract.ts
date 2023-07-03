@@ -1,4 +1,5 @@
-import { ContractProps, CallOptions, SendOptions, SendResult, ViewResult, IPortkeyContract } from './types';
+import { SendOptions, SendResult, ViewResult, CallOptions } from '@portkey/types';
+import { ContractProps, IPortkeyContract } from './types';
 import { BaseContract } from './baseContract';
 import { Web3Contract } from './web3Contract';
 import { AElfContract } from './aelfContract';

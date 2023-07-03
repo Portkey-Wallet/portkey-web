@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2023-06-30)
+
+**Note:** Version bump only for package @portkey/did
+
+## [1.0.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.3...v1.0.0-alpha.4) (2023-06-29)
+
+**Note:** Version bump only for package @portkey/did
+
+## [1.0.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.2...v1.0.0-alpha.3) (2023-06-29)
+
+**Note:** Version bump only for package @portkey/did
+
+## [1.0.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.1...v1.0.0-alpha.2) (2023-06-29)
+
+### Features
+
+- 🎸 strict ([87c1182](https://github.com/Portkey-Wallet/portkey-web/commit/87c1182aebfd7f492bb9c93e2a0241da54f3c536))
+
+### Bug Fixes
+
+- 🐛 host ([8252fda](https://github.com/Portkey-Wallet/portkey-web/commit/8252fda775f9e0a11a50184c6a6c08be9a17b822))
+- 🐛 test ([c907dd1](https://github.com/Portkey-Wallet/portkey-web/commit/c907dd1f2b00d1a6b41ef315c5a6c203f40af79f))
+
 ## [1.0.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.0...v1.0.0-alpha.1) (2023-06-28)
 
 **Note:** Version bump only for package @portkey/did
