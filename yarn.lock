@@ -2,25 +2,25 @@
 # yarn lockfile v1
 
 
-"@abp/core@~7.2.2":
-  version "7.2.2"
-  resolved "https://registry.npmjs.org/@abp/core/-/core-7.2.2.tgz#b5d403289181094ecd92cb8d963292ba8d7afe67"
-  integrity sha512-4laOq4dsya/oUCbmz6JvZdiEXADFVgXdfncS//EZWJJvDVzasfO0Sf71qkj233aYQ6PmClSZarZJSottzdr8vw==
+"@abp/core@~7.2.3":
+  version "7.2.3"
+  resolved "https://registry.npmjs.org/@abp/core/-/core-7.2.3.tgz#a669073989a30f600355b368c01c654714456f17"
+  integrity sha512-UyKBWwXbKCzKZwV2YJPgP3v2naDFsfJzV+KEHpdgLdPZyrpBhp+bQ80VNVe2HHrD/bLfhM4fu9pCXw6RYZKnvA==
   dependencies:
-    "@abp/utils" "~7.2.2"
+    "@abp/utils" "~7.2.3"
 
 "@abp/signalr@^7.0.0":
-  version "7.2.2"
-  resolved "https://registry.npmjs.org/@abp/signalr/-/signalr-7.2.2.tgz#ce0c3c41d57a2235fe7dd03792254036a46b2d10"
-  integrity sha512-GxYD/Rm6n9fpOtTlSOD4b7HeSaJfXO+W01rmWiMu4zvUEM9yAryqgUH8l/+Dk1HIcjL2bmx++NIJD6V6Ls/Lqg==
+  version "7.2.3"
+  resolved "https://registry.npmjs.org/@abp/signalr/-/signalr-7.2.3.tgz#edbe03322272c41098355cd8bf3fe98162e184d4"
+  integrity sha512-TF7lRl/YbYCwNI3Q+cDim7gXAstUoi8BjQl05Hq+27rx132dnM/AFs2xA7liAjcRlOcJmX4GsQXaKWigi9o1wA==
   dependencies:
-    "@abp/core" "~7.2.2"
+    "@abp/core" "~7.2.3"
     "@microsoft/signalr" "~6.0.1"
 
-"@abp/utils@~7.2.2":
-  version "7.2.2"
-  resolved "https://registry.npmjs.org/@abp/utils/-/utils-7.2.2.tgz#6054baa822d52f08452e8405c7a391aaedee7de0"
-  integrity sha512-VB9ijoPvB2tHInc1XrcvTvEzYANh+V1BliyScNTG9tr09q2pvn5jHp8Jixtu7GewCy8dh7cyueqhbnuozxedjg==
+"@abp/utils@~7.2.3":
+  version "7.2.3"
+  resolved "https://registry.npmjs.org/@abp/utils/-/utils-7.2.3.tgz#f384ba76b2948dbc8c49a453a343facda0825e2c"
+  integrity sha512-hejxDJhSI9Kor4mS9c/JHHQrW/wLXC/XMOJMUcBVkX/5IQd9GU9EW63oalNQyVA3gz3h5obnb0Qcfdv65wc5Pg==
   dependencies:
     just-compare "^1.3.0"
 

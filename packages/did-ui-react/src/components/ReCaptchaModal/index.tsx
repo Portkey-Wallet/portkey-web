@@ -1,6 +1,6 @@
 import useReCaptcha from '../../hooks/useReCaptcha';
 import GoogleReCaptcha from '../GoogleReCaptcha';
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback, useState, useRef } from 'react';
 import { eventBus } from '../../utils';
 import { SET_RECAPTCHA_MODAL } from '../../constants/events';
 import { BaseReCaptchaHandler } from '../types';
@@ -23,6 +23,8 @@ export default function ReCaptchaModal() {
     });
   }, []);
 
+  const errorRef = useRef<any>();
+
   useEffect(() => {
     eventBus.addListener(SET_RECAPTCHA_MODAL, setHandler);
     return () => {
@@ -31,7 +33,7 @@ export default function ReCaptchaModal() {
   }, [setHandler]);
 
   const onCancel = useCallback(() => {
-    modalInfo?.onCancel?.();
+    if (!errorRef.current) modalInfo?.onCancel?.();
     setReCaptchaModal(false);
   }, [modalInfo]);
 
@@ -56,11 +58,13 @@ export default function ReCaptchaModal() {
             }}
             onExpire={(e) => {
               modalInfo?.onExpire?.(e);
-              setReCaptchaModal(false);
+              // setReCaptchaModal(false);
+              errorRef.current = 'reCaptcha expired';
             }}
             onError={(e) => {
               modalInfo?.onError?.(e);
-              setReCaptchaModal(false);
+              // setReCaptchaModal(false);
+              errorRef.current = 'reCaptcha error';
             }}
           />
         ) : (
