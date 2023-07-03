@@ -24,6 +24,7 @@ jest.mock('@portkey/contracts', () => {
       account: { address: string } | IBlockchainWallet;
     }) => {
       return new ContractBasicMock({
+        type: 'aelf',
         contractAddress: contractAddress || 'contractAddress_mock',
         rpcUrl: rpcUrl || 'rpcUrl_mock',
       });

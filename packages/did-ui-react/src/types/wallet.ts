@@ -7,6 +7,7 @@ export interface QRData {
   netWorkType: string;
   chainType: ChainType; // eth or nft
   address: string;
+  id: string; // uuid
 }
 
 export interface LoginQRData extends QRData {

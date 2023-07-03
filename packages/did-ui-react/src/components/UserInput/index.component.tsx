@@ -3,7 +3,7 @@ import { CSSProperties, ReactNode, memo, useMemo, useState, useCallback, useRef 
 import { GuardianInputInfo, IPhoneCountry, LoginFinishWithoutPin, IGuardianIdentifierInfo } from '../types';
 import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
 import { AccountType, AccountTypeEnum } from '@portkey/services';
-import Overview from './compontents/Overview';
+import Overview from './components/Overview';
 import ScanCard from '../ScanCard/index.component';
 import CustomSvg from '../CustomSvg';
 import useNetworkList from '../../hooks/useNetworkList';
@@ -23,9 +23,11 @@ import clsx from 'clsx';
 import './index.less';
 import { useUpdateEffect } from 'react-use';
 
+type UserInputType = AccountType | 'Scan' | null;
 export interface UserInputProps {
   defaultChainId?: ChainId;
   className?: string;
+  type?: UserInputType;
   style?: CSSProperties;
   isErrorTip?: boolean;
   isShowScan?: boolean; // show scan button
@@ -47,13 +49,14 @@ export interface UserInputProps {
 }
 function UserInput({
   style,
+  type = null,
   defaultChainId = 'AELF',
   className,
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
   appleIdToken,
-  socialLogin: defalutSocialLogin,
+  socialLogin: defaultSocialLogin,
   extraElement,
   termsOfService,
   onError,
@@ -64,13 +67,13 @@ function UserInput({
   onChainIdChange,
   onLoginFinishWithoutPin,
 }: UserInputProps) {
-  const [accountType, setAccountType] = useState<AccountType | 'Scan' | null>(null);
+  const [accountType, setAccountType] = useState<UserInputType>(type);
   const validateEmailRef = useRef<UserInputProps['validateEmail']>(defaultValidateEmail);
   const validatePhoneRef = useRef<UserInputProps['validatePhone']>(defaultValidatePhone);
   const onChainIdChangeRef = useRef<UserInputProps['onChainIdChange']>(onChainIdChange);
   const onErrorRef = useRef<UserInputProps['onError']>(onError);
 
-  const socialLogin = useMemo(() => defalutSocialLogin || ConfigProvider.getSocialLoginConfig(), [defalutSocialLogin]);
+  const socialLogin = useMemo(() => defaultSocialLogin || ConfigProvider.getSocialLoginConfig(), [defaultSocialLogin]);
 
   const { loginByApple, loginByGoogle } = useSocialLogin({ socialLogin });
 

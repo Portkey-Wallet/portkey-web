@@ -8,16 +8,16 @@ import clsx from 'clsx';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
 import { ISocialLoginConfig, OnErrorFunc } from '../../types';
 import { ChainId, ChainType } from '@portkey/types';
-import { AccountType, RecaptchaType } from '@portkey/services';
+import { AccountType, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { verification, setLoading, errorTip, verifyErrorHandler, handleErrorMessage } from '../../utils';
-import './index.less';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
 import { portkeyDidUIPrefix } from '../../constants';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
+import './index.less';
 
 type SelectVerifierStorageInfo = {
   verifier: VerifierItem;
@@ -215,6 +215,7 @@ export default function VerifierSelect({
         chainId,
         clientId: clientId ?? '',
         redirectURI,
+        verifierCodeOperation: VerifierCodeOperationType.register,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);

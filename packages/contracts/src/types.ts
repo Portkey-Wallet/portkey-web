@@ -1,56 +1,68 @@
-export type SendOptions = {
-  from?: string;
-  gasPrice?: string;
-  gas?: number;
-  value?: number | string;
-  nonce?: number;
-  onMethod: 'transactionHash' | 'receipt' | 'confirmation';
-};
+import { ChainId, ChainType, IAElfRPCMethods, IBlockchainWallet, IContract, ViewResult } from '@portkey/types';
+import { IChain } from '@portkey/provider-types';
 
-export interface ContractProps {
+export interface IPortkeyContract extends IContract {
+  encodedTx<T = any>(functionName: string, paramsOption?: any): Promise<ViewResult<T>>;
+}
+
+export interface BaseContractOptions {
+  chainId?: ChainId;
   contractAddress: string;
-  aelfContract?: any;
-  aelfInstance?: any;
+  type: ChainType;
   rpcUrl: string;
 }
 
-export interface ErrorMsg {
-  name?: string;
-  code?: number;
-  message?: string;
-}
-export interface ViewResult {
-  data?: any;
-  error?: ErrorMsg;
+export interface ContractProps extends BaseContractOptions {
+  aelfContract?: any;
+  aelfInstance?: { chain: IAElfRPCMethods };
 }
 
-export interface SendResult extends ViewResult {
-  transactionId?: string;
+export interface CAContractProps extends ContractProps {
+  caContractAddress: string;
+  caContract: any;
+  caHash: string;
 }
 
-export type CallViewMethod = (
-  functionName: string,
-  paramsOption?: any,
-  callOptions?: {
-    defaultBlock: number | string;
-    options?: any;
-    callback?: any;
-  },
-) => Promise<ViewResult>;
+export type CallType = 'ca' | 'eoa';
 
-export type CallSendMethod = (
-  functionName: string,
-  account: string,
-  paramsOption?: any,
-  sendOptions?: SendOptions,
-) => Promise<SendResult>;
+export interface IBaseOptions {
+  contractAddress: string;
+  callType?: CallType;
+  chianType?: ChainType;
+}
 
-export type ContractBasicErrorMsg = ErrorMsg;
+export interface IProviderOptions extends IBaseOptions {
+  chainProvider: IChain;
+}
 
-export type AElfCallViewMethod = (functionName: string, paramsOption?: any) => Promise<ViewResult>;
+export interface IEOAInstanceOptions extends IBaseOptions {
+  rpcUrl?: string;
+  aelfInstance?: { chain: IAElfRPCMethods };
+  account: { address: string } | IBlockchainWallet;
+}
 
-export type AElfCallSendMethod = (
-  functionName: string,
-  paramsOption?: any,
-  sendOptions?: SendOptions,
-) => Promise<SendResult>;
+export interface ICAInstanceOptions extends IEOAInstanceOptions {
+  callType: 'ca';
+  caHash: string;
+  caContractAddress: string;
+}
+
+export interface IGetContract {
+  /**
+   * use provider contract
+   * @returns IContract
+   */
+  getContractBasic(options: IProviderOptions): Promise<IContract>;
+
+  /**
+   * use base contract
+   * @returns IPortkeyContract
+   */
+  getContractBasic(options: IEOAInstanceOptions): Promise<IPortkeyContract>;
+
+  /**
+   * use ca contract
+   * @returns IContract
+   */
+  getContractBasic(options: ICAInstanceOptions): Promise<IContract>;
+}

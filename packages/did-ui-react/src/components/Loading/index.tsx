@@ -17,11 +17,9 @@ const LoadingIndicator = () => {
       });
     }
     return () => {
-      if (animation.current) {
-        animation.current.stop();
-        animation.current.destroy();
-        animation.current = null;
-      }
+      animation.current?.stop();
+      animation.current?.destroy();
+      animation.current = null;
     };
   }, []);
 

@@ -7,7 +7,7 @@ import type { ChainId } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
 import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
 import type { GuardiansApproved } from '@portkey/services';
-import { RecaptchaType } from '@portkey/services';
+import { RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
@@ -24,6 +24,7 @@ export interface GuardianApprovalProps {
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
   operationType?: RecaptchaType;
+  verifierCodeOperation: VerifierCodeOperationType;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => void;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -39,6 +40,7 @@ const GuardianApproval = forwardRef(
       isErrorTip = true,
       wrapperStyle,
       operationType = RecaptchaType.communityRecovery,
+      verifierCodeOperation = VerifierCodeOperationType.communityRecovery,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -131,6 +133,7 @@ const GuardianApproval = forwardRef(
             chainId,
             clientId: clientId ?? '',
             redirectURI,
+            verifierCodeOperation,
             customLoginHandler,
           });
           if (!rst && item.guardianType === 'Apple') return;
@@ -162,7 +165,7 @@ const GuardianApproval = forwardRef(
           setLoading(false);
         }
       },
-      [chainId, isErrorTip, onError, verifyToken],
+      [chainId, isErrorTip, onError, verifierCodeOperation, verifyToken],
     );
 
     const onVerifyingHandler = useCallback(
@@ -248,6 +251,7 @@ const GuardianApproval = forwardRef(
             isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
             accountType={guardianList[verifyAccountIndex].guardianType}
             isErrorTip={isErrorTip}
+            verifierCodeOperation={verifierCodeOperation}
             verifier={guardianList[verifyAccountIndex].verifier as VerifierItem}
             onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
             onError={onError}

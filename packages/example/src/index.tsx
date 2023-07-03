@@ -5,6 +5,8 @@ import { IStorageSuite } from '@portkey/types';
 import { ConfigProvider, SignIn, ISignIn } from '@portkey/did-ui-react';
 import '@portkey/did-ui-react/dist/assets/index.css';
 import './index.css';
+import { getContractBasic } from '@portkey/contracts';
+import AElf from 'aelf-sdk';
 
 export class Store implements IStorageSuite {
   async getItem(key: string) {
@@ -42,8 +44,25 @@ function App() {
       did example
       <button
         onClick={async () => {
-          const info = await did.services.getChainsInfo();
-          console.log(info, '=====info');
+          const account = AElf.wallet.getWalletByPrivateKey(
+            'f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71',
+          );
+          const contract = await getContractBasic({
+            contractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
+            rpcUrl: 'https://explorer-test.aelf.io/chain',
+            account,
+          });
+          const req = await contract.callViewMethod<{ balance: string; owner: string; symbol: string }>('GetBalance', {
+            symbol: 'ELF',
+            owner: account.address,
+          });
+          console.log(req.data.balance, '=====req');
+          const transfer1 = await contract.callSendMethod('Transfer', '', {
+            symbol: 'ELF',
+            to: 'LSWoBaeoXRp9QW75mCVJgNP4YurGi2oEJDYu3iAxtDH8R6UGy',
+            amount: 10000 * 10 ** 8,
+          });
+          console.log(transfer1, '=====transfer1');
         }}>
         get chains info
       </button>

@@ -16,25 +16,25 @@
   }
 
   .portkey-ant-btn-default {
-    color: @font-9;
-    border-color: @border-3;
+    color: var(--portkey-ui-font-4);
+    border-color: var(--portkey-ui-border-3);
     &:disabled,
     &:disabled:hover,
     &:disabled:focus,
     &:disabled:active {
-      border-color: @border-8;
+      border-color: var(--portkey-ui-border-5);
       box-shadow: none !important;
     }
   }
 
   .portkey-ant-btn-primary {
-    background-color: @bg-7;
-    border-color: @border-3;
+    background-color: var(--portkey-ui-bg-2);
+    border-color: var(--portkey-ui-border-3);
     &:hover,
     &:focus {
       color: white;
-      background-color: @hover1;
-      border-color: @border-4;
+      background-color: var(--portkey-ui-bg-9);
+      border-color: var(--portkey-ui-border-3);
     }
 
     &:disabled,
@@ -42,8 +42,8 @@
     &:disabled:focus,
     &:disabled:active {
       color: white;
-      background-color: @bg-7;
-      border-color: @border-3;
+      background-color: var(--portkey-ui-bg-2);
+      border-color: var(--portkey-ui-border-3);
       box-shadow: none !important;
       opacity: 0.3;
     }
@@ -57,7 +57,7 @@
     &::placeholder {
       font-size: 14px;
       line-height: 20px;
-      color: @font-12;
+      color: var(--portkey-ui-font-7);
     }
   }
 
@@ -65,7 +65,7 @@
   .portkey-ant-input-password:hover,
   .portkey-ant-input:hover,
   .portkey-ant-input:focus {
-    border-color: @border-1 !important;
+    border-color: var(--portkey-ui-border-1) !important;
     box-shadow: none;
   }
 
@@ -80,9 +80,9 @@
     border-radius: 6px;
     color: @font-2;
     line-height: 22px;
-    border-color: @border-1;
+    border-color: var(--portkey-ui-border-1);
     &:hover {
-      border-color: @hover2;
+      border-color: var(--portkey-ui-border-7);
     }
   }
 
@@ -111,11 +111,11 @@
       }
     }
     .portkey-ant-input-affix-wrapper-status-error {
-      border-color: @border-7;
+      border-color: var(--portkey-ui-border-4);
     }
 
     .portkey-ant-form-item-explain-error {
-      color: @font-14;
+      color: var(--portkey-ui-font-error);
       font-size: 12px;
     }
 
@@ -126,10 +126,10 @@
       line-height: 22px;
       font-size: 16px;
       padding-bottom: 16px;
-      color: @font-2;
+      color: var(--portkey-ui-font-2);
     }
     .portkey-ant-form-item-label > label {
-      color: @font-2;
+      color: var(--portkey-ui-font-2);
       line-height: 22px;
       font-size: 16px;
     }
@@ -146,7 +146,7 @@
   .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
       .portkey-ant-input-affix-wrapper-borderless
     ).portkey-ant-input-affix-wrapper:focus {
-    border-color: #c5cbd5;
+    border-color: var(--portkey-ui-border-1);
   }
   // to change  border color of the errored input
   .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(
@@ -158,7 +158,7 @@
   .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
       .portkey-ant-input-affix-wrapper-borderless
     ).portkey-ant-input-affix-wrapper:hover {
-    border-color: @border-3 !important;
+    border-color: var(--portkey-ui-border-3) !important;
   }
 
   .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(
@@ -167,19 +167,19 @@
   .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
       .portkey-ant-input-affix-wrapper-borderless
     ).portkey-ant-input-affix-wrapper-focused {
-    border-color: @border-3 !important;
+    border-color: var(--portkey-ui-border-3) !important;
     box-shadow: 0 0 0 2px rgb(91 142 244 / 20%);
   }
 
   /* tabs */
   .portkey-ant-tabs-tab.portkey-ant-tabs-tab-active .portkey-ant-tabs-tab-btn {
-    color: @font-9;
+    color: var(--portkey-ui-font-4);
     .portkey-ant-tabs-ink-bar {
-      background: @bg-7;
+      background: var(--portkey-ui-bg-2);
     }
   }
   .portkey-ant-tabs-tab:hover {
-    color: @font-18;
+    color: var(--portkey-ui-font-11);
   }
 }
 
