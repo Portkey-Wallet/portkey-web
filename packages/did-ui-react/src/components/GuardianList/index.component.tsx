@@ -7,8 +7,8 @@ import CommonTooltip from '../CommonTooltip/index.component';
 import GuardianItems from './components/GuardianItems';
 import { ChainId } from '@portkey/types';
 import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
+import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
-import { RecaptchaType } from '@portkey/services';
 
 export interface GuardianListProps {
   chainId?: ChainId;
@@ -16,7 +16,7 @@ export interface GuardianListProps {
   guardianList?: UserGuardianStatus[];
   expiredTime?: number;
   isErrorTip?: boolean;
-  operationType?: RecaptchaType;
+  operationType?: OperationTypeEnum;
   onError?: OnErrorFunc;
   onConfirm?: () => void;
   onSend?: (item: UserGuardianStatus, index: number) => void;
@@ -29,7 +29,7 @@ function GuardianList({
   guardianList = [],
   expiredTime,
   isErrorTip = true,
-  operationType = RecaptchaType.communityRecovery,
+  operationType = OperationTypeEnum.communityRecovery,
   onError,
   onConfirm,
   onSend,

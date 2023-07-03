@@ -4,7 +4,7 @@ import { handleErrorMessage } from '../utils';
 import { setReCaptchaModal } from '../utils/reCaptcha';
 import useReCaptcha from './useReCaptcha';
 import { ReCaptchaResponseType } from '../components';
-import { RecaptchaType } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey/services';
 
 export default function useReCaptchaModal() {
   const reCaptchaInfo = useReCaptcha();
@@ -12,12 +12,12 @@ export default function useReCaptchaModal() {
   return useCallback(
     async (
       open?: boolean,
-      operationType: RecaptchaType = RecaptchaType.register,
+      operationType: OperationTypeEnum = OperationTypeEnum.register,
     ): Promise<{ type: ReCaptchaResponseType; message?: any }> => {
       if (open) {
         let needGoogleRecaptcha = true;
         // When the operationType is register, the google recaptcha is required.
-        if (operationType !== RecaptchaType.register) {
+        if (operationType !== OperationTypeEnum.register) {
           needGoogleRecaptcha = await did.services.checkGoogleRecaptcha({
             operationType,
           });

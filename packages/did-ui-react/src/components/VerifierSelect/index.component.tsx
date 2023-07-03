@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
 import { ISocialLoginConfig, OnErrorFunc } from '../../types';
 import { ChainId, ChainType } from '@portkey/types';
-import { AccountType, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
+import { AccountType, OperationTypeEnum } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { verification, setLoading, errorTip, verifyErrorHandler, handleErrorMessage } from '../../utils';
 import { useVerifyToken } from '../../hooks/authentication';
@@ -42,7 +42,7 @@ export interface VerifierSelectProps {
   className?: string;
   accountType?: AccountType;
   isErrorTip?: boolean;
-  operationType?: RecaptchaType;
+  operationType?: OperationTypeEnum;
   chainType?: ChainType;
   // socialLogin porps
   appleIdToken?: string; // apple authorized
@@ -64,7 +64,7 @@ export default function VerifierSelect({
   defaultVerifier,
   appleIdToken,
   googleAccessToken,
-  operationType = RecaptchaType.register,
+  operationType = OperationTypeEnum.register,
   onError,
   onConfirm,
 }: VerifierSelectProps) {
@@ -215,7 +215,7 @@ export default function VerifierSelect({
         chainId,
         clientId: clientId ?? '',
         redirectURI,
-        verifierCodeOperation: VerifierCodeOperationType.register,
+        operationType: OperationTypeEnum.register,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);

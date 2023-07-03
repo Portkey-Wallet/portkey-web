@@ -9,7 +9,7 @@ import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verificat
 import { useEffectOnce } from 'react-use';
 import { OnErrorFunc } from '../../types';
 import type { ChainId } from '@portkey/types';
-import { AccountType, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
+import { AccountType, OperationTypeEnum } from '@portkey/services';
 import type { VerifierItem } from '@portkey/did';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import './index.less';
@@ -26,8 +26,7 @@ export interface CodeVerifyProps {
   guardianIdentifier: string;
   verifierSessionId: string;
   isErrorTip?: boolean;
-  operationType?: RecaptchaType;
-  verifierCodeOperation: VerifierCodeOperationType;
+  operationType: OperationTypeEnum;
   onError?: OnErrorFunc;
   onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
   onReSend?: (result: { verifier: VerifierItem; verifierSessionId: string }) => void;
@@ -38,13 +37,12 @@ export default function CodeVerify({
   verifier,
   className,
   isErrorTip = true,
+  operationType,
   isCountdownNow,
   isLoginGuardian,
   guardianIdentifier,
   accountType = 'Email',
-  operationType = RecaptchaType.register,
-  verifierCodeOperation,
-  verifierSessionId: defalutVerifierSessionId,
+  verifierSessionId: defaultVerifierSessionId,
   onError,
   onReSend,
   onSuccess,
@@ -52,7 +50,7 @@ export default function CodeVerify({
   const [timer, setTimer] = useState<number>(0);
   const [pinVal, setPinVal] = useState<string>();
   const timerRef = useRef<NodeJS.Timer>();
-  const [verifierSessionId, setVerifierSessionId] = useState<string>(defalutVerifierSessionId);
+  const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
   const { t } = useTranslation();
 
   useEffectOnce(() => {
@@ -71,7 +69,7 @@ export default function CodeVerify({
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
             chainId,
-            verifierCodeOperation,
+            operationType,
           });
           setLoading(false);
 
@@ -95,16 +93,7 @@ export default function CodeVerify({
       }
     },
 
-    [
-      verifierSessionId,
-      guardianIdentifier,
-      verifier.id,
-      chainId,
-      verifierCodeOperation,
-      onSuccess,
-      isErrorTip,
-      onError,
-    ],
+    [verifierSessionId, guardianIdentifier, verifier.id, chainId, operationType, onSuccess, isErrorTip, onError],
   );
 
   const reCaptchaHandler = useReCaptchaModal();

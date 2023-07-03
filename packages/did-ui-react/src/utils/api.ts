@@ -1,4 +1,4 @@
-import { RecaptchaType, SendVerificationCodeRequestParams, VerifyVerificationCodeParams } from '@portkey/services';
+import { OperationTypeEnum, SendVerificationCodeRequestParams, VerifyVerificationCodeParams } from '@portkey/services';
 import { IStorageSuite } from '@portkey/types';
 import { did } from './did';
 import { BaseAsyncStorage } from './BaseAsyncStorage';
@@ -68,7 +68,7 @@ export class Verification extends StorageBaseLoader {
     config: SendVerificationCodeRequestParams,
     recaptchaHandler: (
       open?: boolean | undefined,
-      operationType?: RecaptchaType,
+      operationType?: OperationTypeEnum,
     ) => Promise<{
       type: ReCaptchaResponseType;
       message?: any;
