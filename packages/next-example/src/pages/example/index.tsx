@@ -7,6 +7,7 @@ import {
   GuardianApproval,
   PortkeyLoading,
   UserInput,
+  SignIn,
 } from '@portkey/did-ui-react';
 import { useState } from 'react';
 import { Store } from '../../utils';
@@ -50,24 +51,10 @@ function Example() {
         onCancel={() => setLoading(false)}
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
         <SignUpAndLogin
-          style={{ height: 600 }}
-          termsOfService={
-            <>
-              termsOfService: <a href="https://portkey.finance/terms-of-service"></a>
-            </>
-          }
-          extraElement={
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-            </div>
-          }
+          style={{ height: 600, border: '1px solid gray' }}
+          termsOfService={'https://portkey.finance/terms-of-service'}
           socialLogin={{
             Portkey: {
               websiteName: 'website demo name',
@@ -81,8 +68,17 @@ function Example() {
             console.log('onSuccess:', value);
           }}
         />
+        <UserInput
+          style={{ height: 600, border: '1px solid gray' }}
+          termsOfService={'https://portkey.finance/terms-of-service'}
+          onError={(error: any) => {
+            console.log('onError', error);
+          }}
+          onSuccess={(value: any) => {
+            console.log('onSuccess:', value);
+          }}
+        />
         <VerifierSelect
-          operationType={RecaptchaType.register}
           guardianIdentifier={'105383420233267798964'}
           accountType={'Google'}
           onError={(error: any) => {
@@ -116,6 +112,7 @@ function Example() {
           }}
           verifierSessionId={'080bbdcd-73f5-45a6-b65b-0d067474756f'}
           guardianIdentifier={'+852 12233333'}
+          verifierCodeOperation={1}
           onError={(error: any) => {
             console.log('SetPinAndAddManager:onError', error);
           }}
@@ -126,9 +123,11 @@ function Example() {
         <GuardianApproval
           chainId="AELF"
           operationType={RecaptchaType.communityRecovery}
+          wrapperStyle={{ height: 600 }}
+          verifierCodeOperation={2}
           guardianList={[
             {
-              isLoginAccount: true,
+              isLoginGuardian: true,
               verifier: {
                 endPoints: ['http://192.168.66.240:16010'],
                 verifierAddresses: ['2mBnRTqXMb5Afz4CWM2QakLRVDfaq2doJNRNQT1MXoi2uc6Zy3'],
@@ -142,26 +141,27 @@ function Example() {
             },
           ]}
         />
-        <UserInput
-          style={{ height: 600, border: '1px solid red' }}
-          termsOfService={'https://portkey.finance/terms-of-service'}
-          extraElement={
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-              <button>button</button>
-            </div>
-          }
-          onError={(error: any) => {
-            console.log('onError', error);
-          }}
-          onSuccess={(value: any) => {
-            console.log('onSuccess:', value);
-          }}
-        />
+        <div style={{ height: 600 }}>
+          <SignIn
+            uiType="Full"
+            design="SocialDesign"
+            isShowScan
+            className="sign-in-wrapper"
+            // termsOfService={'https://portkey.finance/terms-of-service'}
+            onFinish={async res => {
+              console.log(res, 'onFinish====');
+            }}
+            onError={error => {
+              console.log(error, 'onError====error');
+            }}
+            onCancel={() => {
+              // ref1?.current.setOpen(false);
+            }}
+            onCreatePending={info => {
+              console.log(info, 'onCreatePending====info');
+            }}
+          />
+        </div>
       </div>
     </div>
   );

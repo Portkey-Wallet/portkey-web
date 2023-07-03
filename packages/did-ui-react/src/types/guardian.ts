@@ -4,9 +4,10 @@ import { ChainId } from '@portkey/types';
 import { TSocialLoginHandler } from './wallet';
 
 export interface BaseGuardianItem {
-  isLoginAccount: boolean | undefined;
+  isLoginGuardian: boolean | undefined;
   verifier?: VerifierItem;
   identifier?: string;
+  guardianIdentifier?: string;
   guardianType: AccountType;
   key: string; // `${identifier}&${verifier?.name}`,
   identifierHash?: string;

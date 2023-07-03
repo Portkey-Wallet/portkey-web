@@ -45,3 +45,10 @@ const useChainInfo = (chainId: ChainId, onError?: OnErrorFunc) => {
 };
 
 export default useChainInfo;
+
+export const getChainInfo = async (originChainId?: ChainId) => {
+  const chainList = await did.services.getChainsInfo();
+  const chainMap = {} as ChainMapType;
+  chainList.forEach((chain) => (chainMap[chain.chainId] = chain));
+  if (originChainId) return chainMap[originChainId];
+};

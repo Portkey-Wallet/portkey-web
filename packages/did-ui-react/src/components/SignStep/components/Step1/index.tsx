@@ -1,6 +1,6 @@
 import SignUpAndLogin, { SignUpAndLoginProps } from '../../../SignUpAndLogin/index.component';
 import { useCallback, useState, memo, useEffect, useRef } from 'react';
-import type { DIDWalletInfo, GuardianInputInfo, SignInSuccess } from '../../../types';
+import type { DIDWalletInfo, IGuardianIdentifierInfo } from '../../../types';
 import type { SignInLifeCycleType, TDesign } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import qs from 'query-string';
@@ -11,7 +11,7 @@ export type OnSignInFinishedFun = (values: {
   isFinished: boolean;
   result: {
     type?: SignInLifeCycleType;
-    value: GuardianInputInfo | DIDWalletInfo;
+    value: IGuardianIdentifierInfo | DIDWalletInfo;
   };
 }) => void;
 
@@ -21,17 +21,16 @@ interface Step1Props extends SignUpAndLoginProps {
   onStepChange?: (v: SignInLifeCycleType) => void;
 }
 
-function Step1({ design, onStepChange, onSignInFinished, ...props }: Step1Props) {
-  const [createType, setCreateType] = useState<SignInLifeCycleType>('Login');
+function Step1({ design, onStepChange, onSignInFinished, type, ...props }: Step1Props) {
+  const [createType, setCreateType] = useState<SignInLifeCycleType>(type || 'Login');
   const [open, setOpen] = useState<boolean>();
-
-  const signInSuccessRef = useRef<SignInSuccess>();
+  const signInSuccessRef = useRef<IGuardianIdentifierInfo>();
 
   const onSuccess = useCallback(
-    (value: SignInSuccess) => {
+    (value: IGuardianIdentifierInfo) => {
       signInSuccessRef.current = value;
-      if (value.isLoginIdentifier && createType !== 'Login') return setOpen(true);
-      if (!value.isLoginIdentifier && createType !== 'SignUp') return setOpen(true);
+      if (value.isLoginGuardian && createType !== 'Login') return setOpen(true);
+      if (!value.isLoginGuardian && createType !== 'SignUp') return setOpen(true);
       onSignInFinished?.({
         isFinished: false,
         result: {
@@ -61,9 +60,22 @@ function Step1({ design, onStepChange, onSignInFinished, ...props }: Step1Props)
 
   return (
     <>
-      {design === 'SocialDesign' && <UserInput {...props} appleIdToken={appleIdToken} onSuccess={onSuccess} />}
+      {design === 'SocialDesign' && (
+        <UserInput
+          {...props}
+          type={type === 'LoginByScan' ? 'Scan' : null}
+          appleIdToken={appleIdToken}
+          onSuccess={onSuccess}
+        />
+      )}
       {design !== 'SocialDesign' && (
-        <SignUpAndLogin {...props} appleIdToken={appleIdToken} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
+        <SignUpAndLogin
+          {...props}
+          type={type}
+          appleIdToken={appleIdToken}
+          onSignTypeChange={setCreateType}
+          onSuccess={onSuccess}
+        />
       )}
 
       <LoginModal
@@ -72,7 +84,7 @@ function Step1({ design, onStepChange, onSignInFinished, ...props }: Step1Props)
         onCancel={() => setOpen(false)}
         onConfirm={() => {
           if (!signInSuccessRef.current) return setOpen(false);
-          const createType = signInSuccessRef.current.isLoginIdentifier ? 'Login' : 'SignUp';
+          const createType = signInSuccessRef.current.isLoginGuardian ? 'Login' : 'SignUp';
           setCreateType(createType);
           onSignInFinished?.({
             isFinished: false,

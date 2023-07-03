@@ -1,8 +1,9 @@
-import { useRef, useEffect } from 'react';
 import lottie, { AnimationItem } from 'lottie-web';
-import animationData from './data';
+import { useRef, useEffect } from 'react';
+import ScanLoadingAnimation from './ScanLoading';
+import './index.less';
 
-const LoadingIndicator = () => {
+export default function ScanLoading() {
   const containerRef = useRef<HTMLDivElement>(null);
   const animation = useRef<AnimationItem | null>(null);
 
@@ -13,7 +14,7 @@ const LoadingIndicator = () => {
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        animationData: animationData,
+        animationData: ScanLoadingAnimation,
       });
     }
     return () => {
@@ -22,8 +23,5 @@ const LoadingIndicator = () => {
       animation.current = null;
     };
   }, []);
-
-  return <div className="loading" ref={containerRef}></div>;
-};
-
-export default LoadingIndicator;
+  return <div className="scan-loading-inner" ref={containerRef}></div>;
+}

@@ -31,6 +31,7 @@ describe('verification describe', () => {
       guardianIdentifier: 'guardianIdentifier_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      verifierCodeOperation: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -55,6 +56,7 @@ describe('verification describe', () => {
       accessToken: 'accessToken_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      verifierCodeOperation: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -65,6 +67,7 @@ describe('verification describe', () => {
       identityToken: 'identityToken_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      verifierCodeOperation: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');

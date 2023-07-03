@@ -1,44 +1,50 @@
-import type { ChainType } from '@portkey/types';
+import type { ChainId, ChainType } from '@portkey/types';
 import { VerifierItem } from '@portkey/did';
-import { ChainInfo, GuardiansApproved, RecaptchaType } from '@portkey/services';
-import { memo, useMemo, useState, useEffect, useCallback, useRef } from 'react';
-import { contractErrorHandler, did, errorTip, setLoading } from '../../../../utils';
+import { GuardiansApproved, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
+import { memo, useState, useCallback } from 'react';
+import { did, errorTip, handleErrorMessage, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';
 import GuardianApproval from '../../../GuardianApproval/index.component';
-import { BaseGuardianItem, VerifyStatus, OnErrorFunc } from '../../../../types';
+import { BaseGuardianItem, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../../../types';
 import { getVerifierList } from '../../../../utils/sandboxUtil/getVerifierList';
-import { SignInSuccess } from '../../../types';
-import qs from 'query-string';
+import { IGuardianIdentifierInfo } from '../../../types';
 import './index.less';
+import { useEffectOnce } from 'react-use';
+import { getChainInfo } from '../../../../hooks/useChainInfo';
 
 interface Step2OfLoginProps {
   sandboxId?: string;
-  chainInfo?: ChainInfo;
+  chainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
-  guardianList?: BaseGuardianItem[];
-  guardianIdentifierInfo: SignInSuccess;
+  guardianList?: UserGuardianStatus[];
   approvedList?: GuardiansApproved[];
-  onFinish?: (guardianList: GuardiansApproved[]) => void;
-  onCancel?: () => void;
+  guardianIdentifierInfo: IGuardianIdentifierInfo;
+  onFinish?(guardianList: GuardiansApproved[]): void;
+  onCancel?(): void;
   onError?: OnErrorFunc;
+  onGuardianListChange?(guardianList: UserGuardianStatus[]): void;
 }
 
 function Step2OfLogin({
   sandboxId,
   chainType,
-  chainInfo,
+  chainId,
   isErrorTip = true,
   approvedList,
+  guardianList: defaultGuardianList,
   guardianIdentifierInfo,
   onFinish,
   onCancel,
   onError,
+  onGuardianListChange,
 }: Step2OfLoginProps) {
-  const [guardianList, setGuardianList] = useState<BaseGuardianItem[] | undefined>();
+  const [guardianList, setGuardianList] = useState<UserGuardianStatus[] | undefined>(defaultGuardianList);
 
   const getVerifierListHandler = useCallback(async () => {
+    const chainInfo = await getChainInfo(chainId);
     if (!chainInfo) return;
+
     const list = await getVerifierList({
       sandboxId,
       chainId: guardianIdentifierInfo.chainId,
@@ -47,7 +53,7 @@ function Step2OfLogin({
       address: chainInfo.caContractAddress,
     });
     return list;
-  }, [chainInfo, chainType, guardianIdentifierInfo.chainId, sandboxId]);
+  }, [chainId, chainType, guardianIdentifierInfo.chainId, sandboxId]);
 
   const getGuardianList = useCallback(async () => {
     try {
@@ -65,35 +71,58 @@ function Step2OfLogin({
       });
 
       const { guardians } = payload?.guardianList ?? { guardians: [] };
-      const _guardianAccounts = [...guardians];
+      const guardianAccounts = [...guardians];
+      const guardianMap: { [x: string]: UserGuardianStatus } = {};
+      if (guardianList) {
+        guardianList.forEach((guardian) => {
+          const key = `${guardian.identifier || guardian.identifierHash}&${guardian.verifier?.id}`;
+          guardianMap[key] = guardian;
+        });
+      }
+      const approvedMap = {} as { [x: string]: GuardiansApproved };
+      if (approvedList) {
+        approvedList.forEach((item) => {
+          approvedMap[`${item.identifier}&${item.verifierId}`] = item;
+        });
+      }
 
-      const guardiansList = _guardianAccounts.map((_guardianAccount) => {
+      const currentGuardiansList = guardianAccounts.map((_guardianAccount) => {
         const key = `${_guardianAccount.guardianIdentifier}&${_guardianAccount.verifierId}`;
 
         const guardianAccount = _guardianAccount.guardianIdentifier || _guardianAccount.identifierHash;
         const verifier = verifierMap?.[_guardianAccount.verifierId];
 
-        const _guardian: BaseGuardianItem = {
+        const baseGuardian: BaseGuardianItem = {
           ..._guardianAccount,
           key,
-          isLoginAccount: _guardianAccount.isLoginGuardian,
           verifier,
           identifier: guardianAccount,
           guardianType: _guardianAccount.type,
         };
-        if (guardianIdentifierInfo.authenticationInfo)
-          _guardian.accessToken =
+        if (
+          guardianIdentifierInfo.authenticationInfo &&
+          guardianIdentifierInfo.identifier === guardianAccount &&
+          guardianIdentifierInfo.accountType === baseGuardian.guardianType
+        )
+          baseGuardian.accessToken =
             guardianIdentifierInfo.authenticationInfo?.googleAccessToken ||
             guardianIdentifierInfo.authenticationInfo?.appleIdToken;
-        return _guardian;
+        const temGuardian = (guardianMap[key] ? guardianMap[key] : {}) as UserGuardianStatus;
+        if (approvedMap[key] && temGuardian) {
+          const approvedItem = approvedMap[key];
+          temGuardian.status = VerifyStatus.Verified;
+          temGuardian.verificationDoc = approvedItem.verificationDoc;
+          temGuardian.signature = approvedItem.signature;
+        }
+        return Object.assign(temGuardian, baseGuardian);
       });
 
-      setGuardianList(guardiansList);
+      setGuardianList(currentGuardiansList);
     } catch (error) {
       errorTip(
         {
           errorFields: 'GuardianApproval',
-          error: contractErrorHandler(error),
+          error: handleErrorMessage(error),
         },
         isErrorTip,
         onError,
@@ -101,67 +130,24 @@ function Step2OfLogin({
     } finally {
       setLoading(false);
     }
-  }, [getVerifierListHandler, guardianIdentifierInfo, isErrorTip, onError]);
+  }, [approvedList, getVerifierListHandler, guardianIdentifierInfo, guardianList, isErrorTip, onError]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     getGuardianList();
-  }, [getGuardianList]);
+  });
 
-  const _guardianList = useMemo(() => {
-    if (!approvedList) return guardianList;
-    const approvedMap: { [x: string]: GuardiansApproved } = {};
-    approvedList.forEach((item) => {
-      approvedMap[`${item.identifier}&${item.verifierId}`] = item;
-    });
-    return guardianList?.map((guardian) => {
-      const approvedItem = approvedMap[`${guardian.identifier}&${guardian.verifier?.id}`];
-      if (approvedItem)
-        return {
-          ...guardian,
-          status: VerifyStatus.Verified,
-          verificationDoc: approvedItem.verificationDoc,
-          signature: approvedItem.signature,
-        };
-      return guardian;
-    });
-  }, [approvedList, guardianList]);
-
-  const [appleIdToken, setAppleIdToken] = useState<string>();
-
-  useEffect(() => {
-    const { id_token } = qs.parse(location.search);
-    if (id_token && typeof id_token === 'string') {
-      setAppleIdToken(id_token);
-    }
-  }, []);
-
-  const ref = useRef<any>();
-
-  const _onCancel = useCallback(() => {
-    ref?.current?.clearStorage();
-    history.pushState(null, '', `${location.pathname}`);
-    onCancel?.();
-  }, [onCancel]);
-
-  const onConfirm = useCallback(
-    (guardianList: GuardiansApproved[]) => {
-      history.pushState(null, '', `${location.pathname}`);
-      onFinish?.(guardianList);
-    },
-    [onFinish],
-  );
   return (
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
-        ref={ref}
         operationType={RecaptchaType.communityRecovery}
         chainId={guardianIdentifierInfo.chainId}
-        header={<BackHeader onBack={_onCancel} />}
-        appleIdToken={appleIdToken}
-        guardianList={_guardianList}
+        header={<BackHeader onBack={onCancel} />}
+        guardianList={guardianList}
         isErrorTip={isErrorTip}
-        onConfirm={onConfirm}
+        verifierCodeOperation={VerifierCodeOperationType.communityRecovery}
+        onConfirm={onFinish}
         onError={onError}
+        onGuardianListChange={onGuardianListChange}
       />
     </div>
   );

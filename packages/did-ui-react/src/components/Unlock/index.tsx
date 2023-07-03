@@ -67,7 +67,7 @@ export default function UnLock({
   return (
     <PortkeyStyleProvider>
       {uiType === 'Full' ? (
-        <div className="step-page-full-wrapper">{mainContent()}</div>
+        <div className="portkey-sign-full-wrapper">{mainContent()}</div>
       ) : (
         <BaseModal destroyOnClose className={className} open={open} onCancel={onCancel}>
           {mainContent()}

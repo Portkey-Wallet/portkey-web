@@ -1,4 +1,4 @@
-@import '../../assets/theme/color.less';
+@import '../../assets/theme/constants.less';
 
 .scan-card-wrapper {
   text-align: center;
@@ -7,7 +7,7 @@
     text-align: center;
     padding-top: 120px;
     line-height: 28px;
-    color: @font-11;
+    color: var(--portkey-ui-font-6);
     font-size: 24px;
     padding-bottom: 8px;
     position: relative;
@@ -25,15 +25,24 @@
   }
   .description {
     line-height: 20px;
-    color: @font-13;
+    color: var(--portkey-ui-font-8);
     font-size: 14px;
     margin-bottom: 45px;
     z-index: 10;
     position: relative;
   }
+  .waiting-wrapper {
+    margin-top: 24px;
+  }
+  .waiting-text {
+    color: var(--portkey-ui-font-8);
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 8px;
+  }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: @screen-max-w-768) {
   .scan-card-wrapper {
     .scan-card-content {
       padding: 0 16px 16px;

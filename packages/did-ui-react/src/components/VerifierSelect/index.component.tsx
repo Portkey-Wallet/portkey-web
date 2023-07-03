@@ -7,17 +7,17 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
 import { ISocialLoginConfig, OnErrorFunc } from '../../types';
-import { ChainId } from '@portkey/types';
-import { AccountType, RecaptchaType } from '@portkey/services';
+import { ChainId, ChainType } from '@portkey/types';
+import { AccountType, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { verification, setLoading, errorTip, verifyErrorHandler, handleErrorMessage } from '../../utils';
-import './index.less';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
 import { portkeyDidUIPrefix } from '../../constants';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
-import useChainInfo from '../../hooks/useChainInfo';
+import { getChainInfo } from '../../hooks/useChainInfo';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
+import './index.less';
 
 type SelectVerifierStorageInfo = {
   verifier: VerifierItem;
@@ -43,7 +43,7 @@ export interface VerifierSelectProps {
   accountType?: AccountType;
   isErrorTip?: boolean;
   operationType?: RecaptchaType;
-
+  chainType?: ChainType;
   // socialLogin porps
   appleIdToken?: string; // apple authorized
   googleAccessToken?: string; // google authorized
@@ -57,8 +57,9 @@ export default function VerifierSelect({
   className,
   sandboxId,
   isErrorTip = true,
-  verifierList: _verifierList,
+  verifierList: defaultVerifierList,
   guardianIdentifier,
+  chainType = 'aelf',
   accountType = 'Email',
   defaultVerifier,
   appleIdToken,
@@ -75,33 +76,39 @@ export default function VerifierSelect({
     onConfirmRef.current = onConfirm;
   });
 
-  const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>(_verifierList);
+  const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>(defaultVerifierList);
 
   const socialLogin = useMemo<ISocialLoginConfig | undefined>(() => ConfigProvider.getSocialLoginConfig(), []);
 
-  const chainInfo = useChainInfo(chainId, onError);
-
-  useEffect(() => {
-    chainInfo &&
-      getVerifierList({
+  const getVerifierInfo = useCallback(async () => {
+    try {
+      setLoading(true);
+      const chainInfo = await getChainInfo(chainId);
+      const list = await getVerifierList({
         sandboxId,
         chainId,
         rpcUrl: chainInfo?.endPoint,
-        chainType: 'aelf',
+        chainType,
         address: chainInfo?.caContractAddress,
-      })
-        .then((list) => setVerifierList(list))
-        .catch((err) =>
-          errorTip(
-            {
-              errorFields: 'getVerifierServers',
-              error: err || 'Get verifierList error by contract',
-            },
-            isErrorTip,
-            onError,
-          ),
-        );
-  }, [_verifierList, chainId, chainInfo, isErrorTip, onError, sandboxId]);
+      });
+      setVerifierList(list);
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'getVerifierServers',
+          error,
+        },
+        isErrorTip,
+        onError,
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [chainId, chainType, isErrorTip, onError, sandboxId]);
+
+  useEffect(() => {
+    getVerifierInfo();
+  }, [getVerifierInfo]);
 
   const selectItems = useMemo(
     () =>
@@ -208,6 +215,7 @@ export default function VerifierSelect({
         chainId,
         clientId: clientId ?? '',
         redirectURI,
+        verifierCodeOperation: VerifierCodeOperationType.register,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);

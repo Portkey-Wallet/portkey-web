@@ -1,7 +1,11 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { ConfigProvider, SignIn, ISignIn, did, PortkeyStyleProvider } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
+import { ChainId } from '@portkey/types';
 import { Spin, Button, message } from 'antd';
+
+const PIN = '111111';
+let CHAIN_ID: ChainId = 'AELF';
 
 const myStore = new Store();
 ConfigProvider.setGlobalConfig({
@@ -29,6 +33,12 @@ ConfigProvider.setGlobalConfig({
 export default function Sign() {
   const ref = useRef<ISignIn>();
   const ref1 = useRef<ISignIn>();
+  const [defaultLifeCycle, setLifeCycle] = useState<any>();
+
+  useEffect(() => {
+    typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
+  }, []);
+
   return (
     <div>
       <Spin spinning />
@@ -54,8 +64,8 @@ export default function Sign() {
         termsOfService={'https://portkey.finance/terms-of-service'}
         onFinish={async res => {
           console.log(res, 'onFinish====');
-          const CAHolderInfo = await did.getCAHolderInfo(res.chainId);
-          console.log(CAHolderInfo, CAHolderInfo.nickName, 'result====onFinish');
+          CHAIN_ID = res.chainId;
+          did.save(PIN);
         }}
         onError={error => {
           console.log(error, 'onError====error');
@@ -66,41 +76,70 @@ export default function Sign() {
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
         }}
+        defaultLifeCycle={defaultLifeCycle}
+        onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
+          console.log(
+            'onLifeCycleChange:',
+            lifeCycle,
+            nextLifeCycleProps,
+            { [lifeCycle]: nextLifeCycleProps },
+            JSON.stringify({ [lifeCycle]: nextLifeCycleProps }),
+          );
+          localStorage.setItem('portkeyLifeCycle', JSON.stringify({ [lifeCycle]: nextLifeCycleProps }));
+        }}
       />
+
       <button
         onClick={() => {
-          ref?.current.setOpen(true);
+          ref.current?.setOpen(true);
         }}>
         setOpen
       </button>
       <div></div>
       <button
         onClick={() => {
-          ref1?.current.setOpen(true);
+          ref1.current?.setOpen(true);
         }}>
         setOpen connectFirst
       </button>
+      <button
+        onClick={async () => {
+          // Mock pin: 111111
+          const wallet = await did.load(PIN);
+          console.log('wallet:', wallet);
+          // Mock chainId: 'AELF'
+          did.logout({ chainId: CHAIN_ID });
+        }}>
+        logout
+      </button>
+      <div id="wrapper"></div>
 
       <SignIn
         ref={ref1}
-        uiType="Modal"
+        uiType="Full"
         design="SocialDesign"
         isShowScan
+        // getContainer="#wrapper"
         className="sign-in-wrapper"
         // termsOfService={'https://portkey.finance/terms-of-service'}
         onFinish={async res => {
           console.log(res, 'onFinish====');
-          const CAHolderInfo = await did.getCAHolderInfo(res.chainId);
-          console.log(CAHolderInfo, CAHolderInfo.nickName, 'result====onFinish');
+          CHAIN_ID = res.chainId;
+          did.save(PIN);
         }}
         onError={error => {
           console.log(error, 'onError====error');
         }}
         onCancel={() => {
-          ref1?.current.setOpen(false);
+          ref?.current.setOpen(false);
         }}
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
+        }}
+        defaultLifeCycle={defaultLifeCycle}
+        onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
+          console.log('onLifeCycleChange:', lifeCycle, nextLifeCycleProps);
+          localStorage.setItem('portkeyLifeCycle', JSON.stringify({ [lifeCycle]: nextLifeCycleProps }));
         }}
       />
     </div>

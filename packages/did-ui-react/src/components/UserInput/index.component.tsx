@@ -1,9 +1,9 @@
 import { ChainId } from '@portkey/types';
 import { CSSProperties, ReactNode, memo, useMemo, useState, useCallback, useRef } from 'react';
-import { GuardianInputInfo, IPhoneCountry, LoginFinishWithoutPin, SignInSuccess } from '../types';
+import { GuardianInputInfo, IPhoneCountry, LoginFinishWithoutPin, IGuardianIdentifierInfo } from '../types';
 import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
 import { AccountType, AccountTypeEnum } from '@portkey/services';
-import Overview from './compontents/Overview';
+import Overview from './components/Overview';
 import ScanCard from '../ScanCard/index.component';
 import CustomSvg from '../CustomSvg';
 import useNetworkList from '../../hooks/useNetworkList';
@@ -23,9 +23,11 @@ import clsx from 'clsx';
 import './index.less';
 import { useUpdateEffect } from 'react-use';
 
+type UserInputType = AccountType | 'Scan' | null;
 export interface UserInputProps {
   defaultChainId?: ChainId;
   className?: string;
+  type?: UserInputType;
   style?: CSSProperties;
   isErrorTip?: boolean;
   isShowScan?: boolean; // show scan button
@@ -40,20 +42,21 @@ export interface UserInputProps {
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone
   // onSignTypeChange?: (type: CreateWalletType) => void;
-  onSuccess?: (value: SignInSuccess) => void;
+  onSuccess?: (value: IGuardianIdentifierInfo) => void;
   onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
   onNetworkChange?: (network: string) => void; // When network changed
   onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
 }
 function UserInput({
   style,
+  type = null,
   defaultChainId = 'AELF',
   className,
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
   appleIdToken,
-  socialLogin: defalutSocialLogin,
+  socialLogin: defaultSocialLogin,
   extraElement,
   termsOfService,
   onError,
@@ -64,13 +67,13 @@ function UserInput({
   onChainIdChange,
   onLoginFinishWithoutPin,
 }: UserInputProps) {
-  const [accountType, setAccountType] = useState<AccountType | 'Scan' | null>(null);
+  const [accountType, setAccountType] = useState<UserInputType>(type);
   const validateEmailRef = useRef<UserInputProps['validateEmail']>(defaultValidateEmail);
   const validatePhoneRef = useRef<UserInputProps['validatePhone']>(defaultValidatePhone);
   const onChainIdChangeRef = useRef<UserInputProps['onChainIdChange']>(onChainIdChange);
   const onErrorRef = useRef<UserInputProps['onError']>(onError);
 
-  const socialLogin = useMemo(() => defalutSocialLogin || ConfigProvider.getSocialLoginConfig(), [defalutSocialLogin]);
+  const socialLogin = useMemo(() => defaultSocialLogin || ConfigProvider.getSocialLoginConfig(), [defaultSocialLogin]);
 
   const { loginByApple, loginByGoogle } = useSocialLogin({ socialLogin });
 
@@ -84,7 +87,7 @@ function UserInput({
   const isHasAccount = useRef<boolean>(false);
 
   const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
-    let isLoginIdentifier = false;
+    let isLoginGuardian = false;
     try {
       const { originChainId } = await did.services.getRegisterInfo({
         loginGuardianIdentifier: identifier,
@@ -95,17 +98,17 @@ function UserInput({
         chainId: originChainId,
       });
       if (payload?.guardianList?.guardians?.length > 0) {
-        isLoginIdentifier = true;
+        isLoginGuardian = true;
       }
     } catch (error: any) {
       if (handleErrorCode(error) === '3002') {
-        isLoginIdentifier = false;
+        isLoginGuardian = false;
       } else {
         throw handleErrorMessage(error || 'GetHolderInfo error');
       }
     }
 
-    isHasAccount.current = isLoginIdentifier;
+    isHasAccount.current = isLoginGuardian;
   }, []);
 
   const validateEmail = useCallback(
@@ -149,7 +152,7 @@ function UserInput({
       const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
       onChainIdChangeRef?.current?.(chainId);
       setLoading(false);
-      onSuccess?.({ ...value, isLoginIdentifier: isHasAccount.current, chainId });
+      onSuccess?.({ ...value, isLoginGuardian: isHasAccount.current, chainId });
     },
     [getIdentifierChainId, onSuccess],
   );

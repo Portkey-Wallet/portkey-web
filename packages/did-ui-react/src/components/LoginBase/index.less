@@ -15,7 +15,7 @@
 
     .portkey-ant-select-item-option-disabled {
       .label-item .title {
-        color: @font-12;
+        color: var(--portkey-ui-font-7);
       }
     }
     .network-list-select {
@@ -34,7 +34,7 @@
               align-items: center;
               line-height: 20px;
               font-size: 14px;
-              color: @primary-color;
+              color: var(--portkey-ui-font-4);
               &::after {
                 content: '';
                 margin-left: 6px;
@@ -42,7 +42,7 @@
                 width: 16px;
                 height: 16px;
                 background: url('../../assets/svgIcon/Down-primary.svg') no-repeat center;
-                color: @primary-color;
+                color: var(--portkey-ui-font-4);
               }
             }
           }
@@ -58,7 +58,7 @@
     }
   }
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: @screen-max-w-768) {
   .login-ui-card {
     padding: 0 16px 16px;
   }

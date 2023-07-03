@@ -9,7 +9,7 @@ import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verificat
 import { useEffectOnce } from 'react-use';
 import { OnErrorFunc } from '../../types';
 import type { ChainId } from '@portkey/types';
-import { AccountType, RecaptchaType } from '@portkey/services';
+import { AccountType, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
 import type { VerifierItem } from '@portkey/did';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import './index.less';
@@ -22,11 +22,12 @@ export interface CodeVerifyProps {
   className?: string;
   accountType?: AccountType;
   isCountdownNow?: boolean;
-  isLoginAccount?: boolean;
+  isLoginGuardian?: boolean;
   guardianIdentifier: string;
   verifierSessionId: string;
   isErrorTip?: boolean;
   operationType?: RecaptchaType;
+  verifierCodeOperation: VerifierCodeOperationType;
   onError?: OnErrorFunc;
   onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
   onReSend?: (result: { verifier: VerifierItem; verifierSessionId: string }) => void;
@@ -38,10 +39,11 @@ export default function CodeVerify({
   className,
   isErrorTip = true,
   isCountdownNow,
-  isLoginAccount,
+  isLoginGuardian,
   guardianIdentifier,
   accountType = 'Email',
   operationType = RecaptchaType.register,
+  verifierCodeOperation,
   verifierSessionId: defalutVerifierSessionId,
   onError,
   onReSend,
@@ -69,6 +71,7 @@ export default function CodeVerify({
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
             chainId,
+            verifierCodeOperation,
           });
           setLoading(false);
 
@@ -92,7 +95,16 @@ export default function CodeVerify({
       }
     },
 
-    [verifierSessionId, guardianIdentifier, verifier.id, chainId, onSuccess, isErrorTip, onError],
+    [
+      verifierSessionId,
+      guardianIdentifier,
+      verifier.id,
+      chainId,
+      verifierCodeOperation,
+      onSuccess,
+      isErrorTip,
+      onError,
+    ],
   );
 
   const reCaptchaHandler = useReCaptchaModal();
@@ -158,7 +170,7 @@ export default function CodeVerify({
 
   return (
     <div className={clsx('verifier-account-wrapper', className)}>
-      {isLoginAccount && <div className="login-icon">{t('Login Account')}</div>}
+      {isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
       <div className="portkey-ui-flex-row-center login-account-wrapper">
         <VerifierPair guardianType={accountType} verifierSrc={verifier.imageUrl} verifierName={verifier.name} />
         <span className="login-account">{guardianIdentifier || ''}</span>

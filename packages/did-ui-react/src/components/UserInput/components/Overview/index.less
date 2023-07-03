@@ -1,4 +1,4 @@
-@import '../../../../assets/theme/color.less';
+@import '../../../../assets/theme/components.less';
 
 .portkey-ui-user-input-overview {
   height: 100%;
@@ -20,7 +20,7 @@
       cursor: pointer;
       width: 40px;
       height: 40px;
-      border: 1px solid @border-11;
+      border: 1px solid var(--portkey-ui-border-6);
       border-radius: 4px;
       margin: 0 12px;
       &:first-child {
@@ -37,7 +37,7 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: @screen-max-w-768) {
   .portkey-ui-user-input-overview {
     padding: 0 16px 16px;
   }

@@ -42,8 +42,10 @@
   "dependencies": {
     "@matt-block/react-recaptcha-v2": "^2.0.0",
     "@portkey/did": "^1.0.0-alpha.5",
+    "@portkey/socket": "^1.0.0-alpha.5",
     "aelf-sdk": "^3.2.40",
     "antd": "4.24.4",
+    "@rc-component/portal": "1.0.2",
     "antd-mobile": "5.26.0",
     "bignumber.js": "^9.1.0",
     "clsx": "^1.2.1",
