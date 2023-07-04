@@ -10,9 +10,8 @@ export interface GlobalConfigProps extends IConfig {
   network: NetworkInfo;
   socialLogin?: ISocialLoginConfig;
   reCaptchaConfig?: BaseReCaptcha;
-  // storage?: IStorageSuite; //
+  socketUrl?: string;
 
-  // locale?: Locale;
   // TODO There feature
   // autoClose?: boolean;
   // prefixCls?: string;

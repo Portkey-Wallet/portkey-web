@@ -9,10 +9,11 @@ import type { ChainId, ChainType } from '@portkey/types';
 import type { portkey } from '@portkey/accounts';
 import { dealURLLastChar, did, errorTip } from '../../utils';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
-import './index.less';
 import clsx from 'clsx';
 import { DIDSignalr } from '@portkey/socket';
 import { randomId } from '@portkey/utils';
+import ConfigProvider from '../config-provider';
+import './index.less';
 
 export interface ScanCardProps {
   chainId?: ChainId;
@@ -94,14 +95,25 @@ export default function ScanCard({
 
   // Listen whether the user is authorized
   useEffect(() => {
-    const data: LoginQRData = JSON.parse(qrData);
-    if (!data?.id) return;
-    const clientId = `${data.address}_${data.id}`;
-    const didSignalr = new DIDSignalr();
-    didSignalr.doOpen({ url: `${dealURLLastChar(did.config.requestDefaults?.baseURL || '')}/ca`, clientId });
-    didSignalr.onScanLogin(() => {
-      setIsWaitingAuth(true);
-    });
+    try {
+      const data: LoginQRData = JSON.parse(qrData);
+      if (!data?.id) return;
+      if (!ConfigProvider.config.socketUrl) console.warn('SocketUrl is not config');
+      const clientId = `${data.address}_${data.id}`;
+      const didSignalr = new DIDSignalr();
+      didSignalr
+        .doOpen({ url: dealURLLastChar(ConfigProvider.config.socketUrl), clientId })
+        .then(() => {
+          didSignalr.onScanLogin(() => {
+            setIsWaitingAuth(true);
+          });
+        })
+        .catch((error) => {
+          console.warn('Socket:', error);
+        });
+    } catch (error) {
+      console.warn('Socket:', error);
+    }
   }, [qrData]);
 
   useEffect(() => {
