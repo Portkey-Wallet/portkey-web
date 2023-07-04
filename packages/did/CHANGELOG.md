@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2023-07-04)
+
+### Features
+
+- 🎸 add ut ([2856c1b](https://github.com/Portkey-Wallet/portkey-web/commit/2856c1b97445775c4de0a639c64bf6d584305983))
+- 🎸 adjust verify operationType ([e6512ec](https://github.com/Portkey-Wallet/portkey-web/commit/e6512ec436946100b4e2359b3efa3650e54632d5))
+
 ## [1.0.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2023-06-30)
 
 **Note:** Version bump only for package @portkey/did

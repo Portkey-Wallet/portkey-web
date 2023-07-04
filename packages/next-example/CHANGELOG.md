@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2023-07-04)
+
+### Features
+
+- 🎸 add getContainer when uiType=Full ([a210c86](https://github.com/Portkey-Wallet/portkey-web/commit/a210c863c3b86fbeb0614def9600409642da8476))
+- 🎸 add lifecycle ([f66cb28](https://github.com/Portkey-Wallet/portkey-web/commit/f66cb28ac024c887c997f11eb707f6776e93f5d3))
+- 🎸 add verifierCodeOperation ([3243a22](https://github.com/Portkey-Wallet/portkey-web/commit/3243a225002a226af897ce1d705ed5eba5a4cc81))
+- 🎸 change operationType ([96d648c](https://github.com/Portkey-Wallet/portkey-web/commit/96d648cc58778c2f7057dcc9f2d232e71a63858a))
+
+### Bug Fixes
+
+- 🐛 socket ([3ed30e9](https://github.com/Portkey-Wallet/portkey-web/commit/3ed30e9f41de39a95f947c28f358de9320574f67))
+
 ## [1.0.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.4...v1.0.0-alpha.5) (2023-06-30)
 
 **Note:** Version bump only for package @portkey/next-example
