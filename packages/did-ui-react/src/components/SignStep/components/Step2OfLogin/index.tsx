@@ -1,6 +1,6 @@
 import type { ChainId, ChainType } from '@portkey/types';
 import { VerifierItem } from '@portkey/did';
-import { GuardiansApproved, RecaptchaType, VerifierCodeOperationType } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { memo, useState, useCallback } from 'react';
 import { did, errorTip, handleErrorMessage, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';
@@ -139,12 +139,11 @@ function Step2OfLogin({
   return (
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
-        operationType={RecaptchaType.communityRecovery}
+        operationType={OperationTypeEnum.communityRecovery}
         chainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}
         isErrorTip={isErrorTip}
-        verifierCodeOperation={VerifierCodeOperationType.communityRecovery}
         onConfirm={onFinish}
         onError={onError}
         onGuardianListChange={onGuardianListChange}

@@ -11,7 +11,7 @@ import {
 } from '@portkey/did-ui-react';
 import { useState } from 'react';
 import { Store } from '../../utils';
-import { RecaptchaType } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey/services';
 
 const myStore = new Store();
 ConfigProvider.setGlobalConfig({
@@ -112,7 +112,7 @@ function Example() {
           }}
           verifierSessionId={'080bbdcd-73f5-45a6-b65b-0d067474756f'}
           guardianIdentifier={'+852 12233333'}
-          verifierCodeOperation={1}
+          operationType={1}
           onError={(error: any) => {
             console.log('SetPinAndAddManager:onError', error);
           }}
@@ -122,9 +122,8 @@ function Example() {
         />
         <GuardianApproval
           chainId="AELF"
-          operationType={RecaptchaType.communityRecovery}
+          operationType={OperationTypeEnum.communityRecovery}
           wrapperStyle={{ height: 600 }}
-          verifierCodeOperation={2}
           guardianList={[
             {
               isLoginGuardian: true,

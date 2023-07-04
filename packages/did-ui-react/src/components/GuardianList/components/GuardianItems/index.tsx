@@ -7,7 +7,7 @@ import clsx from 'clsx';
 import { ChainId } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
-import { RecaptchaType } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey/services';
 
 interface GuardianItemProps {
   chainId: ChainId;
@@ -15,7 +15,7 @@ interface GuardianItemProps {
   isExpired?: boolean;
   item: UserGuardianStatus;
   isErrorTip?: boolean;
-  operationType?: RecaptchaType;
+  operationType?: OperationTypeEnum;
   onError?: OnErrorFunc;
   onSend?: (item: UserGuardianItem) => void;
   onVerifying?: (item: UserGuardianItem) => void;
@@ -27,7 +27,7 @@ function GuardianItems({
   item,
   isExpired,
   isErrorTip = true,
-  operationType = RecaptchaType.communityRecovery,
+  operationType = OperationTypeEnum.communityRecovery,
   onError,
   onSend,
   onVerifying,
