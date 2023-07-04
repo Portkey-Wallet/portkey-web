@@ -1,5 +1,4 @@
 import type { ConfigProviderProps } from 'antd/lib/config-provider';
-import { ConfigProvider } from 'antd';
 import ScreenLoading from '../ScreenLoading';
 import { useEffectOnce } from 'react-use';
 import ReCaptchaModal from '../ReCaptchaModal';
@@ -19,13 +18,11 @@ export default function BaseConfigProvider({ children }: { children: ConfigProvi
 
   return (
     <>
-      <ConfigProvider prefixCls="portkey-ant">
-        <div>
-          {children}
-          <ScreenLoading />
-          <ReCaptchaModal />
-        </div>
-      </ConfigProvider>
+      <div>
+        {children}
+        <ScreenLoading />
+        <ReCaptchaModal />
+      </div>
     </>
   );
 }
