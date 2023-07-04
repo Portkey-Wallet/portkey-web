@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2023-07-04)
+
+### Features
+
+- 🎸 contract ([8b82d98](https://github.com/Portkey-Wallet/portkey-web/commit/8b82d98a3e9d066313217ea0c773258c3f638672))
+
 ## [1.0.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.5...v1.0.0-alpha.6) (2023-07-04)
 
 ### Features
