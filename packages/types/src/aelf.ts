@@ -15,16 +15,16 @@ export type AElfWallet = {
   keyPair?: ec.KeyPair;
 };
 export type Block = {
-  BlockHash: string;
-  Header: any;
   Body: any;
+  Header: any;
   BlockSize: number;
+  BlockHash: string;
 };
 
 export type NightElfErrorMessage = {
   message: {
-    Code: null | string;
     Data: any;
+    Code: null | string;
     Details: null | string;
     Message: null | string;
     ValidationErrors: null | string;
@@ -67,24 +67,38 @@ export type AElfTransaction = {
   MethodName: string;
 };
 export type TransactionStatus =
+  // The transaction was successfully executed and successfully packaged into a block.
   | 'MINED'
+  // The transaction is in the transaction pool waiting to be packaged.
   | 'PENDING'
+  // The execution result of the transaction does not exist.
   | 'NOT_EXISTED'
+  // Transaction execution failed.
   | 'FAILED'
+  // When executed in parallel, there are conflicts with other transactions.
   | 'CONFLICT'
+  // The transaction is waiting for validation.
   | 'PENDING_VALIDATION'
+  // Transaction validation failed.
   | 'NODE_VALIDATION_FAILED';
 
+export type Log = {
+  Address: string;
+  Name: string;
+  Indexed: Array<string>;
+  NonIndexed: string;
+};
+
 export type TransactionResult = {
-  BlockHash: string;
-  BlockNumber: AElfBlockHeight;
-  Bloom: string;
-  Error: null | any;
-  Logs: any;
-  ReturnValue: any;
-  Status: TransactionStatus;
-  Transaction: AElfTransaction;
   TransactionId: string;
+  Status: TransactionStatus;
+  BlockHash: string | null;
+  BlockNumber: AElfBlockHeight;
+  Bloom: string | null;
+  Error: any;
+  Logs: Array<Log>;
+  ReturnValue: any;
+  Transaction: AElfTransaction | null;
   TransactionSize: number;
 };
 
@@ -142,7 +156,11 @@ export interface IAElfRPCMethods {
   /**
    * Get multiple transaction results in a block
    */
-  getTxResults(blockHash: string, offset?: number, limit?: number): Promise<ChainMethodResult<TransactionResult[]>>;
+  getTxResults(
+    blockHash: string,
+    offset?: number,
+    limit?: number,
+  ): Promise<ChainMethodResult<Array<TransactionResult>>>;
   /**
    * Broadcast a transaction
    */

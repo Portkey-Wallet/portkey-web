@@ -90,7 +90,7 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   register(params: Omit<RegisterParams, 'manager'>): Promise<RegisterResult> {
     return this.didWallet.register(params);
   }
-  getHolderInfo(params: Pick<GetHolderInfoParams, 'manager'>): Promise<GetCAHolderByManagerResult>;
+  getHolderInfo(params: Partial<Pick<GetHolderInfoParams, 'manager' | 'chainId'>>): Promise<GetCAHolderByManagerResult>;
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   public async getHolderInfo(params: any): Promise<any> {
     return this.didWallet.getHolderInfo(params);

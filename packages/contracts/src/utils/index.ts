@@ -1,7 +1,7 @@
 import AElf from 'aelf-sdk';
 import { sleep } from '@portkey/utils';
 import { aelf } from '@portkey/utils';
-import { AElfWallet } from '@portkey/types';
+import { AElfWallet, TransactionResult } from '@portkey/types';
 
 import {
   IGetContract,
@@ -62,22 +62,26 @@ export const getContractBasic: IGetContract['getContractBasic'] = async (
   return new ContractBasic({ ...contractOptions, aelfContract });
 };
 
+export function handleGetTxResult(instance: any) {
+  return instance.getTxResult ? instance.getTxResult : instance.chain.getTxResult;
+}
+
 export async function getTxResult(
   instance: any,
   TransactionId: string,
   reGetCount = 0,
   notExistedReGetCount = 0,
-): Promise<any> {
-  const txFun = instance.chain.getTxResult;
+): Promise<TransactionResult> {
+  const txFun = handleGetTxResult(instance);
+
   const txResult = await txFun(TransactionId);
-  if (txResult.error && txResult.errorMessage) {
+  if (txResult.error && txResult.errorMessage)
     throw Error(txResult.errorMessage.message || txResult.errorMessage.Message);
-  }
+
   const result = txResult?.result || txResult;
 
-  if (!result) {
-    throw Error('Can not get transaction result.');
-  }
+  if (!result) throw Error('Can not get transaction result.');
+
   const lowerCaseStatus = result.Status.toLowerCase();
 
   if (lowerCaseStatus === 'notexisted') {
@@ -95,10 +99,7 @@ export async function getTxResult(
     return getTxResult(instance, TransactionId, reGetCount, notExistedReGetCount);
   }
 
-  if (lowerCaseStatus === 'mined') {
-    return result;
-  }
-
+  if (lowerCaseStatus === 'mined') return result;
   throw Error(result.Error || `Transaction: ${result.Status}`);
 }
 
@@ -137,7 +138,7 @@ export const getFileDescriptorsSet = async (instance: any, contractAddress: stri
   return getServicesFromFileDescriptors(fds);
 };
 
-export async function getContractMethods(instance: any, address: any) {
+export async function getContractMethods(instance: any, address: string) {
   const key = instance.currentProvider.host + address;
   if (!methodsMap[key]) {
     const methods = await getFileDescriptorsSet(instance, address);

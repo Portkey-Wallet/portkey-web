@@ -58,7 +58,7 @@ export class AElfContract extends BaseContract implements IPortkeyContract {
         await sleep(1000);
         try {
           const txResult = await getTxResult(this.aelfInstance, TransactionId);
-          return { data: txResult, transactionId: TransactionId };
+          return { data: txResult as T, transactionId: TransactionId };
         } catch (error) {
           return { error: handleContractError(error, req), transactionId: TransactionId };
         }
