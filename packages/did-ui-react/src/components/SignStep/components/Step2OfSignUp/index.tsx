@@ -108,6 +108,7 @@ function Step2WithSignUp({
             verifier: info.verifier,
           };
           onStepChange?.('SignUpCodeVerify', { guardianIdentifierInfo, verifierSelectResult });
+          return info;
         }
       });
     },

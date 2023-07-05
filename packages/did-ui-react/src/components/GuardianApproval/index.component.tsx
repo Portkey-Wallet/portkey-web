@@ -6,7 +6,7 @@ import { errorTip, handleErrorMessage, handleVerificationDoc, setLoading } from 
 import type { ChainId } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
 import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
-import { OperationTypeEnum, type GuardiansApproved } from '@portkey/services';
+import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
