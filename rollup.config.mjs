@@ -74,10 +74,10 @@ export default function createConfig(packageName) {
       plugins: [minifyHtml, esbuildPlugin, postcssPlugin, urlPlugin, copyPlugin, terserPlugin],
       output: [{ file: './dist/index.js', format: 'es', ...output }],
     },
-    {
-      input: './src/sandbox/index.ts',
-      plugins: [esbuildPlugin, urlPlugin, terserPlugin],
-      output: [{ file: './src/sandbox/index.js', format: 'es', ...output }],
-    },
+    // {
+    //   input: './src/sandbox/index.ts',
+    //   plugins: [esbuildPlugin, urlPlugin, terserPlugin],
+    //   output: [{ file: './src/sandbox/index.js', format: 'es', ...output }],
+    // },
   ];
 }
