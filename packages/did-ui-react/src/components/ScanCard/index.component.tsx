@@ -101,16 +101,12 @@ export default function ScanCard({
       if (!ConfigProvider.config.socketUrl) console.warn('SocketUrl is not config');
       const clientId = `${data.address}_${data.id}`;
       const didSignalr = new DIDSignalr();
-      didSignalr
-        .doOpen({ url: dealURLLastChar(ConfigProvider.config.socketUrl), clientId })
-        .then(() => {
-          didSignalr.onScanLogin(() => {
-            setIsWaitingAuth(true);
-          });
-        })
-        .catch((error) => {
-          console.warn('Socket:', error);
-        });
+      didSignalr.onScanLogin(() => {
+        setIsWaitingAuth(true);
+      });
+      didSignalr.doOpen({ url: dealURLLastChar(ConfigProvider.config.socketUrl), clientId }).catch((error) => {
+        console.warn('Socket:', error);
+      });
     } catch (error) {
       console.warn('Socket:', error);
     }
