@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.7...v1.0.0-alpha.8) (2023-07-06)
+
+### Bug Fixes
+
+- 🐛 qr code data too large ([94a993a](https://github.com/Portkey-Wallet/portkey-web/commit/94a993a6b5237f616f5cabb8fe906c56a9173a8d))
+- 🐛 socket open and listen delay bug ([70e2e79](https://github.com/Portkey-Wallet/portkey-web/commit/70e2e7955f58d4dde5230cdf4d6aa00f632fa5a4))
+- 🐛 style and resend verify code error ([d89cf63](https://github.com/Portkey-Wallet/portkey-web/commit/d89cf631f57368e6cd37f6d98bbccc98e82bd68e))
+
 ## [1.0.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0-alpha.6...v1.0.0-alpha.7) (2023-07-04)
 
 ### Features
