@@ -32,7 +32,7 @@ export default function ScanCard({
       </h2>
       <div className="scan-card-content">
         <p className="description">Please use the portkey Dapp to scan the QR code</p>
-        <div className="scan-content">{qrData && <PortkeyQRCode value={qrData} />}</div>
+        <div className="scan-content">{qrData && qrData !== '{}' && <PortkeyQRCode value={qrData} />}</div>
         {isWaitingAuth && (
           <div className="portkey-ui-flex-center waiting-wrapper">
             <ScanLoading />

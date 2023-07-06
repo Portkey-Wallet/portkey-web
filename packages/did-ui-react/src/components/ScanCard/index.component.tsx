@@ -7,12 +7,10 @@ import ScanBase from '../ScanBase';
 import { LoginFinishWithoutPin } from '../types';
 import type { ChainId, ChainType } from '@portkey/types';
 import type { portkey } from '@portkey/accounts';
-import { dealURLLastChar, did, errorTip } from '../../utils';
+import { did, errorTip } from '../../utils';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
 import clsx from 'clsx';
-import { DIDSignalr } from '@portkey/socket';
 import { randomId } from '@portkey/utils';
-import ConfigProvider from '../config-provider';
 import './index.less';
 
 export interface ScanCardProps {
@@ -41,7 +39,7 @@ export default function ScanCard({
 }: ScanCardProps) {
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
-  const [isWaitingAuth, setIsWaitingAuth] = useState<boolean>();
+  const [isWaitingAuth] = useState<boolean>();
 
   const [caWallet] = useIntervalQueryCAInfo({
     address: managementAccount?.address,
@@ -94,23 +92,23 @@ export default function ScanCard({
   }, [chainType, deviceInfo, managementAccount, networkType]);
 
   // Listen whether the user is authorized
-  useEffect(() => {
-    try {
-      const data: LoginQRData = JSON.parse(qrData);
-      if (!data?.id) return;
-      if (!ConfigProvider.config.socketUrl) console.warn('SocketUrl is not config');
-      const clientId = `${data.address}_${data.id}`;
-      const didSignalr = new DIDSignalr();
-      didSignalr.onScanLogin(() => {
-        setIsWaitingAuth(true);
-      });
-      didSignalr.doOpen({ url: dealURLLastChar(ConfigProvider.config.socketUrl), clientId }).catch((error) => {
-        console.warn('Socket:', error);
-      });
-    } catch (error) {
-      console.warn('Socket:', error);
-    }
-  }, [qrData]);
+  // useEffect(() => {
+  //   try {
+  //     const data: LoginQRData = JSON.parse(qrData);
+  //     if (!data?.id) return;
+  //     if (!ConfigProvider.config.socketUrl) console.warn('SocketUrl is not config');
+  //     const clientId = `${data.address}_${data.id}`;
+  //     const didSignalr = new DIDSignalr();
+  //     didSignalr.onScanLogin(() => {
+  //       setIsWaitingAuth(true);
+  //     });
+  //     didSignalr.doOpen({ url: dealURLLastChar(ConfigProvider.config.socketUrl), clientId }).catch((error) => {
+  //       console.warn('Socket:', error);
+  //     });
+  //   } catch (error) {
+  //     console.warn('Socket:', error);
+  //   }
+  // }, [qrData]);
 
   useEffect(() => {
     caWallet &&
