@@ -4,6 +4,7 @@
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
 [![NPM Package Version][npm-image-version]][npm-url]
 
+It is already possible to follow [the standard apollo tutorial](https://www.apollographql.com/docs/react/why-apollo) to add [apollo client](https://www.apollographql.com/docs/react) to your application. However, Portkey provides graphql integration packages those simplify the integration and usage.
 ## Installation
 
 ### Using NPM

@@ -12,6 +12,10 @@ export type SendOptions = {
   gas?: number;
   value?: number | string;
   nonce?: number;
+  /**
+   * transactionHash: The transaction is committed without confirmation
+   * receipt: The transaction has been confirmed and returns receipt
+   */
   onMethod: 'transactionHash' | 'receipt' | 'confirmation';
 };
 

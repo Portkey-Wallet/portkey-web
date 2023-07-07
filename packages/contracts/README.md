@@ -34,7 +34,52 @@ yarn add @portkey/contracts
 | lint:fix | Uses `eslint` to check and fix any warnings        |
 | format   | Uses `prettier` to format the code                 |
 
-## Usage
+# Basic Usage
+
+```typescript
+import { getContractBasic } from '@portkey/contracts'
+
+// use ca contract 
+const contract = await getContractBasic({
+  chianType: 'aelf',
+  account: 'your account',
+  contractAddress: 'contractAddress',
+  caContractAddress: 'caContractAddress',
+  callType: 'ca',
+  caHash: 'caHash',
+  rpcUrl: 'rpcUrl',
+});
+
+// use base contract 
+const contract = await getContractBasic({
+  account: 'your account',
+  contractAddress: 'contractAddress',
+  chianType: 'aelf',
+  rpcUrl: 'rpcUrl',
+})
+
+// use portkey provider
+import detectProvider from '@portkey/detect-provider';
+// detect provider
+const provider = await detectProvider();
+// get chain provider
+const chainProvider = await provider.getChain('AELF');
+
+const contract = await getContractBasic({
+  chainProvider,
+  contractAddress: 'contractAddress',
+});
+
+// call view
+contract.callViewMethod('your method', paramsOption);
+// call send
+contract.callSendMethod('your method', 'your address', paramsOption);
+```
+### standard types
+
+[contract types](../types/src/contract.ts)
+
+
 
 [npm-image-version]: https://img.shields.io/npm/v/@portkey/contracts
 [npm-url]: https://npmjs.org/package/@portkey/contracts
