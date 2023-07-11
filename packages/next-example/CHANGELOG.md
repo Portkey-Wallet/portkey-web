@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.0-alpha.0...v1.1.0-alpha.1) (2023-07-11)
+
+### Features
+
+- 🎸 add less contants ([d05d253](https://github.com/Portkey-Wallet/portkey-web/commit/d05d253b5b182a2e8fec63ce7173bb1e7502fad1))
+
 ## [1.1.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.1...v1.1.0-alpha.0) (2023-07-11)
 
 ### Features
