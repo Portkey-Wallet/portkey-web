@@ -9,8 +9,9 @@ import {
   UserInput,
   SignIn,
   Web2Design,
+  ISignIn,
 } from '@portkey/did-ui-react';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Store } from '../../utils';
 import { OperationTypeEnum } from '@portkey/services';
 
@@ -37,8 +38,39 @@ ConfigProvider.setGlobalConfig({
 function Example() {
   const [isLoading, setLoading] = useState<any>();
   const [dark, setDark] = useState<boolean>(true);
+  const ref = useRef<ISignIn>();
+
   return (
     <div id={dark && 'ids'}>
+      <div id="wrapper"></div>
+
+      <SignIn
+        ref={ref}
+        uiType="Modal"
+        getContainer="#wrapper"
+        isShowScan
+        className="sign-in-wrapper"
+        termsOfService={'https://portkey.finance/terms-of-service'}
+        onFinish={async res => {
+          console.log(res, 'onFinish====');
+        }}
+        onError={error => {
+          console.log(error, 'onError====error');
+        }}
+        onCancel={() => {
+          ref?.current.setOpen(false);
+        }}
+        onCreatePending={info => {
+          console.log(info, 'onCreatePending====info');
+        }}
+      />
+
+      <button
+        onClick={() => {
+          ref.current?.setOpen(true);
+        }}>
+        setOpen
+      </button>
       <button
         onClick={async () => {
           setLoading(true);
