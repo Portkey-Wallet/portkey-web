@@ -39,6 +39,7 @@ export { default as GoogleReCaptcha } from './GoogleReCaptcha';
 export { default as LoginModal } from './LoginModal';
 export { PortkeyConfigProvider } from './config-provider';
 export { default as UserInput } from './UserInput';
+export { default as Web2Design } from './Web2Design';
 export { default as Step1OfSignIn } from './SignStep/components/Step1';
 export { default as Step2OfLogin } from './SignStep/components/Step2OfLogin';
 export { default as Step2OfSignUp } from './SignStep/components/Step2OfSignUp';

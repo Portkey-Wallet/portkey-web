@@ -1,0 +1,49 @@
+.portkey-ui-segmented {
+  border-radius: var(--portkey-ui-border-radius-4);
+  background-color: var(--portkey-ui-segmented-bg);
+  height: 44px;
+  padding: 4px;
+  margin-bottom: 32px;
+  .portkey-ant-segmented-item-selected {
+    background-color: var(--portkey-ui-segmented-selected-bg);
+    border-radius: var(--portkey-ui-border-radius-0);
+    color: var(--portkey-ui-font-6);
+    font-weight: 500;
+  }
+  .portkey-ant-segmented-item-label {
+    height: 36px;
+    line-height: 36px;
+    font-size: 16px;
+    color: var(--portkey-ui-text-secondary);
+  }
+  .portkey-ant-segmented-item:focus,
+  .portkey-ant-segmented-item:hover {
+    color: var(--portkey-ui-text-hover1);
+  }
+}
+
+.portkey-ui-segmented.portkey-ant-segmented:not(.portkey-ant-segmented-disabled):hover {
+  background-color: var(--portkey-ui-segmented-bg);
+}
+
+.portkey-ui-segmented-phone {
+  .phone-number-input {
+    border: 0;
+    background-color: var(--portkey-ui-input-bg);
+  }
+  & > .login-btn {
+    margin-top: 24px;
+  }
+}
+
+.portkey-ui-segmented-email .email-input-wrapper .input-wrapper {
+  margin-bottom: 24px;
+}
+
+.portkey-ui-segmented-email,
+.portkey-ui-segmented-phone {
+  .portkey-ant-input {
+    border: 0;
+    background-color: var(--portkey-ui-input-bg);
+  }
+}

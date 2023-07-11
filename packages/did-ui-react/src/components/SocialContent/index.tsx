@@ -14,6 +14,7 @@ interface SocialContentProps {
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
   networkType?: string;
+  className?: string;
   onLoginByPortkey?: LoginFinishWithoutPin;
   onFinish?: SocialLoginFinishHandler;
   onError?: OnErrorFunc;
@@ -24,6 +25,7 @@ export default function SocialContent({
   socialLogin,
   isErrorTip = true,
   networkType,
+  className,
   onFinish,
   onLoginByPortkey,
   onError,
@@ -119,7 +121,7 @@ export default function SocialContent({
   }, []);
 
   return (
-    <div className="social-content-wrapper">
+    <div className={clsx('social-content-wrapper', className)}>
       {socialLogin?.Portkey && type !== 'Sign up' && isMobile && (
         <WakeUpPortkey
           type={type}

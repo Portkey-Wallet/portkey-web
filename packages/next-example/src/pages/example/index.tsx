@@ -8,6 +8,7 @@ import {
   PortkeyLoading,
   UserInput,
   SignIn,
+  Web2Design,
 } from '@portkey/did-ui-react';
 import { useState } from 'react';
 import { Store } from '../../utils';
@@ -51,16 +52,10 @@ function Example() {
         onCancel={() => setLoading(false)}
       />
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
+      {/* <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
         <SignUpAndLogin
           style={{ height: 600, border: '1px solid gray' }}
           termsOfService={'https://portkey.finance/terms-of-service'}
-          socialLogin={{
-            Portkey: {
-              websiteName: 'website demo name',
-              websiteIcon: '',
-            },
-          }}
           onError={(error: any) => {
             console.log('onError', error);
           }}
@@ -161,6 +156,62 @@ function Example() {
             }}
           />
         </div>
+      </div> */}
+      <div>
+        <Web2Design
+          phoneCountry={{
+            iso: 'CN',
+            countryList: [
+              {
+                country: 'China',
+                code: '86',
+                iso: 'CN',
+              },
+              {
+                country: 'Denmark',
+                code: '45',
+                iso: 'DK',
+              },
+              {
+                country: 'France',
+                code: '33',
+                iso: 'FR',
+              },
+              {
+                country: 'Hong Kong',
+                code: '852',
+                iso: 'HK',
+              },
+              {
+                country: 'Mexico',
+                code: '52',
+                iso: 'MX',
+              },
+              {
+                country: 'Singapore',
+                code: '65',
+                iso: 'SG',
+              },
+              {
+                country: 'United Kingdom',
+                code: '44',
+                iso: 'GB',
+              },
+              {
+                country: 'United States',
+                code: '1',
+                iso: 'US',
+              },
+            ],
+          }}
+          termsOfService={'https://portkey.finance/terms-of-service'}
+          onError={(error: any) => {
+            console.log('onError', error);
+          }}
+          onSuccess={(value: any) => {
+            console.log('onSuccess:', value);
+          }}
+        />
       </div>
     </div>
   );

@@ -42,3 +42,10 @@ export interface CreatePendingInfo {
 }
 
 export type LoginFinishWithoutPin = (info: Omit<DIDWalletInfo, 'pin'>) => void;
+
+export enum GridType {
+  qrCodeOnTop,
+  qrCodeOnBottom,
+}
+
+export type TSize = 'L' | 'S';

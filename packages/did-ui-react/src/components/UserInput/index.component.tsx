@@ -1,7 +1,7 @@
 import { ChainId } from '@portkey/types';
 import { CSSProperties, ReactNode, memo, useMemo, useState, useCallback, useRef } from 'react';
 import { GuardianInputInfo, IPhoneCountry, LoginFinishWithoutPin, IGuardianIdentifierInfo } from '../types';
-import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
+import { OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
 import { AccountType, AccountTypeEnum } from '@portkey/services';
 import Overview from './components/Overview';
 import ScanCard from '../ScanCard/index.component';
@@ -21,7 +21,6 @@ import ConfigProvider from '../config-provider';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import clsx from 'clsx';
 import './index.less';
-import { useUpdateEffect } from 'react-use';
 
 type UserInputType = AccountType | 'Scan' | null;
 export interface UserInputProps {
@@ -34,9 +33,6 @@ export interface UserInputProps {
   termsOfService?: ReactNode;
   phoneCountry?: IPhoneCountry; // phone country code info
   extraElement?: ReactNode; // extra element
-  // socialLogin porps
-  socialLogin?: ISocialLoginConfig; // social login config
-  appleIdToken?: string; // apple authorized
   //
   onError?: OnErrorFunc;
   validateEmail?: ValidatorHandler; // validate email
@@ -55,8 +51,6 @@ function UserInput({
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
-  appleIdToken,
-  socialLogin: defaultSocialLogin,
   extraElement,
   termsOfService,
   onError,
@@ -73,7 +67,7 @@ function UserInput({
   const onChainIdChangeRef = useRef<UserInputProps['onChainIdChange']>(onChainIdChange);
   const onErrorRef = useRef<UserInputProps['onError']>(onError);
 
-  const socialLogin = useMemo(() => defaultSocialLogin || ConfigProvider.getSocialLoginConfig(), [defaultSocialLogin]);
+  const socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
 
   const { loginByApple, loginByGoogle } = useSocialLogin({ socialLogin });
 
@@ -229,18 +223,6 @@ function UserInput({
     },
     [isErrorTip, loginByApple, loginByGoogle, onSocialFinish],
   );
-
-  useUpdateEffect(() => {
-    try {
-      if (appleIdToken) {
-        const tokenInfo = parseAppleIdentityToken(appleIdToken);
-        if (tokenInfo?.isExpired) return;
-        onSocialFinish({ type: 'Apple', data: { accessToken: appleIdToken } });
-      }
-    } catch (error) {
-      console.log(error, 'parseAppleIdentityToken');
-    }
-  }, [appleIdToken]);
 
   return (
     <div className={clsx('portkey-ui-user-input-wrapper', className)} style={style}>

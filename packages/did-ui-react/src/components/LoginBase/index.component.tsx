@@ -92,7 +92,7 @@ export default function LoginCard({
           isErrorTip={isErrorTip}
           onFinish={onSocialLoginFinish}
           switchType={onStep}
-          switchGuardinType={() => setStep(STEP.inputLogin)}
+          switchGuardianType={() => setStep(STEP.inputLogin)}
           extraElement={extraElement}
           termsOfService={termsOfService}
           onLoginByPortkey={onLoginByPortkey}

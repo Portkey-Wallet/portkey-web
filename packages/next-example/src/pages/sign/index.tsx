@@ -115,10 +115,39 @@ export default function Sign() {
       </button>
       <div id="wrapper"></div>
 
-      <SignIn
+      {/* <SignIn
         ref={ref1}
         uiType="Full"
         design="SocialDesign"
+        isShowScan
+        // getContainer="#wrapper"
+        className="sign-in-wrapper"
+        // termsOfService={'https://portkey.finance/terms-of-service'}
+        onFinish={async res => {
+          console.log(res, 'onFinish====');
+          CHAIN_ID = res.chainId;
+          did.save(PIN);
+        }}
+        onError={error => {
+          console.log(error, 'onError====error');
+        }}
+        onCancel={() => {
+          ref?.current.setOpen(false);
+        }}
+        onCreatePending={info => {
+          console.log(info, 'onCreatePending====info');
+        }}
+        defaultLifeCycle={defaultLifeCycle}
+        onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
+          console.log('onLifeCycleChange:', lifeCycle, nextLifeCycleProps);
+          localStorage.setItem('portkeyLifeCycle', JSON.stringify({ [lifeCycle]: nextLifeCycleProps }));
+        }}
+      /> */}
+
+      <SignIn
+        ref={ref1}
+        // uiType="Full"
+        design="Web2Design"
         isShowScan
         // getContainer="#wrapper"
         className="sign-in-wrapper"

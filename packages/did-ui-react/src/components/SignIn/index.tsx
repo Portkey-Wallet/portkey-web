@@ -340,6 +340,7 @@ const SignIn = forwardRef(
           <Step1
             type={lifeCycle as any}
             isShowScan={isShowScan}
+            size={uiType === 'Modal' ? 'S' : undefined}
             design={design}
             defaultChainId={defaultChainId}
             isErrorTip={isErrorTip}
@@ -412,6 +413,7 @@ const SignIn = forwardRef(
     }, [
       lifeCycle,
       isShowScan,
+      uiType,
       design,
       defaultChainId,
       isErrorTip,

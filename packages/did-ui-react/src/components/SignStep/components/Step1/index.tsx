@@ -1,11 +1,11 @@
 import SignUpAndLogin, { SignUpAndLoginProps } from '../../../SignUpAndLogin/index.component';
-import { useCallback, useState, memo, useEffect, useRef } from 'react';
-import type { DIDWalletInfo, IGuardianIdentifierInfo } from '../../../types';
-import type { SignInLifeCycleType, TDesign } from '../../../SignStep/types';
+import { useCallback, useState, memo, useRef } from 'react';
+import type { DIDWalletInfo, IGuardianIdentifierInfo, TSize } from '../../../types';
+import { Design, type SignInLifeCycleType, type TDesign } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
-import qs from 'query-string';
 import LoginModal from '../../../LoginModal';
 import UserInput from '../../../UserInput/index.component';
+import Web2Design from '../../../Web2Design/index.component';
 
 export type OnSignInFinishedFun = (values: {
   isFinished: boolean;
@@ -16,12 +16,13 @@ export type OnSignInFinishedFun = (values: {
 }) => void;
 
 interface Step1Props extends SignUpAndLoginProps {
+  size?: TSize;
   design?: TDesign;
   onSignInFinished: OnSignInFinishedFun;
   onStepChange?: (v: SignInLifeCycleType) => void;
 }
 
-function Step1({ design, onStepChange, onSignInFinished, type, ...props }: Step1Props) {
+function Step1({ size, design, onStepChange, onSignInFinished, type, ...props }: Step1Props) {
   const [createType, setCreateType] = useState<SignInLifeCycleType>(type || 'Login');
   const [open, setOpen] = useState<boolean>();
   const signInSuccessRef = useRef<IGuardianIdentifierInfo>();
@@ -46,36 +47,18 @@ function Step1({ design, onStepChange, onSignInFinished, type, ...props }: Step1
     createType && onStepChange?.(createType);
   }, [createType]);
 
-  const [appleIdToken, setAppleIdToken] = useState<string>();
-
-  useEffect(() => {
-    const { id_token } = qs.parse(location.search);
-    if (id_token && typeof id_token === 'string') {
-      setAppleIdToken(id_token);
-    }
-    return () => {
-      history.pushState(null, '', `${location.pathname}`);
-    };
-  }, []);
-
   return (
     <>
-      {design === 'SocialDesign' && (
-        <UserInput
-          {...props}
-          type={type === 'LoginByScan' ? 'Scan' : null}
-          appleIdToken={appleIdToken}
-          onSuccess={onSuccess}
-        />
+      {design === Design.SocialDesign && (
+        <UserInput {...props} type={type === 'LoginByScan' ? 'Scan' : null} onSuccess={onSuccess} />
       )}
-      {design !== 'SocialDesign' && (
-        <SignUpAndLogin
-          {...props}
-          type={type}
-          appleIdToken={appleIdToken}
-          onSignTypeChange={setCreateType}
-          onSuccess={onSuccess}
-        />
+
+      {design === Design.Web2Design && (
+        <Web2Design {...props} size={size} type={type} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
+      )}
+
+      {(!design || design === Design.CryptoDesign) && (
+        <SignUpAndLogin {...props} type={type} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
       )}
 
       <LoginModal

@@ -20,7 +20,7 @@ interface SocialLoginProps {
   networkType?: string;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
-  switchGuardinType?: () => void;
+  switchGuardianType?: () => void;
   switchType?: (type: CreateWalletType) => void;
   onLoginByPortkey?: LoginFinishWithoutPin;
 
@@ -40,19 +40,19 @@ export default function SocialLogin({
   onBack,
   onError,
   onFinish,
-  switchGuardinType,
+  switchGuardianType: switchGuardianType,
   onLoginByPortkey,
   switchType,
 }: SocialLoginProps) {
   const { t } = useTranslation();
   const onBackRef = useRef<SocialLoginProps['onBack']>(onBack);
   const onFinishRef = useRef<SocialLoginProps['onFinish']>(onFinish);
-  const switchGuardinTypeRef = useRef<SocialLoginProps['switchGuardinType']>(switchGuardinType);
+  const switchGuardianTypeRef = useRef<SocialLoginProps['switchGuardianType']>(switchGuardianType);
   const switchTypeRef = useRef<SocialLoginProps['switchType']>(switchType);
   useEffect(() => {
     onBackRef.current = onBack;
     onFinishRef.current = onFinish;
-    switchGuardinTypeRef.current = switchGuardinType;
+    switchGuardianTypeRef.current = switchGuardianType;
     switchTypeRef.current = switchType;
   });
 
@@ -79,7 +79,7 @@ export default function SocialLogin({
             onError={onError}
           />
           <DividerCenter />
-          <Button type="primary" className="login-by-input-btn" onClick={switchGuardinTypeRef?.current}>
+          <Button type="primary" className="login-by-input-btn" onClick={switchGuardianTypeRef?.current}>
             {t(`${type} with Phone / Email`)}
           </Button>
           {extraElement}

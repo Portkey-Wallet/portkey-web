@@ -12,7 +12,7 @@
     color: var(--portkey-ui-font-6);
   }
   .guardian-list-title {
-    font-size: 40px;
+    font-size: var(--portkey-ui-title-text-1);
     color: var(--portkey-ui-font-6);
     margin-bottom: 16px;
     text-align: center;
@@ -78,7 +78,7 @@
     }
     .not-verified,
     .verifying {
-      border-radius: 6px;
+      border-radius: var(--portkey-ui-border-radius-1);
       line-height: 24px;
       font-size: 12px;
       padding: 0 12px;
@@ -87,7 +87,7 @@
       color: var(--portkey-ui-font-4);
       padding: 0;
       &.verified {
-        color: var(--portkey-ui-font-10);
+        color: var(--portkey-ui-text-success);
       }
       &.expired {
         color: var(--portkey-ui-font-7);
@@ -137,8 +137,8 @@
   }
 
   .confirm-approve-btn {
-    line-height: 44px;
-    border-radius: 22px;
+    line-height: var(--portkey-ui-primary-btn-h);
+    border-radius: var(--portkey-ui-primary-border-radius);
   }
 }
 

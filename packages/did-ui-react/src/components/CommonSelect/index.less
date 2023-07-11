@@ -2,7 +2,7 @@
 .portkey-ui-common-select {
   width: 100%;
   &:not(.portkey-ant-select-customize-input) .portkey-ant-select-selector {
-    border-radius: 6px;
+    border-radius: var(--portkey-ui-border-radius-1);
     align-items: center;
   }
   &.portkey-ant-select-single:not(.portkey-ant-select-customize-input) .portkey-ant-select-selector {
@@ -33,7 +33,7 @@
 
   .portkey-ant-select-dropdown {
     box-shadow: 0 2px 6px 0 rgb(77 78 89 / 13%);
-    border-radius: 6px;
+    border-radius: var(--portkey-ui-border-radius-1);
     .portkey-ant-select-item {
       padding: 0 16px 0 48px;
       line-height: 48px;
@@ -69,7 +69,7 @@
     .label-icon {
       width: 32px;
       height: 32px;
-      border-radius: 54px;
+      border-radius: var(--portkey-ui-rounded-full);
       overflow: hidden;
       & > .portkey-ui-custom-svg,
       & > img {

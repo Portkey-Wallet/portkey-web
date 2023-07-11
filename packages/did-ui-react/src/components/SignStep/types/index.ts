@@ -27,7 +27,14 @@ export type LifeCycleType =
   | SetPinAndAddManagerCycleType;
 
 export type UI_TYPE = 'Modal' | 'Full';
-export type TDesign = 'SocialDesign' | 'CryptoDesign';
+
+export enum Design {
+  SocialDesign = 'SocialDesign',
+  CryptoDesign = 'CryptoDesign',
+  Web2Design = 'Web2Design',
+}
+
+export type TDesign = `${Design}`;
 
 export type TStep1LifeCycle = {
   [x in SignInLifeCycleType]?: undefined;
