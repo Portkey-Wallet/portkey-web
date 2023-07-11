@@ -39,7 +39,7 @@ class LocalConfigProvider {
       const requestDefaults = _config['requestDefaults'];
       if (requestDefaults) {
         if (!requestDefaults.headers) requestDefaults.headers = {};
-        requestDefaults.headers.version = 'v1.3.0';
+        if (!requestDefaults.headers.version) requestDefaults.headers.version = 'v1.3.2';
         did.setConfig({ requestDefaults: requestDefaults });
         setServiceConfig(_config['requestDefaults']);
         _config.requestDefaults && setServiceConfig(_config.requestDefaults);
