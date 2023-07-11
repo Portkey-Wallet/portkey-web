@@ -14,7 +14,7 @@
   }
 
   .portkey-ant-btn {
-    background-color: var(--portkey-ui-bg-5);
+    background-color: var(--portkey-ui-default-btn-bg);
     width: 100%;
     height: auto;
     padding: 0;
@@ -22,7 +22,7 @@
 
   .portkey-ant-btn-default {
     color: var(--portkey-ui-font-4);
-    border-color: var(--portkey-ui-border-3);
+    border-color: var(--portkey-ui-primary-border);
     &:disabled,
     &:disabled:hover,
     &:disabled:focus,
@@ -33,14 +33,14 @@
   }
 
   .portkey-ant-btn-primary {
-    background-color: var(--portkey-ui-bg-2);
-    border-color: var(--portkey-ui-border-3);
+    background-color: var(--portkey-ui-primary-btn-bg);
+    border-color: var(--portkey-ui-primary-border);
     border: none;
     &:hover,
     &:focus {
       color: var(--portkey-ui-font-12);
       background-color: var(--portkey-ui-bg-9);
-      border-color: var(--portkey-ui-border-3);
+      border-color: var(--portkey-ui-primary-border);
     }
 
     &:disabled,
@@ -48,8 +48,8 @@
     &:disabled:focus,
     &:disabled:active {
       color: var(--portkey-ui-font-12);
-      background-color: var(--portkey-ui-bg-2);
-      border-color: var(--portkey-ui-border-3);
+      background-color: var(--portkey-ui-primary-btn-bg);
+      border-color: var(--portkey-ui-primary-border);
       box-shadow: none !important;
       opacity: 0.3;
     }
@@ -59,21 +59,21 @@
 
   .portkey-ant-input {
     font-size: 16px;
-    background-color: var(--portkey-ui-bg-5);
+    background-color: var(--portkey-ui-input-bg);
     &::placeholder {
       font-size: 14px;
       line-height: 20px;
-      color: var(--portkey-ui-font-7);
+      color: var(--portkey-ui-input-placeholder);
     }
   }
   .portkey-ant-input-affix-wrapper {
-    background-color: var(--portkey-ui-bg-5);
+    background-color: var(--portkey-ui-input-bg);
   }
   .portkey-ant-input-affix-wrapper:not(.portkey-ant-input-affix-wrapper-disabled):hover,
   .portkey-ant-input-password:hover,
   .portkey-ant-input:hover,
   .portkey-ant-input:focus {
-    border-color: var(--portkey-ui-border-1) !important;
+    border-color: var(--portkey-ui-input-border) !important;
     box-shadow: none;
   }
 
@@ -86,9 +86,9 @@
   .portkey-ant-input-password {
     padding: 12px 16px;
     border-radius: var(--portkey-ui-border-radius-1);
-    color: var(--portkey-ui-font-2);
+    color: var(--portkey-ui-input-text);
     line-height: 22px;
-    border-color: var(--portkey-ui-border-1);
+    border-color: var(--portkey-ui-input-border);
     &:hover {
       border-color: var(--portkey-ui-border-7);
     }
@@ -134,10 +134,10 @@
       line-height: 22px;
       font-size: 16px;
       padding-bottom: 16px;
-      color: var(--portkey-ui-font-2);
+      color: var(--portkey-ui-form-label);
     }
     .portkey-ant-form-item-label > label {
-      color: var(--portkey-ui-font-2);
+      color: var(--portkey-ui-form-label);
       line-height: 22px;
       font-size: 16px;
     }
@@ -154,7 +154,7 @@
   .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
       .portkey-ant-input-affix-wrapper-borderless
     ).portkey-ant-input-affix-wrapper:focus {
-    border-color: var(--portkey-ui-border-1);
+    border-color: var(--portkey-ui-input-border);
   }
   // to change  border color of the errored input
   .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(
@@ -166,9 +166,9 @@
   .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
       .portkey-ant-input-affix-wrapper-borderless
     ).portkey-ant-input-affix-wrapper:hover {
-    background-color: var(--portkey-ui-bg-5);
+    background-color: var(--portkey-ui-input-bg);
 
-    border-color: var(--portkey-ui-border-3) !important;
+    border-color: var(--portkey-ui-primary-border) !important;
   }
 
   .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(
@@ -177,19 +177,19 @@
   .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
       .portkey-ant-input-affix-wrapper-borderless
     ).portkey-ant-input-affix-wrapper-focused {
-    border-color: var(--portkey-ui-border-3) !important;
-    box-shadow: 0 0 0 2px rgb(91 142 244 / 20%);
+    border-color: var(--portkey-ui-primary-border) !important;
+    box-shadow: none;
   }
 
   /* tabs */
 
   .portkey-ant-tabs {
-    color: var(--portkey-ui-font-6);
+    color: var(--portkey-ui-text-primary);
   }
   .portkey-ant-tabs-tab.portkey-ant-tabs-tab-active .portkey-ant-tabs-tab-btn {
     color: var(--portkey-ui-font-4);
     .portkey-ant-tabs-ink-bar {
-      background: var(--portkey-ui-bg-2);
+      background: var(--portkey-ui-primary-bg);
     }
   }
   .portkey-ant-tabs-tab:hover {
@@ -198,15 +198,16 @@
 
   /** select */
   .portkey-ant-select-dropdown {
-    background-color: var(--portkey-ui-bg-5);
+    background-color: var(--portkey-ui-select-dropdown-bg);
   }
   .portkey-ant-select:not(.portkey-ant-select-customize-input) .portkey-ant-select-selector {
-    background-color: var(--portkey-ui-bg-5);
+    background-color: var(--portkey-ui-select-bg);
+    border-color: var(--portkey-ui-input-border);
   }
   /* mobile */
   // password code
   .adm-passcode-input-cell {
-    background-color: var(--portkey-ui-bg-5);
+    background-color: transparent;
   }
 }
 
