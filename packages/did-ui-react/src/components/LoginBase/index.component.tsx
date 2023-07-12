@@ -3,11 +3,12 @@ import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHan
 import ConfigProvider from '../config-provider';
 import InputLogin from '../InputLogin';
 import SocialLogin from '../SocialLogin';
-import { CreateWalletType, GuardianInputInfo, LoginFinishWithoutPin } from '../types';
+import { CreateWalletType, GuardianInputInfo, LoginFinishWithoutPin, Theme } from '../types';
 import { IPhoneCountry } from '../types';
 import './index.less';
 
 export interface LoginBaseProps {
+  theme?: Theme;
   isShowScan?: boolean;
   termsOfService?: ReactNode;
   extraElement?: ReactNode; // extra element
@@ -30,6 +31,7 @@ enum STEP {
   inputLogin,
 }
 export default function LoginCard({
+  theme,
   isShowScan,
   phoneCountry,
   isErrorTip = true,
@@ -84,6 +86,7 @@ export default function LoginCard({
         />
       ) : (
         <SocialLogin
+          theme={theme}
           className="portkey-ui-flex-1"
           type="Login"
           networkType={networkType}

@@ -37,11 +37,10 @@ ConfigProvider.setGlobalConfig({
 
 function Example() {
   const [isLoading, setLoading] = useState<any>();
-  const [dark, setDark] = useState<boolean>(true);
   const ref = useRef<ISignIn>();
 
   return (
-    <div id={dark && 'ids'}>
+    <div>
       <div id="wrapper"></div>
 
       <SignIn
@@ -77,19 +76,14 @@ function Example() {
         }}>
         ShowLoading
       </button>
-      <button
-        onClick={async () => {
-          setDark(v => !v);
-        }}>
-        change theme
-      </button>
+
       <PortkeyLoading
         loading={isLoading}
         loadingText={'Synchronizing on-chain account information...'}
         cancelable
         onCancel={() => setLoading(false)}
       />
-      <div style={{ background: dark ? '#101217' : '#fff' }}>
+      <div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
           <SignUpAndLogin
             style={{ height: 600, border: '1px solid gray' }}
@@ -200,7 +194,7 @@ function Example() {
             ]}
           />
         </div>
-        <div style={{ background: dark ? '#1E212B' : '#fff' }}>
+        <div>
           <Web2Design
             phoneCountry={{
               iso: 'CN',

@@ -244,11 +244,7 @@ export default function VerifierSelect({
     isErrorTip,
     onError,
     selectItem,
-    socialLogin?.Apple?.clientId,
-    socialLogin?.Apple?.customLoginHandler,
-    socialLogin?.Apple?.redirectURI,
-    socialLogin?.Google?.clientId,
-    socialLogin?.Google?.customLoginHandler,
+    socialLogin,
     verifyToken,
   ]);
 

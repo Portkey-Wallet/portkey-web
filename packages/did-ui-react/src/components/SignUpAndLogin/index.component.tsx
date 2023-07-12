@@ -22,6 +22,7 @@ import type { IPhoneCountry } from '../types';
 import { AccountType, AccountTypeEnum } from '@portkey/services';
 import ConfigProvider from '../config-provider';
 import './index.less';
+import { usePortkey } from '../context';
 
 export interface SignUpAndLoginProps {
   type?: CreateWalletType;
@@ -69,7 +70,7 @@ export default function SignUpAndLoginBaseCom({
   const onErrorRef = useRef<SignUpAndLoginProps['onError']>(onError);
 
   const _socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
-
+  const [{ theme }] = usePortkey();
   useEffect(() => {
     validateEmailRef.current = validateEmail;
     validatePhoneRef.current = validatePhone;
@@ -246,6 +247,7 @@ export default function SignUpAndLoginBaseCom({
       )}
       {_type === 'Login' && (
         <LoginCard
+          theme={theme}
           isErrorTip={isErrorTip}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}

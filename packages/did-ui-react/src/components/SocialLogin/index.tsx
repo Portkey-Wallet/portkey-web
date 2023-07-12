@@ -12,7 +12,7 @@ import './index.less';
 
 interface SocialLoginProps {
   type: RegisterType;
-  theme: Theme;
+  theme?: Theme;
   className?: string;
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
