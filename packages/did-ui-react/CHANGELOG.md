@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.0-alpha.1...v1.1.0-alpha.2) (2023-07-12)
+
+### Features
+
+- 🎸 add theme props ([c9ca4ea](https://github.com/Portkey-Wallet/portkey-web/commit/c9ca4ea1fb9bc92e42cb35b60a41c4d830f3d90a))
+
+### Bug Fixes
+
+- 🐛 theme icon ([fa2125b](https://github.com/Portkey-Wallet/portkey-web/commit/fa2125b20b9d41250c8db609004cbc572c44b72b))
+
 ## [1.1.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.0-alpha.0...v1.1.0-alpha.1) (2023-07-11)
 
 ### Features
