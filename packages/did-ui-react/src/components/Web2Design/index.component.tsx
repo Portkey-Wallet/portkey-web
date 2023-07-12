@@ -1,56 +1,27 @@
 import SegmentedInput from '../SegmentedInput';
-import {
-  CreateWalletType,
-  GuardianInputInfo,
-  IGuardianIdentifierInfo,
-  IPhoneCountry,
-  LoginFinishWithoutPin,
-  TSize,
-} from '../types';
-import { OnErrorFunc, RegisterType, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
+import { CreateWalletType, IBaseGetGuardianProps, TSize } from '../types';
+import { RegisterType } from '../../types';
 import DividerCenter from '../DividerCenter';
 import SocialContent from '../SocialContent';
-import { useState, useMemo, CSSProperties, ReactNode, useCallback, useEffect, useRef } from 'react';
-import { ChainId } from '@portkey/types';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import useNetworkList from '../../hooks/useNetworkList';
 import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
 import ScanCard from '../ScanCard/index.component';
 import TermsOfServiceItem from '../TermsOfServiceItem';
-import {
-  did,
-  getGoogleUserInfo,
-  handleErrorCode,
-  handleErrorMessage,
-  parseAppleIdentityToken,
-  setLoading,
-} from '../../utils';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
-import './index.less';
 import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
 import useMedia from '../../hooks/useMedia';
 import { usePortkey } from '../context';
+import './index.less';
+import useSignHandler from '../SignStep/utils';
 
-export interface Web2DesignProps {
+export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
-  defaultChainId?: ChainId;
-  className?: string;
   size?: TSize;
-  style?: CSSProperties;
-  isErrorTip?: boolean;
-  isShowScan?: boolean; // show scan button
-  termsOfService?: ReactNode;
-  phoneCountry?: IPhoneCountry; // phone country code info
-  extraElement?: ReactNode; // extra element
-  onError?: OnErrorFunc;
-  validateEmail?: ValidatorHandler; // validate email
-  validatePhone?: ValidatorHandler; // validate phone
   onSignTypeChange?: (type: CreateWalletType) => void;
-  onSuccess?: (value: IGuardianIdentifierInfo) => void;
-  onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
-  onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
 }
+
 export default function Web2Design({
   style,
   defaultChainId = 'AELF',
@@ -103,6 +74,23 @@ export default function Web2Design({
     () => networkList?.find((item) => item.networkType === network),
     [network, networkList],
   );
+  const handlerParam = useMemo(
+    () => ({
+      defaultChainId,
+      onError: onErrorRef.current,
+      onSuccess,
+      customValidateEmail: validateEmailRef.current,
+      customValidatePhone: validatePhoneRef.current,
+      onChainIdChange: onChainIdChangeRef.current,
+    }),
+    [defaultChainId, onSuccess],
+  );
+  const {
+    validateEmail: _validateEmail,
+    validatePhone: _validatePhone,
+    onFinish,
+    onSocialFinish,
+  } = useSignHandler(handlerParam);
 
   const onSwitch = useCallback(() => {
     setType((v) => {
@@ -112,120 +100,6 @@ export default function Web2Design({
       return nextType;
     });
   }, [onSignTypeChange]);
-
-  const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
-    let isLoginGuardian = false;
-    try {
-      const { originChainId } = await did.services.getRegisterInfo({
-        loginGuardianIdentifier: identifier,
-      });
-
-      const payload = await did.getHolderInfo({
-        loginGuardianIdentifier: identifier,
-        chainId: originChainId,
-      });
-      if (payload?.guardianList?.guardians?.length > 0) {
-        isLoginGuardian = true;
-      }
-    } catch (error: any) {
-      if (handleErrorCode(error) === '3002') {
-        isLoginGuardian = false;
-      } else {
-        throw handleErrorMessage(error || 'GetHolderInfo error');
-      }
-    }
-
-    isHasAccount.current = isLoginGuardian;
-  }, []);
-
-  const _validateEmail = useCallback(
-    async (email?: string) => {
-      setLoading(true, 'Checking account on the chain...');
-      await validateIdentifier(email);
-      return validateEmailRef?.current?.(email);
-    },
-    [validateIdentifier],
-  );
-
-  const _validatePhone = useCallback(
-    async (phone?: string) => {
-      setLoading(true, 'Checking account on the chain...');
-      await validateIdentifier(phone?.replaceAll(/\s/g, ''));
-      return validatePhoneRef?.current?.(phone);
-    },
-    [validateIdentifier],
-  );
-
-  const getIdentifierChainId = useCallback(
-    async (identifier: string) => {
-      let _originChainId = defaultChainId;
-
-      try {
-        const { originChainId } = await did.services.getRegisterInfo({
-          loginGuardianIdentifier: identifier.replaceAll(/\s/g, ''),
-        });
-        _originChainId = originChainId;
-      } catch (error: any) {
-        _originChainId = defaultChainId;
-      }
-      return _originChainId;
-    },
-    [defaultChainId],
-  );
-  const isHasAccount = useRef<boolean>(false);
-
-  const onFinish = useCallback(
-    async (value: GuardianInputInfo) => {
-      setLoading(true);
-      const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
-      onChainIdChangeRef?.current?.(chainId);
-      setLoading(false);
-      onSuccess?.({ ...value, isLoginGuardian: isHasAccount.current, chainId });
-    },
-    [getIdentifierChainId, onSuccess],
-  );
-
-  const onSocialFinish: SocialLoginFinishHandler = useCallback(
-    async ({ type, data }) => {
-      try {
-        setLoading(true, 'Checking account on the chain...');
-        if (!data) throw 'Action error';
-        if (type === 'Google') {
-          const userInfo = await getGoogleUserInfo(data?.accessToken);
-          if (!userInfo?.id) throw userInfo;
-          await validateIdentifier(userInfo.id);
-          onFinish({
-            identifier: userInfo.id,
-            accountType: AccountTypeEnum[AccountTypeEnum.Google] as AccountType,
-            authenticationInfo: { googleAccessToken: data?.accessToken },
-          });
-        } else if (type === 'Apple') {
-          const userInfo = parseAppleIdentityToken(data?.accessToken);
-          if (userInfo) {
-            await validateIdentifier(userInfo.userId);
-            onFinish({
-              identifier: userInfo.userId,
-              accountType: AccountTypeEnum[AccountTypeEnum.Apple] as AccountType,
-              authenticationInfo: { appleIdToken: data?.accessToken },
-            });
-          } else {
-            throw 'Authorization failed';
-          }
-        } else {
-          throw Error(`AccountType:${type} is not support`);
-        }
-      } catch (error) {
-        setLoading(false);
-
-        const msg = handleErrorMessage(error);
-        onErrorRef?.current?.({
-          errorFields: 'onSocialFinish',
-          error: msg,
-        });
-      }
-    },
-    [onFinish, validateIdentifier],
-  );
 
   const leftWrapper = useMemo(
     () => (

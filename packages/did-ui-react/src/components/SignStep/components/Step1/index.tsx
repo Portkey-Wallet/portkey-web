@@ -1,7 +1,8 @@
 import SignUpAndLogin, { SignUpAndLoginProps } from '../../../SignUpAndLogin/index.component';
 import { useCallback, useState, memo, useRef } from 'react';
-import type { DIDWalletInfo, IGuardianIdentifierInfo, TSize } from '../../../types';
-import { Design, type SignInLifeCycleType, type TDesign } from '../../../SignStep/types';
+import type { DIDWalletInfo, IGuardianIdentifierInfo, TDesign, TSize } from '../../../types';
+import { Design } from '../../../types';
+import type { SignInLifeCycleType } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
 import UserInput from '../../../UserInput/index.component';

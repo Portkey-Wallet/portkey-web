@@ -66,7 +66,6 @@ const SignIn = forwardRef(
       getContainer,
       onLifeCycleChange,
       onChainIdChange,
-      onNetworkChange,
       onCreatePending,
       onCancel,
       onFinish,
@@ -77,7 +76,6 @@ const SignIn = forwardRef(
     const [guardianIdentifierInfo, setGuardianIdentifierInfo] = useState<IGuardianIdentifierInfo>();
     const onErrorRef = useRef<SignInProps['onError']>(onError);
     const onFinishRef = useRef<SignInProps['onFinish']>(onFinish);
-    const onNetworkChangeRef = useRef<SignInProps['onNetworkChange']>(onNetworkChange);
     const onChainIdChangeRef = useRef<SignInProps['onChainIdChange']>(onChainIdChange);
     const defaultLifeCycleRef = useRef<LifeCycleType>();
     const defaultLiftCyclePropsRef = useRef<any>();
@@ -92,7 +90,6 @@ const SignIn = forwardRef(
     useEffect(() => {
       onErrorRef.current = onError;
       onFinishRef.current = onFinish;
-      onNetworkChangeRef.current = onNetworkChange;
       onChainIdChangeRef.current = onChainIdChange;
     });
 
@@ -350,7 +347,6 @@ const SignIn = forwardRef(
             validateEmail={validateEmail}
             validatePhone={validatePhone}
             onSignInFinished={onSignInFinished}
-            onNetworkChange={onNetworkChangeRef?.current}
             onStepChange={onSignInStepChange}
             onChainIdChange={onOriginChainIdChange}
             onLoginFinishWithoutPin={onLoginFinishWithoutPin}
