@@ -7,11 +7,12 @@ import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
 import SocialContent from '../SocialContent';
 import TermsOfServiceItem from '../TermsOfServiceItem';
-import { CreateWalletType, LoginFinishWithoutPin } from '../types';
+import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import './index.less';
 
 interface SocialLoginProps {
   type: RegisterType;
+  theme: Theme;
   className?: string;
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
@@ -30,6 +31,7 @@ interface SocialLoginProps {
 
 export default function SocialLogin({
   type,
+  theme,
   className,
   isShowScan,
   isErrorTip = true,
@@ -70,6 +72,7 @@ export default function SocialLogin({
         </h1>
         <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
           <SocialContent
+            theme={theme}
             isErrorTip={isErrorTip}
             networkType={networkType}
             socialLogin={socialLogin}

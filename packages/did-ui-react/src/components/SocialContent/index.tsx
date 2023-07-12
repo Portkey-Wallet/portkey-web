@@ -5,12 +5,13 @@ import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLogi
 import { errorTip, handleErrorMessage, setLoading, socialLoginAuth } from '../../utils';
 import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
-import { LoginFinishWithoutPin } from '../types';
+import { LoginFinishWithoutPin, Theme } from '../types';
 import WakeUpPortkey from '../WakeUpPortkey';
 import './index.less';
 
 interface SocialContentProps {
   type: RegisterType;
+  theme?: Theme;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
   networkType?: string;
@@ -22,6 +23,7 @@ interface SocialContentProps {
 
 export default function SocialContent({
   type,
+  theme,
   socialLogin,
   isErrorTip = true,
   networkType,
@@ -131,11 +133,11 @@ export default function SocialContent({
         />
       )}
       <Button className={clsx('social-login-btn')} onClick={onGoogleSuccess}>
-        <CustomSvg type="Google" />
+        {theme === 'dark' ? <CustomSvg type="GuardianGoogle" /> : <CustomSvg type="Google" />}
         {`${type} with Google`}
       </Button>
       <Button className={clsx('social-login-btn')} onClick={onAppleSuccess}>
-        <CustomSvg type="Apple" />
+        {theme === 'dark' ? <CustomSvg type="GuardianApple" /> : <CustomSvg type="Apple" />}
         {`${type} with Apple`}
       </Button>
     </div>

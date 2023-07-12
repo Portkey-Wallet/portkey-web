@@ -20,6 +20,7 @@ import {
 import ConfigProvider from '../config-provider';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import clsx from 'clsx';
+import { usePortkey } from '../context';
 import './index.less';
 
 type UserInputType = AccountType | 'Scan' | null;
@@ -70,7 +71,8 @@ function UserInput({
   const socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
 
   const { loginByApple, loginByGoogle } = useSocialLogin({ socialLogin });
-
+  const [{ theme }] = usePortkey();
+  console.log(theme, 'theme===');
   const { network, networkList } = useNetworkList();
 
   const currentNetwork = useMemo(
@@ -253,6 +255,7 @@ function UserInput({
 
       {!accountType && (
         <Overview
+          theme={theme}
           isShowScan={showScan}
           extraElement={extraElement}
           onAccountTypeChange={onAccountTypeChange}

@@ -49,3 +49,4 @@ export enum GridType {
 }
 
 export type TSize = 'L' | 'S';
+export type Theme = 'dark' | 'light';

@@ -1,15 +1,15 @@
-import type { ConfigProviderProps } from 'antd/lib/config-provider';
 import ScreenLoading from '../ScreenLoading';
 import ReCaptchaModal from '../ReCaptchaModal';
+import PortkeyProvider from '../context';
+import type { Theme } from '../types';
+import { ReactNode } from 'react';
 
-export default function BaseConfigProvider({ children }: { children: ConfigProviderProps['children'] }) {
+export default function BaseConfigProvider({ theme = 'light', children }: { theme?: Theme; children: ReactNode }) {
   return (
-    <>
-      <div>
-        {children}
-        <ScreenLoading />
-        <ReCaptchaModal />
-      </div>
-    </>
+    <PortkeyProvider theme={theme}>
+      {children}
+      <ScreenLoading />
+      <ReCaptchaModal />
+    </PortkeyProvider>
   );
 }

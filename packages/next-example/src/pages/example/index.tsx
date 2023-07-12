@@ -171,6 +171,32 @@ function Example() {
                 guardianType: 'Phone',
                 key: '',
               },
+              {
+                isLoginGuardian: true,
+                verifier: {
+                  endPoints: ['http://192.168.66.240:16010'],
+                  verifierAddresses: ['2mBnRTqXMb5Afz4CWM2QakLRVDfaq2doJNRNQT1MXoi2uc6Zy3'],
+                  id: 'd0e2442158b870190362c8daea87a6687a59fef94937a88bd7dcb464e8e21025',
+                  name: 'Portkey',
+                  imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/Portkey.png',
+                },
+                identifier: 'identifier',
+                guardianType: 'Apple',
+                key: '',
+              },
+              {
+                isLoginGuardian: true,
+                verifier: {
+                  endPoints: ['http://192.168.66.240:16010'],
+                  verifierAddresses: ['2mBnRTqXMb5Afz4CWM2QakLRVDfaq2doJNRNQT1MXoi2uc6Zy3'],
+                  id: 'd0e2442158b870190362c8daea87a6687a59fef94937a88bd7dcb464e8e21025',
+                  name: 'Portkey',
+                  imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/Portkey.png',
+                },
+                identifier: 'identifier',
+                guardianType: 'Google',
+                key: '',
+              },
             ]}
           />
         </div>

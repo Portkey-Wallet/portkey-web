@@ -30,6 +30,7 @@ import './index.less';
 import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
 import useMedia from '../../hooks/useMedia';
+import { usePortkey } from '../context';
 
 export interface Web2DesignProps {
   type?: CreateWalletType;
@@ -71,7 +72,7 @@ export default function Web2Design({
   const [type, setType] = useState<RegisterType>('Login');
 
   const { network, networkList } = useNetworkList();
-
+  const [{ theme }] = usePortkey();
   const validateEmailRef = useRef<Web2DesignProps['validateEmail']>(validateEmail);
   const validatePhoneRef = useRef<Web2DesignProps['validatePhone']>(validatePhone);
   const onChainIdChangeRef = useRef<Web2DesignProps['onChainIdChange']>(onChainIdChange);
@@ -240,6 +241,7 @@ export default function Web2Design({
         />
         <DividerCenter />
         <SocialContent
+          theme={theme}
           className="portkey-ui-web2design-social-login"
           isErrorTip={isErrorTip}
           networkType={network}
@@ -284,6 +286,7 @@ export default function Web2Design({
       phoneCountry,
       socialLogin,
       termsOfService,
+      theme,
       type,
     ],
   );
