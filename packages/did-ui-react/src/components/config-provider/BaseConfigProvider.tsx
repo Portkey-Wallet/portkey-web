@@ -8,7 +8,7 @@ import clsx from 'clsx';
 export default function BaseConfigProvider({ theme = 'light', children }: { theme?: Theme; children: ReactNode }) {
   return (
     <PortkeyProvider theme={theme}>
-      <div className={clsx('portkey-ui-wrapper', theme === 'dark' && 'portkey-ui-dark-wrapper')}>
+      <div id="portkey-ui-root" className={clsx('portkey-ui-wrapper', theme === 'dark' && 'portkey-ui-dark-wrapper')}>
         {children}
         <ScreenLoading />
         <ReCaptchaModal />

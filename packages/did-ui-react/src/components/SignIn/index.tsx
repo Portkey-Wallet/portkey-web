@@ -449,7 +449,7 @@ const SignIn = forwardRef(
             destroyOnClose
             className={className}
             open={open}
-            getContainer={getContainer}
+            getContainer={getContainer ? getContainer : '#portkey-ui-root'}
             onCancel={onModalCancel}>
             {mainContent()}
           </BaseModal>

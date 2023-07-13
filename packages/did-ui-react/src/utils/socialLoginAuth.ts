@@ -17,16 +17,33 @@ export const socialLoginAuth = ({
   provider: ISocialLogin;
 }> =>
   new Promise((resolve, reject) => {
+    let timer: any = null;
+
     const onMessage = (event: MessageEvent) => {
-      if (event.data.type === 'PortkeySocialLoginOnSuccess') {
-        resolve(event.data.data);
-      } else if (event.data.type === 'PortkeySocialLoginOnFailure') {
-        reject(event.data.error);
-      } else {
-        return;
+      const type = event.data.type;
+      if (type === 'PortkeySocialLoginOnSuccess' || type === 'PortkeySocialLoginOnFailure') {
+        timer && clearInterval(timer);
+      }
+      switch (type) {
+        case 'PortkeySocialLoginOnSuccess':
+          resolve(event.data.data);
+          break;
+        case 'PortkeySocialLoginOnFailure':
+          reject(event.data.error);
+          break;
+        default:
+          return;
       }
       window.removeEventListener('message', onMessage);
     };
     window.addEventListener('message', onMessage);
-    window.open(`${loginPlatform}/social-login/${type}?${stringify({ clientId, redirectURI })}`);
+    const windowOpener = window.open(`${loginPlatform}/social-login/${type}?${stringify({ clientId, redirectURI })}`);
+
+    timer = setInterval(() => {
+      if (windowOpener?.closed) {
+        clearInterval(timer);
+        reject('User close the prompt');
+        timer = null;
+      }
+    }, 1600);
   });
