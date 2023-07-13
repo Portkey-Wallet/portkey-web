@@ -8,9 +8,12 @@ import CommonModal from '../CommonModal';
 import { setReCaptchaModal } from '../../utils/reCaptcha';
 import { defaultReCaptchaSiteKey } from '../../constants/reCaptcha';
 import './index.less';
+import { usePortkey } from '../context';
 
 export default function ReCaptchaModal() {
   const reCaptchaInfo = useReCaptcha();
+  const [{ theme }] = usePortkey();
+
   const [modalInfo, setModalInfo] = useState<
     {
       open?: boolean;
@@ -49,7 +52,7 @@ export default function ReCaptchaModal() {
       <div className="reCaptcha-modal-inner">
         {typeof window !== 'undefined' ? (
           <GoogleReCaptcha
-            theme={reCaptchaInfo?.theme || 'light'}
+            theme={reCaptchaInfo?.theme || theme || 'light'}
             size={reCaptchaInfo?.size || 'normal'}
             siteKey={reCaptchaInfo?.siteKey || defaultReCaptchaSiteKey}
             onSuccess={(res) => {

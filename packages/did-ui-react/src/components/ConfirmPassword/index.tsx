@@ -58,7 +58,9 @@ export default function ConfirmPassword({
             label?.password
           ) : (
             <>
-              <span style={{ marginRight: 8 }}>{t('Pin (Must be at least 6 characters)')}</span>
+              <span style={{ marginRight: 8 }}>
+                Pin&nbsp;<span className="label-tip">{'(Must be at least 6 characters)'}</span>
+              </span>
             </>
           )
         }

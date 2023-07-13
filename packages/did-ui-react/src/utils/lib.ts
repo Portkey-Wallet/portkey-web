@@ -8,3 +8,5 @@ export const isExtension = () => location.protocol === 'chrome-extension:';
 export const randomId = () => uuid.v4().replace(/-/g, '');
 
 export const dealURLLastChar = (url = '') => (url?.at(-1) === '/' ? url.slice(0, -1) : url);
+
+export const isBrowser = typeof window !== 'undefined';

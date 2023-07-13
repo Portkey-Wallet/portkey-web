@@ -1,0 +1,88 @@
+.portkey-ui-web2design-wrapper {
+  position: relative;
+  .web2design-qrcode-icon {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    top: 8px;
+    right: 8px;
+  }
+
+  .portkey-ui-web2design-login-wrapper {
+    &:not(.portkey-ui-web2design-login) {
+      width: 100%;
+    }
+  }
+}
+
+.portkey-ui-web2design-login-wrapper {
+  border-radius: var(--portkey-ui-border-radius-2);
+  &:not(.portkey-ui-web2design-login) {
+    width: 548px;
+    margin: auto;
+    .left-wrapper {
+      padding-bottom: 24px;
+    }
+  }
+  .right-wrapper {
+    width: 412px;
+    background-color: var(--portkey-ui-scan-bg);
+  }
+  .left-wrapper {
+    padding: 64px;
+  }
+  .scan-base-wrapper {
+    height: auto;
+  }
+
+  .web2design-title {
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 48px;
+    color: var(--portkey-ui-text-primary);
+  }
+  .portkey-ui-segmented-input {
+    padding-top: 40px;
+  }
+}
+
+.portkey-ui-web2design-social-login {
+  .portkey-ant-btn-default.social-login-btn {
+    border: 0;
+    box-shadow: none;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--portkey-ui-text-primary);
+    background-color: var(--portkey-ui-btn-bg);
+  }
+}
+
+.portkey-ui-web2design-switch-sign {
+  color: var(--portkey-ui-text-secondary);
+  text-align: center;
+  font-size: 16px;
+  line-height: 24px;
+  .btn-text {
+    color: var(--portkey-ui-text-primary1);
+    cursor: pointer;
+  }
+}
+
+.portkey-ui-web2design-login-little-screen {
+  .left-wrapper {
+    padding: 24px 16px;
+  }
+  .right-wrapper {
+    width: 100%;
+    background-color: transparent;
+    padding-top: 160px;
+  }
+  .scan-card-wrapper {
+    .scan-card-content {
+      padding: 0;
+    }
+    .description {
+      margin-bottom: 0;
+    }
+  }
+}

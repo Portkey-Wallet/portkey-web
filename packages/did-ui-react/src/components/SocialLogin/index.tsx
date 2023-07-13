@@ -7,11 +7,12 @@ import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
 import SocialContent from '../SocialContent';
 import TermsOfServiceItem from '../TermsOfServiceItem';
-import { CreateWalletType, LoginFinishWithoutPin } from '../types';
+import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import './index.less';
 
 interface SocialLoginProps {
   type: RegisterType;
+  theme?: Theme;
   className?: string;
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
@@ -20,7 +21,7 @@ interface SocialLoginProps {
   networkType?: string;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
-  switchGuardinType?: () => void;
+  switchGuardianType?: () => void;
   switchType?: (type: CreateWalletType) => void;
   onLoginByPortkey?: LoginFinishWithoutPin;
 
@@ -30,6 +31,7 @@ interface SocialLoginProps {
 
 export default function SocialLogin({
   type,
+  theme,
   className,
   isShowScan,
   isErrorTip = true,
@@ -40,19 +42,19 @@ export default function SocialLogin({
   onBack,
   onError,
   onFinish,
-  switchGuardinType,
+  switchGuardianType: switchGuardianType,
   onLoginByPortkey,
   switchType,
 }: SocialLoginProps) {
   const { t } = useTranslation();
   const onBackRef = useRef<SocialLoginProps['onBack']>(onBack);
   const onFinishRef = useRef<SocialLoginProps['onFinish']>(onFinish);
-  const switchGuardinTypeRef = useRef<SocialLoginProps['switchGuardinType']>(switchGuardinType);
+  const switchGuardianTypeRef = useRef<SocialLoginProps['switchGuardianType']>(switchGuardianType);
   const switchTypeRef = useRef<SocialLoginProps['switchType']>(switchType);
   useEffect(() => {
     onBackRef.current = onBack;
     onFinishRef.current = onFinish;
-    switchGuardinTypeRef.current = switchGuardinType;
+    switchGuardianTypeRef.current = switchGuardianType;
     switchTypeRef.current = switchType;
   });
 
@@ -70,6 +72,7 @@ export default function SocialLogin({
         </h1>
         <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
           <SocialContent
+            theme={theme}
             isErrorTip={isErrorTip}
             networkType={networkType}
             socialLogin={socialLogin}
@@ -79,7 +82,7 @@ export default function SocialLogin({
             onError={onError}
           />
           <DividerCenter />
-          <Button type="primary" className="login-by-input-btn" onClick={switchGuardinTypeRef?.current}>
+          <Button type="primary" className="login-by-input-btn" onClick={switchGuardianTypeRef?.current}>
             {t(`${type} with Phone / Email`)}
           </Button>
           {extraElement}

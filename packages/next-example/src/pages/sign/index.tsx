@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did, PortkeyStyleProvider } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did, TDesign } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 import { ChainId } from '@portkey/types';
-import { Spin, Button, message } from 'antd';
+import { Spin } from 'antd';
+import { sleep } from '@portkey/utils';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
@@ -26,15 +27,12 @@ ConfigProvider.setGlobalConfig({
   //   siteKey: '',
   // },
   graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
-  network: {
-    defaultNetwork: 'TESTNET',
-  },
 });
 
 export default function Sign() {
   const ref = useRef<ISignIn>();
-  const ref1 = useRef<ISignIn>();
   const [defaultLifeCycle, setLifeCycle] = useState<any>();
+  const [design, setDesign] = useState<TDesign>();
 
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
@@ -43,23 +41,11 @@ export default function Sign() {
   return (
     <div>
       <Spin spinning />
-      <Button
-        onClick={() => {
-          message.error('button', 10000000);
-        }}>
-        button
-      </Button>
-      <PortkeyStyleProvider>
-        <Button
-          onClick={() => {
-            message.error('PortkeyStyleProvider button', 1000000);
-          }}>
-          button
-        </Button>
-      </PortkeyStyleProvider>
       <SignIn
         ref={ref}
+        design={design}
         uiType="Modal"
+        // getContainer="#wrapper"
         isShowScan
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
@@ -91,18 +77,31 @@ export default function Sign() {
       />
 
       <button
-        onClick={() => {
+        onClick={async () => {
+          setDesign('CryptoDesign');
+          await sleep(50);
           ref.current?.setOpen(true);
         }}>
-        setOpen
+        CryptoDesign
+      </button>
+      <button
+        onClick={async () => {
+          setDesign('SocialDesign');
+          await sleep(50);
+          ref.current?.setOpen(true);
+        }}>
+        SocialDesign
+      </button>
+      <button
+        onClick={async () => {
+          setDesign('Web2Design');
+          await sleep(50);
+          ref.current?.setOpen(true);
+        }}>
+        Web2Design
       </button>
       <div></div>
-      <button
-        onClick={() => {
-          ref1.current?.setOpen(true);
-        }}>
-        setOpen connectFirst
-      </button>
+
       <button
         onClick={async () => {
           // Mock pin: 111111
@@ -114,35 +113,6 @@ export default function Sign() {
         logout
       </button>
       <div id="wrapper"></div>
-
-      <SignIn
-        ref={ref1}
-        uiType="Full"
-        design="SocialDesign"
-        isShowScan
-        // getContainer="#wrapper"
-        className="sign-in-wrapper"
-        // termsOfService={'https://portkey.finance/terms-of-service'}
-        onFinish={async res => {
-          console.log(res, 'onFinish====');
-          CHAIN_ID = res.chainId;
-          did.save(PIN);
-        }}
-        onError={error => {
-          console.log(error, 'onError====error');
-        }}
-        onCancel={() => {
-          ref?.current.setOpen(false);
-        }}
-        onCreatePending={info => {
-          console.log(info, 'onCreatePending====info');
-        }}
-        defaultLifeCycle={defaultLifeCycle}
-        onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
-          console.log('onLifeCycleChange:', lifeCycle, nextLifeCycleProps);
-          localStorage.setItem('portkeyLifeCycle', JSON.stringify({ [lifeCycle]: nextLifeCycleProps }));
-        }}
-      />
     </div>
   );
 }

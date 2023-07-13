@@ -1,6 +1,7 @@
 import clsx from 'clsx';
 import { CSSProperties } from 'react';
 import svgsList from '../../assets/svgs';
+import './index.less';
 
 export interface CustomSvgProps {
   type: keyof typeof svgsList;

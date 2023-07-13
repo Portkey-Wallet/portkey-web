@@ -1,50 +1,19 @@
 import LoginCard from '../LoginBase/index.component';
 import ScanCard from '../ScanCard/index.component';
 import SignUpBase from '../SignUpBase/index.component';
-import { useState, useMemo, useRef, useCallback, useEffect, CSSProperties, ReactNode } from 'react';
-import type { CreateWalletType, LoginFinishWithoutPin } from '../types';
+import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
+import type { CreateWalletType, IBaseGetGuardianProps } from '../types';
 import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
 import { useUpdateEffect } from 'react-use';
-import { OnErrorFunc, ISocialLoginConfig, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
-import useNetworkList from '../../hooks/useNetworkList';
-import { ChainId } from '@portkey/types';
-import {
-  did,
-  handleErrorCode,
-  getGoogleUserInfo,
-  handleErrorMessage,
-  parseAppleIdentityToken,
-  setLoading,
-} from '../../utils';
-import { GuardianInputInfo, IGuardianIdentifierInfo } from '../types';
-import type { IPhoneCountry } from '../types';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
 import ConfigProvider from '../config-provider';
+import { usePortkey } from '../context';
+import useSignHandler from '../SignStep/utils';
 import './index.less';
 
-export interface SignUpAndLoginProps {
+export interface SignUpAndLoginProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
-  defaultChainId?: ChainId;
-  className?: string;
-  style?: CSSProperties;
-  isErrorTip?: boolean;
-  isShowScan?: boolean; // show scan button
-  termsOfService?: ReactNode;
-  phoneCountry?: IPhoneCountry; // phone country code info
-  extraElement?: ReactNode; // extra element
-  // socialLogin porps
-  socialLogin?: ISocialLoginConfig; // social login config
-  appleIdToken?: string; // apple authorized
-  //
-  onError?: OnErrorFunc;
-  validateEmail?: ValidatorHandler; // validate email
-  validatePhone?: ValidatorHandler; // validate phone
   onSignTypeChange?: (type: CreateWalletType) => void;
-  onSuccess?: (value: IGuardianIdentifierInfo) => void;
-  onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
-  onNetworkChange?: (network: string) => void; // When network changed
-  onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
 }
 
 export default function SignUpAndLoginBaseCom({
@@ -55,8 +24,6 @@ export default function SignUpAndLoginBaseCom({
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
-  socialLogin,
-  appleIdToken,
   extraElement,
   termsOfService,
   onError,
@@ -64,7 +31,6 @@ export default function SignUpAndLoginBaseCom({
   validateEmail,
   validatePhone,
   onSignTypeChange,
-  onNetworkChange,
   onChainIdChange,
   onLoginFinishWithoutPin,
 }: SignUpAndLoginProps) {
@@ -73,7 +39,8 @@ export default function SignUpAndLoginBaseCom({
   const onChainIdChangeRef = useRef<SignUpAndLoginProps['onChainIdChange']>(onChainIdChange);
   const onErrorRef = useRef<SignUpAndLoginProps['onError']>(onError);
 
-  const _socialLogin = useMemo(() => socialLogin || ConfigProvider.getSocialLoginConfig(), [socialLogin]);
+  const _socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
+  const [{ theme }] = usePortkey();
 
   useEffect(() => {
     validateEmailRef.current = validateEmail;
@@ -84,151 +51,36 @@ export default function SignUpAndLoginBaseCom({
 
   const [_type, setType] = useState<CreateWalletType>(type ?? 'Login');
 
-  const { network, networkList } = useNetworkList();
+  const [{ networkType, chainType }] = usePortkey();
 
   const LoginCardOnStep = useCallback((step: Omit<CreateWalletType, 'Login'>) => setType(step as CreateWalletType), []);
 
-  const currentNetwork = useMemo(
-    () => networkList?.find((item) => item.networkType === network),
-    [network, networkList],
-  );
-
   const isShowScan = useMemo(
-    () =>
-      typeof showScan === 'undefined' ? Boolean(currentNetwork?.networkType && currentNetwork.walletType) : showScan,
-    [currentNetwork, showScan],
+    () => (typeof showScan === 'undefined' ? Boolean(networkType && chainType) : showScan),
+    [chainType, networkType, showScan],
   );
 
   useUpdateEffect(() => {
     onSignTypeChange?.(_type);
   }, [_type, onSignTypeChange]);
 
-  const isHasAccount = useRef<boolean>(false);
-
-  const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
-    let isLoginGuardian = false;
-    try {
-      const { originChainId } = await did.services.getRegisterInfo({
-        loginGuardianIdentifier: identifier,
-      });
-
-      const payload = await did.getHolderInfo({
-        loginGuardianIdentifier: identifier,
-        chainId: originChainId,
-      });
-      if (payload?.guardianList?.guardians?.length > 0) {
-        isLoginGuardian = true;
-      }
-    } catch (error: any) {
-      if (handleErrorCode(error) === '3002') {
-        isLoginGuardian = false;
-      } else {
-        throw handleErrorMessage(error || 'GetHolderInfo error');
-      }
-    }
-
-    isHasAccount.current = isLoginGuardian;
-  }, []);
-
-  const _validateEmail = useCallback(
-    async (email?: string) => {
-      setLoading(true, 'Checking account on the chain...');
-      await validateIdentifier(email);
-      return validateEmailRef?.current?.(email);
-    },
-    [validateIdentifier],
+  const handlerParam = useMemo(
+    () => ({
+      defaultChainId,
+      onError: onErrorRef.current,
+      onSuccess,
+      customValidateEmail: validateEmailRef.current,
+      customValidatePhone: validatePhoneRef.current,
+      onChainIdChange: onChainIdChangeRef.current,
+    }),
+    [defaultChainId, onSuccess],
   );
-
-  const _validatePhone = useCallback(
-    async (phone?: string) => {
-      setLoading(true, 'Checking account on the chain...');
-      await validateIdentifier(phone?.replaceAll(/\s/g, ''));
-      return validatePhoneRef?.current?.(phone);
-    },
-    [validateIdentifier],
-  );
-
-  const getIdentifierChainId = useCallback(
-    async (identifier: string) => {
-      let _originChainId = defaultChainId;
-
-      try {
-        const { originChainId } = await did.services.getRegisterInfo({
-          loginGuardianIdentifier: identifier.replaceAll(/\s/g, ''),
-        });
-        _originChainId = originChainId;
-      } catch (error: any) {
-        _originChainId = defaultChainId;
-      }
-      return _originChainId;
-    },
-    [defaultChainId],
-  );
-
-  const onFinish = useCallback(
-    async (value: GuardianInputInfo) => {
-      setLoading(true);
-      const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
-      onChainIdChangeRef?.current?.(chainId);
-      setLoading(false);
-      onSuccess?.({ ...value, isLoginGuardian: isHasAccount.current, chainId });
-    },
-    [getIdentifierChainId, onSuccess],
-  );
-
-  const onSocialFinish: SocialLoginFinishHandler = useCallback(
-    async ({ type, data }) => {
-      try {
-        setLoading(true, 'Checking account on the chain...');
-        if (!data) throw 'Action error';
-        if (type === 'Google') {
-          const userInfo = await getGoogleUserInfo(data?.accessToken);
-          if (!userInfo?.id) throw userInfo;
-          await validateIdentifier(userInfo.id);
-          onFinish({
-            identifier: userInfo.id,
-            accountType: AccountTypeEnum[AccountTypeEnum.Google] as AccountType,
-            authenticationInfo: { googleAccessToken: data?.accessToken },
-          });
-        } else if (type === 'Apple') {
-          const userInfo = parseAppleIdentityToken(data?.accessToken);
-          if (userInfo) {
-            await validateIdentifier(userInfo.userId);
-            onFinish({
-              identifier: userInfo.userId,
-              accountType: AccountTypeEnum[AccountTypeEnum.Apple] as AccountType,
-              authenticationInfo: { appleIdToken: data?.accessToken },
-            });
-          } else {
-            throw 'Authorization failed';
-          }
-        } else {
-          throw Error(`AccountType:${type} is not support`);
-        }
-      } catch (error) {
-        setLoading(false);
-
-        const msg = handleErrorMessage(error);
-        onErrorRef?.current?.({
-          errorFields: 'onSocialFinish',
-          error: msg,
-        });
-      }
-    },
-    [onFinish, validateIdentifier],
-  );
-
-  useUpdateEffect(() => {
-    try {
-      if (appleIdToken) {
-        const tokenInfo = parseAppleIdentityToken(appleIdToken);
-        if (tokenInfo?.isExpired) return;
-        onSocialFinish({ type: 'Apple', data: { accessToken: appleIdToken } });
-      }
-    } catch (error) {
-      console.log(error, 'parseAppleIdentityToken');
-    }
-  }, [appleIdToken]);
+  const {
+    validateEmail: _validateEmail,
+    validatePhone: _validatePhone,
+    onFinish,
+    onSocialFinish,
+  } = useSignHandler(handlerParam);
 
   return (
     <div className={clsx('signup-login-content', className)} style={style}>
@@ -239,7 +91,7 @@ export default function SignUpAndLoginBaseCom({
           socialLogin={_socialLogin}
           extraElement={extraElement}
           termsOfService={termsOfService}
-          networkType={network}
+          networkType={networkType}
           onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
@@ -253,8 +105,8 @@ export default function SignUpAndLoginBaseCom({
         <ScanCard
           chainId={defaultChainId}
           backIcon={<CustomSvg type="PC" />}
-          chainType={currentNetwork?.walletType}
-          networkType={network}
+          chainType={chainType}
+          networkType={networkType}
           onBack={() => setType('Login')}
           onFinish={onLoginFinishWithoutPin}
           isErrorTip={isErrorTip}
@@ -263,20 +115,20 @@ export default function SignUpAndLoginBaseCom({
       )}
       {_type === 'Login' && (
         <LoginCard
+          theme={theme}
           isErrorTip={isErrorTip}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           isShowScan={isShowScan}
           extraElement={extraElement}
           termsOfService={termsOfService}
-          networkType={network}
+          networkType={networkType}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={onFinish}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
           onStep={LoginCardOnStep}
           onSocialLoginFinish={onSocialFinish}
-          onNetworkChange={onNetworkChange}
           onError={onError}
         />
       )}

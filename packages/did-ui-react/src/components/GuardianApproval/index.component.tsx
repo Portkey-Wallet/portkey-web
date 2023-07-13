@@ -103,19 +103,20 @@ const GuardianApproval = forwardRef(
         try {
           setLoading(true);
           const accessToken = item?.accessToken;
+          const socialLogin = ConfigProvider.config.socialLogin;
           let clientId;
           let redirectURI;
           let customLoginHandler;
           switch (item.guardianType) {
             case 'Apple':
-              clientId = ConfigProvider.config.socialLogin?.Apple?.clientId;
-              redirectURI = ConfigProvider.config.socialLogin?.Apple?.redirectURI;
-              customLoginHandler = ConfigProvider.config.socialLogin?.Apple?.customLoginHandler;
+              clientId = socialLogin?.Apple?.clientId;
+              redirectURI = socialLogin?.Apple?.redirectURI;
+              customLoginHandler = socialLogin?.Apple?.customLoginHandler;
 
               break;
             case 'Google':
-              clientId = ConfigProvider.config.socialLogin?.Google?.clientId;
-              customLoginHandler = ConfigProvider.config.socialLogin?.Google?.customLoginHandler;
+              clientId = socialLogin?.Google?.clientId;
+              customLoginHandler = socialLogin?.Google?.customLoginHandler;
               break;
             default:
               throw 'accountType is not supported';

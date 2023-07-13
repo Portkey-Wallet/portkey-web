@@ -1,8 +1,8 @@
 import { AccountType } from '@portkey/services';
 import DividerCenter from '../../../DividerCenter';
-import './index.less';
 import CustomSvg from '../../../CustomSvg';
 import TermsOfServiceItem from '../../../TermsOfServiceItem';
+import './index.less';
 
 export interface OverviewProps {
   extraElement?: React.ReactNode;
@@ -17,9 +17,10 @@ type IAccountItem = {
   name: string;
   icon: string;
 };
+
 const accountTypeList: IAccountItem[] = [
-  { type: 'Google', name: 'Google', icon: 'Google' },
-  { type: 'Apple', name: 'Apple', icon: 'Apple' },
+  { type: 'Google', name: 'Google', icon: 'GoogleIcon' },
+  { type: 'Apple', name: 'Apple', icon: 'AppleIcon' },
   { type: 'Email', name: 'Email', icon: 'EmailIcon' },
   { type: 'Phone', name: 'Phone', icon: 'PhoneIcon' },
   { type: 'Scan', name: 'Scan', icon: 'QRCodeIcon' },

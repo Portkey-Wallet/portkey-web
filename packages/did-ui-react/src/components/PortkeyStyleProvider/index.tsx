@@ -8,9 +8,5 @@ export default function PortkeyStyleProvider({ children }: { children: React.Rea
       prefixCls: 'portkey-ant',
     });
   });
-  return (
-    <ConfigProvider prefixCls="portkey-ant">
-      <div className="portkey-ui-wrapper">{children}</div>
-    </ConfigProvider>
-  );
+  return <ConfigProvider prefixCls="portkey-ant">{children}</ConfigProvider>;
 }

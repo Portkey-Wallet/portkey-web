@@ -2,8 +2,8 @@
   position: absolute;
   width: 100%;
   margin-top: 9px;
-  background: var(--portkey-ui-bg-5);
-  border-radius: 6px;
+  background: var(--portkey-ui-default-bg);
+  border-radius: var(--portkey-ui-border-radius-1);
   z-index: 99;
   height: 300px;
   display: flex;
@@ -17,18 +17,18 @@
   }
   .search-input {
     background-color: var(--portkey-ui-bg-6);
-    border-radius: 6px;
+    border-radius: var(--portkey-ui-border-radius-1);
     padding: 7px 8px;
     .portkey-ant-input {
       background-color: transparent;
-      color: var(--portkey-ui-font-1);
+      color: var(--portkey-ui-input-text);
     }
     .portkey-input-prefix {
       margin-right: 8px;
     }
     .search-svg {
       path {
-        fill: var(--portkey-ui-font-8);
+        fill: var(--portkey-ui-text-secondary);
       }
     }
   }
@@ -39,11 +39,11 @@
     &::-webkit-scrollbar {
       width: 6px;
       height: 10px;
-      border-radius: 5px;
+      border-radius: var(--portkey-ui-border-radius-1);
     }
     &::-webkit-scrollbar-thumb {
       background-color: var(--portkey-ui-bg-8);
-      border-radius: 8px;
+      border-radius: var(--portkey-ui-border-radius-2);
     }
   }
   .area-code-item {
@@ -51,14 +51,14 @@
     padding-right: 10px;
     cursor: pointer;
     & > span:first-child {
-      color: var(--portkey-ui-font-6);
+      color: var(--portkey-ui-text-primary);
       font-size: 16px;
       line-height: 22px;
     }
     & > span:last-child {
       font-size: 14px;
       line-height: 20px;
-      color: var(--portkey-ui-font-8);
+      color: var(--portkey-ui-text-secondary);
       text-align: right;
     }
     &:hover {
