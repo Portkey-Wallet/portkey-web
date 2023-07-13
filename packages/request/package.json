@@ -41,7 +41,7 @@
   },
   "dependencies": {
     "@portkey/types": "^1.1.0-alpha.3",
-    "query-string": "^6.14.1"
+    "query-string": "^7.1.1"
   },
   "gitHead": "8175df23e1a9922676b754ffc2d93c83eaedbaf5"
 }
