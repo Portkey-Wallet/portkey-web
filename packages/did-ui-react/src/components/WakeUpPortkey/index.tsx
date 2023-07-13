@@ -3,15 +3,13 @@ import { Button, message } from 'antd';
 import clsx from 'clsx';
 import { useRef, useCallback, useState, useEffect, useMemo } from 'react';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo, isSafariBrowser } from '../../constants/device';
-import { PORTKEY_SOCIAL_LOGIN_URL } from '../../constants/socialLogin';
 import { useIntervalQueryCAInfo } from '../../hooks/useIntervalQueryCAInfo';
 import { LoginQRData, RegisterType } from '../../types';
 import { did, handleErrorMessage, setLoading } from '../../utils';
 import CustomSvg from '../CustomSvg';
 import { DIDWalletInfo } from '../types';
-import { stringifyUrl } from 'query-string';
 import './index.less';
-import { randomId } from '@portkey/utils';
+import { randomId, scheme } from '@portkey/utils';
 
 export default function WakeUpPortkey({
   type,
@@ -114,13 +112,11 @@ export default function WakeUpPortkey({
 
       const extraData = JSON.stringify(websiteInfo);
 
-      window.location.href = stringifyUrl(
-        {
-          url: `${PORTKEY_SOCIAL_LOGIN_URL}${window.location.host}/login`,
-          query: { data: dataStr, extraData },
-        },
-        { encode: true },
-      );
+      window.location.href = scheme.handleScheme({
+        action: 'login',
+        domain: window.location.host,
+        custom: { data: dataStr, extraData },
+      });
 
       return () => {
         document.removeEventListener('visibilitychange', visibilitychange);
