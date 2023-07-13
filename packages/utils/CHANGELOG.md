@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.1...v1.0.2) (2023-07-13)
+
+### Features
+
+- 🎸 scheme ([afdbc4c](https://github.com/Portkey-Wallet/portkey-web/commit/afdbc4c99fdc89ee08084f8869f980a10d137091))
+
 ## [1.0.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.0...v1.0.1) (2023-07-11)
 
 **Note:** Version bump only for package @portkey/utils
