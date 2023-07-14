@@ -11,6 +11,7 @@
     "@types/react-dom": "^18.0.0",
     "aelf-sdk": "^3.2.40",
     "react-dom": "^18.0.0",
+    "react-router-dom": "^6.4.0",
     "react-scripts": "^5.0.1"
   },
   "devDependencies": {

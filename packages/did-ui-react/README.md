@@ -97,10 +97,18 @@ ConfigProvider.setGlobalConfig({
 
 [Bingogame Github](https://github.com/Portkey-Wallet/portkey-bingo-game)
 
-You can also use the ```next-example``` in the current project
+You can also use the ```next-example``` in the current project. [next-example](../next-example/src/pages/sign/index.tsx)
 
 ```bash
   yarn next-example dev
+```
+
+or
+
+You can also use the ```example``` in the current project. [example](../example/src/index.tsx)
+
+```bash
+ yarn example dev
 ```
 
 ### TypeScript
