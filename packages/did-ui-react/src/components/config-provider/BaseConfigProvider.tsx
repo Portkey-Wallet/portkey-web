@@ -18,7 +18,7 @@ export default function BaseConfigProvider({ children }: { children: ConfigProvi
 
   return (
     <>
-      <div>
+      <div id="portkey-ui-root">
         {children}
         <ScreenLoading />
         <ReCaptchaModal />
