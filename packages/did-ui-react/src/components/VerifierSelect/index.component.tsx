@@ -17,6 +17,7 @@ import { portkeyDidUIPrefix } from '../../constants';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
+import { usePortkey } from '../context';
 import './index.less';
 
 type SelectVerifierStorageInfo = {
@@ -35,7 +36,6 @@ export interface VerifierSelectConfirmResult {
 
 export interface VerifierSelectProps {
   chainId?: ChainId;
-  sandboxId?: string;
   verifierList?: VerifierItem[];
   defaultVerifier?: string;
   guardianIdentifier: string;
@@ -55,7 +55,6 @@ export interface VerifierSelectProps {
 export default function VerifierSelect({
   chainId = 'AELF',
   className,
-  sandboxId,
   isErrorTip = true,
   verifierList: defaultVerifierList,
   guardianIdentifier,
@@ -79,6 +78,7 @@ export default function VerifierSelect({
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>(defaultVerifierList);
 
   const socialLogin = useMemo<ISocialLoginConfig | undefined>(() => ConfigProvider.getSocialLoginConfig(), []);
+  const [{ sandboxId }] = usePortkey();
 
   const getVerifierInfo = useCallback(async () => {
     try {
@@ -244,11 +244,7 @@ export default function VerifierSelect({
     isErrorTip,
     onError,
     selectItem,
-    socialLogin?.Apple?.clientId,
-    socialLogin?.Apple?.customLoginHandler,
-    socialLogin?.Apple?.redirectURI,
-    socialLogin?.Google?.clientId,
-    socialLogin?.Google?.customLoginHandler,
+    socialLogin,
     verifyToken,
   ]);
 

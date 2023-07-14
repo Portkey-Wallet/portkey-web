@@ -11,9 +11,9 @@ import { IGuardianIdentifierInfo } from '../../../types';
 import './index.less';
 import { useEffectOnce } from 'react-use';
 import { getChainInfo } from '../../../../hooks/useChainInfo';
+import { usePortkey } from '../../../context';
 
 interface Step2OfLoginProps {
-  sandboxId?: string;
   chainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
@@ -27,7 +27,6 @@ interface Step2OfLoginProps {
 }
 
 function Step2OfLogin({
-  sandboxId,
   chainType,
   chainId,
   isErrorTip = true,
@@ -40,6 +39,7 @@ function Step2OfLogin({
   onGuardianListChange,
 }: Step2OfLoginProps) {
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[] | undefined>(defaultGuardianList);
+  const [{ sandboxId }] = usePortkey();
 
   const getVerifierListHandler = useCallback(async () => {
     const chainInfo = await getChainInfo(chainId);

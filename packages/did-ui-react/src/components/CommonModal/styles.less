@@ -1,18 +1,18 @@
 .portkey-ui-common-modals {
   line-height: 1.2;
   .portkey-ant-modal-content {
-    border-radius: 8px;
+    border-radius: var(--portkey-ui-border-radius-2);
     box-shadow: none;
   }
   .portkey-ant-modal-header {
     border: none;
-    border-radius: 8px;
+    border-radius: var(--portkey-ui-border-radius-2);
     padding: 0;
     .portkey-ant-modal-title {
       line-height: 22px;
       font-size: 18px;
       padding: 24px 24px 16px;
-      color: var(--portkey-ui-font-5);
+      color: var(--portkey-ui-text-primary);
       font-weight: 400;
     }
   }
@@ -21,10 +21,10 @@
     line-height: 20px;
     font-size: 14px;
     .modal-content {
-      color: var(--portkey-ui-font-8);
+      color: var(--portkey-ui-text-secondary);
       padding: 0 24px 24px;
       text-align: center;
-      border-bottom: 1px solid var(--portkey-ui-border-2);
+      border-bottom: 1px solid var(--portkey-ui-default-border);
     }
     .btn-wrapper {
       padding: 15px 16px 17px;
@@ -33,13 +33,13 @@
       column-gap: 16px;
       line-height: 20px;
       button {
-        border-radius: 24px;
-        line-height: 48px;
+        border-radius: var(--portkey-ui-primary-border-radius);
+        line-height: var(--portkey-ui-primary-btn-h);
         font-size: 16px;
       }
     }
   }
   .portkey-ant-btn {
-    line-height: 48px;
+    line-height: var(--portkey-ui-primary-btn-h);
   }
 }

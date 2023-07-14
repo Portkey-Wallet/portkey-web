@@ -4,7 +4,7 @@ import { useIntervalQueryCAInfo } from '../../hooks/useIntervalQueryCAInfo';
 import { ReactNode } from 'react';
 import type { LoginQRData, OnErrorFunc } from '../../types';
 import ScanBase from '../ScanBase';
-import { LoginFinishWithoutPin } from '../types';
+import { GridType, LoginFinishWithoutPin } from '../types';
 import type { ChainId, ChainType } from '@portkey/types';
 import type { portkey } from '@portkey/accounts';
 import { did, errorTip } from '../../utils';
@@ -20,6 +20,7 @@ export interface ScanCardProps {
   chainType?: ChainType;
   isErrorTip?: boolean;
   wrapperClassName?: string;
+  gridType?: GridType;
   onError?: OnErrorFunc;
   onBack?: () => void;
   onFinish?: LoginFinishWithoutPin;
@@ -30,6 +31,7 @@ export default function ScanCard({
   chainId = 'AELF',
   backIcon,
   isErrorTip = true,
+  gridType,
   chainType,
   networkType,
   wrapperClassName,
@@ -123,7 +125,7 @@ export default function ScanCard({
 
   return (
     <div className={clsx('scan-base-wrapper', wrapperClassName)}>
-      <ScanBase isWaitingAuth={isWaitingAuth} backIcon={backIcon} onBack={onBack} qrData={qrData} />
+      <ScanBase gridType={gridType} isWaitingAuth={isWaitingAuth} backIcon={backIcon} onBack={onBack} qrData={qrData} />
     </div>
   );
 }

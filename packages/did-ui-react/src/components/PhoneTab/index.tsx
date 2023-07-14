@@ -5,8 +5,10 @@ import { handleErrorMessage, setLoading } from '../../utils';
 import PhoneNumberInput from '../PhoneNumberInput';
 import { IPhoneCountry } from '../types';
 import './index.less';
+import clsx from 'clsx';
 
 interface PhoneTabProps {
+  className?: string;
   phoneCountry?: IPhoneCountry;
   countryList?: IPhoneCountry['countryList'];
   confirmText: string;
@@ -14,7 +16,7 @@ interface PhoneTabProps {
   onFinish?: (phoneNumber: { code: string; phoneNumber: string }) => void;
 }
 
-const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: PhoneTabProps, ref) => {
+const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, onFinish }: PhoneTabProps, ref) => {
   const [countryCode, setCountryCode] = useState<ICountryItem | undefined>();
   const [error, setError] = useState<string>();
   const validateRef = useRef<PhoneTabProps['validate']>();
@@ -32,7 +34,7 @@ const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: 
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   return (
-    <div className="phone-tab-wrapper">
+    <div className={clsx('phone-tab-wrapper', className)}>
       <PhoneNumberInput
         iso={countryCode?.iso ?? phoneCountry?.iso}
         countryList={phoneCountry?.countryList}

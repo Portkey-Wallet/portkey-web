@@ -11,7 +11,6 @@ import Step2OfSignUp from '../SignStep/components/Step2OfSignUp';
 import Step2OfLogin from '../SignStep/components/Step2OfLogin';
 import Step3 from '../SignStep/components/Step3';
 import { useEffectOnce } from 'react-use';
-import useNetworkList from '../../hooks/useNetworkList';
 import type {
   IVerifyInfo,
   DIDWalletInfo,
@@ -36,6 +35,7 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import './index.less';
 import { UserGuardianStatus } from '../../types';
 import Container from '../Container';
+import { usePortkey } from '../context';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -53,7 +53,6 @@ const SignIn = forwardRef(
       isErrorTip = true,
       // If you set isShowScan to true, make sure you configure ConfigProvider.setGlobalConfig `network`
       isShowScan,
-      sandboxId,
       defaultLifeCycle: defaultLifeCycleInfo,
       phoneCountry: defaultPhoneCountry,
       extraElement,
@@ -66,7 +65,6 @@ const SignIn = forwardRef(
       getContainer,
       onLifeCycleChange,
       onChainIdChange,
-      onNetworkChange,
       onCreatePending,
       onCancel,
       onFinish,
@@ -77,7 +75,6 @@ const SignIn = forwardRef(
     const [guardianIdentifierInfo, setGuardianIdentifierInfo] = useState<IGuardianIdentifierInfo>();
     const onErrorRef = useRef<SignInProps['onError']>(onError);
     const onFinishRef = useRef<SignInProps['onFinish']>(onFinish);
-    const onNetworkChangeRef = useRef<SignInProps['onNetworkChange']>(onNetworkChange);
     const onChainIdChangeRef = useRef<SignInProps['onChainIdChange']>(onChainIdChange);
     const defaultLifeCycleRef = useRef<LifeCycleType>();
     const defaultLiftCyclePropsRef = useRef<any>();
@@ -92,11 +89,10 @@ const SignIn = forwardRef(
     useEffect(() => {
       onErrorRef.current = onError;
       onFinishRef.current = onFinish;
-      onNetworkChangeRef.current = onNetworkChange;
       onChainIdChangeRef.current = onChainIdChange;
     });
 
-    const { network, networkList } = useNetworkList();
+    const [{ chainType }] = usePortkey();
     const [open, setOpen] = useState<boolean>(false);
 
     const changeLifeCycle: SignInProps['onLifeCycleChange'] = useCallback(
@@ -154,10 +150,6 @@ const SignIn = forwardRef(
 
     useImperativeHandle(ref, () => ({ setOpen: refSetOpen }));
 
-    const networkItem = useMemo(
-      () => networkList?.find((item) => item.networkType === network),
-      [network, networkList],
-    );
     const [originChainId, setOriginChainId] = useState<ChainId>();
     const [approvedList, setApprovedList] = useState<GuardiansApproved[]>();
     const [walletWithoutPin, setWalletWithoutPin] = useState<Omit<DIDWalletInfo, 'pin'>>();
@@ -340,6 +332,7 @@ const SignIn = forwardRef(
           <Step1
             type={lifeCycle as any}
             isShowScan={isShowScan}
+            size={uiType === 'Modal' ? 'S' : undefined}
             design={design}
             defaultChainId={defaultChainId}
             isErrorTip={isErrorTip}
@@ -349,7 +342,6 @@ const SignIn = forwardRef(
             validateEmail={validateEmail}
             validatePhone={validatePhone}
             onSignInFinished={onSignInFinished}
-            onNetworkChange={onNetworkChangeRef?.current}
             onStepChange={onSignInStepChange}
             onChainIdChange={onOriginChainIdChange}
             onLoginFinishWithoutPin={onLoginFinishWithoutPin}
@@ -365,8 +357,7 @@ const SignIn = forwardRef(
             defaultCodeInfo={defaultLiftCyclePropsRef.current?.verifierSelectResult}
             guardianIdentifierInfo={guardianIdentifierInfo}
             isErrorTip={isErrorTip}
-            sandboxId={sandboxId}
-            chainType={networkItem?.walletType}
+            chainType={chainType}
             onStepChange={changeLifeCycle}
             onError={onErrorRef?.current}
             onFinish={onStep2OfSignUpFinish}
@@ -382,8 +373,7 @@ const SignIn = forwardRef(
           <Step2OfLogin
             guardianList={defaultLiftCyclePropsRef.current?.guardianList}
             approvedList={approvedList}
-            sandboxId={sandboxId}
-            chainType={networkItem?.walletType}
+            chainType={chainType}
             chainId={chainId}
             guardianIdentifierInfo={guardianIdentifierInfo}
             isErrorTip={isErrorTip}
@@ -412,6 +402,7 @@ const SignIn = forwardRef(
     }, [
       lifeCycle,
       isShowScan,
+      uiType,
       design,
       defaultChainId,
       isErrorTip,
@@ -430,8 +421,7 @@ const SignIn = forwardRef(
       onStep3Finish,
       onStep3Cancel,
       onCreatePending,
-      sandboxId,
-      networkItem?.walletType,
+      chainType,
       changeLifeCycle,
       onStep2OfSignUpFinish,
       onStep2Cancel,
@@ -451,7 +441,7 @@ const SignIn = forwardRef(
             destroyOnClose
             className={className}
             open={open}
-            getContainer={getContainer}
+            getContainer={getContainer ? getContainer : '#portkey-ui-root'}
             onCancel={onModalCancel}>
             {mainContent()}
           </BaseModal>

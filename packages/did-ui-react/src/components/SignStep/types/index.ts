@@ -6,6 +6,7 @@ import {
   DIDWalletInfo,
   IGuardianIdentifierInfo,
   IPhoneCountry,
+  TDesign,
 } from '../../types';
 import { ChainId } from '@portkey/types';
 import { ReactNode } from 'react';
@@ -27,7 +28,6 @@ export type LifeCycleType =
   | SetPinAndAddManagerCycleType;
 
 export type UI_TYPE = 'Modal' | 'Full';
-export type TDesign = 'SocialDesign' | 'CryptoDesign';
 
 export type TStep1LifeCycle = {
   [x in SignInLifeCycleType]?: undefined;
@@ -69,7 +69,6 @@ export interface SignInProps {
   defaultChainId?: ChainId;
 
   defaultLifeCycle?: Partial<TStep1LifeCycle | TStep2SignUpLifeCycle | TStep2SignInLifeCycle | TStep3LifeCycle>;
-  sandboxId?: string;
   isErrorTip?: boolean;
 
   // Login
@@ -80,7 +79,6 @@ export interface SignInProps {
   design?: TDesign;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
-  onNetworkChange?(network: string): void;
   onChainIdChange?(chainId?: ChainId): void;
   onFinish?(didWallet: DIDWalletInfo): void;
   onCreatePending?(createPendingInfo: CreatePendingInfo): void;

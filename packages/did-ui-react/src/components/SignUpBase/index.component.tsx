@@ -81,7 +81,7 @@ export default function SignUpBase({
           networkType={networkType}
           socialLogin={_socialLogin}
           onFinish={onSocialSignFinish}
-          switchGuardinType={() => setStep(STEP.inputLogin)}
+          switchGuardianType={() => setStep(STEP.inputLogin)}
           onBack={_onBack}
           onError={onError}
           onLoginByPortkey={onLoginByPortkey}

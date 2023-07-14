@@ -1,17 +1,7 @@
 import { GlobalConfigProps } from './types';
-import { setVerification, did, setNetwork, setNetworkInfo, setServiceConfig, setReCaptchaConfig } from '../../utils';
+import { setVerification, did, setServiceConfig, setReCaptchaConfig } from '../../utils';
 
-const defaultConfig: GlobalConfigProps = {
-  network: {
-    networkList: [],
-    defaultNetwork: undefined,
-  },
-  // fontFamily400: '../../assets/fonts/Roboto-Regular.ttf',
-  // fontFamily500: '../../assets/fonts/Roboto-Medium.ttf',
-  // fontFamily600: '../../assets/fonts/Roboto-Bold.ttf',
-  // storage?: Storage; //
-  // prefixCls: string;
-};
+const defaultConfig: GlobalConfigProps = {};
 
 type ConfigKey = keyof GlobalConfigProps;
 
@@ -31,10 +21,6 @@ class LocalConfigProvider {
   };
 
   setGlobalConfig = (_config: Partial<GlobalConfigProps>) => {
-    if ('network' in _config) {
-      _config.network?.networkList && setNetworkInfo(_config.network);
-      // throw "The current version does not support switching networks, please use 'setGlobalConfig.requestDefaults' or 'setGlobalConfig.graphQLUrl' to configure the network";
-    }
     if ('requestDefaults' in _config) {
       const requestDefaults = _config['requestDefaults'];
       if (requestDefaults) {
@@ -65,11 +51,6 @@ class LocalConfigProvider {
       _config['reCaptchaConfig'] && setReCaptchaConfig(_config['reCaptchaConfig']);
     }
     this.config = { ...this.config, ..._config };
-  };
-
-  setNetwork = (network: string) => {
-    this.config.network.defaultNetwork = network;
-    setNetwork(network);
   };
 
   getSocialLoginConfig = () => {

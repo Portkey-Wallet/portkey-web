@@ -1,10 +1,12 @@
 import { Col, Modal, ModalProps, Row } from 'antd';
 import clsx from 'clsx';
 import { LeftOutlined } from '@ant-design/icons';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
+import { Theme } from '../types';
 import './styles.less';
 
 export interface CommonModalProps extends ModalProps {
+  theme?: Theme;
   className?: string;
   leftCallBack?: () => void;
   leftElement?: ReactNode;

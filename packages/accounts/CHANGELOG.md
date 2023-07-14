@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.5...v1.1.0-alpha.4) (2023-07-13)
 ## [1.0.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.0...v1.0.8) (2023-07-14)
 
 **Note:** Version bump only for package @portkey/accounts
@@ -13,11 +14,9 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [1.0.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.6...v1.0.7) (2023-07-14)
 
-**Note:** Version bump only for package @portkey/accounts
+### Features
 
-## [1.0.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.5...v1.0.6) (2023-07-14)
-
-**Note:** Version bump only for package @portkey/accounts
+- 🎸 dark mode ([2698298](https://github.com/Portkey-Wallet/portkey-web/commit/26982983d199432b1b24e37afe8c727ff61ad576))
 
 ## [1.0.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.1...v1.0.5) (2023-07-13)
 
