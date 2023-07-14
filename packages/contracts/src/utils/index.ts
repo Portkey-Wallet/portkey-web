@@ -106,7 +106,7 @@ export async function getTxResult(
 export function handleContractError(error?: any, req?: any) {
   if (typeof error === 'string') return { message: error };
   if (error?.message) return error;
-  if (error.Error) {
+  if (error?.Error) {
     return {
       message: error.Error.Details || error.Error.Message || error.Error || error.Status,
       code: error.Error.Code,
