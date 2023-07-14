@@ -1,6 +1,14 @@
 import { GlobalConfigProps } from './types';
 import { setVerification, did, setNetwork, setNetworkInfo, setServiceConfig, setReCaptchaConfig } from '../../utils';
 
+const apiVersion = 'v1.3.2';
+
+did.setConfig({
+  requestDefaults: {
+    headers: { version: apiVersion },
+  },
+});
+
 const defaultConfig: GlobalConfigProps = {
   network: {
     networkList: [],
@@ -39,7 +47,7 @@ class LocalConfigProvider {
       const requestDefaults = _config['requestDefaults'];
       if (requestDefaults) {
         if (!requestDefaults.headers) requestDefaults.headers = {};
-        if (!requestDefaults.headers.version) requestDefaults.headers.version = 'v1.3.2';
+        if (!requestDefaults.headers.version) requestDefaults.headers.version = apiVersion;
         did.setConfig({ requestDefaults: requestDefaults });
         setServiceConfig(_config['requestDefaults']);
         _config.requestDefaults && setServiceConfig(_config.requestDefaults);

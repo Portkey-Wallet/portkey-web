@@ -7,6 +7,7 @@ export { default as GuardianList } from './GuardianList';
 export { default as SignUpBase } from './SignUpBase';
 export { default as SignUpAndLogin } from './SignUpAndLogin';
 export { default as CodeVerify } from './CodeVerify';
+export { default as CodeVerifyUI } from './CodeVerifyUI';
 export { default as GuardianApproval } from './GuardianApproval';
 export { default as SignIn } from './SignIn';
 export { default as PortkeyLoading } from './PortkeyLoading';
