@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.7...v1.1.0) (2023-07-14)
+
+### Features
+
+- 🎸 add wrapper id ([4bcd2ec](https://github.com/Portkey-Wallet/portkey-web/commit/4bcd2ec449193801e73b96247ddb8eb3aa82a68c))
+
 ## [1.0.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.6...v1.0.7) (2023-07-14)
 
 **Note:** Version bump only for package root
