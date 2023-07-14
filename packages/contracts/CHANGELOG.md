@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.0.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.0...v1.0.8) (2023-07-14)
+
+### Bug Fixes
+
+- 🐛 handleContractError ([462676b](https://github.com/Portkey-Wallet/portkey-web/commit/462676b64de93f15f34cd08231c17330484d682c))
+
 ## [1.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.7...v1.1.0) (2023-07-14)
 
 **Note:** Version bump only for package @portkey/contracts
