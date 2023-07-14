@@ -176,7 +176,7 @@ export default function SetPinAndAddManager({
         if (onlyGetPin) return onFinish?.(pin);
         if (!guardianIdentifier) throw 'Missing account!!!';
         did.reset();
-        const loadingText = type === 'recovery' ? 'Working on recovery...' : 'Creating address on the chain...';
+        const loadingText = type === 'recovery' ? 'Initiating social recovery...' : 'Creating address on the chain...';
 
         setLoading(true, loadingText);
 
