@@ -28,6 +28,7 @@ const CodeVerifyUI = forwardRef(
       verifier,
       className,
       isCountdownNow,
+      tipExtra,
       isLoginGuardian,
       guardianIdentifier,
       accountType = 'Email',
@@ -71,6 +72,7 @@ const CodeVerifyUI = forwardRef(
           <span className="login-account">{guardianIdentifier || ''}</span>
         </div>
         <div className="send-tip">
+          {tipExtra}
           {`A ${DIGIT_CODE.length}-digit code was sent to `}
           <span className="account">{guardianIdentifier}</span>
           <br />

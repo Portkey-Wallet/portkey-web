@@ -13,6 +13,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - 🎸 dark mode ([2698298](https://github.com/Portkey-Wallet/portkey-web/commit/26982983d199432b1b24e37afe8c727ff61ad576))
 
+## [1.0.10](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.9...v1.0.10) (2023-07-17)
+
+**Note:** Version bump only for package @portkey/socket
+
 ## [1.0.9](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.8...v1.0.9) (2023-07-14)
 
 **Note:** Version bump only for package @portkey/socket

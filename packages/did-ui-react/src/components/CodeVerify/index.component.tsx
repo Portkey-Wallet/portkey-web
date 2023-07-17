@@ -23,6 +23,7 @@ export default function CodeVerify({
   chainId,
   verifier,
   className,
+  tipExtra,
   isErrorTip = true,
   operationType,
   isCountdownNow,
@@ -125,6 +126,7 @@ export default function CodeVerify({
     <CodeVerifyUI
       ref={uiRef}
       code={pinVal}
+      tipExtra={tipExtra}
       verifier={verifier}
       className={className}
       isCountdownNow={isCountdownNow}
