@@ -1,28 +1,33 @@
-import type { ConfigProviderProps } from 'antd/lib/config-provider';
 import ScreenLoading from '../ScreenLoading';
-import { useEffectOnce } from 'react-use';
 import ReCaptchaModal from '../ReCaptchaModal';
+import PortkeyProvider from '../context';
+import type { Theme } from '../types';
+import { ReactNode } from 'react';
+import clsx from 'clsx';
+import { ChainType } from '@portkey/types';
 
-export default function BaseConfigProvider({ children }: { children: ConfigProviderProps['children'] }) {
-  // const config = useMemo(() => localConfigProvider.getGlobalConfig(), []);
-
-  useEffectOnce(() => {
-    // TODO
-    // const fontFamily400 = config?.fontFamily400;
-    // const fontFamily500 = config?.fontFamily500;
-    // const fontFamily600 = config?.fontFamily600;
-    // fontFamily400 && loadFonts('portkey-ui-font', fontFamily400, { weight: '400' });
-    // fontFamily500 && loadFonts('portkey-ui-font', fontFamily500, { weight: '500' });
-    // fontFamily600 && loadFonts('portkey-ui-font', fontFamily600, { weight: '600' });
-  });
-
+export default function BaseConfigProvider({
+  sandboxId,
+  networkType,
+  chainType = 'aelf',
+  theme = 'light',
+  children,
+}: {
+  // Required when running on chrome extension
+  sandboxId?: string;
+  // Currently theme is used to control content such as pictures under the black/light theme
+  theme?: Theme;
+  networkType: string;
+  chainType?: ChainType;
+  children: ReactNode;
+}) {
   return (
-    <>
-      <div id="portkey-ui-root">
+    <PortkeyProvider sandboxId={sandboxId} chainType={chainType} networkType={networkType} theme={theme}>
+      <div id="portkey-ui-root" className={clsx('portkey-ui-wrapper', theme === 'dark' && 'portkey-ui-dark-wrapper')}>
         {children}
         <ScreenLoading />
         <ReCaptchaModal />
       </div>
-    </>
+    </PortkeyProvider>
   );
 }

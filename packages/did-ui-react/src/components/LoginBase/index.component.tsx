@@ -1,13 +1,14 @@
-import { useState, useRef, useEffect, useMemo, ReactNode } from 'react';
+import { useState, useMemo, ReactNode } from 'react';
 import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
 import ConfigProvider from '../config-provider';
 import InputLogin from '../InputLogin';
 import SocialLogin from '../SocialLogin';
-import { CreateWalletType, GuardianInputInfo, LoginFinishWithoutPin } from '../types';
+import { CreateWalletType, GuardianInputInfo, LoginFinishWithoutPin, Theme } from '../types';
 import { IPhoneCountry } from '../types';
 import './index.less';
 
 export interface LoginBaseProps {
+  theme?: Theme;
   isShowScan?: boolean;
   termsOfService?: ReactNode;
   extraElement?: ReactNode; // extra element
@@ -21,7 +22,6 @@ export interface LoginBaseProps {
   validatePhone?: ValidatorHandler;
   onSocialLoginFinish?: SocialLoginFinishHandler;
   onStep?: (value: CreateWalletType) => void;
-  onNetworkChange?: (network: string) => void;
   onError?: OnErrorFunc;
 }
 
@@ -30,6 +30,7 @@ enum STEP {
   inputLogin,
 }
 export default function LoginCard({
+  theme,
   isShowScan,
   phoneCountry,
   isErrorTip = true,
@@ -44,30 +45,8 @@ export default function LoginCard({
   validatePhone,
   onLoginByPortkey,
   onSocialLoginFinish,
-  onNetworkChange,
 }: LoginBaseProps) {
-  // const { network, networkList } = useNetworkList();
-  const onNetworkChangeRef = useRef<LoginBaseProps['onNetworkChange']>(onNetworkChange);
-  useEffect(() => {
-    onNetworkChangeRef.current = onNetworkChange;
-  });
   const socialLogin = useMemo(() => defaultSocialLogin || ConfigProvider.getSocialLoginConfig(), [defaultSocialLogin]);
-
-  // const selectItems = useMemo(
-  //   () =>
-  //     networkList?.map((item) => ({
-  //       value: item.networkType,
-  //       icon: item?.networkIconUrl ? <img src={item?.networkIconUrl} /> : <CustomSvg type="Aelf" />,
-  //       label: item.name,
-  //       disabled: !item.isActive,
-  //     })),
-  //   [networkList],
-  // );
-
-  // const networkChange = useCallback((value: string) => {
-  //   ConfigProvider.setNetwork(value);
-  //   onNetworkChangeRef?.current?.(value);
-  // }, []);
 
   const [step, setStep] = useState<STEP>(STEP.socialLogin);
 
@@ -84,6 +63,7 @@ export default function LoginCard({
         />
       ) : (
         <SocialLogin
+          theme={theme}
           className="portkey-ui-flex-1"
           type="Login"
           networkType={networkType}
@@ -92,27 +72,13 @@ export default function LoginCard({
           isErrorTip={isErrorTip}
           onFinish={onSocialLoginFinish}
           switchType={onStep}
-          switchGuardinType={() => setStep(STEP.inputLogin)}
+          switchGuardianType={() => setStep(STEP.inputLogin)}
           extraElement={extraElement}
           termsOfService={termsOfService}
           onLoginByPortkey={onLoginByPortkey}
           onError={onError}
         />
       )}
-      {/* TODO feature The new version iteration supports main test network switching */}
-      {/* {Boolean(selectItems?.length) && (
-        <div className="network-list-wrapper">
-          <CommonSelect
-            className="network-list-select"
-            placement="topLeft"
-            value={network}
-            items={selectItems}
-            onChange={networkChange}
-            showArrow={false}
-            getPopupContainer={(triggerNode) => triggerNode.parentElement}
-          />
-        </div>
-      )} */}
     </div>
   );
 }

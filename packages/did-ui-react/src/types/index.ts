@@ -1,6 +1,5 @@
 export * from './error';
 export * from './guardian';
-export * from './network';
 export * from './wallet';
 export * from './country';
 export * from './device';

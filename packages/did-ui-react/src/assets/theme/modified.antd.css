@@ -1,11 +1,11 @@
+/**
+ * @remarks
+ * Import antd css as required, only import the required styles and modify the prefix
+ */
 /* stylelint-disable at-rule-empty-line-before,at-rule-name-space-after,at-rule-no-unknown */
 /* stylelint-disable no-duplicate-selectors */
 /* stylelint-disable */
 /* stylelint-disable declaration-bang-space-before,no-duplicate-selectors,string-no-newline */
-/** 
-  * @remarks modified antd css, change ant-prefix
-  */
-
 html {
   --portkey-ant-primary-color: #1890ff;
   --portkey-ant-primary-color-hover: #40a9ff;
@@ -1268,13 +1268,13 @@ html {
     opacity: 0;
   }
 }
-.portkey-ant-motion-collapse-legacy {
+.ant-motion-collapse-legacy {
   overflow: hidden;
 }
-.portkey-ant-motion-collapse-legacy-active {
+.ant-motion-collapse-legacy-active {
   transition: height 0.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
 }
-.portkey-ant-motion-collapse {
+.ant-motion-collapse {
   overflow: hidden;
   transition: height 0.2s cubic-bezier(0.645, 0.045, 0.355, 1), opacity 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) !important;
 }
@@ -12871,6 +12871,134 @@ textarea.portkey-ant-input-number {
 }
 .portkey-ant-page-header-rtl .portkey-ant-page-header-footer .portkey-ant-tabs-bar .portkey-ant-tabs-nav {
   float: right;
+}
+.segmented-disabled-item,
+.segmented-disabled-item:hover,
+.segmented-disabled-item:focus {
+  color: rgba(0, 0, 0, 0.25);
+  cursor: not-allowed;
+}
+.segmented-item-selected {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 1px 4px -1px rgba(0, 0, 0, 0.07), 0 0 1px 0 rgba(0, 0, 0, 0.08);
+}
+.segmented-text-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+}
+.portkey-ant-segmented {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  color: rgba(0, 0, 0, 0.85);
+  font-size: 14px;
+  font-variant: tabular-nums;
+  line-height: 1.5715;
+  list-style: none;
+  font-feature-settings: 'tnum';
+  display: inline-block;
+  padding: 2px;
+  color: rgba(0, 0, 0, 0.65);
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 2px;
+  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.portkey-ant-segmented-group {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  justify-items: flex-start;
+  width: 100%;
+}
+.portkey-ant-segmented.portkey-ant-segmented-block {
+  display: flex;
+}
+.portkey-ant-segmented.portkey-ant-segmented-block .portkey-ant-segmented-item {
+  flex: 1;
+  min-width: 0;
+}
+.portkey-ant-segmented:not(.portkey-ant-segmented-disabled):hover,
+.portkey-ant-segmented:not(.portkey-ant-segmented-disabled):focus {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.portkey-ant-segmented-item {
+  position: relative;
+  text-align: center;
+  cursor: pointer;
+  transition: color 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+}
+.portkey-ant-segmented-item-selected {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 1px 4px -1px rgba(0, 0, 0, 0.07), 0 0 1px 0 rgba(0, 0, 0, 0.08);
+  color: #262626;
+}
+.portkey-ant-segmented-item:hover,
+.portkey-ant-segmented-item:focus {
+  color: #262626;
+}
+.portkey-ant-segmented-item-label {
+  min-height: 28px;
+  padding: 0 11px;
+  line-height: 28px;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  word-break: keep-all;
+}
+.portkey-ant-segmented-item-icon + * {
+  margin-left: 6px;
+}
+.portkey-ant-segmented-item-input {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.portkey-ant-segmented.portkey-ant-segmented-lg .portkey-ant-segmented-item-label {
+  min-height: 36px;
+  padding: 0 11px;
+  font-size: 16px;
+  line-height: 36px;
+}
+.portkey-ant-segmented.portkey-ant-segmented-sm .portkey-ant-segmented-item-label {
+  min-height: 20px;
+  padding: 0 7px;
+  line-height: 20px;
+}
+.portkey-ant-segmented-item-disabled,
+.portkey-ant-segmented-item-disabled:hover,
+.portkey-ant-segmented-item-disabled:focus {
+  color: rgba(0, 0, 0, 0.25);
+  cursor: not-allowed;
+}
+.portkey-ant-segmented-thumb {
+  background-color: #fff;
+  border-radius: 2px;
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05), 0 1px 4px -1px rgba(0, 0, 0, 0.07), 0 0 1px 0 rgba(0, 0, 0, 0.08);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  padding: 4px 0;
+}
+.portkey-ant-segmented-thumb-motion-appear-active {
+  transition: transform 0.3s cubic-bezier(0.645, 0.045, 0.355, 1), width 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
+  will-change: transform, width;
+}
+.portkey-ant-segmented.portkey-ant-segmented-rtl {
+  direction: rtl;
+}
+.portkey-ant-segmented.portkey-ant-segmented-rtl .portkey-ant-segmented-item-icon {
+  margin-right: 0;
+  margin-left: 6px;
 }
 .portkey-ant-select-single .portkey-ant-select-selector {
   display: flex;

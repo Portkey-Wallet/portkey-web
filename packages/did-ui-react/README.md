@@ -30,7 +30,7 @@ yarn add "@portkey/did-ui-react
 ## 🔨 Usage
 
 ```tsx
-import { SignIn, PortkeyConfigProvider, DIDWalletInfo, ISignIn } from '@portkey/did-ui-react';
+import { SignIn, PortkeyProvider, DIDWalletInfo, ISignIn } from '@portkey/did-ui-react';
 import { useRef, useCallback } from 'react';
 
 const App = () => {
@@ -41,7 +41,7 @@ const App = () => {
   }, []);
 
   return (
-    <PortkeyConfigProvider>
+    <PortkeyProvider networkType={'TESTNET'}>
       <button
         onClick={() => {
           ref.current?.setOpen(true);
@@ -49,7 +49,7 @@ const App = () => {
         Sign In
       </button>
       <SignIn ref={ref} onFinish={onFinish} />
-    </PortkeyConfigProvider>
+    </PortkeyProvider>
   );
 };
 
@@ -97,10 +97,18 @@ ConfigProvider.setGlobalConfig({
 
 [Bingogame Github](https://github.com/Portkey-Wallet/portkey-bingo-game)
 
-You can also use the ```next-example``` in the current project
+You can also use the ```next-example``` in the current project. [next-example](../next-example/src/pages/sign/index.tsx)
 
 ```bash
   yarn next-example dev
+```
+
+or
+
+You can also use the ```example``` in the current project. [example](../example/src/index.tsx)
+
+```bash
+ yarn example dev
 ```
 
 ### TypeScript

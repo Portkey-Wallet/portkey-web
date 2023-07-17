@@ -1,6 +1,9 @@
 import { CAInfo } from '@portkey/did';
 import { AccountType } from '@portkey/services';
 import { ChainId, IBlockchainWallet } from '@portkey/types';
+import { CSSProperties, ReactNode } from 'react';
+import { IGuardianIdentifierInfo, IPhoneCountry } from './signIn';
+import { OnErrorFunc, ValidatorHandler } from '../../types';
 export * from './verify';
 export * from './signIn';
 export * from './reCaptcha';
@@ -42,3 +45,36 @@ export interface CreatePendingInfo {
 }
 
 export type LoginFinishWithoutPin = (info: Omit<DIDWalletInfo, 'pin'>) => void;
+
+export enum GridType {
+  qrCodeOnTop,
+  qrCodeOnBottom,
+}
+
+export enum Design {
+  SocialDesign = 'SocialDesign',
+  CryptoDesign = 'CryptoDesign',
+  Web2Design = 'Web2Design',
+}
+
+export type TDesign = `${Design}`;
+
+export type TSize = 'L' | 'S';
+export type Theme = 'dark' | 'light';
+
+export interface IBaseGetGuardianProps {
+  defaultChainId?: ChainId;
+  className?: string;
+  style?: CSSProperties;
+  isErrorTip?: boolean;
+  isShowScan?: boolean; // show scan button
+  termsOfService?: ReactNode;
+  phoneCountry?: IPhoneCountry; // phone country code info
+  extraElement?: ReactNode; // extra element
+  onError?: OnErrorFunc;
+  validateEmail?: ValidatorHandler; // validate email
+  validatePhone?: ValidatorHandler; // validate phone
+  onSuccess?: (value: IGuardianIdentifierInfo) => void;
+  onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
+  onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
+}

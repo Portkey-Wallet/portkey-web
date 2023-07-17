@@ -17,7 +17,6 @@ const step2Storage = `${portkeyDidUIPrefix}step1Storage`;
 type Step2FinishParams = { verifier: VerifierItem } & IVerifyInfo;
 
 interface Step2WithSignUpProps {
-  sandboxId?: string;
   chainType?: ChainType;
   defaultSignUpStep?: Step2SignUpLifeCycleType;
   defaultCodeInfo?: VerifierSelectConfirmResult;
@@ -32,7 +31,6 @@ interface Step2WithSignUpProps {
 
 function Step2WithSignUp({
   isErrorTip = true,
-  sandboxId,
   chainType,
   defaultSignUpStep,
   defaultCodeInfo,
@@ -120,7 +118,6 @@ function Step2WithSignUp({
       <BackHeader onBack={onBackHandler} />
       {signUpStep === 'VerifierSelect' && (
         <VerifierSelect
-          sandboxId={sandboxId}
           chainType={chainType}
           operationType={OperationTypeEnum.register}
           chainId={guardianIdentifierInfo.chainId}
