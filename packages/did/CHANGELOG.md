@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.10...v1.1.0-alpha.6) (2023-07-18)
+
+### Features
+
+- 🎸 Use react context, and support configuration theme ([0761677](https://github.com/Portkey-Wallet/portkey-web/commit/07616771e1399a006a50e5fb932362ab6f21523d))
+
 ## [1.1.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.8...v1.1.0-alpha.5) (2023-07-14)
 
 **Note:** Version bump only for package @portkey/did
