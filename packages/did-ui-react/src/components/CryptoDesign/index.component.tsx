@@ -11,12 +11,12 @@ import { usePortkey } from '../context';
 import useSignHandler from '../SignStep/utils';
 import './index.less';
 
-export interface SignUpAndLoginProps extends IBaseGetGuardianProps {
+export interface CryptoDesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
-export default function SignUpAndLoginBaseCom({
+export default function CryptoDesignBaseCom({
   type,
   style,
   defaultChainId = 'AELF',
@@ -33,11 +33,11 @@ export default function SignUpAndLoginBaseCom({
   onSignTypeChange,
   onChainIdChange,
   onLoginFinishWithoutPin,
-}: SignUpAndLoginProps) {
-  const validateEmailRef = useRef<SignUpAndLoginProps['validateEmail']>(validateEmail);
-  const validatePhoneRef = useRef<SignUpAndLoginProps['validatePhone']>(validatePhone);
-  const onChainIdChangeRef = useRef<SignUpAndLoginProps['onChainIdChange']>(onChainIdChange);
-  const onErrorRef = useRef<SignUpAndLoginProps['onError']>(onError);
+}: CryptoDesignProps) {
+  const validateEmailRef = useRef<CryptoDesignProps['validateEmail']>(validateEmail);
+  const validatePhoneRef = useRef<CryptoDesignProps['validatePhone']>(validatePhone);
+  const onChainIdChangeRef = useRef<CryptoDesignProps['onChainIdChange']>(onChainIdChange);
+  const onErrorRef = useRef<CryptoDesignProps['onError']>(onError);
 
   const _socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
   const [{ theme }] = usePortkey();

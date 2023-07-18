@@ -12,7 +12,6 @@ const myStore = new Store();
 ConfigProvider.setGlobalConfig({
   connectUrl: 'https://auth-portkey-test.portkey.finance',
   storageMethod: myStore,
-  socketUrl: 'https://did-portkey-test.portkey.finance/ca',
   socialLogin: {
     Portkey: {
       websiteName: 'website demo',

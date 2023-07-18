@@ -1,12 +1,12 @@
 import {
   ConfigProvider,
-  SignUpAndLogin,
+  CryptoDesign,
   SetPinAndAddManager,
   VerifierSelect,
   CodeVerify,
   GuardianApproval,
   PortkeyLoading,
-  UserInput,
+  SocialDesign,
   SignIn,
   Web2Design,
   ISignIn,
@@ -71,7 +71,7 @@ function Example() {
       />
       <div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
-          <SignUpAndLogin
+          <CryptoDesign
             style={{ height: 600, border: '1px solid gray' }}
             termsOfService={'https://portkey.finance/terms-of-service'}
             onError={(error: any) => {
@@ -81,7 +81,7 @@ function Example() {
               console.log('onSuccess:', value);
             }}
           />
-          <UserInput
+          <SocialDesign
             style={{ height: 600, border: '1px solid gray' }}
             termsOfService={'https://portkey.finance/terms-of-service'}
             onError={(error: any) => {

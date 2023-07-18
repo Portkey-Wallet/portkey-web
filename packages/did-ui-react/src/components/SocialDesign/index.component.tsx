@@ -13,12 +13,12 @@ import useSignHandler from '../SignStep/utils';
 import { usePortkey } from '../context';
 import './index.less';
 
-type UserInputType = AccountType | 'Scan' | null;
-export interface UserInputProps extends IBaseGetGuardianProps {
-  type?: UserInputType;
+type SocialDesignType = AccountType | 'Scan' | null;
+export interface SocialDesignProps extends IBaseGetGuardianProps {
+  type?: SocialDesignType;
 }
 
-function UserInput({
+function SocialDesign({
   style,
   type = null,
   defaultChainId = 'AELF',
@@ -34,12 +34,12 @@ function UserInput({
   validatePhone: defaultValidatePhone,
   onChainIdChange,
   onLoginFinishWithoutPin,
-}: UserInputProps) {
-  const [accountType, setAccountType] = useState<UserInputType>(type);
-  const validateEmailRef = useRef<UserInputProps['validateEmail']>(defaultValidateEmail);
-  const validatePhoneRef = useRef<UserInputProps['validatePhone']>(defaultValidatePhone);
-  const onChainIdChangeRef = useRef<UserInputProps['onChainIdChange']>(onChainIdChange);
-  const onErrorRef = useRef<UserInputProps['onError']>(onError);
+}: SocialDesignProps) {
+  const [accountType, setAccountType] = useState<SocialDesignType>(type);
+  const validateEmailRef = useRef<SocialDesignProps['validateEmail']>(defaultValidateEmail);
+  const validatePhoneRef = useRef<SocialDesignProps['validatePhone']>(defaultValidatePhone);
+  const onChainIdChangeRef = useRef<SocialDesignProps['onChainIdChange']>(onChainIdChange);
+  const onErrorRef = useRef<SocialDesignProps['onError']>(onError);
 
   const socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
 
@@ -127,4 +127,4 @@ function UserInput({
   );
 }
 
-export default memo(UserInput);
+export default memo(SocialDesign);

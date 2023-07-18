@@ -1,11 +1,11 @@
-import SignUpAndLogin, { SignUpAndLoginProps } from '../../../SignUpAndLogin/index.component';
+import CryptoDesign, { CryptoDesignProps } from '../../../CryptoDesign/index.component';
 import { useCallback, useState, memo, useRef } from 'react';
 import type { DIDWalletInfo, IGuardianIdentifierInfo, TDesign, TSize } from '../../../types';
 import { Design } from '../../../types';
 import type { SignInLifeCycleType } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
-import UserInput from '../../../UserInput/index.component';
+import SocialDesign from '../../../SocialDesign/index.component';
 import Web2Design from '../../../Web2Design/index.component';
 
 export type OnSignInFinishedFun = (values: {
@@ -16,7 +16,7 @@ export type OnSignInFinishedFun = (values: {
   };
 }) => void;
 
-interface Step1Props extends SignUpAndLoginProps {
+interface Step1Props extends CryptoDesignProps {
   size?: TSize;
   design?: TDesign;
   onSignInFinished: OnSignInFinishedFun;
@@ -51,7 +51,7 @@ function Step1({ size, design, onStepChange, onSignInFinished, type, ...props }:
   return (
     <>
       {design === Design.SocialDesign && (
-        <UserInput {...props} type={type === 'LoginByScan' ? 'Scan' : null} onSuccess={onSuccess} />
+        <SocialDesign {...props} type={type === 'LoginByScan' ? 'Scan' : null} onSuccess={onSuccess} />
       )}
 
       {design === Design.Web2Design && (
@@ -59,7 +59,7 @@ function Step1({ size, design, onStepChange, onSignInFinished, type, ...props }:
       )}
 
       {(!design || design === Design.CryptoDesign) && (
-        <SignUpAndLogin {...props} type={type} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
+        <CryptoDesign {...props} type={type} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
       )}
 
       <LoginModal
