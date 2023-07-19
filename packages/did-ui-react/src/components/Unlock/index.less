@@ -9,20 +9,19 @@
   flex-direction: column;
   align-items: center;
   padding: 72px 30px 0;
+  .unlock-title {
+    color: var(--portkey-ui-text-primary);
+  }
+
   .password-wrap {
     width: 100%;
     margin-bottom: 24px;
 
     .password-label {
+      display: block;
+      margin-bottom: 12px;
       font-size: 12px;
-    }
-
-    .password-input {
-      border: none;
-      border-bottom: 2px solid var(--portkey-ui-border-7);
-      border-radius: 0;
-      padding-left: 0;
-      padding-right: 0;
+      color: var(--portkey-ui-form-label);
     }
   }
 
@@ -34,7 +33,6 @@
     line-height: 16px;
   }
   .submit-btn {
-    padding: 16px 0;
     border-radius: var(--portkey-ui-primary-border-radius);
     font-size: 16px;
     line-height: var(--portkey-ui-primary-btn-h);
@@ -51,4 +49,16 @@
   font-size: 32px;
   line-height: 38px;
   margin-bottom: 56px;
+}
+
+.portkey-ui-unlock-input {
+  border: none;
+  border-bottom: 2px solid;
+  border-color: var(--portkey-ui-border-7);
+  border-radius: 0;
+  padding-left: 0;
+  padding-right: 0;
+  &:hover {
+    border-color: var(--portkey-ui-border-7) !important;
+  }
 }

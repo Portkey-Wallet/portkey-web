@@ -42,13 +42,13 @@ export default function UnLock({
     return (
       <div className="unlock-body">
         <CustomSvg type="Portkey" style={{ width: '80px', height: '80px' }} />
-        <h1>Welcome back!</h1>
+        <h1 className="unlock-title">Welcome back!</h1>
         <div className="password-wrap">
           <span className="password-label">Enter Pin</span>
           <CustomPassword
             value={value}
             placeholder={t('Enter Pin')}
-            className="password-input"
+            className="portkey-ui-unlock-input"
             maxLength={16}
             onChange={(e) => {
               onChange(e.target.value);
