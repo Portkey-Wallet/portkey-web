@@ -20,18 +20,19 @@ keeping their original UI.
 <h2>📦 Installation</h2>
 
 ```bash
-npm install "@portkey/did-ui-react
+npm install "@portkey/did-ui-react"
 ```
 
 ```bash
-yarn add "@portkey/did-ui-react
+yarn add "@portkey/did-ui-react"
 ```
 
 ## 🔨 Usage
 
 ```tsx
-import { SignIn, PortkeyProvider, DIDWalletInfo, ISignIn } from '@portkey/did-ui-react';
-import { useRef, useCallback } from 'react';
+import { SignIn , DIDWalletInfo} from '@portkey/did-ui-react';
+import { useState, useEffect, useCallback } from 'react';
+import "@portkey/did-ui-react/dist/assets/index.css";
 
 const App = () => {
   const ref = useRef<ISignIn>();
