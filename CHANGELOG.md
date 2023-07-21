@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.1.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.10...v1.1.1) (2023-07-21)
+
+### Bug Fixes
+
+- 🐛 Array.at incompatibilities ([36e797c](https://github.com/Portkey-Wallet/portkey-web/commit/36e797c7b2888bc0efc7f6bbe0e339c82e3724c7))
+
 ## [1.0.10](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.9...v1.0.10) (2023-07-17)
 
 **Note:** Version bump only for package root
