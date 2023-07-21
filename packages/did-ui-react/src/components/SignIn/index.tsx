@@ -83,7 +83,7 @@ const SignIn = forwardRef(
     const defaultLiftCyclePropsRef = useRef<any>();
 
     useMemo(() => {
-      const lifeCycle = Object.entries(defaultLifeCycleInfo || {}).at(-1) || [];
+      const lifeCycle = Object.entries(defaultLifeCycleInfo || {}).slice(-1)[0] || [];
       defaultLifeCycleRef.current = lifeCycle[0] as LifeCycleType;
       defaultLiftCyclePropsRef.current = lifeCycle[1];
       return lifeCycle as [] | [LifeCycleType, any];
