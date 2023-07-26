@@ -17,6 +17,8 @@ import {
   CheckGoogleRecaptchaParams,
 } from '../types/communityRecovery';
 import {
+  GetRecommendationVerifierParams,
+  GetRecommendationVerifierResult,
   SendAppleUserExtraInfoParams,
   SendAppleUserExtraInfoResult,
   SendVerificationCodeRequestParams,
@@ -128,6 +130,13 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
         ...params,
         accessToken: params.identityToken,
       },
+    });
+  }
+  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<GetRecommendationVerifierResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/getVerifierServer',
+      params,
     });
   }
 }

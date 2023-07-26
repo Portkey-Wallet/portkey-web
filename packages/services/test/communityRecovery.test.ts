@@ -173,4 +173,11 @@ describe('communityRecovery describe', () => {
     expect(result.locateData).toHaveProperty('code');
     expect(result.locateData).toHaveProperty('iso');
   });
+
+  test('test getRecommendationVerifier', async () => {
+    const result = await communityRecovery.getRecommendationVerifier({ chainId: 'AELF' });
+    expect(result).toHaveProperty('id');
+    expect(result).toHaveProperty('name');
+    expect(result).toHaveProperty('imageUrl');
+  });
 });
