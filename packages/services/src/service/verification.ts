@@ -1,4 +1,6 @@
 import {
+  GetRecommendationVerifierParams,
+  GetRecommendationVerifierResult,
   IVerificationService,
   SendAppleUserExtraInfoParams,
   SendAppleUserExtraInfoResult,
@@ -59,6 +61,13 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
         ...params,
         accessToken: params.identityToken,
       },
+    });
+  }
+  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<GetRecommendationVerifierResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/getVerifierServer',
+      params,
     });
   }
 }
