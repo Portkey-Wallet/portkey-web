@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import './index.css';
 
 export default function APP({ Component, pageProps }: any) {
-  const [dark, setDark] = useState<boolean>(true);
+  const [dark, setDark] = useState<boolean>(false);
 
   useEffect(() => {
     if (dark) {
