@@ -116,7 +116,6 @@ export default function VerifierSelect({
         value: item.id,
         iconUrl: item.imageUrl ?? '',
         label: item.name,
-        url: item.endPoints[0],
         icon: <img src={item.imageUrl} />,
         id: item.id,
       })),

@@ -66,7 +66,7 @@ export type GetRecommendationVerifierParams = {
   chainId: ChainId;
 };
 
-export type GetRecommendationVerifierResult = {
+export type VerifierItem = {
   id: string;
   name: string;
   imageUrl: string;
@@ -78,5 +78,5 @@ export interface IVerificationService {
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
-  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<GetRecommendationVerifierResult>;
+  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
 }
