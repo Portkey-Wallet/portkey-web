@@ -153,6 +153,85 @@ class FetchRequestMock {
         };
         break;
 
+      // ramp
+      case '/api/app/thirdPart/alchemy/fiatList':
+        result = {
+          data: [
+            {
+              currency: 'USD',
+              country: 'US',
+              payWayCode: 'credit_card',
+              payWayName: 'Credit Card',
+              fixedFee: 0,
+              rateFee: 1,
+              payMin: 10,
+              payMax: 10000,
+            },
+          ],
+          returnCode: '0000',
+        };
+        break;
+      case '/api/app/thirdPart/alchemy/cryptoList':
+        result = {
+          data: [
+            {
+              crypto: 'crypto_mock',
+              network: 'network_mock',
+              buyEnable: 'buyEnable_mock',
+              sellEnable: 'sellEnable_mock',
+              minPurchaseAmount: 10,
+              maxPurchaseAmount: 100,
+              address: null,
+              icon: 'icon_mock',
+              minSellAmount: 20,
+              maxSellAmount: 200,
+            },
+          ],
+          returnCode: '0000',
+        };
+        break;
+      case '/api/app/thirdPart/alchemy/order/quote':
+        result = {
+          data: [
+            {
+              crypto: 'crypto_mock',
+              cryptoPrice: '200',
+              cryptoQuantity: '1',
+              fiat: 'USD',
+              rampFee: '0',
+              networkFee: '0',
+              fiatQuantity: '200',
+            },
+          ],
+          returnCode: '0000',
+        };
+        break;
+      case '/api/app/thirdPart/alchemy/token':
+        result = {
+          data: {
+            id: 'id_mock',
+            email: 'email_mock',
+            accessToken: 'accessToken_mock',
+          },
+          returnCode: '0000',
+        };
+        break;
+      case '/api/app/thirdPart/order':
+        result = {
+          id: 'order_no_mock',
+          success: true,
+        };
+        break;
+      case '/api/app/thirdPart/alchemy/signature':
+        result = {
+          signature: 'signature_mock',
+          returnCode: '0000',
+        };
+        break;
+      case '/api/app/thirdPart/alchemy/transaction':
+        result = {};
+        break;
+
       default:
         break;
     }
