@@ -94,8 +94,8 @@ export interface VerifierItem {
   id: string;
   name: string;
   imageUrl: string;
-  endPoints: string[];
-  verifierAddresses: string[];
+  endPoints?: string[];
+  verifierAddresses?: string[];
 }
 
 export interface IDIDConfig extends IConfig {

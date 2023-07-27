@@ -18,7 +18,7 @@ import {
 } from '../types/communityRecovery';
 import {
   GetRecommendationVerifierParams,
-  GetRecommendationVerifierResult,
+  VerifierItem,
   SendAppleUserExtraInfoParams,
   SendAppleUserExtraInfoResult,
   SendVerificationCodeRequestParams,
@@ -132,7 +132,7 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
-  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<GetRecommendationVerifierResult> {
+  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/getVerifierServer',
