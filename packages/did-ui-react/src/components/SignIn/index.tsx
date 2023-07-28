@@ -18,33 +18,30 @@ import type {
   IPhoneCountry,
   AddManagerType,
   LoginFinishWithoutPin,
+  TVerifierItem,
 } from '../types';
 import type { ChainId } from '@portkey/types';
-import type { GuardiansApproved } from '@portkey/services';
-import type { VerifierItem } from '@portkey/did';
-import {
-  LifeCycleType,
-  SignInLifeCycleType,
-  SIGN_IN_STEP,
-  SignInProps,
-  Step2SignUpLifeCycleType,
-} from '../SignStep/types';
+import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, SignInProps, TVerifyCodeInfo } from '../SignStep/types';
 import clsx from 'clsx';
-import { did, errorTip } from '../../utils';
+import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
-import './index.less';
 import { UserGuardianStatus } from '../../types';
 import Container from '../Container';
 import { usePortkey } from '../context';
+import useVerifier from '../../hooks/useVerifier';
+import { sleep } from '@portkey/utils';
+import { modalMethod } from '../../utils/modalMethod';
+import './index.less';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
   Step2OfLogin: ['GuardianApproval'],
-  Step2OfSignUp: ['VerifierSelect', 'SignUpCodeVerify'],
+  Step2OfSignUp: ['SignUpCodeVerify'],
   SignIn: ['SignUp', 'Login', 'LoginByScan'],
 };
 
-type TSignUpVerifier = { verifier: VerifierItem } & IVerifyInfo;
+type TSignUpVerifier = { verifier: TVerifierItem } & IVerifyInfo;
 
 const SignIn = forwardRef(
   (
@@ -73,6 +70,7 @@ const SignIn = forwardRef(
     ref,
   ) => {
     const [guardianIdentifierInfo, setGuardianIdentifierInfo] = useState<IGuardianIdentifierInfo>();
+    const [verifierCodeInfo, setVerifierCodeInfo] = useState<TVerifyCodeInfo>();
     const onErrorRef = useRef<SignInProps['onError']>(onError);
     const onFinishRef = useRef<SignInProps['onFinish']>(onFinish);
     const onChainIdChangeRef = useRef<SignInProps['onChainIdChange']>(onChainIdChange);
@@ -123,6 +121,7 @@ const SignIn = forwardRef(
                 break;
               case 'Step2OfSignUp':
               case 'Step2OfLogin':
+                if (key === 'Step2OfSignUp') setVerifierCodeInfo(defaultLiftCycleProps?.verifyCodeInfo);
                 setGuardianIdentifierInfo(defaultLiftCycleProps?.guardianIdentifierInfo);
                 // uiType === 'Modal' && setOpen(true);
                 break;
@@ -161,32 +160,16 @@ const SignIn = forwardRef(
       dealStep();
     });
 
-    const onSignInFinished: OnSignInFinishedFun = useCallback(
-      (result) => {
-        const { type, value } = result.result;
-        if (result.isFinished) {
-          // Sign in by scan
-          onFinishRef?.current?.(value as DIDWalletInfo);
-        } else {
-          if (type === 'SignUp') {
-            changeLifeCycle('VerifierSelect', { guardianIdentifierInfo: value });
-          } else {
-            changeLifeCycle('GuardianApproval', { guardianIdentifierInfo: value });
-          }
-          setApprovedList(undefined);
-          setGuardianIdentifierInfo(value as IGuardianIdentifierInfo);
-        }
-      },
-      [changeLifeCycle],
-    );
+    const { getRecommendationVerifier, verifySocialToken, sendVerifyCode } = useVerifier();
 
     const onStep2OfSignUpFinish = useCallback(
-      (res: TSignUpVerifier) => {
-        if (!guardianIdentifierInfo) return console.error('No guardianIdentifier!');
+      (res: TSignUpVerifier, value?: IGuardianIdentifierInfo) => {
+        const identifier = value || guardianIdentifierInfo;
+        if (!identifier) return console.error('No guardianIdentifier!');
         const list = [
           {
-            type: guardianIdentifierInfo?.accountType,
-            identifier: guardianIdentifierInfo.identifier,
+            type: identifier.accountType,
+            identifier: identifier.identifier,
             verifierId: res.verifier.id,
             verificationDoc: res.verificationDoc,
             signature: res.signature,
@@ -194,11 +177,117 @@ const SignIn = forwardRef(
         ];
         setApprovedList(list);
         changeLifeCycle('SetPinAndAddManager', {
-          guardianIdentifierInfo,
+          guardianIdentifierInfo: identifier,
           approvedList: list,
         });
       },
       [changeLifeCycle, guardianIdentifierInfo],
+    );
+
+    const onSignUp = useCallback(
+      async (value: IGuardianIdentifierInfo) => {
+        try {
+          setLoading(true, 'Assigning a verifier on-chain…');
+          await sleep(2000);
+          const verifier = await getRecommendationVerifier(chainId);
+          setLoading(false);
+          const { accountType, authenticationInfo, identifier } = value;
+          if (accountType === 'Apple' || accountType === 'Google') {
+            setLoading(true);
+            const result = await verifySocialToken({
+              accountType,
+              token: authenticationInfo?.appleIdToken || authenticationInfo?.googleAccessToken,
+              guardianIdentifier: identifier,
+              verifier,
+              chainId,
+              operationType: OperationTypeEnum.register,
+            });
+            setLoading(false);
+
+            onStep2OfSignUpFinish(
+              {
+                verifier,
+                verificationDoc: result.verificationDoc,
+                signature: result.signature,
+              },
+              value,
+            );
+          } else {
+            const isOk = await modalMethod({
+              wrapClassName: 'verify-confirm-modal',
+              type: 'confirm',
+              content: (
+                <p className="modal-content">
+                  {`${verifier.name ?? ''} will send a verification code to `}
+                  <span className="bold">{identifier}</span>
+                  {` to verify your ${accountType} address.`}
+                </p>
+              ),
+            });
+            if (isOk) {
+              const result = await sendVerifyCode({
+                accountType,
+                guardianIdentifier: identifier,
+                verifier,
+                chainId,
+                operationType: OperationTypeEnum.register,
+              });
+
+              if (!result?.verifierSessionId) return;
+              const verifyCodeInfo = {
+                verifier,
+                verifierSessionId: result.verifierSessionId,
+              };
+              setVerifierCodeInfo(verifyCodeInfo);
+              changeLifeCycle('SignUpCodeVerify', {
+                guardianIdentifierInfo: value,
+                verifyCodeInfo,
+              });
+            } else {
+              // Cancel
+            }
+          }
+        } catch (error) {
+          const errorMsg = handleErrorMessage(error);
+          errorTip(
+            {
+              errorFields: 'Check sign up',
+              error: errorMsg,
+            },
+            isErrorTip,
+            onError,
+          );
+        }
+      },
+      [
+        chainId,
+        changeLifeCycle,
+        getRecommendationVerifier,
+        isErrorTip,
+        onError,
+        onStep2OfSignUpFinish,
+        sendVerifyCode,
+        verifySocialToken,
+      ],
+    );
+
+    const onSignInFinished: OnSignInFinishedFun = useCallback(
+      async (result) => {
+        const { type, value } = result.result;
+        if (result.isFinished) {
+          // Sign in by scan
+          onFinishRef?.current?.(value as DIDWalletInfo);
+        } else {
+          setGuardianIdentifierInfo(value as IGuardianIdentifierInfo);
+          if (type === 'SignUp') {
+            await onSignUp(value as IGuardianIdentifierInfo);
+          } else {
+            changeLifeCycle('GuardianApproval', { guardianIdentifierInfo: value });
+            setApprovedList(undefined);
+          }
+        }
+      },
+      [changeLifeCycle, onSignUp],
     );
 
     const onStep2Cancel = useCallback(() => {
@@ -209,7 +298,7 @@ const SignIn = forwardRef(
     const onStep3Cancel = useCallback(
       (v?: AddManagerType) => {
         if (v === 'register') {
-          changeLifeCycle('VerifierSelect', { guardianIdentifierInfo });
+          changeLifeCycle('SignUp', null);
           setApprovedList(undefined);
         } else if (v === 'recovery') {
           changeLifeCycle('GuardianApproval', { guardianIdentifierInfo });
@@ -353,11 +442,9 @@ const SignIn = forwardRef(
           return <div className="portkey-ui-text-center">Missing `guardianIdentifierInfo`</div>;
         return (
           <Step2OfSignUp
-            defaultSignUpStep={lifeCycle as Step2SignUpLifeCycleType}
-            defaultCodeInfo={defaultLiftCyclePropsRef.current?.verifierSelectResult}
+            verifierCodeInfo={verifierCodeInfo}
             guardianIdentifierInfo={guardianIdentifierInfo}
             isErrorTip={isErrorTip}
-            chainType={chainType}
             onStepChange={changeLifeCycle}
             onError={onErrorRef?.current}
             onFinish={onStep2OfSignUpFinish}
@@ -422,6 +509,7 @@ const SignIn = forwardRef(
       onStep3Cancel,
       onCreatePending,
       chainType,
+      verifierCodeInfo,
       changeLifeCycle,
       onStep2OfSignUpFinish,
       onStep2Cancel,

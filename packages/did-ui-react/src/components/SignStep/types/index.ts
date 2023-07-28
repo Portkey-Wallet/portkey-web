@@ -7,16 +7,16 @@ import {
   IGuardianIdentifierInfo,
   IPhoneCountry,
   TDesign,
+  TVerifierItem,
 } from '../../types';
 import { ChainId } from '@portkey/types';
 import { ReactNode } from 'react';
 import { GuardiansApproved } from '@portkey/services';
-import { VerifierItem } from '@portkey/did';
 export type SIGN_IN_STEP = 'SignIn' | 'Step2OfSignUp' | 'Step2OfLogin' | 'Step3';
 
 export type SignInLifeCycleType = CreateWalletType;
 
-export type Step2SignUpLifeCycleType = 'VerifierSelect' | 'SignUpCodeVerify';
+export type Step2SignUpLifeCycleType = 'SignUpCodeVerify';
 export type Step2SignInLifeCycleType = 'GuardianApproval';
 
 export type SetPinAndAddManagerCycleType = 'SetPinAndAddManager';
@@ -33,20 +33,15 @@ export type TStep1LifeCycle = {
   [x in SignInLifeCycleType]?: undefined;
 };
 
-type VerifierSelectConfirmResult = {
-  verifier: VerifierItem;
-  // accountType === 'Email' || accountType === 'Phone' is required;
+export type TVerifyCodeInfo = {
+  verifier: TVerifierItem;
   verifierSessionId: string;
 };
 
 export type TStep2SignUpLifeCycle = {
-  // [x in Step2SignUpLifeCycleType]?:
-  VerifierSelect: {
-    guardianIdentifierInfo: IGuardianIdentifierInfo;
-  };
   SignUpCodeVerify: {
     guardianIdentifierInfo: IGuardianIdentifierInfo;
-    verifierSelectResult: VerifierSelectConfirmResult;
+    verifyCodeInfo: TVerifyCodeInfo;
   };
 };
 
@@ -85,10 +80,6 @@ export interface SignInProps {
 
   onLifeCycleChange?<T = any>(liftCycle: LifeCycleType, nextLifeCycleProps: T): void;
   onLifeCycleChange?(nextLifeCycle: SignInLifeCycleType, nextLifeCycleProps: undefined | null): void;
-  onLifeCycleChange?(
-    nextLifeCycle: 'VerifierSelect',
-    nextLifeCycleProps: TStep2SignUpLifeCycle['VerifierSelect'],
-  ): void;
   onLifeCycleChange?(
     nextLifeCycle: 'SignUpCodeVerify',
     nextLifeCycleProps: TStep2SignUpLifeCycle['SignUpCodeVerify'],

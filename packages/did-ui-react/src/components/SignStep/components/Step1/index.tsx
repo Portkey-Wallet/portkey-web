@@ -40,6 +40,7 @@ function Step1({ size, design, onStepChange, onSignInFinished, type, ...props }:
           value,
         },
       });
+      setOpen(false);
     },
     [createType, onSignInFinished],
   );
@@ -77,6 +78,7 @@ function Step1({ size, design, onStepChange, onSignInFinished, type, ...props }:
               value: signInSuccessRef.current,
             },
           });
+          setOpen(false);
         }}
       />
     </>

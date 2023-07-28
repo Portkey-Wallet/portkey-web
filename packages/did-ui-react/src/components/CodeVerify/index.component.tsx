@@ -2,7 +2,7 @@ import { useCallback, useState, useRef } from 'react';
 import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verification } from '../../utils';
 import type { ChainId } from '@portkey/types';
 import { OperationTypeEnum } from '@portkey/services';
-import type { VerifierItem } from '@portkey/did';
+import { TVerifyCodeInfo } from '../SignStep/types';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
@@ -16,7 +16,7 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
   onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
-  onReSend?: (result: { verifier: VerifierItem; verifierSessionId: string }) => void;
+  onReSend?: (result: TVerifyCodeInfo) => void;
 }
 
 export default function CodeVerify({

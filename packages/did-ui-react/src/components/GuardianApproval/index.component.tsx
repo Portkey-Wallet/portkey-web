@@ -7,10 +7,11 @@ import type { ChainId } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
 import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
-import { VerifierItem } from '@portkey/did';
+import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
+import { TVerifierItem } from '../types';
 import './index.less';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
@@ -59,7 +60,6 @@ const GuardianApproval = forwardRef(
     console.log(guardianList, defaultGuardianList, 'guardianList==GuardianApproval');
 
     useUpdateEffect(() => {
-      console.log('useUpdateEffect==onGuardianListChange', guardianList);
       onGuardianListChange?.(guardianList);
     }, [guardianList]);
 
@@ -129,7 +129,7 @@ const GuardianApproval = forwardRef(
             id,
             verifierId: item.verifier?.id,
             chainId,
-            clientId: clientId ?? '',
+            clientId,
             redirectURI,
             operationType,
             customLoginHandler,
@@ -178,11 +178,10 @@ const GuardianApproval = forwardRef(
             return [...v];
           });
         } catch (error: any) {
-          console.log(error, 'error===');
           return errorTip(
             {
               errorFields: 'GuardianApproval',
-              error: error?.error?.message ?? error?.type ?? 'Something error',
+              error: handleErrorMessage(error, 'Something error'),
             },
             isErrorTip,
             onError,
@@ -221,20 +220,17 @@ const GuardianApproval = forwardRef(
       onConfirmRef.current?.(verificationList);
     }, [guardianList]);
 
-    const onReSendVerifyHandler = useCallback(
-      ({ verifierSessionId }: { verifier: VerifierItem; verifierSessionId: string }, verifyAccountIndex: number) => {
-        setGuardianList((v) => {
-          const list = [...v];
-          if (list[verifyAccountIndex]) {
-            list[verifyAccountIndex].verifierInfo = { sessionId: verifierSessionId };
-          } else {
-            return list;
-          }
+    const onReSendVerifyHandler = useCallback(({ verifierSessionId }: TVerifyCodeInfo, verifyAccountIndex: number) => {
+      setGuardianList((v) => {
+        const list = [...v];
+        if (list[verifyAccountIndex]) {
+          list[verifyAccountIndex].verifierInfo = { sessionId: verifierSessionId };
+        } else {
           return list;
-        });
-      },
-      [],
-    );
+        }
+        return list;
+      });
+    }, []);
 
     return (
       <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
@@ -249,7 +245,7 @@ const GuardianApproval = forwardRef(
             isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
             accountType={guardianList[verifyAccountIndex].guardianType}
             isErrorTip={isErrorTip}
-            verifier={guardianList[verifyAccountIndex].verifier as VerifierItem}
+            verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
             onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
             onError={onError}
             onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}

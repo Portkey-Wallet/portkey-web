@@ -1,80 +1,39 @@
 import { useState, useCallback, memo, useEffect, useRef } from 'react';
-import { AccountTypeEnum, OperationTypeEnum } from '@portkey/services';
-import VerifierSelect, { VerifierSelectConfirmResult } from '../../../VerifierSelect/index.component';
+import { OperationTypeEnum } from '@portkey/services';
 import CodeVerify from '../../../CodeVerify/index.component';
-import { IVerifyInfo } from '../../../types/verify';
+import { IVerifier, IVerifyInfo } from '../../../types/verify';
 import BackHeader from '../../../BackHeader';
 import { OnErrorFunc } from '../../../../types/error';
-import { ChainType } from '@portkey/types';
-import { VerifierItem } from '@portkey/did';
-import { Step2SignUpLifeCycleType, TStep2SignUpLifeCycle } from '../../../SignStep/types';
 import { IGuardianIdentifierInfo } from '../../../types';
-import { portkeyDidUIPrefix } from '../../../../constants';
-import ConfigProvider from '../../../config-provider';
+import { TStep2SignUpLifeCycle, TVerifyCodeInfo } from '../../types';
 
-const step2Storage = `${portkeyDidUIPrefix}step1Storage`;
-
-type Step2FinishParams = { verifier: VerifierItem } & IVerifyInfo;
+type Step2FinishParams = { verifier: IVerifier } & IVerifyInfo;
 
 interface Step2WithSignUpProps {
-  chainType?: ChainType;
-  defaultSignUpStep?: Step2SignUpLifeCycleType;
-  defaultCodeInfo?: VerifierSelectConfirmResult;
+  verifierCodeInfo?: TVerifyCodeInfo;
   isErrorTip?: boolean;
   guardianIdentifierInfo: IGuardianIdentifierInfo;
   onCancel?(): void;
   onFinish?(values: Step2FinishParams): void;
   onError?: OnErrorFunc;
-  onStepChange?(step: 'VerifierSelect', info: TStep2SignUpLifeCycle['VerifierSelect']): void;
   onStepChange?(step: 'SignUpCodeVerify', info: TStep2SignUpLifeCycle['SignUpCodeVerify']): void;
 }
 
 function Step2WithSignUp({
   isErrorTip = true,
-  chainType,
-  defaultSignUpStep,
-  defaultCodeInfo,
+  verifierCodeInfo,
   guardianIdentifierInfo,
   onFinish,
   onCancel,
   onError,
   onStepChange,
 }: Step2WithSignUpProps) {
-  const [signUpStep, setSignUpStep] = useState<Step2SignUpLifeCycleType>(
-    defaultCodeInfo ? defaultSignUpStep || 'VerifierSelect' : 'VerifierSelect',
-  );
-  const [sendCodeInfo, setSendCodeInfo] = useState<VerifierSelectConfirmResult | undefined>(defaultCodeInfo);
+  const [sendCodeInfo, setSendCodeInfo] = useState<TVerifyCodeInfo | undefined>(verifierCodeInfo);
   const onErrorRef = useRef<Step2WithSignUpProps['onError']>(onError);
 
   useEffect(() => {
     onErrorRef.current = onError;
   });
-
-  const onVerifierSelectConfirm = useCallback(
-    (info: VerifierSelectConfirmResult) => {
-      ConfigProvider.config.storageMethod?.setItem(step2Storage, JSON.stringify(info));
-      if (
-        guardianIdentifierInfo.accountType === AccountTypeEnum[AccountTypeEnum.Apple] ||
-        guardianIdentifierInfo.accountType === AccountTypeEnum[AccountTypeEnum.Google]
-      ) {
-        onFinish?.(info as Step2FinishParams);
-        return;
-      }
-      setSendCodeInfo((preInfo) => {
-        if (preInfo?.verifierSessionId === info.verifierSessionId) return preInfo;
-        if (info.verifierSessionId) {
-          const verifierSelectResult = {
-            verifierSessionId: info.verifierSessionId,
-            verifier: info.verifier,
-          };
-          onStepChange?.('SignUpCodeVerify', { guardianIdentifierInfo, verifierSelectResult });
-        }
-        return info;
-      });
-      setSignUpStep('SignUpCodeVerify');
-    },
-    [guardianIdentifierInfo, onFinish, onStepChange],
-  );
 
   const onCodeVerifySuccess = useCallback(
     (res: IVerifyInfo) => {
@@ -87,27 +46,16 @@ function Step2WithSignUp({
     [onFinish, sendCodeInfo],
   );
 
-  const onBackHandler = useCallback(() => {
-    if (signUpStep === 'SignUpCodeVerify') {
-      setSignUpStep('VerifierSelect');
-      onStepChange?.('VerifierSelect', { guardianIdentifierInfo });
-    } else {
-      onCancel?.();
-    }
-  }, [guardianIdentifierInfo, onCancel, onStepChange, signUpStep]);
-
   const onReSend = useCallback(
-    (info: VerifierSelectConfirmResult) => {
+    (info: TVerifyCodeInfo) => {
       setSendCodeInfo((preInfo) => {
         if (preInfo?.verifierSessionId === info.verifierSessionId) return preInfo;
-        if (info.verifierSessionId) {
-          const verifierSelectResult = {
-            verifierSessionId: info.verifierSessionId,
-            verifier: info.verifier,
-          };
-          onStepChange?.('SignUpCodeVerify', { guardianIdentifierInfo, verifierSelectResult });
-          return info;
-        }
+        onStepChange?.('SignUpCodeVerify', {
+          guardianIdentifierInfo,
+          verifyCodeInfo: info,
+        });
+
+        return info;
       });
     },
     [guardianIdentifierInfo, onStepChange],
@@ -115,23 +63,8 @@ function Step2WithSignUp({
 
   return (
     <div className="step-page-wrapper">
-      <BackHeader onBack={onBackHandler} />
-      {signUpStep === 'VerifierSelect' && (
-        <VerifierSelect
-          chainType={chainType}
-          operationType={OperationTypeEnum.register}
-          chainId={guardianIdentifierInfo.chainId}
-          className="content-padding"
-          guardianIdentifier={guardianIdentifierInfo.identifier}
-          isErrorTip={isErrorTip}
-          onError={onError}
-          accountType={guardianIdentifierInfo.accountType}
-          onConfirm={onVerifierSelectConfirm}
-          appleIdToken={guardianIdentifierInfo.authenticationInfo?.appleIdToken}
-          googleAccessToken={guardianIdentifierInfo.authenticationInfo?.googleAccessToken}
-        />
-      )}
-      {signUpStep === 'SignUpCodeVerify' && sendCodeInfo?.verifierSessionId ? (
+      <BackHeader onBack={onCancel} />
+      {sendCodeInfo ? (
         <CodeVerify
           chainId={guardianIdentifierInfo.chainId}
           className="content-padding"
@@ -148,7 +81,7 @@ function Step2WithSignUp({
           onReSend={onReSend}
         />
       ) : (
-        signUpStep === 'SignUpCodeVerify' && 'Missing sendCodeInfo'
+        'Missing sendCodeInfo'
       )}
     </div>
   );
