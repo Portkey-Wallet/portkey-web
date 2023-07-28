@@ -13,3 +13,4 @@ export * from './device';
 export * from './lib';
 export * from './socialLoginAuth';
 export * from './sandboxService';
+export * from './modalMethod';

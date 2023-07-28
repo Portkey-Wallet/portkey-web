@@ -8,7 +8,7 @@ interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
 }
 
 interface BaseAuthProps {
-  clientId: string;
+  clientId?: string;
   redirectURI?: string; // when apple login, it will be used
 }
 
