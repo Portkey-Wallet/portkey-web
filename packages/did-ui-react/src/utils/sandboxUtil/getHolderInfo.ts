@@ -60,4 +60,10 @@ export const getHolderInfoByApi = async (params: GetHolderInfoParam) => {
   });
 };
 
-export const getHolderInfo = async (params: GetHolderInfoParam) => getHolderInfoByApi(params);
+export const getHolderInfo = async (params: GetHolderInfoParam) => {
+  if (isExtension()) {
+    if (!params.sandboxId) throw Error(PortkeyUIError.sandboxIdRequired);
+    return getHolderInfoByExtension(params);
+  }
+  return getHolderInfoByApi(params);
+};

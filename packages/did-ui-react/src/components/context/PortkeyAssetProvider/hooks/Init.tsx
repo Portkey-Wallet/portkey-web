@@ -32,20 +32,24 @@ export const useStateInit = () => {
         },
       };
       const guardian = holderInfo.guardianList.guardians.find((guardian) => guardian.isLoginGuardian);
+      console.log(holderInfo.guardianList.guardians, 'holderInfo.guardianList.guardians');
+      dispatch(basicAssetView.setGuardianList.actions(holderInfo.guardianList.guardians));
       if (guardian)
         did.didWallet.accountInfo = {
           loginAccount: guardian.guardianIdentifier || guardian.identifierHash,
         };
+      await did.didWallet.getCAHolderInfo(originChainId);
+
       return did;
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [caHash, chainType, originChainId, sandboxId],
   );
 
   const loadCaInfoByCaHash = useCallback(async () => {
     if (!managerPrivateKey) throw 'Please configure manager information(`managerPrivateKey`)';
     did.didWallet.createByPrivateKey(managerPrivateKey);
-    return getHolderInfo(did.didWallet.managementAccount?.address as string);
-  }, [getHolderInfo, managerPrivateKey]);
+  }, [managerPrivateKey]);
 
   const loadCaInfo = useCallback(async () => {
     try {
@@ -54,7 +58,9 @@ export const useStateInit = () => {
       } else {
         await did.load(pin, didStorageKeyName);
       }
-      await did.didWallet.getCAHolderInfo(originChainId);
+
+      await getHolderInfo(did.didWallet.managementAccount?.address as string);
+
       const wallet = {
         caInfo: did.didWallet.caInfo,
         managementAccount: did.didWallet.managementAccount,
@@ -64,7 +70,7 @@ export const useStateInit = () => {
     } catch (error) {
       console.error('loadCaInfo:', error);
     }
-  }, [didStorageKeyName, dispatch, loadCaInfoByCaHash, originChainId, pin]);
+  }, [didStorageKeyName, dispatch, getHolderInfo, loadCaInfoByCaHash, pin]);
 
   useEffect(() => {
     loadCaInfo();

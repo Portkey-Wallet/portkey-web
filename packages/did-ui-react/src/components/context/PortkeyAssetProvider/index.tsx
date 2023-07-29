@@ -14,9 +14,10 @@ export function usePortkeyAsset(): [AssetState, BasicActions] {
 function reducer(state: any, { type, payload }: any) {
   switch (type) {
     case basicAssetView.setDIDWallet.type: {
-      console.log(payload, 'payload===');
-
       return Object.assign({}, state, { ...payload });
+    }
+    case basicAssetView.setGuardianList.type: {
+      return Object.assign({}, state, payload);
     }
     case basicAssetView.destroy.type: {
       return {};

@@ -51,7 +51,7 @@ const SignIn = forwardRef(
     {
       defaultChainId = 'AELF',
       isErrorTip = true,
-      // If you set isShowScan to true, make sure you configure ConfigProvider.setGlobalConfig `network`
+      // If you set isShowScan to true, make sure you configure `network`
       isShowScan,
       defaultLifeCycle: defaultLifeCycleInfo,
       phoneCountry: defaultPhoneCountry,

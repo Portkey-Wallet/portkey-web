@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import './index.css';
 
 export default function APP({ Component, pageProps }: any) {
-  const [dark, setDark] = useState<boolean>(true);
+  const [dark, setDark] = useState<boolean>(false);
 
   useEffect(() => {
     if (dark) {
@@ -17,12 +17,12 @@ export default function APP({ Component, pageProps }: any) {
   return (
     <PortkeyProvider networkType={'TESTNET'} theme={dark ? 'dark' : 'light'}>
       <div style={{ background: dark ? '#1E212B' : '#fff' }} id={dark && 'ids'}>
-        <button
+        {/* <button
           onClick={async () => {
             setDark(v => !v);
           }}>
           change theme
-        </button>
+        </button> */}
         <Component {...pageProps} />
       </div>
     </PortkeyProvider>
