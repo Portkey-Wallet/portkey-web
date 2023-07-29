@@ -1,0 +1,57 @@
+import { IBaseRequest } from '@portkey/types';
+import { BaseService } from '../types';
+import {
+  FetchAccountNftCollectionItemListParams,
+  FetchAccountNftCollectionItemListResult,
+  FetchAccountNftCollectionListParams,
+  FetchAccountNftCollectionListResult,
+  FetchAccountTokenListParams,
+  FetchAccountTokenListResult,
+  FetchTokenPriceParams,
+  FetchTokenPriceResult,
+  GetSymbolImagesParams,
+  GetSymbolImagesResult,
+  IAssetsService,
+} from '../types/assets';
+
+export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T> implements IAssetsService {
+  fetchAccountTokenList(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/user/assets/token',
+      params,
+    });
+  }
+  getSymbolImages(params: GetSymbolImagesParams): Promise<GetSymbolImagesResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/user/assets/symbolImages',
+      params,
+    });
+  }
+  fetchAccountNftCollectionList(
+    params: FetchAccountNftCollectionListParams,
+  ): Promise<FetchAccountNftCollectionListResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/user/assets/nftCollections',
+      params,
+    });
+  }
+  fetchAccountNftCollectionItemList(
+    params: FetchAccountNftCollectionItemListParams,
+  ): Promise<FetchAccountNftCollectionItemListResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/user/assets/nftItems',
+      params,
+    });
+  }
+  fetchTokenPrice(params: FetchTokenPriceParams): Promise<FetchTokenPriceResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/tokens/prices',
+      params,
+    });
+  }
+}
