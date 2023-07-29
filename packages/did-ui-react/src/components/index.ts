@@ -47,6 +47,8 @@ export { default as Step2OfSignUp } from './SignStep/components/Step2OfSignUp';
 export { default as Step3OfSign } from './SignStep/components/Step3';
 export { default as Ramp } from './Ramp';
 export { default as RampPreview } from './RampPreview';
+export { default as AssetCard } from './AssetCard';
+export * from './context/PortkeyAssetProvider';
 
 export * from './SignStep/types';
 

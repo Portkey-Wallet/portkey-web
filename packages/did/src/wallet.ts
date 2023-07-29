@@ -317,6 +317,10 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.managementAccount = this._accountProvider.create();
     return this;
   }
+  public createByPrivateKey(create: string): this {
+    this.managementAccount = this._accountProvider.privateKeyToAccount(create);
+    return this;
+  }
   public async save(password: string, keyName?: string | undefined): Promise<boolean> {
     if (!this._storage) throw new Error('Please set storage first');
     const aesPrivateKey = await this.aesEncrypt(password);
