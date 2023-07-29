@@ -3,6 +3,7 @@ export * from './guardian';
 export * from './wallet';
 export * from './country';
 export * from './device';
+export * from './ramp';
 
 type GenerateType<T> = {
   [K in keyof T]: T[K];
@@ -32,4 +33,9 @@ export enum UseRecaptcha {
   register = 0,
   communityRecovery = 1,
   optGuardian = 2,
+}
+
+export interface IKeyDownParams {
+  key: string;
+  preventDefault: () => any;
 }
