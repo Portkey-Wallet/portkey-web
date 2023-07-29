@@ -32,7 +32,7 @@ export const basicAssetView = {
   },
   setGuardianList: {
     type: PortkeyActions['setGuardianList'],
-    actions: (guardianList: Guardian[]) => basicActions(PortkeyActions['setGuardianList'], guardianList),
+    actions: (guardianList: Guardian[]) => basicActions(PortkeyActions['setGuardianList'], { guardianList }),
   },
   destroy: {
     type: PortkeyActions['destroy'],

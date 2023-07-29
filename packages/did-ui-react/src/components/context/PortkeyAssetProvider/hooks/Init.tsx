@@ -11,7 +11,7 @@ export const useStateInit = () => {
   const [{ pin, caHash, originChainId, managerPrivateKey, didStorageKeyName }, { dispatch }] = usePortkeyAsset();
 
   const getHolderInfo = useCallback(
-    async (managerAddress: string) => {
+    async ({ managerAddress, caHash }: { managerAddress: string; caHash: string }) => {
       if (!originChainId) throw 'Please configure `originChainId` in PortkeyAssetProvider';
       if (!caHash) throw 'Please configure `caHash` in PortkeyAssetProvider';
       const holderInfo = await getHolderInfoByContract({
@@ -32,7 +32,6 @@ export const useStateInit = () => {
         },
       };
       const guardian = holderInfo.guardianList.guardians.find((guardian) => guardian.isLoginGuardian);
-      console.log(holderInfo.guardianList.guardians, 'holderInfo.guardianList.guardians');
       dispatch(basicAssetView.setGuardianList.actions(holderInfo.guardianList.guardians));
       if (guardian)
         did.didWallet.accountInfo = {
@@ -42,8 +41,7 @@ export const useStateInit = () => {
 
       return did;
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [caHash, chainType, originChainId, sandboxId],
+    [chainType, dispatch, originChainId, sandboxId],
   );
 
   const loadCaInfoByCaHash = useCallback(async () => {
@@ -58,8 +56,16 @@ export const useStateInit = () => {
       } else {
         await did.load(pin, didStorageKeyName);
       }
+      const storageCaHash = did.didWallet?.caInfo?.[originChainId]?.['caHash'];
+      if (caHash && storageCaHash && storageCaHash !== caHash)
+        throw 'Please check whether the entered caHash is correct';
 
-      await getHolderInfo(did.didWallet.managementAccount?.address as string);
+      if (!caHash && !storageCaHash) throw 'Please configure `caHash` in PortkeyAssetProvider';
+
+      await getHolderInfo({
+        caHash: caHash || storageCaHash,
+        managerAddress: did.didWallet.managementAccount?.address as string,
+      });
 
       const wallet = {
         caInfo: did.didWallet.caInfo,
@@ -70,7 +76,7 @@ export const useStateInit = () => {
     } catch (error) {
       console.error('loadCaInfo:', error);
     }
-  }, [didStorageKeyName, dispatch, getHolderInfo, loadCaInfoByCaHash, pin]);
+  }, [caHash, didStorageKeyName, dispatch, getHolderInfo, loadCaInfoByCaHash, originChainId, pin]);
 
   useEffect(() => {
     loadCaInfo();

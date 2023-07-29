@@ -48,6 +48,8 @@ export { default as Step3OfSign } from './SignStep/components/Step3';
 export { default as Ramp } from './Ramp';
 export { default as RampPreview } from './RampPreview';
 export { default as AssetCard } from './AssetCard';
+export { default as Asset } from './Asset';
+
 export * from './context/PortkeyAssetProvider';
 
 export * from './SignStep/types';
