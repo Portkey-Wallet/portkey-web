@@ -6,12 +6,13 @@ import clsx from 'clsx';
 import { RampTypeEnum } from '../../types';
 import './index.less';
 import {
+  ACH_MERCHANT_NAME,
   // ACH_MERCHANT_NAME,
   AchConfig,
   DISCLAIMER_TEXT,
   MAX_UPDATE_TIME,
   SERVICE_UNAVAILABLE_TEXT,
-  // TransDirectEnum,
+  TransDirectEnum,
   initPreviewData,
 } from '../../constants/ramp';
 import BackHeaderForPage from '../BackHeaderForPage';
@@ -20,8 +21,10 @@ import { formatAmountShow } from '../../utils/converter';
 import CustomModal from '../CustomModal';
 import ConfigProvider from '../config-provider';
 import { IRampPreviewProps } from '.';
-import { ConfigContext } from 'antd/lib/config-provider';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
+import { getOrderQuote } from '../Ramp/utils';
+import { getAchSignature, getRampOrderNo } from './utils';
+import { useGetAchTokenInfo } from './hooks';
 
 export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewProps) {
   const { t } = useTranslation();
@@ -40,12 +43,9 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
     [data, receive],
   );
 
-  // const getAchTokenInfo = useGetAchTokenInfo();
-  // const getAchTokenInfo = {};
+  const getAchTokenInfo = useGetAchTokenInfo();
+
   const [{ guardianList }] = usePortkeyAsset();
-  useEffect(() => {
-    console.log(guardianList, 'guardianList===');
-  }, [guardianList]);
 
   const setReceiveCase = useCallback(
     ({
@@ -70,15 +70,14 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
 
   const updateReceive = useCallback(async () => {
     try {
-      // const rst = await getOrderQuote(data);
-      const rst = {} as any;
+      const rst = await getOrderQuote(data);
       const { cryptoPrice, fiatQuantity, rampFee, cryptoQuantity } = rst;
       setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
       setRate(cryptoPrice);
     } catch (error) {
       console.log('error', error);
     }
-  }, [setReceiveCase]);
+  }, [data, setReceiveCase]);
 
   useEffect(() => {
     updateReceive();
@@ -116,25 +115,22 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
         `${apiUrl}${updateAchOrder}`,
       )}`;
 
-      // const orderNo = await getPaymentOrderNo({
-      //   transDirect: side === 'BUY' ? TransDirectEnum.TOKEN_BUY : TransDirectEnum.TOKEN_SELL,
-      //   merchantName: ACH_MERCHANT_NAME,
-      // });
-      const orderNo = '';
+      const orderNo = await getRampOrderNo({
+        transDirect: side === 'BUY' ? TransDirectEnum.TOKEN_BUY : TransDirectEnum.TOKEN_SELL,
+        merchantName: ACH_MERCHANT_NAME,
+      });
       achUrl += `&merchantOrderNo=${orderNo}`;
 
       if (side === RampTypeEnum.BUY) {
         achUrl += `&type=buy&fiatAmount=${amount}`;
 
-        // const achTokenInfo = await getAchTokenInfo();
-        const achTokenInfo = {} as any;
+        const achTokenInfo = await getAchTokenInfo(guardianList || []);
         if (achTokenInfo !== undefined) {
           achUrl += `&token=${encodeURIComponent(achTokenInfo.token)}`;
         }
 
         const address = walletInfo?.caAddress || '';
-        // const signature = await getAchSignature({ address });
-        const signature = '';
+        const signature = await getAchSignature({ address });
         achUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
       } else {
         const ACH_WITHDRAW_URL = ''; // TODO
@@ -163,7 +159,9 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
     appId,
     baseUrl,
     data,
+    getAchTokenInfo,
     goBackCallback,
+    guardianList,
     isBuySectionShow,
     isSellSectionShow,
     updateAchOrder,

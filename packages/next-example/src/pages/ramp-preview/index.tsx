@@ -1,6 +1,10 @@
 import { ConfigProvider, PortkeyAssetProvider, RampPreview } from '@portkey/did-ui-react';
+import { Store } from '../../utils';
+
+const myStore = new Store();
 
 ConfigProvider.setGlobalConfig({
+  storageMethod: myStore,
   ramp: {
     isBuySectionShow: true,
     isSellSectionShow: true,

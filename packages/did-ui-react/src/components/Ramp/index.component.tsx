@@ -187,7 +187,6 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
       },
     ) => {
       try {
-        // TODO
         const rst = await getOrderQuote(params);
         if (params.amount !== valueSaveRef.current.amount) return;
 
