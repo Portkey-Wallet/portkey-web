@@ -71,7 +71,7 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
   const updateReceive = useCallback(async () => {
     try {
       const rst = await getOrderQuote(data);
-      const { cryptoPrice, fiatQuantity, rampFee, cryptoQuantity } = rst;
+      const { cryptoPrice, fiatQuantity, rampFee, cryptoQuantity } = rst[0];
       setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
       setRate(cryptoPrice);
     } catch (error) {

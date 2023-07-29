@@ -26,7 +26,12 @@ export default function RampPage() {
       <PortkeyAssetProvider originChainId="AELF" pin="111111">
         <RampPreview
           state={{
-            crypto: '',
+            crypto: 'ELF',
+            network: 'ELF',
+            fiat: 'USD',
+            country: 'US',
+            amount: '200',
+            side: 'BUY',
           }}
           goBackCallback={function (): void {}}></RampPreview>
       </PortkeyAssetProvider>

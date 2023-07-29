@@ -32,7 +32,7 @@ import { IRampProps } from '.';
 import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo } from './utils';
 import './index.less';
 
-export default function RampMain({ state, goBackCallback }: IRampProps) {
+export default function RampMain({ state, goBack, goPreview }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
   const updateTimerRef = useRef<NodeJS.Timer | number>();
@@ -190,7 +190,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
         const rst = await getOrderQuote(params);
         if (params.amount !== valueSaveRef.current.amount) return;
 
-        const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst;
+        const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst[0];
         setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
         setRate(cryptoPrice);
         setErrMsg('');
@@ -381,7 +381,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
     if ((side === RampTypeEnum.BUY && !isBuySectionShow) || (side === RampTypeEnum.SELL && !isSellSectionShow)) {
       setLoading(false);
       message.error(SERVICE_UNAVAILABLE_TEXT);
-      return goBackCallback?.();
+      return goBack?.();
     }
 
     if (side === RampTypeEnum.SELL) {
@@ -408,41 +408,41 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
     }
     setLoading(false);
 
-    // const { amount, currency, country, crypto, network } = valueSaveRef.current;
-    goBackCallback?.();
-    // navigate('/ramp-preview', {
-    //   state: {
-    //     crypto,
-    //     network,
-    //     fiat: currency,
-    //     country,
-    //     amount,
-    //     side,
-    //     tokenInfo: state ? state.tokenInfo : null,
-    //   },
-    // });
+    const { amount, currency, country, crypto, network } = valueSaveRef.current;
+    goPreview({
+      state: {
+        crypto,
+        network,
+        fiat: currency,
+        country,
+        amount,
+        side,
+        tokenInfo: state ? state.tokenInfo : null,
+      },
+    });
   }, [
-    achFee,
-    currentChain,
     isBuySectionShow,
-    isManagerSynced,
     isSellSectionShow,
-    goBackCallback,
-    setInsufficientFundsMsg,
+    goPreview,
+    state,
+    goBack,
+    currentChain,
+    isManagerSynced,
     walletInfo?.balance,
     walletInfo?.decimals,
+    setInsufficientFundsMsg,
   ]);
 
   const handleBack = useCallback(() => {
     if (state && state.tokenInfo) {
-      goBackCallback?.();
+      goBack?.();
       // navigate('/token-detail', {
       //   state: state.tokenInfo,
       // });
     } else {
-      goBackCallback?.();
+      goBack?.();
     }
-  }, [goBackCallback, state]);
+  }, [goBack, state]);
 
   const renderRate = useMemo(
     () => (

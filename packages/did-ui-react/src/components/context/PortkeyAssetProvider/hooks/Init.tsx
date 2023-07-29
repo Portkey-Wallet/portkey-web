@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from 'react';
 import { usePortkey } from '../../index';
 import { message } from 'antd';
-import { did } from '../../../../utils';
+import { AuthServe, did } from '../../../../utils';
 import { getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolderInfo';
 import { basicAssetView } from '../actions';
 import { usePortkeyAsset } from '..';
@@ -73,6 +73,7 @@ export const useStateInit = () => {
         accountInfo: did.didWallet.accountInfo,
       };
       dispatch(basicAssetView.setDIDWallet.actions(wallet));
+      AuthServe.setRefreshTokenConfig('AELF'); // todo
     } catch (error) {
       console.error('loadCaInfo:', error);
     }

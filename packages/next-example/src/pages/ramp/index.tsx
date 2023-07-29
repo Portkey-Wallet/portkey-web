@@ -1,4 +1,5 @@
 import { ConfigProvider, Ramp } from '@portkey/did-ui-react';
+import router from 'next/router';
 
 ConfigProvider.setGlobalConfig({
   ramp: {
@@ -19,16 +20,12 @@ export default function RampPage() {
   return (
     <div>
       <Ramp
-        state={{
-          amount: undefined,
-          country: undefined,
-          fiat: undefined,
-          crypto: undefined,
-          network: undefined,
-          side: undefined,
-          tokenInfo: undefined,
+        goBack={function (): void {
+          router.push('/sign');
         }}
-        goBackCallback={function (): void {}}></Ramp>
+        goPreview={function ({ state }: any): void {
+          router.push('/ramp-preview');
+        }}></Ramp>
     </div>
   );
 }
