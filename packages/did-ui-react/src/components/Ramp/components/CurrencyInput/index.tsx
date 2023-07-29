@@ -1,13 +1,13 @@
 import { Input } from 'antd';
 import { useState } from 'react';
 import SuffixSelect from '../SuffixSelect';
-import { RampTypeEnum, RampDrawerType, IKeyDownParams, PartialFiatType } from '../../../../types';
+import { RampDrawerType, IKeyDownParams, PartialFiatType, FiatType } from '../../../../types';
 import CustomSvg from '../../../CustomSvg';
 import { countryCodeMap } from '../../../../constants/ramp';
 
 export interface ICurrencyInputProps {
   value: string;
-  side: RampTypeEnum;
+  fiatList: FiatType[];
   onChange: (val: string) => void;
   readOnly: boolean;
   onKeyDown: (e: IKeyDownParams) => void;
@@ -17,7 +17,7 @@ export interface ICurrencyInputProps {
 
 export default function CurrencyInput({
   value,
-  side,
+  fiatList,
   onChange,
   readOnly,
   onKeyDown,
@@ -46,7 +46,7 @@ export default function CurrencyInput({
       />
       <SuffixSelect
         drawerType={RampDrawerType.CURRENCY}
-        side={side}
+        fiatList={fiatList}
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         onSelect={onSelect}

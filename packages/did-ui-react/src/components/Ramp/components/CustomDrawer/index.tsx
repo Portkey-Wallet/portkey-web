@@ -2,14 +2,14 @@ import { DrawerProps } from 'antd';
 import BaseDrawer from '../../../BaseDrawer';
 import SelectList from '../SelectList';
 import './index.less';
-import { RampDrawerType, RampTypeEnum } from '../../../../types';
+import { FiatType, RampDrawerType } from '../../../../types';
 
 interface CustomSelectProps extends DrawerProps {
   onChange?: (v: any) => void;
   onClose?: () => void;
   searchPlaceHolder?: string;
+  fiatList: FiatType[];
   drawerType: RampDrawerType;
-  side: RampTypeEnum;
 }
 
 export default function CustomDrawer({
@@ -17,16 +17,16 @@ export default function CustomDrawer({
   onClose,
   title,
   searchPlaceHolder,
+  fiatList,
   drawerType,
-  side,
   ...props
 }: CustomSelectProps) {
   return (
     <BaseDrawer {...props} onClose={onClose} className="custom-drawer" destroyOnClose>
       <SelectList
         drawerType={drawerType}
+        fiatList={fiatList}
         title={title}
-        side={side}
         searchPlaceHolder={searchPlaceHolder}
         onClose={onClose}
         onChange={onChange}

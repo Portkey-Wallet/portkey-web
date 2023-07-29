@@ -1,4 +1,4 @@
-import { ConfigProvider, RampPreview } from '@portkey/did-ui-react';
+import { ConfigProvider, PortkeyAssetProvider, RampPreview } from '@portkey/did-ui-react';
 
 ConfigProvider.setGlobalConfig({
   ramp: {
@@ -19,11 +19,13 @@ ConfigProvider.setGlobalConfig({
 export default function RampPage() {
   return (
     <div>
-      <RampPreview
-        state={{
-          crypto: '',
-        }}
-        goBackCallback={function (): void {}}></RampPreview>
+      <PortkeyAssetProvider originChainId="AELF" pin="111111">
+        <RampPreview
+          state={{
+            crypto: '',
+          }}
+          goBackCallback={function (): void {}}></RampPreview>
+      </PortkeyAssetProvider>
     </div>
   );
 }

@@ -20,6 +20,8 @@ import { formatAmountShow } from '../../utils/converter';
 import CustomModal from '../CustomModal';
 import ConfigProvider from '../config-provider';
 import { IRampPreviewProps } from '.';
+import { ConfigContext } from 'antd/lib/config-provider';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 
 export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewProps) {
   const { t } = useTranslation();
@@ -40,6 +42,10 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
 
   // const getAchTokenInfo = useGetAchTokenInfo();
   // const getAchTokenInfo = {};
+  const [{ guardianList }] = usePortkeyAsset();
+  useEffect(() => {
+    console.log(guardianList, 'guardianList===');
+  }, [guardianList]);
 
   const setReceiveCase = useCallback(
     ({

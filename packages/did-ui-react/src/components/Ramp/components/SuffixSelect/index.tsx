@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
-import { PartialFiatType, RampDrawerType, RampTypeEnum } from '../../../../types';
+import { FiatType, PartialFiatType, RampDrawerType } from '../../../../types';
 import CustomDrawer from '../CustomDrawer';
 import CustomModal from '../CustomModal';
 
 interface ISuffixSelectProps {
+  fiatList: FiatType[];
   drawerType: RampDrawerType;
   open: boolean;
-  side: RampTypeEnum;
   isModal: Boolean;
   onClose: () => void;
   onSelect: (v: PartialFiatType) => void;
@@ -18,9 +18,9 @@ const SearchCrypto = 'Search crypto';
 const SearchCurrency = 'Search currency';
 
 export default function SuffixSelect({
+  fiatList,
   drawerType,
   open,
-  side,
   isModal = false,
   onClose,
   onSelect,
@@ -33,9 +33,9 @@ export default function SuffixSelect({
   return isModal ? (
     <CustomModal
       open={open}
+      fiatList={fiatList}
       drawerType={drawerType}
       title={title}
-      side={side}
       searchPlaceHolder={searchPlaceHolder}
       onClose={onClose}
       onChange={onSelect}
@@ -43,9 +43,9 @@ export default function SuffixSelect({
   ) : (
     <CustomDrawer
       open={open}
+      fiatList={fiatList}
       drawerType={drawerType}
       title={title}
-      side={side}
       searchPlaceHolder={searchPlaceHolder}
       height="528"
       maskClosable={true}

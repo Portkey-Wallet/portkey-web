@@ -2,6 +2,13 @@ import { MAIN_CHAIN_ID, MAIN_CHAIN, SIDE_CHAIN, TESTNET, TEST_NET } from '../../
 import { countryCodeMap } from '../../constants/ramp';
 import { FiatType, GetFiatType, RampTypeEnum } from '../../types';
 import { did } from '../../utils';
+import { GetOrderQuoteParams, OrderQuoteType, CryptoInfoType } from '@portkey/services';
+
+export function transNetworkText(chainId: string, networkType: string): string {
+  return `${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN} ${chainId}${
+    networkType === TESTNET ? ' ' + TEST_NET : ''
+  }`;
+}
 
 export const fetchBuyFiatListAsync = async (): Promise<FiatType[]> => {
   const rst: { data: GetFiatType[] } = await did.rampServices.getFiatList({
@@ -43,8 +50,26 @@ export const fetchSellFiatListAsync = async (): Promise<FiatType[]> => {
   }));
 };
 
-export function transNetworkText(chainId: string, networkType: string): string {
-  return `${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN} ${chainId}${
-    networkType === TESTNET ? ' ' + TEST_NET : ''
-  }`;
-}
+export const getOrderQuote = async (params: GetOrderQuoteParams) => {
+  const rst = await did.rampServices.getOrderQuote({
+    ...params,
+    type: 'ONE',
+  });
+  if (rst.returnCode !== '0000') {
+    throw new Error(rst.returnMsg);
+  }
+  return rst.data as OrderQuoteType;
+};
+
+export const getCryptoInfo = async (params: { fiat: string }, symbol: string, network: string, side: RampTypeEnum) => {
+  const rst = await did.rampServices.getCryptoList(params);
+  if (rst.returnCode !== '0000') {
+    throw new Error(rst.returnMsg);
+  }
+  return (rst.data as CryptoInfoType[]).find(
+    (item: any) =>
+      item.crypto === symbol &&
+      item.network === network &&
+      (side === RampTypeEnum.BUY ? Number(item.buyEnable) === 1 : Number(item.sellEnable) === 1),
+  );
+};

@@ -4,6 +4,7 @@ import { IRampFromProps } from '../BuyForm';
 import { useTranslation } from 'react-i18next';
 
 export default function SellFrom({
+  fiatList,
   currencyVal,
   handleCurrencyChange,
   handleCurrencyKeyDown,
@@ -18,7 +19,6 @@ export default function SellFrom({
 
   errMsg,
   warningMsg,
-  side,
 }: IRampFromProps) {
   const { t } = useTranslation();
   const tokenChange = (val: string) => {
@@ -37,7 +37,7 @@ export default function SellFrom({
         <div className="label">{`I want to sell`}</div>
         <TokenInput
           value={tokenVal}
-          side={side}
+          fiatList={fiatList}
           onChange={tokenChange}
           readOnly={false}
           onKeyDown={handleTokenKeyDown}
@@ -51,7 +51,7 @@ export default function SellFrom({
         <div className="label">{`I will receive≈`}</div>
         <CurrencyInput
           value={currencyVal}
-          side={side}
+          fiatList={fiatList}
           onChange={handleCurrencyChange}
           readOnly={true}
           onKeyDown={handleCurrencyKeyDown}

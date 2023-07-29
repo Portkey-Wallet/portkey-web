@@ -1,6 +1,6 @@
 import { DrawerProps } from 'antd';
 import SelectList from '../SelectList';
-import { RampDrawerType, RampTypeEnum } from '../../../../types';
+import { FiatType, RampDrawerType } from '../../../../types';
 import CustomPromptModal, { ICustomTokenModalProps } from '../../../CustomPromptModal';
 import './index.less';
 
@@ -8,8 +8,8 @@ interface CustomSelectProps extends DrawerProps {
   onChange?: (v: any) => void;
   onClose: () => void;
   searchPlaceHolder?: string;
+  fiatList: FiatType[];
   drawerType: RampDrawerType;
-  side: RampTypeEnum;
   getContainer?: ICustomTokenModalProps['getContainer'];
 }
 
@@ -18,16 +18,16 @@ export default function CustomModal({
   onClose,
   title,
   searchPlaceHolder,
+  fiatList,
   drawerType,
-  side,
   ...props
 }: CustomSelectProps) {
   return (
     <CustomPromptModal {...props} onClose={onClose} destroyOnClose className="ramp-modal">
       <SelectList
+        fiatList={fiatList}
         drawerType={drawerType}
         title={title}
-        side={side}
         searchPlaceHolder={searchPlaceHolder}
         onClose={onClose}
         onChange={onChange}

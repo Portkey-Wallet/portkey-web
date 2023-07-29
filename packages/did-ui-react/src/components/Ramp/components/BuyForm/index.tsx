@@ -1,9 +1,10 @@
-import { IKeyDownParams, PartialFiatType, RampTypeEnum } from '../../../../types';
+import { FiatType, IKeyDownParams, PartialFiatType } from '../../../../types';
 import CurrencyInput from '../CurrencyInput';
 import TokenInput, { ICurToken } from '../TokenInput';
 import { useTranslation } from 'react-i18next';
 
 export interface IRampFromProps {
+  fiatList: FiatType[];
   currencyVal: string;
   handleCurrencyChange: (val: string) => void;
   handleCurrencyKeyDown: (e: IKeyDownParams) => void;
@@ -18,10 +19,10 @@ export interface IRampFromProps {
 
   errMsg: string;
   warningMsg?: string;
-  side: RampTypeEnum;
 }
 
 export default function BuyFrom({
+  fiatList,
   currencyVal,
   handleCurrencyChange,
   handleCurrencyKeyDown,
@@ -35,7 +36,6 @@ export default function BuyFrom({
   curToken,
 
   errMsg,
-  side,
 }: IRampFromProps) {
   const { t } = useTranslation();
   return (
@@ -44,7 +44,7 @@ export default function BuyFrom({
         <div className="label">{`I want to pay`}</div>
         <CurrencyInput
           value={currencyVal}
-          side={side}
+          fiatList={fiatList}
           onChange={handleCurrencyChange}
           readOnly={false}
           onKeyDown={handleCurrencyKeyDown}
@@ -57,7 +57,7 @@ export default function BuyFrom({
         <div className="label">{`I will receive≈`}</div>
         <TokenInput
           value={tokenVal}
-          side={side}
+          fiatList={fiatList}
           onChange={handleTokenChange}
           readOnly={true}
           onKeyDown={handleTokenKeyDown}

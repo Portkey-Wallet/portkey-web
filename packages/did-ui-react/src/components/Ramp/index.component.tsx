@@ -20,7 +20,7 @@ import {
   SERVICE_UNAVAILABLE_TEXT,
   SYNCHRONIZING_CHAIN_TEXT,
 } from '../../constants/ramp';
-import { PartialFiatType, RampDrawerType, RampTypeEnum } from '../../types';
+import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../types';
 import { divDecimals, formatAmountShow } from '../../utils/converter';
 import BackHeaderForPage from '../BackHeaderForPage';
 import CustomSvg from '../CustomSvg';
@@ -29,8 +29,8 @@ import { handleKeyDown } from '../../utils/keyDown';
 import CustomModal from '../CustomModal';
 import ConfigProvider from '../config-provider';
 import { IRampProps } from '.';
+import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo } from './utils';
 import './index.less';
-import { fetchBuyFiatListAsync } from './utils';
 
 export default function RampMain({ state, goBackCallback }: IRampProps) {
   const { t } = useTranslation();
@@ -51,6 +51,8 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
   const isManagerSynced = useMemo(() => ConfigProvider.config.ramp?.isManagerSynced, []);
   const currentChain = useMemo(() => ConfigProvider.config.currentChain, []);
   const walletInfo = useMemo(() => ConfigProvider.config.walletInfo, []);
+  const [buyFiatList, setBuyFiatList] = useState<FiatType[]>([]);
+  const [sellFiatList, setSellFiatList] = useState<FiatType[]>([]);
 
   // TODO ykx
   // useFetchTxFee();
@@ -64,13 +66,20 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
   );
 
   useEffectOnce(() => {
-    // fetchBuyFiatListAsync()
-    //   .then((res) => {
-    //     console.log('🌈 🌈 🌈 🌈 🌈 🌈 buyFiatList', res);
-    //   })
-    //   .catch((error) => {
-    //     throw Error(JSON.stringify(error));
-    //   });
+    fetchBuyFiatListAsync()
+      .then((res) => {
+        setBuyFiatList(res);
+      })
+      .catch((error) => {
+        throw Error(JSON.stringify(error));
+      });
+    fetchSellFiatListAsync()
+      .then((res) => {
+        setSellFiatList(res);
+      })
+      .catch((error) => {
+        throw Error(JSON.stringify(error));
+      });
   });
 
   useEffectOnce(() => {
@@ -165,6 +174,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
       valueSaveRef.current.receive = '';
     }
   }, [showLimitText]);
+
   const { updateReceive, stopInterval } = useMemo(() => {
     const updateReceive = async (
       params = {
@@ -178,8 +188,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
     ) => {
       try {
         // TODO
-        // const rst = await did.rampServices.getOrderQuote(params);
-        const rst = {} as any;
+        const rst = await getOrderQuote(params);
         if (params.amount !== valueSaveRef.current.amount) return;
 
         const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst;
@@ -227,8 +236,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
 
   const updateCrypto = useCallback(async () => {
     const { currency, crypto, network, side } = valueSaveRef.current;
-    // const data = await getCryptoInfo({ fiat: currency }, crypto, network, side);
-    const data = {} as any;
+    const data = await getCryptoInfo({ fiat: currency }, crypto, network, side);
     if (side === RampTypeEnum.BUY) {
       if (data && data.maxPurchaseAmount !== null && data.minPurchaseAmount !== null) {
         valueSaveRef.current.max = Number(
@@ -475,7 +483,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
             handleTokenSelect={(v) => handleSelect(v, RampDrawerType.TOKEN)}
             curToken={curToken}
             errMsg={errMsg}
-            side={RampTypeEnum.BUY}
+            fiatList={buyFiatList}
           />
         )}
         {page === RampTypeEnum.SELL && (
@@ -492,7 +500,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
             curFiat={curFiat}
             errMsg={errMsg}
             warningMsg={warningMsg}
-            side={RampTypeEnum.SELL}
+            fiatList={sellFiatList}
           />
         )}
         {rate !== '' && renderRate}

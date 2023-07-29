@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import { useState } from 'react';
 import SuffixSelect from '../SuffixSelect';
 import CustomSvg from '../../../CustomSvg';
-import { IKeyDownParams, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../../../types';
+import { FiatType, IKeyDownParams, PartialFiatType, RampDrawerType } from '../../../../types';
 
 export interface ICurToken {
   crypto: string;
@@ -11,7 +11,7 @@ export interface ICurToken {
 
 export interface ITokenInputProps {
   value: string;
-  side: RampTypeEnum;
+  fiatList: FiatType[];
   onChange: (val: string) => void;
   readOnly: boolean;
   onKeyDown: (e: IKeyDownParams) => void;
@@ -21,7 +21,7 @@ export interface ITokenInputProps {
 
 export default function TokenInput({
   value,
-  side,
+  fiatList,
   onChange,
   readOnly,
   onKeyDown,
@@ -47,8 +47,8 @@ export default function TokenInput({
         }
       />
       <SuffixSelect
+        fiatList={fiatList}
         drawerType={RampDrawerType.TOKEN}
-        side={side}
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         onSelect={onSelect}

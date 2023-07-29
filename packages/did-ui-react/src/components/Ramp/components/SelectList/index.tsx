@@ -1,18 +1,18 @@
-import { ReactNode, useEffect, useMemo, useState, useRef } from 'react';
+import { ReactNode, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../../../types';
+import { FiatType, PartialFiatType, RampDrawerType } from '../../../../types';
 import CustomSvg from '../../../CustomSvg';
 import DropdownSearch from '../../../DropdownSearch';
 import './index.less';
-import { fetchBuyFiatListAsync, fetchSellFiatListAsync, transNetworkText } from '../../utils';
+import { transNetworkText } from '../../utils';
 
 export interface ICustomTokenListProps {
   onChange?: (v: PartialFiatType) => void;
   onClose?: () => void;
   title?: ReactNode;
   searchPlaceHolder?: string;
+  fiatList: FiatType[];
   drawerType: RampDrawerType;
-  side: RampTypeEnum;
   networkType: 'MAIN' | 'TESTNET';
 }
 
@@ -28,22 +28,13 @@ export default function CustomList({
   onClose,
   title,
   searchPlaceHolder,
+  fiatList,
   drawerType,
-  side,
   networkType,
 }: ICustomTokenListProps) {
   const { t } = useTranslation();
   const [openDrop, setOpenDrop] = useState<boolean>(false);
   const [filterWord, setFilterWord] = useState<string>('');
-
-  // TODO
-  const buyFiatList = useRef<FiatType[]>([]);
-  const sellFiatList = useRef<FiatType[]>([]);
-
-  const fiatList: FiatType[] = useMemo(() => {
-    console.log('🌈 🌈 🌈 🌈 🌈 🌈 side === RampTypeEnum.SELL', side === RampTypeEnum.SELL, buyFiatList.current);
-    return side === RampTypeEnum.SELL ? sellFiatList.current : buyFiatList.current;
-  }, [buyFiatList, sellFiatList, side]);
 
   const showFiatList = useMemo(() => {
     return filterWord === ''
@@ -59,22 +50,6 @@ export default function CustomList({
   }, [filterWord]);
 
   useEffect(() => {
-    // fetchBuyFiatListAsync()
-    //   .then((res) => {
-    //     buyFiatList.current = res;
-    //     console.log('🌈 🌈 🌈 🌈 🌈 🌈 buyFiatList', buyFiatList);
-    //   })
-    //   .catch((error) => {
-    //     throw Error(JSON.stringify(error));
-    //   });
-    // fetchSellFiatListAsync()
-    //   .then((res) => {
-    //     sellFiatList.current = res;
-    //     console.log('🌈 🌈 🌈 🌈 🌈 🌈 sellFiatList', sellFiatList);
-    //   })
-    //   .catch((error) => {
-    //     throw Error(JSON.stringify(error));
-    //   });
     setOpenDrop(!!filterWord && !showFiatList.length && !showTokenList.length);
   }, [filterWord, showFiatList, showTokenList]);
 
