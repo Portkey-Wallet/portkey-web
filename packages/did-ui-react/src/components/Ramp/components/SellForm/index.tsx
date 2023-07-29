@@ -1,6 +1,6 @@
 import CurrencyInput from '../CurrencyInput';
 import TokenInput from '../TokenInput';
-import { IBuyOrSellFromProps } from '../BuyForm';
+import { IRampFromProps } from '../BuyForm';
 import { useTranslation } from 'react-i18next';
 
 export default function SellFrom({
@@ -19,7 +19,7 @@ export default function SellFrom({
   errMsg,
   warningMsg,
   side,
-}: IBuyOrSellFromProps) {
+}: IRampFromProps) {
   const { t } = useTranslation();
   const tokenChange = (val: string) => {
     const arr = val.split('.');
@@ -33,7 +33,7 @@ export default function SellFrom({
 
   return (
     <>
-      <div className="buy-input">
+      <div className="ramp-input">
         <div className="label">{`I want to sell`}</div>
         <TokenInput
           value={tokenVal}
@@ -47,7 +47,7 @@ export default function SellFrom({
         {!!errMsg && <div className="error-text">{t(errMsg)}</div>}
         {!!warningMsg && <div className="warning-text">{t(warningMsg)}</div>}
       </div>
-      <div className="buy-input">
+      <div className="ramp-input">
         <div className="label">{`I will receive≈`}</div>
         <CurrencyInput
           value={currencyVal}

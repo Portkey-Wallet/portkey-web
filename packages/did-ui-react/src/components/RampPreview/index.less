@@ -1,16 +1,9 @@
 .preview-frame {
   height: 100vh;
-  background-color: var(--portkey-ui-btn-bg);
-
-  .preview-title {
-    padding-top: 16px;
-    background-color: var(--portkey-ui-bg-6);
-  }
 
   .preview-content {
     padding: 0 24px;
     flex: 1;
-    background-color: var(--portkey-ui-btn-bg);
 
     .transaction {
       margin: 40px;
@@ -37,6 +30,7 @@
 
     .card {
       width: 100%;
+      color: var(--portkey-ui-font-8);
       .label {
         margin: 0 0 8px 8px;
         font-size: 12px;
@@ -48,6 +42,10 @@
         border-radius: 6px;
         .ach {
           height: 20px;
+          .rampach-icon {
+            width: 104px;
+            height: 20px;
+          }
           .rate {
             padding: 2px 0;
             font-size: 12px;
@@ -56,17 +54,20 @@
         }
         .ach-pay {
           margin-top: 24px;
+          .ramppay-icon{
+            width: 204px;
+            height: 20px;
+          }
         }
       }
     }
-    
   }
 
   .disclaimer {
     padding: 24px;
     font-size: 14px;
     line-height: 20px;
-    background-color: var(--portkey-ui-btn-bg);
+    color: var(--portkey-ui-font-6);
     .highlight {
       color: var(--portkey-ui-font-4);
       cursor: pointer;
@@ -78,7 +79,6 @@
     height: 80px;
     padding: 16px;
     border-top: 1px solid var(--portkey-ui-border-2);
-    background-color: var(--portkey-ui-btn-bg);
 
     .portkey-ant-btn {
       height: 48px;

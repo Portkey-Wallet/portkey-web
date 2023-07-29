@@ -1,9 +1,10 @@
-import { ReactNode, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useEffect, useMemo, useState, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../../../types';
 import CustomSvg from '../../../CustomSvg';
 import DropdownSearch from '../../../DropdownSearch';
 import './index.less';
+import { fetchBuyFiatListAsync, fetchSellFiatListAsync, transNetworkText } from '../../utils';
 
 export interface ICustomTokenListProps {
   onChange?: (v: PartialFiatType) => void;
@@ -12,6 +13,7 @@ export interface ICustomTokenListProps {
   searchPlaceHolder?: string;
   drawerType: RampDrawerType;
   side: RampTypeEnum;
+  networkType: 'MAIN' | 'TESTNET';
 }
 
 const tokenList = [
@@ -28,18 +30,19 @@ export default function CustomList({
   searchPlaceHolder,
   drawerType,
   side,
+  networkType,
 }: ICustomTokenListProps) {
   const { t } = useTranslation();
   const [openDrop, setOpenDrop] = useState<boolean>(false);
   const [filterWord, setFilterWord] = useState<string>('');
+
   // TODO
-  // const isTestNet = false;
-  // const isTestNet = useIsTestnet();
-  // TODO
-  const { buyFiatList, sellFiatList } = { buyFiatList: {} as any, sellFiatList: {} as any };
-  // const { buyFiatList, sellFiatList } = usePayment();
+  const buyFiatList = useRef<FiatType[]>([]);
+  const sellFiatList = useRef<FiatType[]>([]);
+
   const fiatList: FiatType[] = useMemo(() => {
-    return side === RampTypeEnum.SELL ? sellFiatList : buyFiatList;
+    console.log('🌈 🌈 🌈 🌈 🌈 🌈 side === RampTypeEnum.SELL', side === RampTypeEnum.SELL, buyFiatList.current);
+    return side === RampTypeEnum.SELL ? sellFiatList.current : buyFiatList.current;
   }, [buyFiatList, sellFiatList, side]);
 
   const showFiatList = useMemo(() => {
@@ -56,6 +59,22 @@ export default function CustomList({
   }, [filterWord]);
 
   useEffect(() => {
+    // fetchBuyFiatListAsync()
+    //   .then((res) => {
+    //     buyFiatList.current = res;
+    //     console.log('🌈 🌈 🌈 🌈 🌈 🌈 buyFiatList', buyFiatList);
+    //   })
+    //   .catch((error) => {
+    //     throw Error(JSON.stringify(error));
+    //   });
+    // fetchSellFiatListAsync()
+    //   .then((res) => {
+    //     sellFiatList.current = res;
+    //     console.log('🌈 🌈 🌈 🌈 🌈 🌈 sellFiatList', sellFiatList);
+    //   })
+    //   .catch((error) => {
+    //     throw Error(JSON.stringify(error));
+    //   });
     setOpenDrop(!!filterWord && !showFiatList.length && !showTokenList.length);
   }, [filterWord, showFiatList, showTokenList]);
 
@@ -95,14 +114,13 @@ export default function CustomList({
             <CustomSvg type="AelfTestnet" />
             <div className="portkey-ui-flex-column text">
               <div>{token.symbol}</div>
-              {/* TODO transNetworkText(token.chainId, isTestNet) */}
-              <div className="chain">{token.chainId}</div>
+              <div className="chain">{transNetworkText(token.chainId, networkType)}</div>
             </div>
           </div>
         ))}
       </>
     ),
-    [onClose, showTokenList],
+    [networkType, onClose, showTokenList],
   );
 
   return (

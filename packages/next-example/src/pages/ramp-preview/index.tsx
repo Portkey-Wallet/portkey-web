@@ -1,4 +1,4 @@
-import { ConfigProvider, Ramp } from '@portkey/did-ui-react';
+import { ConfigProvider, RampPreview } from '@portkey/did-ui-react';
 
 ConfigProvider.setGlobalConfig({
   ramp: {
@@ -6,29 +6,24 @@ ConfigProvider.setGlobalConfig({
     isSellSectionShow: true,
     isManagerSynced: false,
   },
+  apiUrl: '',
   currentChain: { chainId: 'AELF', symbol: 'ELF', rpcUrl: '', type: 'aelf', getContract: (): any => {} }, // IChain & { symbol: string };
   walletInfo: {
     walletType: '',
     caAddress: '',
     balance: '',
     decimals: 8,
-  },
+  }, //{ walletType: string; caAddress: string; balance: string; decimals: number };
 });
 
 export default function RampPage() {
   return (
     <div>
-      <Ramp
+      <RampPreview
         state={{
-          amount: undefined,
-          country: undefined,
-          fiat: undefined,
-          crypto: undefined,
-          network: undefined,
-          side: undefined,
-          tokenInfo: undefined,
+          crypto: '',
         }}
-        goBackCallback={function (): void {}}></Ramp>
+        goBackCallback={function (): void {}}></RampPreview>
     </div>
   );
 }

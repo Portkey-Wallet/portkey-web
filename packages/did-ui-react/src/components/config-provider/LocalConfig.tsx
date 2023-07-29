@@ -58,16 +58,6 @@ class LocalConfigProvider {
     if ('reCaptchaConfig' in _config) {
       _config['reCaptchaConfig'] && setReCaptchaConfig(_config['reCaptchaConfig']);
     }
-    // if ('ramp' in _config && _config['ramp']) {
-    //   _config['ramp'] = {
-    //     isBuySectionShow:
-    //       typeof _config['ramp']?.isBuySectionShow === 'boolean' ? _config['ramp']?.isBuySectionShow : true,
-    //     isSellSectionShow:
-    //       typeof _config['ramp']?.isSellSectionShow === 'boolean' ? _config['ramp']?.isSellSectionShow : true,
-    //     isManagerSynced:
-    //       typeof _config['ramp']?.isSellSectionShow === 'boolean' ? _config['ramp']?.isSellSectionShow : false,
-    //   };
-    // }
     this.config = { ...this.config, ..._config };
   };
 

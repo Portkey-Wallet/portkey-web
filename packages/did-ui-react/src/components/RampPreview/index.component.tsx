@@ -199,11 +199,11 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
           <div className="label">{t('Service provider')}</div>
           <div className="card-item portkey-ui-flex-column">
             <div className="portkey-ui-flex-between-center ach">
-              <CustomSvg type="BuyAch" />
+              <CustomSvg type="RampAch" />
               <div className="rate">{showRateText}</div>
             </div>
             <div className="ach-pay">
-              <CustomSvg type="BUY-PAY" />
+              <CustomSvg type="RampPAY" />
             </div>
           </div>
         </div>

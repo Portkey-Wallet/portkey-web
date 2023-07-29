@@ -28,9 +28,9 @@ import { setLoading } from '../../utils';
 import { handleKeyDown } from '../../utils/keyDown';
 import CustomModal from '../CustomModal';
 import ConfigProvider from '../config-provider';
-import './index.less';
 import { IRampProps } from '.';
-// import { did } from '@portkey/did';
+import './index.less';
+import { fetchBuyFiatListAsync } from './utils';
 
 export default function RampMain({ state, goBackCallback }: IRampProps) {
   const { t } = useTranslation();
@@ -62,6 +62,16 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
     () => `1 ${curToken.crypto} ≈ ${formatAmountShow(rate, 2)} ${curFiat.currency}`,
     [curFiat, curToken, rate],
   );
+
+  useEffectOnce(() => {
+    // fetchBuyFiatListAsync()
+    //   .then((res) => {
+    //     console.log('🌈 🌈 🌈 🌈 🌈 🌈 buyFiatList', res);
+    //   })
+    //   .catch((error) => {
+    //     throw Error(JSON.stringify(error));
+    //   });
+  });
 
   useEffectOnce(() => {
     if (state && state.amount !== undefined) {
@@ -393,7 +403,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
 
     // const { amount, currency, country, crypto, network } = valueSaveRef.current;
     goBackCallback?.();
-    // navigate('/buy/preview', {
+    // navigate('/ramp-preview', {
     //   state: {
     //     crypto,
     //     network,
@@ -429,7 +439,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
 
   const renderRate = useMemo(
     () => (
-      <div className="buy-rate portkey-ui-flex-between-center">
+      <div className="ramp-rate portkey-ui-flex-between-center">
         <div>{showRateText}</div>
         <div className="timer portkey-ui-flex-center">
           <CustomSvg type="Timer" />
@@ -441,12 +451,12 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
   );
 
   return (
-    <div className={clsx(['buy-frame portkey-ui-flex-column'])}>
-      <div className="buy-title">
+    <div className={clsx(['ramp-frame portkey-ui-flex-column'])}>
+      <div className="ramp-title">
         <BackHeaderForPage title={t('Buy')} leftCallBack={handleBack} />
       </div>
-      <div className="buy-content portkey-ui-flex-column-center">
-        <div className="buy-radio">
+      <div className="ramp-content portkey-ui-flex-column-center">
+        <div className="ramp-radio">
           <Radio.Group defaultValue={RampTypeEnum.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
             <Radio.Button value={RampTypeEnum.BUY}>{t('Buy')}</Radio.Button>
             <Radio.Button value={RampTypeEnum.SELL}>{t('Sell')}</Radio.Button>
@@ -487,7 +497,7 @@ export default function RampMain({ state, goBackCallback }: IRampProps) {
         )}
         {rate !== '' && renderRate}
       </div>
-      <div className="buy-footer">
+      <div className="ramp-footer">
         <Button type="primary" htmlType="submit" disabled={disabled} onClick={handleNext}>
           {t('Next')}
         </Button>

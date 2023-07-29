@@ -23,7 +23,7 @@ export default function CustomModal({
   ...props
 }: CustomSelectProps) {
   return (
-    <CustomPromptModal {...props} onClose={onClose} destroyOnClose className="buy-modal">
+    <CustomPromptModal {...props} onClose={onClose} destroyOnClose className="ramp-modal">
       <SelectList
         drawerType={drawerType}
         title={title}
@@ -31,6 +31,7 @@ export default function CustomModal({
         searchPlaceHolder={searchPlaceHolder}
         onClose={onClose}
         onChange={onChange}
+        networkType={'MAIN'}
       />
     </CustomPromptModal>
   );

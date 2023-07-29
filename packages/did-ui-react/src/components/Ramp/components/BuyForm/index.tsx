@@ -3,7 +3,7 @@ import CurrencyInput from '../CurrencyInput';
 import TokenInput, { ICurToken } from '../TokenInput';
 import { useTranslation } from 'react-i18next';
 
-export interface IBuyOrSellFromProps {
+export interface IRampFromProps {
   currencyVal: string;
   handleCurrencyChange: (val: string) => void;
   handleCurrencyKeyDown: (e: IKeyDownParams) => void;
@@ -36,11 +36,11 @@ export default function BuyFrom({
 
   errMsg,
   side,
-}: IBuyOrSellFromProps) {
+}: IRampFromProps) {
   const { t } = useTranslation();
   return (
     <>
-      <div className="buy-input">
+      <div className="ramp-input">
         <div className="label">{`I want to pay`}</div>
         <CurrencyInput
           value={currencyVal}
@@ -53,9 +53,8 @@ export default function BuyFrom({
         />
         {!!errMsg && <div className="error-text">{t(errMsg)}</div>}
       </div>
-      <div className="buy-input">
+      <div className="ramp-input">
         <div className="label">{`I will receive≈`}</div>
-
         <TokenInput
           value={tokenVal}
           side={side}

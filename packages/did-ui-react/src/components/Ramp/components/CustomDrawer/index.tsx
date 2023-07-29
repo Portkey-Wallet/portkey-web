@@ -30,6 +30,7 @@ export default function CustomDrawer({
         searchPlaceHolder={searchPlaceHolder}
         onClose={onClose}
         onChange={onChange}
+        networkType={'MAIN'}
       />
     </BaseDrawer>
   );
