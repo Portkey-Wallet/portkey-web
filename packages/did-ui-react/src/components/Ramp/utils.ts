@@ -2,7 +2,7 @@ import { MAIN_CHAIN_ID, MAIN_CHAIN, SIDE_CHAIN, TESTNET, TEST_NET } from '../../
 import { countryCodeMap } from '../../constants/ramp';
 import { FiatType, GetFiatType, RampTypeEnum } from '../../types';
 import { did } from '../../utils';
-import { GetOrderQuoteParams, OrderQuoteType, CryptoInfoType } from '@portkey/services';
+import { GetOrderQuoteParams } from '@portkey/services';
 
 export function transNetworkText(chainId: string, networkType: string): string {
   return `${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN} ${chainId}${
@@ -58,7 +58,7 @@ export const getOrderQuote = async (params: GetOrderQuoteParams) => {
   if (rst.returnCode !== '0000') {
     throw new Error(rst.returnMsg);
   }
-  return rst.data as OrderQuoteType;
+  return rst.data;
 };
 
 export const getCryptoInfo = async (params: { fiat: string }, symbol: string, network: string, side: RampTypeEnum) => {
@@ -66,7 +66,7 @@ export const getCryptoInfo = async (params: { fiat: string }, symbol: string, ne
   if (rst.returnCode !== '0000') {
     throw new Error(rst.returnMsg);
   }
-  return (rst.data as CryptoInfoType[]).find(
+  return rst.data.find(
     (item: any) =>
       item.crypto === symbol &&
       item.network === network &&

@@ -18,6 +18,7 @@ export interface BaseFiatType {
 export type GetFiatListResult = {
   data: BaseFiatType[];
   returnCode: string;
+  returnMsg: string;
 };
 export type GetCryptoListParams = {
   fiat: string;
@@ -38,6 +39,7 @@ export type CryptoInfoType = {
 export type GetCryptoListResult = {
   data: CryptoInfoType[];
   returnCode: string;
+  returnMsg: string;
 };
 
 export type OrderQuoteType = {
@@ -61,6 +63,7 @@ export type GetOrderQuoteParams = {
 export type GetOrderQuoteResult = {
   data: OrderQuoteType[];
   returnCode: string;
+  returnMsg: string;
 };
 
 export type AchTokenInfoType = {
@@ -74,6 +77,7 @@ export type GetAchTokenParams = {
 export type GetAchTokenResult = {
   data: AchTokenInfoType;
   returnCode: string;
+  returnMsg: string;
 };
 
 export type GetOrderNoParams = {
@@ -82,6 +86,7 @@ export type GetOrderNoParams = {
 export type GetOrderNoResult = {
   success: boolean;
   id?: string;
+  returnMsg: string;
 };
 
 export type GetAchSignatureParams = {
@@ -90,6 +95,7 @@ export type GetAchSignatureParams = {
 export type GetAchSignatureResult = {
   signature: string;
   returnCode: string;
+  returnMsg: string;
 };
 
 export type RampMerchantName = 'Alchemy';

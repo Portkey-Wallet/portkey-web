@@ -1,8 +1,9 @@
+import { GetOrderQuoteParams } from '@portkey/services';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampPreviewMain from './index.component';
 
 export interface IRampPreviewProps {
-  state: { crypto: string };
+  state: GetOrderQuoteParams;
   goBackCallback: () => void;
 }
 
