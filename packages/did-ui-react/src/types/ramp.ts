@@ -65,3 +65,29 @@ export type ITokenType = {
   symbol: string;
   chainId: ChainId;
 };
+
+export type IRampInitState = {
+  crypto: string;
+  network: string;
+  fiat: string;
+  country: string;
+  amount?: string;
+  side: RampTypeEnum;
+  tokenInfo?: any;
+};
+
+export type IRampPreviewInitState = {
+  crypto: string;
+  network: string;
+  fiat: string;
+  country: string;
+  amount: string;
+  side: RampTypeEnum;
+  tokenInfo: any;
+};
+
+export type ITokenInfo = {
+  balance: number | string;
+  decimals: number | string;
+  chainId: ChainId;
+};

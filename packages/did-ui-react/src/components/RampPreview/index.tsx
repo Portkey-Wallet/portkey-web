@@ -1,10 +1,12 @@
-import { GetOrderQuoteParams } from '@portkey/services';
+import { IRampPreviewInitState } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampPreviewMain from './index.component';
 
 export interface IRampPreviewProps {
-  state: GetOrderQuoteParams;
-  goBackCallback: () => void;
+  state: IRampPreviewInitState;
+  goBack: () => void;
+  isBuySectionShow?: boolean;
+  isSellSectionShow?: boolean;
 }
 
 export default function Ramp(props: IRampPreviewProps) {

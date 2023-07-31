@@ -73,7 +73,7 @@ export const useStateInit = () => {
         accountInfo: did.didWallet.accountInfo,
       };
       dispatch(basicAssetView.setDIDWallet.actions(wallet));
-      AuthServe.setRefreshTokenConfig('AELF'); // todo
+      AuthServe.setRefreshTokenConfig(originChainId);
     } catch (error) {
       console.error('loadCaInfo:', error);
     }

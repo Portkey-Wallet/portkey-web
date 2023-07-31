@@ -1,6 +1,7 @@
 import { IAchConfig, ICurToken, ICurrencyItem, PartialFiatType, RampTypeEnum } from '../../types';
 import { ChainId } from '@portkey/types';
 import { countryCodeJson } from './countryCodeJson';
+import { WEB_PAGE } from '..';
 
 const getCountryCodeMap = (list: ICurrencyItem[]) => {
   const country: { [key: string]: ICurrencyItem } = {};
@@ -32,6 +33,8 @@ export const AchConfig: IAchConfig = {
   baseUrl: 'https://ramptest.alchemypay.org',
   updateAchOrder: '/api/app/thirdPart/order/alchemy',
 };
+
+export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge';
 
 export const ACH_MERCHANT_NAME = 'Alchemy';
 

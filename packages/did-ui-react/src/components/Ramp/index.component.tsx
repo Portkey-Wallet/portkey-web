@@ -27,12 +27,19 @@ import CustomSvg from '../CustomSvg';
 import { setLoading } from '../../utils';
 import { handleKeyDown } from '../../utils/keyDown';
 import CustomModal from '../CustomModal';
-import ConfigProvider from '../config-provider';
 import { IRampProps } from '.';
-import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo } from './utils';
+import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo, fetchTxFeeAsync } from './utils';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
 
-export default function RampMain({ state, goBack, goPreview }: IRampProps) {
+export default function RampMain({
+  state,
+  tokenInfo,
+  goBack,
+  goPreview,
+  isBuySectionShow = true,
+  isSellSectionShow = true,
+}: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
   const updateTimerRef = useRef<NodeJS.Timer | number>();
@@ -46,18 +53,18 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
   const [curToken, setCurToken] = useState(initToken);
   const [curFiat, setCurFiat] = useState<PartialFiatType>(initFiat);
   const [rateUpdateTime, setRateUpdateTime] = useState(MAX_UPDATE_TIME);
-  const isBuySectionShow = useMemo(() => ConfigProvider.config.ramp?.isBuySectionShow, []);
-  const isSellSectionShow = useMemo(() => ConfigProvider.config.ramp?.isSellSectionShow, []);
-  const isManagerSynced = useMemo(() => ConfigProvider.config.ramp?.isManagerSynced, []);
-  const currentChain = useMemo(() => ConfigProvider.config.currentChain, []);
-  const walletInfo = useMemo(() => ConfigProvider.config.walletInfo, []);
   const [buyFiatList, setBuyFiatList] = useState<FiatType[]>([]);
   const [sellFiatList, setSellFiatList] = useState<FiatType[]>([]);
+  const chainId = useRef(tokenInfo?.chainId || 'AELF');
 
-  // TODO ykx
-  // useFetchTxFee();
-  // const { ach: achFee } = useGetTxFee(currentChain?.chainId);
-  const achFee = 0.39;
+  const [{ managementAccount }] = usePortkeyAsset();
+  const isManagerSynced = useMemo(
+    () => !!managementAccount?.address && managementAccount.address?.length > 0,
+    [managementAccount?.address],
+  );
+
+  // ach transaction fee, default is 0.39
+  const achFee = useRef<number>(0.39);
 
   const disabled = useMemo(() => !!errMsg || !amount, [errMsg, amount]);
   const showRateText = useMemo(
@@ -76,6 +83,14 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
     fetchSellFiatListAsync()
       .then((res) => {
         setSellFiatList(res);
+      })
+      .catch((error) => {
+        throw Error(JSON.stringify(error));
+      });
+
+    fetchTxFeeAsync([chainId.current])
+      .then((res) => {
+        achFee.current = res[chainId.current].ach;
       })
       .catch((error) => {
         throw Error(JSON.stringify(error));
@@ -190,7 +205,7 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
         const rst = await getOrderQuote(params);
         if (params.amount !== valueSaveRef.current.amount) return;
 
-        const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst[0];
+        const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst;
         setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
         setRate(cryptoPrice);
         setErrMsg('');
@@ -385,8 +400,6 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
     }
 
     if (side === RampTypeEnum.SELL) {
-      if (!currentChain) return setLoading(false);
-
       if (!isManagerSynced) {
         setLoading(false);
         setWarningMsg(SYNCHRONIZING_CHAIN_TEXT);
@@ -398,8 +411,8 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
       setLoading(false);
 
       if (
-        ZERO.plus(divDecimals(walletInfo?.balance, walletInfo?.decimals)).isLessThanOrEqualTo(
-          ZERO.plus(achFee).plus(valueSaveRef.current.amount),
+        ZERO.plus(divDecimals(tokenInfo.balance, tokenInfo.decimals)).isLessThanOrEqualTo(
+          ZERO.plus(achFee.current).plus(valueSaveRef.current.amount),
         )
       ) {
         setInsufficientFundsMsg();
@@ -426,23 +439,11 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
     goPreview,
     state,
     goBack,
-    currentChain,
     isManagerSynced,
-    walletInfo?.balance,
-    walletInfo?.decimals,
+    tokenInfo.balance,
+    tokenInfo.decimals,
     setInsufficientFundsMsg,
   ]);
-
-  const handleBack = useCallback(() => {
-    if (state && state.tokenInfo) {
-      goBack?.();
-      // navigate('/token-detail', {
-      //   state: state.tokenInfo,
-      // });
-    } else {
-      goBack?.();
-    }
-  }, [goBack, state]);
 
   const renderRate = useMemo(
     () => (
@@ -460,7 +461,7 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
   return (
     <div className={clsx(['ramp-frame portkey-ui-flex-column'])}>
       <div className="ramp-title">
-        <BackHeaderForPage title={t('Buy')} leftCallBack={handleBack} />
+        <BackHeaderForPage title={t('Buy')} leftCallBack={goBack} />
       </div>
       <div className="ramp-content portkey-ui-flex-column-center">
         <div className="ramp-radio">
