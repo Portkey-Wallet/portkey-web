@@ -86,6 +86,7 @@ export type GetOrderNoParams = {
 export type GetOrderNoResult = {
   success: boolean;
   id?: string;
+  returnMsg: string;
 };
 
 export type GetAchSignatureParams = {
