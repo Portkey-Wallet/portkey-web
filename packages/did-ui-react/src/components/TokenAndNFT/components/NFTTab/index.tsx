@@ -33,19 +33,19 @@ export default function NFTTab({ accountNFTList, isMainnet, loadMoreNFT }: NFTTa
         chainId: chainId as ChainId,
         pageNum: curNftNum,
       });
-      setNftNum({ ...nftNum, [nftColKey]: curNftNum + 1 });
+      setNftNum((v) => ({ ...v, [nftColKey]: curNftNum + 1 }));
       setGetMoreFlag(false);
     },
-    [getMoreFlag, nftNum, loadMoreNFT],
+    [getMoreFlag, loadMoreNFT, nftNum],
   );
 
   const handleChange = useCallback(
     (arr: string[] | string) => {
-      console.log(arr, 'arr===handleChange');
       const openArr = typeof arr === 'string' ? [arr] : arr;
+
       openPanel.forEach((prev: string) => {
         if (!openArr.some((cur: string) => cur === prev)) {
-          setNftNum({ ...nftNum, [prev]: 0 });
+          setNftNum((v) => ({ ...v, [prev]: 0 }));
         }
       });
       openArr.forEach((cur: string) => {
@@ -58,68 +58,64 @@ export default function NFTTab({ accountNFTList, isMainnet, loadMoreNFT }: NFTTa
             pageNum: 0,
           });
 
-          setNftNum({ ...nftNum, [cur]: 1 });
+          setNftNum((v) => ({ ...v, [cur]: 1 }));
         }
       });
       setOpenPanel(openArr);
     },
-    [loadMoreNFT, nftNum, openPanel],
+    [loadMoreNFT, openPanel],
   );
 
-  const renderItem = useCallback(
-    (nft: NFTCollectionItemShowType) => {
-      const nftColKey = `${nft.symbol}_${nft.chainId}`;
-      if (!nft.symbol) return null;
-      return (
-        <Collapse.Panel
-          key={nftColKey}
-          header={
-            <div className="protocol">
-              <div className="avatar">
-                {nft.imageUrl ? <img src={nft.imageUrl} /> : nft.collectionName?.slice(0, 1)}
-              </div>
-              <div className="info">
-                <p className="alias">{nft.collectionName}</p>
-                <p className="network">{transNetworkText(nft.chainId, isMainnet)}</p>
-              </div>
-              <div className="amount">{nft.itemCount}</div>
+  const renderItem = (nft: NFTCollectionItemShowType) => {
+    const nftColKey = `${nft.symbol}_${nft.chainId}`;
+
+    if (!nft.symbol) return null;
+    return (
+      <Collapse.Panel
+        key={nftColKey}
+        header={
+          <div className="protocol">
+            <div className="avatar">{nft.imageUrl ? <img src={nft.imageUrl} /> : nft.collectionName?.slice(0, 1)}</div>
+            <div className="info">
+              <p className="alias">{nft.collectionName}</p>
+              <p className="network">{transNetworkText(nft.chainId, isMainnet)}</p>
             </div>
-          }>
-          <div className="list">
-            {!!nftNum[nftColKey] &&
-              nft.children.map((nftItem: NFTItemBaseType, index: number) => {
-                const curNftNum = nftNum[nftColKey] ?? 0;
-                return (
-                  index < curNftNum * maxNftNum && (
-                    <div
-                      key={`${nft.symbol}-${nftItem.symbol}`}
-                      style={{
-                        backgroundImage: `url('${nftItem.imageUrl}')`,
-                      }}
-                      className={clsx(['item', nftItem.imageUrl ? 'item-img' : ''])}>
-                      <div className="mask">
-                        <p className="alias">{nftItem.alias}</p>
-                        <p className="token-id">#{nftItem.tokenId}</p>
-                      </div>
-                    </div>
-                  )
-                );
-              })}
-            {!!nftNum[nftColKey] && Number(nft.totalRecordCount) > nftNum[nftColKey] * maxNftNum && (
-              <div
-                className="load-more"
-                onClick={() => {
-                  getMore?.(nft.symbol, nft.chainId);
-                }}>
-                <CustomSvg type="Down" /> More
-              </div>
-            )}
+            <div className="amount">{nft.itemCount}</div>
           </div>
-        </Collapse.Panel>
-      );
-    },
-    [getMore, isMainnet, maxNftNum, nftNum],
-  );
+        }>
+        <div className={clsx('list', (!nft.children?.length || !nftNum[nftColKey]) && 'empty-list')}>
+          {Boolean(nftNum[nftColKey]) &&
+            nft.children.map((nftItem: NFTItemBaseType, index: number) => {
+              const curNftNum = nftNum[nftColKey] ?? 0;
+              return (
+                index < curNftNum * maxNftNum && (
+                  <div
+                    key={`${nft.symbol}-${nftItem.symbol}-${nftItem.chainId}`}
+                    style={{
+                      backgroundImage: `url('${nftItem.imageUrl}')`,
+                    }}
+                    className={clsx(['item', nftItem.imageUrl ? 'item-img' : ''])}>
+                    <div className="mask">
+                      <p className="alias">{nftItem.alias}</p>
+                      <p className="token-id">#{nftItem.tokenId}</p>
+                    </div>
+                  </div>
+                )
+              );
+            })}
+          {!!nftNum[nftColKey] && Number(nft.totalRecordCount) > nftNum[nftColKey] * maxNftNum && (
+            <div
+              className="load-more"
+              onClick={() => {
+                getMore?.(nft.symbol, nft.chainId);
+              }}>
+              <CustomSvg type="Down" /> More
+            </div>
+          )}
+        </div>
+      </Collapse.Panel>
+    );
+  };
 
   return (
     <div className="portkey-ui-nft-tab">

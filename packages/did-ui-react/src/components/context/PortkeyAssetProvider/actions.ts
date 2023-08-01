@@ -15,6 +15,7 @@ export const PortkeyAssetActions = {
   setTokenList: 'setTokenList',
   setNFTCollections: 'setNFTCollections',
   setNFTItem: 'setNFTItem',
+  setTokenPrice: 'setTokenPrice',
 };
 type WalletInfo = {
   caInfo: DIDWallet<IBaseWalletAccount>['caInfo'];
@@ -41,7 +42,12 @@ export type BaseListInfo<T> = {
 
 export type BalanceInfo = {
   tokenListInfo?: BaseListInfo<TokenItemShowType>;
-  NFTCollection?: BaseListInfo<NFTCollectionItemShowType>;
+  NFTCollection?: BaseListInfo<NFTCollectionItemShowType> & { updateRandom?: string };
+  tokenPrices?: {
+    tokenPriceObject: {
+      [symbol: string]: number | string;
+    };
+  };
 };
 
 export interface AssetState extends WalletInfo, BaseAssetProps, BalanceInfo {}
@@ -146,8 +152,14 @@ const fetchNFTItem = async ({
   });
 };
 
+const fetchTokenPrices = async (params: { symbols: string[] }) => {
+  const response = await did.assetsServices.fetchTokenPrice(params);
+  return basicActions(PortkeyAssetActions['setTokenPrice'], { list: response.items });
+};
+
 export const basicAssetViewAsync = {
   setTokenList: fetchTokenList,
   setNFTCollections: fetchNFTCollections,
   setNFTItem: fetchNFTItem,
+  setTokenPrices: fetchTokenPrices,
 };

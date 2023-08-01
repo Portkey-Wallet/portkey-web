@@ -13,20 +13,23 @@ export interface TokenAndNFTProps extends NFTTabProps {
 
 export default function TokenAndNFT({ networkType, tokenList, accountNFTList, loadMoreNFT }: TokenAndNFTProps) {
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
-  const renderTabsData = useMemo(
-    () => [
-      {
-        label: 'Tokens',
-        key: BalanceTab.TOKEN,
-        children: <TokenTab isMainnet={isMainnet} tokenList={tokenList} />,
-      },
-      {
-        label: 'NFTs',
-        key: BalanceTab.NFT,
-        children: <NFTTab accountNFTList={accountNFTList} isMainnet={isMainnet} loadMoreNFT={loadMoreNFT} />,
-      },
-    ],
-    [accountNFTList, isMainnet, loadMoreNFT, tokenList],
+
+  return (
+    <Tabs
+      centered
+      items={[
+        {
+          label: 'Tokens',
+          key: BalanceTab.TOKEN,
+          children: <TokenTab isMainnet={isMainnet} tokenList={tokenList} />,
+        },
+        {
+          label: 'NFTs',
+          key: BalanceTab.NFT,
+          children: <NFTTab accountNFTList={accountNFTList} isMainnet={isMainnet} loadMoreNFT={loadMoreNFT} />,
+        },
+      ]}
+      className="portkey-ui-balance-tab"
+    />
   );
-  return <Tabs centered items={renderTabsData} className="portkey-ui-balance-tab" />;
 }

@@ -2,9 +2,13 @@ import AssetCard from '../AssetCard';
 import { usePortkey } from '../context';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import TokenAndNFT, { TokenAndNFTProps } from '../TokenAndNFT';
-import { ReactNode, useCallback, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useState } from 'react';
 import { MAINNET } from '../../constants/network';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
+import { setLoading } from '../../utils';
+import { ZERO } from '../../constants/misc';
+import { TokenItemShowType } from '../types/assets';
+import { divDecimals, formatAmountShow } from '../../utils/converter';
 
 export interface AssetOverviewProps {
   isShowBuy?: boolean;
@@ -24,9 +28,10 @@ export default function AssetOverviewMain({
   onReceive,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
-  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection }, { dispatch }] = usePortkeyAsset();
+  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, tokenPrices }, { dispatch }] = usePortkeyAsset();
 
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
+  const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
 
   const onFaucet = useCallback(() => {
     if (faucetUrl && networkType !== MAINNET) window.open(faucetUrl);
@@ -50,6 +55,7 @@ export default function AssetOverviewMain({
       if ((pageNum + 1) * maxResultCount <= children.length) return;
 
       if (totalRecordCount === 0 || Number(totalRecordCount) > children.length) {
+        setLoading(true);
         basicAssetViewAsync
           .setNFTItem({
             chainId,
@@ -58,12 +64,38 @@ export default function AssetOverviewMain({
             skipCount,
             maxResultCount,
           })
-          .then(dispatch);
+          .then(dispatch)
+          .finally(() => setLoading(false));
       }
     },
     [NFTCollection?.list, caInfo, dispatch],
   );
-  console.log(NFTCollection, 'NFTCollection===');
+  // get Token price
+  useEffect(() => {
+    const symbols = tokenListInfo?.list.map((tokenInfo) => tokenInfo.symbol);
+    if (!symbols) return;
+    basicAssetViewAsync.setTokenPrices({ symbols }).then(dispatch);
+  }, [tokenListInfo, dispatch]);
+
+  // Calculate the user's total balance
+  useEffect(() => {
+    if (!tokenPrices?.tokenPriceObject) return;
+    if (!tokenListInfo?.list) return;
+    const tokenList = tokenListInfo?.list.map((token) => ({
+      ...token,
+      balanceInUsd: ZERO.plus(divDecimals(token.balance ?? 0, token.decimals))
+        .times(tokenPrices.tokenPriceObject[token.symbol])
+        .toString(),
+    }));
+    setTokenList(tokenList);
+
+    const totalBalanceInUSD = tokenList.reduce((pre, cur) => {
+      return pre.plus(cur.balanceInUsd ?? ZERO);
+    }, ZERO);
+
+    setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
+  }, [tokenListInfo?.list, tokenPrices?.tokenPriceObject]);
+
   return (
     <div className="portkey-ui-asset-overview">
       <AssetCard
@@ -81,7 +113,7 @@ export default function AssetOverviewMain({
       <TokenAndNFT
         networkType={networkType}
         accountNFTList={NFTCollection?.list}
-        tokenList={tokenListInfo?.list}
+        tokenList={tokenList || tokenListInfo?.list}
         loadMoreNFT={loadMoreNFT}
       />
     </div>

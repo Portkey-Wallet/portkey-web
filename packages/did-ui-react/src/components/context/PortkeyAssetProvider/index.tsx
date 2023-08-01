@@ -4,6 +4,7 @@ import { BasicActions } from '../utils';
 import { Updater } from './hooks/Init';
 import { NFTCollectionItemShowType } from '../../types/assets';
 import { INftCollection } from '@portkey/services';
+import { randomId } from '@portkey/utils';
 
 const INITIAL_STATE = {
   initialized: false,
@@ -41,30 +42,45 @@ function reducer(state: AssetState, { type, payload }: any) {
         totalRecordCount: totalRecordCount,
         list: collectionList,
       };
-
+      state.NFTCollection.updateRandom = randomId();
       return Object.assign({}, state);
     }
     case PortkeyAssetActions.setNFTItem: {
-      if (!payload) return;
+      if (!payload) return state;
       const { list, totalRecordCount, symbol, chainId, skipCount } = payload;
-      const currentNFTSeriesItem = state.NFTCollection?.list.find(
+      if (!state.NFTCollection?.list) return state;
+      const currentNFTIndex = state.NFTCollection.list.findIndex(
         (ele) => ele.symbol === symbol && ele.chainId === chainId,
       );
-      if (currentNFTSeriesItem) {
-        if (currentNFTSeriesItem?.children?.length > skipCount) return;
+      if (currentNFTIndex !== -1) {
+        const currentNFTSeriesItem = state.NFTCollection.list[currentNFTIndex];
+        if (!currentNFTSeriesItem) return state;
+        if (currentNFTSeriesItem?.children?.length > skipCount) return state;
         currentNFTSeriesItem.children = [...currentNFTSeriesItem.children, ...list];
         currentNFTSeriesItem.skipCount = currentNFTSeriesItem.children.length;
         currentNFTSeriesItem.totalRecordCount = totalRecordCount;
         currentNFTSeriesItem.isFetching = false;
+        state.NFTCollection.list[currentNFTIndex] = currentNFTSeriesItem;
+        state.NFTCollection.updateRandom = randomId();
       }
-      return Object.assign({}, state);
+      return Object.assign({}, JSON.parse(JSON.stringify(state)));
+    }
+    case PortkeyAssetActions.setTokenPrice: {
+      if (!payload) return state;
+      const { list } = payload;
+      const tokenPrices = state.tokenPrices ?? { tokenPriceObject: {} };
+      list.map((ele: { symbol: string; priceInUsd: number }) => {
+        tokenPrices.tokenPriceObject[ele.symbol] = ele.priceInUsd;
+      });
+      state.tokenPrices = tokenPrices;
+      return Object.assign({}, { ...state });
     }
     case PortkeyAssetActions.destroy: {
       return INITIAL_STATE;
     }
     default: {
-      const { destroy } = payload;
-      if (destroy) return Object.assign({}, payload);
+      // const { destroy } = payload;
+      // if (destroy) return Object.assign({}, payload);
       return Object.assign({}, state, payload);
     }
   }

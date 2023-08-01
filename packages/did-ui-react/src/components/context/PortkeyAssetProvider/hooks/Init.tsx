@@ -13,23 +13,26 @@ export const useStateInit = () => {
 
   const fetchCAAddressByChainId = useCallback(
     async (chainIdList: ChainId[], caHash: string) => {
-      chainIdList.forEach(async (chainId: ChainId) => {
-        const holderInfo = await getHolderInfoByContract({
-          sandboxId,
-          chainId,
-          chainType,
-          paramsOption: {
-            caHash,
-          },
-        });
-        did.didWallet.caInfo[chainId] = {
+      const result = await Promise.all(
+        chainIdList.map(async (chainId: ChainId) =>
+          getHolderInfoByContract({
+            sandboxId,
+            chainId,
+            chainType,
+            paramsOption: {
+              caHash,
+            },
+          }),
+        ),
+      );
+      result.forEach((holderInfo, index) => {
+        did.didWallet.caInfo[chainIdList[index]] = {
           caAddress: holderInfo.caAddress,
           caHash: holderInfo.caHash,
         };
-        dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
       });
     },
-    [chainType, dispatch, sandboxId],
+    [chainType, sandboxId],
   );
 
   const getHolderInfo = useCallback(
@@ -49,15 +52,17 @@ export const useStateInit = () => {
       const managerInfo = holderInfo.managerInfos;
       const isExist = managerInfo.some((value) => managerAddress === value.address);
       if (!isExist) throw message.error('Manager is not exist, please check `managerPrivateKey` or `caHash`');
-      const chainIdList = Object.keys(chainsInfo).filter((chainId) => chainId !== originChainId);
-      fetchCAAddressByChainId(chainIdList as ChainId[], caHash);
-
       did.didWallet.caInfo = {
         [originChainId]: {
           caAddress: holderInfo.caAddress,
           caHash: holderInfo.caHash,
         },
       };
+      // fetch other caAddress on other chain
+      const chainIdList = Object.keys(chainsInfo).filter((chainId) => chainId !== originChainId);
+      await fetchCAAddressByChainId(chainIdList as ChainId[], caHash);
+      dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
+
       const guardian = holderInfo.guardianList.guardians.find((guardian) => guardian.isLoginGuardian);
       dispatch(basicAssetView.setGuardianList.actions(holderInfo.guardianList.guardians));
       if (guardian)
@@ -79,7 +84,8 @@ export const useStateInit = () => {
   const loadCaInfo = useCallback(async () => {
     try {
       dispatch(basicAssetView.initialized.actions(false));
-
+      AuthServe.addRequestAuthCheck(originChainId);
+      AuthServe.setRefreshTokenConfig(originChainId);
       if (!pin) {
         await loadCaInfoByCaHash();
       } else {
@@ -103,8 +109,7 @@ export const useStateInit = () => {
         accountInfo: did.didWallet.accountInfo,
       };
       dispatch(basicAssetView.setDIDWallet.actions(wallet));
-      AuthServe.addRequestAuthCheck(originChainId);
-      AuthServe.setRefreshTokenConfig(originChainId);
+
       dispatch(basicAssetView.initialized.actions(true));
     } catch (error) {
       console.error('loadCaInfo:', error);
