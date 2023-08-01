@@ -52,3 +52,9 @@ export const getChainInfo = async (originChainId?: ChainId) => {
   chainList.forEach((chain) => (chainMap[chain.chainId] = chain));
   if (originChainId) return chainMap[originChainId];
 };
+
+export const getChain = (chainId: ChainId) => {
+  const info = did.didWallet.chainsInfo?.[chainId];
+  if (info) return info;
+  return getChainInfo(chainId);
+};

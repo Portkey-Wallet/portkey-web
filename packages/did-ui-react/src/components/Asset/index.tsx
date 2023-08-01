@@ -1,7 +1,7 @@
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
-import AssetMain from './index.component';
+import AssetMain, { AssetMainProps } from './index.component';
 
-export default function Asset(props?: any) {
+export default function Asset(props?: AssetMainProps) {
   return (
     <PortkeyStyleProvider>
       <AssetMain {...props} />
