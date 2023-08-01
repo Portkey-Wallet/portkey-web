@@ -41,6 +41,7 @@ export { default as LoginModal } from './LoginModal';
 export { PortkeyProvider } from './config-provider';
 export { default as SocialDesign } from './SocialDesign';
 export { default as Web2Design } from './Web2Design';
+export { default as ReCaptchaModal } from './ReCaptchaModal';
 export { default as Step1OfSignIn } from './SignStep/components/Step1';
 export { default as Step2OfLogin } from './SignStep/components/Step2OfLogin';
 export { default as Step2OfSignUp } from './SignStep/components/Step2OfSignUp';

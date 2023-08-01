@@ -79,4 +79,11 @@ describe('verification describe', () => {
     });
     expect(typeof result).toEqual('boolean');
   });
+
+  test('test getRecommendationVerifier', async () => {
+    const result = await verification.getRecommendationVerifier({ chainId: 'AELF' });
+    expect(result).toHaveProperty('id');
+    expect(result).toHaveProperty('name');
+    expect(result).toHaveProperty('imageUrl');
+  });
 });

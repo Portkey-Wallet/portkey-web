@@ -61,6 +61,16 @@ export type VerifyAppleTokenParams = {
 };
 
 export type SendAppleUserExtraInfoResult = { userId: string };
+
+export type GetRecommendationVerifierParams = {
+  chainId: ChainId;
+};
+
+export type VerifierItem = {
+  id: string;
+  name: string;
+  imageUrl: string;
+};
 export interface IVerificationService {
   getVerificationCode(params: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult>;
   verifyVerificationCode(params: VerifyVerificationCodeParams): Promise<VerifyVerificationCodeResult>;
@@ -68,4 +78,5 @@ export interface IVerificationService {
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
+  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
 }

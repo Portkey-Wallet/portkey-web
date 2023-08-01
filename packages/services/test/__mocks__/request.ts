@@ -143,6 +143,13 @@ class FetchRequestMock {
           data: [{ country: 'Singapore', code: '65', iso: 'SG' }],
         };
         break;
+      case '/api/app/account/getVerifierServer':
+        result = {
+          id: 'id_mock',
+          name: 'name_mock',
+          imageUrl: 'imageUrl_mock',
+        };
+        break;
 
       // connect
       case '/connect/token':

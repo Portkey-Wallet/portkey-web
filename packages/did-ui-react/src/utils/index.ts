@@ -14,3 +14,4 @@ export * from './lib';
 export * from './socialLoginAuth';
 export * from './sandboxService';
 export * from './authServe';
+export * from './modalMethod';
