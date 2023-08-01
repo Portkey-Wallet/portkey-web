@@ -1,15 +1,18 @@
 import { RefreshTokenConfig } from '@portkey/services';
 import { did, isValidRefreshTokenConfig, queryAuthorization } from './did';
-import { ChainId } from '@portkey/types';
+import { ChainId, RequestOpts } from '@portkey/types';
+import { fetchFormat, timeoutPromise } from '@portkey/request';
+const DEFAULT_FETCH_TIMEOUT = 8000;
 
 interface IAuthTokenServe {
-  addRequestAuthCheck<T>(funObj: T, originChainId: ChainId): void;
+  addRequestAuthCheck(originChainId: ChainId): void;
   setRefreshTokenConfig(originChainId: ChainId): void;
   getConnectToken({ originChainId }: { originChainId: ChainId }): Promise<string>;
 }
 
 export class AuthServeInit implements IAuthTokenServe {
   protected refreshTokenConfig?: RefreshTokenConfig;
+  protected originChainId?: ChainId;
 
   getConnectToken = ({ originChainId }: { originChainId: ChainId }) => {
     if (!did.didWallet.managementAccount) throw 'ManagementAccount is not exist';
@@ -43,47 +46,62 @@ export class AuthServeInit implements IAuthTokenServe {
         Authorization: token,
       };
       did.setConfig({ requestDefaults });
+      return token;
     } catch (error) {
-      console.log(error);
+      return;
     }
   };
 
-  addRequestAuthCheck = (funObj: any, originChainId: ChainId) => {
-    if (typeof funObj !== 'object') throw 'Please check Params';
-
-    Reflect.ownKeys(funObj).forEach(async (key) => {
-      if (key !== 'constructor' && typeof funObj[key] === 'function') {
-        // funObj[key] = ;
-        Reflect.set(funObj, key, this.functionWrap(funObj[key], 0, originChainId));
-      }
-    });
-    return funObj;
+  addRequestAuthCheck = (originChainId: ChainId) => {
+    if (!(did.fetchRequest as any)?.isSet || this.originChainId !== originChainId) {
+      this.originChainId = originChainId;
+      const send = async (config: RequestOpts) => {
+        return this.sendOrigin(config, originChainId, 0);
+      };
+      did.fetchRequest.send = send;
+      (did.fetchRequest as any).isSet = true;
+    }
+    return did;
   };
 
-  private functionWrap = (callback: Function, reCount = 0, originChainId: ChainId) => {
-    return this.sendOrigin(callback, reCount, originChainId);
-  };
-
-  private sendOrigin = (callback: Function, reCount: number, originChainId: ChainId) => {
-    console.log('sendOrigin=fetchResult', originChainId, 'fetchResult==originChainId');
-
-    return async (...props: any) => {
-      const fetchResult = await callback(props);
-      if (fetchResult && fetchResult.status === 401 && fetchResult.message === 'unauthorized') {
-        if (reCount > 5) throw fetchResult;
-        const token = await this.getConnectToken({ originChainId });
-        console.log(token, 'fetchResult==token');
+  private sendOrigin = async (config: RequestOpts, originChainId: ChainId, reCount: number): Promise<any> => {
+    try {
+      return await this.request(config);
+    } catch (error: any) {
+      if (typeof error === 'object' && error.status === 401 && error.message?.toLocaleLowerCase() === 'unauthorized') {
+        if (reCount > 5) throw error;
+        const token = await this.setRefreshTokenConfig(originChainId);
         if (!token) {
           if (this.refreshTokenConfig && !isValidRefreshTokenConfig(this.refreshTokenConfig)) {
             // TODO: definite message
-            throw { ...fetchResult, code: 402, message: 'token expires' };
+            throw { ...error, code: 402, message: 'token expires' };
           }
-          throw fetchResult;
+          throw error;
         }
-        return this.functionWrap(callback, ++reCount, originChainId);
+
+        return this.sendOrigin(config, originChainId, ++reCount);
       }
-      return fetchResult;
-    };
+      throw error;
+    }
+  };
+
+  private request = async (config: RequestOpts) => {
+    const { headers, baseURL, url, method, timeout = DEFAULT_FETCH_TIMEOUT } = did.config.requestConfig || {};
+
+    const _config = { ...config };
+    _config.headers = { ..._config.headers, ...headers };
+    _config.method = _config.method || method;
+    _config.url = _config.url || url;
+    if (baseURL) _config.url = baseURL + _config.url;
+
+    const control = new AbortController();
+
+    const result = await Promise.race([fetchFormat(_config, control.signal), timeoutPromise(timeout)]);
+    if (result?.type === 'timeout') {
+      if (control.abort) control.abort();
+      throw new Error('fetch timeout');
+    }
+    return result;
   };
 }
 

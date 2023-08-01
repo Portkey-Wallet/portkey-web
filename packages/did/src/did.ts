@@ -23,6 +23,7 @@ import {
   IConnectService,
   CAHolderInfo,
   Ramp,
+  Assets,
 } from '@portkey/services';
 import { FetchRequest } from '@portkey/request';
 import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
@@ -37,6 +38,7 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public fetchRequest: IBaseRequest;
   public connectRequest: IBaseRequest;
   public rampServices: Ramp;
+  public assetsServices: Assets;
 
   public accountProvider: portkey.AccountProvider;
   constructor() {
@@ -48,6 +50,7 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
     this.connectServices = new Connect(this.connectRequest);
     this.services = new CommunityRecovery(this.fetchRequest, this.didGraphQL);
     this.rampServices = new Ramp(this.fetchRequest);
+    this.assetsServices = new Assets(this.fetchRequest);
 
     this.didWallet = new DIDWallet({
       accountProvider: this.accountProvider,

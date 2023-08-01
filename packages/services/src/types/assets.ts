@@ -1,3 +1,5 @@
+import { ChainId } from '@portkey/types';
+
 export type ITokenItemResponse = {
   decimals: number;
   symbol: string;
@@ -12,7 +14,6 @@ export type ITokenItemResponse = {
 export type FetchAccountTokenListParams = {
   skipCount?: number;
   maxResultCount?: number;
-  caAddresses: string[];
   caAddressInfos: { chainId: string; caAddress: string }[];
 };
 export type FetchAccountTokenListResult = {
@@ -26,14 +27,13 @@ export type GetSymbolImagesResult = {
 };
 
 export type INftCollection = {
-  chainId: string;
+  chainId: ChainId;
   collectionName: string;
   imageUrl: string;
   itemCount: number;
   symbol: string;
 };
 export type FetchAccountNftCollectionListParams = {
-  caAddresses: string[];
   skipCount: number;
   maxResultCount?: number;
   caAddressInfos: { chainId: string; caAddress: string }[];
@@ -58,7 +58,6 @@ export type INftCollectionItem = {
 };
 export type FetchAccountNftCollectionItemListParams = {
   symbol: string;
-  caAddresses: string[];
   caAddressInfos: { chainId: string; caAddress: string }[];
   skipCount: number;
   maxResultCount: number;

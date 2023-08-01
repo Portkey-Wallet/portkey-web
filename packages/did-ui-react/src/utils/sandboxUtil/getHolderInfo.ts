@@ -5,7 +5,7 @@ import type { ChainId } from '@portkey/types';
 import { IHolderInfo } from '@portkey/services';
 import { isExtension } from '../lib';
 import PortkeyUIError from '../../constants/error';
-import { getChainInfo } from '../../hooks/useChainInfo';
+import { getChain } from '../../hooks/useChainInfo';
 
 interface GetHolderInfoParam {
   sandboxId?: string;
@@ -23,7 +23,7 @@ export const getHolderInfoByExtension = async ({
   chainId,
   paramsOption,
 }: Omit<GetHolderInfoParam, 'contract'>): Promise<IHolderInfo> => {
-  const chainInfo = await getChainInfo(chainId);
+  const chainInfo = await getChain(chainId);
   if (!chainInfo) throw 'Please check network connection and chainId';
   const resMessage = await SandboxEventService.dispatchAndReceive(
     SandboxEventTypes.callViewMethod,

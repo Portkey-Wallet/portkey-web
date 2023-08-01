@@ -1,9 +1,13 @@
 import React, { createContext, useContext, useMemo, useReducer } from 'react';
-import { basicAssetView, AssetState, BaseAssetProps } from './actions';
+import { AssetState, BaseAssetProps, PortkeyAssetActions } from './actions';
 import { BasicActions } from '../utils';
 import { Updater } from './hooks/Init';
+import { NFTCollectionItemShowType } from '../../types/assets';
+import { INftCollection } from '@portkey/services';
 
-const INITIAL_STATE = {};
+const INITIAL_STATE = {
+  initialized: false,
+};
 const PortkeyContext = createContext<any>(INITIAL_STATE);
 
 export function usePortkeyAsset(): [AssetState, BasicActions] {
@@ -11,16 +15,52 @@ export function usePortkeyAsset(): [AssetState, BasicActions] {
 }
 
 //reducer
-function reducer(state: any, { type, payload }: any) {
+function reducer(state: AssetState, { type, payload }: any) {
   switch (type) {
-    case basicAssetView.setDIDWallet.type: {
+    case PortkeyAssetActions.setDIDWallet: {
       return Object.assign({}, state, { ...payload });
     }
-    case basicAssetView.setGuardianList.type: {
+    case PortkeyAssetActions.setGuardianList: {
       return Object.assign({}, state, payload);
     }
-    case basicAssetView.destroy.type: {
-      return {};
+    case PortkeyAssetActions.setNFTCollections: {
+      const { list, totalRecordCount, skipCount, maxResultCount, maxNFTCount } = payload;
+      const collectionList: NFTCollectionItemShowType[] = (list as INftCollection[]).map((item) => ({
+        isFetching: false,
+        skipCount: 0,
+        maxResultCount: maxNFTCount,
+        totalRecordCount: 0,
+        children: [],
+        decimals: 0,
+        ...item,
+      }));
+      // TODO Handle pagination requests
+      state.NFTCollection = {
+        skipCount,
+        maxResultCount,
+        totalRecordCount: totalRecordCount,
+        list: collectionList,
+      };
+
+      return Object.assign({}, state);
+    }
+    case PortkeyAssetActions.setNFTItem: {
+      if (!payload) return;
+      const { list, totalRecordCount, symbol, chainId, skipCount } = payload;
+      const currentNFTSeriesItem = state.NFTCollection?.list.find(
+        (ele) => ele.symbol === symbol && ele.chainId === chainId,
+      );
+      if (currentNFTSeriesItem) {
+        if (currentNFTSeriesItem?.children?.length > skipCount) return;
+        currentNFTSeriesItem.children = [...currentNFTSeriesItem.children, ...list];
+        currentNFTSeriesItem.skipCount = currentNFTSeriesItem.children.length;
+        currentNFTSeriesItem.totalRecordCount = totalRecordCount;
+        currentNFTSeriesItem.isFetching = false;
+      }
+      return Object.assign({}, state);
+    }
+    case PortkeyAssetActions.destroy: {
+      return INITIAL_STATE;
     }
     default: {
       const { destroy } = payload;
