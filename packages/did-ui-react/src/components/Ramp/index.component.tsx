@@ -19,6 +19,7 @@ import {
   INSUFFICIENT_FUNDS_TEXT,
   SERVICE_UNAVAILABLE_TEXT,
   SYNCHRONIZING_CHAIN_TEXT,
+  DEFAULT_CHAIN_ID,
 } from '../../constants/ramp';
 import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../types';
 import { divDecimals, formatAmountShow } from '../../utils/converter';
@@ -31,6 +32,7 @@ import { IRampProps } from '.';
 import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo, fetchTxFeeAsync } from './utils';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
+import { useHandleAchSell } from './hooks';
 
 export default function RampMain({
   state,
@@ -39,6 +41,8 @@ export default function RampMain({
   goPreview,
   isBuySectionShow = true,
   isSellSectionShow = true,
+  isMainnet,
+  chainInfo,
 }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
@@ -55,7 +59,7 @@ export default function RampMain({
   const [rateUpdateTime, setRateUpdateTime] = useState(MAX_UPDATE_TIME);
   const [buyFiatList, setBuyFiatList] = useState<FiatType[]>([]);
   const [sellFiatList, setSellFiatList] = useState<FiatType[]>([]);
-  const chainId = useRef(tokenInfo?.chainId || 'AELF');
+  const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
 
   const [{ managementAccount }] = usePortkeyAsset();
   const isManagerSynced = useMemo(
@@ -71,6 +75,28 @@ export default function RampMain({
     () => `1 ${curToken.crypto} ≈ ${formatAmountShow(rate, 2)} ${curFiat.currency}`,
     [curFiat, curToken, rate],
   );
+
+  const isSell = useRef(0); // guaranteed to make only one transfer
+  const handleAchSell = useHandleAchSell({ isMainnet, chainInfo, tokenInfo });
+
+  useEffectOnce(() => {
+    window?.addEventListener(
+      'message',
+      function (event) {
+        if (event.data.type === 'CHECK_SELL_RESULT') {
+          checkAchSell(event.data.data);
+        }
+      },
+      false,
+    );
+    const checkAchSell = async (orderId: any) => {
+      console.log('sell orderId', orderId);
+      if (isSell.current === 0) {
+        isSell.current = 1;
+        await handleAchSell(orderId);
+      }
+    };
+  });
 
   useEffectOnce(() => {
     fetchBuyFiatListAsync()
@@ -430,14 +456,12 @@ export default function RampMain({
         country,
         amount,
         side,
-        tokenInfo: state ? state.tokenInfo : null,
       },
     });
   }, [
     isBuySectionShow,
     isSellSectionShow,
     goPreview,
-    state,
     goBack,
     isManagerSynced,
     tokenInfo.balance,

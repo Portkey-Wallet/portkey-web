@@ -10,7 +10,7 @@ import {
   AchConfig,
   DISCLAIMER_TEXT,
   MAX_UPDATE_TIME,
-  RAMP_WEB_PAGE_ROUTE,
+  RAMP_WITH_DRAW_URL,
   SERVICE_UNAVAILABLE_TEXT,
   TransDirectEnum,
   initPreviewData,
@@ -38,7 +38,9 @@ export default function RampPreviewMain({
   const [rate, setRate] = useState('');
   const { appId, baseUrl, updateAchOrder } = AchConfig;
   const apiUrl = useMemo(() => ConfigProvider.config?.apiUrl, []);
-  const data = useMemo(() => ({ ...initPreviewData, ...state }), [state]);
+  const data = useMemo(() => {
+    return { ...initPreviewData, ...state };
+  }, [state]);
   const showRateText = useMemo(() => `1 ${data.crypto} ≈ ${formatAmountShow(rate, 2)} ${data.fiat}`, [data, rate]);
   const receiveText = useMemo(
     () => `I will receive ≈ ${formatAmountShow(receive)} ${data.side === RampTypeEnum.BUY ? data.crypto : data.fiat}`,
@@ -125,7 +127,7 @@ export default function RampPreviewMain({
 
       if (side === RampTypeEnum.BUY) {
         // portkeyMethod is used by third-part-bridge, not ach
-        openUrl += `&portkeyMethod=ACH_BUY&type=buy&fiatAmount=${amount}`;
+        openUrl += `&portkeyMethod=TO_ACH_BUY&type=buy&fiatAmount=${amount}`;
 
         const achTokenInfo = await getAchTokenInfo(guardianList || []);
         if (achTokenInfo !== undefined) {
@@ -137,11 +139,11 @@ export default function RampPreviewMain({
         openUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
       } else {
         const withdrawUrl = encodeURIComponent(
-          RAMP_WEB_PAGE_ROUTE + `&payload=${encodeURIComponent(JSON.stringify({ orderNo: orderNo }))}`,
+          RAMP_WITH_DRAW_URL + `&payload=${encodeURIComponent(JSON.stringify({ orderNo: orderNo }))}`,
         );
 
         // portkeyMethod is used by third-part-bridge, not ach
-        openUrl += `&portkeyMethod=ACH_SELL&type=sell&cryptoAmount=${amount}&withdrawUrl=${withdrawUrl}&source=3#/sell-formUserInfo`;
+        openUrl += `&portkeyMethod=TO_ACH_SELL&type=sell&cryptoAmount=${amount}&withdrawUrl=${withdrawUrl}&source=3#/sell-formUserInfo`;
       }
 
       const openWinder = window.open(openUrl, '_blank');

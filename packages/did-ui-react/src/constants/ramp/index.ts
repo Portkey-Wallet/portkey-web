@@ -34,7 +34,11 @@ export const AchConfig: IAchConfig = {
   updateAchOrder: '/api/app/thirdPart/order/alchemy',
 };
 
-export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge';
+export const DEFAULT_CHAIN_ID = 'AELF';
+
+export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge/';
+
+export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK';
 
 export const ACH_MERCHANT_NAME = 'Alchemy';
 
@@ -100,3 +104,9 @@ export const initPreviewData = {
   amount: '200',
   side: RampTypeEnum.BUY,
 };
+
+export enum STAGE {
+  ACHTXADS, // onAchTxAddressReceived
+  TRANSACTION, // transaction
+  ORDER, // onRequestOrderTransferred
+}

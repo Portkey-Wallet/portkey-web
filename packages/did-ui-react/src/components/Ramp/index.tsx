@@ -1,10 +1,9 @@
-import { IRampInitState, IRampPreviewInitState, ITokenInfo } from '../../types';
+import { IRampInitState, IRampPreviewInitState, ITokenInfo, IUseHandleAchSellParams } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampMain from './index.component';
 
-export interface IRampProps {
+export interface IRampProps extends IUseHandleAchSellParams {
   state?: IRampInitState;
-  tokenInfo: ITokenInfo;
   goBack: () => void;
   goPreview: ({ state }: { state: IRampPreviewInitState }) => void;
   isBuySectionShow?: boolean;

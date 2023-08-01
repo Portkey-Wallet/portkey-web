@@ -1,4 +1,6 @@
 import { ChainId } from '@portkey/types';
+import { ChainType } from '../../../types/dist/commonjs';
+import { AchTxAddressReceivedType } from '@portkey/socket';
 
 export enum RampTypeEnum {
   BUY = 'BUY',
@@ -83,11 +85,41 @@ export type IRampPreviewInitState = {
   country: string;
   amount: string;
   side: RampTypeEnum;
-  tokenInfo: any;
 };
 
 export type ITokenInfo = {
   balance: number | string;
   decimals: number | string;
   chainId: ChainId;
+  symbol: string;
+  tokenContractAddress: string;
 };
+
+export interface PaymentSellTransferResult {
+  publicKey: string;
+  signature: string; // sign(md5(orderId + rawTransaction))
+  rawTransaction: string;
+}
+
+export type SellTransferParams = Pick<AchTxAddressReceivedType, 'merchantName' | 'orderId'> & {
+  // sellBaseURL: string; // request.defaultConfig.baseURL
+  paymentSellTransfer: (params: AchTxAddressReceivedType) => Promise<PaymentSellTransferResult>;
+};
+
+export interface PaymentLimitType {
+  min: number;
+  max: number;
+}
+
+export interface ISellTransferParams {
+  isMainnet: boolean;
+}
+
+export interface IUseHandleAchSellParams {
+  isMainnet: boolean;
+  chainInfo: {
+    caContractAddress: string;
+    endPoint: string;
+  };
+  tokenInfo: ITokenInfo;
+}

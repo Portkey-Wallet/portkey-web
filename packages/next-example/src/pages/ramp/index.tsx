@@ -19,7 +19,18 @@ export default function RampPage() {
           goPreview={function ({ state }): void {
             router.push(`/ramp-preview/${JSON.stringify(state)}`);
           }}
-          tokenInfo={{ balance: '300.00', decimals: 8, chainId: 'AELF' }}></Ramp>
+          tokenInfo={{
+            balance: '300.00',
+            decimals: 8,
+            chainId: 'AELF',
+            symbol: 'ELF',
+            tokenContractAddress: '',
+          }}
+          isMainnet={true}
+          chainInfo={{
+            caContractAddress: '',
+            endPoint: '',
+          }}></Ramp>
       </PortkeyAssetProvider>
     </div>
   );
