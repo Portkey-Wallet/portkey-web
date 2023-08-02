@@ -5,9 +5,10 @@ import NFTTab, { NFTTabProps } from './components/NFTTab';
 import TokenTab from './components/TokenTab';
 import { MAINNET } from '../../constants/network';
 import './index.less';
+import { NetworkType } from '../../types';
 
 export interface TokenAndNFTProps extends NFTTabProps {
-  networkType: string;
+  networkType: NetworkType;
   tokenList?: TokenItemShowType[];
 }
 

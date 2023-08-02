@@ -1,6 +1,7 @@
 import { ChainType } from '@portkey/types';
 import { Theme } from '../types';
 import { basicActions } from './utils';
+import { NetworkType } from '../../types';
 
 const PortkeyActions = {
   setTheme: 'SET_THEME',
@@ -10,7 +11,7 @@ const PortkeyActions = {
 export type PortkeyState = {
   theme?: Theme;
   sandboxId?: string;
-  networkType: string;
+  networkType: NetworkType;
   chainType: ChainType;
 };
 

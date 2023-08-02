@@ -2,6 +2,8 @@ import { ChainType } from '@portkey/types';
 import { ICountryItem } from './country';
 import { DeviceType, QRExtraDataType } from './device';
 
+export type NetworkType = 'MAIN' | 'TESTNET';
+
 export interface QRData {
   type: 'login' | 'send';
   netWorkType: string;

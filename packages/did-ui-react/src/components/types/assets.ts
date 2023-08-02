@@ -9,15 +9,18 @@ export interface BaseToken {
   id?: string; // id
   chainId: ChainId;
   decimals: number;
-  address: string; // token address  contract address
-  symbol: string; // "ELF"   the name showed
+  address: string; // token  contract address
+  symbol: string;
+}
+
+export interface BaseTokenExpand extends BaseToken {
   name: string;
   imageUrl?: string;
   alias?: string;
   tokenId?: string; // nft tokenId
 }
 
-export interface TokenItemType extends BaseToken {
+export interface TokenItemType extends BaseTokenExpand {
   isDefault?: boolean; // boolean,
   tokenName?: string;
 }

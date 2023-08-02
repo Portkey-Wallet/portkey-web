@@ -5,6 +5,7 @@ import type { Theme } from '../types';
 import { ReactNode } from 'react';
 import clsx from 'clsx';
 import { ChainType } from '@portkey/types';
+import { NetworkType } from '../../types';
 
 export default function BaseConfigProvider({
   sandboxId,
@@ -17,7 +18,7 @@ export default function BaseConfigProvider({
   sandboxId?: string;
   // Currently theme is used to control content such as pictures under the black/light theme
   theme?: Theme;
-  networkType: string;
+  networkType: NetworkType;
   chainType?: ChainType;
   children: ReactNode;
 }) {

@@ -3,6 +3,7 @@ import { basicPortkeyView, PortkeyState } from './actions';
 import { BasicActions } from './utils';
 import { Theme } from '../types';
 import { ChainType } from '@portkey/types';
+import { NetworkType } from '../../types';
 
 const INITIAL_STATE = {
   theme: 'light',
@@ -38,7 +39,7 @@ export default function Provider({
   theme?: Theme;
   sandboxId?: string;
   chainType?: ChainType;
-  networkType: string;
+  networkType: NetworkType;
   children: React.ReactNode;
 }) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);

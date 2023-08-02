@@ -1,12 +1,12 @@
 import { ChainId } from '@portkey/types';
 import { MAIN_CHAIN_ID, MAIN_CHAIN, SIDE_CHAIN, TESTNET, TEST_NET } from '../../constants/network';
 import { countryCodeMap } from '../../constants/ramp';
-import { FiatType, GetFiatType, RampTypeEnum } from '../../types';
+import { FiatType, GetFiatType, NetworkType, RampTypeEnum } from '../../types';
 import { did } from '../../utils';
 import { GetOrderQuoteParams } from '@portkey/services';
 import { FetchTxFeeResultItemTransactionFee } from '@portkey/services';
 
-export function transNetworkText(chainId: string, networkType: string): string {
+export function transNetworkText(chainId: string, networkType: NetworkType): string {
   return `${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN} ${chainId}${
     networkType === TESTNET ? ' ' + TEST_NET : ''
   }`;
