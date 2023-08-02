@@ -10,22 +10,37 @@ import { did } from '../../utils';
 import { IUserTokenItem } from '@portkey/services';
 import { BaseToken } from '../types/assets';
 import { sleep } from '@portkey/utils';
+import RampMain from '../Ramp/index.component';
+import { MAINNET } from '../../constants/network';
+import { IRampInitState, IRampPreviewInitState } from '../../types';
+import RampPreviewMain from '../RampPreview/index.component';
 
 export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack'> {
   onOverviewBack?: () => void;
+  rampState?: IRampInitState;
+  // if `${isShowRamp = true}` Please configure the API service of portkey
+  portkeyServiceUrl?: string;
 }
 
 export enum AssetStep {
   overview = 'overview',
   receive = 'receive',
-  buy = 'buy',
+  ramp = 'ramp',
+  rampPreview = 'rampPreview',
 }
 
-export default function AssetMain({ isShowBuy = true, faucetUrl, backIcon, onOverviewBack }: AssetMainProps) {
+export default function AssetMain({
+  isShowRamp = true,
+  rampState,
+  faucetUrl,
+  backIcon,
+  portkeyServiceUrl,
+  onOverviewBack,
+}: AssetMainProps) {
   const [{ networkType }] = usePortkey();
   const [{ caInfo, initialized }, { dispatch }] = usePortkeyAsset();
 
-  const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.receive);
+  const [assetStep, setAssetStep] = useState<AssetStep>();
 
   const maxNftNum = useNFTMaxCount();
 
@@ -70,12 +85,15 @@ export default function AssetMain({ isShowBuy = true, faucetUrl, backIcon, onOve
   }, [caAddressInfos, dispatch, getAllTokenList, initialized, maxNftNum]);
 
   const [selectToken, setSelectToken] = useState<BaseToken>();
+
+  const [rampPreview, setRampPreview] = useState<IRampPreviewInitState>();
+
   return (
     <div>
-      {assetStep === AssetStep.overview && (
+      {(!assetStep || assetStep === AssetStep.overview) && (
         <AssetOverviewMain
           allToken={allToken}
-          isShowBuy={isShowBuy}
+          isShowRamp={isShowRamp}
           faucetUrl={faucetUrl}
           backIcon={backIcon}
           onBack={onOverviewBack}
@@ -84,7 +102,11 @@ export default function AssetMain({ isShowBuy = true, faucetUrl, backIcon, onOve
             await sleep(50);
             setAssetStep(AssetStep.receive);
           }}
-          onBuy={() => setAssetStep(AssetStep.buy)}
+          onBuy={async (v) => {
+            setSelectToken(v);
+            await sleep(50);
+            setAssetStep(AssetStep.ramp);
+          }}
         />
       )}
       {assetStep === AssetStep.receive && selectToken && (
@@ -104,7 +126,34 @@ export default function AssetMain({ isShowBuy = true, faucetUrl, backIcon, onOve
           onBack={() => setAssetStep(AssetStep.overview)}
         />
       )}
-      {assetStep === AssetStep.buy && 'buy'}
+      {assetStep === AssetStep.ramp && selectToken && (
+        <RampMain
+          initState={rampState}
+          tokenInfo={{
+            ...selectToken,
+            tokenContractAddress: selectToken.address,
+          }}
+          goBack={() => setAssetStep(AssetStep.overview)}
+          goPreview={({ initState }) => {
+            setRampPreview(initState);
+            setAssetStep(AssetStep.rampPreview);
+          }}
+          isBuySectionShow={true}
+          isSellSectionShow={true}
+          isMainnet={networkType === MAINNET}
+        />
+      )}
+      {assetStep === AssetStep.rampPreview && rampPreview && (
+        <RampPreviewMain
+          initState={rampPreview}
+          portkeyServiceUrl={portkeyServiceUrl || ''}
+          goBack={() => {
+            setAssetStep(AssetStep.ramp);
+          }}
+          isBuySectionShow={true}
+          isSellSectionShow={true}
+        />
+      )}
     </div>
   );
 }

@@ -4,6 +4,7 @@ export const ELF_SYMBOL = 'ELF';
 
 export const NEW_CLIENT_DEFAULT_ELF_LIST: TokenItemShowType[] = [
   {
+    id: '',
     name: 'AELF',
     address: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
     balance: '0',

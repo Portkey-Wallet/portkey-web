@@ -8,7 +8,7 @@ interface AssetCardProps {
   networkType?: string;
   nickName?: string;
   accountBalanceUSD?: string;
-  isShowBuy?: boolean;
+  isShowRamp?: boolean;
   isShowFaucet?: boolean;
   onBuy?: () => void;
   onBack?: () => void;
@@ -20,7 +20,7 @@ export default function AssetCard({
   networkType,
   nickName,
   accountBalanceUSD,
-  isShowBuy,
+  isShowRamp,
   isShowFaucet,
   backIcon,
   onBuy,
@@ -47,7 +47,8 @@ export default function AssetCard({
       </div>
       <BalanceCard
         isShowFaucet={isShowFaucet}
-        isShowBuy={isShowBuy}
+        isShowRamp={isShowRamp}
+        isMainnet={isMainnet}
         onBuy={onBuy}
         onReceive={onReceive}
         onFaucet={onFaucet}

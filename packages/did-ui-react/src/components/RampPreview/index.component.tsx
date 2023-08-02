@@ -29,7 +29,7 @@ import { useGetAchTokenInfo } from './hooks';
 
 export default function RampPreviewMain({
   initState,
-  tokenInfo,
+  chainId = DEFAULT_CHAIN_ID,
   portkeyServiceUrl,
   goBack,
   isBuySectionShow = true,
@@ -43,7 +43,6 @@ export default function RampPreviewMain({
   const data = useMemo(() => {
     return { ...initPreviewData, ...initState };
   }, [initState]);
-  const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
 
   const showRateText = useMemo(() => `1 ${data.crypto} ≈ ${formatAmountShow(rate, 2)} ${data.fiat}`, [data, rate]);
   const receiveText = useMemo(
@@ -138,7 +137,7 @@ export default function RampPreviewMain({
           openUrl += `&token=${encodeURIComponent(achTokenInfo.token)}`;
         }
 
-        const address = caInfo[chainId.current]?.caAddress || '';
+        const address = caInfo[chainId]?.caAddress || '';
         const signature = await getAchSignature({ address });
         openUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
       } else {
@@ -163,17 +162,18 @@ export default function RampPreviewMain({
       setLoading(false);
     }
   }, [
-    portkeyServiceUrl,
-    appId,
-    baseUrl,
-    caInfo,
     data,
-    getAchTokenInfo,
-    goBack,
-    guardianList,
     isBuySectionShow,
     isSellSectionShow,
+    appId,
+    baseUrl,
+    goBack,
+    portkeyServiceUrl,
     updateAchOrder,
+    getAchTokenInfo,
+    guardianList,
+    caInfo,
+    chainId,
   ]);
 
   const showDisclaimerTipModal = useCallback(() => {

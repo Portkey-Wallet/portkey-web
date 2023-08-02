@@ -12,20 +12,22 @@ import { divDecimals, formatAmountShow } from '../../utils/converter';
 import CustomTokenModal from '../CustomTokenModal';
 import { ChainId } from '@portkey/types';
 import { IUserTokenItem } from '@portkey/services';
+import { ELF_SYMBOL } from '../../constants/assets';
+import { message } from 'antd';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItem[];
-  isShowBuy?: boolean;
+  isShowRamp?: boolean;
   backIcon?: ReactNode;
   faucetUrl?: string; // Only when testing the network, you can configure the faucet address
   onReceive?: (selectToken: BaseToken) => void;
-  onBuy?: () => void;
+  onBuy?: (selectToken: BaseToken) => void;
   onBack?: () => void;
 }
 
 export default function AssetOverviewMain({
   allToken,
-  isShowBuy = true,
+  isShowRamp = true,
   faucetUrl,
   backIcon = <></>,
   onBack,
@@ -104,17 +106,26 @@ export default function AssetOverviewMain({
   }, [networkType, tokenListInfo?.list, tokenPrices?.tokenPriceObject]);
 
   const allTokenList = useMemo(() => allToken?.map((tokenItem) => tokenItem.token), [allToken]);
+  const supportToken = useMemo(
+    () => allTokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL),
+    [allTokenList],
+  );
 
   return (
     <div className="portkey-ui-asset-overview">
       <AssetCard
-        isShowBuy={isShowBuy}
+        isShowRamp={isShowRamp}
         isShowFaucet={Boolean(faucetUrl)}
         networkType={networkType}
         backIcon={backIcon}
         nickName={accountInfo?.nickName}
         accountBalanceUSD={accountBalanceUSD}
-        onBuy={onBuy}
+        onBuy={() => {
+          // TODO select Token
+          if (!supportToken?.[0]) return message.error('There is no token that meets the requirements');
+
+          onBuy?.(supportToken[0]);
+        }}
         onReceive={() => setTokenOpen(true)}
         onFaucet={onFaucet}
         onBack={onBack}

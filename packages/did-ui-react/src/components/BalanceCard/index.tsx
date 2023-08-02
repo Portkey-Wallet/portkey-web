@@ -5,7 +5,7 @@ import './index.less';
 export interface BalanceCardProps {
   accountInfo?: any;
   isMainnet?: boolean;
-  isShowBuy?: boolean;
+  isShowRamp?: boolean;
   isShowFaucet?: boolean;
   onBuy?: () => void;
   onReceive?: () => void;
@@ -13,7 +13,7 @@ export interface BalanceCardProps {
 }
 
 export default function BalanceCard({
-  isShowBuy = true,
+  isShowRamp = true,
   isShowFaucet,
   isMainnet,
   onBuy,
@@ -32,7 +32,7 @@ export default function BalanceCard({
     [onBuy, onFaucet],
   );
 
-  const renderBuy = useMemo(() => isShowBuy && isMainnet && renderTem('Buy'), [isMainnet, isShowBuy, renderTem]);
+  const renderBuy = useMemo(() => isShowRamp && isMainnet && renderTem('Buy'), [isMainnet, isShowRamp, renderTem]);
   const renderFaucet = useMemo(
     () => isShowFaucet && !isMainnet && renderTem('Faucet'),
     [isMainnet, isShowFaucet, renderTem],

@@ -6,7 +6,7 @@ export enum BalanceTab {
 }
 
 export interface BaseToken {
-  id?: string; // id
+  id: string; // id
   chainId: ChainId;
   decimals: number;
   address: string; // token  contract address
