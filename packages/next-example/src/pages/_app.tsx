@@ -16,7 +16,7 @@ export default function APP({ Component, pageProps }: any) {
 
   return (
     <PortkeyProvider networkType={'TESTNET'} theme={dark ? 'dark' : 'light'}>
-      <div style={{ background: dark ? '#1E212B' : '#fff' }} id={dark && 'ids'}>
+      <div style={{ background: dark ? '#1E212B' : '#fff' }} id={dark ? 'ids' : ''}>
         {/* <button
           onClick={async () => {
             setDark(v => !v);

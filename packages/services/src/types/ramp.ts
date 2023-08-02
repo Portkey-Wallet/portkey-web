@@ -1,3 +1,5 @@
+import { ChainId } from '@portkey/types';
+
 export type RampType = 'BUY' | 'SELL';
 
 export type GetFiatListParams = {
@@ -61,7 +63,7 @@ export type GetOrderQuoteParams = {
   type?: 'ONE' | 'ALL';
 };
 export type GetOrderQuoteResult = {
-  data: OrderQuoteType[];
+  data: OrderQuoteType;
   returnCode: string;
   returnMsg: string;
 };
@@ -109,6 +111,22 @@ export type SendSellTransactionParams = {
 };
 export type SendSellTransactionResult = {};
 
+export type FetchTxFeeParams = {
+  chainIds: ChainId[];
+};
+export type FetchTxFeeResult = FetchTxFeeResultItem[];
+
+export type FetchTxFeeResultItem = {
+  chainId: ChainId;
+  transactionFee: FetchTxFeeResultItemTransactionFee;
+};
+
+export type FetchTxFeeResultItemTransactionFee = {
+  ach: number;
+  crossChain: number;
+  max: number;
+};
+
 export interface IRampService {
   getFiatList(params: GetFiatListParams): Promise<GetFiatListResult>;
   getCryptoList(params: GetCryptoListParams): Promise<GetCryptoListResult>;
@@ -117,4 +135,5 @@ export interface IRampService {
   getOrderNo(params: GetOrderNoParams): Promise<GetOrderNoResult>;
   getAchSignature(params: GetAchSignatureParams): Promise<GetAchSignatureResult>;
   sendSellTransaction(params: SendSellTransactionParams): Promise<SendSellTransactionResult>;
+  fetchTxFee(params: FetchTxFeeParams): Promise<FetchTxFeeResult>;
 }

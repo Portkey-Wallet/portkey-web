@@ -199,17 +199,15 @@ class FetchRequestMock {
         break;
       case '/api/app/thirdPart/alchemy/order/quote':
         result = {
-          data: [
-            {
-              crypto: 'crypto_mock',
-              cryptoPrice: '200',
-              cryptoQuantity: '1',
-              fiat: 'USD',
-              rampFee: '0',
-              networkFee: '0',
-              fiatQuantity: '200',
-            },
-          ],
+          data: {
+            crypto: 'crypto_mock',
+            cryptoPrice: '200',
+            cryptoQuantity: '1',
+            fiat: 'USD',
+            rampFee: '0',
+            networkFee: '0',
+            fiatQuantity: '200',
+          },
           returnCode: '0000',
         };
         break;

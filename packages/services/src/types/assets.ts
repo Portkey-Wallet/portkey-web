@@ -77,6 +77,26 @@ export type FetchTokenPriceResult = {
   totalRecordCount: number;
 };
 
+export type IUserTokenItem = {
+  isDisplay: boolean;
+  isDefault: boolean;
+  id: string;
+  token: {
+    chainId: ChainId;
+    decimals: number;
+    address: string;
+    symbol: string;
+    id: string;
+  };
+};
+export type GetUserTokenListParams = {
+  keyword: string;
+  chainIdArray: string[];
+};
+export type GetUserTokenListResult = {
+  items: IUserTokenItem[];
+  totalRecordCount: number;
+};
 export interface IAssetsService {
   fetchAccountTokenList(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListResult>;
   getSymbolImages(params: GetSymbolImagesParams): Promise<GetSymbolImagesResult>;
@@ -87,4 +107,5 @@ export interface IAssetsService {
     params: FetchAccountNftCollectionItemListParams,
   ): Promise<FetchAccountNftCollectionItemListResult>;
   fetchTokenPrice(params: FetchTokenPriceParams): Promise<FetchTokenPriceResult>;
+  getUserTokenList(params: GetUserTokenListParams): Promise<GetUserTokenListResult>;
 }

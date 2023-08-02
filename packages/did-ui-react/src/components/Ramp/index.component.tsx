@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Radio, RadioChangeEvent, message } from 'antd';
 import { useEffectOnce } from 'react-use';
@@ -19,6 +19,7 @@ import {
   INSUFFICIENT_FUNDS_TEXT,
   SERVICE_UNAVAILABLE_TEXT,
   SYNCHRONIZING_CHAIN_TEXT,
+  DEFAULT_CHAIN_ID,
 } from '../../constants/ramp';
 import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../types';
 import { divDecimals, formatAmountShow } from '../../utils/converter';
@@ -27,12 +28,21 @@ import CustomSvg from '../CustomSvg';
 import { setLoading } from '../../utils';
 import { handleKeyDown } from '../../utils/keyDown';
 import CustomModal from '../CustomModal';
-import ConfigProvider from '../config-provider';
 import { IRampProps } from '.';
-import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo } from './utils';
+import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo, fetchTxFeeAsync } from './utils';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
+import { useHandleAchSell } from './hooks';
 
-export default function RampMain({ state, goBack, goPreview }: IRampProps) {
+export default function RampMain({
+  state,
+  tokenInfo,
+  goBack,
+  goPreview,
+  isBuySectionShow = true,
+  isSellSectionShow = true,
+  isMainnet,
+}: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
   const updateTimerRef = useRef<NodeJS.Timer | number>();
@@ -46,18 +56,18 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
   const [curToken, setCurToken] = useState(initToken);
   const [curFiat, setCurFiat] = useState<PartialFiatType>(initFiat);
   const [rateUpdateTime, setRateUpdateTime] = useState(MAX_UPDATE_TIME);
-  const isBuySectionShow = useMemo(() => ConfigProvider.config.ramp?.isBuySectionShow, []);
-  const isSellSectionShow = useMemo(() => ConfigProvider.config.ramp?.isSellSectionShow, []);
-  const isManagerSynced = useMemo(() => ConfigProvider.config.ramp?.isManagerSynced, []);
-  const currentChain = useMemo(() => ConfigProvider.config.currentChain, []);
-  const walletInfo = useMemo(() => ConfigProvider.config.walletInfo, []);
   const [buyFiatList, setBuyFiatList] = useState<FiatType[]>([]);
   const [sellFiatList, setSellFiatList] = useState<FiatType[]>([]);
+  const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
 
-  // TODO ykx
-  // useFetchTxFee();
-  // const { ach: achFee } = useGetTxFee(currentChain?.chainId);
-  const achFee = 0.39;
+  const [{ managementAccount, initialized }] = usePortkeyAsset();
+  const isManagerSynced = useMemo(
+    () => !!managementAccount?.address && managementAccount.address?.length > 0,
+    [managementAccount?.address],
+  );
+
+  // ach transaction fee, default is 0.39
+  const achFee = useRef<number>(0.39);
 
   const disabled = useMemo(() => !!errMsg || !amount, [errMsg, amount]);
   const showRateText = useMemo(
@@ -65,58 +75,54 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
     [curFiat, curToken, rate],
   );
 
-  useEffectOnce(() => {
-    fetchBuyFiatListAsync()
-      .then((res) => {
-        setBuyFiatList(res);
-      })
-      .catch((error) => {
-        throw Error(JSON.stringify(error));
-      });
-    fetchSellFiatListAsync()
-      .then((res) => {
-        setSellFiatList(res);
-      })
-      .catch((error) => {
-        throw Error(JSON.stringify(error));
-      });
-  });
+  const isSell = useRef(0); // guaranteed to make only one transfer
+  const handleAchSell = useHandleAchSell({ isMainnet, tokenInfo });
 
   useEffectOnce(() => {
-    if (state && state.amount !== undefined) {
-      const { amount, country, fiat, crypto, network, side } = state;
-      setAmount(amount);
-      setCurFiat({ country, currency: fiat });
-      setCurToken({ crypto, network });
-      setPage(side);
-      valueSaveRef.current = {
-        amount,
-        currency: fiat,
-        country,
-        crypto,
-        network,
-        max: null,
-        min: null,
-        side,
-        receive: '',
-        isShowErrMsg: false,
-      };
-      updateCrypto();
-    } else {
-      if (!isBuySectionShow && isSellSectionShow) {
-        const side = RampTypeEnum.SELL;
-        setPage(side);
-        valueSaveRef.current.side = side;
-        setAmount(initCrypto);
-        valueSaveRef.current.amount = initCrypto;
+    window?.addEventListener(
+      'message',
+      function (event) {
+        if (event.data.type === 'CHECK_SELL_RESULT') {
+          checkAchSell(event.data.data);
+        }
+      },
+      false,
+    );
+    const checkAchSell = async (data: any) => {
+      if (isSell.current === 0) {
+        isSell.current = 1;
+        const orderNo = JSON.parse(data?.payload).orderNo;
+        await handleAchSell(orderNo);
       }
-      updateCrypto();
-    }
-    return () => {
-      clearInterval(updateTimerRef.current);
-      updateTimerRef.current = undefined;
     };
   });
+
+  useEffect(() => {
+    if (initialized) {
+      fetchBuyFiatListAsync()
+        .then((res) => {
+          setBuyFiatList(res);
+        })
+        .catch((error) => {
+          throw Error(JSON.stringify(error));
+        });
+      fetchSellFiatListAsync()
+        .then((res) => {
+          setSellFiatList(res);
+        })
+        .catch((error) => {
+          throw Error(JSON.stringify(error));
+        });
+
+      fetchTxFeeAsync([chainId.current])
+        .then((res) => {
+          achFee.current = res[chainId.current].ach;
+        })
+        .catch((error) => {
+          throw Error(JSON.stringify(error));
+        });
+    }
+  }, [initialized]);
 
   const showLimitText = useCallback(
     (min: string | number, max: string | number, fiat = 'USD') =>
@@ -186,21 +192,23 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
         side: valueSaveRef.current.side,
       },
     ) => {
-      try {
-        const rst = await getOrderQuote(params);
-        if (params.amount !== valueSaveRef.current.amount) return;
+      if (initialized) {
+        try {
+          const rst = await getOrderQuote(params);
+          if (params.amount !== valueSaveRef.current.amount) return;
 
-        const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst[0];
-        setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
-        setRate(cryptoPrice);
-        setErrMsg('');
-        setWarningMsg('');
-        valueSaveRef.current.isShowErrMsg = false;
-        if (!updateTimerRef.current) {
-          resetTimer();
+          const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst;
+          setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
+          setRate(cryptoPrice);
+          setErrMsg('');
+          setWarningMsg('');
+          valueSaveRef.current.isShowErrMsg = false;
+          if (!updateTimerRef.current) {
+            resetTimer();
+          }
+        } catch (error) {
+          console.log('error', error);
         }
-      } catch (error) {
-        console.log('error', error);
       }
     };
 
@@ -231,39 +239,81 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
     };
 
     return { updateReceive, handleSetTimer, stopInterval, resetTimer };
-  }, [setReceiveCase]);
+  }, [initialized, setReceiveCase]);
 
   const updateCrypto = useCallback(async () => {
-    const { currency, crypto, network, side } = valueSaveRef.current;
-    const data = await getCryptoInfo({ fiat: currency }, crypto, network, side);
-    if (side === RampTypeEnum.BUY) {
-      if (data && data.maxPurchaseAmount !== null && data.minPurchaseAmount !== null) {
-        valueSaveRef.current.max = Number(
-          ZERO.plus(data.maxPurchaseAmount).decimalPlaces(4, BigNumber.ROUND_DOWN).valueOf(),
-        );
-        valueSaveRef.current.min = Number(
-          ZERO.plus(data.minPurchaseAmount).decimalPlaces(4, BigNumber.ROUND_UP).valueOf(),
-        );
-      }
-    } else {
-      if (data && data.maxSellAmount !== null && data.minSellAmount !== null) {
-        valueSaveRef.current.max = Number(
-          ZERO.plus(data.maxSellAmount).decimalPlaces(4, BigNumber.ROUND_DOWN).valueOf(),
-        );
-        valueSaveRef.current.min = Number(ZERO.plus(data.minSellAmount).decimalPlaces(4, BigNumber.ROUND_UP).valueOf());
-      }
-    }
-    const { amount, min, max } = valueSaveRef.current;
-    if (min && max) {
-      if (!isValidValue({ amount, min, max })) {
-        setErrMsgCase();
-        setWarningMsg('');
-        stopInterval();
+    if (initialized) {
+      const { currency, crypto, network, side } = valueSaveRef.current;
+      const data = await getCryptoInfo({ fiat: currency }, crypto, network, side);
+      if (side === RampTypeEnum.BUY) {
+        if (data && data.maxPurchaseAmount !== null && data.minPurchaseAmount !== null) {
+          valueSaveRef.current.max = Number(
+            ZERO.plus(data.maxPurchaseAmount).decimalPlaces(4, BigNumber.ROUND_DOWN).valueOf(),
+          );
+          valueSaveRef.current.min = Number(
+            ZERO.plus(data.minPurchaseAmount).decimalPlaces(4, BigNumber.ROUND_UP).valueOf(),
+          );
+        }
       } else {
-        await updateReceive();
+        if (data && data.maxSellAmount !== null && data.minSellAmount !== null) {
+          valueSaveRef.current.max = Number(
+            ZERO.plus(data.maxSellAmount).decimalPlaces(4, BigNumber.ROUND_DOWN).valueOf(),
+          );
+          valueSaveRef.current.min = Number(
+            ZERO.plus(data.minSellAmount).decimalPlaces(4, BigNumber.ROUND_UP).valueOf(),
+          );
+        }
+      }
+      const { amount, min, max } = valueSaveRef.current;
+      if (min && max) {
+        if (!isValidValue({ amount, min, max })) {
+          setErrMsgCase();
+          setWarningMsg('');
+          stopInterval();
+        } else {
+          await updateReceive();
+        }
       }
     }
-  }, [isValidValue, setErrMsgCase, stopInterval, updateReceive]);
+  }, [initialized, isValidValue, setErrMsgCase, stopInterval, updateReceive]);
+
+  useEffect(() => {
+    if (initialized) {
+      if (state && state.amount !== undefined) {
+        const { amount, country, fiat, crypto, network, side } = state;
+        setAmount(amount);
+        setCurFiat({ country, currency: fiat });
+        setCurToken({ crypto, network });
+        setPage(side);
+        valueSaveRef.current = {
+          amount,
+          currency: fiat,
+          country,
+          crypto,
+          network,
+          max: null,
+          min: null,
+          side,
+          receive: '',
+          isShowErrMsg: false,
+        };
+        updateCrypto();
+      } else {
+        if (!isBuySectionShow && isSellSectionShow) {
+          const side = RampTypeEnum.SELL;
+          setPage(side);
+          valueSaveRef.current.side = side;
+          setAmount(initCrypto);
+          valueSaveRef.current.amount = initCrypto;
+        }
+        updateCrypto();
+      }
+      return () => {
+        clearInterval(updateTimerRef.current);
+        updateTimerRef.current = undefined;
+      };
+    }
+  }, [initialized, isBuySectionShow, isSellSectionShow, state, updateCrypto]);
 
   const handleInputChange = useCallback(
     async (v: string) => {
@@ -385,8 +435,6 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
     }
 
     if (side === RampTypeEnum.SELL) {
-      if (!currentChain) return setLoading(false);
-
       if (!isManagerSynced) {
         setLoading(false);
         setWarningMsg(SYNCHRONIZING_CHAIN_TEXT);
@@ -398,8 +446,8 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
       setLoading(false);
 
       if (
-        ZERO.plus(divDecimals(walletInfo?.balance, walletInfo?.decimals)).isLessThanOrEqualTo(
-          ZERO.plus(achFee).plus(valueSaveRef.current.amount),
+        ZERO.plus(divDecimals(tokenInfo.balance, tokenInfo.decimals)).isLessThanOrEqualTo(
+          ZERO.plus(achFee.current).plus(valueSaveRef.current.amount),
         )
       ) {
         setInsufficientFundsMsg();
@@ -417,32 +465,18 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
         country,
         amount,
         side,
-        tokenInfo: state ? state.tokenInfo : null,
       },
     });
   }, [
     isBuySectionShow,
     isSellSectionShow,
     goPreview,
-    state,
     goBack,
-    currentChain,
     isManagerSynced,
-    walletInfo?.balance,
-    walletInfo?.decimals,
+    tokenInfo.balance,
+    tokenInfo.decimals,
     setInsufficientFundsMsg,
   ]);
-
-  const handleBack = useCallback(() => {
-    if (state && state.tokenInfo) {
-      goBack?.();
-      // navigate('/token-detail', {
-      //   state: state.tokenInfo,
-      // });
-    } else {
-      goBack?.();
-    }
-  }, [goBack, state]);
 
   const renderRate = useMemo(
     () => (
@@ -460,7 +494,7 @@ export default function RampMain({ state, goBack, goPreview }: IRampProps) {
   return (
     <div className={clsx(['ramp-frame portkey-ui-flex-column'])}>
       <div className="ramp-title">
-        <BackHeaderForPage title={t('Buy')} leftCallBack={handleBack} />
+        <BackHeaderForPage title={t('Buy')} leftCallBack={goBack} />
       </div>
       <div className="ramp-content portkey-ui-flex-column-center">
         <div className="ramp-radio">

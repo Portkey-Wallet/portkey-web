@@ -7,10 +7,11 @@ import { RampTypeEnum } from '../../types';
 import './index.less';
 import {
   ACH_MERCHANT_NAME,
-  // ACH_MERCHANT_NAME,
   AchConfig,
   DISCLAIMER_TEXT,
   MAX_UPDATE_TIME,
+  RAMP_WEB_PAGE_ROUTE,
+  RAMP_WITH_DRAW_URL,
   SERVICE_UNAVAILABLE_TEXT,
   TransDirectEnum,
   initPreviewData,
@@ -19,24 +20,27 @@ import BackHeaderForPage from '../BackHeaderForPage';
 import CustomSvg from '../CustomSvg';
 import { formatAmountShow } from '../../utils/converter';
 import CustomModal from '../CustomModal';
-import ConfigProvider from '../config-provider';
 import { IRampPreviewProps } from '.';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getOrderQuote } from '../Ramp/utils';
 import { getAchSignature, getRampOrderNo } from './utils';
 import { useGetAchTokenInfo } from './hooks';
 
-export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewProps) {
+export default function RampPreviewMain({
+  state,
+  apiUrl,
+  goBack,
+  isBuySectionShow = true,
+  isSellSectionShow = true,
+}: IRampPreviewProps) {
   const { t } = useTranslation();
   const updateRef = useRef(MAX_UPDATE_TIME);
   const [receive, setReceive] = useState('');
   const [rate, setRate] = useState('');
   const { appId, baseUrl, updateAchOrder } = AchConfig;
-  const isBuySectionShow = useMemo(() => ConfigProvider.config.ramp?.isBuySectionShow, []);
-  const isSellSectionShow = useMemo(() => ConfigProvider.config.ramp?.isSellSectionShow, []);
-  const walletInfo = useMemo(() => ConfigProvider.config.walletInfo, []);
-  const apiUrl = useMemo(() => ConfigProvider.config?.apiUrl, []);
-  const data = useMemo(() => ({ ...initPreviewData, ...state }), [state]);
+  const data = useMemo(() => {
+    return { ...initPreviewData, ...state };
+  }, [state]);
   const showRateText = useMemo(() => `1 ${data.crypto} ≈ ${formatAmountShow(rate, 2)} ${data.fiat}`, [data, rate]);
   const receiveText = useMemo(
     () => `I will receive ≈ ${formatAmountShow(receive)} ${data.side === RampTypeEnum.BUY ? data.crypto : data.fiat}`,
@@ -45,7 +49,7 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
 
   const getAchTokenInfo = useGetAchTokenInfo();
 
-  const [{ guardianList }] = usePortkeyAsset();
+  const [{ guardianList, caInfo, originChainId }] = usePortkeyAsset();
 
   const setReceiveCase = useCallback(
     ({
@@ -71,7 +75,7 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
   const updateReceive = useCallback(async () => {
     try {
       const rst = await getOrderQuote(data);
-      const { cryptoPrice, fiatQuantity, rampFee, cryptoQuantity } = rst[0];
+      const { cryptoPrice, fiatQuantity, rampFee, cryptoQuantity } = rst;
       setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
       setRate(cryptoPrice);
     } catch (error) {
@@ -105,13 +109,13 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
     if ((side === RampTypeEnum.BUY && !isBuySectionShow) || (side === RampTypeEnum.SELL && !isSellSectionShow)) {
       setLoading(false);
       message.error(SERVICE_UNAVAILABLE_TEXT);
-      goBackCallback?.();
+      goBack?.();
     }
 
     if (!appId || !baseUrl) return setLoading(false);
     try {
       const { network, country, fiat, amount, crypto } = data;
-      let achUrl = `${baseUrl}/?crypto=${crypto}&network=${network}&country=${country}&fiat=${fiat}&appId=${appId}&callbackUrl=${encodeURIComponent(
+      let openUrl = `${RAMP_WEB_PAGE_ROUTE}/?url=${baseUrl}&crypto=${crypto}&network=${network}&country=${country}&fiat=${fiat}&appId=${appId}&callbackUrl=${encodeURIComponent(
         `${apiUrl}${updateAchOrder}`,
       )}`;
 
@@ -119,35 +123,37 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
         transDirect: side === 'BUY' ? TransDirectEnum.TOKEN_BUY : TransDirectEnum.TOKEN_SELL,
         merchantName: ACH_MERCHANT_NAME,
       });
-      achUrl += `&merchantOrderNo=${orderNo}`;
+      openUrl += `&merchantOrderNo=${orderNo}`;
 
       if (side === RampTypeEnum.BUY) {
-        achUrl += `&type=buy&fiatAmount=${amount}`;
+        // portkeyMethod is used by third-part-bridge, not ach
+        openUrl += `&portkeyMethod=TO_ACH_BUY&type=buy&fiatAmount=${amount}`;
 
         const achTokenInfo = await getAchTokenInfo(guardianList || []);
         if (achTokenInfo !== undefined) {
-          achUrl += `&token=${encodeURIComponent(achTokenInfo.token)}`;
+          openUrl += `&token=${encodeURIComponent(achTokenInfo.token)}`;
         }
 
-        const address = walletInfo?.caAddress || '';
+        const address = caInfo[originChainId]?.caAddress || '';
         const signature = await getAchSignature({ address });
-        achUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
+        openUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
       } else {
-        const ACH_WITHDRAW_URL = ''; // TODO
         const withdrawUrl = encodeURIComponent(
-          ACH_WITHDRAW_URL + `&payload=${encodeURIComponent(JSON.stringify({ orderNo: orderNo }))}`,
+          RAMP_WITH_DRAW_URL + `&payload=${encodeURIComponent(JSON.stringify({ orderNo: orderNo }))}`,
         );
 
-        achUrl += `&type=sell&cryptoAmount=${amount}&withdrawUrl=${withdrawUrl}&source=3#/sell-formUserInfo`;
+        // portkeyMethod is used by third-part-bridge, not ach
+        openUrl += `&portkeyMethod=TO_ACH_SELL&type=sell&cryptoAmount=${amount}&withdrawUrl=${withdrawUrl}&source=${encodeURIComponent(
+          '3#/sell-formUserInfo',
+        )}`;
       }
 
-      console.log('achUrl', achUrl);
-      const openWinder = window.open(achUrl, '_blank');
-      if (openWinder) {
-        openWinder.opener = null;
-      }
+      const openWinder = window.open(openUrl, '_blank');
+
+      console.log('openUrl', openUrl, openWinder);
+
       await new Promise((resolve) => setTimeout(resolve, 500));
-      goBackCallback?.();
+      goBack?.();
     } catch (error) {
       message.error('There is a network error, please try again.');
       console.log(error);
@@ -158,14 +164,15 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
     apiUrl,
     appId,
     baseUrl,
+    caInfo,
     data,
     getAchTokenInfo,
-    goBackCallback,
+    goBack,
     guardianList,
     isBuySectionShow,
     isSellSectionShow,
+    originChainId,
     updateAchOrder,
-    walletInfo?.caAddress,
   ]);
 
   const showDisclaimerTipModal = useCallback(() => {
@@ -179,16 +186,12 @@ export default function RampPreviewMain({ state, goBackCallback }: IRampPreviewP
     });
   }, [t]);
 
-  const handleBack = useCallback(() => {
-    goBackCallback?.();
-  }, [goBackCallback]);
-
   return (
     <div className={clsx(['preview-frame portkey-ui-flex-column'])}>
       <div className="preview-title">
         <BackHeaderForPage
           title={`${data.side === RampTypeEnum.BUY ? 'Buy' : 'Sell'} ${state.crypto}`}
-          leftCallBack={handleBack}
+          leftCallBack={goBack}
         />
       </div>
       <div className="preview-content">
