@@ -1,4 +1,4 @@
-import { ChainId, ChainType, ErrorMsg } from '@portkey/types';
+import { ChainId, ChainType, ErrorMsg, ViewResult } from '@portkey/types';
 import { SandboxEventService, SandboxEventTypes, SandboxErrorCode } from '..';
 import { getChain } from '../../hooks/useChainInfo';
 import { getContractBasic } from '@portkey/contracts';
@@ -55,7 +55,7 @@ export const getTransactionRawByExtension = async ({
 
 export const getTransactionRawByContract = async (
   params: Omit<GetTransitionFeeParams, 'chainType'>,
-): Promise<{ data?: any; error?: ErrorMsg }> => {
+): Promise<{ result: { data: string } }> => {
   const chainInfo = await getChain(params.chainId);
   if (!chainInfo) throw 'Please check network connection and chainId';
 

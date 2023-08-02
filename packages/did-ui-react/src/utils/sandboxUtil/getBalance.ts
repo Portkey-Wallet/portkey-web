@@ -16,8 +16,9 @@ interface GetBalanceParams {
 }
 
 interface GetBalanceResult {
-  data?: { symbol: string; owner: string; balance: number };
-  error?: ErrorMsg;
+  symbol: string;
+  owner: string;
+  balance: number;
 }
 
 export const getBalanceByExtension = async ({ sandboxId, chainId, chainType, paramsOption }: GetBalanceParams) => {

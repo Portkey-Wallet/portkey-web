@@ -36,7 +36,7 @@ import { useHandleAchSell } from './hooks';
 import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
 
 export default function RampMain({
-  state,
+  initState,
   tokenInfo,
   goBack,
   goPreview,
@@ -281,8 +281,8 @@ export default function RampMain({
 
   useEffect(() => {
     if (initialized) {
-      if (state && state.amount !== undefined) {
-        const { amount, country, fiat, crypto, network, side } = state;
+      if (initState && initState.amount !== undefined) {
+        const { amount, country, fiat, crypto, network, side } = initState;
         setAmount(amount);
         setCurFiat({ country, currency: fiat });
         setCurToken({ crypto, network });
@@ -315,7 +315,7 @@ export default function RampMain({
         updateTimerRef.current = undefined;
       };
     }
-  }, [initialized, isBuySectionShow, isSellSectionShow, state, updateCrypto]);
+  }, [initialized, isBuySectionShow, isSellSectionShow, initState, updateCrypto]);
 
   const handleInputChange = useCallback(
     async (v: string) => {
@@ -469,7 +469,7 @@ export default function RampMain({
 
         const { amount, currency, country, crypto, network } = valueSaveRef.current;
         goPreview({
-          state: {
+          initState: {
             crypto,
             network,
             fiat: currency,

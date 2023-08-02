@@ -34,8 +34,8 @@ export default function RampPage() {
       <PortkeyAssetProvider originChainId="AELF" pin="111111">
         {state && tokenInfo && (
           <RampPreview
-            state={state}
-            apiUrl="https://did-portkey.portkey.finance"
+            initState={state}
+            portkeyServiceUrl="https://did-portkey.portkey.finance"
             goBack={function (): void {
               router.back();
             }}

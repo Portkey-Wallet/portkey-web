@@ -28,9 +28,9 @@ import { getAchSignature, getRampOrderNo } from './utils';
 import { useGetAchTokenInfo } from './hooks';
 
 export default function RampPreviewMain({
-  state,
+  initState,
   tokenInfo,
-  apiUrl,
+  portkeyServiceUrl,
   goBack,
   isBuySectionShow = true,
   isSellSectionShow = true,
@@ -41,8 +41,8 @@ export default function RampPreviewMain({
   const [rate, setRate] = useState('');
   const { appId, baseUrl, updateAchOrder } = AchConfig;
   const data = useMemo(() => {
-    return { ...initPreviewData, ...state };
-  }, [state]);
+    return { ...initPreviewData, ...initState };
+  }, [initState]);
   const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
 
   const showRateText = useMemo(() => `1 ${data.crypto} ≈ ${formatAmountShow(rate, 2)} ${data.fiat}`, [data, rate]);
@@ -120,7 +120,7 @@ export default function RampPreviewMain({
     try {
       const { network, country, fiat, amount, crypto } = data;
       let openUrl = `${RAMP_WEB_PAGE_ROUTE}?url=${baseUrl}&crypto=${crypto}&network=${network}&country=${country}&fiat=${fiat}&appId=${appId}&callbackUrl=${encodeURIComponent(
-        `${apiUrl}${updateAchOrder}`,
+        `${portkeyServiceUrl}${updateAchOrder}`,
       )}`;
 
       const orderNo = await getRampOrderNo({
@@ -163,7 +163,7 @@ export default function RampPreviewMain({
       setLoading(false);
     }
   }, [
-    apiUrl,
+    portkeyServiceUrl,
     appId,
     baseUrl,
     caInfo,
@@ -191,7 +191,7 @@ export default function RampPreviewMain({
     <div className={clsx(['preview-frame portkey-ui-flex-column'])}>
       <div className="preview-title">
         <BackHeaderForPage
-          title={`${data.side === RampTypeEnum.BUY ? 'Buy' : 'Sell'} ${state.crypto}`}
+          title={`${data.side === RampTypeEnum.BUY ? 'Buy' : 'Sell'} ${initState.crypto}`}
           leftCallBack={goBack}
         />
       </div>

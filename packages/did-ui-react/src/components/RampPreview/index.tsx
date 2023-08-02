@@ -3,9 +3,9 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampPreviewMain from './index.component';
 
 export interface IRampPreviewProps {
-  state: IRampPreviewInitState;
+  initState: IRampPreviewInitState;
   tokenInfo: ITokenInfo;
-  apiUrl: string;
+  portkeyServiceUrl: string;
   goBack: () => void;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
