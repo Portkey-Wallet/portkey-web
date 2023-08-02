@@ -12,8 +12,9 @@ import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
 import useMedia from '../../hooks/useMedia';
 import { usePortkey } from '../context';
-import './index.less';
 import useSignHandler from '../SignStep/utils';
+import './index.less';
+import { useUpdateEffect } from 'react-use';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -22,6 +23,7 @@ export interface Web2DesignProps extends IBaseGetGuardianProps {
 }
 
 export default function Web2Design({
+  type: mode,
   style,
   defaultChainId = 'AELF',
   className,
@@ -39,7 +41,12 @@ export default function Web2Design({
   onChainIdChange,
   onLoginFinishWithoutPin,
 }: Web2DesignProps) {
-  const [type, setType] = useState<RegisterType>('Login');
+  const signType = useMemo(() => (mode === 'SignUp' ? 'Sign up' : 'Login'), [mode]);
+  const [type, setType] = useState<RegisterType>(signType || 'Login');
+
+  useUpdateEffect(() => {
+    setType(signType);
+  }, [signType]);
 
   const [{ networkType, chainType }] = usePortkey();
   const [{ theme }] = usePortkey();

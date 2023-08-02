@@ -77,12 +77,14 @@ const SignIn = forwardRef(
     const defaultLifeCycleRef = useRef<LifeCycleType>();
     const defaultLiftCyclePropsRef = useRef<any>();
 
-    useMemo(() => {
+    const getDefaultLifeCycleProps = useCallback(() => {
       const lifeCycle = Object.entries(defaultLifeCycleInfo || {}).slice(-1)[0] || [];
       defaultLifeCycleRef.current = lifeCycle[0] as LifeCycleType;
       defaultLiftCyclePropsRef.current = lifeCycle[1];
       return lifeCycle as [] | [LifeCycleType, any];
     }, [defaultLifeCycleInfo]);
+
+    useMemo(() => getDefaultLifeCycleProps(), [getDefaultLifeCycleProps]);
 
     useEffect(() => {
       onErrorRef.current = onError;
@@ -105,9 +107,7 @@ const SignIn = forwardRef(
 
     const dealStep = useCallback(async () => {
       try {
-        const defaultLifeCycle = defaultLifeCycleRef.current;
-        const defaultLiftCycleProps = defaultLiftCyclePropsRef.current;
-
+        const [defaultLifeCycle, defaultLiftCycleProps] = getDefaultLifeCycleProps();
         if (!defaultLifeCycle) return setLifeCycle('Login');
         let flag = false;
         Object.entries(LifeCycleMap).forEach(([key, value]) => {
@@ -137,7 +137,7 @@ const SignIn = forwardRef(
         console.error('dealStep', error);
         setLifeCycle('Login');
       }
-    }, [changeLifeCycle]);
+    }, [changeLifeCycle, getDefaultLifeCycleProps]);
 
     const refSetOpen = useCallback(
       (v: boolean) => {
