@@ -1,7 +1,7 @@
 import { message } from 'antd';
 import { useCallback, useMemo, useRef } from 'react';
 import { did, randomId, setLoading } from '../../utils';
-import { ACH_MERCHANT_NAME, SELL_SOCKET_TIMEOUT, STAGE } from '../../constants/ramp';
+import { ACH_MERCHANT_NAME, DEFAULT_CHAIN_ID, SELL_SOCKET_TIMEOUT, STAGE } from '../../constants/ramp';
 import SparkMD5 from 'spark-md5';
 import AElf from 'aelf-sdk';
 import { ISellTransferParams, SellTransferParams, IUseHandleAchSellParams } from '../../types';
@@ -9,8 +9,7 @@ import { timesDecimals } from '../../utils/converter';
 import { signalrSell } from '@portkey/socket';
 import { RequestOrderTransferredType, AchTxAddressReceivedType } from '@portkey/socket';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import getTransactionRaw from '../../sandbox/getTransactionRaw';
-import { usePortkey } from '../context';
+import { getTransactionRawByContract } from '../../utils/sandboxUtil/getTransactionRaw';
 import { getChain } from '../../hooks/useChainInfo';
 
 export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
@@ -101,16 +100,15 @@ export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
 
 export const useHandleAchSell = ({ isMainnet, tokenInfo }: IUseHandleAchSellParams) => {
   const sellTransfer = useSellTransfer({ isMainnet });
+  const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
 
-  const [{ chainType }] = usePortkey();
-
-  const [{ managementAccount, caInfo, originChainId }] = usePortkeyAsset();
+  const [{ managementAccount, caInfo }] = usePortkeyAsset();
   const privateKey = useMemo(() => managementAccount?.wallet?.privateKey, [managementAccount?.wallet?.privateKey]);
   const keyPair = useMemo(() => managementAccount?.wallet?.keyPair, [managementAccount?.wallet?.keyPair]);
 
   const paymentSellTransfer = useCallback(
     async (params: AchTxAddressReceivedType) => {
-      const chainInfo = await getChain(originChainId);
+      const chainInfo = await getChain(chainId.current);
 
       if (!chainInfo) throw new Error('Sell Transfer: No ChainInfo');
 
@@ -120,14 +118,12 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo }: IUseHandleAchSellPara
 
       if (!keyPair) throw new Error('Sell Transfer: No keyPair');
 
-      const rawResult = await getTransactionRaw({
-        contractAddress: chainInfo.caContractAddress,
-        rpcUrl: chainInfo?.endPoint || '',
-        chainType: chainType,
-        methodName: 'ManagerForwardCall',
+      const rawResult = await getTransactionRawByContract({
+        chainId: chainId.current,
+        tokenContractAddress: tokenInfo.tokenContractAddress || '',
         privateKey,
         paramsOption: {
-          caHash: caInfo?.[originChainId]?.caHash || '',
+          caHash: caInfo?.[chainId.current]?.caHash || '',
           contractAddress: tokenInfo.tokenContractAddress || '',
           methodName: 'Transfer',
           args: {
@@ -149,7 +145,7 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo }: IUseHandleAchSellPara
         signature,
       };
     },
-    [caInfo, keyPair, originChainId, privateKey, tokenInfo, chainType],
+    [caInfo, keyPair, privateKey, tokenInfo],
   );
 
   return useCallback(
