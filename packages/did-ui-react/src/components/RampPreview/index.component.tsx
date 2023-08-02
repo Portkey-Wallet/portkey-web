@@ -8,6 +8,7 @@ import './index.less';
 import {
   ACH_MERCHANT_NAME,
   AchConfig,
+  DEFAULT_CHAIN_ID,
   DISCLAIMER_TEXT,
   MAX_UPDATE_TIME,
   RAMP_WEB_PAGE_ROUTE,
@@ -28,6 +29,7 @@ import { useGetAchTokenInfo } from './hooks';
 
 export default function RampPreviewMain({
   state,
+  tokenInfo,
   apiUrl,
   goBack,
   isBuySectionShow = true,
@@ -41,6 +43,8 @@ export default function RampPreviewMain({
   const data = useMemo(() => {
     return { ...initPreviewData, ...state };
   }, [state]);
+  const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
+
   const showRateText = useMemo(() => `1 ${data.crypto} ≈ ${formatAmountShow(rate, 2)} ${data.fiat}`, [data, rate]);
   const receiveText = useMemo(
     () => `I will receive ≈ ${formatAmountShow(receive)} ${data.side === RampTypeEnum.BUY ? data.crypto : data.fiat}`,
@@ -49,7 +53,7 @@ export default function RampPreviewMain({
 
   const getAchTokenInfo = useGetAchTokenInfo();
 
-  const [{ guardianList, caInfo, originChainId }] = usePortkeyAsset();
+  const [{ guardianList, caInfo }] = usePortkeyAsset();
 
   const setReceiveCase = useCallback(
     ({
@@ -115,7 +119,7 @@ export default function RampPreviewMain({
     if (!appId || !baseUrl) return setLoading(false);
     try {
       const { network, country, fiat, amount, crypto } = data;
-      let openUrl = `${RAMP_WEB_PAGE_ROUTE}/?url=${baseUrl}&crypto=${crypto}&network=${network}&country=${country}&fiat=${fiat}&appId=${appId}&callbackUrl=${encodeURIComponent(
+      let openUrl = `${RAMP_WEB_PAGE_ROUTE}?url=${baseUrl}&crypto=${crypto}&network=${network}&country=${country}&fiat=${fiat}&appId=${appId}&callbackUrl=${encodeURIComponent(
         `${apiUrl}${updateAchOrder}`,
       )}`;
 
@@ -134,7 +138,7 @@ export default function RampPreviewMain({
           openUrl += `&token=${encodeURIComponent(achTokenInfo.token)}`;
         }
 
-        const address = caInfo[originChainId]?.caAddress || '';
+        const address = caInfo[chainId.current]?.caAddress || '';
         const signature = await getAchSignature({ address });
         openUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
       } else {
@@ -148,9 +152,7 @@ export default function RampPreviewMain({
         )}`;
       }
 
-      const openWinder = window.open(openUrl, '_blank');
-
-      console.log('openUrl', openUrl, openWinder);
+      window.open(openUrl, '_blank');
 
       await new Promise((resolve) => setTimeout(resolve, 500));
       goBack?.();
@@ -171,7 +173,6 @@ export default function RampPreviewMain({
     guardianList,
     isBuySectionShow,
     isSellSectionShow,
-    originChainId,
     updateAchOrder,
   ]);
 

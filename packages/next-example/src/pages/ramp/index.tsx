@@ -20,7 +20,6 @@ export default function RampPage() {
             router.push(`/ramp-preview/${JSON.stringify(state)}`);
           }}
           tokenInfo={{
-            balance: '70000000000.00',
             decimals: 8,
             chainId: 'AELF',
             symbol: 'ELF',
