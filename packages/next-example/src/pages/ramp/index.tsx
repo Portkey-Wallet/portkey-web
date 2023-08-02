@@ -16,11 +16,10 @@ export default function RampPage() {
           goBack={function (): void {
             router.push('/sign');
           }}
-          goPreview={function ({ state }): void {
-            router.push(`/ramp-preview/${JSON.stringify(state)}`);
+          goPreview={function ({ initState }): void {
+            router.push(`/ramp-preview/${JSON.stringify(initState)}`);
           }}
           tokenInfo={{
-            balance: '70000000000.00',
             decimals: 8,
             chainId: 'AELF',
             symbol: 'ELF',

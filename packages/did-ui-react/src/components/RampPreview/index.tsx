@@ -1,10 +1,11 @@
-import { IRampPreviewInitState } from '../../types';
+import { IRampPreviewInitState, ITokenInfo } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampPreviewMain from './index.component';
 
 export interface IRampPreviewProps {
-  state: IRampPreviewInitState;
-  apiUrl: string;
+  initState: IRampPreviewInitState;
+  tokenInfo: ITokenInfo;
+  portkeyServiceUrl: string;
   goBack: () => void;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;

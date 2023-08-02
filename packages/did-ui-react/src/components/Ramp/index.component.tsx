@@ -33,9 +33,10 @@ import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCrypto
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
 import { useHandleAchSell } from './hooks';
+import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
 
 export default function RampMain({
-  state,
+  initState,
   tokenInfo,
   goBack,
   goPreview,
@@ -59,8 +60,9 @@ export default function RampMain({
   const [buyFiatList, setBuyFiatList] = useState<FiatType[]>([]);
   const [sellFiatList, setSellFiatList] = useState<FiatType[]>([]);
   const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
+  const symbol = useRef(tokenInfo?.symbol || 'ELF');
 
-  const [{ managementAccount, initialized }] = usePortkeyAsset();
+  const [{ managementAccount, caInfo, initialized }] = usePortkeyAsset();
   const isManagerSynced = useMemo(
     () => !!managementAccount?.address && managementAccount.address?.length > 0,
     [managementAccount?.address],
@@ -279,8 +281,8 @@ export default function RampMain({
 
   useEffect(() => {
     if (initialized) {
-      if (state && state.amount !== undefined) {
-        const { amount, country, fiat, crypto, network, side } = state;
+      if (initState && initState.amount !== undefined) {
+        const { amount, country, fiat, crypto, network, side } = initState;
         setAmount(amount);
         setCurFiat({ country, currency: fiat });
         setCurToken({ crypto, network });
@@ -313,7 +315,7 @@ export default function RampMain({
         updateTimerRef.current = undefined;
       };
     }
-  }, [initialized, isBuySectionShow, isSellSectionShow, state, updateCrypto]);
+  }, [initialized, isBuySectionShow, isSellSectionShow, initState, updateCrypto]);
 
   const handleInputChange = useCallback(
     async (v: string) => {
@@ -443,38 +445,52 @@ export default function RampMain({
         setWarningMsg('');
       }
 
-      setLoading(false);
+      // search balance from contract
+      try {
+        const result = await getBalanceByContract({
+          chainId: chainId.current,
+          paramsOption: {
+            owner: caInfo[chainId.current]?.caAddress || '',
+            symbol: symbol.current,
+          },
+        });
 
-      if (
-        ZERO.plus(divDecimals(tokenInfo.balance, tokenInfo.decimals)).isLessThanOrEqualTo(
-          ZERO.plus(achFee.current).plus(valueSaveRef.current.amount),
-        )
-      ) {
-        setInsufficientFundsMsg();
-        return;
+        setLoading(false);
+        const balance = result.balance;
+
+        if (
+          ZERO.plus(divDecimals(balance, tokenInfo.decimals)).isLessThanOrEqualTo(
+            ZERO.plus(achFee.current).plus(valueSaveRef.current.amount),
+          )
+        ) {
+          setInsufficientFundsMsg();
+          return;
+        }
+
+        const { amount, currency, country, crypto, network } = valueSaveRef.current;
+        goPreview({
+          initState: {
+            crypto,
+            network,
+            fiat: currency,
+            country,
+            amount,
+            side,
+          },
+          tokenInfo,
+        });
+      } catch (error) {
+        setLoading(false);
       }
     }
-    setLoading(false);
-
-    const { amount, currency, country, crypto, network } = valueSaveRef.current;
-    goPreview({
-      state: {
-        crypto,
-        network,
-        fiat: currency,
-        country,
-        amount,
-        side,
-      },
-    });
   }, [
     isBuySectionShow,
     isSellSectionShow,
     goPreview,
+    tokenInfo,
     goBack,
     isManagerSynced,
-    tokenInfo.balance,
-    tokenInfo.decimals,
+    caInfo,
     setInsufficientFundsMsg,
   ]);
 

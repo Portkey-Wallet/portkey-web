@@ -1,5 +1,4 @@
 import { ChainId } from '@portkey/types';
-import { ChainType } from '../../../types/dist/commonjs';
 import { AchTxAddressReceivedType } from '@portkey/socket';
 
 export enum RampTypeEnum {
@@ -88,7 +87,6 @@ export type IRampPreviewInitState = {
 };
 
 export type ITokenInfo = {
-  balance: number | string;
   decimals: number | string;
   chainId: ChainId;
   symbol: string;
