@@ -16,8 +16,8 @@ export default function RampPage() {
           goBack={function (): void {
             router.push('/sign');
           }}
-          goPreview={function ({ state }): void {
-            router.push(`/ramp-preview/${JSON.stringify(state)}`);
+          goPreview={function ({ initState }): void {
+            router.push(`/ramp-preview/${JSON.stringify(initState)}`);
           }}
           tokenInfo={{
             decimals: 8,
