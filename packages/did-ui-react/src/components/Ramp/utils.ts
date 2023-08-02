@@ -1,8 +1,10 @@
+import { ChainId } from '@portkey/types';
 import { MAIN_CHAIN_ID, MAIN_CHAIN, SIDE_CHAIN, TESTNET, TEST_NET } from '../../constants/network';
 import { countryCodeMap } from '../../constants/ramp';
 import { FiatType, GetFiatType, RampTypeEnum } from '../../types';
 import { did } from '../../utils';
 import { GetOrderQuoteParams } from '@portkey/services';
+import { FetchTxFeeResultItemTransactionFee } from '@portkey/services';
 
 export function transNetworkText(chainId: string, networkType: string): string {
   return `${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN} ${chainId}${
@@ -72,4 +74,19 @@ export const getCryptoInfo = async (params: { fiat: string }, symbol: string, ne
       item.network === network &&
       (side === RampTypeEnum.BUY ? Number(item.buyEnable) === 1 : Number(item.sellEnable) === 1),
   );
+};
+
+export const fetchTxFeeAsync = async (
+  chainIds: ChainId[],
+): Promise<Record<ChainId, FetchTxFeeResultItemTransactionFee>> => {
+  const result = await did.rampServices.fetchTxFee({
+    chainIds,
+  });
+
+  const fee: any = {};
+  result?.forEach((item: any) => {
+    fee[item.chainId] = item.transactionFee;
+  });
+
+  return fee;
 };

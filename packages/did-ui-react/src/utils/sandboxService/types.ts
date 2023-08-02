@@ -9,6 +9,8 @@ export enum SandboxEventTypes {
   callSendMethod = '@portkey/did-ui-sdk:callSendMethod',
   // getEncodedTx
   getTransactionFee = '@portkey/did-ui-sdk:getTransactionFee',
+  // getTransactionRaw
+  getTransactionRaw = 'getTransactionRaw',
 
   initViewContract = '@portkey/did-ui-sdk:initViewContract',
 }

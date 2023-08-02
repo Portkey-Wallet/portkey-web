@@ -1,6 +1,7 @@
 import { IAchConfig, ICurToken, ICurrencyItem, PartialFiatType, RampTypeEnum } from '../../types';
 import { ChainId } from '@portkey/types';
 import { countryCodeJson } from './countryCodeJson';
+import { WEB_PAGE } from '..';
 
 const getCountryCodeMap = (list: ICurrencyItem[]) => {
   const country: { [key: string]: ICurrencyItem } = {};
@@ -27,11 +28,25 @@ export enum TransDirectEnum {
   TOKEN_SELL = 'TokenSell',
 }
 
+// testnet
 export const AchConfig: IAchConfig = {
   appId: 'f83Is2y7L425rxl8',
   baseUrl: 'https://ramptest.alchemypay.org',
   updateAchOrder: '/api/app/thirdPart/order/alchemy',
 };
+
+// mainnet
+// export const AchConfig: IAchConfig = {
+//   appId: 'P0e0l39jipsNYT46',
+//   baseUrl: 'https://ramp.alchemypay.org',
+//   updateAchOrder: '/api/app/thirdPart/order/alchemy',
+// };
+
+export const DEFAULT_CHAIN_ID = 'AELF';
+
+export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge/';
+
+export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK';
 
 export const ACH_MERCHANT_NAME = 'Alchemy';
 
@@ -97,3 +112,9 @@ export const initPreviewData = {
   amount: '200',
   side: RampTypeEnum.BUY,
 };
+
+export enum STAGE {
+  ACHTXADS, // onAchTxAddressReceived
+  TRANSACTION, // transaction
+  ORDER, // onRequestOrderTransferred
+}

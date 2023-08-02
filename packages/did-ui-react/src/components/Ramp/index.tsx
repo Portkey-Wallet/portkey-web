@@ -1,10 +1,13 @@
+import { IRampInitState, IRampPreviewInitState, IUseHandleAchSellParams } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampMain from './index.component';
 
-export interface IRampProps {
-  state?: { amount: any; country: any; fiat: any; crypto: any; network: any; side: any; tokenInfo: any };
+export interface IRampProps extends IUseHandleAchSellParams {
+  state?: IRampInitState;
   goBack: () => void;
-  goPreview: ({ state }: any) => void;
+  goPreview: ({ state }: { state: IRampPreviewInitState }) => void;
+  isBuySectionShow?: boolean;
+  isSellSectionShow?: boolean;
 }
 
 export default function Ramp(props: IRampProps) {
