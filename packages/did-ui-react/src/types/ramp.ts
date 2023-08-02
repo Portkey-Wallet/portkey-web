@@ -117,9 +117,5 @@ export interface ISellTransferParams {
 
 export interface IUseHandleAchSellParams {
   isMainnet: boolean;
-  chainInfo: {
-    caContractAddress: string;
-    endPoint: string;
-  };
   tokenInfo: ITokenInfo;
 }

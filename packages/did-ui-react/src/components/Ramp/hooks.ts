@@ -11,6 +11,7 @@ import { RequestOrderTransferredType, AchTxAddressReceivedType } from '@portkey/
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import getTransactionRaw from '../../sandbox/getTransactionRaw';
 import { usePortkey } from '../context';
+import { getChain } from '../../hooks/useChainInfo';
 
 export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
   const status = useRef<STAGE>(STAGE.ACHTXADS);
@@ -98,7 +99,7 @@ export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
   );
 };
 
-export const useHandleAchSell = ({ isMainnet, chainInfo, tokenInfo }: IUseHandleAchSellParams) => {
+export const useHandleAchSell = ({ isMainnet, tokenInfo }: IUseHandleAchSellParams) => {
   const sellTransfer = useSellTransfer({ isMainnet });
 
   const [{ chainType }] = usePortkey();
@@ -109,6 +110,8 @@ export const useHandleAchSell = ({ isMainnet, chainInfo, tokenInfo }: IUseHandle
 
   const paymentSellTransfer = useCallback(
     async (params: AchTxAddressReceivedType) => {
+      const chainInfo = await getChain(originChainId);
+
       if (!chainInfo) throw new Error('Sell Transfer: No ChainInfo');
 
       if (!privateKey) throw new Error('Sell Transfer: No PrivateKey');
@@ -146,7 +149,7 @@ export const useHandleAchSell = ({ isMainnet, chainInfo, tokenInfo }: IUseHandle
         signature,
       };
     },
-    [caInfo, chainInfo, keyPair, originChainId, privateKey, tokenInfo, chainType],
+    [caInfo, keyPair, originChainId, privateKey, tokenInfo, chainType],
   );
 
   return useCallback(

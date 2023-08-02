@@ -20,17 +20,13 @@ export default function RampPage() {
             router.push(`/ramp-preview/${JSON.stringify(state)}`);
           }}
           tokenInfo={{
-            balance: '300.00',
+            balance: '70000000000.00',
             decimals: 8,
             chainId: 'AELF',
             symbol: 'ELF',
-            tokenContractAddress: '',
+            tokenContractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
           }}
-          isMainnet={true}
-          chainInfo={{
-            caContractAddress: '',
-            endPoint: '',
-          }}></Ramp>
+          isMainnet={true}></Ramp>
       </PortkeyAssetProvider>
     </div>
   );

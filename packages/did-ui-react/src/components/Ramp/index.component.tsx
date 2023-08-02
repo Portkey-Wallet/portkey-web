@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Radio, RadioChangeEvent, message } from 'antd';
 import { useEffectOnce } from 'react-use';
@@ -42,7 +42,6 @@ export default function RampMain({
   isBuySectionShow = true,
   isSellSectionShow = true,
   isMainnet,
-  chainInfo,
 }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
@@ -61,7 +60,7 @@ export default function RampMain({
   const [sellFiatList, setSellFiatList] = useState<FiatType[]>([]);
   const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
 
-  const [{ managementAccount }] = usePortkeyAsset();
+  const [{ managementAccount, initialized }] = usePortkeyAsset();
   const isManagerSynced = useMemo(
     () => !!managementAccount?.address && managementAccount.address?.length > 0,
     [managementAccount?.address],
@@ -77,7 +76,7 @@ export default function RampMain({
   );
 
   const isSell = useRef(0); // guaranteed to make only one transfer
-  const handleAchSell = useHandleAchSell({ isMainnet, chainInfo, tokenInfo });
+  const handleAchSell = useHandleAchSell({ isMainnet, tokenInfo });
 
   useEffectOnce(() => {
     window?.addEventListener(
@@ -89,75 +88,41 @@ export default function RampMain({
       },
       false,
     );
-    const checkAchSell = async (orderId: any) => {
-      console.log('sell orderId', orderId);
+    const checkAchSell = async (data: any) => {
       if (isSell.current === 0) {
         isSell.current = 1;
-        await handleAchSell(orderId);
+        const orderNo = JSON.parse(data?.payload).orderNo;
+        await handleAchSell(orderNo);
       }
     };
   });
 
-  useEffectOnce(() => {
-    fetchBuyFiatListAsync()
-      .then((res) => {
-        setBuyFiatList(res);
-      })
-      .catch((error) => {
-        throw Error(JSON.stringify(error));
-      });
-    fetchSellFiatListAsync()
-      .then((res) => {
-        setSellFiatList(res);
-      })
-      .catch((error) => {
-        throw Error(JSON.stringify(error));
-      });
+  useEffect(() => {
+    if (initialized) {
+      fetchBuyFiatListAsync()
+        .then((res) => {
+          setBuyFiatList(res);
+        })
+        .catch((error) => {
+          throw Error(JSON.stringify(error));
+        });
+      fetchSellFiatListAsync()
+        .then((res) => {
+          setSellFiatList(res);
+        })
+        .catch((error) => {
+          throw Error(JSON.stringify(error));
+        });
 
-    fetchTxFeeAsync([chainId.current])
-      .then((res) => {
-        achFee.current = res[chainId.current].ach;
-      })
-      .catch((error) => {
-        throw Error(JSON.stringify(error));
-      });
-  });
-
-  useEffectOnce(() => {
-    if (state && state.amount !== undefined) {
-      const { amount, country, fiat, crypto, network, side } = state;
-      setAmount(amount);
-      setCurFiat({ country, currency: fiat });
-      setCurToken({ crypto, network });
-      setPage(side);
-      valueSaveRef.current = {
-        amount,
-        currency: fiat,
-        country,
-        crypto,
-        network,
-        max: null,
-        min: null,
-        side,
-        receive: '',
-        isShowErrMsg: false,
-      };
-      updateCrypto();
-    } else {
-      if (!isBuySectionShow && isSellSectionShow) {
-        const side = RampTypeEnum.SELL;
-        setPage(side);
-        valueSaveRef.current.side = side;
-        setAmount(initCrypto);
-        valueSaveRef.current.amount = initCrypto;
-      }
-      updateCrypto();
+      fetchTxFeeAsync([chainId.current])
+        .then((res) => {
+          achFee.current = res[chainId.current].ach;
+        })
+        .catch((error) => {
+          throw Error(JSON.stringify(error));
+        });
     }
-    return () => {
-      clearInterval(updateTimerRef.current);
-      updateTimerRef.current = undefined;
-    };
-  });
+  }, [initialized]);
 
   const showLimitText = useCallback(
     (min: string | number, max: string | number, fiat = 'USD') =>
@@ -227,21 +192,23 @@ export default function RampMain({
         side: valueSaveRef.current.side,
       },
     ) => {
-      try {
-        const rst = await getOrderQuote(params);
-        if (params.amount !== valueSaveRef.current.amount) return;
+      if (initialized) {
+        try {
+          const rst = await getOrderQuote(params);
+          if (params.amount !== valueSaveRef.current.amount) return;
 
-        const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst;
-        setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
-        setRate(cryptoPrice);
-        setErrMsg('');
-        setWarningMsg('');
-        valueSaveRef.current.isShowErrMsg = false;
-        if (!updateTimerRef.current) {
-          resetTimer();
+          const { cryptoPrice, cryptoQuantity, fiatQuantity, rampFee } = rst;
+          setReceiveCase({ fiatQuantity, rampFee, cryptoQuantity });
+          setRate(cryptoPrice);
+          setErrMsg('');
+          setWarningMsg('');
+          valueSaveRef.current.isShowErrMsg = false;
+          if (!updateTimerRef.current) {
+            resetTimer();
+          }
+        } catch (error) {
+          console.log('error', error);
         }
-      } catch (error) {
-        console.log('error', error);
       }
     };
 
@@ -272,39 +239,81 @@ export default function RampMain({
     };
 
     return { updateReceive, handleSetTimer, stopInterval, resetTimer };
-  }, [setReceiveCase]);
+  }, [initialized, setReceiveCase]);
 
   const updateCrypto = useCallback(async () => {
-    const { currency, crypto, network, side } = valueSaveRef.current;
-    const data = await getCryptoInfo({ fiat: currency }, crypto, network, side);
-    if (side === RampTypeEnum.BUY) {
-      if (data && data.maxPurchaseAmount !== null && data.minPurchaseAmount !== null) {
-        valueSaveRef.current.max = Number(
-          ZERO.plus(data.maxPurchaseAmount).decimalPlaces(4, BigNumber.ROUND_DOWN).valueOf(),
-        );
-        valueSaveRef.current.min = Number(
-          ZERO.plus(data.minPurchaseAmount).decimalPlaces(4, BigNumber.ROUND_UP).valueOf(),
-        );
-      }
-    } else {
-      if (data && data.maxSellAmount !== null && data.minSellAmount !== null) {
-        valueSaveRef.current.max = Number(
-          ZERO.plus(data.maxSellAmount).decimalPlaces(4, BigNumber.ROUND_DOWN).valueOf(),
-        );
-        valueSaveRef.current.min = Number(ZERO.plus(data.minSellAmount).decimalPlaces(4, BigNumber.ROUND_UP).valueOf());
-      }
-    }
-    const { amount, min, max } = valueSaveRef.current;
-    if (min && max) {
-      if (!isValidValue({ amount, min, max })) {
-        setErrMsgCase();
-        setWarningMsg('');
-        stopInterval();
+    if (initialized) {
+      const { currency, crypto, network, side } = valueSaveRef.current;
+      const data = await getCryptoInfo({ fiat: currency }, crypto, network, side);
+      if (side === RampTypeEnum.BUY) {
+        if (data && data.maxPurchaseAmount !== null && data.minPurchaseAmount !== null) {
+          valueSaveRef.current.max = Number(
+            ZERO.plus(data.maxPurchaseAmount).decimalPlaces(4, BigNumber.ROUND_DOWN).valueOf(),
+          );
+          valueSaveRef.current.min = Number(
+            ZERO.plus(data.minPurchaseAmount).decimalPlaces(4, BigNumber.ROUND_UP).valueOf(),
+          );
+        }
       } else {
-        await updateReceive();
+        if (data && data.maxSellAmount !== null && data.minSellAmount !== null) {
+          valueSaveRef.current.max = Number(
+            ZERO.plus(data.maxSellAmount).decimalPlaces(4, BigNumber.ROUND_DOWN).valueOf(),
+          );
+          valueSaveRef.current.min = Number(
+            ZERO.plus(data.minSellAmount).decimalPlaces(4, BigNumber.ROUND_UP).valueOf(),
+          );
+        }
+      }
+      const { amount, min, max } = valueSaveRef.current;
+      if (min && max) {
+        if (!isValidValue({ amount, min, max })) {
+          setErrMsgCase();
+          setWarningMsg('');
+          stopInterval();
+        } else {
+          await updateReceive();
+        }
       }
     }
-  }, [isValidValue, setErrMsgCase, stopInterval, updateReceive]);
+  }, [initialized, isValidValue, setErrMsgCase, stopInterval, updateReceive]);
+
+  useEffect(() => {
+    if (initialized) {
+      if (state && state.amount !== undefined) {
+        const { amount, country, fiat, crypto, network, side } = state;
+        setAmount(amount);
+        setCurFiat({ country, currency: fiat });
+        setCurToken({ crypto, network });
+        setPage(side);
+        valueSaveRef.current = {
+          amount,
+          currency: fiat,
+          country,
+          crypto,
+          network,
+          max: null,
+          min: null,
+          side,
+          receive: '',
+          isShowErrMsg: false,
+        };
+        updateCrypto();
+      } else {
+        if (!isBuySectionShow && isSellSectionShow) {
+          const side = RampTypeEnum.SELL;
+          setPage(side);
+          valueSaveRef.current.side = side;
+          setAmount(initCrypto);
+          valueSaveRef.current.amount = initCrypto;
+        }
+        updateCrypto();
+      }
+      return () => {
+        clearInterval(updateTimerRef.current);
+        updateTimerRef.current = undefined;
+      };
+    }
+  }, [initialized, isBuySectionShow, isSellSectionShow, state, updateCrypto]);
 
   const handleInputChange = useCallback(
     async (v: string) => {

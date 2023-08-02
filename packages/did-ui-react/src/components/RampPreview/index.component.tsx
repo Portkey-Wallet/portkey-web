@@ -10,6 +10,7 @@ import {
   AchConfig,
   DISCLAIMER_TEXT,
   MAX_UPDATE_TIME,
+  RAMP_WEB_PAGE_ROUTE,
   RAMP_WITH_DRAW_URL,
   SERVICE_UNAVAILABLE_TEXT,
   TransDirectEnum,
@@ -19,7 +20,6 @@ import BackHeaderForPage from '../BackHeaderForPage';
 import CustomSvg from '../CustomSvg';
 import { formatAmountShow } from '../../utils/converter';
 import CustomModal from '../CustomModal';
-import ConfigProvider from '../config-provider';
 import { IRampPreviewProps } from '.';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getOrderQuote } from '../Ramp/utils';
@@ -28,6 +28,7 @@ import { useGetAchTokenInfo } from './hooks';
 
 export default function RampPreviewMain({
   state,
+  apiUrl,
   goBack,
   isBuySectionShow = true,
   isSellSectionShow = true,
@@ -37,7 +38,6 @@ export default function RampPreviewMain({
   const [receive, setReceive] = useState('');
   const [rate, setRate] = useState('');
   const { appId, baseUrl, updateAchOrder } = AchConfig;
-  const apiUrl = useMemo(() => ConfigProvider.config?.apiUrl, []);
   const data = useMemo(() => {
     return { ...initPreviewData, ...state };
   }, [state]);
@@ -115,7 +115,7 @@ export default function RampPreviewMain({
     if (!appId || !baseUrl) return setLoading(false);
     try {
       const { network, country, fiat, amount, crypto } = data;
-      let openUrl = `${'http://localhost:3001/third-part-bridge'}/?url=${baseUrl}&crypto=${crypto}&network=${network}&country=${country}&fiat=${fiat}&appId=${appId}&callbackUrl=${encodeURIComponent(
+      let openUrl = `${RAMP_WEB_PAGE_ROUTE}/?url=${baseUrl}&crypto=${crypto}&network=${network}&country=${country}&fiat=${fiat}&appId=${appId}&callbackUrl=${encodeURIComponent(
         `${apiUrl}${updateAchOrder}`,
       )}`;
 
@@ -143,7 +143,9 @@ export default function RampPreviewMain({
         );
 
         // portkeyMethod is used by third-part-bridge, not ach
-        openUrl += `&portkeyMethod=TO_ACH_SELL&type=sell&cryptoAmount=${amount}&withdrawUrl=${withdrawUrl}&source=3#/sell-formUserInfo`;
+        openUrl += `&portkeyMethod=TO_ACH_SELL&type=sell&cryptoAmount=${amount}&withdrawUrl=${withdrawUrl}&source=${encodeURIComponent(
+          '3#/sell-formUserInfo',
+        )}`;
       }
 
       const openWinder = window.open(openUrl, '_blank');

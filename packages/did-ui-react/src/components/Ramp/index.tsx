@@ -1,4 +1,4 @@
-import { IRampInitState, IRampPreviewInitState, ITokenInfo, IUseHandleAchSellParams } from '../../types';
+import { IRampInitState, IRampPreviewInitState, IUseHandleAchSellParams } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampMain from './index.component';
 

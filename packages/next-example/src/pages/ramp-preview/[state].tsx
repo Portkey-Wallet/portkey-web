@@ -5,7 +5,7 @@ import {
   RampPreview,
   RampTypeEnum,
 } from '@portkey/did-ui-react';
-import router, { useRouter } from 'next/router';
+import { useRouter } from 'next/router';
 import { Store } from '../../utils';
 import { useEffect, useState } from 'react';
 
@@ -13,12 +13,9 @@ const myStore = new Store();
 
 ConfigProvider.setGlobalConfig({
   storageMethod: myStore,
-  ramp: {
-    isBuySectionShow: true,
-    isSellSectionShow: true,
-    isManagerSynced: false,
-  },
-  apiUrl: '',
+  // requestDefaults: {
+  //   baseURL: isTest ? '/test' : undefined,
+  // },
 });
 
 export default function RampPage() {
@@ -31,7 +28,6 @@ export default function RampPage() {
     country: '',
     amount: '',
     side: RampTypeEnum.BUY,
-    tokenInfo: { balance: '300', decimals: 8 },
   });
 
   useEffect(() => {
@@ -43,8 +39,9 @@ export default function RampPage() {
       <PortkeyAssetProvider originChainId="AELF" pin="111111">
         <RampPreview
           state={state}
+          apiUrl="https://did-portkey.portkey.finance"
           goBack={function (): void {
-            router.push('/ramp');
+            router.back();
           }}></RampPreview>
       </PortkeyAssetProvider>
     </div>
