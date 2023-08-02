@@ -11,6 +11,8 @@ import {
   FetchTokenPriceResult,
   GetSymbolImagesParams,
   GetSymbolImagesResult,
+  GetUserTokenListParams,
+  GetUserTokenListResult,
   IAssetsService,
 } from '../types/assets';
 
@@ -52,6 +54,23 @@ export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T
       method: 'GET',
       url: '/api/app/tokens/prices',
       params,
+    });
+  }
+  getUserTokenList({ keyword, chainIdArray }: GetUserTokenListParams): Promise<GetUserTokenListResult> {
+    const chainIdSearchLanguage = chainIdArray.map(chainId => `token.chainId:${chainId}`).join(' OR ');
+
+    const filterKeywords =
+      keyword?.length < 10 ? `token.symbol: *${keyword.toUpperCase().trim()}*` : `token.address:${keyword}`;
+
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/search/usertokenindex',
+      params: {
+        filter: `${filterKeywords} AND (${chainIdSearchLanguage})`,
+        sort: 'sortWeight desc,isDisplay  desc,token.symbol  acs,token.chainId acs',
+        skipCount: 0,
+        maxResultCount: 1000,
+      },
     });
   }
 }
