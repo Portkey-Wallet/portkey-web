@@ -13,15 +13,15 @@ ConfigProvider.setGlobalConfig({
   // },
 });
 
-export default function RampPage() {
+export default function RampPreviewPage() {
   const router = useRouter();
 
   const [initState, setInitState] = useState<IRampPreviewInitState>();
   const [chainId, setChainId] = useState<ChainId>();
 
   useEffect(() => {
-    setInitState(JSON.parse(router?.query?.initState as string));
-    setChainId(JSON.parse(router?.query?.chainId as string));
+    setInitState(JSON.parse(router?.query?.state as string).initState);
+    setChainId(JSON.parse(router?.query?.state as string).chainId);
   }, []);
 
   return (
