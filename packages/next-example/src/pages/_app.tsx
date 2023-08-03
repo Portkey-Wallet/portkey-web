@@ -1,10 +1,11 @@
 import '@portkey/did-ui-react/dist/assets/index.css';
-import { PortkeyProvider } from '@portkey/did-ui-react';
+import { NetworkType, PortkeyProvider } from '@portkey/did-ui-react';
 import { useEffect, useState } from 'react';
 import './index.css';
 
 export default function APP({ Component, pageProps }: any) {
   const [dark, setDark] = useState<boolean>(false);
+  const [networkType, setNetworkType] = useState<NetworkType>('MAIN');
 
   useEffect(() => {
     if (dark) {
@@ -15,13 +16,19 @@ export default function APP({ Component, pageProps }: any) {
   }, [dark]);
 
   return (
-    <PortkeyProvider networkType={'TESTNET'} theme={dark ? 'dark' : 'light'}>
+    <PortkeyProvider networkType={networkType} theme={dark ? 'dark' : 'light'}>
       <div style={{ background: dark ? '#1E212B' : '#fff' }} id={dark ? 'ids' : ''}>
         <button
           onClick={async () => {
             setDark(v => !v);
           }}>
           change theme
+        </button>
+        <button
+          onClick={async () => {
+            setNetworkType(v => (v === 'MAIN' ? 'TESTNET' : 'MAIN'));
+          }}>
+          Only change networkType
         </button>
         <Component {...pageProps} />
       </div>

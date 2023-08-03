@@ -248,6 +248,7 @@ const SignIn = forwardRef(
             }
           }
         } catch (error) {
+          setLoading(false);
           const errorMsg = handleErrorMessage(error);
           errorTip(
             {

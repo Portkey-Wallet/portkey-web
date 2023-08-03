@@ -3,6 +3,7 @@ import CustomSvg from '../../../CustomSvg';
 import { ELF_SYMBOL } from '../../../../constants/assets';
 import { divDecimals, formatAmountShow, transNetworkText } from '../../../../utils/converter';
 import './index.less';
+import BigNumber from 'bignumber.js';
 
 export default function TokenTab({ isMainnet, tokenList }: { isMainnet?: boolean; tokenList?: TokenItemShowType[] }) {
   return (
@@ -22,9 +23,8 @@ export default function TokenTab({ isMainnet, tokenList }: { isMainnet?: boolean
               </div>
               <div className="amount">
                 <p>{transNetworkText(item.chainId, isMainnet)}</p>
-                {isMainnet && (
-                  <>TODO</>
-                  // <p className="convert">{amountInUsdShow(item.balance || '', item.decimals, item.symbol)}</p>
+                {isMainnet && item.balanceInUsd && !BigNumber(item.balanceInUsd).isZero() && (
+                  <p className="convert">{`$ ${formatAmountShow(item.balanceInUsd)}`}</p>
                 )}
               </div>
             </div>
