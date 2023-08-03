@@ -12,7 +12,7 @@ export default function TokenTab({ isMainnet, tokenList }: { isMainnet?: boolean
         {tokenList?.map((item) => (
           <li className="token-list-item" key={`${item.chainId}_${item.symbol}`}>
             {item.symbol === ELF_SYMBOL ? (
-              <CustomSvg className="token-logo" type={isMainnet ? 'Aelf' : 'AelfTestnet'} />
+              <CustomSvg className="token-logo" type={'AelfTestnet'} />
             ) : (
               <div className="token-logo custom-word-logo">{item.symbol?.slice(0, 1)}</div>
             )}

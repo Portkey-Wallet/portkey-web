@@ -43,7 +43,7 @@ export default function CustomTokenList({
           <div className="icon">
             <div className="custom">
               {token.symbol === ELF_SYMBOL ? (
-                <CustomSvg className="token-logo" type="Aelf" />
+                <CustomSvg className="token-logo" type="AelfTestnet" />
               ) : (
                 token?.symbol?.slice(0, 1)
               )}

@@ -68,7 +68,7 @@ export default function ReceiveCard({
           <h2 className="portkey-ui-receive-title">My Wallet Address to Receive</h2>
           <div className="portkey-ui-flex-column-center token-info">
             {assetInfo.symbol === ELF_SYMBOL ? (
-              <CustomSvg type={isMainnet ? 'Aelf' : 'AelfTestnet'} />
+              <CustomSvg type={'AelfTestnet'} />
             ) : (
               <div className="icon">{assetInfo?.symbol?.[0]}</div>
             )}
