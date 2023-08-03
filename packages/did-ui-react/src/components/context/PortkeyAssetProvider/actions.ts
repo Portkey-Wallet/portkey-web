@@ -18,8 +18,9 @@ export const PortkeyAssetActions = {
   setTokenPrice: 'setTokenPrice',
 };
 type WalletInfo = {
-  caInfo: DIDWallet<IBaseWalletAccount>['caInfo'];
-  accountInfo: DIDWallet<IBaseWalletAccount>['accountInfo'];
+  caHash?: string;
+  caInfo?: DIDWallet<IBaseWalletAccount>['caInfo'];
+  accountInfo?: DIDWallet<IBaseWalletAccount>['accountInfo'];
   managementAccount?: IBaseWalletAccount;
 };
 
@@ -86,10 +87,11 @@ const fetchTokenList = async ({
   skipCount = 0,
   maxResultCount = 1000,
 }: BaseListParams): Promise<any> => {
-  const response = await did.assetsServices.fetchAccountTokenList({
+  const response = await did.services.assets.fetchAccountTokenList({
     skipCount,
     maxResultCount,
     caAddressInfos,
+    caAddresses: caAddressInfos.map((info) => info.caAddress),
   });
   let data;
   // mock data for new account
@@ -112,7 +114,7 @@ const fetchNFTCollections = async ({
   skipCount = 0,
   maxResultCount = 1000,
 }: BaseListParams & { maxNFTCount: number }) => {
-  const response = await did.assetsServices.fetchAccountNftCollectionList({
+  const response = await did.services.assets.fetchAccountNftCollectionList({
     caAddressInfos,
     skipCount,
     maxResultCount,
@@ -135,7 +137,7 @@ const fetchNFTItem = async ({
   skipCount = 0,
   maxResultCount = 1000,
 }: BaseListParams & { symbol: string; chainId: ChainId }) => {
-  const response = await did.assetsServices.fetchAccountNftCollectionItemList({
+  const response = await did.services.assets.fetchAccountNftCollectionItemList({
     symbol,
     caAddressInfos,
     skipCount,
@@ -153,7 +155,7 @@ const fetchNFTItem = async ({
 };
 
 const fetchTokenPrices = async (params: { symbols: string[] }) => {
-  const response = await did.assetsServices.fetchTokenPrice(params);
+  const response = await did.services.assets.fetchTokenPrice(params);
   return basicActions(PortkeyAssetActions['setTokenPrice'], { list: response.items });
 };
 

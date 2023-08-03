@@ -13,6 +13,7 @@ export enum SandboxEventTypes {
   getTransactionRaw = 'getTransactionRaw',
 
   initViewContract = '@portkey/did-ui-sdk:initViewContract',
+  callCASendMethod = '@portkey/did-ui-sdk:callCASendMethod',
 }
 
 export enum SandboxErrorCode {

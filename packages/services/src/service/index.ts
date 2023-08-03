@@ -4,3 +4,4 @@ export * from './verification';
 export * from './connect';
 export * from './ramp';
 export * from './assets';
+export * from './services';

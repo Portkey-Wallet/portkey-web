@@ -38,11 +38,15 @@ ConfigProvider.setGlobalConfig({
 export default function Assets() {
   return (
     <PortkeyAssetProvider
-      // pin="111111"
-      managerPrivateKey="0d793e7e158c80425441fcc668522b899695c5edf243ad790d428a131f112c1b"
-      caHash="bd8f9aee71f7a582ee15ca7b6d76a3a924364a60a11ee48fb49b997989e0dbcf"
+      pin="111111"
+      // managerPrivateKey="0d793e7e158c80425441fcc668522b899695c5edf243ad790d428a131f112c1b"
+      // caHash="bd8f9aee71f7a582ee15ca7b6d76a3a924364a60a11ee48fb49b997989e0dbcf"
       originChainId="AELF">
-      <Asset />
+      <Asset
+        faucet={{
+          faucetContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',
+        }}
+      />
     </PortkeyAssetProvider>
   );
 }

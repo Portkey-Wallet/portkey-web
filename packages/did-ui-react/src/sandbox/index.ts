@@ -13,13 +13,16 @@ type SendBack = (
     message?: any;
     sid: string;
     error?: any;
+    transactionId?: string;
   },
 ) => void;
 type RpcUrl = string;
 type ContractAddress = string;
+type CAFlag = string; // `${contractAddress}-${caHash}`
 type FromAccountPrivateKey = string;
 const contracts: Record<RpcUrl, Record<ContractAddress, IContract>> = {};
 const accountContracts: Record<RpcUrl, Record<FromAccountPrivateKey, Record<ContractAddress, IPortkeyContract>>> = {};
+const caContracts: Record<RpcUrl, Record<FromAccountPrivateKey, Record<CAFlag, IContract>>> = {};
 
 class SandboxUtil {
   constructor() {
@@ -46,6 +49,10 @@ class SandboxUtil {
         case SandboxEventTypes.callSendMethod:
           SandboxUtil.callSendMethod(event, SandboxUtil.callback);
           break;
+        case SandboxEventTypes.callCASendMethod:
+          SandboxUtil.callCASendMethod(event, SandboxUtil.callback);
+          break;
+
         case SandboxEventTypes.getTransactionFee:
           SandboxUtil.getTransactionFee(event, SandboxUtil.callback);
           break;
@@ -111,6 +118,37 @@ class SandboxUtil {
     return _contract;
   }
 
+  static async getCAContract({
+    rpcUrl,
+    privateKey,
+    caContractAddress,
+    contractAddress,
+    caHash,
+  }: {
+    caHash: string;
+    rpcUrl: string;
+    privateKey: string;
+    contractAddress: string;
+    caContractAddress: string;
+  }) {
+    let _contract = caContracts?.[rpcUrl]?.[privateKey]?.[`${contractAddress}-${caHash}`];
+    if (!_contract) {
+      _contract = await getContractBasic({
+        contractAddress,
+        account: aelf.getWallet(privateKey),
+        caContractAddress,
+        callType: 'ca',
+        caHash,
+        rpcUrl,
+      });
+      if (!caContracts?.[rpcUrl]) caContracts[rpcUrl] = {};
+      if (!caContracts?.[rpcUrl]?.[privateKey]) caContracts[rpcUrl][privateKey] = {};
+      caContracts[rpcUrl][privateKey][`${contractAddress}-${caHash}`] = _contract;
+    }
+
+    return _contract;
+  }
+
   static async callViewMethod(event: MessageEvent<any>, callback: SendBack) {
     const data = event.data.data ?? {};
     try {
@@ -146,6 +184,74 @@ class SandboxUtil {
       callback(event, {
         code: SandboxErrorCode.error,
         message: error?.error || error,
+        sid: data.sid,
+      });
+    }
+  }
+
+  static async callCASendMethod(event: MessageEvent<any>, callback: SendBack) {
+    const data = event.data.data ?? {};
+
+    try {
+      const {
+        rpcUrl,
+        contractAddress,
+        methodName,
+        privateKey,
+        caContractAddress,
+        caHash,
+        paramsOption,
+        chainType,
+        sendOptions,
+      } = data;
+      const missParams = getMissParams({
+        rpcUrl,
+        contractAddress,
+        methodName,
+        caContractAddress,
+      });
+      if (missParams)
+        return callback(event, {
+          code: SandboxErrorCode.error,
+          message: `Miss Param: ${missParams}`,
+          sid: data.sid,
+        });
+      // TODO only support aelf
+      if (chainType !== 'aelf') {
+        return callback(event, {
+          code: SandboxErrorCode.error,
+          message: 'Not support',
+          sid: data.sid,
+        });
+      }
+
+      const contract = await SandboxUtil.getCAContract({
+        contractAddress,
+        privateKey,
+        caContractAddress,
+        caHash,
+        rpcUrl,
+      });
+      const account = aelf.getWallet(privateKey);
+
+      const req = await contract.callSendMethod(methodName, account, paramsOption, sendOptions);
+      if (req?.error)
+        return callback(event, {
+          code: SandboxErrorCode.error,
+          message: req.error?.message,
+          sid: data.sid,
+          error: req.error,
+        });
+      return callback(event, {
+        code: SandboxErrorCode.success,
+        message: req?.data,
+        sid: data.sid,
+        transactionId: req.transactionId,
+      });
+    } catch (e: any) {
+      callback(event, {
+        code: SandboxErrorCode.error,
+        message: handleErrorMessage(e),
         sid: data.sid,
       });
     }

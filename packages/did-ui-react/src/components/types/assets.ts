@@ -63,3 +63,9 @@ export interface NFTCollectionItemShowType extends NFTCollectionItemBaseType {
   totalRecordCount: string | number;
   children: NFTItemBaseType[];
 }
+
+export interface IFaucetConfig {
+  // Only when testing the network, you can configure the faucet address
+  faucetUrl?: string;
+  faucetContractAddress?: string;
+}

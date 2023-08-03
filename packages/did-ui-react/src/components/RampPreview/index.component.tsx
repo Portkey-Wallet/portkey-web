@@ -106,6 +106,7 @@ export default function RampPreviewMain({
 
   const goPayPage = useCallback(async () => {
     const { side } = data;
+    if (!caInfo) return message.error('Please confirm whether to log in');
     setLoading(true);
 
     // Compatible with the situation where the function is turned off when the user is on the page.

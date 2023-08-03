@@ -127,7 +127,7 @@ export default function Web2Design({
           onLoginByPortkey={onLoginFinishWithoutPin}
           onError={onError}
         />
-        {extraElement}
+        {extraElement ? extraElement : <div className="empty-element"></div>}
         <div className="portkey-ui-web2design-switch-sign">
           {type === 'Login' ? (
             <>
