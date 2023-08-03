@@ -12,9 +12,8 @@ import {
 } from './types';
 import { DIDWallet } from './wallet';
 import {
-  CommunityRecovery,
   GetCAHolderByManagerResult,
-  ICommunityRecoveryService,
+  Services,
   IHolderInfo,
   RecoverStatusResult,
   RegisterParams,
@@ -22,10 +21,7 @@ import {
   Connect,
   IConnectService,
   CAHolderInfo,
-  Ramp,
-  Assets,
-  IAssetsService,
-  IRampService,
+  IServices,
 } from '@portkey/services';
 import { FetchRequest } from '@portkey/request';
 import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
@@ -33,14 +29,12 @@ import { ISignature, IKeyStore, IDIDBaseWallet, IConfig, IBaseRequest, ChainId }
 import { DIDConfig } from './config';
 export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public didWallet: DIDWallet<portkey.WalletAccount>;
-  public services: ICommunityRecoveryService;
+  public services: IServices;
   public connectServices: IConnectService;
   public config: DIDConfig;
   public didGraphQL: IDIDGraphQL;
   public fetchRequest: IBaseRequest;
   public connectRequest: IBaseRequest;
-  public rampServices: IRampService;
-  public assetsServices: IAssetsService;
 
   public accountProvider: portkey.AccountProvider;
   constructor() {
@@ -50,13 +44,11 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
     this.connectRequest = new FetchRequest(this.config.connectRequestConfig);
     this.didGraphQL = new DIDGraphQL({ config: this.config });
     this.connectServices = new Connect(this.connectRequest);
-    this.services = new CommunityRecovery(this.fetchRequest, this.didGraphQL);
-    this.rampServices = new Ramp(this.fetchRequest);
-    this.assetsServices = new Assets(this.fetchRequest);
+    this.services = new Services(this.fetchRequest, this.didGraphQL);
 
     this.didWallet = new DIDWallet({
       accountProvider: this.accountProvider,
-      service: this.services,
+      service: this.services.communityRecovery,
       storage: this.config.storageMethod,
       connectService: this.connectServices,
     });
