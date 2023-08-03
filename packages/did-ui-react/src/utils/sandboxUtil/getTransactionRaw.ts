@@ -1,4 +1,4 @@
-import { ChainId, ChainType, ErrorMsg, ViewResult } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey/types';
 import { SandboxEventService, SandboxEventTypes, SandboxErrorCode } from '..';
 import { getChain } from '../../hooks/useChainInfo';
 import { getContractBasic } from '@portkey/contracts';

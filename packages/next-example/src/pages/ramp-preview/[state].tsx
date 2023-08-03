@@ -1,13 +1,8 @@
-import {
-  ConfigProvider,
-  IRampPreviewInitState,
-  ITokenInfo,
-  PortkeyAssetProvider,
-  RampPreview,
-} from '@portkey/did-ui-react';
+import { ConfigProvider, IRampPreviewInitState, PortkeyAssetProvider, RampPreview } from '@portkey/did-ui-react';
 import { useRouter } from 'next/router';
 import { Store } from '../../utils';
 import { useEffect, useState } from 'react';
+import { ChainId } from '@portkey/types';
 
 const myStore = new Store();
 
@@ -21,25 +16,25 @@ ConfigProvider.setGlobalConfig({
 export default function RampPage() {
   const router = useRouter();
 
-  const [state, setState] = useState<IRampPreviewInitState>();
-  const [tokenInfo, setTokenInfo] = useState<ITokenInfo>();
+  const [initState, setInitState] = useState<IRampPreviewInitState>();
+  const [chainId, setChainId] = useState<ChainId>();
 
   useEffect(() => {
-    setState(JSON.parse(router?.query?.state as string));
-    setTokenInfo(JSON.parse(router?.query?.state as string));
+    setInitState(JSON.parse(router?.query?.initState as string));
+    setChainId(JSON.parse(router?.query?.chainId as string));
   }, []);
 
   return (
     <div>
       <PortkeyAssetProvider originChainId="AELF" pin="111111">
-        {state && tokenInfo && (
+        {initState && (
           <RampPreview
-            initState={state}
+            initState={initState}
+            chainId={chainId}
             portkeyServiceUrl="https://did-portkey.portkey.finance"
             goBack={function (): void {
               router.back();
             }}
-            tokenInfo={tokenInfo}
           />
         )}
       </PortkeyAssetProvider>
