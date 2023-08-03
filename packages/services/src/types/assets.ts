@@ -14,6 +14,7 @@ export type ITokenItemResponse = {
 export type FetchAccountTokenListParams = {
   skipCount?: number;
   maxResultCount?: number;
+  caAddresses: string[];
   caAddressInfos: { chainId: string; caAddress: string }[];
 };
 export type FetchAccountTokenListResult = {

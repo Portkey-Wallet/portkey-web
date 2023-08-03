@@ -18,8 +18,9 @@ export const PortkeyAssetActions = {
   setTokenPrice: 'setTokenPrice',
 };
 type WalletInfo = {
-  caInfo: DIDWallet<IBaseWalletAccount>['caInfo'];
-  accountInfo: DIDWallet<IBaseWalletAccount>['accountInfo'];
+  caHash?: string;
+  caInfo?: DIDWallet<IBaseWalletAccount>['caInfo'];
+  accountInfo?: DIDWallet<IBaseWalletAccount>['accountInfo'];
   managementAccount?: IBaseWalletAccount;
 };
 
@@ -90,6 +91,7 @@ const fetchTokenList = async ({
     skipCount,
     maxResultCount,
     caAddressInfos,
+    caAddresses: caAddressInfos.map((info) => info.caAddress),
   });
   let data;
   // mock data for new account

@@ -32,7 +32,7 @@ export enum AssetStep {
 export default function AssetMain({
   isShowRamp = true,
   rampState,
-  faucetUrl,
+  faucet,
   backIcon,
   portkeyServiceUrl,
   onOverviewBack,
@@ -94,7 +94,7 @@ export default function AssetMain({
         <AssetOverviewMain
           allToken={allToken}
           isShowRamp={isShowRamp}
-          faucetUrl={faucetUrl}
+          faucet={faucet}
           backIcon={backIcon}
           onBack={onOverviewBack}
           onReceive={async (v) => {
@@ -109,10 +109,10 @@ export default function AssetMain({
           }}
         />
       )}
-      {assetStep === AssetStep.receive && selectToken && (
+      {assetStep === AssetStep.receive && caInfo && selectToken && (
         <ReceiveCard
           toInfo={{
-            address: selectToken.address,
+            address: caInfo[selectToken.chainId]?.caAddress,
             name: '',
           }}
           assetInfo={{

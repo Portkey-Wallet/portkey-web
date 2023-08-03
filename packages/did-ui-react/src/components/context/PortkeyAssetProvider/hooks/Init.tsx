@@ -76,45 +76,49 @@ export const useStateInit = () => {
     [chainType, dispatch, fetchCAAddressByChainId, originChainId, sandboxId],
   );
 
-  const loadCaInfoByCaHash = useCallback(async () => {
+  const loadManager = useCallback(async () => {
     if (!managerPrivateKey) throw 'Please configure manager information(`managerPrivateKey`)';
     did.didWallet.createByPrivateKey(managerPrivateKey);
   }, [managerPrivateKey]);
 
   const loadCaInfo = useCallback(async () => {
-    try {
-      dispatch(basicAssetView.initialized.actions(false));
-      AuthServe.addRequestAuthCheck(originChainId);
-      AuthServe.setRefreshTokenConfig(originChainId);
-      if (!pin) {
-        await loadCaInfoByCaHash();
-      } else {
-        await did.load(pin, didStorageKeyName);
-      }
-      const storageCaHash = did.didWallet?.caInfo?.[originChainId]?.['caHash'];
-      // console.log(did, caHash, 'storageCaHash===');
-      if (caHash && storageCaHash && storageCaHash !== caHash)
-        throw 'Please check whether the entered caHash is correct';
-
-      if (!caHash && !storageCaHash) throw 'Please configure `caHash` in PortkeyAssetProvider';
-
-      await getHolderInfo({
-        caHash: caHash || storageCaHash,
-        managerAddress: did.didWallet.managementAccount?.address as string,
-      });
-
-      const wallet = {
-        caInfo: did.didWallet.caInfo,
-        managementAccount: did.didWallet.managementAccount,
-        accountInfo: did.didWallet.accountInfo,
-      };
-      dispatch(basicAssetView.setDIDWallet.actions(wallet));
-
-      dispatch(basicAssetView.initialized.actions(true));
-    } catch (error) {
-      console.error('loadCaInfo:', error);
+    dispatch(basicAssetView.initialized.actions(false));
+    AuthServe.addRequestAuthCheck(originChainId);
+    AuthServe.setRefreshTokenConfig(originChainId);
+    if (!pin) {
+      await loadManager();
+    } else {
+      await did.load(pin, didStorageKeyName);
     }
-  }, [caHash, didStorageKeyName, dispatch, getHolderInfo, loadCaInfoByCaHash, originChainId, pin]);
+    const storageCaHash = did.didWallet?.caInfo?.[originChainId]?.['caHash'];
+    if (caHash && storageCaHash && storageCaHash !== caHash) {
+      const error = 'Please check whether the entered caHash is correct';
+      message.error(error);
+      throw error;
+    }
+    const currentCaHash = caHash || storageCaHash;
+    if (!currentCaHash) {
+      const error = 'Please configure `caHash` in PortkeyAssetProvider';
+      message.error(error);
+      throw error;
+    }
+    AuthServe.addRequestAuthCheck(originChainId);
+    await AuthServe.setRefreshTokenConfig(originChainId);
+    await getHolderInfo({
+      caHash: currentCaHash,
+      managerAddress: did.didWallet.managementAccount?.address as string,
+    });
+
+    const wallet = {
+      caInfo: did.didWallet.caInfo,
+      managementAccount: did.didWallet.managementAccount,
+      accountInfo: did.didWallet.accountInfo,
+      caHash: currentCaHash,
+    };
+    dispatch(basicAssetView.setDIDWallet.actions(wallet));
+
+    dispatch(basicAssetView.initialized.actions(true));
+  }, [caHash, didStorageKeyName, dispatch, getHolderInfo, loadManager, originChainId, pin]);
   useEffect(() => {
     loadCaInfo();
   }, [loadCaInfo]);

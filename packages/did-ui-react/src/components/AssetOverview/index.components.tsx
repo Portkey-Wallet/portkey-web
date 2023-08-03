@@ -3,23 +3,24 @@ import { usePortkey } from '../context';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import TokenAndNFT, { TokenAndNFTProps } from '../TokenAndNFT';
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { MAINNET } from '../../constants/network';
+import { MAINNET, MAIN_CHAIN_ID } from '../../constants/network';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
-import { setLoading } from '../../utils';
+import { handleErrorMessage, setLoading } from '../../utils';
 import { ZERO } from '../../constants/misc';
-import { BaseToken, TokenItemShowType } from '../types/assets';
-import { divDecimals, formatAmountShow } from '../../utils/converter';
+import { BaseToken, IFaucetConfig, TokenItemShowType } from '../types/assets';
+import { divDecimals, formatAmountShow, timesDecimals } from '../../utils/converter';
 import CustomTokenModal from '../CustomTokenModal';
 import { ChainId } from '@portkey/types';
 import { IUserTokenItem } from '@portkey/services';
 import { ELF_SYMBOL } from '../../constants/assets';
 import { message } from 'antd';
+import { callCASendMethod } from '../../utils/sandboxUtil/callCASendMethod';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItem[];
   isShowRamp?: boolean;
   backIcon?: ReactNode;
-  faucetUrl?: string; // Only when testing the network, you can configure the faucet address
+  faucet?: IFaucetConfig;
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
   onBack?: () => void;
@@ -28,23 +29,53 @@ export interface AssetOverviewProps {
 export default function AssetOverviewMain({
   allToken,
   isShowRamp = true,
-  faucetUrl,
+  faucet,
   backIcon = <></>,
   onBack,
   onBuy,
   onReceive,
 }: AssetOverviewProps) {
-  const [{ networkType }] = usePortkey();
-  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, tokenPrices }, { dispatch }] = usePortkeyAsset();
+  const [{ networkType, sandboxId, chainType }] = usePortkey();
+  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, tokenPrices, caHash, managementAccount }, { dispatch }] =
+    usePortkeyAsset();
 
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
 
   const [tokenOpen, setTokenOpen] = useState(false);
+  console.log(caHash, managementAccount?.privateKey, 'callCASendMethod');
 
-  const onFaucet = useCallback(() => {
-    if (faucetUrl && networkType !== MAINNET) window.open(faucetUrl);
-  }, [faucetUrl, networkType]);
+  const onFaucet = useCallback(async () => {
+    const faucetUrl = faucet?.faucetUrl;
+    const faucetContractAddress = faucet?.faucetContractAddress;
+    if (faucetUrl && networkType !== MAINNET) return window.open(faucetUrl);
+    if (!faucetContractAddress) return message.error('Please configure `faucets`');
+    console.log(caHash, managementAccount?.privateKey, 'callCASendMethod');
+    if (!caHash || !managementAccount?.privateKey) return message.error('Please confirm whether to log in!');
+    try {
+      setLoading(true);
+      const result = await callCASendMethod({
+        methodName: 'ClaimToken',
+        paramsOption: {
+          symbol: 'ELF',
+          amount: timesDecimals(100, 8).toString(),
+        },
+        sandboxId,
+        chainId: MAIN_CHAIN_ID,
+        caHash,
+        chainType,
+        contractAddress: faucetContractAddress,
+        privateKey: managementAccount?.privateKey,
+      });
+      setLoading(false);
+      message.success('Token successfully requested');
+      // TODO
+      console.log(result, 'result==callCASendMethod');
+    } catch (error) {
+      setLoading(false);
+      message.error(handleErrorMessage(error));
+    }
+  }, [caHash, chainType, faucet, managementAccount?.privateKey, networkType, sandboxId]);
 
   const loadMoreNFT: Required<TokenAndNFTProps>['loadMoreNFT'] = useCallback(
     async ({ symbol, chainId, pageNum }) => {
@@ -58,7 +89,7 @@ export default function AssetOverviewMain({
       // has cache data
       if ((pageNum + 1) * maxResultCount <= children.length) return;
 
-      const caAddressInfos = Object.entries(caInfo).map(([chainId, info]) => ({
+      const caAddressInfos = Object.entries(caInfo ?? {}).map(([chainId, info]) => ({
         chainId: chainId as ChainId,
         caAddress: info.caAddress,
       }));
@@ -115,7 +146,7 @@ export default function AssetOverviewMain({
     <div className="portkey-ui-asset-overview">
       <AssetCard
         isShowRamp={isShowRamp}
-        isShowFaucet={Boolean(faucetUrl)}
+        isShowFaucet={Boolean(faucet?.faucetUrl || faucet?.faucetContractAddress)}
         networkType={networkType}
         backIcon={backIcon}
         nickName={accountInfo?.nickName}
