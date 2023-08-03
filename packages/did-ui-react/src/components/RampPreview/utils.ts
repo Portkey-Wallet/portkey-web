@@ -3,7 +3,7 @@ import { did } from '../../utils';
 import { AchTokenInfoType } from '@portkey/services';
 
 export const getAchToken = async (params: { email: string }) => {
-  const rst = await did.rampServices.getAchToken(params);
+  const rst = await did.services.ramp.getAchToken(params);
 
   if (rst.returnCode !== '0000') {
     throw new Error(rst.returnMsg);
@@ -12,7 +12,7 @@ export const getAchToken = async (params: { email: string }) => {
 };
 
 export const getAchSignature = async (params: { address: string }) => {
-  const rst = await did.rampServices.getAchSignature(params);
+  const rst = await did.services.ramp.getAchSignature(params);
 
   if (rst.returnCode !== '0000' || !rst?.signature) {
     throw new Error(rst.returnMsg);
@@ -22,7 +22,7 @@ export const getAchSignature = async (params: { address: string }) => {
 };
 
 export const getRampOrderNo = async (params: { transDirect: TransDirectEnum; merchantName: string }) => {
-  const rst = await did.rampServices.getOrderNo(params);
+  const rst = await did.services.ramp.getOrderNo(params);
 
   if (rst.success !== true || !rst?.id) {
     throw new Error(rst.returnMsg);

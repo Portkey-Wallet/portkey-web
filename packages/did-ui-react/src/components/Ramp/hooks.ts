@@ -48,7 +48,7 @@ export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
           try {
             status.current = STAGE.TRANSACTION;
             const result = await paymentSellTransfer(data);
-            await did.rampServices.sendSellTransaction({
+            await did.services.ramp.sendSellTransaction({
               merchantName: ACH_MERCHANT_NAME,
               orderId,
               rawTransaction: result.rawTransaction,

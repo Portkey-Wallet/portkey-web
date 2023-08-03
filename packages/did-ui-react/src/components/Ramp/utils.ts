@@ -13,7 +13,7 @@ export function transNetworkText(chainId: string, networkType: NetworkType): str
 }
 
 export const fetchBuyFiatListAsync = async (): Promise<FiatType[]> => {
-  const rst: { data: GetFiatType[] } = await did.rampServices.getFiatList({
+  const rst: { data: GetFiatType[] } = await did.services.ramp.getFiatList({
     type: RampTypeEnum.BUY,
   });
   const { data } = rst;
@@ -33,7 +33,7 @@ export const fetchBuyFiatListAsync = async (): Promise<FiatType[]> => {
 };
 
 export const fetchSellFiatListAsync = async (): Promise<FiatType[]> => {
-  const rst: { data: FiatType[] } = await did.rampServices.getFiatList({
+  const rst: { data: FiatType[] } = await did.services.ramp.getFiatList({
     type: RampTypeEnum.SELL,
   });
   const { data } = rst;
@@ -53,7 +53,7 @@ export const fetchSellFiatListAsync = async (): Promise<FiatType[]> => {
 };
 
 export const getOrderQuote = async (params: GetOrderQuoteParams) => {
-  const rst = await did.rampServices.getOrderQuote({
+  const rst = await did.services.ramp.getOrderQuote({
     ...params,
     type: 'ONE',
   });
@@ -64,7 +64,7 @@ export const getOrderQuote = async (params: GetOrderQuoteParams) => {
 };
 
 export const getCryptoInfo = async (params: { fiat: string }, symbol: string, network: string, side: RampTypeEnum) => {
-  const rst = await did.rampServices.getCryptoList(params);
+  const rst = await did.services.ramp.getCryptoList(params);
   if (rst.returnCode !== '0000') {
     throw new Error(rst.returnMsg);
   }
@@ -79,7 +79,7 @@ export const getCryptoInfo = async (params: { fiat: string }, symbol: string, ne
 export const fetchTxFeeAsync = async (
   chainIds: ChainId[],
 ): Promise<Record<ChainId, FetchTxFeeResultItemTransactionFee>> => {
-  const result = await did.rampServices.fetchTxFee({
+  const result = await did.services.ramp.fetchTxFee({
     chainIds,
   });
 

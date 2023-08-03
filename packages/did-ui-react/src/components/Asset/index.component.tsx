@@ -56,7 +56,7 @@ export default function AssetMain({
   const getAllTokenList = useCallback(async () => {
     if (!caAddressInfos) return;
     const chainIdArray = caAddressInfos.map((info) => info.chainId);
-    const result = await did.assetsServices.getUserTokenList({
+    const result = await did.services.assets.getUserTokenList({
       chainIdArray,
       keyword: '',
     });

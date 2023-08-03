@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did, TDesign } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 import { ChainId } from '@portkey/types';
 import { Spin } from 'antd';
@@ -32,6 +32,7 @@ export default function Sign() {
   const ref = useRef<ISignIn>();
   const [defaultLifeCycle, setLifeCycle] = useState<any>();
   const [design, setDesign] = useState<TDesign>();
+  const [uiType, setUIType] = useState<UI_TYPE>('Modal');
 
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
@@ -43,7 +44,7 @@ export default function Sign() {
       <SignIn
         ref={ref}
         design={design}
-        uiType="Modal"
+        uiType={uiType}
         // getContainer="#wrapper"
         isShowScan
         className="sign-in-wrapper"
@@ -62,7 +63,7 @@ export default function Sign() {
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
         }}
-        defaultLifeCycle={defaultLifeCycle}
+        defaultLifeCycle={defaultLifeCycle as any}
         onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
           console.log(
             'onLifeCycleChange:',
@@ -99,6 +100,14 @@ export default function Sign() {
         }}>
         Web2Design
       </button>
+      <div></div>
+      <button
+        onClick={async () => {
+          setUIType(v => (v === 'Full' ? 'Modal' : 'Full'));
+        }}>
+        setUIType
+      </button>
+
       <div></div>
 
       <button
