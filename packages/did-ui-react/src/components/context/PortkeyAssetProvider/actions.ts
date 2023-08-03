@@ -22,16 +22,15 @@ type WalletInfo = {
   caInfo?: DIDWallet<IBaseWalletAccount>['caInfo'];
   accountInfo?: DIDWallet<IBaseWalletAccount>['accountInfo'];
   managementAccount?: IBaseWalletAccount;
+  guardianList?: Guardian[];
 };
 
 export type BaseAssetProps = {
-  initialized?: boolean;
   pin?: string;
   caHash?: string;
   originChainId: ChainId;
   managerPrivateKey?: string;
   didStorageKeyName?: string;
-  guardianList?: Guardian[];
 };
 
 export type BaseListInfo<T> = {
@@ -51,7 +50,9 @@ export type BalanceInfo = {
   };
 };
 
-export interface AssetState extends WalletInfo, BaseAssetProps, BalanceInfo {}
+export interface AssetState extends WalletInfo, BaseAssetProps, BalanceInfo {
+  initialized?: boolean;
+}
 
 export const basicAssetView = {
   initialized: {

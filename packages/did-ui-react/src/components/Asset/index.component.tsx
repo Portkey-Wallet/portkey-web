@@ -15,11 +15,12 @@ import { MAINNET } from '../../constants/network';
 import { IRampInitState, IRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 
-export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack'> {
+export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken'> {
   onOverviewBack?: () => void;
   rampState?: IRampInitState;
   // if `${isShowRamp = true}` Please configure the API service of portkey
   portkeyServiceUrl?: string;
+  className?: string;
 }
 
 export enum AssetStep {
@@ -34,6 +35,7 @@ export default function AssetMain({
   rampState,
   faucet,
   backIcon,
+  className,
   portkeyServiceUrl,
   onOverviewBack,
 }: AssetMainProps) {
@@ -89,7 +91,7 @@ export default function AssetMain({
   const [rampPreview, setRampPreview] = useState<IRampPreviewInitState>();
 
   return (
-    <div>
+    <div className={className}>
       {(!assetStep || assetStep === AssetStep.overview) && (
         <AssetOverviewMain
           allToken={allToken}
