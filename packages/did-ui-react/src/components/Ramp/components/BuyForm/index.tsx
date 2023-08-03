@@ -40,7 +40,7 @@ export default function BuyFrom({
   const { t } = useTranslation();
   return (
     <>
-      <div className="ramp-input">
+      <div className="portkey-ui-ramp-input">
         <div className="label">{`I want to pay`}</div>
         <CurrencyInput
           value={currencyVal}
@@ -53,7 +53,7 @@ export default function BuyFrom({
         />
         {!!errMsg && <div className="error-text">{t(errMsg)}</div>}
       </div>
-      <div className="ramp-input">
+      <div className="portkey-ui-ramp-input">
         <div className="label">{`I will receive≈`}</div>
         <TokenInput
           value={tokenVal}

@@ -189,14 +189,12 @@ export default function RampPreviewMain({
   }, [t]);
 
   return (
-    <div className={clsx(['preview-frame portkey-ui-flex-column'])}>
-      <div className="preview-title">
-        <BackHeaderForPage
-          title={`${data.side === RampTypeEnum.BUY ? 'Buy' : 'Sell'} ${initState.crypto}`}
-          leftCallBack={goBack}
-        />
-      </div>
-      <div className="preview-content">
+    <div className={clsx(['portkey-ui-ramp-preview-frame portkey-ui-flex-column'])}>
+      <BackHeaderForPage
+        title={`${data.side === RampTypeEnum.BUY ? 'Buy' : 'Sell'} ${initState.crypto}`}
+        leftCallBack={goBack}
+      />
+      <div className="portkey-ui-ramp-preview-content">
         <div className="transaction portkey-ui-flex-column-center">
           <div className="send">
             <span className="amount">{formatAmountShow(data.amount)}</span>
@@ -217,18 +215,16 @@ export default function RampPreviewMain({
           </div>
         </div>
       </div>
-      <div>
-        <div className="disclaimer">
-          <span>
-            Proceeding with this transaction means that you have read and understood
-            <span className="highlight" onClick={showDisclaimerTipModal}>
-              &nbsp;the Disclaimer
-            </span>
-            .
+      <div className="portkey-ui-ramp-preview-disclaimer">
+        <span>
+          Proceeding with this transaction means that you have read and understood
+          <span className="highlight" onClick={showDisclaimerTipModal}>
+            &nbsp;the Disclaimer
           </span>
-        </div>
+          .
+        </span>
       </div>
-      <div className="preview-footer">
+      <div className="portkey-ui-ramp-preview-footer">
         <Button type="primary" htmlType="submit" onClick={goPayPage}>
           {t('Go to AlchemyPay')}
         </Button>
