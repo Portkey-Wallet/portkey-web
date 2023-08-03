@@ -122,15 +122,12 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo }: IUseHandleAchSellPara
         chainId: chainId.current,
         tokenContractAddress: tokenInfo.tokenContractAddress || '',
         privateKey,
+        methodName: 'Transfer',
+        caHash: caInfo?.[chainId.current]?.caHash || '',
         paramsOption: {
-          caHash: caInfo?.[chainId.current]?.caHash || '',
-          contractAddress: tokenInfo.tokenContractAddress || '',
-          methodName: 'Transfer',
-          args: {
-            symbol: tokenInfo.symbol,
-            to: `ELF_${params.address}_AELF`,
-            amount: timesDecimals(params.cryptoAmount, tokenInfo.decimals).toNumber(),
-          },
+          symbol: tokenInfo.symbol,
+          to: `ELF_${params.address}_AELF`,
+          amount: timesDecimals(params.cryptoAmount, tokenInfo.decimals).toNumber(),
         },
       });
       if (!rawResult || !rawResult.result) {

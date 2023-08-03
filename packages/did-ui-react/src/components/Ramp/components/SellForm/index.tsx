@@ -33,7 +33,7 @@ export default function SellFrom({
 
   return (
     <>
-      <div className="ramp-input">
+      <div className="portkey-ui-ramp-input">
         <div className="label">{`I want to sell`}</div>
         <TokenInput
           value={tokenVal}
@@ -47,7 +47,7 @@ export default function SellFrom({
         {!!errMsg && <div className="error-text">{t(errMsg)}</div>}
         {!!warningMsg && <div className="warning-text">{t(warningMsg)}</div>}
       </div>
-      <div className="ramp-input">
+      <div className="portkey-ui-ramp-input">
         <div className="label">{`I will receive≈`}</div>
         <CurrencyInput
           value={currencyVal}

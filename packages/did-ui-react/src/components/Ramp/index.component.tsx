@@ -20,6 +20,7 @@ import {
   SERVICE_UNAVAILABLE_TEXT,
   SYNCHRONIZING_CHAIN_TEXT,
   DEFAULT_CHAIN_ID,
+  DEFAULT_SYMBOL,
 } from '../../constants/ramp';
 import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../types';
 import { divDecimals, formatAmountShow } from '../../utils/converter';
@@ -59,8 +60,8 @@ export default function RampMain({
   const [rateUpdateTime, setRateUpdateTime] = useState(MAX_UPDATE_TIME);
   const [buyFiatList, setBuyFiatList] = useState<FiatType[]>([]);
   const [sellFiatList, setSellFiatList] = useState<FiatType[]>([]);
-  const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
-  const symbol = useRef(tokenInfo?.symbol || 'ELF');
+  const chainId = useMemo(() => tokenInfo?.chainId || DEFAULT_CHAIN_ID, [tokenInfo?.chainId]);
+  const symbol = useMemo(() => tokenInfo?.symbol || DEFAULT_SYMBOL, [tokenInfo?.symbol]);
 
   const [{ managementAccount, caInfo, initialized }] = usePortkeyAsset();
   const isManagerSynced = useMemo(
@@ -116,15 +117,15 @@ export default function RampMain({
           throw Error(JSON.stringify(error));
         });
 
-      fetchTxFeeAsync([chainId.current])
+      fetchTxFeeAsync([chainId])
         .then((res) => {
-          achFee.current = res[chainId.current].ach;
+          achFee.current = res[chainId].ach;
         })
         .catch((error) => {
           throw Error(JSON.stringify(error));
         });
     }
-  }, [initialized]);
+  }, [chainId, initialized]);
 
   const showLimitText = useCallback(
     (min: string | number, max: string | number, fiat = 'USD') =>
@@ -450,10 +451,11 @@ export default function RampMain({
       // search balance from contract
       try {
         const result = await getBalanceByContract({
-          chainId: chainId.current,
+          chainId: chainId,
+          tokenContractAddress: tokenInfo.tokenContractAddress || '',
           paramsOption: {
-            owner: caInfo[chainId.current]?.caAddress || '',
-            symbol: symbol.current,
+            owner: caInfo[chainId]?.caAddress || '',
+            symbol: symbol,
           },
         });
 
@@ -468,37 +470,43 @@ export default function RampMain({
           setInsufficientFundsMsg();
           return;
         }
-
-        const { amount, currency, country, crypto, network } = valueSaveRef.current;
-        goPreview({
-          initState: {
-            crypto,
-            network,
-            fiat: currency,
-            country,
-            amount,
-            side,
-          },
-          tokenInfo,
-        });
       } catch (error) {
         setLoading(false);
+        return;
       }
     }
+
+    setLoading(false);
+
+    const { amount, currency, country, crypto, network } = valueSaveRef.current;
+    goPreview({
+      initState: {
+        crypto,
+        network,
+        fiat: currency,
+        country,
+        amount,
+        side,
+      },
+      chainId: chainId,
+    });
   }, [
     isBuySectionShow,
     isSellSectionShow,
     goPreview,
-    tokenInfo,
+    chainId,
     goBack,
     isManagerSynced,
+    tokenInfo.tokenContractAddress,
+    tokenInfo.decimals,
     caInfo,
+    symbol,
     setInsufficientFundsMsg,
   ]);
 
   const renderRate = useMemo(
     () => (
-      <div className="ramp-rate portkey-ui-flex-between-center">
+      <div className="portkey-ui-ramp-rate portkey-ui-flex-between-center">
         <div>{showRateText}</div>
         <div className="timer portkey-ui-flex-center">
           <CustomSvg type="Timer" />
@@ -510,12 +518,10 @@ export default function RampMain({
   );
 
   return (
-    <div className={clsx(['ramp-frame portkey-ui-flex-column'])}>
-      <div className="ramp-title">
-        <BackHeaderForPage title={t('Buy')} leftCallBack={goBack} />
-      </div>
-      <div className="ramp-content portkey-ui-flex-column-center">
-        <div className="ramp-radio">
+    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column'])}>
+      <BackHeaderForPage title={t('Buy')} leftCallBack={goBack} />
+      <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
+        <div className="portkey-ui-ramp-radio">
           <Radio.Group defaultValue={RampTypeEnum.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
             <Radio.Button value={RampTypeEnum.BUY}>{t('Buy')}</Radio.Button>
             <Radio.Button value={RampTypeEnum.SELL}>{t('Sell')}</Radio.Button>
@@ -556,7 +562,7 @@ export default function RampMain({
         )}
         {rate !== '' && renderRate}
       </div>
-      <div className="ramp-footer">
+      <div className="portkey-ui-ramp-footer">
         <Button type="primary" htmlType="submit" disabled={disabled} onClick={handleNext}>
           {t('Next')}
         </Button>

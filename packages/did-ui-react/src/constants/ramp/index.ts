@@ -44,6 +44,8 @@ export const AchConfig: IAchConfig = {
 
 export const DEFAULT_CHAIN_ID = 'AELF';
 
+export const DEFAULT_SYMBOL = 'ELF';
+
 export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge/';
 
 export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK';
