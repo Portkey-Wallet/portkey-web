@@ -33,7 +33,7 @@ export default function PhoneNumberInput({
 
   return (
     <div className="phone-number-input-wrapper">
-      <div className="portkey-ui-flex phone-number-input">
+      <div className="portkey-ui-flex phone-number-input-content">
         <div className="addon-content">
           <div
             className="portkey-ui-flex-between-center input-addon"
@@ -48,6 +48,7 @@ export default function PhoneNumberInput({
 
         <Input
           placeholder="Enter phone number"
+          className="phone-number-input"
           value={phoneNumber}
           onChange={(e) => onPhoneNumberChange?.(e.target.value)}
         />
