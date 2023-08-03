@@ -224,8 +224,8 @@ export default function RampPreviewMain({
           .
         </span>
       </div>
-      <div className="portkey-ui-ramp-footer">
-        <Button type="primary" htmlType="submit" onClick={goPayPage} className="ramp-footer-btn">
+      <div className="portkey-ui-ramp-preview-footer">
+        <Button type="primary" htmlType="submit" onClick={goPayPage}>
           {t('Go to AlchemyPay')}
         </Button>
       </div>

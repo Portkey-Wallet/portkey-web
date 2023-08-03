@@ -563,7 +563,7 @@ export default function RampMain({
         {rate !== '' && renderRate}
       </div>
       <div className="portkey-ui-ramp-footer">
-        <Button type="primary" htmlType="submit" disabled={disabled} onClick={handleNext} className="ramp-footer-btn">
+        <Button type="primary" htmlType="submit" disabled={disabled} onClick={handleNext}>
           {t('Next')}
         </Button>
       </div>
