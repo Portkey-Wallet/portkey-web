@@ -79,6 +79,15 @@ describe('DIDWallet describe', () => {
     expect(wallet.managementAccount).toHaveProperty('privateKey');
   });
 
+  test('test createByPrivateKey', () => {
+    const wallet = new DIDWallet({ accountProvider, storage, service, connectService });
+    wallet.createByPrivateKey(privateKey);
+    expect(wallet.managementAccount).not.toBeUndefined();
+    expect(wallet.managementAccount).not.toBeNull();
+    expect(wallet.managementAccount).toHaveProperty('address');
+    expect(wallet.managementAccount).toHaveProperty('privateKey');
+  });
+
   test('test getContract', async () => {
     const result = await wallet.getContract({
       contractAddress: 'contractAddress_mock',

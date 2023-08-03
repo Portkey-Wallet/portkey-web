@@ -317,8 +317,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.managementAccount = this._accountProvider.create();
     return this;
   }
-  public createByPrivateKey(create: string): this {
-    this.managementAccount = this._accountProvider.privateKeyToAccount(create);
+  public createByPrivateKey(privateKey: string): this {
+    this.managementAccount = this._accountProvider.privateKeyToAccount(privateKey);
     return this;
   }
   public async save(password: string, keyName?: string | undefined): Promise<boolean> {
