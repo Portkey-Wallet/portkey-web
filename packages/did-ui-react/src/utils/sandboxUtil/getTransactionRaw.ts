@@ -1,5 +1,5 @@
 import { ChainId, ChainType } from '@portkey/types';
-import { SandboxEventService, SandboxEventTypes, SandboxErrorCode } from '..';
+import { handleErrorMessage } from '..';
 import { getChain } from '../../hooks/useChainInfo';
 import { getContractBasic } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
@@ -11,47 +11,15 @@ interface GetTransitionFeeParams {
   paramsOption: GetTransitionFeeParamsOption;
   tokenContractAddress: string;
   privateKey: string;
+  caHash: string;
+  methodName: string;
 }
 
 interface GetTransitionFeeParamsOption {
-  caHash: string;
-  contractAddress: string;
-  methodName: string;
-  args: {
-    symbol: string;
-    to: string;
-    amount: number;
-  };
+  symbol: string;
+  to: string;
+  amount: number;
 }
-
-const MethodName = 'ManagerForwardCall';
-
-export const getTransactionRawByExtension = async ({
-  sandboxId,
-  chainId,
-  paramsOption,
-  chainType,
-  privateKey,
-}: GetTransitionFeeParams) => {
-  const chainInfo = await getChain(chainId);
-  if (!chainInfo) throw 'Please check network connection and chainId';
-
-  const resMessage = await SandboxEventService.dispatchAndReceive(
-    SandboxEventTypes.getTransactionRaw,
-    {
-      rpcUrl: chainInfo.endPoint,
-      address: chainInfo.caContractAddress,
-      chainType,
-      methodName: MethodName,
-      privateKey,
-      paramsOption,
-    },
-    sandboxId,
-  );
-
-  if (resMessage.code === SandboxErrorCode.error) throw resMessage.error;
-  return resMessage.message;
-};
 
 export const getTransactionRawByContract = async (
   params: Omit<GetTransitionFeeParams, 'chainType'>,
@@ -59,12 +27,19 @@ export const getTransactionRawByContract = async (
   const chainInfo = await getChain(params.chainId);
   if (!chainInfo) throw 'Please check network connection and chainId';
 
+  const account = aelf.getWallet(params.privateKey);
+
   const contract = await getContractBasic({
     contractAddress: params.tokenContractAddress,
-    account: aelf.getWallet(params.privateKey),
+    account,
+    caContractAddress: chainInfo.caContractAddress,
+    callType: 'ca',
+    caHash: params.caHash,
     rpcUrl: chainInfo.endPoint,
   });
-  const req = await contract.encodedTx(MethodName, params.paramsOption);
-  if (req.error) throw req.error;
+
+  const req = await contract.callSendMethod(params.methodName, account, params.paramsOption);
+  console.log(req, params.paramsOption, 'req===callCASendMethod');
+  if (req.error) throw handleErrorMessage(req);
   return req.data;
 };

@@ -452,6 +452,7 @@ export default function RampMain({
       try {
         const result = await getBalanceByContract({
           chainId: chainId,
+          tokenContractAddress: tokenInfo.tokenContractAddress || '',
           paramsOption: {
             owner: caInfo[chainId]?.caAddress || '',
             symbol: symbol,
@@ -496,9 +497,10 @@ export default function RampMain({
     chainId,
     goBack,
     isManagerSynced,
+    tokenInfo.tokenContractAddress,
+    tokenInfo.decimals,
     caInfo,
     symbol,
-    tokenInfo.decimals,
     setInsufficientFundsMsg,
   ]);
 

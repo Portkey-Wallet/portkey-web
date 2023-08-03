@@ -8,6 +8,7 @@ import { COMMON_PRIVATE } from '../../constants';
 interface GetBalanceParams {
   sandboxId?: string;
   chainId: ChainId;
+  tokenContractAddress: string;
   chainType: ChainType;
   paramsOption: {
     symbol: string;
@@ -45,7 +46,7 @@ export const getBalanceByContract = async (params: Omit<GetBalanceParams, 'chain
   if (!chainInfo) throw 'Please check network connection and chainId';
 
   const contract = await getContractBasic({
-    contractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
+    contractAddress: params.tokenContractAddress,
     account: aelf.getWallet(COMMON_PRIVATE),
     rpcUrl: chainInfo.endPoint,
   });
