@@ -24,6 +24,8 @@ import {
   CAHolderInfo,
   Ramp,
   Assets,
+  IAssetsService,
+  IRampService,
 } from '@portkey/services';
 import { FetchRequest } from '@portkey/request';
 import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
@@ -37,8 +39,8 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public didGraphQL: IDIDGraphQL;
   public fetchRequest: IBaseRequest;
   public connectRequest: IBaseRequest;
-  public rampServices: Ramp;
-  public assetsServices: Assets;
+  public rampServices: IRampService;
+  public assetsServices: IAssetsService;
 
   public accountProvider: portkey.AccountProvider;
   constructor() {

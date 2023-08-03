@@ -1,6 +1,6 @@
 .phone-number-input-wrapper {
   position: relative;
-  .phone-number-input {
+  .phone-number-input-content {
     border: 1px solid var(--portkey-ui-input-border);
     border-radius: var(--portkey-ui-border-radius-1);
 
@@ -18,11 +18,16 @@
       min-width: 90px;
       display: flex;
       background-color: var(--portkey-ui-input-bg);
-      border-radius: var(--portkey-ui-border-radius-1);
+      border-top-left-radius: var(--portkey-ui-border-radius-1);
+      border-bottom-left-radius: var(--portkey-ui-border-radius-1);
       &::after {
         content: '';
         border-right: 0.5px solid var(--portkey-ui-border-1);
       }
+    }
+    .phone-number-input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
     }
     .input-addon {
       font-size: 14px;
