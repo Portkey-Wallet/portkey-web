@@ -1,6 +1,6 @@
 import { Collapse, List } from 'antd';
 import { NFTCollectionItemShowType, NFTItemBaseType } from '../../../types/assets';
-import { useCallback, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
 import { transNetworkText } from '../../../../utils/converter';
 import clsx from 'clsx';
 import CustomSvg from '../../../CustomSvg';
@@ -14,10 +14,28 @@ export interface NFTTabProps {
   loadMoreNFT?: (params: { symbol: string; chainId: ChainId; pageNum: number }) => void;
 }
 
-export default function NFTTab({ accountNFTList, isMainnet, loadMoreNFT }: NFTTabProps) {
+export interface NFTTabInstance {
+  refreshState: () => void;
+}
+
+const NFTTab = forwardRef(({ accountNFTList, isMainnet, loadMoreNFT }: NFTTabProps, ref) => {
   const [openPanel, setOpenPanel] = useState<string[]>([]);
   const [nftNum, setNftNum] = useState<Record<string, number>>({});
   const [getMoreFlag, setGetMoreFlag] = useState(false);
+
+  const refreshState = useCallback(() => {
+    setOpenPanel([]);
+    setNftNum({});
+    setGetMoreFlag(false);
+  }, []);
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      refreshState,
+    }),
+    [refreshState],
+  );
 
   const maxNftNum = useNFTMaxCount();
 
@@ -124,10 +142,14 @@ export default function NFTTab({ accountNFTList, isMainnet, loadMoreNFT }: NFTTa
       ) : (
         <List className="nft-list">
           <List.Item>
-            <Collapse onChange={handleChange}>{accountNFTList.map((item) => renderItem(item))}</Collapse>
+            <Collapse activeKey={openPanel} onChange={handleChange}>
+              {accountNFTList.map((item) => renderItem(item))}
+            </Collapse>
           </List.Item>
         </List>
       )}
     </div>
   );
-}
+});
+
+export default NFTTab;

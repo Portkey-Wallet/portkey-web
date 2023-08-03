@@ -7,7 +7,7 @@ import { MAINNET, MAIN_CHAIN_ID } from '../../constants/network';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import { handleErrorMessage, setLoading } from '../../utils';
 import { ZERO } from '../../constants/misc';
-import { BaseToken, IFaucetConfig, TokenItemShowType } from '../types/assets';
+import { BalanceTab, BaseToken, IFaucetConfig, TokenItemShowType } from '../types/assets';
 import { divDecimals, formatAmountShow, timesDecimals } from '../../utils/converter';
 import CustomTokenModal from '../CustomTokenModal';
 import { ChainId } from '@portkey/types';
@@ -15,6 +15,7 @@ import { IUserTokenItem } from '@portkey/services';
 import { ELF_SYMBOL } from '../../constants/assets';
 import { message } from 'antd';
 import { callCASendMethod } from '../../utils/sandboxUtil/callCASendMethod';
+import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItem[];
@@ -43,7 +44,16 @@ export default function AssetOverviewMain({
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
 
   const [tokenOpen, setTokenOpen] = useState(false);
+  const maxNftNum = useNFTMaxCount();
+
   console.log(caHash, managementAccount?.privateKey, 'callCASendMethod');
+  const caAddressInfos = useMemo(() => {
+    if (!caInfo) return;
+    return Object.entries(caInfo ?? {}).map(([chainId, info]) => ({
+      chainId: chainId as ChainId,
+      caAddress: info.caAddress,
+    }));
+  }, [caInfo]);
 
   const onFaucet = useCallback(async () => {
     const faucetUrl = faucet?.faucetUrl;
@@ -166,6 +176,23 @@ export default function AssetOverviewMain({
         accountNFTList={NFTCollection?.list}
         tokenList={tokenList || tokenListInfo?.list}
         loadMoreNFT={loadMoreNFT}
+        onChange={(v) => {
+          if (!caAddressInfos) return;
+          if (v === BalanceTab.TOKEN) {
+            basicAssetViewAsync
+              .setTokenList({
+                caAddressInfos,
+              })
+              .then(dispatch);
+          } else if (v === BalanceTab.NFT) {
+            basicAssetViewAsync
+              .setNFTCollections({
+                caAddressInfos,
+                maxNFTCount: maxNftNum,
+              })
+              .then(dispatch);
+          }
+        }}
       />
       <CustomTokenModal
         networkType={networkType}
