@@ -56,11 +56,12 @@ const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, o
         type="primary"
         onClick={async () => {
           try {
-            if (!countryCode?.code) throw Error('Please select a country code');
+            const code = countryCode?.code || phoneCountry?.iso;
+            if (!code) throw Error('Please select a country code');
             if (!phoneNumber) throw Error('Please enter a phone number');
-            await validatePhone(`+${countryCode.code} ${phoneNumber}`);
+            await validatePhone(`+${code} ${phoneNumber}`);
             onFinishRef.current?.({
-              code: countryCode.code,
+              code,
               phoneNumber,
             });
           } catch (error) {
