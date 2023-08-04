@@ -291,10 +291,13 @@ const SignIn = forwardRef(
       [changeLifeCycle, onSignUp],
     );
 
-    const onStep2Cancel = useCallback(() => {
-      changeLifeCycle('Login', null);
-      setApprovedList(undefined);
-    }, [changeLifeCycle]);
+    const onStep2Cancel = useCallback(
+      (type: 'Login' | 'SignUp') => {
+        changeLifeCycle(type, null);
+        setApprovedList(undefined);
+      },
+      [changeLifeCycle],
+    );
 
     const onStep3Cancel = useCallback(
       (v?: AddManagerType) => {
@@ -449,7 +452,7 @@ const SignIn = forwardRef(
             onStepChange={changeLifeCycle}
             onError={onErrorRef?.current}
             onFinish={onStep2OfSignUpFinish}
-            onCancel={onStep2Cancel}
+            onCancel={() => onStep2Cancel('SignUp')}
           />
         );
       }
@@ -467,7 +470,7 @@ const SignIn = forwardRef(
             isErrorTip={isErrorTip}
             onError={onErrorRef?.current}
             onFinish={onStep2LoginFinish}
-            onCancel={onStep2Cancel}
+            onCancel={() => onStep2Cancel('Login')}
             onGuardianListChange={onGuardianListChange}
           />
         );
