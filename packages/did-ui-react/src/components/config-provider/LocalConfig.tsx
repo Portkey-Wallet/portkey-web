@@ -1,5 +1,5 @@
 import { GlobalConfigProps } from './types';
-import { setVerification, did, setServiceConfig, setReCaptchaConfig } from '../../utils';
+import { setVerification, did, setServiceConfig, setReCaptchaConfig, BaseAsyncStorage } from '../../utils';
 
 const apiVersion = 'v1.3.2';
 
@@ -29,6 +29,14 @@ class LocalConfigProvider {
   };
 
   setGlobalConfig = (_config: Partial<GlobalConfigProps>) => {
+    if (('storageMethod' in _config && _config.storageMethod) || !this.config.storageMethod) {
+      const storageMethod = _config.storageMethod || new BaseAsyncStorage();
+      setVerification(storageMethod);
+      did.setConfig({
+        storageMethod,
+      });
+    }
+
     if ('requestDefaults' in _config) {
       const requestDefaults = _config['requestDefaults'];
       if (requestDefaults) {
@@ -39,12 +47,7 @@ class LocalConfigProvider {
         _config.requestDefaults && setServiceConfig(_config.requestDefaults);
       }
     }
-    if ('storageMethod' in _config && _config.storageMethod) {
-      setVerification(_config.storageMethod);
-      did.setConfig({
-        storageMethod: _config['storageMethod'],
-      });
-    }
+
     if ('graphQLUrl' in _config) {
       did.setConfig({
         graphQLUrl: _config['graphQLUrl'],
@@ -58,6 +61,7 @@ class LocalConfigProvider {
     if ('reCaptchaConfig' in _config) {
       _config['reCaptchaConfig'] && setReCaptchaConfig(_config['reCaptchaConfig']);
     }
+
     this.config = { ...this.config, ..._config };
   };
 
