@@ -142,6 +142,7 @@ export default function AssetMain({
           }}
           isBuySectionShow={true}
           isSellSectionShow={true}
+          isShowSelectInModal={true}
           isMainnet={networkType === MAINNET}
         />
       )}

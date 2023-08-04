@@ -125,6 +125,5 @@ export interface ICommunityRecoveryService extends IVerificationService, ISearch
   getHolderInfoByManager(params: GetCAHolderByManagerParams): Promise<GetCAHolderByManagerResult>;
   getRegisterInfo(params: GetRegisterInfoParams): Promise<RegisterInfo>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
-  getPhoneCountryCode(): Promise<ICountryItem[]>;
   getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult>;
 }

@@ -31,21 +31,21 @@ ConfigProvider.setGlobalConfig({
 export default function Sign() {
   const ref = useRef<ISignIn>();
   const [defaultLifeCycle, setLifeCycle] = useState<any>();
-  const [design, setDesign] = useState<TDesign>();
-  const [uiType, setUIType] = useState<UI_TYPE>('Modal');
-
+  const [design, setDesign] = useState<TDesign>('Web2Design');
+  const [uiType, setUIType] = useState<UI_TYPE>('Full');
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
   }, []);
 
   return (
     <div>
-      <Spin spinning />
+      <div>-----------</div>
       <SignIn
         ref={ref}
         design={design}
         uiType={uiType}
-        // getContainer="#wrapper"
+        extraElement={<div style={{ height: 300, background: 'red' }}></div>}
+        getContainer="#wrapper"
         isShowScan
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
@@ -59,11 +59,12 @@ export default function Sign() {
         }}
         onCancel={() => {
           ref?.current.setOpen(false);
+          setLifeCycle(undefined);
         }}
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
         }}
-        defaultLifeCycle={defaultLifeCycle as any}
+        // defaultLifeCycle={defaultLifeCycle as any}
         onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
           console.log(
             'onLifeCycleChange:',
@@ -100,7 +101,7 @@ export default function Sign() {
         }}>
         Web2Design
       </button>
-      <div></div>
+      <div>-----------</div>
       <button
         onClick={async () => {
           setUIType(v => (v === 'Full' ? 'Modal' : 'Full'));
@@ -108,7 +109,14 @@ export default function Sign() {
         setUIType
       </button>
 
-      <div></div>
+      <button
+        onClick={async () => {
+          ref.current.setCurrentLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
+        }}>
+        setCurrentLifeCycle
+      </button>
+
+      <div>-----------</div>
 
       <button
         onClick={async () => {
@@ -121,6 +129,7 @@ export default function Sign() {
         logout
       </button>
       <div id="wrapper"></div>
+      <div>-----------</div>
     </div>
   );
 }

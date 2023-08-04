@@ -154,18 +154,6 @@ describe('communityRecovery describe', () => {
     expect(typeof result).toEqual('boolean');
   });
 
-  test('test getPhoneCountryCode', async () => {
-    const result = await communityRecovery.getPhoneCountryCode();
-    expect(Array.isArray(result)).toBeTruthy();
-
-    const requestMock = {
-      send: async () => undefined,
-    };
-    const mockCommunityRecovery = new CommunityRecovery(requestMock, didGraphQL);
-    const result2 = await mockCommunityRecovery.getPhoneCountryCode();
-    expect(result2.length === 0).toBeTruthy();
-  });
-
   test('test getPhoneCountryCodeWithLocal', async () => {
     const result = await communityRecovery.getPhoneCountryCodeWithLocal();
     expect(Array.isArray(result.data)).toBeTruthy();

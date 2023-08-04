@@ -1,6 +1,7 @@
 import { AccountType } from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import { ICountryItem } from '../../types';
+import { SignInProps } from '../SignStep/types';
 
 export interface GuardianInputInfo {
   identifier: string;
@@ -24,5 +25,6 @@ export interface IPhoneCountry {
 }
 export type ISignIn = {
   setOpen: (open: boolean) => void;
+  setCurrentLifeCycle: (cycle: Required<SignInProps['defaultLifeCycle']>) => void;
 };
 export type SignInInterface = ISignIn;

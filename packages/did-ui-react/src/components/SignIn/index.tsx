@@ -1,3 +1,4 @@
+'use client';
 /**
  * @remarks
  *
@@ -77,12 +78,15 @@ const SignIn = forwardRef(
     const defaultLifeCycleRef = useRef<LifeCycleType>();
     const defaultLiftCyclePropsRef = useRef<any>();
 
-    const getDefaultLifeCycleProps = useCallback(() => {
-      const lifeCycle = Object.entries(defaultLifeCycleInfo || {}).slice(-1)[0] || [];
-      defaultLifeCycleRef.current = lifeCycle[0] as LifeCycleType;
-      defaultLiftCyclePropsRef.current = lifeCycle[1];
-      return lifeCycle as [] | [LifeCycleType, any];
-    }, [defaultLifeCycleInfo]);
+    const getDefaultLifeCycleProps = useCallback(
+      (lifeCycleInfo?: Required<SignInProps['defaultLifeCycle']>) => {
+        const lifeCycle = Object.entries(lifeCycleInfo || defaultLifeCycleInfo || {}).slice(-1)[0] || [];
+        defaultLifeCycleRef.current = lifeCycle[0] as LifeCycleType;
+        defaultLiftCyclePropsRef.current = lifeCycle[1];
+        return lifeCycle as [] | [LifeCycleType, any];
+      },
+      [defaultLifeCycleInfo],
+    );
 
     useMemo(() => getDefaultLifeCycleProps(), [getDefaultLifeCycleProps]);
 
@@ -104,40 +108,45 @@ const SignIn = forwardRef(
       },
       [onLifeCycleChange],
     );
+    console.log(defaultLifeCycleInfo, 'defaultLifeCycle===');
 
-    const dealStep = useCallback(async () => {
-      try {
-        const [defaultLifeCycle, defaultLiftCycleProps] = getDefaultLifeCycleProps();
-        if (!defaultLifeCycle) return setLifeCycle('Login');
-        let flag = false;
-        Object.entries(LifeCycleMap).forEach(([key, value]) => {
-          if (!flag && value.includes(defaultLifeCycle)) {
-            flag = true;
-            switch (key) {
-              case 'Step3':
-                setApprovedList(defaultLiftCycleProps?.approvedList);
-                setGuardianIdentifierInfo(defaultLiftCycleProps?.guardianIdentifierInfo);
-                // uiType === 'Modal' && setOpen(true);
-                break;
-              case 'Step2OfSignUp':
-              case 'Step2OfLogin':
-                if (key === 'Step2OfSignUp') setVerifierCodeInfo(defaultLiftCycleProps?.verifyCodeInfo);
-                setGuardianIdentifierInfo(defaultLiftCycleProps?.guardianIdentifierInfo);
-                // uiType === 'Modal' && setOpen(true);
-                break;
-              default:
-                changeLifeCycle(defaultLifeCycle, null);
-                break;
+    const dealStep = useCallback(
+      async (lifeCycleInfo?: Required<SignInProps['defaultLifeCycle']>) => {
+        try {
+          const [defaultLifeCycle, defaultLiftCycleProps] = getDefaultLifeCycleProps(lifeCycleInfo);
+          console.log(defaultLifeCycle, 'defaultLifeCycle===1');
+
+          if (!defaultLifeCycle) return setLifeCycle('Login');
+          let flag = false;
+          Object.entries(LifeCycleMap).forEach(([key, value]) => {
+            if (!flag && value.includes(defaultLifeCycle)) {
+              flag = true;
+              switch (key) {
+                case 'Step3':
+                  setApprovedList(defaultLiftCycleProps?.approvedList);
+                  setGuardianIdentifierInfo(defaultLiftCycleProps?.guardianIdentifierInfo);
+                  // uiType === 'Modal' && setOpen(true);
+                  break;
+                case 'Step2OfSignUp':
+                case 'Step2OfLogin':
+                  if (key === 'Step2OfSignUp') setVerifierCodeInfo(defaultLiftCycleProps?.verifyCodeInfo);
+                  setGuardianIdentifierInfo(defaultLiftCycleProps?.guardianIdentifierInfo);
+                  // uiType === 'Modal' && setOpen(true);
+                  break;
+                default:
+                  changeLifeCycle(defaultLifeCycle, null);
+                  break;
+              }
+              setLifeCycle(defaultLifeCycle);
             }
-            setLifeCycle(defaultLifeCycle);
-          }
-        });
-        console.log(defaultLifeCycle, 'defaultLifeCycle===');
-      } catch (error) {
-        console.error('dealStep', error);
-        setLifeCycle('Login');
-      }
-    }, [changeLifeCycle, getDefaultLifeCycleProps]);
+          });
+        } catch (error) {
+          console.error('dealStep', error);
+          setLifeCycle('Login');
+        }
+      },
+      [changeLifeCycle, getDefaultLifeCycleProps],
+    );
 
     const refSetOpen = useCallback(
       (v: boolean) => {
@@ -147,14 +156,20 @@ const SignIn = forwardRef(
       [dealStep],
     );
 
-    useImperativeHandle(ref, () => ({ setOpen: refSetOpen }));
-
     const [originChainId, setOriginChainId] = useState<ChainId>();
     const [approvedList, setApprovedList] = useState<GuardiansApproved[]>();
     const [walletWithoutPin, setWalletWithoutPin] = useState<Omit<DIDWalletInfo, 'pin'>>();
     const [lifeCycle, setLifeCycle] = useState<LifeCycleType>('Login');
 
     const chainId = useMemo(() => originChainId || defaultChainId, [originChainId, defaultChainId]);
+
+    const setCurrentLifeCycle = useCallback(
+      (cycle: Required<SignInProps['defaultLifeCycle']>) => {
+        dealStep(cycle);
+      },
+      [dealStep],
+    );
+    useImperativeHandle(ref, () => ({ setOpen: refSetOpen, setCurrentLifeCycle: setCurrentLifeCycle }));
 
     useEffectOnce(() => {
       dealStep();
