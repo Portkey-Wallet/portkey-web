@@ -56,7 +56,7 @@ const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, o
         type="primary"
         onClick={async () => {
           try {
-            const code = countryCode?.code || phoneCountry?.iso;
+            const code = countryCode?.code || phoneCountry?.countryList?.find((v) => v.iso === phoneCountry.iso)?.code;
             if (!code) throw Error('Please select a country code');
             if (!phoneNumber) throw Error('Please enter a phone number');
             await validatePhone(`+${code} ${phoneNumber}`);
