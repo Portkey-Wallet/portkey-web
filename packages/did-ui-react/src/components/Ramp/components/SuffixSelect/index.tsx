@@ -32,6 +32,7 @@ export default function SuffixSelect({
   );
   return isModal ? (
     <CustomModal
+      getContainer={'#portkey-ui-ramp'}
       open={open}
       fiatList={fiatList}
       drawerType={drawerType}
@@ -42,6 +43,7 @@ export default function SuffixSelect({
     />
   ) : (
     <CustomDrawer
+      getContainer={'#portkey-ui-ramp'}
       open={open}
       fiatList={fiatList}
       drawerType={drawerType}

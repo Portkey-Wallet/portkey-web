@@ -9,6 +9,7 @@ export interface IRampProps extends IUseHandleAchSellParams {
   goPreview: ({ initState, chainId }: { initState: IRampPreviewInitState; chainId: ChainId }) => void;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
+  isShowSelectInModal?: boolean; // to control the selection UI of fiat currency and token
 }
 
 export default function Ramp(props: IRampProps) {

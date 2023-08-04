@@ -44,6 +44,7 @@ export default function RampMain({
   isBuySectionShow = true,
   isSellSectionShow = true,
   isMainnet,
+  isShowSelectInModal = true,
 }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
@@ -518,7 +519,7 @@ export default function RampMain({
   );
 
   return (
-    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column'])}>
+    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column'])} id="portkey-ui-ramp">
       <BackHeaderForPage title={t('Buy')} leftCallBack={goBack} />
       <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
         <div className="portkey-ui-ramp-radio">
@@ -541,6 +542,7 @@ export default function RampMain({
             curToken={curToken}
             errMsg={errMsg}
             fiatList={buyFiatList}
+            isShowSelectInModal={isShowSelectInModal}
           />
         )}
         {page === RampTypeEnum.SELL && (
@@ -558,6 +560,7 @@ export default function RampMain({
             errMsg={errMsg}
             warningMsg={warningMsg}
             fiatList={sellFiatList}
+            isShowSelectInModal={isShowSelectInModal}
           />
         )}
         {rate !== '' && renderRate}
