@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.1...v1.2.2) (2023-08-04)
+
+### Bug Fixes
+
+- 🐛 fix country code ([ae9ff1f](https://github.com/Portkey-Wallet/portkey-web/commit/ae9ff1fdf9473fa3c4217893cd44935426dab609))
+
 ## [1.2.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.1...v1.2.1) (2023-08-03)
 
 ### Bug Fixes
