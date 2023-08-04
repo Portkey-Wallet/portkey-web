@@ -25,6 +25,7 @@ export default function RampPage() {
             symbol: 'ELF',
             tokenContractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
           }}
+          portkeyWebSocketUrl={'http://192.168.66.240:5577'}
           isMainnet={true}
           isShowSelectInModal={true}
         />

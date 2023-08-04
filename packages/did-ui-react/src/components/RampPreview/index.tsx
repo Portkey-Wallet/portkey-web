@@ -5,12 +5,12 @@ import RampPreviewMain from './index.component';
 
 export interface IRampPreviewProps {
   initState: IRampPreviewInitState;
-  chainId?: ChainId;
   portkeyServiceUrl: string;
-  goBack: () => void;
+  chainId?: ChainId;
+  overrideAchConfig?: IAchConfig;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
-  overrideAchConfig?: IAchConfig;
+  goBack: () => void;
 }
 
 export default function Ramp(props: IRampPreviewProps) {

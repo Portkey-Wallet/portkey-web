@@ -1,5 +1,6 @@
-import { ChainId } from '@portkey/types';
+import { ChainId, IBaseWalletAccount } from '@portkey/types';
 import { AchTxAddressReceivedType } from '@portkey/socket';
+import { CAInfo } from '@portkey/did';
 
 export enum RampTypeEnum {
   BUY = 'BUY',
@@ -101,7 +102,18 @@ export interface PaymentSellTransferResult {
 
 export type SellTransferParams = Pick<AchTxAddressReceivedType, 'merchantName' | 'orderId'> & {
   // sellBaseURL: string; // request.defaultConfig.baseURL
-  paymentSellTransfer: (params: AchTxAddressReceivedType) => Promise<PaymentSellTransferResult>;
+  managementAccount: IBaseWalletAccount;
+  caInfo: {
+    [key: string]: CAInfo;
+  };
+  paymentSellTransfer: (
+    params: AchTxAddressReceivedType & {
+      managementAccount: IBaseWalletAccount;
+      caInfo: {
+        [key: string]: CAInfo;
+      };
+    },
+  ) => Promise<PaymentSellTransferResult>;
 };
 
 export interface PaymentLimitType {
@@ -111,9 +123,11 @@ export interface PaymentLimitType {
 
 export interface ISellTransferParams {
   isMainnet: boolean;
+  portkeyWebSocketUrl: string; // ip
 }
 
 export interface IUseHandleAchSellParams {
   isMainnet: boolean;
   tokenInfo: ITokenInfo;
+  portkeyWebSocketUrl: string; // ip
 }
