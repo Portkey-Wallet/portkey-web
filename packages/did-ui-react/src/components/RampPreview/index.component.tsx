@@ -34,12 +34,13 @@ export default function RampPreviewMain({
   goBack,
   isBuySectionShow = true,
   isSellSectionShow = true,
+  overrideAchConfig,
 }: IRampPreviewProps) {
   const { t } = useTranslation();
   const updateRef = useRef(MAX_UPDATE_TIME);
   const [receive, setReceive] = useState('');
   const [rate, setRate] = useState('');
-  const { appId, baseUrl, updateAchOrder } = AchConfig;
+  const { appId, baseUrl, updateAchOrder } = useMemo(() => overrideAchConfig || AchConfig, [overrideAchConfig]);
   const data = useMemo(() => {
     return { ...initPreviewData, ...initState };
   }, [initState]);

@@ -12,7 +12,7 @@ import { BaseToken } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
-import { IRampInitState, IRampPreviewInitState } from '../../types';
+import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 
 export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken'> {
@@ -21,6 +21,7 @@ export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | '
   // if `${isShowRamp = true}` Please configure the API service of portkey
   portkeyServiceUrl?: string;
   className?: string;
+  overrideAchConfig?: IAchConfig;
 }
 
 export enum AssetStep {
@@ -37,6 +38,7 @@ export default function AssetMain({
   backIcon,
   className,
   portkeyServiceUrl,
+  overrideAchConfig,
   onOverviewBack,
 }: AssetMainProps) {
   const [{ networkType }] = usePortkey();
@@ -154,6 +156,7 @@ export default function AssetMain({
           }}
           isBuySectionShow={true}
           isSellSectionShow={true}
+          overrideAchConfig={overrideAchConfig}
         />
       )}
     </div>

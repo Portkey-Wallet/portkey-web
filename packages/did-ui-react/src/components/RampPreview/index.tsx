@@ -1,5 +1,5 @@
 import { ChainId } from '@portkey/types';
-import { IRampPreviewInitState } from '../../types';
+import { IAchConfig, IRampPreviewInitState } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampPreviewMain from './index.component';
 
@@ -10,6 +10,7 @@ export interface IRampPreviewProps {
   goBack: () => void;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
+  overrideAchConfig?: IAchConfig;
 }
 
 export default function Ramp(props: IRampPreviewProps) {
