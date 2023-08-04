@@ -25,7 +25,9 @@ export default function RampPage() {
             symbol: 'ELF',
             tokenContractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
           }}
-          isMainnet={true}></Ramp>
+          isMainnet={true}
+          isShowSelectInModal={true}
+        />
       </PortkeyAssetProvider>
     </div>
   );
