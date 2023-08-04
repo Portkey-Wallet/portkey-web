@@ -16,8 +16,6 @@ import {
   IRampService,
   SendSellTransactionParams,
   SendSellTransactionResult,
-  FetchTxFeeParams,
-  FetchTxFeeResult,
 } from '../types/ramp';
 
 export class Ramp<T extends IBaseRequest = IBaseRequest> extends BaseService<T> implements IRampService {
@@ -67,14 +65,6 @@ export class Ramp<T extends IBaseRequest = IBaseRequest> extends BaseService<T> 
     return this._request.send({
       method: 'POST',
       url: '/api/app/thirdPart/alchemy/transaction',
-      params,
-    });
-  }
-
-  fetchTxFee(params: FetchTxFeeParams): Promise<FetchTxFeeResult> {
-    return this._request.send({
-      method: 'GET',
-      url: '/api/app/account/transactionFee',
       params,
     });
   }

@@ -60,7 +60,7 @@ export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T
     const chainIdSearchLanguage = chainIdArray.map(chainId => `token.chainId:${chainId}`).join(' OR ');
 
     const filterKeywords =
-      keyword?.length < 10 ? `token.symbol: *${keyword.toUpperCase().trim()}*` : `token.address:${keyword}`;
+      keyword.length < 10 ? `token.symbol: *${keyword.toUpperCase().trim()}*` : `token.address:${keyword}`;
 
     return this._request.send({
       method: 'GET',
