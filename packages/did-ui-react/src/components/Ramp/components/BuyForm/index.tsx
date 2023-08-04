@@ -17,6 +17,8 @@ export interface IRampFromProps {
   handleTokenSelect: (v: PartialFiatType) => void;
   curToken: ICurToken;
 
+  isShowSelectInModal?: boolean;
+
   errMsg: string;
   warningMsg?: string;
 }
@@ -35,6 +37,8 @@ export default function BuyFrom({
   handleTokenSelect,
   curToken,
 
+  isShowSelectInModal = true,
+
   errMsg,
 }: IRampFromProps) {
   const { t } = useTranslation();
@@ -45,6 +49,7 @@ export default function BuyFrom({
         <CurrencyInput
           value={currencyVal}
           fiatList={fiatList}
+          isShowSelectInModal={isShowSelectInModal}
           onChange={handleCurrencyChange}
           readOnly={false}
           onKeyDown={handleCurrencyKeyDown}
@@ -58,6 +63,7 @@ export default function BuyFrom({
         <TokenInput
           value={tokenVal}
           fiatList={fiatList}
+          isShowSelectInModal={isShowSelectInModal}
           onChange={handleTokenChange}
           readOnly={true}
           onKeyDown={handleTokenKeyDown}

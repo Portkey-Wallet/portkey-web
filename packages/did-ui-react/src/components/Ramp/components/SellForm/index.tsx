@@ -17,6 +17,8 @@ export default function SellFrom({
   handleTokenSelect,
   curToken,
 
+  isShowSelectInModal = true,
+
   errMsg,
   warningMsg,
 }: IRampFromProps) {
@@ -38,6 +40,7 @@ export default function SellFrom({
         <TokenInput
           value={tokenVal}
           fiatList={fiatList}
+          isShowSelectInModal={isShowSelectInModal}
           onChange={tokenChange}
           readOnly={false}
           onKeyDown={handleTokenKeyDown}
@@ -52,6 +55,7 @@ export default function SellFrom({
         <CurrencyInput
           value={currencyVal}
           fiatList={fiatList}
+          isShowSelectInModal={isShowSelectInModal}
           onChange={handleCurrencyChange}
           readOnly={true}
           onKeyDown={handleCurrencyKeyDown}

@@ -79,7 +79,7 @@ export const getCryptoInfo = async (params: { fiat: string }, symbol: string, ne
 export const fetchTxFeeAsync = async (
   chainIds: ChainId[],
 ): Promise<Record<ChainId, FetchTxFeeResultItemTransactionFee>> => {
-  const result = await did.services.ramp.fetchTxFee({
+  const result = await did.services.token.fetchTxFee({
     chainIds,
   });
 
