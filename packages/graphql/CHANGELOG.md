@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.2.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.1...v1.2.1) (2023-08-03)
+
+## [1.2.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.0-alpha.6...v1.2.0) (2023-07-19)
+
+## [1.1.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.0.10...v1.1.0-alpha.6) (2023-07-18)
+
+### Features
+
+- 🎸 Use react context, and support configuration theme ([0761677](https://github.com/Portkey-Wallet/portkey-web/commit/07616771e1399a006a50e5fb932362ab6f21523d))
+
 ## [1.2.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.1.0-alpha.6...v1.2.0) (2023-07-19)
 
 **Note:** Version bump only for package @portkey/graphql

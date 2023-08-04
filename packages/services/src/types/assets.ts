@@ -36,7 +36,7 @@ export type INftCollection = {
 };
 export type FetchAccountNftCollectionListParams = {
   skipCount: number;
-  maxResultCount?: number;
+  maxResultCount: number;
   caAddressInfos: { chainId: string; caAddress: string }[];
   width: number;
   height: number;

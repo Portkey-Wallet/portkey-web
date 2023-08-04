@@ -237,6 +237,108 @@ class FetchRequestMock {
         result = {};
         break;
 
+      // token
+      case '/api/app/account/transactionFee':
+        result = [
+          {
+            chainId: 'AELF',
+            transactionFee: {
+              ach: 0.01,
+              crossChain: 0.01,
+              max: 0.01,
+            },
+          },
+        ];
+        break;
+
+      // assets
+      case '/api/app/user/assets/token':
+        result = {
+          data: [
+            {
+              decimals: 8,
+              symbol: 'ELF',
+              tokenContractAddress: 'tokenContractAddress_mock',
+              balance: '100000000',
+              chainId: 'AELF',
+              balanceInUsd: 1,
+              imageUrl: 'imageUrl_mock',
+              price: 1,
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
+      case '/api/app/user/assets/symbolImages':
+        result = {
+          symbolImages: {
+            ELF: 'imageUrl_mock',
+          },
+        };
+        break;
+      case '/api/app/user/assets/nftCollections':
+        result = {
+          data: [
+            {
+              chainId: 'AELF',
+              collectionName: 'collectionName_mock',
+              imageUrl: 'imageUrl_mock',
+              itemCount: 1,
+              symbol: 'symbol_mock',
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
+      case '/api/app/user/assets/nftItems':
+        result = {
+          data: [
+            {
+              alias: 'alias_mock',
+              balance: '100000000',
+              chainId: 'AELF',
+              imageLargeUrl: 'imageLargeUrl_mock',
+              imageUrl: 'imageUrl_mock',
+              symbol: 'symbol_mock',
+              tokenContractAddress: 'tokenContractAddress_mock',
+              tokenId: 'tokenId_mock',
+              totalSupply: '1',
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
+      case '/api/app/tokens/prices':
+        result = {
+          items: [
+            {
+              symbol: 'ELF',
+              priceInUsd: 1,
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
+      case '/api/app/search/usertokenindex':
+        result = {
+          items: [
+            {
+              isDisplay: true,
+              isDefault: true,
+              id: 'id_mock',
+              token: {
+                chainId: 'AELF',
+                decimals: 8,
+                address: 'address_mock',
+                symbol: 'ELF',
+                id: 'id_mock',
+              },
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
+
       default:
         break;
     }

@@ -1,6 +1,6 @@
 {
   "name": "@portkey/contracts",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,8 +41,8 @@
   },
   "dependencies": {
     "@portkey/provider-types": "^1.0.1-alpha.0",
-    "@portkey/types": "^1.2.0",
-    "@portkey/utils": "^1.2.0",
+    "@portkey/types": "^1.2.1",
+    "@portkey/utils": "^1.2.1",
     "aelf-sdk": "^3.2.44"
   },
   "gitHead": "df2d5f465b4d184997734e87625e1e686adb6822"
