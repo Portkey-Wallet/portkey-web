@@ -1,5 +1,7 @@
 import { ChainId } from '@portkey/types';
-import { SocialLoginFinishHandler } from '../../../types';
+import { useRef, useCallback, useMemo } from 'react';
+import { AccountType, AccountTypeEnum } from '@portkey/services';
+import { GuardianInputInfo, IBaseGetGuardianProps } from '../components';
 import {
   did,
   getGoogleUserInfo,
@@ -7,11 +9,10 @@ import {
   handleErrorMessage,
   parseAppleIdentityToken,
   setLoading,
-} from '../../../utils';
-import { useRef, useCallback, useMemo } from 'react';
-import { GuardianInputInfo, IBaseGetGuardianProps } from '../../types';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
-const useSignHandler = ({
+} from '../utils';
+import { SocialLoginFinishHandler } from '../types';
+
+export const useSignHandler = ({
   defaultChainId,
   onError,
   onSuccess,
@@ -146,5 +147,3 @@ const useSignHandler = ({
     [validateIdentifier, validateEmail, validatePhone, getIdentifierChainId, onFinish, onSocialFinish],
   );
 };
-
-export default useSignHandler;

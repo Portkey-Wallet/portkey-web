@@ -9,8 +9,8 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import ConfigProvider from '../config-provider';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import clsx from 'clsx';
-import useSignHandler from '../SignStep/utils';
 import { usePortkey } from '../context';
+import { useSignHandler } from '../../hooks/useSignHandler';
 import './index.less';
 
 type SocialDesignType = AccountType | 'Scan' | null;

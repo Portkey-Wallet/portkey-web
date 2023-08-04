@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useUpdateEffect } from 'react-use';
 import ConfigProvider from '../config-provider';
 import { usePortkey } from '../context';
-import useSignHandler from '../SignStep/utils';
+import { useSignHandler } from '../../hooks/useSignHandler';
 import './index.less';
 
 export interface CryptoDesignProps extends IBaseGetGuardianProps {

@@ -12,9 +12,9 @@ import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
 import useMedia from '../../hooks/useMedia';
 import { usePortkey } from '../context';
-import useSignHandler from '../SignStep/utils';
 import './index.less';
 import { useUpdateEffect } from 'react-use';
+import { useSignHandler } from '../../hooks/useSignHandler';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
