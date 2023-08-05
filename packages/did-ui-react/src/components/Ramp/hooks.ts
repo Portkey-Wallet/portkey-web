@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { useCallback, useMemo, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { did, randomId, setLoading } from '../../utils';
 import { ACH_MERCHANT_NAME, DEFAULT_CHAIN_ID, SELL_SOCKET_TIMEOUT, STAGE } from '../../constants/ramp';
 import SparkMD5 from 'spark-md5';
@@ -8,15 +8,17 @@ import { ISellTransferParams, SellTransferParams, IUseHandleAchSellParams } from
 import { timesDecimals } from '../../utils/converter';
 import { signalrSell } from '@portkey/socket';
 import { RequestOrderTransferredType, AchTxAddressReceivedType } from '@portkey/socket';
-import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getTransactionRawByContract } from '../../utils/sandboxUtil/getTransactionRaw';
 import { getChain } from '../../hooks/useChainInfo';
+import { IBaseWalletAccount } from '@portkey/types';
+import { CAInfo } from '@portkey/did';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 
-export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
+export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransferParams) => {
   const status = useRef<STAGE>(STAGE.ACHTXADS);
 
   return useCallback(
-    async ({ merchantName, orderId, paymentSellTransfer }: SellTransferParams) => {
+    async ({ merchantName, orderId, managementAccount, caInfo, paymentSellTransfer }: SellTransferParams) => {
       if (!isMainnet || merchantName !== ACH_MERCHANT_NAME) return;
 
       let signalrAchTxRemove: (() => void) | undefined;
@@ -26,7 +28,7 @@ export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
 
       try {
         await signalrSell.doOpen({
-          url: `/ca`,
+          url: `${portkeyWebSocketUrl}/ca`,
           clientId,
         });
       } catch (error) {
@@ -40,14 +42,15 @@ export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
       });
 
       const signalrSellPromise = new Promise<RequestOrderTransferredType | null>((resolve) => {
+        // Step1
         const { remove: removeAchTx } = signalrSell.onAchTxAddressReceived({ clientId, orderId }, async (data) => {
           if (data === null) {
             throw new Error('Transaction failed.');
           }
-
+          // Step2
           try {
             status.current = STAGE.TRANSACTION;
-            const result = await paymentSellTransfer(data);
+            const result = await paymentSellTransfer({ ...data, managementAccount, caInfo });
             await did.services.ramp.sendSellTransaction({
               merchantName: ACH_MERCHANT_NAME,
               orderId,
@@ -59,7 +62,7 @@ export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
             resolve(null);
             return;
           }
-
+          // Step3
           const { remove: removeRes } = signalrSell.onRequestOrderTransferred({ clientId, orderId }, async (data) => {
             status.current = STAGE.ORDER;
             resolve(data);
@@ -72,7 +75,6 @@ export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
       });
 
       const signalrSellResult = await Promise.race([timerPromise, signalrSellPromise]);
-
       if (signalrSellResult === null) throw new Error('Transaction failed.');
       if (signalrSellResult === 'timeout') {
         if (status.current === STAGE.ACHTXADS) throw new Error('Transaction failed.');
@@ -94,21 +96,26 @@ export const useSellTransfer = ({ isMainnet }: ISellTransferParams) => {
       }
       signalrSell.stop();
     },
-    [isMainnet],
+    [isMainnet, portkeyWebSocketUrl],
   );
 };
 
-export const useHandleAchSell = ({ isMainnet, tokenInfo }: IUseHandleAchSellParams) => {
-  const sellTransfer = useSellTransfer({ isMainnet });
+export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: IUseHandleAchSellParams) => {
+  const sellTransfer = useSellTransfer({ isMainnet, portkeyWebSocketUrl });
   const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
 
-  const [{ managementAccount, caInfo }] = usePortkeyAsset();
-  const privateKey = useMemo(() => managementAccount?.wallet?.privateKey, [managementAccount?.wallet?.privateKey]);
-  const keyPair = useMemo(() => managementAccount?.wallet?.keyPair, [managementAccount?.wallet?.keyPair]);
-
   const paymentSellTransfer = useCallback(
-    async (params: AchTxAddressReceivedType) => {
+    async (
+      params: AchTxAddressReceivedType & {
+        managementAccount: IBaseWalletAccount;
+        caInfo: {
+          [key: string]: CAInfo;
+        };
+      },
+    ) => {
       const chainInfo = await getChain(chainId.current);
+      const privateKey = params.managementAccount?.wallet?.privateKey;
+      const keyPair = params.managementAccount?.wallet?.keyPair;
 
       if (!chainInfo) throw new Error('Sell Transfer: No ChainInfo');
 
@@ -123,7 +130,7 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo }: IUseHandleAchSellPara
         tokenContractAddress: tokenInfo.tokenContractAddress || '',
         privateKey,
         methodName: 'Transfer',
-        caHash: caInfo?.[chainId.current]?.caHash || '',
+        caHash: params.caInfo?.[chainId.current]?.caHash || '',
         paramsOption: {
           symbol: tokenInfo.symbol,
           to: `ELF_${params.address}_AELF`,
@@ -142,19 +149,31 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo }: IUseHandleAchSellPara
         signature,
       };
     },
-    [caInfo, keyPair, privateKey, tokenInfo],
+    [tokenInfo],
   );
+  const managementAccountRef = useRef<IBaseWalletAccount>();
+  const caInfoRef = useRef<{ [key: string]: CAInfo }>();
+  const initializedRef = useRef<boolean>();
+  const [{ managementAccount, caInfo, initialized }] = usePortkeyAsset();
+
+  managementAccountRef.current = managementAccount;
+  caInfoRef.current = caInfo;
+  initializedRef.current = initialized;
 
   return useCallback(
-    async (orderId: string) => {
+    async ({ orderId }: { orderId: string }) => {
       try {
-        setLoading(true, 'Payment is being processed and may take around 10 seconds to complete.');
-        await sellTransfer({
-          merchantName: ACH_MERCHANT_NAME,
-          orderId,
-          paymentSellTransfer,
-        });
-        message.success('Transaction completed.');
+        if (initializedRef && managementAccountRef.current && caInfoRef.current) {
+          setLoading(true, 'Payment is being processed and may take around 10 seconds to complete.');
+          await sellTransfer({
+            merchantName: ACH_MERCHANT_NAME,
+            orderId,
+            managementAccount: managementAccountRef.current,
+            caInfo: caInfoRef.current,
+            paymentSellTransfer,
+          });
+          message.success('Transaction completed.');
+        }
       } catch (error: any) {
         if (error?.code === 'TIMEOUT') {
           message.warn(error?.message || 'The waiting time is too long, it will be put on hold in the background.');

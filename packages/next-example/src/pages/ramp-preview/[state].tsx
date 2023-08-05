@@ -8,9 +8,6 @@ const myStore = new Store();
 
 ConfigProvider.setGlobalConfig({
   storageMethod: myStore,
-  // requestDefaults: {
-  //   baseURL: isTest ? '/test' : undefined,
-  // },
 });
 
 export default function RampPreviewPage() {
@@ -31,7 +28,12 @@ export default function RampPreviewPage() {
           <RampPreview
             initState={initState}
             chainId={chainId}
-            portkeyServiceUrl="https://did-portkey.portkey.finance"
+            portkeyServiceUrl="https://localtest-applesign.portkey.finance"
+            overrideAchConfig={{
+              appId: 'f83Is2y7L425rxl8',
+              baseUrl: 'https://ramptest.alchemypay.org',
+              updateAchOrder: '/api/app/thirdPart/order/alchemy',
+            }}
             goBack={function (): void {
               router.back();
             }}
