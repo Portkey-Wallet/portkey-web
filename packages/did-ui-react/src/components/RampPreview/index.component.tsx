@@ -29,17 +29,18 @@ import { useGetAchTokenInfo } from './hooks';
 
 export default function RampPreviewMain({
   initState,
-  chainId = DEFAULT_CHAIN_ID,
   portkeyServiceUrl,
-  goBack,
+  chainId = DEFAULT_CHAIN_ID,
+  overrideAchConfig,
   isBuySectionShow = true,
   isSellSectionShow = true,
+  goBack,
 }: IRampPreviewProps) {
   const { t } = useTranslation();
   const updateRef = useRef(MAX_UPDATE_TIME);
   const [receive, setReceive] = useState('');
   const [rate, setRate] = useState('');
-  const { appId, baseUrl, updateAchOrder } = AchConfig;
+  const { appId, baseUrl, updateAchOrder } = useMemo(() => overrideAchConfig || AchConfig, [overrideAchConfig]);
   const data = useMemo(() => {
     return { ...initPreviewData, ...initState };
   }, [initState]);

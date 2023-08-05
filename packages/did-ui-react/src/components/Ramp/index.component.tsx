@@ -21,6 +21,7 @@ import {
   SYNCHRONIZING_CHAIN_TEXT,
   DEFAULT_CHAIN_ID,
   DEFAULT_SYMBOL,
+  RAMP_WEB_PAGE_ROUTE,
 } from '../../constants/ramp';
 import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../types';
 import { divDecimals, formatAmountShow } from '../../utils/converter';
@@ -39,12 +40,13 @@ import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
 export default function RampMain({
   initState,
   tokenInfo,
-  goBack,
-  goPreview,
+  portkeyWebSocketUrl,
+  isMainnet,
   isBuySectionShow = true,
   isSellSectionShow = true,
-  isMainnet,
   isShowSelectInModal = true,
+  goBack,
+  goPreview,
 }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
@@ -80,23 +82,19 @@ export default function RampMain({
   );
 
   const isSell = useRef(0); // guaranteed to make only one transfer
-  const handleAchSell = useHandleAchSell({ isMainnet, tokenInfo });
+  const handleAchSell = useHandleAchSell({ isMainnet, tokenInfo, portkeyWebSocketUrl });
 
   useEffectOnce(() => {
-    window?.addEventListener(
-      'message',
-      function (event) {
-        if (event.data.type === 'CHECK_SELL_RESULT') {
-          checkAchSell(event.data.data);
-        }
-      },
-      false,
-    );
+    window.onmessage = function (event) {
+      if (event.data.type === 'CHECK_SELL_RESULT') {
+        checkAchSell(event.data.data);
+      }
+    };
     const checkAchSell = async (data: any) => {
       if (isSell.current === 0) {
         isSell.current = 1;
         const orderNo = JSON.parse(data?.payload).orderNo;
-        await handleAchSell(orderNo);
+        await handleAchSell({ orderId: orderNo });
       }
     };
   });

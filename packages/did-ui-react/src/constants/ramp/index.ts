@@ -29,18 +29,18 @@ export enum TransDirectEnum {
 }
 
 // testnet
-export const AchConfig: IAchConfig = {
-  appId: 'f83Is2y7L425rxl8',
-  baseUrl: 'https://ramptest.alchemypay.org',
-  updateAchOrder: '/api/app/thirdPart/order/alchemy',
-};
-
-// mainnet
 // export const AchConfig: IAchConfig = {
-//   appId: 'P0e0l39jipsNYT46',
-//   baseUrl: 'https://ramp.alchemypay.org',
+//   appId: 'f83Is2y7L425rxl8',
+//   baseUrl: 'https://ramptest.alchemypay.org',
 //   updateAchOrder: '/api/app/thirdPart/order/alchemy',
 // };
+
+// mainnet
+export const AchConfig: IAchConfig = {
+  appId: 'P0e0l39jipsNYT46',
+  baseUrl: 'https://ramp.alchemypay.org',
+  updateAchOrder: '/api/app/thirdPart/order/alchemy',
+};
 
 export const DEFAULT_CHAIN_ID = 'AELF';
 
