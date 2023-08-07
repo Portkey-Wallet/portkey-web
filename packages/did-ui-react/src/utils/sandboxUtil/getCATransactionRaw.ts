@@ -61,7 +61,7 @@ export const getCATransactionRawOnWeb = async (params: Omit<CATransactionRawPara
   const methods = await getContractMethods((contract as any).aelfInstance, options.contractAddress);
   const inputType = methods[options.methodName];
 
-  options.args = await encodedParams(inputType, options.args);
+  options.args = await encodedParams(inputType, paramsOption);
 
   const rawResult = await contract.encodedTx('ManagerForwardCall', options);
   if (!rawResult || !rawResult.data) {
