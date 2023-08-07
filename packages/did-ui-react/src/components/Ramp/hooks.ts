@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { useCallback, useRef } from 'react';
-import { did, randomId, setLoading } from '../../utils';
+import { dealURLLastChar, did, randomId, setLoading } from '../../utils';
 import { ACH_MERCHANT_NAME, DEFAULT_CHAIN_ID, SELL_SOCKET_TIMEOUT, STAGE } from '../../constants/ramp';
 import SparkMD5 from 'spark-md5';
 import AElf from 'aelf-sdk';
@@ -8,11 +8,18 @@ import { ISellTransferParams, SellTransferParams, IUseHandleAchSellParams } from
 import { timesDecimals } from '../../utils/converter';
 import { signalrSell } from '@portkey/socket';
 import { RequestOrderTransferredType, AchTxAddressReceivedType } from '@portkey/socket';
-import { getTransactionRawByContract } from '../../utils/sandboxUtil/getTransactionRaw';
+import { getCATransactionRaw } from '../../utils/sandboxUtil/getCATransactionRaw';
 import { getChain } from '../../hooks/useChainInfo';
 import { IBaseWalletAccount } from '@portkey/types';
 import { CAInfo } from '@portkey/did';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
+import { usePortkey } from '../context';
+
+interface TransferParams {
+  symbol: string;
+  to: string;
+  amount: number;
+}
 
 export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransferParams) => {
   const status = useRef<STAGE>(STAGE.ACHTXADS);
@@ -28,7 +35,7 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
 
       try {
         await signalrSell.doOpen({
-          url: `${portkeyWebSocketUrl}/ca`,
+          url: dealURLLastChar(portkeyWebSocketUrl),
           clientId,
         });
       } catch (error) {
@@ -103,6 +110,7 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
 export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: IUseHandleAchSellParams) => {
   const sellTransfer = useSellTransfer({ isMainnet, portkeyWebSocketUrl });
   const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
+  const [{ chainType }] = usePortkey();
 
   const paymentSellTransfer = useCallback(
     async (
@@ -125,9 +133,10 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
 
       if (!keyPair) throw new Error('Sell Transfer: No keyPair');
 
-      const rawResult = await getTransactionRawByContract({
+      const rawResult = await getCATransactionRaw<TransferParams>({
         chainId: chainId.current,
-        tokenContractAddress: tokenInfo.tokenContractAddress || '',
+        contractAddress: tokenInfo.tokenContractAddress || '',
+        chainType,
         privateKey,
         methodName: 'Transfer',
         caHash: params.caInfo?.[chainId.current]?.caHash || '',
@@ -137,19 +146,19 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
           amount: timesDecimals(params.cryptoAmount, tokenInfo.decimals).toNumber(),
         },
       });
-      if (!rawResult || !rawResult.result) {
+      if (!rawResult) {
         throw new Error('Failed to get raw transaction.');
       }
       const publicKey = keyPair.getPublic('hex');
-      const message = SparkMD5.hash(`${params.orderId}${rawResult.result.data}`);
+      const message = SparkMD5.hash(`${params.orderId}${rawResult}`);
       const signature = AElf.wallet.sign(Buffer.from(message).toString('hex'), keyPair).toString('hex');
       return {
-        rawTransaction: rawResult.result.data,
+        rawTransaction: rawResult,
         publicKey,
         signature,
       };
     },
-    [tokenInfo],
+    [chainType, tokenInfo],
   );
   const managementAccountRef = useRef<IBaseWalletAccount>();
   const caInfoRef = useRef<{ [key: string]: CAInfo }>();

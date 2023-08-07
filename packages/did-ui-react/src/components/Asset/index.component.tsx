@@ -6,7 +6,7 @@ import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ChainId } from '@portkey/types';
-import { did } from '../../utils';
+import { dealURLLastChar, did } from '../../utils';
 import { IUserTokenItem } from '@portkey/services';
 import { BaseToken } from '../types/assets';
 import { sleep } from '@portkey/utils';
@@ -14,12 +14,13 @@ import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
 import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
+import ConfigProvider from '../config-provider';
+import { message } from 'antd';
 
 export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken'> {
   onOverviewBack?: () => void;
   rampState?: IRampInitState;
   // if `${isShowRamp = true}` Please configure the API service of portkey
-  portkeyServiceUrl?: string;
   className?: string;
   overrideAchConfig?: IAchConfig;
 }
@@ -37,13 +38,16 @@ export default function AssetMain({
   faucet,
   backIcon,
   className,
-  portkeyServiceUrl,
   overrideAchConfig,
   onOverviewBack,
 }: AssetMainProps) {
   const [{ networkType }] = usePortkey();
   const [{ caInfo, initialized }, { dispatch }] = usePortkeyAsset();
-
+  const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
+  const portkeyWebSocketUrl = useMemo(
+    () => ConfigProvider.config.socketUrl || `${dealURLLastChar(portkeyServiceUrl)}/ca`,
+    [portkeyServiceUrl],
+  );
   const [assetStep, setAssetStep] = useState<AssetStep>();
 
   const maxNftNum = useNFTMaxCount();
@@ -107,6 +111,7 @@ export default function AssetMain({
             setAssetStep(AssetStep.receive);
           }}
           onBuy={async (v) => {
+            if (!portkeyWebSocketUrl) return message.error('Please configure socket service url in setGlobalConfig');
             setSelectToken(v);
             await sleep(50);
             setAssetStep(AssetStep.ramp);
@@ -133,6 +138,7 @@ export default function AssetMain({
       {assetStep === AssetStep.ramp && selectToken && (
         <RampMain
           initState={rampState}
+          portkeyWebSocketUrl={portkeyWebSocketUrl}
           tokenInfo={{
             ...selectToken,
             tokenContractAddress: selectToken.address,

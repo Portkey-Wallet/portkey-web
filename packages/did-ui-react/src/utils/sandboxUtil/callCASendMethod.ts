@@ -61,7 +61,12 @@ export const callCASendMethodOnWeb = async (params: CallCASendMethodParams) => {
     rpcUrl: chainInfo.endPoint,
   });
 
-  const req = await contract.callSendMethod(params.methodName, account, params.paramsOption, params.sendOptions);
+  const req = await contract.callSendMethod(
+    params.methodName,
+    account.address,
+    params.paramsOption,
+    params.sendOptions,
+  );
   console.log(req, params.paramsOption, 'req===callCASendMethod');
   if (req.error) throw handleErrorMessage(req);
   return req.data;

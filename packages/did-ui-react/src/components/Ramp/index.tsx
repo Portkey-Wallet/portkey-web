@@ -5,7 +5,6 @@ import RampMain from './index.component';
 
 export interface IRampProps extends IUseHandleAchSellParams {
   initState?: IRampInitState;
-  portkeyWebSocketUrl: string; // websocket url
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
   isShowSelectInModal?: boolean; // to control the selection UI of fiat currency and token

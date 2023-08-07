@@ -11,4 +11,5 @@ export interface GlobalConfigProps extends IConfig {
   reCaptchaConfig?: BaseReCaptcha;
   socketUrl?: string;
   apiUrl?: string;
+  serviceUrl?: string;
 }
