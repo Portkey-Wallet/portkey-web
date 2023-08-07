@@ -9,6 +9,6 @@ export const DAY = HOUR * 24;
 export const commonAccount = aelf.getWallet(COMMON_PRIVATE);
 export const portkeyDidUIPrefix = '@portkey/did-ui-sdk:';
 
-// export const WEB_PAGE = 'https://openlogin.portkey.finance';
-export const WEB_PAGE = 'https://openlogin-test.portkey.finance';
+export const WEB_PAGE = 'https://openlogin.portkey.finance';
+// export const WEB_PAGE = 'https://openlogin-test.portkey.finance';
 // export const WEB_PAGE = 'http://localhost:3000';

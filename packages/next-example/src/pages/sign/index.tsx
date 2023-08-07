@@ -21,6 +21,7 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
+  serviceUrl: 'https://localtest-applesign.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
@@ -32,7 +33,7 @@ export default function Sign() {
   const ref = useRef<ISignIn>();
   const [defaultLifeCycle, setLifeCycle] = useState<any>();
   const [design, setDesign] = useState<TDesign>('Web2Design');
-  const [uiType, setUIType] = useState<UI_TYPE>('Full');
+  const [uiType, setUIType] = useState<UI_TYPE>('Modal');
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
   }, []);

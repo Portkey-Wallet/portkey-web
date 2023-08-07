@@ -1,5 +1,5 @@
-import { IContract, SendOptions, SendResult } from '@portkey/types';
-import { sleep } from '@portkey/utils';
+import { CallOptions, IContract, SendOptions, SendResult, ViewResult } from '@portkey/types';
+import { aelf, sleep } from '@portkey/utils';
 
 import { AElfContract } from './aelfContract';
 import { CAContractProps } from './types';
@@ -69,6 +69,48 @@ export class AElfCAContract extends AElfContract implements IContract {
       return { transactionId: TransactionId };
     } catch (error) {
       return { error: handleContractError(error) };
+    }
+  }
+
+  public async encodedTx<T = any>(
+    functionName: string,
+    paramsOption?: any,
+    _callOptions?: CallOptions,
+  ): Promise<ViewResult<T>> {
+    if (!this.aelfContract) return { error: { code: 401, message: 'Contract init error' } };
+    if (!this.aelfInstance) return { error: { code: 401, message: 'instance init error' } };
+    try {
+      let _params: any, _functionName: string;
+      if (this.address !== this.caContractAddress) {
+        _functionName = 'ManagerForwardCall';
+        const methodName = handleFunctionName(functionName);
+        _params = await handleContractParams({
+          instance: this.aelfInstance,
+          paramsOption: {
+            args: paramsOption,
+            caHash: this.caHash,
+            methodName,
+            contractAddress: this.address,
+          },
+          functionName: _functionName,
+        });
+      } else {
+        _functionName = handleFunctionName(functionName);
+        _params = await handleContractParams({
+          instance: this.aelfInstance,
+          paramsOption,
+          functionName: _functionName,
+        });
+      }
+      const data = await aelf.encodedTx({
+        instance: this.aelfInstance,
+        contract: this.aelfContract,
+        paramsOption: _params,
+        functionName: _functionName,
+      });
+      return { data };
+    } catch (error) {
+      return handleContractError(error);
     }
   }
 }

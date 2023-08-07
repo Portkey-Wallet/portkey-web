@@ -46,7 +46,6 @@ export default function AssetOverviewMain({
   const [tokenOpen, setTokenOpen] = useState(false);
   const maxNftNum = useNFTMaxCount();
 
-  console.log(caHash, managementAccount?.privateKey, 'callCASendMethod');
   const caAddressInfos = useMemo(() => {
     if (!caInfo) return;
     return Object.entries(caInfo ?? {}).map(([chainId, info]) => ({
@@ -60,7 +59,6 @@ export default function AssetOverviewMain({
     const faucetContractAddress = faucet?.faucetContractAddress;
     if (faucetUrl && networkType !== MAINNET) return window.open(faucetUrl);
     if (!faucetContractAddress) return message.error('Please configure `faucets`');
-    console.log(caHash, managementAccount?.privateKey, 'callCASendMethod');
     if (!caHash || !managementAccount?.privateKey) return message.error('Please confirm whether to log in!');
     try {
       setLoading(true);

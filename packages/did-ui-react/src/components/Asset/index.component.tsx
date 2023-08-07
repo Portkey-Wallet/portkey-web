@@ -12,18 +12,11 @@ import { BaseToken } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
-import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
+import { IAchConfig, IRampInitState, IRampPreviewInitState, RampTypeEnum } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
 import { message } from 'antd';
-
-export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken'> {
-  onOverviewBack?: () => void;
-  rampState?: IRampInitState;
-  // if `${isShowRamp = true}` Please configure the API service of portkey
-  className?: string;
-  overrideAchConfig?: IAchConfig;
-}
+import { useUpdateEffect } from 'react-use';
 
 export enum AssetStep {
   overview = 'overview',
@@ -32,7 +25,15 @@ export enum AssetStep {
   rampPreview = 'rampPreview',
 }
 
-export default function AssetMain({
+export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken'> {
+  onOverviewBack?: () => void;
+  rampState?: IRampInitState;
+  className?: string;
+  overrideAchConfig?: IAchConfig;
+  onLifeCycleChange?(liftCycle: `${AssetStep}`): void;
+}
+
+function AssetMain({
   isShowRamp = true,
   rampState,
   faucet,
@@ -40,15 +41,24 @@ export default function AssetMain({
   className,
   overrideAchConfig,
   onOverviewBack,
+  onLifeCycleChange,
 }: AssetMainProps) {
   const [{ networkType }] = usePortkey();
   const [{ caInfo, initialized }, { dispatch }] = usePortkeyAsset();
   const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
+
   const portkeyWebSocketUrl = useMemo(
     () => ConfigProvider.config.socketUrl || `${dealURLLastChar(portkeyServiceUrl)}/ca`,
     [portkeyServiceUrl],
   );
+
   const [assetStep, setAssetStep] = useState<AssetStep>();
+
+  console.log(portkeyWebSocketUrl, portkeyWebSocketUrl, 'portkeyWebSocketUrl===');
+
+  useUpdateEffect(() => {
+    onLifeCycleChange?.(assetStep || AssetStep.overview);
+  }, [assetStep]);
 
   const maxNftNum = useNFTMaxCount();
 
@@ -154,11 +164,15 @@ export default function AssetMain({
           isMainnet={networkType === MAINNET}
         />
       )}
-      {assetStep === AssetStep.rampPreview && rampPreview && (
+      {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
         <RampPreviewMain
           initState={rampPreview}
           portkeyServiceUrl={portkeyServiceUrl || ''}
+          chainId={selectToken.chainId}
           goBack={() => {
+            if (rampState?.side) {
+              rampState.side = RampTypeEnum.SELL;
+            }
             setAssetStep(AssetStep.ramp);
           }}
           isBuySectionShow={true}
@@ -169,3 +183,5 @@ export default function AssetMain({
     </div>
   );
 }
+
+export default AssetMain;

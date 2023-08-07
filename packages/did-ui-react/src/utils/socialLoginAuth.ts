@@ -1,8 +1,6 @@
+import { WEB_PAGE } from '../constants';
 import { ISocialLogin } from '../types';
 import { stringify } from 'query-string';
-const loginPlatform = 'https://openlogin.portkey.finance';
-// const loginPlatform = 'https://openlogin-test.portkey.finance';
-// const loginPlatform = 'http://localhost:3000';
 
 export const socialLoginAuth = ({
   type,
@@ -37,7 +35,7 @@ export const socialLoginAuth = ({
       window.removeEventListener('message', onMessage);
     };
     window.addEventListener('message', onMessage);
-    const windowOpener = window.open(`${loginPlatform}/social-login/${type}?${stringify({ clientId, redirectURI })}`);
+    const windowOpener = window.open(`${WEB_PAGE}/social-login/${type}?${stringify({ clientId, redirectURI })}`);
 
     timer = setInterval(() => {
       if (windowOpener?.closed) {

@@ -79,13 +79,19 @@ export class AElfContract extends BaseContract implements IPortkeyContract {
     if (!this.aelfContract) return { error: { code: 401, message: 'Contract init error' } };
     if (!this.aelfInstance) return { error: { code: 401, message: 'instance init error' } };
     try {
-      const raw = await aelf.encodedTx({
+      const _functionName = handleFunctionName(functionName);
+      const _params = await handleContractParams({
+        instance: this.aelfInstance,
+        paramsOption,
+        functionName: _functionName,
+      });
+      const data = await aelf.encodedTx({
         instance: this.aelfInstance,
         contract: this.aelfContract,
-        functionName,
-        paramsOption,
+        paramsOption: _params,
+        functionName: _functionName,
       });
-      return { data: raw };
+      return { data };
     } catch (error) {
       return handleContractError(error);
     }

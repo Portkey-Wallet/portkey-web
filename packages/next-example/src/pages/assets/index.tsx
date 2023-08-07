@@ -18,6 +18,9 @@ export default function Assets() {
         faucet={{
           faucetContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',
         }}
+        onLifeCycleChange={lifeCycle => {
+          console.log(lifeCycle, 'onLifeCycleChange');
+        }}
       />
     </PortkeyAssetProvider>
   );

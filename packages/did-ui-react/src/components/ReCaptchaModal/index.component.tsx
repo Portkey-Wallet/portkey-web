@@ -8,9 +8,10 @@ import { setReCaptchaModal } from '../../utils/reCaptcha';
 import { defaultReCaptchaSiteKey } from '../../constants/reCaptcha';
 import { usePortkey } from '../context';
 import { useUpdateEffect } from 'react-use';
+import { WEB_PAGE } from '../../constants';
 import './index.less';
 
-const ReCaptchaIframe = 'https://openlogin-test.portkey.finance/recaptcha';
+const ReCaptchaIframe = `${WEB_PAGE}/recaptcha`;
 
 export default function ReCaptchaModal() {
   const reCaptchaInfo = useReCaptcha();
