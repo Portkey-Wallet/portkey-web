@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.2...v1.3.0-alpha.0) (2023-08-07)
+
+### Features
+
+- 🎸 add assets service ([e74ca66](https://github.com/Portkey-Wallet/portkey-web/commit/e74ca66845a61d2febec13a35b15803ca2969504))
+- 🎸 add assetsService getUserTokenList ([eab582d](https://github.com/Portkey-Wallet/portkey-web/commit/eab582d66960119de27e468a551da60ee93ba927))
+- 🎸 add getRecommendationVerifier API ([1db4d76](https://github.com/Portkey-Wallet/portkey-web/commit/1db4d7634a2180af5501ce584ad0186cfd1f0b0e))
+- 🎸 add ramp service ([da84b3f](https://github.com/Portkey-Wallet/portkey-web/commit/da84b3fe260d108a5c15b3e8054bfef059e5130a))
+- 🎸 add token service & ut ([74d614e](https://github.com/Portkey-Wallet/portkey-web/commit/74d614e9beab60c8de809bc37e342466a94ef3c6))
+- 🎸 adjust VerifierItem ([9829200](https://github.com/Portkey-Wallet/portkey-web/commit/9829200539da68bdba30478547dfd9f1a2aad038))
+- 🎸 assets ([b3b12cd](https://github.com/Portkey-Wallet/portkey-web/commit/b3b12cdd1054c705cd8eabfbb8d69eac6a6e9816))
+- 🎸 change ts ([af52d05](https://github.com/Portkey-Wallet/portkey-web/commit/af52d05b6f7e13521912079ed91348ef2e2635b1))
+- 🎸 dev ramp ([42c0df6](https://github.com/Portkey-Wallet/portkey-web/commit/42c0df6bf58e874bebeb424c3b24024889748602))
+- 🎸 dev ramp ([9a3d881](https://github.com/Portkey-Wallet/portkey-web/commit/9a3d881898b1e86f790d25d7169a6292743f81dd))
+- 🎸 dev ramp route ([d881b9c](https://github.com/Portkey-Wallet/portkey-web/commit/d881b9cb2184a13351dd61ff6d881edc4da8f72f))
+- 🎸 get token by faucet ([9d8211b](https://github.com/Portkey-Wallet/portkey-web/commit/9d8211be2484ffc912953e98714c161c7f81d1cf))
+- 🎸 services ([2209d6e](https://github.com/Portkey-Wallet/portkey-web/commit/2209d6e492849ae9816d1edb71119e6abb03fd61))
+
 ## [1.2.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.1...v1.2.2) (2023-08-04)
 
 **Note:** Version bump only for package @portkey/services

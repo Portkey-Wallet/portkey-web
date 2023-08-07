@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.2...v1.3.0-alpha.0) (2023-08-07)
+
+### Features
+
+- 🎸 add token service & ut ([74d614e](https://github.com/Portkey-Wallet/portkey-web/commit/74d614e9beab60c8de809bc37e342466a94ef3c6))
+- 🎸 adjust VerifierItem ([9829200](https://github.com/Portkey-Wallet/portkey-web/commit/9829200539da68bdba30478547dfd9f1a2aad038))
+- 🎸 assets ([b3b12cd](https://github.com/Portkey-Wallet/portkey-web/commit/b3b12cdd1054c705cd8eabfbb8d69eac6a6e9816))
+- 🎸 createByPrivateKey ([015bbaf](https://github.com/Portkey-Wallet/portkey-web/commit/015bbafaafac5476be9a9685fb9fdf88b8df5b66))
+- 🎸 dev ramp style ([449fa2a](https://github.com/Portkey-Wallet/portkey-web/commit/449fa2a0a40e5e9ae7171c6eff4ddadacbdf480b))
+- 🎸 services ([2209d6e](https://github.com/Portkey-Wallet/portkey-web/commit/2209d6e492849ae9816d1edb71119e6abb03fd61))
+
 ## [1.2.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.1...v1.2.2) (2023-08-04)
 
 **Note:** Version bump only for package @portkey/did

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.2...v1.3.0-alpha.0) (2023-08-07)
+
+### Features
+
+- 🎸 catch sell socket error ([7403616](https://github.com/Portkey-Wallet/portkey-web/commit/740361680ee3f51afa5b5edaeab711e94fb65cdc))
+- 🎸 dev sell back ([06a250f](https://github.com/Portkey-Wallet/portkey-web/commit/06a250f928c14cb958102c87d541d413bfb80368))
+
 ## [1.2.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.1...v1.2.2) (2023-08-04)
 
 **Note:** Version bump only for package @portkey/socket

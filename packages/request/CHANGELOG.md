@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.2...v1.3.0-alpha.0) (2023-08-07)
+
+### Features
+
+- 🎸 assets ([b3b12cd](https://github.com/Portkey-Wallet/portkey-web/commit/b3b12cdd1054c705cd8eabfbb8d69eac6a6e9816))
+
 ## [1.2.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.1...v1.2.2) (2023-08-04)
 
 **Note:** Version bump only for package @portkey/request

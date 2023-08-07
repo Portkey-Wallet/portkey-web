@@ -3,6 +3,53 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.2...v1.3.0-alpha.0) (2023-08-07)
+
+### Features
+
+- 🎸 add asset provider ([de51a5d](https://github.com/Portkey-Wallet/portkey-web/commit/de51a5d000675aca82968c477bb65bc55fc57826))
+- 🎸 add default sign type ([1988237](https://github.com/Portkey-Wallet/portkey-web/commit/198823755ed0c39b58c6e14f77aa420c5fd302e8))
+- 🎸 add override ach config ([a34df42](https://github.com/Portkey-Wallet/portkey-web/commit/a34df427f47c850042a4f44900cd50aa6b3b3209))
+- 🎸 add ramp selection ui type ([96220c7](https://github.com/Portkey-Wallet/portkey-web/commit/96220c75203601ff07af1c7cc60cec18cb98951b))
+- 🎸 adjust VerifierItem ([9829200](https://github.com/Portkey-Wallet/portkey-web/commit/9829200539da68bdba30478547dfd9f1a2aad038))
+- 🎸 assets ([b3b12cd](https://github.com/Portkey-Wallet/portkey-web/commit/b3b12cdd1054c705cd8eabfbb8d69eac6a6e9816))
+- 🎸 catch sell socket error ([7403616](https://github.com/Portkey-Wallet/portkey-web/commit/740361680ee3f51afa5b5edaeab711e94fb65cdc))
+- 🎸 change txfee ([f439c0f](https://github.com/Portkey-Wallet/portkey-web/commit/f439c0fef39928fa0612fbab2bf769356b4fa28c))
+- 🎸 connect ramp ([567fb5c](https://github.com/Portkey-Wallet/portkey-web/commit/567fb5c34eb7e0cb9992dcbe0ca8ed67fa156bdd))
+- 🎸 delete useless code ([f771968](https://github.com/Portkey-Wallet/portkey-web/commit/f7719689d8fa6553d78079e6a9ff24d5503b614c))
+- 🎸 dev get data from aelf contract ([2d1d0da](https://github.com/Portkey-Wallet/portkey-web/commit/2d1d0da8daa3b80e79dfa05190e12accf69d83b7))
+- 🎸 dev ramp ([42c0df6](https://github.com/Portkey-Wallet/portkey-web/commit/42c0df6bf58e874bebeb424c3b24024889748602))
+- 🎸 dev ramp ([9a3d881](https://github.com/Portkey-Wallet/portkey-web/commit/9a3d881898b1e86f790d25d7169a6292743f81dd))
+- 🎸 dev ramp api ([3ddef87](https://github.com/Portkey-Wallet/portkey-web/commit/3ddef872d9e396cd8ce690cd0603d07192754a87))
+- 🎸 dev ramp jump ([c7ee13b](https://github.com/Portkey-Wallet/portkey-web/commit/c7ee13b68fbd4417631456f9c8ccdff8a6adc799))
+- 🎸 dev ramp params ([f3a1f27](https://github.com/Portkey-Wallet/portkey-web/commit/f3a1f27d193cbcfff547d8aaac64e5948ae13f09))
+- 🎸 dev ramp preview api ([59ab75a](https://github.com/Portkey-Wallet/portkey-web/commit/59ab75ab2533902271610d16bc88160d3570ebc3))
+- 🎸 dev ramp route ([d881b9c](https://github.com/Portkey-Wallet/portkey-web/commit/d881b9cb2184a13351dd61ff6d881edc4da8f72f))
+- 🎸 dev ramp style ([449fa2a](https://github.com/Portkey-Wallet/portkey-web/commit/449fa2a0a40e5e9ae7171c6eff4ddadacbdf480b))
+- 🎸 dev sell ([ee3e0d9](https://github.com/Portkey-Wallet/portkey-web/commit/ee3e0d97b7c0ed37d6118016a3f11d2f60ef145e))
+- 🎸 dev sell back ([06a250f](https://github.com/Portkey-Wallet/portkey-web/commit/06a250f928c14cb958102c87d541d413bfb80368))
+- 🎸 dev style ([e425e29](https://github.com/Portkey-Wallet/portkey-web/commit/e425e298a0f319fbb5c7bcca7ba65d8a69316cb2))
+- 🎸 export token ([a706ee8](https://github.com/Portkey-Wallet/portkey-web/commit/a706ee85a8929f95c3acf38e00696a2858447f2e))
+- 🎸 fix ts and name ([0f2e82b](https://github.com/Portkey-Wallet/portkey-web/commit/0f2e82b60546295bf86827563d6c4660fadb23ff))
+- 🎸 format select verifier ([afcf761](https://github.com/Portkey-Wallet/portkey-web/commit/afcf761fc79775186036b939c5adca1178cd3afd))
+- 🎸 format-recaptch ([5dbe32c](https://github.com/Portkey-Wallet/portkey-web/commit/5dbe32c76cce646ea9bcb4512ebea3adae557f43))
+- 🎸 get token balance ([58459e7](https://github.com/Portkey-Wallet/portkey-web/commit/58459e7ad9336baf3e26b72bf3eee916a81ede60))
+- 🎸 get token by faucet ([9d8211b](https://github.com/Portkey-Wallet/portkey-web/commit/9d8211be2484ffc912953e98714c161c7f81d1cf))
+- 🎸 receive card ([e3aa170](https://github.com/Portkey-Wallet/portkey-web/commit/e3aa1704e59876f302302d4ac6bd131aa1ea9dd0))
+- 🎸 remove useless references ([0dcbf69](https://github.com/Portkey-Wallet/portkey-web/commit/0dcbf696a49f17a41a81abe7585631f958b3d87a))
+- 🎸 reset ramp style ([c5c98ca](https://github.com/Portkey-Wallet/portkey-web/commit/c5c98cadb2d702f031ce48d5222f917d9c45c7cf))
+
+### Bug Fixes
+
+- 🐛 change token logo ([727926a](https://github.com/Portkey-Wallet/portkey-web/commit/727926a8e62d0664018fd57137dd3e0f8dd6697d))
+- 🐛 fix and merge ([7e51654](https://github.com/Portkey-Wallet/portkey-web/commit/7e51654642e697af9c7fbf62809ae7c1e29d5f7e))
+- 🐛 getCATransactionRawOnWeb ([024a655](https://github.com/Portkey-Wallet/portkey-web/commit/024a6559e7d2c368c70bb1c9ca3250a7ad9d6dbf))
+- 🐛 loading and show balance ([934d7da](https://github.com/Portkey-Wallet/portkey-web/commit/934d7dab5f59513d9e94032911edf1396e5be0a9))
+
+### Performance Improvements
+
+- ⚡️ config ([399cf9c](https://github.com/Portkey-Wallet/portkey-web/commit/399cf9ca59a345e1169de43b1edb15dc47c827f3))
+
 ## [1.2.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.2.1...v1.2.2) (2023-08-04)
 
 ### Bug Fixes
