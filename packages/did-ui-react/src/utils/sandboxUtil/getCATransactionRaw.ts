@@ -1,7 +1,7 @@
 import { ChainId, ChainType } from '@portkey/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes, handleErrorMessage, isExtension } from '../index';
 import { getChain } from '../../hooks/useChainInfo';
-import { getContractBasic } from '@portkey/contracts';
+import { encodedParams, getContractBasic, getContractMethods } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
 import PortkeyUIError from '../../constants/error';
 
@@ -52,12 +52,18 @@ export const getCATransactionRawOnWeb = async (params: Omit<CATransactionRawPara
     rpcUrl: chainInfo.endPoint,
   });
 
-  const rawResult = await contract.encodedTx('ManagerForwardCall', {
+  const options: any = {
     caHash,
     contractAddress,
     methodName,
-    args: paramsOption,
-  });
+  };
+
+  const methods = await getContractMethods((contract as any).aelfInstance, options.contractAddress);
+  const inputType = methods[options.methodName];
+
+  options.args = await encodedParams(inputType, options.args);
+
+  const rawResult = await contract.encodedTx('ManagerForwardCall', options);
   if (!rawResult || !rawResult.data) {
     throw new Error('Failed to get raw transaction.');
   }
