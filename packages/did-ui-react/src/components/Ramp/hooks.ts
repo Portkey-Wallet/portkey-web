@@ -75,10 +75,15 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
             resolve(data);
           });
           signalrOrderRemove = removeRes;
-          signalrSell.requestOrderTransferred(clientId, orderId);
+          signalrSell.requestOrderTransferred(clientId, orderId).catch(() => {
+            resolve(null);
+          });
         });
         signalrAchTxRemove = removeAchTx;
-        signalrSell.requestAchTxAddress(clientId, orderId);
+
+        signalrSell.requestAchTxAddress(clientId, orderId).catch(() => {
+          resolve(null);
+        });
       });
 
       const signalrSellResult = await Promise.race([timerPromise, signalrSellPromise]);

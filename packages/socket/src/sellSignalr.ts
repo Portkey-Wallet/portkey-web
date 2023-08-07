@@ -4,7 +4,7 @@ import { AchTxAddressReceivedType, RequestOrderTransferredType } from './types/s
 export class SignalrSell extends BaseSignalr {
   public requestAchTxAddress(clientId: string, orderId: string) {
     console.log('invoke RequestAchTxAddress', clientId, orderId);
-    this.invoke('RequestAchTxAddress', {
+    return this.invoke('RequestAchTxAddress', {
       TargetClientId: clientId,
       OrderId: orderId,
     });
@@ -25,7 +25,7 @@ export class SignalrSell extends BaseSignalr {
 
   public requestOrderTransferred(clientId: string, orderId: string) {
     console.log('invoke RequestOrderTransferred', clientId, orderId);
-    this.invoke('RequestOrderTransferred', {
+    return this.invoke('RequestOrderTransferred', {
       TargetClientId: clientId,
       OrderId: orderId,
     });
