@@ -13,10 +13,10 @@ export default function RampPage() {
     <div>
       <PortkeyAssetProvider originChainId="AELF" pin="111111">
         <Ramp
-          goBack={function (): void {
+          onBack={function (): void {
             router.push('/sign');
           }}
-          goPreview={function (data): void {
+          onShowPreview={function (data): void {
             router.push(`/ramp-preview/${JSON.stringify(data)}`);
           }}
           tokenInfo={{

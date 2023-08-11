@@ -153,8 +153,8 @@ function AssetMain({
             ...selectToken,
             tokenContractAddress: selectToken.address,
           }}
-          goBack={() => setAssetStep(AssetStep.overview)}
-          goPreview={({ initState }) => {
+          onBack={() => setAssetStep(AssetStep.overview)}
+          onShowPreview={({ initState }) => {
             setRampPreview(initState);
             setAssetStep(AssetStep.rampPreview);
           }}
@@ -169,7 +169,7 @@ function AssetMain({
           initState={rampPreview}
           portkeyServiceUrl={portkeyServiceUrl || ''}
           chainId={selectToken.chainId}
-          goBack={() => {
+          onBack={() => {
             if (rampState?.side) {
               rampState.side = RampTypeEnum.SELL;
             }

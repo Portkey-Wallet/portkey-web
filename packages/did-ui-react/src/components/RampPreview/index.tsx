@@ -10,7 +10,7 @@ export interface IRampPreviewProps {
   overrideAchConfig?: IAchConfig;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
-  goBack: () => void;
+  onBack: () => void;
 }
 
 export default function Ramp(props: IRampPreviewProps) {
