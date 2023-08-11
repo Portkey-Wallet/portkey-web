@@ -4,6 +4,7 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampMain from './index.component';
 
 export interface IRampProps extends IUseHandleAchSellParams {
+  className?: string;
   initState?: IRampInitState;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;

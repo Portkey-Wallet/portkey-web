@@ -28,6 +28,7 @@ import { getAchSignature, getRampOrderNo } from './utils';
 import { useGetAchTokenInfo } from './hooks';
 
 export default function RampPreviewMain({
+  className,
   initState,
   portkeyServiceUrl,
   chainId = DEFAULT_CHAIN_ID,
@@ -189,7 +190,7 @@ export default function RampPreviewMain({
   }, [t]);
 
   return (
-    <div className={clsx(['portkey-ui-ramp-preview-frame portkey-ui-flex-column'])}>
+    <div className={clsx(['portkey-ui-ramp-preview-frame portkey-ui-flex-column', className])}>
       <BackHeaderForPage
         title={`${data.side === RampTypeEnum.BUY ? 'Buy' : 'Sell'} ${initState.crypto}`}
         leftCallBack={onBack}

@@ -37,6 +37,7 @@ import { useHandleAchSell } from './hooks';
 import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
 
 export default function RampMain({
+  className,
   initState,
   tokenInfo,
   portkeyWebSocketUrl,
@@ -516,7 +517,7 @@ export default function RampMain({
   );
 
   return (
-    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column'])} id="portkey-ui-ramp">
+    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column', className])} id="portkey-ui-ramp">
       <BackHeaderForPage title={t('Buy')} leftCallBack={onBack} />
       <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
         <div className="portkey-ui-ramp-radio">
