@@ -1,8 +1,9 @@
 import { useRef, useEffect } from 'react';
 import lottie, { AnimationItem } from 'lottie-web';
 import animationData from './loading';
+import clsx from 'clsx';
 
-const CircleLoading = ({ loading }: { loading?: boolean }) => {
+const CircleLoading = ({ loading, className }: { loading?: boolean; className?: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const animation = useRef<AnimationItem | null>(null);
 
@@ -25,7 +26,12 @@ const CircleLoading = ({ loading }: { loading?: boolean }) => {
     };
   }, []);
 
-  return <div className="circle-loading" style={{ display: loading ? 'block' : 'none' }} ref={containerRef}></div>;
+  return (
+    <div
+      className={clsx('circle-loading', className)}
+      style={{ display: loading ? 'block' : 'none' }}
+      ref={containerRef}></div>
+  );
 };
 
 export default CircleLoading;

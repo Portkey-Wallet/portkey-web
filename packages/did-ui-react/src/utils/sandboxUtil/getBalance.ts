@@ -4,6 +4,8 @@ import { getChain } from '../../hooks/useChainInfo';
 import { getContractBasic } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
 import { COMMON_PRIVATE } from '../../constants';
+import { isExtension } from '../lib';
+import { PortkeyUIError } from '../../constants/error';
 
 interface GetBalanceParams {
   sandboxId?: string;
@@ -22,7 +24,13 @@ interface GetBalanceResult {
   balance: number;
 }
 
-export const getBalanceByExtension = async ({ sandboxId, chainId, chainType, paramsOption }: GetBalanceParams) => {
+export const getBalanceOnSandbox = async ({
+  sandboxId,
+  chainId,
+  chainType,
+  paramsOption,
+  tokenContractAddress,
+}: GetBalanceParams) => {
   const chainInfo = await getChain(chainId);
   if (!chainInfo) throw 'Please check network connection and chainId';
   const resMessage = await SandboxEventService.dispatchAndReceive(
@@ -30,7 +38,7 @@ export const getBalanceByExtension = async ({ sandboxId, chainId, chainType, par
     {
       rpcUrl: chainInfo.endPoint,
       chainType,
-      address: chainInfo.caContractAddress,
+      address: tokenContractAddress,
       methodName: 'GetBalance',
       paramsOption,
     },
@@ -41,7 +49,7 @@ export const getBalanceByExtension = async ({ sandboxId, chainId, chainType, par
   return resMessage.message;
 };
 
-export const getBalanceByContract = async (params: Omit<GetBalanceParams, 'chainType'>): Promise<GetBalanceResult> => {
+export const getBalanceOnWeb = async (params: Omit<GetBalanceParams, 'chainType'>): Promise<GetBalanceResult> => {
   const chainInfo = await getChain(params.chainId);
   if (!chainInfo) throw 'Please check network connection and chainId';
 
@@ -58,4 +66,12 @@ export const getBalanceByContract = async (params: Omit<GetBalanceParams, 'chain
 
   if (req.error) throw req.error;
   return req.data;
+};
+
+export const getBalanceByContract = async (params: GetBalanceParams) => {
+  if (isExtension()) {
+    if (!params.sandboxId) throw Error(PortkeyUIError.sandboxIdRequired);
+    return getBalanceOnSandbox(params);
+  }
+  return getBalanceOnWeb(params);
 };

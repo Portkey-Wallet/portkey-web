@@ -3,7 +3,7 @@ import { ChainId } from '@portkey/types';
 import { ChainType } from '@portkey/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
 import { isExtension } from '..';
-import PortkeyUIError from '../../constants/error';
+import { PortkeyUIError } from '../../constants/error';
 import { did } from '../did';
 
 interface VerifierListParams {

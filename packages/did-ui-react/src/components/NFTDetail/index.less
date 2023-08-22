@@ -1,0 +1,147 @@
+.portkey-ui-nft-detail {
+  .picture {
+    width: 264px;
+    height: 264px;
+  }
+}
+
+.portkey-ui-nft-detail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  background: var(--portkey-ui-default-bg);
+
+  .nft-detail-body {
+    background: var(--portkey-ui-default-bg);
+  }
+
+  .setting-header-wrapper {
+    border: none;
+    height: 64px;
+    padding: 0 16px;
+  }
+
+  .collection {
+    margin: 8px 24px 0;
+    .img {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+      img,
+      .img-text {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+      }
+      .img-text {
+        background-color: var(--portkey-ui-bg-14);
+        font-size: 12px;
+        line-height: 14px;
+        color: var(--portkey-ui-text-tip);
+      }
+    }
+    .name {
+      margin-left: 8px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      color: var(--portkey-ui-text-secondary);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+
+  .token-id {
+    margin: 6px 24px 0;
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 500;
+    color: var(--portkey-ui-text-primary);
+  }
+
+  .picture {
+    margin: 16px auto 24px;
+
+    width: 320px;
+    height: 320px;
+    img {
+      object-fit: contain;
+      border-radius: 6px;
+    }
+    .picture-text {
+      background-color: var(--portkey-ui-bg-14);
+      font-size: 40px;
+      color: var(--portkey-ui-text-tip);
+    }
+  }
+
+  .picture-common {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+  }
+
+  .info {
+    padding: 0 24px 42px;
+    .title {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 500;
+      color: var(--portkey-ui-text-primary);
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    .info-item {
+      margin-top: 14px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 400;
+      color: var(--portkey-ui-text-primary);
+      .label {
+        color: var(--portkey-ui-text-secondary);
+      }
+    }
+    .contract {
+      .contract-title {
+        gap: 8px;
+      }
+    }
+    .alias {
+      .alias-name {
+        max-width: 115px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+  .btn-wrap {
+    background: var(--portkey-ui-default-bg);
+    width: 100%;
+    border-top: 1px solid var(--portkey-ui-default-border);
+    padding: 0 16px 16px;
+    .balance {
+      margin: 10px auto 16px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      color: var(--portkey-ui-text-primary);
+    }
+    button {
+      height: 48px;
+      border-radius: 22px;
+      line-height: 22px;
+      font-size: 16px;
+    }
+  }
+}
+
+.portkey-prompt {
+  padding-bottom: none !important;
+}

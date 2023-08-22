@@ -5,7 +5,7 @@ import './index.css';
 
 export default function APP({ Component, pageProps }: any) {
   const [dark, setDark] = useState<boolean>(false);
-  const [networkType, setNetworkType] = useState<NetworkType>('TESTNET');
+  const [networkType, setNetworkType] = useState<NetworkType>('MAIN');
 
   useEffect(() => {
     if (dark) {

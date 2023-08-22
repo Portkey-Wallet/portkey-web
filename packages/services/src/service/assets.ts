@@ -9,6 +9,8 @@ import {
   FetchAccountTokenListResult,
   FetchTokenPriceParams,
   FetchTokenPriceResult,
+  GetAccountAssetsByKeywordsParams,
+  GetAccountAssetsByKeywordsResult,
   GetSymbolImagesParams,
   GetSymbolImagesResult,
   GetUserTokenListParams,
@@ -71,6 +73,14 @@ export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T
         skipCount: 0,
         maxResultCount: 1000,
       },
+    });
+  }
+
+  getAccountAssetsByKeywords(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/user/assets/searchUserAssets',
+      params,
     });
   }
 }

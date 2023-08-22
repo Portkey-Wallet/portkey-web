@@ -21,7 +21,6 @@ import {
   SYNCHRONIZING_CHAIN_TEXT,
   DEFAULT_CHAIN_ID,
   DEFAULT_SYMBOL,
-  RAMP_WEB_PAGE_ROUTE,
 } from '../../constants/ramp';
 import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../types';
 import { divDecimals, formatAmountShow } from '../../utils/converter';
@@ -31,11 +30,13 @@ import { setLoading } from '../../utils';
 import { handleKeyDown } from '../../utils/keyDown';
 import CustomModal from '../CustomModal';
 import { IRampProps } from '.';
-import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo, fetchTxFeeAsync } from './utils';
+import { fetchBuyFiatListAsync, fetchSellFiatListAsync, getOrderQuote, getCryptoInfo } from './utils';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
 import { useHandleAchSell } from './hooks';
 import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
+import { usePortkey } from '../context';
+import { fetchTxFeeAsync } from '../../request/token';
 
 export default function RampMain({
   initState,
@@ -57,6 +58,7 @@ export default function RampMain({
   const [page, setPage] = useState<RampTypeEnum>(RampTypeEnum.BUY);
   const [rate, setRate] = useState('');
   const [amount, setAmount] = useState(initCurrency);
+  const [{ sandboxId, chainType }] = usePortkey();
   const [receive, setReceive] = useState('');
   const [curToken, setCurToken] = useState(initToken);
   const [curFiat, setCurFiat] = useState<PartialFiatType>(initFiat);
@@ -450,6 +452,8 @@ export default function RampMain({
       // search balance from contract
       try {
         const result = await getBalanceByContract({
+          sandboxId,
+          chainType,
           chainId: chainId,
           tokenContractAddress: tokenInfo.tokenContractAddress || '',
           paramsOption: {
@@ -501,6 +505,8 @@ export default function RampMain({
     caInfo,
     symbol,
     setInsufficientFundsMsg,
+    sandboxId,
+    chainType,
   ]);
 
   const renderRate = useMemo(

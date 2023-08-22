@@ -15,16 +15,12 @@ export type EncodedParams = {
  * @returns raw string / { error: { message } }
  */
 export const encodedTx = async ({ instance, functionName, paramsOption, contract }: EncodedParams) => {
-  try {
-    const chainStatus = await instance.chain.getChainStatus();
-    const raw = await contract[functionName].getSignedTx(paramsOption, {
-      height: chainStatus?.BestChainHeight,
-      hash: chainStatus?.BestChainHash,
-    });
-    return raw;
-  } catch (error) {
-    return { error };
-  }
+  const chainStatus = await instance.chain.getChainStatus();
+  const raw = await contract[functionName].getSignedTx(paramsOption, {
+    height: chainStatus?.BestChainHeight,
+    hash: chainStatus?.BestChainHash,
+  });
+  return raw;
 };
 
 export const getELFContract = async (rpcUrl: string, tokenAddress: string, privateKey: string) => {

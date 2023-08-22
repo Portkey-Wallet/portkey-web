@@ -3,7 +3,7 @@ import { SandboxErrorCode, SandboxEventService, SandboxEventTypes, handleErrorMe
 import { getChain } from '../../hooks/useChainInfo';
 import { encodedParams, getContractBasic, getContractMethods } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
-import PortkeyUIError from '../../constants/error';
+import { PortkeyUIError } from '../../constants/error';
 
 interface CATransactionRawParams<T = any> {
   sandboxId?: string;
@@ -67,7 +67,6 @@ export const getCATransactionRawOnWeb = async (params: Omit<CATransactionRawPara
   if (!rawResult || !rawResult.data) {
     throw new Error('Failed to get raw transaction.');
   }
-  console.log(rawResult, 'req===callCASendMethod');
   if (rawResult.error) throw handleErrorMessage(rawResult);
   return rawResult.data;
 };

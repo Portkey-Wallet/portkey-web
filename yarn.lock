@@ -12086,7 +12086,7 @@ modify-values@^1.0.0:
   resolved "https://registry.npmjs.org/modify-values/-/modify-values-1.0.1.tgz#b3939fa605546474e3e3e3c63d64bd43b4ee6022"
   integrity sha512-xV2bxeN6F7oYjZWTe/YPAy6MN2M+sL4u/Rlm2AHCIVGfo2p1yGmBHQ6vHehl4bRTZBdHu3TSkWdYgkwpYzAGSw==
 
-moment@^2.24.0, moment@^2.29.2:
+moment@^2.24.0, moment@^2.29.2, moment@^2.29.4:
   version "2.29.4"
   resolved "https://registry.npmjs.org/moment/-/moment-2.29.4.tgz#3dbe052889fe7c1b2ed966fcb3a77328964ef108"
   integrity sha512-5LC9SOxjSc2HF6vO2CyuTDNivEdoz2IvyJJGj6X8DJ0eFyfszE0QiEd+iXmBvUP3WHxSjFH/vIsA0EN00cgr8w==
@@ -14389,10 +14389,10 @@ rc-table@~7.26.0:
     rc-util "^5.22.5"
     shallowequal "^1.1.0"
 
-rc-tabs@~12.4.1:
-  version "12.4.2"
-  resolved "https://registry.npmjs.org/rc-tabs/-/rc-tabs-12.4.2.tgz#487a1b3f8d8cf0bfc121224013dab00d4a8e0532"
-  integrity sha512-FFlGwuTjQUznWzJtyhmHc6KAp5lRQFxKUv9Aj1UtsOYe2e7WGmuzcrd+/LQchuPe0VjhaZPdGkmFGcqGqNO6ow==
+rc-tabs@~12.5.1:
+  version "12.5.10"
+  resolved "https://registry.npmjs.org/rc-tabs/-/rc-tabs-12.5.10.tgz#0e41c723fac66c4f0bcad3271429fff6653b0721"
+  integrity sha512-Ay0l0jtd4eXepFH9vWBvinBjqOpqzcsJTerBGwJy435P2S90Uu38q8U/mvc1sxUEVOXX5ZCFbxcWPnfG3dH+tQ==
   dependencies:
     "@babel/runtime" "^7.11.2"
     classnames "2.x"

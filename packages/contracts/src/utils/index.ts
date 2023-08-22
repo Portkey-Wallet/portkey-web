@@ -19,9 +19,9 @@ const methodsMap: { [key: string]: any } = {};
 export const getContractBasic: IGetContract['getContractBasic'] = async (
   options: IProviderOptions | IEOAInstanceOptions | ICAInstanceOptions,
 ) => {
-  const { contractAddress, chianType = 'aelf', callType = 'eoa' } = options;
+  const { contractAddress, chainType = 'aelf', callType = 'eoa' } = options;
 
-  if (chianType === 'ethereum') throw new Error('Not yet supported');
+  if (chainType === 'ethereum') throw new Error('Not yet supported');
 
   // use provider
   if ('chainProvider' in options) {
@@ -35,7 +35,7 @@ export const getContractBasic: IGetContract['getContractBasic'] = async (
   if (!instance) throw new Error('Get instance error');
 
   const contractOptions: ContractProps = {
-    type: chianType,
+    type: chainType,
     contractAddress,
     aelfInstance: instance,
     rpcUrl: (instance as any)?.currentProvider?.host || 'host',

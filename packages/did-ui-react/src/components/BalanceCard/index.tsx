@@ -8,6 +8,7 @@ export interface BalanceCardProps {
   isShowRamp?: boolean;
   isShowFaucet?: boolean;
   onBuy?: () => void;
+  onSend?: () => void;
   onReceive?: () => void;
   onFaucet?: () => void;
 }
@@ -17,14 +18,15 @@ export default function BalanceCard({
   isShowFaucet,
   isMainnet,
   onBuy,
+  onSend,
   onReceive,
   onFaucet,
 }: BalanceCardProps) {
   const renderTem = useCallback(
     (type: 'Buy' | 'Faucet') => {
       return (
-        <span className="send btn" onClick={type === 'Buy' ? onBuy : onFaucet}>
-          <CustomSvg type={type} style={{ width: 36, height: 36 }} />
+        <span className="buy btn" onClick={type === 'Buy' ? onBuy : onFaucet}>
+          <CustomSvg type={type} />
           <span className="btn-name">{type}</span>
         </span>
       );
@@ -38,13 +40,24 @@ export default function BalanceCard({
     [isMainnet, isShowFaucet, renderTem],
   );
 
+  const renderSend = useMemo(
+    () => (
+      <span className="send btn" onClick={onSend}>
+        <CustomSvg type="Receive" />
+        <span className="btn-name">Send</span>
+      </span>
+    ),
+    [onSend],
+  );
+
   return (
     <div className="portkey-ui-flex-center  portkey-ui-balance-card">
       <div className="balance-btn">
         {renderFaucet}
         {renderBuy}
+        {renderSend}
         <span className="receive btn" onClick={onReceive}>
-          <CustomSvg type="Receive" style={{ width: 36, height: 36 }} />
+          <CustomSvg type="Receive" />
           <span className="btn-name">Receive</span>
         </span>
       </div>

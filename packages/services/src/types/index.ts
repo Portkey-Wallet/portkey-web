@@ -17,6 +17,11 @@ export abstract class BaseService<T = IBaseRequest> {
   }
 }
 
+export type BaseListResponse<T = any> = {
+  data: T[];
+  totalRecordCount: number;
+};
+
 export * from './services';
 export * from './communityRecovery';
 export * from './search';
@@ -25,3 +30,5 @@ export * from './connect';
 export * from './ramp';
 export * from './assets';
 export * from './token';
+export * from './transaction';
+export * from './activity';

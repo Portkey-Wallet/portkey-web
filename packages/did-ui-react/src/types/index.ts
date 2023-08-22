@@ -4,6 +4,7 @@ export * from './wallet';
 export * from './country';
 export * from './device';
 export * from './ramp';
+export * from './assets';
 
 type GenerateType<T> = {
   [K in keyof T]: T[K];
@@ -38,4 +39,16 @@ export enum UseRecaptcha {
 export interface IKeyDownParams {
   key: string;
   preventDefault: () => any;
+}
+
+export type BaseListInfo<T> = {
+  list: T[];
+  skipCount: number;
+  maxResultCount: number;
+  totalRecordCount: number;
+};
+
+export interface PaginationPage {
+  pageSize: number;
+  page: number;
 }

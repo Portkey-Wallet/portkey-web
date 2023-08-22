@@ -8,8 +8,8 @@ import { LoginQRData, RegisterType } from '../../types';
 import { did, handleErrorMessage, setLoading } from '../../utils';
 import CustomSvg from '../CustomSvg';
 import { DIDWalletInfo } from '../types';
-import './index.less';
 import { randomId, scheme } from '@portkey/utils';
+import './index.less';
 
 export default function WakeUpPortkey({
   type,
@@ -124,7 +124,6 @@ export default function WakeUpPortkey({
         document.removeEventListener('pagehide', pagehideHandler);
       };
     } catch (error) {
-      console.log(error, 'GoogleAuth===error');
       message.error(handleErrorMessage(error));
     } finally {
       // setLoading(false);

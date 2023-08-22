@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId, INftInfoType, ITokenInfoType } from '@portkey/types';
 
 export type ITokenItemResponse = {
   decimals: number;
@@ -11,11 +11,13 @@ export type ITokenItemResponse = {
   price: number;
 };
 
+export type CaAddressInfosType = { chainId: ChainId; caAddress: string }[];
+
 export type FetchAccountTokenListParams = {
   skipCount?: number;
   maxResultCount?: number;
   caAddresses: string[];
-  caAddressInfos: { chainId: string; caAddress: string }[];
+  caAddressInfos: CaAddressInfosType;
 };
 export type FetchAccountTokenListResult = {
   data: ITokenItemResponse[];
@@ -37,7 +39,7 @@ export type INftCollection = {
 export type FetchAccountNftCollectionListParams = {
   skipCount: number;
   maxResultCount: number;
-  caAddressInfos: { chainId: string; caAddress: string }[];
+  caAddressInfos: CaAddressInfosType;
   width: number;
   height: number;
 };
@@ -59,7 +61,7 @@ export type INftCollectionItem = {
 };
 export type FetchAccountNftCollectionItemListParams = {
   symbol: string;
-  caAddressInfos: { chainId: string; caAddress: string }[];
+  caAddressInfos: CaAddressInfosType;
   skipCount: number;
   maxResultCount: number;
   width: number;
@@ -98,6 +100,27 @@ export type GetUserTokenListResult = {
   items: IUserTokenItem[];
   totalRecordCount: number;
 };
+
+export type GetAccountAssetsByKeywordsParams = {
+  maxResultCount: number;
+  skipCount: number;
+  keyword?: string;
+  caAddressInfos: CaAddressInfosType;
+  width?: number;
+  height?: number;
+};
+export type GetAccountAssetsByKeywordsResult = {
+  data: IAssetItemType[];
+  totalRecordCount: number;
+};
+export interface IAssetItemType {
+  chainId: string;
+  symbol: string;
+  address: string;
+  tokenInfo?: ITokenInfoType;
+  nftInfo?: INftInfoType;
+}
+
 export interface IAssetsService {
   fetchAccountTokenList(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListResult>;
   getSymbolImages(params: GetSymbolImagesParams): Promise<GetSymbolImagesResult>;
@@ -109,4 +132,5 @@ export interface IAssetsService {
   ): Promise<FetchAccountNftCollectionItemListResult>;
   fetchTokenPrice(params: FetchTokenPriceParams): Promise<FetchTokenPriceResult>;
   getUserTokenList(params: GetUserTokenListParams): Promise<GetUserTokenListResult>;
+  getAccountAssetsByKeywords(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsResult>;
 }

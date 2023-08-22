@@ -1,31 +1,43 @@
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import AssetOverviewMain, { AssetOverviewProps } from '../AssetOverview/index.components';
-import ReceiveCard from '../ReceiveCard';
+import ReceiveCard from '../ReceiveCard/index.components';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
-import { ChainId } from '@portkey/types';
+import { ActivityItemType, ChainId } from '@portkey/types';
 import { dealURLLastChar, did } from '../../utils';
-import { IUserTokenItem } from '@portkey/services';
-import { BaseToken } from '../types/assets';
+import { IAssetItemType, IUserTokenItem } from '@portkey/services';
+import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
-import { IAchConfig, IRampInitState, IRampPreviewInitState, RampTypeEnum } from '../../types';
+import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
 import { message } from 'antd';
 import { useUpdateEffect } from 'react-use';
+import { useThrottleEffect } from '../../hooks/throttle';
+import SendMain from '../Send/index.components';
+import Transaction from '../Transaction/index.component';
+import TokenDetailMain from '../TokenDetail';
+import NFTDetailMain from '../NFTDetail/index.component';
+import clsx from 'clsx';
+import './index.less';
 
 export enum AssetStep {
   overview = 'overview',
   receive = 'receive',
   ramp = 'ramp',
   rampPreview = 'rampPreview',
+  send = 'send',
+  activityDetail = 'activityDetail',
+  tokenDetail = 'tokenDetail',
+  NFTDetail = 'NFTDetail',
 }
 
-export interface AssetMainProps extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken'> {
+export interface AssetMainProps
+  extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
   onOverviewBack?: () => void;
   rampState?: IRampInitState;
   className?: string;
@@ -52,9 +64,8 @@ function AssetMain({
     [portkeyServiceUrl],
   );
 
-  const [assetStep, setAssetStep] = useState<AssetStep>();
-
-  console.log(portkeyWebSocketUrl, portkeyWebSocketUrl, 'portkeyWebSocketUrl===');
+  const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
+  const preStepRef = useRef<AssetStep>(AssetStep.overview);
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);
@@ -82,7 +93,7 @@ function AssetMain({
     setAllToken(result.items);
   }, [caAddressInfos]);
 
-  useEffect(() => {
+  useThrottleEffect(() => {
     if (initialized && caAddressInfos) {
       // TODO Request all data at once, no paging request
       basicAssetViewAsync
@@ -104,10 +115,48 @@ function AssetMain({
 
   const [selectToken, setSelectToken] = useState<BaseToken>();
 
+  const [sendToken, setSendToken] = useState<IAssetItemType>();
+
   const [rampPreview, setRampPreview] = useState<IRampPreviewInitState>();
 
+  const [activityDetail, setActivityDetail] = useState<ActivityItemType & { chainId?: ChainId }>();
+  const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
+
+  const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
+
+  const onReceive = useCallback(async (v: BaseToken) => {
+    setSelectToken(v);
+    await sleep(50);
+    setAssetStep(AssetStep.receive);
+  }, []);
+
+  const onBuy = useCallback(
+    async (v: BaseToken) => {
+      if (!portkeyWebSocketUrl) return message.error('Please configure socket service url in setGlobalConfig');
+      setSelectToken(v);
+      await sleep(50);
+      setAssetStep(AssetStep.ramp);
+    },
+    [portkeyWebSocketUrl],
+  );
+
+  const onSend = useCallback(async (v: IAssetItemType) => {
+    setSendToken(v);
+    setAssetStep(AssetStep.send);
+  }, []);
+
+  const onViewActivityItem = useCallback(async (v: ActivityItemType) => {
+    setActivityDetail(v);
+    setAssetStep(AssetStep.activityDetail);
+  }, []);
+
+  const onBack = useCallback((isClose?: boolean) => {
+    if (typeof isClose === 'boolean' && isClose) return setAssetStep(AssetStep.overview);
+    setAssetStep(preStepRef.current);
+  }, []);
+
   return (
-    <div className={className}>
+    <div className={clsx('portkey-ui-asset-wrapper', className)}>
       {(!assetStep || assetStep === AssetStep.overview) && (
         <AssetOverviewMain
           allToken={allToken}
@@ -115,22 +164,30 @@ function AssetMain({
           faucet={faucet}
           backIcon={backIcon}
           onBack={onOverviewBack}
-          onReceive={async (v) => {
-            setSelectToken(v);
-            await sleep(50);
-            setAssetStep(AssetStep.receive);
+          onReceive={onReceive}
+          onBuy={onBuy}
+          onSend={(v) => {
+            preStepRef.current = AssetStep.overview;
+
+            onSend(v);
           }}
-          onBuy={async (v) => {
-            if (!portkeyWebSocketUrl) return message.error('Please configure socket service url in setGlobalConfig');
-            setSelectToken(v);
-            await sleep(50);
-            setAssetStep(AssetStep.ramp);
+          onViewActivityItem={(v) => {
+            preStepRef.current = AssetStep.overview;
+            onViewActivityItem(v);
+          }}
+          onViewTokenItem={(v) => {
+            setTokenDetail(v);
+            setAssetStep(AssetStep.tokenDetail);
+          }}
+          onNFTView={(v) => {
+            setAssetStep(AssetStep.NFTDetail);
+            setNFTDetail(v);
           }}
         />
       )}
       {assetStep === AssetStep.receive && caInfo && selectToken && (
         <ReceiveCard
-          toInfo={{
+          receiveInfo={{
             address: caInfo[selectToken.chainId]?.caAddress,
             name: '',
           }}
@@ -153,7 +210,7 @@ function AssetMain({
             ...selectToken,
             tokenContractAddress: selectToken.address,
           }}
-          goBack={() => setAssetStep(AssetStep.overview)}
+          goBack={onBack}
           goPreview={({ initState }) => {
             setRampPreview(initState);
             setAssetStep(AssetStep.rampPreview);
@@ -170,14 +227,72 @@ function AssetMain({
           portkeyServiceUrl={portkeyServiceUrl || ''}
           chainId={selectToken.chainId}
           goBack={() => {
-            if (rampState?.side) {
-              rampState.side = RampTypeEnum.SELL;
-            }
             setAssetStep(AssetStep.ramp);
           }}
           isBuySectionShow={true}
           isSellSectionShow={true}
           overrideAchConfig={overrideAchConfig}
+        />
+      )}
+
+      {assetStep === AssetStep.send && sendToken && <SendMain assetItem={sendToken} onBack={onBack} />}
+
+      {assetStep === AssetStep.activityDetail && activityDetail && caAddressInfos && (
+        <Transaction
+          chainId={activityDetail?.chainId}
+          caAddressInfos={caAddressInfos}
+          onClose={onBack}
+          activityDetail={activityDetail}
+        />
+      )}
+
+      {assetStep === AssetStep.tokenDetail && tokenDetail && (
+        <TokenDetailMain
+          faucet={faucet}
+          isShowRamp={isShowRamp}
+          tokenInfo={tokenDetail}
+          onBack={() => {
+            setAssetStep(AssetStep.overview);
+          }}
+          onReceive={onReceive}
+          onBuy={onBuy}
+          onSend={(token) => {
+            const info: IAssetItemType = {
+              chainId: token.chainId,
+              symbol: token.symbol,
+              address: token.tokenContractAddress || token.address,
+              tokenInfo: {
+                ...token,
+                balance: token.balance || '0',
+                decimals: token.decimals.toString(),
+                balanceInUsd: token.balanceInUsd || '',
+                tokenContractAddress: token.tokenContractAddress || '',
+              },
+            };
+            preStepRef.current = AssetStep.tokenDetail;
+            onSend(info);
+          }}
+          onViewActivityItem={(v) => {
+            preStepRef.current = AssetStep.tokenDetail;
+            onViewActivityItem(v);
+          }}
+        />
+      )}
+
+      {assetStep === AssetStep.NFTDetail && NFTDetail && (
+        <NFTDetailMain
+          NFTDetail={NFTDetail}
+          onBack={() => setAssetStep(AssetStep.overview)}
+          onSend={(nft) => {
+            const info: IAssetItemType = {
+              chainId: nft.chainId,
+              symbol: nft.symbol,
+              address: nft.tokenContractAddress,
+              nftInfo: nft,
+            };
+            preStepRef.current = AssetStep.NFTDetail;
+            onSend(info);
+          }}
         />
       )}
     </div>
