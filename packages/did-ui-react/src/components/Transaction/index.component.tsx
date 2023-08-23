@@ -23,17 +23,24 @@ import { CaAddressInfosType } from '@portkey/services';
 import './index.less';
 
 export interface TransactionProps {
-  activityDetail: ActivityItemType;
+  transactionDetail: ActivityItemType;
   caAddressInfos: CaAddressInfosType;
+  className?: string;
   chainId?: ChainId;
   onClose?: () => void;
 }
 
-export default function TransactionMain({ chainId, caAddressInfos, activityDetail, onClose }: TransactionProps) {
+export default function TransactionMain({
+  chainId,
+  className,
+  caAddressInfos,
+  transactionDetail,
+  onClose,
+}: TransactionProps) {
   const [{ networkType, chainType }] = usePortkey();
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   // Obtain data through routing to ensure that the page must have data and prevent Null Data Errors.
-  const [activityItem, setActivityItem] = useState<ActivityItemType>(activityDetail);
+  const [activityItem, setActivityItem] = useState<ActivityItemType>(transactionDetail);
   const feeInfo = useMemo(() => activityItem.transactionFees, [activityItem.transactionFees]);
   const defaultToken = useDefaultToken(activityItem.fromChainId);
 
@@ -260,7 +267,7 @@ export default function TransactionMain({ chainId, caAddressInfos, activityDetai
   }, [activityItem.fromChainId, activityItem.transactionId]);
 
   return (
-    <div className="portkey-ui-transaction-detail">
+    <div className={clsx('portkey-ui-transaction-detail', className)}>
       <div className="transaction-detail-body">
         <div className="header">
           <CustomSvg type="Close2" onClick={onClose} />

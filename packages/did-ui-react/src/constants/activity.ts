@@ -1,7 +1,7 @@
-import { TransactionTypes } from '@portkey/types';
+import { TransactionTypes, TransactionEnum } from '@portkey/types';
 
-export const SHOW_FROM_TRANSACTION_TYPES = [
-  TransactionTypes.TRANSFER,
-  TransactionTypes.CROSS_CHAIN_TRANSFER,
-  TransactionTypes.CLAIM_TOKEN,
+export const SHOW_FROM_TRANSACTION_TYPES: TransactionTypes[] = [
+  TransactionEnum.TRANSFER,
+  TransactionEnum.CROSS_CHAIN_TRANSFER,
+  TransactionEnum.CLAIM_TOKEN,
 ];

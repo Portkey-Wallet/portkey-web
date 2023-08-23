@@ -1,3 +1,4 @@
+export * from './aelf';
 export * from './api';
 export * from './BaseAsyncStorage';
 export * from './did';

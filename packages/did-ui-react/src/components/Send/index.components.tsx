@@ -4,11 +4,11 @@ import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { Button, Modal, message } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { ReactElement, useCallback, useMemo, useState } from 'react';
+import { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
 import {
   getAddressChainId,
   getAelfAddress,
-  getEntireDIDAelfAddress,
+  supplementAllAelfAddress,
   isCrossChain,
   isDIDAddress,
 } from '../../utils/aelf';
@@ -33,10 +33,16 @@ import getTransferFee from './utils/getTransferFee';
 import { useCheckManagerSyncState } from '../../hooks/wallet';
 import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
+import clsx from 'clsx';
 
 export interface SendProps {
   assetItem: IAssetItemType;
-  onBack?: (isClose?: boolean) => void;
+  closeIcon?: ReactNode;
+  className?: string;
+  wrapperStyle?: React.CSSProperties;
+  onCancel?: () => void;
+  onClose?: () => void;
+  onSuccess?: () => void;
 }
 
 enum Stage {
@@ -49,7 +55,7 @@ type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
 };
 
-function SendContent({ assetItem, onBack }: SendProps) {
+function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, onClose, onSuccess }: SendProps) {
   const [{ accountInfo, managementAccount, caInfo, caHash }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(Stage.Address);
@@ -212,7 +218,7 @@ function SendContent({ assetItem, onBack }: SendProps) {
         });
       }
       message.success('success');
-      onBack?.(true);
+      onSuccess?.();
     } catch (error: any) {
       console.log('sendHandler==error', error);
       if (!error?.type) return message.error(error);
@@ -239,7 +245,7 @@ function SendContent({ assetItem, onBack }: SendProps) {
     chainType,
     defaultFee.crossChain,
     managementAccount,
-    onBack,
+    onSuccess,
     sandboxId,
     showErrorModal,
     toAccount.address,
@@ -326,7 +332,7 @@ function SendContent({ assetItem, onBack }: SendProps) {
           setStage(Stage.Amount);
         },
         backFun: () => {
-          onBack?.();
+          onCancel?.();
         },
         element: (
           <AddressSelector
@@ -399,7 +405,7 @@ function SendContent({ assetItem, onBack }: SendProps) {
             type={!isNFT ? 'token' : 'nft'}
             toAccount={{
               ...toAccount,
-              address: getEntireDIDAelfAddress(toAccount.address, undefined, tokenInfo.chainId),
+              address: supplementAllAelfAddress(toAccount.address, undefined, tokenInfo.chainId),
             }}
             amount={amount}
             balanceInUsd={tokenInfo.balanceInUsd}
@@ -425,7 +431,7 @@ function SendContent({ assetItem, onBack }: SendProps) {
       isNFT,
       managementAccount?.privateKey,
       networkType,
-      onBack,
+      onCancel,
       sendHandler,
       tipMsg,
       toAccount,
@@ -436,14 +442,15 @@ function SendContent({ assetItem, onBack }: SendProps) {
   );
 
   return (
-    <div className={'portkey-ui-send-wrapper'}>
+    <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
         className="page-title"
         title={`Send ${!isNFT ? tokenInfo.symbol : ''}`}
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}
-        rightElement={<CustomSvg type="Close2" onClick={() => onBack?.(true)} />}
+        rightElement={closeIcon ? closeIcon : <CustomSvg type="Close2" onClick={() => onClose?.()} />}
+        rightCallback={closeIcon ? onClose : undefined}
       />
       {stage !== Stage.Preview && (
         <div className="address-wrap">

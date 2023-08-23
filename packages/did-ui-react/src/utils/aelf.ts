@@ -16,15 +16,27 @@ export const getChainNumber = (chainId: string) => {
   return AElf.utils.chainIdConvertor.base58ToChainId(chainId);
 };
 
-export function getEntireDIDAelfAddress(value: string, defaultPrefix = 'ELF', defaultSuffix = 'AELF') {
+export function getEntireDIDAelfAddress(value: string, defaultPrefix?: string, defaultSuffix?: string) {
   const arr = value.split('_');
   if (arr.length > 3 || arr.length === 0) return '';
-  if (arr.length === 3) return value;
-  if (arr.length === 1) return `${defaultPrefix}_${value}_${defaultSuffix}`;
-  // arr.length === 2
-  if (isAelfAddress(arr[0])) return `${defaultPrefix}_${value}`;
-  return `${value}_${defaultSuffix}`;
+  if (arr.length === 3)
+    return `${defaultPrefix ? defaultPrefix : arr[0]}_${arr[1]}_${defaultSuffix ? defaultSuffix : arr[2]}`;
+  if (arr.length === 1) return `${defaultPrefix || 'ELF'}_${value}_${defaultSuffix || 'AELF'}`;
+  if (isAelfAddress(arr[0])) return `${defaultPrefix || 'ELF'}_${value}`;
+  return `${value}_${defaultSuffix || 'AELF'}`;
 }
+
+export const supplementAllAelfAddress = (address: string, prefix?: string, suffix?: string) => {
+  const arr = address.split('_');
+  let value;
+  arr.forEach((str) => {
+    if (isAelfAddress(str)) value = str;
+  });
+  if (!value) return '';
+  if (arr[0] !== value) prefix = prefix ? prefix : arr[0];
+  if (arr.slice(-1)[0] !== value) suffix = suffix ? suffix : arr.slice(-1)[0];
+  return `${prefix || 'ELF'}_${value}_${suffix || 'AELF'}`;
+};
 
 /**
  * to check if the transfer is crossChain

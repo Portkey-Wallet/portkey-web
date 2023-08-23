@@ -10,7 +10,7 @@ import { NetworkType } from '../../types';
 import { MAINNET } from '../../constants/network';
 import Copy from '../Copy';
 import { ELF_SYMBOL } from '../../constants/assets';
-import { getEntireDIDAelfAddress } from '../../utils/aelf';
+import { supplementAllAelfAddress } from '../../utils/aelf';
 import './index.less';
 
 export interface ReceiveCardProps {
@@ -36,6 +36,10 @@ export default function ReceiveCardMain({
   onBack,
 }: ReceiveCardProps) {
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
+  const receiveAddress = useMemo(
+    () => supplementAllAelfAddress(receiveInfo.address, 'ELF', chainId),
+    [chainId, receiveInfo.address],
+  );
 
   const value: QRCodeDataObjType = useMemo(
     () => ({
@@ -45,12 +49,12 @@ export default function ReceiveCardMain({
       chainType: 'aelf',
       toInfo: {
         name: receiveInfo.name,
-        address: getEntireDIDAelfAddress(receiveInfo.address, 'ELF', chainId),
+        address: receiveAddress,
       },
       assetInfo,
-      address: getEntireDIDAelfAddress(receiveInfo.address, 'ELF', chainId),
+      address: receiveAddress,
     }),
-    [assetInfo, chainId, networkType, receiveInfo],
+    [assetInfo, networkType, receiveAddress, receiveInfo.name],
   );
   return (
     <div className={clsx('portkey-ui-receive-wrapper', className)}>
@@ -76,8 +80,8 @@ export default function ReceiveCardMain({
             <PortkeyQRCode value={JSON.stringify(shrinkSendQrData(value))} />
           </div>
           <div className="receive-address">
-            <div className="address">{getEntireDIDAelfAddress(receiveInfo.address, 'ELF', chainId)}</div>
-            <Copy toCopy={getEntireDIDAelfAddress(receiveInfo.address, 'ELF', chainId)} />
+            <div className="address">{receiveAddress}</div>
+            <Copy toCopy={receiveAddress} />
           </div>
         </div>
       </div>

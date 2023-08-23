@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { useMemo } from 'react';
 import { ChainId } from '@portkey/types';
 import { formatAmountShow } from '../../../../utils/converter';
-import { getEntireDIDAelfAddress, isAelfAddress } from '../../../../utils/aelf';
+import { supplementAllAelfAddress, isAelfAddress } from '../../../../utils/aelf';
 import { amountInUsdShow, chainShowText } from '../../../../utils/assets';
 import { useDefaultToken } from '../../../../hooks/assets';
 import { ZERO } from '../../../../constants/misc';
@@ -57,7 +57,7 @@ export default function SendPreview({
   }, [toAccount.address]);
 
   const entireFromAddressShow = useMemo(
-    () => getEntireDIDAelfAddress(caAddress || '', undefined, chainId),
+    () => supplementAllAelfAddress(caAddress || '', undefined, chainId),
     [caAddress, chainId],
   );
   const renderEstimateAmount = useMemo(() => {

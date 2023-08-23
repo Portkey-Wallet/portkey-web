@@ -1,7 +1,7 @@
 import { IBaseNFTType } from './assets';
 import { ChainId } from './chain';
 
-export enum TransactionTypes {
+export enum TransactionEnum {
   TRANSFER = 'Transfer',
   CROSS_CHAIN_TRANSFER = 'CrossChainTransfer', // CrossChain Transfer
   CLAIM_TOKEN = 'ClaimToken', // faucet receive transfer
@@ -13,6 +13,8 @@ export type TransactionFees = {
   feeInUsd: string;
   decimals: string;
 };
+
+export type TransactionTypes = `${TransactionEnum}`;
 
 export type ActivityItemType = {
   transactionType: TransactionTypes;

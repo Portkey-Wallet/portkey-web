@@ -31,7 +31,7 @@ export enum AssetStep {
   ramp = 'ramp',
   rampPreview = 'rampPreview',
   send = 'send',
-  activityDetail = 'activityDetail',
+  transactionDetail = 'transactionDetail',
   tokenDetail = 'tokenDetail',
   NFTDetail = 'NFTDetail',
 }
@@ -119,7 +119,7 @@ function AssetMain({
 
   const [rampPreview, setRampPreview] = useState<IRampPreviewInitState>();
 
-  const [activityDetail, setActivityDetail] = useState<ActivityItemType & { chainId?: ChainId }>();
+  const [transactionDetail, setTransactionDetail] = useState<ActivityItemType & { chainId?: ChainId }>();
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
@@ -146,12 +146,11 @@ function AssetMain({
   }, []);
 
   const onViewActivityItem = useCallback(async (v: ActivityItemType) => {
-    setActivityDetail(v);
-    setAssetStep(AssetStep.activityDetail);
+    setTransactionDetail(v);
+    setAssetStep(AssetStep.transactionDetail);
   }, []);
 
-  const onBack = useCallback((isClose?: boolean) => {
-    if (typeof isClose === 'boolean' && isClose) return setAssetStep(AssetStep.overview);
+  const onBack = useCallback(() => {
     setAssetStep(preStepRef.current);
   }, []);
 
@@ -235,14 +234,25 @@ function AssetMain({
         />
       )}
 
-      {assetStep === AssetStep.send && sendToken && <SendMain assetItem={sendToken} onBack={onBack} />}
+      {assetStep === AssetStep.send && sendToken && (
+        <SendMain
+          assetItem={sendToken}
+          onCancel={onBack}
+          onSuccess={() => {
+            setAssetStep(AssetStep.overview);
+          }}
+          onClose={() => {
+            setAssetStep(AssetStep.overview);
+          }}
+        />
+      )}
 
-      {assetStep === AssetStep.activityDetail && activityDetail && caAddressInfos && (
+      {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
         <Transaction
-          chainId={activityDetail?.chainId}
+          chainId={transactionDetail?.chainId}
           caAddressInfos={caAddressInfos}
           onClose={onBack}
-          activityDetail={activityDetail}
+          transactionDetail={transactionDetail}
         />
       )}
 
