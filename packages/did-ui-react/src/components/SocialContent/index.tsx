@@ -3,10 +3,10 @@ import clsx from 'clsx';
 import { useCallback, useRef, useEffect, useMemo } from 'react';
 import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
 import { errorTip, handleErrorMessage, setLoading, socialLoginAuth } from '../../utils';
-import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
 import { LoginFinishWithoutPin, Theme } from '../types';
 import WakeUpPortkey from '../WakeUpPortkey';
+import { devices } from '@portkey/utils';
 import './index.less';
 
 interface SocialContentProps {
@@ -116,7 +116,7 @@ export default function SocialContent({
 
   const isMobile = useMemo(() => {
     try {
-      return isMobileDevices();
+      return devices.isMobileDevices();
     } catch (error) {
       return false;
     }

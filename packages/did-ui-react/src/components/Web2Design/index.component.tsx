@@ -8,13 +8,13 @@ import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
 import ScanCard from '../ScanCard/index.component';
 import TermsOfServiceItem from '../TermsOfServiceItem';
-import { isMobileDevices } from '../../utils/isMobile';
 import CustomSvg from '../CustomSvg';
 import useMedia from '../../hooks/useMedia';
 import { usePortkey } from '../context';
 import './index.less';
 import { useUpdateEffect } from 'react-use';
 import { useSignHandler } from '../../hooks/useSignHandler';
+import { devices } from '@portkey/utils';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -68,7 +68,7 @@ export default function Web2Design({
     try {
       if (size === 'L') return false;
       if (size === 'S') return true;
-      return isWide || isMobileDevices();
+      return isWide || devices.isMobileDevices();
     } catch (error) {
       return false;
     }
