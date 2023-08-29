@@ -8,6 +8,8 @@ import { useDefaultToken } from '../../../../hooks/assets';
 import { ZERO } from '../../../../constants/misc';
 import { useTokenPrice } from '../../../context/PortkeyAssetProvider/hooks';
 import './index.less';
+const ADDRESS_REG_EXP_PRE = new RegExp('(?<=^w{9})w+(?=w{10})');
+const ADDRESS_REG_EXP = new RegExp('(?<=^w{9})w+(?=w{10})');
 
 export interface SendPreviewProps {
   nickname?: string;
@@ -110,7 +112,7 @@ export default function SendPreview({
           <span className="label">From</span>
           <div className="value">
             <p className="name">{nickname}</p>
-            <p className="address">{entireFromAddressShow.replace(/(?<=^\w{9})\w+(?=\w{10})/, '...')}</p>
+            <p className="address">{entireFromAddressShow.replace(ADDRESS_REG_EXP_PRE, '...')}</p>
           </div>
         </div>
         <div className={clsx('item', toAccount.name?.length || 'no-name')}>
@@ -119,8 +121,8 @@ export default function SendPreview({
             {!!toAccount.name?.length && <p className="name">{toAccount.name}</p>}
             <p className="address">
               {toAccount.address.includes('ELF_')
-                ? toAccount.address.replace(/(?<=^\w{9})\w+(?=\w{10})/, '...')
-                : toAccount.address.replace(/(?<=^\w{6})\w+(?=\w{6})/, '...')}
+                ? toAccount.address.replace(ADDRESS_REG_EXP_PRE, '...')
+                : toAccount.address.replace(ADDRESS_REG_EXP, '...')}
             </p>
           </div>
         </div>
