@@ -8,6 +8,7 @@ import SettingHeader from '../SettingHeader';
 import './index.less';
 import { ChainId } from '@portkey/types';
 import { NFTItemBaseExpand } from '../types/assets';
+import { formatStr2EllipsisStr } from '../../utils';
 
 export interface NFTDetailProps {
   NFTDetail: NFTItemBaseExpand;
@@ -29,7 +30,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
         <div className="contract info-item flex-between">
           <div className="label">Contract address</div>
           <div className="contract-title flex">
-            {formatTokenContractAds.replace(/(?<=^\w{6})\w+(?=\w{7})/, '...')}
+            {formatStr2EllipsisStr(formatTokenContractAds)}
             <Copy toCopy={formatTokenContractAds} />
           </div>
         </div>
