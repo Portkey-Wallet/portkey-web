@@ -1,16 +1,15 @@
-import { EvokeApp, Browser, evokePortkeyApp, checkPortkeyExtension } from '@portkey/onboarding';
-import { scheme } from '@portkey/utils';
+import { evokePortkey } from '@portkey/onboarding';
 import { message } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function AppleAuth() {
   const [status, setStatus] = useState<string>();
   return (
     <div>
-      <div>1&nbsp;</div>
+      <div>--------</div>
       <button
         onClick={() => {
-          evokePortkeyApp({
+          evokePortkey.app({
             action: 'login',
             custom: {},
             onStatusChange: status => {
@@ -22,18 +21,33 @@ export default function AppleAuth() {
         }}>
         evokePortkeyApp
       </button>
-
       {status}
-
-      <div></div>
-
+      <div>--------</div>
       <button
         onClick={async () => {
-          const result = await checkPortkeyExtension();
+          const result = await evokePortkey.extension();
           // message.error(navigator.userAgent);
           console.log(result, '=result==');
         }}>
-        button
+        extension
+      </button>
+      <div>-----</div>
+      <button
+        onClick={async () => {
+          const result = await evokePortkey.thirdParty();
+          // message.error(navigator.userAgent);
+          console.log(result, '=result==');
+        }}>
+        thirdParty
+      </button>
+      <div>-----</div>
+
+      <button
+        onClick={async () => {
+          const VConsole = require('vconsole');
+          new VConsole();
+        }}>
+        VConsole
       </button>
     </div>
   );

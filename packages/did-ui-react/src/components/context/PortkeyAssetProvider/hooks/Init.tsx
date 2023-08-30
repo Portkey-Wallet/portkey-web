@@ -50,7 +50,7 @@ export const useStateInit = () => {
           caHash,
         },
       });
-      console.log(holderInfo, chainsInfo, 'holderInfo===');
+      console.log(holderInfo, managerAddress, 'holderInfo===');
       const managerInfo = holderInfo.managerInfos;
       const isExist = managerInfo.some((value) => managerAddress === value.address);
       if (!isExist) throw Error('Manager is not exist, please check `managerPrivateKey` or `caHash`');
@@ -71,7 +71,11 @@ export const useStateInit = () => {
         did.didWallet.accountInfo = {
           loginAccount: guardian.guardianIdentifier || guardian.identifierHash,
         };
-      await did.didWallet.getCAHolderInfo(originChainId);
+      try {
+        await did.didWallet.getCAHolderInfo(originChainId);
+      } catch (error) {
+        console.error(error);
+      }
 
       return did;
     },

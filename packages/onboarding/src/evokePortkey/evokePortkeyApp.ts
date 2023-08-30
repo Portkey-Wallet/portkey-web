@@ -1,25 +1,9 @@
 import { scheme as schemeUtils } from '@portkey/utils';
 import { EvokeApp } from '../evokeApp';
-import { PartialOption } from '@portkey/types';
 import { APP_DOWNLOAD_URL } from '../constants';
-import { EvokeAppOptions } from '../evokeApp/types';
+import { IEvokePortkeyApp } from './types';
 
-export interface IBaseEvokeAppOption {
-  timeout?: number;
-  customFailureCallback?: () => void;
-  onStatusChange?: EvokeAppOptions['logFunc'];
-}
-
-export type EvokePortkeyByLogin = PartialOption<Omit<schemeUtils.ILoginHandleSchemeParams, 'scheme'>, 'domain'> &
-  IBaseEvokeAppOption;
-type EvokePortkeyByLinkDapp = PartialOption<Omit<schemeUtils.ILinkDappHandleSchemeParams, 'scheme'>, 'domain'> &
-  IBaseEvokeAppOption;
-
-export interface IEvokePortkeyApp {
-  evokePortkeyApp(params: EvokePortkeyByLogin): void;
-  evokePortkeyApp(params: EvokePortkeyByLinkDapp): void;
-}
-export const evokePortkeyApp: IEvokePortkeyApp['evokePortkeyApp'] = ({
+const evokePortkeyApp: IEvokePortkeyApp['evokePortkeyApp'] = ({
   domain,
   custom,
   action,
@@ -52,3 +36,5 @@ export const evokePortkeyApp: IEvokePortkeyApp['evokePortkeyApp'] = ({
     callback: customFailureCallback,
   });
 };
+
+export default evokePortkeyApp;

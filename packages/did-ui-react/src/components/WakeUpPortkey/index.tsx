@@ -9,7 +9,7 @@ import { did, handleErrorMessage, setLoading } from '../../utils';
 import CustomSvg from '../CustomSvg';
 import { DIDWalletInfo } from '../types';
 import { randomId } from '@portkey/utils';
-import { evokePortkeyApp } from '@portkey/onboarding';
+import { evokePortkey } from '@portkey/onboarding';
 import './index.less';
 
 export default function WakeUpPortkey({
@@ -76,7 +76,7 @@ export default function WakeUpPortkey({
 
       const extraData = JSON.stringify(websiteInfo);
 
-      evokePortkeyApp({
+      evokePortkey.app({
         action: 'login',
         custom: { data: dataStr, extraData },
         onStatusChange: (status) => {

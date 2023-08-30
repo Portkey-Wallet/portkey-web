@@ -7,3 +7,7 @@ export const EXTENSION_DOWNLOAD_URL = {
   EDGE: 'https://chrome.google.com/webstore/detail/portkey-did-crypto-nft/hpjiiechbbhefmpggegmahejiiphbmij',
   DEFAULT: 'https://portkey.finance/download',
 };
+
+// export const WEB_PAGE = 'https://openlogin.portkey.finance';
+// export const WEB_PAGE = 'https://openlogin-test.portkey.finance';
+export const WEB_PAGE = 'http://localhost:3000';

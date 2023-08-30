@@ -2,7 +2,7 @@ import { sleep } from '@portkey/utils';
 import { detectBrowserName } from '../utils';
 import { EXTENSION_DOWNLOAD_URL } from '../constants';
 
-export const checkPortkeyExtension = async () => {
+const checkPortkeyExtension = async () => {
   if (typeof window === 'undefined') return false;
   const _window: any = window;
 
@@ -15,3 +15,5 @@ export const checkPortkeyExtension = async () => {
   _window.open(downloadURL, '_blank');
   return false;
 };
+
+export default checkPortkeyExtension;
