@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.1-alpha.1...v1.4.1-alpha.2) (2023-08-31)
+
+### Bug Fixes
+
+- 🐛 fetch holder info ([bbb6d8c](https://github.com/Portkey-Wallet/portkey-web/commit/bbb6d8c75b3f58692317f9f77be77a2b62c2976e))
+
 ## [1.4.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.0...v1.4.1-alpha.1) (2023-08-29)
 
 ### Bug Fixes
