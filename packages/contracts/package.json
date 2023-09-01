@@ -43,7 +43,7 @@
     "@portkey/provider-types": "^1.0.1-alpha.0",
     "@portkey/types": "^1.4.1",
     "@portkey/utils": "^1.4.1",
-    "aelf-sdk": "^3.2.44"
+    "aelf-sdk": "3.2.45-beta.0"
   },
   "gitHead": "df2d5f465b4d184997734e87625e1e686adb6822"
 }

@@ -44,7 +44,7 @@
     "@portkey/graphql": "^1.4.1",
     "@portkey/request": "^1.4.1",
     "@portkey/types": "^1.4.1",
-    "aelf-sdk": "^3.2.44",
+    "aelf-sdk": "3.2.45-beta.0",
     "query-string": "^7.1.1"
   },
   "devDependencies": {
