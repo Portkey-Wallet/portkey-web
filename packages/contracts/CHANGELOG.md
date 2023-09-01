@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.1...v1.4.2) (2023-09-01)
+
+### Bug Fixes
+
+- 🐛 update aelf-sdk ([d3d669b](https://github.com/Portkey-Wallet/portkey-web/commit/d3d669b4b47affa75d786c3042e518d66113ad18))
+
 ## [1.4.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.1-alpha.2...v1.4.1) (2023-08-31)
 
 **Note:** Version bump only for package @portkey/contracts
