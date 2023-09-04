@@ -2,6 +2,7 @@ import React, { createContext, useContext, useMemo, useReducer } from 'react';
 import { BasicActions } from '../utils';
 import { OverviewState } from './actions';
 import { PortkeyOverviewActions } from './actions';
+import Init from './hooks/init';
 
 const INITIAL_STATE = {};
 const PortkeyContext = createContext<any>(INITIAL_STATE);
@@ -30,6 +31,7 @@ export function PortkeyOverviewProvider({ children }: { children: React.ReactNod
 
   return (
     <PortkeyContext.Provider value={useMemo(() => [{ ...state }, { dispatch }], [state])}>
+      <Init />
       {children}
     </PortkeyContext.Provider>
   );
