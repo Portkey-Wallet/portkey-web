@@ -25,7 +25,7 @@ ConfigProvider.setGlobalConfig({
   // reCaptchaConfig: {
   //   siteKey: '',
   // },
-  graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
+  graphQLUrl: '/graphql',
 });
 
 export default function Sign() {
@@ -64,7 +64,7 @@ export default function Sign() {
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
         }}
-        // defaultLifeCycle={defaultLifeCycle as any}
+        // defaultLifeCycle={{ LoginByScan: null }}
         onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
           console.log(
             'onLifeCycleChange:',

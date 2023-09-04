@@ -29,7 +29,7 @@ export interface GuardianApprovalProps {
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
 }
 
-const GuardianApproval = forwardRef(
+const GuardianApprovalMain = forwardRef(
   (
     {
       header,
@@ -271,4 +271,4 @@ const GuardianApproval = forwardRef(
   },
 );
 
-export default memo(GuardianApproval);
+export default memo(GuardianApprovalMain);

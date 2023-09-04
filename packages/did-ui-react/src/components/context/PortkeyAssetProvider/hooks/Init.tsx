@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { usePortkey } from '../../index';
 import { message } from 'antd';
 import { AuthServe, did, handleErrorMessage } from '../../../../utils';
-import { getHolderInfoByApi, getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolderInfo';
+import { getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolderInfo';
 import { basicAssetView } from '../actions';
 import { usePortkeyAsset } from '..';
 import { ChainId } from '@portkey/types';

@@ -55,6 +55,7 @@ export { default as Send } from './Send';
 export { default as AssetOverview } from './AssetOverview';
 export { default as ReceiveCard } from './ReceiveCard';
 export { default as Transaction } from './Transaction';
+export { default as managerApprove } from './ManagerApprove';
 
 export * from './context/PortkeyAssetProvider';
 export * from './context/PortkeySendProvider';

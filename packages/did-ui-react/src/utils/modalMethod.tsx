@@ -1,6 +1,13 @@
 import { ModalFuncProps, Modal } from 'antd';
 
-export function modalMethod({ type = 'confirm', wrapClassName, className, onOk, onCancel, ...props }: ModalFuncProps) {
+export function modalMethod({
+  type = 'confirm',
+  wrapClassName = '',
+  className,
+  onOk,
+  onCancel,
+  ...props
+}: ModalFuncProps) {
   return new Promise((resolve) => {
     Modal[type]({
       width: 320,

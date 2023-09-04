@@ -1,3 +1,4 @@
+import { handleErrorMessage, managerApprove } from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
@@ -48,6 +49,26 @@ export default function AppleAuth() {
           new VConsole();
         }}>
         VConsole
+      </button>
+
+      <div>-----</div>
+
+      <button
+        onClick={async () => {
+          try {
+            const result = await managerApprove({
+              originChainId: 'AELF',
+              symbol: 'TOKEN',
+              caHash: 'a79c76fd18879943980b9909f46ea644f9cd02eee5069d645d7046a874f7e212',
+              amount: '999',
+              dappName: 'My Demo',
+            });
+            console.log(result, 'result===');
+          } catch (error) {
+            message.error(handleErrorMessage(error));
+          }
+        }}>
+        managerApprove
       </button>
     </div>
   );
