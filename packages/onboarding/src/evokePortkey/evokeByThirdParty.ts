@@ -22,37 +22,6 @@ interface IEvokeByThirdParty {
 }
 
 const evokeByThirdParty: IEvokeByThirdParty['evokeByThirdParty'] = params =>
-  new Promise((resolve, reject) => {
-    let timer: any = null;
-
-    const onMessage = (event: MessageEvent) => {
-      const type = event.data.type;
-      if (type === 'PortkeyDownloadOnSuccess' || type === 'PortkeyDownloadOnFailure') {
-        timer && clearInterval(timer);
-      }
-      switch (type) {
-        case 'PortkeyDownloadOnSuccess':
-          resolve(event.data.data);
-          break;
-        case 'PortkeyDownloadOnFailure':
-          reject(event.data.error);
-          break;
-        default:
-          return;
-      }
-      window.removeEventListener('message', onMessage);
-    };
-    window.addEventListener('message', onMessage);
-
-    const windowOpener = window.open(`${WEB_PAGE}/portkey-download?${stringify(params)}`);
-
-    timer = setInterval(() => {
-      if (windowOpener?.closed) {
-        clearInterval(timer);
-        reject('User close the prompt');
-        timer = null;
-      }
-    }, 1600);
-  });
+  Promise.resolve(window.open(`${WEB_PAGE}/portkey-download?${stringify(params)}`));
 
 export default evokeByThirdParty;

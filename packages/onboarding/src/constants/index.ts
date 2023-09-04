@@ -9,5 +9,5 @@ export const EXTENSION_DOWNLOAD_URL = {
 };
 
 // export const WEB_PAGE = 'https://openlogin.portkey.finance';
-// export const WEB_PAGE = 'https://openlogin-test.portkey.finance';
-export const WEB_PAGE = 'http://localhost:3000';
+export const WEB_PAGE = 'https://openlogin-test.portkey.finance';
+// export const WEB_PAGE = 'http://192.168.11.245:3000';

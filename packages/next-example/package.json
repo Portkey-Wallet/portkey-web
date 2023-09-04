@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@portkey/did-ui-react": "^1.4.2",
+    "aelf-sdk": "3.2.45-beta.0",
+    "@portkey/onboarding": "^1.4.2",
     "next": "12.2.0",
     "next-transpile-modules": "^10.0.0",
     "react": "18.2.0",

@@ -17,3 +17,7 @@ export interface IEvokePortkeyApp {
   evokePortkeyApp(params: EvokePortkeyByLogin): void;
   evokePortkeyApp(params: EvokePortkeyByLinkDapp): void;
 }
+
+export interface IEvokeExtensionProps {
+  openTarget?: '_self' | '_blank';
+}

@@ -53,7 +53,7 @@ export default function WakeUpPortkey({
     try {
       if (!networkType) throw 'Missing network type';
       setLoading(true, {
-        text: 'Synchronizing on-chain account information...',
+        text: 'Loading...please wait',
         cancelable: true,
         onCancel: () => {
           intervalHandler.remove();
