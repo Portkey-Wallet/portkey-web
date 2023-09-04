@@ -7,6 +7,7 @@ import { amountInUsdShow, chainShowText } from '../../../../utils/assets';
 import { useDefaultToken } from '../../../../hooks/assets';
 import { ZERO } from '../../../../constants/misc';
 import { useTokenPrice } from '../../../context/PortkeyAssetProvider/hooks';
+import { formatStr2EllipsisStr } from '../../../../utils';
 import './index.less';
 
 export interface SendPreviewProps {
@@ -110,7 +111,7 @@ export default function SendPreview({
           <span className="label">From</span>
           <div className="value">
             <p className="name">{nickname}</p>
-            <p className="address">{entireFromAddressShow.replace(/(?<=^\w{9})\w+(?=\w{10})/, '...')}</p>
+            <p className="address">{formatStr2EllipsisStr(entireFromAddressShow)}</p>
           </div>
         </div>
         <div className={clsx('item', toAccount.name?.length || 'no-name')}>
@@ -119,8 +120,8 @@ export default function SendPreview({
             {!!toAccount.name?.length && <p className="name">{toAccount.name}</p>}
             <p className="address">
               {toAccount.address.includes('ELF_')
-                ? toAccount.address.replace(/(?<=^\w{9})\w+(?=\w{10})/, '...')
-                : toAccount.address.replace(/(?<=^\w{6})\w+(?=\w{6})/, '...')}
+                ? formatStr2EllipsisStr(toAccount.address)
+                : formatStr2EllipsisStr(toAccount.address, [6, 6])}
             </p>
           </div>
         </div>

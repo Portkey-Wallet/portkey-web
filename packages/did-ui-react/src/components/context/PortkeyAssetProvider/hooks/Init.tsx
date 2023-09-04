@@ -2,7 +2,7 @@ import { useCallback } from 'react';
 import { usePortkey } from '../../index';
 import { message } from 'antd';
 import { AuthServe, did, handleErrorMessage } from '../../../../utils';
-import { getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolderInfo';
+import { getHolderInfoByApi, getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolderInfo';
 import { basicAssetView } from '../actions';
 import { usePortkeyAsset } from '..';
 import { ChainId } from '@portkey/types';
@@ -66,7 +66,16 @@ export const useStateInit = () => {
       dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
 
       const guardian = holderInfo.guardianList.guardians.find((guardian) => guardian.isLoginGuardian);
-      dispatch(basicAssetView.setGuardianList.actions(holderInfo.guardianList.guardians));
+      did
+        .getHolderInfo({
+          chainId: originChainId as ChainId,
+          caHash,
+        })
+        .then((payload) => {
+          const { guardians } = payload?.guardianList ?? { guardians: [] };
+          dispatch(basicAssetView.setGuardianList.actions(guardians));
+        });
+
       if (guardian)
         did.didWallet.accountInfo = {
           loginAccount: guardian.guardianIdentifier || guardian.identifierHash,
