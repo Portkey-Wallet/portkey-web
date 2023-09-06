@@ -1,6 +1,6 @@
 {
   "name": "@portkey/did",
-  "version": "1.5.0-alpha.2",
+  "version": "1.5.0-alpha.3",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,18 +41,18 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey/accounts": "^1.5.0-alpha.2",
-    "@portkey/contracts": "^1.5.0-alpha.2",
-    "@portkey/graphql": "^1.5.0-alpha.2",
-    "@portkey/request": "^1.5.0-alpha.2",
-    "@portkey/services": "^1.5.0-alpha.2",
-    "@portkey/types": "^1.5.0-alpha.2",
-    "@portkey/utils": "^1.5.0-alpha.2",
+    "@portkey/accounts": "^1.5.0-alpha.3",
+    "@portkey/contracts": "^1.5.0-alpha.3",
+    "@portkey/graphql": "^1.5.0-alpha.3",
+    "@portkey/request": "^1.5.0-alpha.3",
+    "@portkey/services": "^1.5.0-alpha.3",
+    "@portkey/types": "^1.5.0-alpha.3",
+    "@portkey/utils": "^1.5.0-alpha.3",
     "aelf-sdk": "3.2.45-beta.0",
     "react": "^18.2.0"
   },
   "devDependencies": {
     "imap": "^0.8.19"
   },
-  "gitHead": "7dba6ac7f61dab0b1e92fc60c15794d30dbb1918"
+  "gitHead": "61f3e1038d7bffee1548b4dc98d137ba18013632"
 }

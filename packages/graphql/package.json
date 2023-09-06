@@ -1,6 +1,6 @@
 {
   "name": "@portkey/graphql",
-  "version": "1.5.0-alpha.2",
+  "version": "1.5.0-alpha.3",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
-    "@portkey/types": "^1.5.0-alpha.2",
+    "@portkey/types": "^1.5.0-alpha.3",
     "graphql": "^16.6.0",
     "subscriptions-transport-ws": "^0.11.0"
   },
@@ -52,5 +52,5 @@
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
   },
-  "gitHead": "7dba6ac7f61dab0b1e92fc60c15794d30dbb1918"
+  "gitHead": "61f3e1038d7bffee1548b4dc98d137ba18013632"
 }
