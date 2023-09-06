@@ -15,6 +15,7 @@ import './index.less';
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   chainId: ChainId;
   caHash: string;
+  sandboxId?: string;
 }
 
 export interface IManagerApproveResult {
@@ -39,6 +40,7 @@ export default function ManagerApproveInner({
   caHash,
   amount,
   dappInfo,
+  sandboxId,
   symbol,
   onCancel,
   onFinish,
@@ -56,6 +58,7 @@ export default function ManagerApproveInner({
       rpcUrl: chainInfo.endPoint,
       chainType: 'aelf',
       address: chainInfo.caContractAddress,
+      sandboxId,
     });
     return list;
   }, [originChainId]);
