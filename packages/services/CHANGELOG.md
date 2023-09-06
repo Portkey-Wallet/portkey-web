@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.5.0-alpha.0) (2023-09-06)
+
+### Features
+
+- 🎸 add ManagerApprove ([46c88b7](https://github.com/Portkey-Wallet/portkey-web/commit/46c88b7c1a20c1de7c6c92b15b1b461319cf4ac3))
+- 🎸 add wallet security check ([edd0eae](https://github.com/Portkey-Wallet/portkey-web/commit/edd0eaebc61061f815c721e98b20608d8ab05302))
+
 ## [1.4.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.1...v1.4.2) (2023-09-01)
 
 ### Bug Fixes
