@@ -43,7 +43,8 @@
     "@portkey/types": "^1.5.0-alpha.5",
     "@portkey/utils": "^1.5.0-alpha.5",
     "bowser": "^2.11.0",
-    "query-string": "^7.1.1"
+    "query-string": "^7.1.1",
+    "@portkey/detect-provider": "1.0.1"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

@@ -17,6 +17,11 @@ export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   caHash: string;
 }
 
+export interface IManagerApproveResult {
+  amount: string;
+  guardiansApproved: GuardiansApproved[];
+}
+
 export interface ManagerApproveInnerProps extends BaseManagerApproveInnerProps {
   onCancel?: () => void;
   onError?: (error: Error) => void;
