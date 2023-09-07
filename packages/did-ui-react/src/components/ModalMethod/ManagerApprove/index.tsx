@@ -1,3 +1,4 @@
+import { AuthServe } from '../../../utils/authServe';
 import ManagerApproveContent, { BaseManagerApproveInnerProps } from '../../ManagerApprove/index.component';
 import BaseModalFunc from '../BaseModalMethod';
 interface ManagerApproveModalProps {
@@ -9,6 +10,7 @@ export type ManagerApproveProps = BaseManagerApproveInnerProps & ManagerApproveM
 
 const managerApprove = async ({ wrapClassName, className, ...props }: ManagerApproveProps) =>
   new Promise((resolve, reject) => {
+    AuthServe.addRequestAuthCheck(props.originChainId);
     const modal = BaseModalFunc({
       ...props,
       wrapClassName: 'portkey-ui-manager-approve-modal-wrapper ' + wrapClassName,

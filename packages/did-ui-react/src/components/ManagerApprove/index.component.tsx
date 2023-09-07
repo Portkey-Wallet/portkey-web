@@ -13,9 +13,8 @@ import BackHeader from '../BackHeader';
 import './index.less';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
-  chainId: ChainId;
+  originChainId: ChainId;
   caHash: string;
-  sandboxId?: string;
 }
 
 export interface IManagerApproveResult {
@@ -36,11 +35,10 @@ export enum ManagerApproveStep {
 const PrefixCls = 'manager-approval';
 
 export default function ManagerApproveInner({
-  chainId: originChainId,
+  originChainId,
   caHash,
   amount,
   dappInfo,
-  sandboxId,
   symbol,
   onCancel,
   onFinish,
@@ -58,7 +56,6 @@ export default function ManagerApproveInner({
       rpcUrl: chainInfo.endPoint,
       chainType: 'aelf',
       address: chainInfo.caContractAddress,
-      sandboxId,
     });
     return list;
   }, [originChainId]);
