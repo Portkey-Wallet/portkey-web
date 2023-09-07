@@ -3,6 +3,8 @@ import { message } from 'antd';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import CustomSvg from '../CustomSvg';
+import { useThrottleCallback } from '../../hooks/throttle';
+import { useRef } from 'react';
 
 export default function Copy({
   toCopy,
@@ -20,12 +22,24 @@ export default function Copy({
   const { t } = useTranslation();
   const [, setCopied] = useCopyToClipboard();
 
+  const isClose = useRef<boolean>();
+
+  const copyHandler = useThrottleCallback(
+    () => {
+      setCopied(toCopy);
+      if (isClose.current) return;
+      isClose.current = true;
+      message.success(t('Copy Success'), 2, () => {
+        isClose.current = false;
+      });
+    },
+    [],
+    2500,
+  );
+
   return (
     <span
-      onClick={() => {
-        setCopied(toCopy);
-        message.success(t('Copy Success'));
-      }}
+      onClick={copyHandler}
       className={clsx('portkey-ui-flex-row-center portkey-ui-copy-wrapper', className)}
       style={{ cursor: 'pointer' }}>
       <CustomSvg type={iconType as any} className={clsx(['copy-icon', iconClassName])} />
