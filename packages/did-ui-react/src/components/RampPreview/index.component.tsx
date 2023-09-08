@@ -28,13 +28,14 @@ import { getAchSignature, getRampOrderNo } from './utils';
 import { useGetAchTokenInfo } from './hooks';
 
 export default function RampPreviewMain({
+  className,
   initState,
   portkeyServiceUrl,
   chainId = DEFAULT_CHAIN_ID,
   overrideAchConfig,
   isBuySectionShow = true,
   isSellSectionShow = true,
-  goBack,
+  onBack,
 }: IRampPreviewProps) {
   const { t } = useTranslation();
   const updateRef = useRef(MAX_UPDATE_TIME);
@@ -114,7 +115,7 @@ export default function RampPreviewMain({
     if ((side === RampTypeEnum.BUY && !isBuySectionShow) || (side === RampTypeEnum.SELL && !isSellSectionShow)) {
       setLoading(false);
       message.error(SERVICE_UNAVAILABLE_TEXT);
-      goBack?.();
+      onBack?.();
     }
 
     if (!appId || !baseUrl) return setLoading(false);
@@ -156,10 +157,9 @@ export default function RampPreviewMain({
       window.open(openUrl, '_blank');
 
       await new Promise((resolve) => setTimeout(resolve, 500));
-      goBack?.();
+      onBack?.();
     } catch (error) {
       message.error('There is a network error, please try again.');
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -169,7 +169,7 @@ export default function RampPreviewMain({
     isSellSectionShow,
     appId,
     baseUrl,
-    goBack,
+    onBack,
     portkeyServiceUrl,
     updateAchOrder,
     getAchTokenInfo,
@@ -190,10 +190,10 @@ export default function RampPreviewMain({
   }, [t]);
 
   return (
-    <div className={clsx(['portkey-ui-ramp-preview-frame portkey-ui-flex-column'])}>
+    <div className={clsx(['portkey-ui-ramp-preview-frame portkey-ui-flex-column', className])}>
       <BackHeaderForPage
         title={`${data.side === RampTypeEnum.BUY ? 'Buy' : 'Sell'} ${initState.crypto}`}
-        leftCallBack={goBack}
+        leftCallBack={onBack}
       />
       <div className="portkey-ui-ramp-preview-content">
         <div className="transaction portkey-ui-flex-column-center">

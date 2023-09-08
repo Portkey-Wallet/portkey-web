@@ -209,8 +209,9 @@ function AssetMain({
             ...selectToken,
             tokenContractAddress: selectToken.address,
           }}
-          goBack={onBack}
-          goPreview={({ initState }) => {
+
+          onBack={onBack}
+          onShowPreview={({ initState }) => {
             setRampPreview(initState);
             setAssetStep(AssetStep.rampPreview);
           }}
@@ -225,7 +226,7 @@ function AssetMain({
           initState={rampPreview}
           portkeyServiceUrl={portkeyServiceUrl || ''}
           chainId={selectToken.chainId}
-          goBack={() => {
+          onBack={() => {
             setAssetStep(AssetStep.ramp);
           }}
           isBuySectionShow={true}
