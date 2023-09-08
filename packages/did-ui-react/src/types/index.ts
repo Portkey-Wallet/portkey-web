@@ -1,3 +1,6 @@
+import { Form } from 'antd';
+import { SvgType } from './assets';
+
 export * from './error';
 export * from './guardian';
 export * from './wallet';
@@ -52,3 +55,15 @@ export interface PaginationPage {
   pageSize: number;
   page: number;
 }
+
+export interface IMenuItemType {
+  label: string;
+  icon?: SvgType;
+  onClick: () => void;
+}
+
+type ValidateStatus = Parameters<typeof Form.Item>[0]['validateStatus'];
+export type ValidData = {
+  validateStatus: ValidateStatus;
+  errorMsg: string;
+};
