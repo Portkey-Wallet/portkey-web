@@ -16,9 +16,15 @@ export interface GuardianListProps {
   onViewGuardian: (item: UserGuardianStatus) => void;
 }
 
-function GuardianList({ header, chainId = 'AELF', className, guardianList = [], onViewGuardian }: GuardianListProps) {
+function GuardianPageList({
+  header,
+  chainId = 'AELF',
+  className,
+  guardianList = [],
+  onViewGuardian,
+}: GuardianListProps) {
   return (
-    <div className={clsx('guardian-list-wrapper', className)}>
+    <div className={clsx('guardian-list-wrapper guardian-page-list-wrapper', className)}>
       {header}
       <ul className="guardian-list-container">
         {guardianList.map((item) => (
@@ -29,4 +35,4 @@ function GuardianList({ header, chainId = 'AELF', className, guardianList = [], 
   );
 }
 
-export default memo(GuardianList);
+export default memo(GuardianPageList);
