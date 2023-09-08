@@ -162,7 +162,7 @@ export default function ManagerApproveInner({
             symbol={symbol}
             amount={allowance}
             recommendedAmount={divDecimals(amount, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed()}
-            max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed()}
+            max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed(0)}
             dappInfo={dappInfo}
             onCancel={onCancel}
             onConfirm={allowanceConfirm}

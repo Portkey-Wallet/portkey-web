@@ -1,6 +1,5 @@
 import { Button, Input } from 'antd';
 import { useCallback, useState } from 'react';
-import { ALLOWANCE_MAX_LIMIT } from '../../constants';
 import { parseInputNumberChange } from '../../utils/input';
 import BigNumber from 'bignumber.js';
 import './index.less';
@@ -12,7 +11,7 @@ export interface BaseSetAllowanceProps {
   symbol: string;
   amount: number | string;
   className?: string;
-  max?: string;
+  max?: string | number;
   dappInfo?: { icon?: string; href?: string; name?: string };
 }
 
@@ -30,7 +29,7 @@ export type SetAllowanceProps = BaseSetAllowanceProps & {
 } & SetAllowanceHandlerProps;
 
 export default function SetAllowanceMain({
-  max,
+  max = Infinity,
   amount,
   dappInfo,
   symbol,
@@ -87,7 +86,7 @@ export default function SetAllowanceMain({
             onChange={(e) => {
               inputChange(e.target.value);
             }}
-            suffix={<span onClick={() => inputChange(ALLOWANCE_MAX_LIMIT)}>Max</span>}
+            suffix={<span onClick={() => inputChange(max)}>Max</span>}
           />
           {typeof error !== 'undefined' && <div className="error-text">{error}</div>}
         </div>
