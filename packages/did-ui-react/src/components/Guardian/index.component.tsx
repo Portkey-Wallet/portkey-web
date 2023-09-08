@@ -69,9 +69,9 @@ function GuardianMain({
     AuthServe.addRequestAuthCheck(originChainId);
   }, []);
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);
+  const verifyToken = useVerifyToken();
   const getVerifierInfo = useCallback(async () => {
     try {
-      setLoading(true);
       const chainInfo = await getChainInfo(chainId);
       const list = await getVerifierList({
         sandboxId,
@@ -99,12 +99,9 @@ function GuardianMain({
       setLoading(false);
     }
   }, [chainId, chainType, isErrorTip, onError, sandboxId]);
-  console.log('verifier', verifierList, verifierMap, guardianList);
-  const verifyToken = useVerifyToken();
 
   const getGuardianList = useCallback(async () => {
     try {
-      setLoading(true);
       const payload = await did.getHolderInfo({
         caHash,
         chainId: originChainId,
@@ -140,15 +137,16 @@ function GuardianMain({
   }, [caHash, isErrorTip, onError, originChainId, verifierMap]);
 
   const getData = useCallback(async () => {
+    setLoading(true);
     await getVerifierInfo();
     await getGuardianList();
+    setLoading(false);
   }, [getGuardianList, getVerifierInfo]);
 
   useEffect(() => {
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  console.log('did', did, guardianList);
   const onAddGuardian = useCallback(() => {
     setIsAdd(true);
     setStep(GuardianStep.guardianAdd);
@@ -228,21 +226,13 @@ function GuardianMain({
     async (v: ISocialLogin) => {
       try {
         const { clientId, redirectURI } = socialBasic(v) || {};
-        console.log('===socialAuth clientId, redirectURI', clientId, redirectURI);
         const response = await socialLoginAuth({
           type: v,
           clientId,
           redirectURI,
         });
-        console.log('===socialAuth response', response);
         if (!response?.token) throw new Error('add guardian failed');
-        // setCurrentGuardian({
-        //   ...(currentGuardian as UserGuardianStatus),
-        //   accessToken: response.token,
-        // });
-        // console.log('===response auth', response);
         const info = await socialUserInfo(v, response.token);
-        console.log('===info', info);
         return info;
       } catch (error) {
         errorTip(
@@ -260,7 +250,6 @@ function GuardianMain({
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       try {
-        setLoading(true);
         const { clientId, redirectURI, customLoginHandler } =
           socialBasic(_guardian?.guardianType as ISocialLogin) || {};
         const info: any = await socialUserInfo(_guardian?.guardianType as ISocialLogin, _guardian?.accessToken || '');
@@ -305,20 +294,23 @@ function GuardianMain({
           chainId,
           caHash,
         });
-        console.log('===handleAddGuardian res', res, {
-          type: GuardianMth.addGuardian,
-          params,
-          sandboxId,
-          chainId,
-          caHash,
-        });
+        console.log('===handleAddGuardian res', res);
         await getGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
-        console.log('===handleAddGuardian error', e);
+        return errorTip(
+          {
+            errorFields: 'HandleAddGuardian',
+            error: handleErrorMessage(e),
+          },
+          isErrorTip,
+          onError,
+        );
+      } finally {
+        setLoading(false);
       }
     },
-    [caHash, chainId, getGuardianList, sandboxId],
+    [caHash, chainId, getGuardianList, isErrorTip, onError, sandboxId],
   );
   const handleEditGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
@@ -338,10 +330,19 @@ function GuardianMain({
         getGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
-        console.log('===handleUpdateGuardian error', e);
+        return errorTip(
+          {
+            errorFields: 'HandldEditGuardian',
+            error: handleErrorMessage(e),
+          },
+          isErrorTip,
+          onError,
+        );
+      } finally {
+        setLoading(false);
       }
     },
-    [caHash, chainId, getGuardianList, preGuardian, sandboxId],
+    [caHash, chainId, getGuardianList, isErrorTip, onError, preGuardian, sandboxId],
   );
   const handleRemoveGuardian = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
@@ -360,10 +361,19 @@ function GuardianMain({
         getGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
-        console.log('===handleRemoveGuardian error', e);
+        return errorTip(
+          {
+            errorFields: 'HandleRemoveGuardian',
+            error: handleErrorMessage(e),
+          },
+          isErrorTip,
+          onError,
+        );
+      } finally {
+        setLoading(false);
       }
     },
-    [caHash, chainId, currentGuardian, getGuardianList, sandboxId],
+    [caHash, chainId, currentGuardian, getGuardianList, isErrorTip, onError, sandboxId],
   );
   const handleSetLoginGuardian = useCallback(async () => {
     const guardian = {
@@ -395,6 +405,8 @@ function GuardianMain({
         isErrorTip,
         onError,
       );
+    } finally {
+      setLoading(true);
     }
   }, [
     caHash,

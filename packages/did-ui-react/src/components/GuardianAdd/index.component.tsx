@@ -164,6 +164,7 @@ function GuardianAdd({
       guardianType: selectGuardianType as AccountType,
       guardianIdentifier: currentKey.split('&')?.[0],
       identifier: currentKey.split('&')?.[0],
+      verifierId: selectVerifierId,
       ...socialValue,
     };
     curGuardian.current = _guardian;
@@ -172,6 +173,7 @@ function GuardianAdd({
   const handleSocialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
+        setLoading(true);
         const info = await socialAuth?.(v);
         setSocialValue(info);
       } catch (error) {
@@ -183,6 +185,8 @@ function GuardianAdd({
           isErrorTip,
           onError,
         );
+      } finally {
+        setLoading(false);
       }
     },
     [isErrorTip, onError, socialAuth],
@@ -322,6 +326,7 @@ function GuardianAdd({
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
+        setLoading(true);
         handleAddGuardian?.(curGuardian.current!, approvalInfo);
       } catch (e) {
         errorTip(
@@ -332,20 +337,37 @@ function GuardianAdd({
           isErrorTip,
           onError,
         );
+      } finally {
+        setLoading(false);
       }
     },
     [handleAddGuardian, isErrorTip, onError],
   );
   const onConfirm = useCallback(async () => {
     if (checkValid()) {
-      if (socialValue) {
-        const { guardianIdentifier, verifierInfo } = await socialVerify?.(curGuardian.current!);
-        curGuardian.current = {
-          ...(curGuardian?.current as UserGuardianStatus),
-          identifierHash: guardianIdentifier,
-          verifierInfo,
-        };
-        setApprovalVisible(true);
+      setLoading(true);
+      if (socialValue?.id) {
+        try {
+          console.log('===curGuardian.current,', curGuardian.current);
+          const { guardianIdentifier, verifierInfo } = await socialVerify?.(curGuardian.current!);
+          curGuardian.current = {
+            ...(curGuardian?.current as UserGuardianStatus),
+            identifierHash: guardianIdentifier,
+            verifierInfo,
+          };
+          setApprovalVisible(true);
+        } catch (e) {
+          errorTip(
+            {
+              errorFields: 'Social Verify',
+              error: handleErrorMessage(e),
+            },
+            isErrorTip,
+            onError,
+          );
+        } finally {
+          setLoading(false);
+        }
       } else {
         CustomModal({
           type: 'confirm',
@@ -365,7 +387,7 @@ function GuardianAdd({
         });
       }
     }
-  }, [checkValid, sendCode, socialValue, socialVerify]);
+  }, [checkValid, isErrorTip, onError, sendCode, socialValue, socialVerify]);
   useEffect(() => {
     let _key = '';
     switch (selectGuardianType) {
