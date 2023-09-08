@@ -12,6 +12,9 @@ export default function Home() {
       <a href="assets">
         <button>Go to assets</button>
       </a>
+      <a href="guardians">
+        <button>Go to guardians</button>
+      </a>
       <div></div>
       <a href="utils-test">
         <button>Go to utils-test</button>

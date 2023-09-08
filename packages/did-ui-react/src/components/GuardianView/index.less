@@ -1,0 +1,96 @@
+@import '../../assets/theme/constants.less';
+
+.portkey-ui-guardian-view {
+  height: 100%;
+  .guardian-view-body {
+    font-size: 14px;
+    line-height: 20px;
+    .guardian-view-input-content {
+      padding: 24px;
+      gap: 24px;
+      .guardian-view-input-item {
+        .guardian-view-input-item-label {
+          color: var(--portkey-ui-text-primary);
+          margin-bottom: 8px;
+          .text-overflow(1)
+        }
+        .guardian-view-input-item-control {
+          left: 40px;
+          width: 100%;
+          height: 48px;
+          align-items: center;
+          padding: 8px 16px;
+          color: var(--portkey-ui-text-disabled);
+          border-radius: 6px;
+          background-color: var(--portkey-ui-bg-6);
+          border: 1px solid var(--portkey-ui-default-border);
+  
+          .portkey-ui-custom-svg {
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+          }
+          .base-verifier-icon {
+            margin-right: 12px;
+            flex-shrink: 0;
+          }
+        }
+      }
+    }
+    .guardian-view-login-content {
+      border-top: 1px solid var(--portkey-ui-default-border);
+      padding: 24px;
+      .guardian-view-login-content-label {
+        margin-bottom: 8px;
+        line-height: 22px;
+        color: var(--portkey-ui-text-primary);
+        font-size: 18px;
+      }
+      .guardian-view-login-content-value {
+        line-height: 20px;
+        color: var(--portkey-ui-text-secondary);
+        font-size: 14px;
+        margin-bottom: 24px;
+      }
+      .guardian-view-switch-status-wrap {
+        display: flex;
+        align-items: center;
+        .guardian-view-switch-login-switch {
+          width: 43px;
+          height: 24px;
+          border: 1px solid var(--portkey-ui-input-border);
+          background: var(--portkey-ui-bg-5);
+          .portkey-ant-switch-handle::before {
+            background: var(--portkey-ui-bg-16);
+          }
+        }
+        .portkey-ant-switch-checked {
+          border: 1px solid var(--portkey-ui-border-7);
+          .portkey-ant-switch-handle::before {
+            background: var(--portkey-ui-primary-bg);
+          }
+        }
+        .portkey-ant-switch:focus {
+          box-shadow: none;
+        }
+        .guardian-view-switch-status {
+          line-height: 22px;
+          color: var(--portkey-ui-text-secondary);
+          font-size: 16px;
+          margin-left: 16px;
+        }
+      }
+    }
+  }
+  .guardian-view-footer {
+    margin-top: 16px;
+    padding: 16px;
+    border-top: 1px solid var(--portkey-ui-default-border);
+    .guardian-btn {
+      padding: 0 16px;
+      line-height: var(--portkey-ui-default-btn-h);
+      border-radius: var(--portkey-ui-primary-border-radius);
+    }
+  }
+}
+
