@@ -1,6 +1,6 @@
 {
   "name": "@portkey/validator",
-  "version": "1.4.2",
+  "version": "1.5.0-alpha.7",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -39,5 +39,5 @@
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
-  "gitHead": "df2d5f465b4d184997734e87625e1e686adb6822"
+  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

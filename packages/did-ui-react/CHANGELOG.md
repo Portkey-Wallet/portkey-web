@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.6...v1.5.0-alpha.7) (2023-09-07)
+
+### Bug Fixes
+
+- 🐛 fix manager approve ([b0a32c3](https://github.com/Portkey-Wallet/portkey-web/commit/b0a32c3ed349b9c428005ef888e198f24d564b34))
+
+## [1.5.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.5...v1.5.0-alpha.6) (2023-09-06)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [1.5.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.4...v1.5.0-alpha.5) (2023-09-06)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [1.5.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.3...v1.5.0-alpha.4) (2023-09-06)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [1.5.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.2...v1.5.0-alpha.3) (2023-09-06)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [1.5.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.1...v1.5.0-alpha.2) (2023-09-06)
+
+### Bug Fixes
+
+- 🐛 add dependencies ([6dc7b00](https://github.com/Portkey-Wallet/portkey-web/commit/6dc7b000281dd9f0fd5772b5c272309f8dd7da2e))
+
+## [1.5.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.0...v1.5.0-alpha.1) (2023-09-06)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [1.5.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.5.0-alpha.0) (2023-09-06)
+
+### Features
+
+- 🎸 add ManagerApprove ([46c88b7](https://github.com/Portkey-Wallet/portkey-web/commit/46c88b7c1a20c1de7c6c92b15b1b461319cf4ac3))
+- 🎸 add wallet security check ([edd0eae](https://github.com/Portkey-Wallet/portkey-web/commit/edd0eaebc61061f815c721e98b20608d8ab05302))
+- 🎸 evoke portkey ([963de7f](https://github.com/Portkey-Wallet/portkey-web/commit/963de7f08282b43bb01d6ad489beca9653890751))
+
+## [1.4.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.2...v1.4.0-alpha.3) (2023-08-30)
+
+## [1.4.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.1-alpha.1...v1.4.0-alpha.2) (2023-08-30)
+
+### Features
+
+- 🎸 add evoke by thirdParty ([ac85ccf](https://github.com/Portkey-Wallet/portkey-web/commit/ac85ccfe40f57d681f332a1b705748b36e3e9e57))
+
+## [1.4.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.0...v1.4.0-alpha.1) (2023-08-25)
+
+### Features
+
+- 🎸 evoke app ([8eb74f7](https://github.com/Portkey-Wallet/portkey-web/commit/8eb74f7df14744324a9579c712c283bb63b5377b))
+
 ## [1.4.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.1...v1.4.2) (2023-09-01)
 
 ### Bug Fixes

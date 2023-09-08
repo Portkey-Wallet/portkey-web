@@ -8,25 +8,37 @@ import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
 import { BaseGuardianItem } from '../../types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
+import BackHeader from '../BackHeader';
+import './index.less';
 
-export interface ManagerApproveInnerProps extends BaseSetAllowanceProps {
+export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
   caHash: string;
+}
+
+export interface IManagerApproveResult {
+  amount: string;
+  guardiansApproved: GuardiansApproved[];
+}
+
+export interface ManagerApproveInnerProps extends BaseManagerApproveInnerProps {
   onCancel?: () => void;
   onError?: (error: Error) => void;
   onFinish?: (res: { amount: string; guardiansApproved: GuardiansApproved[] }) => void;
 }
-
 export enum ManagerApproveStep {
   SetAllowance = 'SetAllowance',
   GuardianApproval = 'GuardianApproval',
 }
 
+const PrefixCls = 'manager-approval';
+
 export default function ManagerApproveInner({
   originChainId,
   caHash,
   amount,
-  dappName,
+  dappInfo,
   symbol,
   onCancel,
   onFinish,
@@ -98,32 +110,36 @@ export default function ManagerApproveInner({
   );
 
   return (
-    <div>
-      {step === ManagerApproveStep.SetAllowance && (
-        <SetAllowanceMain
-          symbol={symbol}
-          amount={amount}
-          dappName={dappName}
-          onCancel={onCancel}
-          onConfirm={allowanceConfirm}
-        />
-      )}
+    <PortkeyStyleProvider>
+      <div className="portkey-ui-flex-column portkey-ui-manager-approval-wrapper">
+        {step === ManagerApproveStep.SetAllowance && (
+          <SetAllowanceMain
+            className="portkey-ui-flex-column"
+            symbol={symbol}
+            amount={allowance}
+            dappInfo={dappInfo}
+            onCancel={onCancel}
+            onConfirm={allowanceConfirm}
+          />
+        )}
 
-      {step === ManagerApproveStep.GuardianApproval && guardianList && (
-        <GuardianApprovalMain
-          header={<div onClick={() => setStep(ManagerApproveStep.SetAllowance)}> Cancel</div>}
-          chainId={originChainId}
-          guardianList={guardianList}
-          onConfirm={(approvalInfo) => {
-            onFinish?.({
-              amount: allowance,
-              guardiansApproved: approvalInfo,
-            });
-          }}
-          onError={(error) => onError?.(Error(handleErrorMessage(error.error)))}
-          operationType={OperationTypeEnum.managerApprove}
-        />
-      )}
-    </div>
+        {step === ManagerApproveStep.GuardianApproval && guardianList && (
+          <GuardianApprovalMain
+            className={`${PrefixCls}-guardian-approve`}
+            header={<BackHeader onBack={() => setStep(ManagerApproveStep.SetAllowance)} />}
+            chainId={originChainId}
+            guardianList={guardianList}
+            onConfirm={(approvalInfo) => {
+              onFinish?.({
+                amount: allowance,
+                guardiansApproved: approvalInfo,
+              });
+            }}
+            onError={(error) => onError?.(Error(handleErrorMessage(error.error)))}
+            operationType={OperationTypeEnum.managerApprove}
+          />
+        )}
+      </div>
+    </PortkeyStyleProvider>
   );
 }
