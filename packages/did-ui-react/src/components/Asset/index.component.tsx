@@ -227,7 +227,6 @@ function AssetMain({
             ...selectToken,
             tokenContractAddress: selectToken.address,
           }}
-
           onBack={onBack}
           onShowPreview={({ initState }) => {
             setRampPreview(initState);

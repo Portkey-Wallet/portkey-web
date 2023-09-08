@@ -48,7 +48,22 @@ export default function ManagerApproveInner({
   onError,
 }: ManagerApproveInnerProps) {
   const [step, setStep] = useState<ManagerApproveStep>(ManagerApproveStep.SetAllowance);
-  const [allowance, setAllowance] = useState<string>(amount.toString());
+
+  const [tokenInfo, setTokenInfo] = useState<{
+    symbol: string;
+    tokenName: string;
+    supply: string;
+    totalSupply: string;
+    decimals: number;
+    issuer: string;
+    isBurnable: true;
+    issueChainId: number;
+    issued: string;
+  }>();
+
+  const [allowance, setAllowance] = useState<string>(
+    divDecimals(amount, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed(),
+  );
   const [guardianList, setGuardianList] = useState<BaseGuardianItem[]>();
 
   const getVerifierListHandler = useCallback(async () => {
@@ -113,18 +128,6 @@ export default function ManagerApproveInner({
     [getGuardianList, onError],
   );
 
-  const [tokenInfo, setTokenInfo] = useState<{
-    symbol: string;
-    tokenName: string;
-    supply: string;
-    totalSupply: string;
-    decimals: number;
-    issuer: string;
-    isBurnable: true;
-    issueChainId: number;
-    issued: string;
-  }>();
-
   const getTokenInfo = useCallback(async () => {
     try {
       const chainInfo = await getChain(originChainId);
@@ -157,7 +160,8 @@ export default function ManagerApproveInner({
           <SetAllowanceMain
             className="portkey-ui-flex-column"
             symbol={symbol}
-            amount={divDecimals(allowance, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed()}
+            amount={allowance}
+            recommendedAmount={divDecimals(amount, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed()}
             max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed()}
             dappInfo={dappInfo}
             onCancel={onCancel}
@@ -183,7 +187,7 @@ export default function ManagerApproveInner({
               }));
 
               onFinish?.({
-                amount: timesDecimals(allowance, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed(),
+                amount: timesDecimals(allowance, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed(0),
                 guardiansApproved: approved,
               });
             }}
