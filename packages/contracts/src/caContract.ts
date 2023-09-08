@@ -1,11 +1,11 @@
-import { CallOptions, IContract, SendOptions, SendResult, ViewResult } from '@portkey/types';
+import { CallOptions, SendOptions, SendResult, ViewResult } from '@portkey/types';
 import { aelf, sleep } from '@portkey/utils';
 
 import { AElfContract } from './aelfContract';
-import { CAContractProps } from './types';
+import { CAContractProps, IPortkeyContract } from './types';
 import { getTxResult, handleContractError, handleContractParams, handleFunctionName } from './utils';
 
-export class AElfCAContract extends AElfContract implements IContract {
+export class AElfCAContract extends AElfContract implements IPortkeyContract {
   public caContractAddress: string;
   public caContract: any;
   public caHash: string;
@@ -104,7 +104,7 @@ export class AElfCAContract extends AElfContract implements IContract {
       }
       const data = await aelf.encodedTx({
         instance: this.aelfInstance,
-        contract: this.aelfContract,
+        contract: this.caContract,
         paramsOption: _params,
         functionName: _functionName,
       });

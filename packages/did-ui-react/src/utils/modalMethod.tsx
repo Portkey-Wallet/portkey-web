@@ -1,8 +1,14 @@
 import { ModalFuncProps, Modal } from 'antd';
 
-export function modalMethod({ type, wrapClassName, className, ...props }: Omit<ModalFuncProps, 'onOk' | 'onCancel'>) {
-  return new Promise((resolve, reject) => {
-    if (!type) return reject('type is required');
+export function modalMethod({
+  type = 'confirm',
+  wrapClassName = '',
+  className,
+  onOk,
+  onCancel,
+  ...props
+}: ModalFuncProps) {
+  return new Promise((resolve) => {
     Modal[type]({
       width: 320,
       icon: null,
@@ -12,9 +18,11 @@ export function modalMethod({ type, wrapClassName, className, ...props }: Omit<M
       wrapClassName: 'portkey-ui-wrapper portkey-ui-modal-method-wrapper ' + wrapClassName,
       className: 'portkey-ui-modal-method ' + className,
       onOk: () => {
+        onOk?.();
         resolve(true);
       },
       onCancel: () => {
+        onCancel?.();
         resolve(false);
       },
     });

@@ -41,7 +41,7 @@ import { getContractBasic } from '@portkey/contracts'
 
 // use ca contract 
 const contract = await getContractBasic({
-  chianType: 'aelf',
+  chainType: 'aelf',
   account: 'your account',
   contractAddress: 'contractAddress',
   caContractAddress: 'caContractAddress',
@@ -54,7 +54,7 @@ const contract = await getContractBasic({
 const contract = await getContractBasic({
   account: 'your account',
   contractAddress: 'contractAddress',
-  chianType: 'aelf',
+  chainType: 'aelf',
   rpcUrl: 'rpcUrl',
 })
 

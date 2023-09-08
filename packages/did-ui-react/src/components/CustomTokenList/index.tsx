@@ -1,13 +1,12 @@
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useMemo, useState } from 'react';
 import { ELF_SYMBOL } from '../../constants/assets';
 import CustomSvg from '../CustomSvg';
 import { transNetworkText } from '../../utils/converter';
 import { BaseToken } from '../types/assets';
 import { NetworkType } from '../../types';
-import DropdownSearch from '../DropdownSearch';
 import { MAINNET } from '../../constants/network';
 import TitleWrapper from '../TitleWrapper';
-import useDebounce from '../../hooks/useDebounce';
+import AssetDropdown from '../AssetDropdown';
 import './index.less';
 
 export interface ICustomTokenListProps {
@@ -28,13 +27,7 @@ export default function CustomTokenList({
   networkType,
 }: ICustomTokenListProps) {
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
-  const [openDrop, setOpenDrop] = useState<boolean>(false);
   const [filterWord, setFilterWord] = useState<string>('');
-  const [searchVal, setSearchVal] = useState<string>('');
-
-  useEffect(() => {
-    setSearchVal('');
-  }, []);
 
   const renderReceiveToken = useCallback(
     (token: BaseToken) => {
@@ -43,7 +36,7 @@ export default function CustomTokenList({
           <div className="icon">
             <div className="custom">
               {token.symbol === ELF_SYMBOL ? (
-                <CustomSvg className="token-logo" type="AelfTestnet" />
+                <CustomSvg className="token-logo" type="ELF" />
               ) : (
                 token?.symbol?.slice(0, 1)
               )}
@@ -58,12 +51,6 @@ export default function CustomTokenList({
     },
     [isMainnet, onChange],
   );
-
-  const debounce = useDebounce(searchVal, 500);
-
-  useEffect(() => {
-    setFilterWord(debounce);
-  }, [debounce]);
 
   const filterTokenList = useMemo(() => {
     if (!filterWord) return tokenList;
@@ -86,22 +73,8 @@ export default function CustomTokenList({
         rightElement={<CustomSvg type="Close2" onClick={onClose} />}
       />
 
-      <DropdownSearch
-        overlayClassName="empty-dropdown"
-        open={openDrop}
-        value={searchVal}
-        overlay={<div className="empty-tip">There is no search result.</div>}
-        inputProps={{
-          onBlur: () => setOpenDrop(false),
-          onChange: (e) => {
-            const value = e.target.value.replaceAll(' ', '');
-            if (!value) setOpenDrop(false);
+      <AssetDropdown placeholder={searchPlaceHolder || 'Search'} onInputChange={setFilterWord} />
 
-            setSearchVal(value);
-          },
-          placeholder: searchPlaceHolder || 'Search',
-        }}
-      />
       <div className="list">
         {!filterTokenList || filterTokenList.length === 0 ? (
           <div className="empty-content">

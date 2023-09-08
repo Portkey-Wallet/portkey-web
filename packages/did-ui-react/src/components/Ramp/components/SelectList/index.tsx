@@ -86,7 +86,7 @@ export default function CustomList({
               // onChange?.(token);
               onClose?.();
             }}>
-            <CustomSvg type="AelfTestnet" />
+            <CustomSvg type="ELF" />
             <div className="portkey-ui-flex-column text">
               <div>{token.symbol}</div>
               <div className="chain">{transNetworkText(token.chainId, networkType)}</div>

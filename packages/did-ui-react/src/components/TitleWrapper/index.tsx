@@ -9,9 +9,17 @@ export interface TitleWrapperProps {
   leftElement?: ReactNode | boolean;
   rightElement?: ReactNode;
   leftCallBack?: () => void;
+  rightCallback?: () => void;
 }
 
-export default function TitleWrapper({ title, className, leftElement, rightElement, leftCallBack }: TitleWrapperProps) {
+export default function TitleWrapper({
+  title,
+  className,
+  leftElement,
+  rightElement,
+  leftCallBack,
+  rightCallback,
+}: TitleWrapperProps) {
   return (
     <Row justify="space-between" className={clsx(className)}>
       <Col
@@ -27,7 +35,9 @@ export default function TitleWrapper({ title, className, leftElement, rightEleme
         ) : null}
       </Col>
       <Col className="title-center">{title}</Col>
-      <Col className="title-right-col">{rightElement || ''}</Col>
+      <Col className="title-right-col">
+        <span onClick={rightCallback}>{rightElement || ''}</span>
+      </Col>
     </Row>
   );
 }

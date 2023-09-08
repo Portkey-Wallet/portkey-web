@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 import { ChainId } from '@portkey/types';
-import { Spin } from 'antd';
 import { sleep } from '@portkey/utils';
 
 const PIN = '111111';
@@ -21,12 +20,12 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
-  serviceUrl: 'https://localtest-applesign.portkey.finance',
+  serviceUrl: 'https://localtest-applesign2.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
   // },
-  graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
+  graphQLUrl: '/graphql',
 });
 
 export default function Sign() {
@@ -65,7 +64,7 @@ export default function Sign() {
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
         }}
-        // defaultLifeCycle={defaultLifeCycle as any}
+        // defaultLifeCycle={{ LoginByScan: null }}
         onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
           console.log(
             'onLifeCycleChange:',

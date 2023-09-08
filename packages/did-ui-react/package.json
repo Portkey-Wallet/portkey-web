@@ -20,7 +20,7 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/did-ui-react"
   },
-  "version": "1.3.0-alpha.1",
+  "version": "1.5.0-alpha.7",
   "main": "dist/index.js",
   "types": "dist/_types/index.d.ts",
   "type": "module",
@@ -41,15 +41,17 @@
   },
   "dependencies": {
     "@matt-block/react-recaptcha-v2": "^2.0.0",
-    "@portkey/did": "^1.3.0-alpha.1",
-    "@portkey/socket": "^1.3.0-alpha.1",
+    "@portkey/did": "^1.5.0-alpha.7",
+    "@portkey/onboarding": "^1.5.0-alpha.7",
+    "@portkey/socket": "^1.5.0-alpha.7",
     "@rc-component/portal": "1.0.2",
-    "aelf-sdk": "^3.2.40",
+    "aelf-sdk": "3.2.45-beta.0",
     "antd": "4.24.4",
     "antd-mobile": "5.26.0",
     "bignumber.js": "^9.1.0",
     "clsx": "^1.2.1",
     "lottie-web": "5.9.6",
+    "moment": "^2.29.4",
     "query-string": "^7.1.1",
     "react-i18next": "^11.18.6",
     "react-qrcode-logo": "2.9.0",
@@ -66,5 +68,8 @@
     "less": "^4.1.3",
     "postcss": "^8.4.21"
   },
-  "gitHead": "df2d5f465b4d184997734e87625e1e686adb6822"
+  "peerDependencies": {
+    "rc-tabs": "12.5.1"
+  },
+  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

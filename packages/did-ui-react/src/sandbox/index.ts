@@ -1,10 +1,11 @@
 import { SandboxEventTypes, SandboxEventService, SandboxErrorCode } from '../utils/sandboxService';
 import { aelf } from '@portkey/utils';
 import { FetchRequest } from '@portkey/request';
-import { IPortkeyContract, getContractBasic } from '@portkey/contracts';
+import { IEOAInstanceOptions, IPortkeyContract, getContractBasic } from '@portkey/contracts';
 import { getMissParams, handleErrorMessage } from '../utils/errorHandler';
 import { COMMON_PRIVATE } from '../constants';
 import { IContract } from '@portkey/types';
+import { ICustomViewOptions, IWalletCustomSendOptions } from '../utils/sandboxUtil/types';
 
 type SendBack = (
   event: MessageEvent<any>,
@@ -41,6 +42,7 @@ class SandboxUtil {
   }
 
   listener() {
+    if (typeof window === 'undefined') return;
     window.addEventListener('message', async function (event) {
       switch (event.data.event) {
         case SandboxEventTypes.callViewMethod:
@@ -56,39 +58,23 @@ class SandboxUtil {
         case SandboxEventTypes.getTransactionFee:
           SandboxUtil.getTransactionFee(event, SandboxUtil.callback);
           break;
-        case SandboxEventTypes.initViewContract:
-          SandboxUtil.initViewContract(event, SandboxUtil.callback);
-          break;
+
         case SandboxEventTypes.getTransactionRaw:
           SandboxUtil.getTransactionRaw(event, SandboxUtil.callback);
+          break;
+        case SandboxEventTypes.callSendMethodFormat:
+          SandboxUtil.callSendMethodFormat(event, SandboxUtil.callback);
+          break;
+        case SandboxEventTypes.callViewMethodFormat:
+          SandboxUtil.callViewMethodFormat(event, SandboxUtil.callback);
+          break;
+        case SandboxEventTypes.encodedTx:
+          SandboxUtil.encodedTx(event, SandboxUtil.callback);
           break;
         default:
           break;
       }
     });
-  }
-
-  static async initViewContract(event: MessageEvent<any>, callback: SendBack) {
-    const data = event.data.data ?? {};
-    try {
-      const { rpcUrl, address, chainType } = data;
-      // TODO only support aelf
-      if (chainType !== 'aelf') {
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: 'Not support',
-          sid: data.sid,
-        });
-      }
-      await SandboxUtil._getELFViewContract(rpcUrl, address);
-      return callback(event, {
-        code: SandboxErrorCode.error,
-        message: 'Not Support',
-        sid: data.sid,
-      });
-    } catch (error) {
-      console.log(error, 'initViewContract===error');
-    }
   }
 
   static async _getELFViewContract(rpcUrl: string, address: string, privateKey: string = COMMON_PRIVATE) {
@@ -156,28 +142,13 @@ class SandboxUtil {
     const data = event.data.data ?? {};
     try {
       const { rpcUrl, address, methodName, paramsOption = '', chainType } = data;
-      if (!rpcUrl || !address || !methodName)
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: 'Invalid argument',
-          sid: data.sid,
-        });
+      if (!rpcUrl || !address || !methodName) throw 'Invalid argument';
       // TODO only support aelf
-      if (chainType !== 'aelf') {
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: 'Not support',
-          sid: data.sid,
-        });
-      }
+      if (chainType !== 'aelf') throw 'Not support';
+
       const contract = await SandboxUtil._getELFViewContract(rpcUrl, address);
       const result = await contract?.callViewMethod(methodName, paramsOption);
-      if (result.error)
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          error: result.error,
-          sid: data.sid,
-        });
+      if (result.error) throw result.error;
       callback(event, {
         code: SandboxErrorCode.success,
         message: result.data,
@@ -186,7 +157,7 @@ class SandboxUtil {
     } catch (error: any) {
       callback(event, {
         code: SandboxErrorCode.error,
-        message: error?.error || error,
+        error: handleErrorMessage(error),
         sid: data.sid,
       });
     }
@@ -213,20 +184,9 @@ class SandboxUtil {
         methodName,
         caContractAddress,
       });
-      if (missParams)
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: `Miss Param: ${missParams}`,
-          sid: data.sid,
-        });
+      if (missParams) throw `Miss Param: ${missParams}`;
       // TODO only support aelf
-      if (chainType !== 'aelf') {
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: 'Not support',
-          sid: data.sid,
-        });
-      }
+      if (chainType !== 'aelf') throw 'Not support';
 
       const contract = await SandboxUtil.getCAContract({
         contractAddress,
@@ -238,13 +198,8 @@ class SandboxUtil {
       const account = aelf.getWallet(privateKey);
 
       const req = await contract.callSendMethod(methodName, account, paramsOption, sendOptions);
-      if (req?.error)
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: req.error?.message,
-          sid: data.sid,
-          error: req.error,
-        });
+
+      if (req?.error) throw req.error;
       return callback(event, {
         code: SandboxErrorCode.success,
         message: req?.data,
@@ -254,7 +209,7 @@ class SandboxUtil {
     } catch (e: any) {
       callback(event, {
         code: SandboxErrorCode.error,
-        message: handleErrorMessage(e),
+        error: handleErrorMessage(e),
         sid: data.sid,
       });
     }
@@ -270,36 +225,20 @@ class SandboxUtil {
         address,
         methodName,
       });
-      if (missParams)
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: `Miss Param: ${missParams}`,
-          sid: data.sid,
-        });
+      if (missParams) throw `Miss Param: ${missParams}`;
       // TODO only support aelf
-      if (chainType !== 'aelf') {
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: 'Not support',
-          sid: data.sid,
-        });
-      }
+      if (chainType !== 'aelf') throw 'Not support';
+
       const account = aelf.getWallet(privateKey);
       const contract = await SandboxUtil._getELFSendContract(rpcUrl, address, privateKey);
       const contractMethod = !isGetSignTx ? contract?.callSendMethod : contract?.encodedTx;
       const req = await contractMethod?.(methodName, account, paramsOption, sendOptions);
-      if (req?.error)
-        return callback(event, {
-          code: SandboxErrorCode.error,
-          message: req.error?.message,
-          sid: data.sid,
-          error: req.error,
-        });
+      if (req?.error) throw req;
       return callback(event, { code: SandboxErrorCode.success, message: req?.data, sid: data.sid });
     } catch (e: any) {
       callback(event, {
         code: SandboxErrorCode.error,
-        message: handleErrorMessage(e),
+        error: handleErrorMessage(e),
         sid: data.sid,
       });
     }
@@ -320,7 +259,7 @@ class SandboxUtil {
     } catch (e) {
       return callback(event, {
         code: SandboxErrorCode.error,
-        message: e,
+        error: e,
         sid: data.sid,
       });
     }
@@ -360,7 +299,96 @@ class SandboxUtil {
     } catch (e) {
       return callback(event, {
         code: SandboxErrorCode.error,
-        message: e,
+        error: e,
+        sid: data.sid,
+      });
+    }
+  }
+
+  static async callSendMethodFormat(
+    event: MessageEvent<{ data: IWalletCustomSendOptions & { sid: string } }>,
+    callback: SendBack,
+  ) {
+    const data = event.data.data ?? {};
+
+    try {
+      const { contractOptions, functionName, privateKey, paramsOption, sendOptions } = data;
+
+      const missParams = getMissParams({
+        functionName,
+        contractOptions,
+        privateKey,
+      });
+
+      if (missParams) throw `Miss Param: ${missParams}`;
+      const account = aelf.getWallet(privateKey);
+      (contractOptions as IEOAInstanceOptions).account = account;
+      const contract = await getContractBasic(contractOptions as any);
+      const req = await contract.callSendMethod(functionName, account.address, paramsOption, sendOptions);
+
+      return callback(event, { code: SandboxErrorCode.success, message: req, sid: data.sid });
+    } catch (e: any) {
+      callback(event, {
+        code: SandboxErrorCode.error,
+        error: handleErrorMessage(e),
+        sid: data.sid,
+      });
+    }
+  }
+
+  static async callViewMethodFormat(
+    event: MessageEvent<{ data: ICustomViewOptions & { sid: string } }>,
+    callback: SendBack,
+  ) {
+    const data = event.data.data ?? {};
+
+    try {
+      const { contractOptions, functionName, paramsOption, callOptions } = data;
+      const missParams = getMissParams({
+        functionName,
+        contractOptions,
+      });
+
+      if (missParams) throw `Miss Param: ${missParams}`;
+      const account = aelf.getWallet(COMMON_PRIVATE);
+      (contractOptions as IEOAInstanceOptions).account = account;
+      const contract = await getContractBasic(contractOptions as any);
+      const req = await contract.callViewMethod(functionName, paramsOption, callOptions);
+      return callback(event, { code: SandboxErrorCode.success, message: req, sid: data.sid });
+    } catch (e: any) {
+      callback(event, {
+        code: SandboxErrorCode.error,
+        error: handleErrorMessage(e),
+        sid: data.sid,
+      });
+    }
+  }
+
+  static async encodedTx(
+    event: MessageEvent<{ data: Omit<IWalletCustomSendOptions, 'sendOptions'> & { sid: string } }>,
+    callback: SendBack,
+  ) {
+    const data = event.data.data ?? {};
+
+    try {
+      const { contractOptions, functionName, privateKey, paramsOption } = data;
+
+      const missParams = getMissParams({
+        functionName,
+        contractOptions,
+      });
+
+      if (missParams) throw Error(`Miss Param: ${missParams}`);
+      const account = aelf.getWallet(privateKey);
+      (contractOptions as IEOAInstanceOptions).account = account;
+      const contract = await getContractBasic(contractOptions as any);
+      const result = await contract.encodedTx(functionName, paramsOption);
+      console.log(result, 'result===');
+      return callback(event, { code: SandboxErrorCode.success, message: result, sid: data.sid });
+    } catch (e: any) {
+      callback(event, {
+        code: SandboxErrorCode.error,
+        error: handleErrorMessage(e),
         sid: data.sid,
       });
     }

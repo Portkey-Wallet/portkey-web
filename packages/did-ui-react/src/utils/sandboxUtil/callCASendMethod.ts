@@ -1,5 +1,5 @@
 import { isExtension } from '../lib';
-import PortkeyUIError from '../../constants/error';
+import { PortkeyUIError } from '../../constants/error';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
 import { getChain } from '../../hooks/useChainInfo';
 import { ChainId, ChainType, SendOptions } from '@portkey/types';
@@ -67,7 +67,6 @@ export const callCASendMethodOnWeb = async (params: CallCASendMethodParams) => {
     params.paramsOption,
     params.sendOptions,
   );
-  console.log(req, params.paramsOption, 'req===callCASendMethod');
   if (req.error) throw handleErrorMessage(req);
   return req.data;
 };

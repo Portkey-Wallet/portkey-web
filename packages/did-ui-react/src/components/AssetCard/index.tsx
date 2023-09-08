@@ -11,6 +11,7 @@ interface AssetCardProps {
   isShowRamp?: boolean;
   isShowFaucet?: boolean;
   onBuy?: () => void;
+  onSend?: () => void;
   onBack?: () => void;
   onFaucet?: () => void;
   onReceive?: () => void;
@@ -24,9 +25,10 @@ export default function AssetCard({
   isShowFaucet,
   backIcon,
   onBuy,
+  onBack,
+  onSend,
   onReceive,
   onFaucet,
-  onBack,
 }: AssetCardProps) {
   const isMainnet = useMemo(() => networkType === 'MAIN', [networkType]);
   return (
@@ -50,6 +52,7 @@ export default function AssetCard({
         isShowRamp={isShowRamp}
         isMainnet={isMainnet}
         onBuy={onBuy}
+        onSend={onSend}
         onReceive={onReceive}
         onFaucet={onFaucet}
       />

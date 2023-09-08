@@ -28,7 +28,7 @@ export type CallType = 'ca' | 'eoa';
 export interface IBaseOptions {
   contractAddress: string;
   callType?: CallType;
-  chianType?: ChainType;
+  chainType?: ChainType;
 }
 
 export interface IProviderOptions extends IBaseOptions {
@@ -49,12 +49,6 @@ export interface ICAInstanceOptions extends IEOAInstanceOptions {
 
 export interface IGetContract {
   /**
-   * use provider contract
-   * @returns IContract
-   */
-  getContractBasic(options: IProviderOptions): Promise<IContract>;
-
-  /**
    * use base contract
    * @returns IPortkeyContract
    */
@@ -64,5 +58,11 @@ export interface IGetContract {
    * use ca contract
    * @returns IContract
    */
-  getContractBasic(options: ICAInstanceOptions): Promise<IContract>;
+  getContractBasic(options: ICAInstanceOptions): Promise<IPortkeyContract>;
+
+  /**
+   * use provider contract
+   * @returns IContract
+   */
+  getContractBasic(options: IProviderOptions): Promise<IContract>;
 }

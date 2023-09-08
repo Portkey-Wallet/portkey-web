@@ -1,0 +1,356 @@
+.portkey-ui-send-wrapper {
+  padding-top: 16px;
+  height: 100%;
+  background-color: var(--portkey-ui-bg-6);
+  display: flex;
+  flex-direction: column;
+
+  .page-title {
+    padding: 26px 24px;
+    align-items: center;
+    .title-left-col {
+      .portkey-ui-custom-svg {
+        width: 24px;
+        height: 24px;
+        svg {
+          width: 24px;
+          height: 24px;
+          path {
+            fill: var(--portkey-ui-text-primary);
+          }
+        }
+      }
+    }
+    .title-center {
+      flex: 1;
+      padding: 0 12px;
+      color: var(--portkey-ui-text-primary);
+      line-height: 28px;
+      font-size: 24px;
+    }
+    .title-right-col {
+      .portkey-ui-custom-svg {
+        width: 18px;
+        height: 18px;
+        svg {
+          width: 18px;
+          height: 18px;
+          path {
+            fill: var(--portkey-ui-text-primary);
+          }
+        }
+      }
+    }
+  }
+
+  .stage-ele {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    overflow: hidden;
+    background-color: var(--portkey-ui-default-bg);
+  }
+
+  .address-wrap,
+  .amount-wrap {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid var(--portkey-ui-default-border);
+    padding: 0 16px 15px;
+    gap: 8px;
+    .item {
+      display: flex;
+      padding: 0;
+      flex-flow: nowrap;
+      flex-direction: row;
+      align-items: center;
+      gap: 16px;
+      .label {
+        padding: 0;
+        width: 62px;
+        line-height: 22px;
+        // max-height: 22px;
+        font-size: 16px;
+        color: var(--portkey-ui-text-secondary);
+        button {
+          margin-top: 4px;
+          border-radius: 16px;
+        }
+      }
+      .control {
+        position: relative;
+        width: 250px;
+        background-color: var(--portkey-ui-default-bg);
+        border-radius: 6px;
+        border: 1px solid var(--portkey-ui-border-1);
+        overflow: hidden;
+        flex: 1;
+      }
+      .from-wallet {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        line-height: 22px;
+        padding: 16px 15px;
+        border-radius: 6px;
+        border: 1px solid var(--portkey-ui-border-1);
+        .name {
+          font-size: 16px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          color: var(--portkey-ui-text-secondary);
+        }
+        .portkey-ui-custom-svg {
+          display: flex;
+          margin-left: 16px;
+        }
+      }
+      .portkey-ant-input {
+        height: 56px;
+        color: var(--portkey-ui-text-secondary);
+        border-radius: 6px;
+        border: 1px solid var(--portkey-ui-input-border);
+        padding: 16px 15px;
+
+        &::placeholder {
+          color: var(--portkey-ui-input-placeholder);
+        }
+      }
+    }
+    .error-msg {
+      color: var(--portkey-ui-text-error);
+      line-height: 16px;
+      font-size: 12px;
+      margin: -6px 0 9px 78px;
+    }
+    .error-msg.error-warning {
+      color: var(--portkey-ui-font-3);
+    }
+  }
+  .address-wrap {
+    .item {
+      .control {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        .portkey-ui-custom-svg,
+        svg {
+          width: 14px;
+          height: 14px;
+        }
+        .portkey-ui-custom-svg {
+          margin-right: 12px;
+          margin-left: -3px;
+        }
+      }
+    }
+  }
+  .amount-wrap {
+    background-color: var(--portkey-ui-default-bg);
+    padding-top: 16px;
+    border-bottom: none;
+    .asset-selector {
+      display: flex;
+      align-items: center;
+      padding: 7px 15px;
+      .icon {
+        margin-right: 8px;
+        img,
+        .portkey-ui-custom-svg,
+        .custom {
+          width: 36px;
+          height: 36px;
+          svg {
+            width: 36px;
+            height: 36px;
+          }
+        }
+        .custom {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          border: 1px solid var(--portkey-ui-border-1);
+          border-radius: 50%;
+          background-color: var(--portkey-ui-bg-6);
+        }
+      }
+      .center {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        .symbol {
+          line-height: 22px;
+          font-size: 16px;
+          color: var(--portkey-ui-text-secondary);
+        }
+        .amount {
+          line-height: 16px;
+          font-size: 12px;
+          color: var(--portkey-ui-text-secondary);
+        }
+      }
+    }
+    .asset.nft {
+      padding: 8px 16px 24px;
+      width: 100vw;
+      display: flex;
+      gap: 16px;
+      margin-left: -16px;
+      margin-right: -16px;
+      border-bottom: 1px solid var(--portkey-ui-default-border);
+      margin-bottom: 15px;
+      .avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 64px;
+        height: 64px;
+        border-radius: 6px;
+        background: var(--portkey-ui-bg-14);
+        left: 48px;
+        font-size: 24px;
+        color: var(--portkey-ui-text-tip);
+        img {
+          width: 64px;
+          height: 64px;
+          border-radius: 6px;
+          object-fit: cover;
+        }
+      }
+      .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 5px 0;
+        .index {
+          display: flex;
+          gap: 4px;
+          line-height: 22px;
+          font-size: 16px;
+          font-weight: 500;
+          color: var(--portkey-ui-text-primary);
+          .alias {
+            overflow: hidden;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 1;
+            text-overflow: ellipsis;
+            max-width: 217px;
+            white-space: nowrap;
+          }
+          .token-id {
+            font-weight: 400;
+          }
+        }
+        .quantity {
+          color: var(--portkey-ui-text-secondary);
+          line-height: 20px;
+          font-size: 14px;
+          span {
+            margin-left: 6px;
+          }
+        }
+      }
+    }
+
+    .amount-input {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      padding: 15px;
+      height: 54px;
+      overflow: hidden;
+      /* stylelint-disable-next-line no-descending-specificity */
+      input,
+      .need-convert {
+        border: none !important;
+        padding: 0 !important;
+        box-shadow: none;
+        line-height: 22px;
+        font-size: 16px;
+        color: var(--portkey-ui-text-secondary) !important;
+      }
+      &:focus-within,
+      &:focus {
+        input {
+          display: block;
+        }
+      }
+      .need-convert {
+        transform: translateY(-8px);
+        &:focus,
+        &.empty {
+          padding: 0 0 24px !important;
+          transform: translateY(0);
+        }
+      }
+      .convert {
+        color: var(--portkey-ui-text-secondary);
+        transform: translateY(-8px);
+        line-height: 16px;
+        font-size: 12px;
+        margin-top: 4px;
+      }
+    }
+  }
+  .btn-wrap {
+    background-color: var(--portkey-ui-default-bg);
+    padding: 16px;
+    border-top: 1px solid var(--portkey-ui-default-border);
+    .stage-btn {
+      border-radius: 100px;
+      height: 48px;
+    }
+  }
+}
+
+.portkey-ui-transaction-retry-modal {
+  border-radius: 8px;
+  overflow: hidden;
+  .portkey-ant-modal-body {
+    padding: 0;
+    .portkey-ant-modal-confirm-title {
+      .warnred-icon {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 24px;
+      }
+
+      padding: 24px;
+      margin: 0;
+      border-bottom: 1px solid var(--portkey-ui-default-border);
+      text-align: center;
+      line-height: 22px;
+      font-size: 18px;
+      color: var(--portkey-ui-text-secondary);
+    }
+    .portkey-ant-modal-confirm-btns {
+      padding: 15px 16px 17px;
+      margin: 0;
+      button {
+        width: 288px;
+        height: 48px;
+        border-radius: 24px;
+        margin: 0 !important;
+        line-height: 22px;
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.portkey-ui-cross-modal {
+  .portkey-ant-modal-body {
+    padding: 0;
+  }
+  .portkey-ant-modal-confirm-content {
+    padding: 24px;
+    text-align: center;
+    color: var(--portkey-ui-text-secondary);
+    font-size: 14px;
+    line-height: 20px;
+  }
+}

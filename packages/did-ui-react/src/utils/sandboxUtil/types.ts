@@ -1,4 +1,5 @@
-import { ChainType, SendOptions } from '@portkey/types';
+import { ICAInstanceOptions, IEOAInstanceOptions, IProviderOptions } from '@portkey/contracts';
+import { CallOptions, ChainType, SendOptions } from '@portkey/types';
 
 export interface BaseSendOption {
   rpcUrl: string;
@@ -7,3 +8,31 @@ export interface BaseSendOption {
   privateKey: string;
   sendOptions?: SendOptions;
 }
+
+export type IWalletContractOptions = Omit<IEOAInstanceOptions, 'account'> | Omit<ICAInstanceOptions, 'account'>;
+
+export interface IBaseCustomSendOptions<T = any> {
+  functionName: string;
+  paramsOption?: T;
+  sendOptions?: SendOptions | undefined;
+  sandboxId?: string;
+}
+export interface IWalletCustomSendOptions<T = any> extends IBaseCustomSendOptions<T> {
+  contractOptions: IWalletContractOptions;
+  privateKey: string;
+}
+export interface IProviderCustomSendOptions<T = any> extends IBaseCustomSendOptions<T> {
+  contractOptions: IProviderOptions;
+}
+
+export type ICustomSendOptions<T = any> = IProviderCustomSendOptions<T> | IWalletCustomSendOptions<T>;
+
+export interface ICustomViewOptions<T = any> {
+  contractOptions: IWalletContractOptions | IProviderOptions;
+  functionName: string;
+  paramsOption?: T;
+  callOptions?: CallOptions;
+  sandboxId?: string;
+}
+
+export type ICustomEncodeTxOptions<T = any> = Omit<IWalletCustomSendOptions<T>, 'sendOptions'>;

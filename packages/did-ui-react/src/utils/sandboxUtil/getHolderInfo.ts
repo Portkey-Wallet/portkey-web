@@ -4,7 +4,7 @@ import { did } from '../did';
 import type { ChainId } from '@portkey/types';
 import { IHolderInfo } from '@portkey/services';
 import { isExtension } from '../lib';
-import PortkeyUIError from '../../constants/error';
+import { PortkeyUIError } from '../../constants/error';
 import { getChain } from '../../hooks/useChainInfo';
 
 interface GetHolderInfoParam {

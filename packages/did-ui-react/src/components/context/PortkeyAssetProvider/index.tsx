@@ -1,10 +1,19 @@
 import React, { createContext, useContext, useMemo, useReducer } from 'react';
-import { AssetState, BaseAssetProps, PortkeyAssetActions } from './actions';
-import { BasicActions } from '../utils';
+import {
+  ActivityStateMap,
+  ActivityStateMapAttributes,
+  AssetState,
+  BaseAssetProps,
+  PortkeyAssetActions,
+  WalletInfo,
+} from './actions';
+import { BasicActions, getUpdateList } from '../utils';
 import { Updater } from './hooks/Init';
 import { NFTCollectionItemShowType } from '../../types/assets';
 import { INftCollection } from '@portkey/services';
 import { randomId } from '@portkey/utils';
+import { ChainId } from '@portkey/types';
+import { getCurrentActivityMapKey } from '../../Activity/utils';
 
 const INITIAL_STATE = {
   initialized: false,
@@ -21,8 +30,51 @@ function reducer(state: AssetState, { type, payload }: any) {
     case PortkeyAssetActions.setDIDWallet: {
       return Object.assign({}, state, { ...payload });
     }
+    case PortkeyAssetActions.setCAInfo: {
+      const caInfo = payload.caInfo as Required<WalletInfo>['caInfo'];
+      if (!caInfo) return state;
+      const caAddressInfos = Object.entries(caInfo).map(([chainId, info]) => ({
+        chainId: chainId as ChainId,
+        caAddress: info.caAddress,
+      }));
+      return Object.assign({}, state, { caInfo, caAddressInfos });
+    }
     case PortkeyAssetActions.setGuardianList: {
       return Object.assign({}, state, payload);
+    }
+    case 'setActivityList': {
+      const {
+        totalRecordCount,
+        skipCount,
+        maxResultCount,
+        chainId,
+        symbol,
+        isUpdate = false,
+      } = payload as ActivityStateMapAttributes;
+      const currentMapKey = getCurrentActivityMapKey(chainId, symbol);
+      const activityMap = (state?.activityMap ?? {}) as ActivityStateMap;
+      if (totalRecordCount !== 0) {
+        const list = getUpdateList(isUpdate, totalRecordCount, activityMap?.[currentMapKey]?.list);
+        list.splice(skipCount, payload.list.length, ...payload.list);
+        activityMap[currentMapKey] = {
+          list,
+          totalRecordCount,
+          skipCount,
+          maxResultCount,
+          chainId,
+          symbol,
+        };
+      } else {
+        activityMap[currentMapKey] = {
+          list: [],
+          totalRecordCount,
+          skipCount,
+          maxResultCount,
+          chainId,
+          symbol,
+        };
+      }
+      return Object.assign({}, state, { activityMap });
     }
     case PortkeyAssetActions.setNFTCollections: {
       const { list, totalRecordCount, skipCount, maxResultCount, maxNFTCount } = payload;
@@ -63,7 +115,7 @@ function reducer(state: AssetState, { type, payload }: any) {
         state.NFTCollection.list[currentNFTIndex] = currentNFTSeriesItem;
         state.NFTCollection.updateRandom = randomId();
       }
-      return Object.assign({}, JSON.parse(JSON.stringify(state)));
+      return Object.assign({}, state);
     }
     case PortkeyAssetActions.setTokenPrice: {
       if (!payload) return state;
@@ -75,6 +127,11 @@ function reducer(state: AssetState, { type, payload }: any) {
       state.tokenPrices = tokenPrices;
       return Object.assign({}, { ...state });
     }
+    case PortkeyAssetActions.setAllAssets: {
+      if (!payload) return state;
+      return Object.assign({}, { ...state, allAsset: payload });
+    }
+
     case PortkeyAssetActions.destroy: {
       return INITIAL_STATE;
     }

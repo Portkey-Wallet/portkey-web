@@ -50,11 +50,21 @@ export { default as Ramp } from './Ramp';
 export { default as RampPreview } from './RampPreview';
 export { default as AssetCard } from './AssetCard';
 export { default as Asset } from './Asset';
+export { default as NFTDetail } from './NFTDetail';
+export { default as Send } from './Send';
+export { default as AssetOverview } from './AssetOverview';
+export { default as ReceiveCard } from './ReceiveCard';
+export { default as Transaction } from './Transaction';
+export { default as managerApprove } from './ModalMethod/ManagerApprove';
+export { default as SetAllowance } from './SetAllowance';
+export { default as ManagerApproveInner } from './ManagerApprove/index.component';
+export { default as PortkeyStyleProvider } from './PortkeyStyleProvider';
+export { default as BaseModalMethod } from './ModalMethod/BaseModalMethod';
+export { default as walletSecurityCheck } from './ModalMethod/WalletSecurityCheck';
 
 export * from './context/PortkeyAssetProvider';
+export * from './context/PortkeySendProvider';
 
 export * from './SignStep/types';
-
-export { default as PortkeyStyleProvider } from './PortkeyStyleProvider';
 
 export * from './types';

@@ -19,6 +19,7 @@ export enum EmailError {
 
 export enum WalletError {
   noCreateWallet = 'Please Create an Wallet First!',
+  invalidPrivateKey = 'Invalid Private Key',
 }
 
 export function checkEmail(email?: string) {
@@ -36,3 +37,10 @@ export function isValidEmail(email?: string) {
 export const isValidBase58 = (str: string) => {
   return !/[\u4e00-\u9fa5\u3000-\u303f\uff01-\uff5e]/.test(str);
 };
+
+const P_N_REG = /^[0-9]+.?[0-9]*$/;
+
+export function isValidNumber(n: string) {
+  if (n.includes('-')) return false;
+  return P_N_REG.test(n);
+}

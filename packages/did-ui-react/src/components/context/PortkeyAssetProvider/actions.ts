@@ -1,10 +1,19 @@
-import { ChainId, IBaseWalletAccount } from '@portkey/types';
+import { ActivityItemType, ChainId, IBaseWalletAccount } from '@portkey/types';
 import { basicActions } from '../utils';
 import { DIDWallet } from '@portkey/did';
-import { Guardian } from '@portkey/services';
+import {
+  Guardian,
+  GetAccountAssetsByKeywordsParams,
+  IAssetItemType,
+  CaAddressInfosType,
+  IActivitiesApiParams,
+} from '@portkey/services';
 import { did } from '../../../utils';
 import { NEW_CLIENT_DEFAULT_ELF_LIST, NFT_SMALL_SIZE } from '../../../constants/assets';
 import { NFTCollectionItemShowType, TokenItemShowType } from '../../types/assets';
+import { fetchTxFeeAsync } from '../../../request/token';
+import { BaseListInfo } from '../../../types';
+import { PIC_MIDDLE_SIZE } from '../../../constants';
 
 export const PortkeyAssetActions = {
   initialized: 'INITIALIZED',
@@ -16,13 +25,18 @@ export const PortkeyAssetActions = {
   setNFTCollections: 'setNFTCollections',
   setNFTItem: 'setNFTItem',
   setTokenPrice: 'setTokenPrice',
+  setAllAssets: 'setAllAssets',
+  setTxFee: 'setTxFee',
+  setActivityList: 'setActivityList',
 };
-type WalletInfo = {
+
+export type WalletInfo = {
   caHash?: string;
   caInfo?: DIDWallet<IBaseWalletAccount>['caInfo'];
   accountInfo?: DIDWallet<IBaseWalletAccount>['accountInfo'];
   managementAccount?: IBaseWalletAccount;
   guardianList?: Guardian[];
+  caAddressInfos?: CaAddressInfosType;
 };
 
 export type BaseAssetProps = {
@@ -33,11 +47,24 @@ export type BaseAssetProps = {
   didStorageKeyName?: string;
 };
 
-export type BaseListInfo<T> = {
-  list: T[];
-  skipCount: number;
-  maxResultCount: number;
-  totalRecordCount: number;
+export type TxFeeType = {
+  [key in ChainId]?: {
+    ach: number;
+    crossChain: number;
+    max: number;
+  };
+};
+
+export interface ActivityStateMapAttributes extends BaseListInfo<ActivityItemType> {
+  chainId?: string;
+  symbol?: string;
+  isUpdate?: boolean;
+}
+
+type Symbol_ChainId = string;
+
+export type ActivityStateMap = {
+  [key in Symbol_ChainId]: ActivityStateMapAttributes;
 };
 
 export type BalanceInfo = {
@@ -48,10 +75,13 @@ export type BalanceInfo = {
       [symbol: string]: number | string;
     };
   };
+  allAsset?: BaseListInfo<IAssetItemType>;
+  activityMap?: ActivityStateMap;
 };
 
 export interface AssetState extends WalletInfo, BaseAssetProps, BalanceInfo {
   initialized?: boolean;
+  txFee: TxFeeType;
 }
 
 export const basicAssetView = {
@@ -78,7 +108,7 @@ export const basicAssetView = {
 };
 
 type BaseListParams = {
-  caAddressInfos: { chainId: ChainId; caAddress: string }[];
+  caAddressInfos: CaAddressInfosType;
   skipCount?: number;
   maxResultCount?: number;
 };
@@ -160,9 +190,77 @@ const fetchTokenPrices = async (params: { symbols: string[] }) => {
   return basicActions(PortkeyAssetActions['setTokenPrice'], { list: response.items });
 };
 
+const fetchAllAsset = async ({
+  width = NFT_SMALL_SIZE,
+  height = -1,
+  keyword = '',
+  skipCount = 0,
+  maxResultCount = 1000,
+  caAddressInfos,
+}: Partial<Omit<GetAccountAssetsByKeywordsParams, 'caAddressInfos'>> & {
+  caAddressInfos: GetAccountAssetsByKeywordsParams['caAddressInfos'];
+}) => {
+  const response = await did.services.assets.getAccountAssetsByKeywords({
+    width,
+    height,
+    keyword,
+    skipCount,
+    maxResultCount,
+    caAddressInfos,
+  });
+  return basicActions(PortkeyAssetActions['setAllAssets'], {
+    list: response.data,
+    totalRecordCount: response.totalRecordCount,
+    skipCount,
+    maxResultCount,
+  });
+};
+
+const fetchTxFee = async (chainIds: ChainId[]) => {
+  const txFee = await fetchTxFeeAsync(chainIds);
+  return basicActions(PortkeyAssetActions['setTxFee'], { txFee });
+};
+
+const fetchActivityList = async ({
+  isUpdate,
+  maxResultCount,
+  skipCount,
+  chainId,
+  symbol,
+  caAddressInfos,
+  managerAddresses,
+  transactionTypes,
+}: Omit<IActivitiesApiParams, 'caAddresses'> & { isUpdate?: boolean }) => {
+  const response = await did.services.activity.getActivityList({
+    width: PIC_MIDDLE_SIZE,
+    height: -1,
+    maxResultCount,
+    skipCount,
+    caAddresses: caAddressInfos?.map((info) => info.caAddress),
+    caAddressInfos,
+    managerAddresses,
+    transactionTypes,
+    chainId,
+    symbol,
+  });
+  const payload: ActivityStateMapAttributes = {
+    list: response.data,
+    totalRecordCount: response.totalRecordCount,
+    maxResultCount: maxResultCount,
+    skipCount,
+    chainId,
+    symbol,
+    isUpdate,
+  };
+  return basicActions<string, typeof payload>(PortkeyAssetActions['setActivityList'], payload);
+};
+
 export const basicAssetViewAsync = {
   setTokenList: fetchTokenList,
   setNFTCollections: fetchNFTCollections,
   setNFTItem: fetchNFTItem,
   setTokenPrices: fetchTokenPrices,
+  setAllAssetInfo: fetchAllAsset,
+  setTxFee: fetchTxFee,
+  setActivityList: fetchActivityList,
 };

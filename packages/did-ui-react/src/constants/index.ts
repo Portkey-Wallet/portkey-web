@@ -8,6 +8,19 @@ export const DAY = HOUR * 24;
 
 export const commonAccount = aelf.getWallet(COMMON_PRIVATE);
 export const portkeyDidUIPrefix = '@portkey/did-ui-sdk:';
+export const PORTKEY_PREFIX_CLS = 'portkey-ant';
+
+export const PIC_SMALL_SIZE = 144;
+export const PIC_MIDDLE_SIZE = 294;
+export const PIC_LARGE_SIZE = 1008;
+
+export const PAGESIZE_10 = 10;
+
+export const DEFAULT_AMOUNT = 0;
+export const DEFAULT_DECIMAL = 8;
+export const DEFAULT_DIGITS = 4;
+
+export const ALLOWANCE_MAX_LIMIT = '9223372036854774784';
 
 export const WEB_PAGE = 'https://openlogin.portkey.finance';
 // export const WEB_PAGE = 'https://openlogin-test.portkey.finance';

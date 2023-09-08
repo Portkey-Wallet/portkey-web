@@ -99,6 +99,8 @@ export enum OperationTypeEnum {
   removeOtherManager = 6,
   // set login account
   setLoginAccount = 7,
+  managerApprove = 8,
+  modifyTransferLimit = 9,
 }
 
 export type CheckGoogleRecaptchaParams = {

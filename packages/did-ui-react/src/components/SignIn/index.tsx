@@ -75,6 +75,7 @@ const SignIn = forwardRef(
     const onErrorRef = useRef<SignInProps['onError']>(onError);
     const onFinishRef = useRef<SignInProps['onFinish']>(onFinish);
     const onChainIdChangeRef = useRef<SignInProps['onChainIdChange']>(onChainIdChange);
+    const onLifeCycleChangeRef = useRef<SignInProps['onLifeCycleChange']>(onLifeCycleChange);
     const defaultLifeCycleRef = useRef<LifeCycleType>();
     const defaultLiftCyclePropsRef = useRef<any>();
 
@@ -94,27 +95,24 @@ const SignIn = forwardRef(
       onErrorRef.current = onError;
       onFinishRef.current = onFinish;
       onChainIdChangeRef.current = onChainIdChange;
+      onLifeCycleChangeRef.current = onLifeCycleChange;
     });
 
     const [{ chainType }] = usePortkey();
     const [open, setOpen] = useState<boolean>(false);
 
-    const changeLifeCycle: SignInProps['onLifeCycleChange'] = useCallback(
-      (v: LifeCycleType, info: any) => {
-        setLifeCycle(v);
-        onLifeCycleChange?.(v, info);
-        defaultLifeCycleRef.current = undefined;
-        defaultLiftCyclePropsRef.current = undefined;
-      },
-      [onLifeCycleChange],
-    );
-    console.log(defaultLifeCycleInfo, 'defaultLifeCycle===');
+    const changeLifeCycle: SignInProps['onLifeCycleChange'] = useCallback((v: LifeCycleType, info: any) => {
+      setLifeCycle(v);
+      onLifeCycleChangeRef.current?.(v, info);
+      defaultLifeCycleRef.current = undefined;
+      defaultLiftCyclePropsRef.current = undefined;
+    }, []);
 
     const dealStep = useCallback(
       async (lifeCycleInfo?: Required<SignInProps['defaultLifeCycle']>) => {
         try {
           const [defaultLifeCycle, defaultLiftCycleProps] = getDefaultLifeCycleProps(lifeCycleInfo);
-          console.log(defaultLifeCycle, 'defaultLifeCycle===1');
+          console.log('defaultLifeCycle:dealStep', defaultLifeCycle);
 
           if (!defaultLifeCycle) return setLifeCycle('Login');
           let flag = false;
@@ -159,7 +157,7 @@ const SignIn = forwardRef(
     const [originChainId, setOriginChainId] = useState<ChainId>();
     const [approvedList, setApprovedList] = useState<GuardiansApproved[]>();
     const [walletWithoutPin, setWalletWithoutPin] = useState<Omit<DIDWalletInfo, 'pin'>>();
-    const [lifeCycle, setLifeCycle] = useState<LifeCycleType>('Login');
+    const [lifeCycle, setLifeCycle] = useState<LifeCycleType>(defaultLifeCycleRef.current || 'Login');
 
     const chainId = useMemo(() => originChainId || defaultChainId, [originChainId, defaultChainId]);
 
@@ -172,7 +170,7 @@ const SignIn = forwardRef(
     useImperativeHandle(ref, () => ({ setOpen: refSetOpen, setCurrentLifeCycle: setCurrentLifeCycle }));
 
     useEffectOnce(() => {
-      dealStep();
+      dealStep(defaultLifeCycleInfo as any);
     });
 
     const { getRecommendationVerifier, verifySocialToken, sendVerifyCode } = useVerifier();

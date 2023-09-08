@@ -5,12 +5,22 @@
     display: flex;
     gap: 48px;
 
+    .portkey-ui-custom-svg {
+      width: 36px;
+      height: 36px;
+    }
+    .send {
+      .portkey-ui-custom-svg {
+        transform: rotate(-90deg);
+      }
+    }
+
     .btn {
       display: flex;
       flex-direction: column;
       align-items: center;
       cursor: pointer;
-      .custom-svg {
+      .portkey-ui-custom-svg {
         margin-bottom: 4px;
       }
 
