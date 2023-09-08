@@ -6,13 +6,13 @@ export default function AccountShow({ guardian }: { guardian: UserGuardianItem |
   switch (AccountTypeEnum[guardian?.guardianType as AccountType]) {
     case AccountTypeEnum.Email:
     case AccountTypeEnum.Phone:
-      return <div className="account account-text-one-row">{guardian?.guardianIdentifier}</div>;
+      return <div className="social-guardian-account account-text-one-row">{guardian?.guardianIdentifier}</div>;
     case AccountTypeEnum.Google:
     case AccountTypeEnum.Apple:
       return (
-        <div className="account account-text-two-row portkey-ui-flex-column">
-          <span className="name">{guardian?.firstName}</span>
-          <span className="detail">{guardian?.isPrivate ? '******' : guardian?.thirdPartyEmail}</span>
+        <div className="social-guardian-account account-text-two-row portkey-ui-flex-column">
+          <span className="social-guardian-name">{guardian?.firstName}</span>
+          <span className="social-guardian-detail">{guardian?.isPrivate ? '******' : guardian?.thirdPartyEmail}</span>
         </div>
       );
     default:

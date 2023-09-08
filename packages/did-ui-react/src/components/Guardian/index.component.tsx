@@ -1,6 +1,7 @@
 import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import GuardianList from '../GuardianPageList';
 import GuardianEdit from '../GuardianEdit';
+import GuardianAdd from '../GuardianAdd';
 import { AccountType, GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import GuardianView from '../GuardianView';
 import {
@@ -28,11 +29,12 @@ import { useVerifyToken } from '../../hooks/authentication';
 import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
 import { formatDelGuardianValue } from './utils/formatDelGuardianValue';
-import { GuardianMth, handleGuardianContract } from './utils/handleGuardianContract';
+import { GuardianMth, handleGuardianContract } from '../../utils/sandboxUtil/handleGuardianContract';
 import './index.less';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
+  guardianAdd = 'guardianAdd',
   guardianEdit = 'guardianEdit',
   guardianView = 'guardianView',
   guardianApproval = 'guardianApproval',
@@ -149,7 +151,7 @@ function GuardianMain({
   console.log('did', did, guardianList);
   const onAddGuardian = useCallback(() => {
     setIsAdd(true);
-    setStep(GuardianStep.guardianEdit);
+    setStep(GuardianStep.guardianAdd);
   }, []);
   const onViewGuardian = useCallback((item: UserGuardianStatus) => {
     setCurrentGuardian(item);
@@ -275,7 +277,6 @@ function GuardianMain({
         if (!rst) return;
         const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
         const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
-        console.log('socialVerify===', { guardianIdentifier, verifierInfo });
         return { verifierInfo, guardianIdentifier };
       } catch (error) {
         return errorTip(
@@ -415,11 +416,11 @@ function GuardianMain({
         <GuardianList
           header={
             <TitleWrapper
-              className="page-title"
+              className="guardian-page-title"
               title="Guardians"
               // leftCallBack={}
               rightElement={
-                <Button onClick={onAddGuardian} className="add-guardian-btn">
+                <Button onClick={onAddGuardian} className="title-add-guardian-btn">
                   Add Guardians
                 </Button>
               }
@@ -432,31 +433,34 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianView && (
         <GuardianView
-          header={<TitleWrapper className="page-title" title="Guardians" leftCallBack={onGoBackList} />}
+          header={<TitleWrapper className="guardian-page-title" title="Guardians" leftCallBack={onGoBackList} />}
           currentGuardian={currentGuardian!}
           onEditGuardian={editable ? onEditGuardian : undefined}
           handleSetLoginGuardian={handleSetLoginGuardian}
+          guardianList={guardianList}
           socialVerify={socialVerify}
+        />
+      )}
+      {step === GuardianStep.guardianAdd && (
+        <GuardianAdd
+          header={<TitleWrapper className="guardian-page-title" title="Add Guardians" leftCallBack={onGoBackList} />}
+          verifierList={verifierList}
+          guardianList={guardianList}
+          verifierMap={verifierMap.current}
+          socialAuth={socialAuth}
+          socialVerify={socialVerify}
+          handleAddGuardian={handleAddGuardian}
         />
       )}
       {step === GuardianStep.guardianEdit && (
         <GuardianEdit
-          header={
-            <TitleWrapper
-              className="page-title"
-              title={isAdd ? 'Add Guardians' : 'Edit Guardians'}
-              leftCallBack={onGoBackList}
-            />
-          }
-          isAdd={isAdd}
+          header={<TitleWrapper className="guardian-page-title" title="Edit Guardians" leftCallBack={onGoBackList} />}
           verifierList={verifierList}
           currentGuardian={currentGuardian}
           guardianList={guardianList}
           preGuardian={preGuardian}
           verifierMap={verifierMap.current}
-          socialAuth={socialAuth}
           socialVerify={socialVerify}
-          handleAddGuardian={handleAddGuardian}
           handleEditGuardian={handleEditGuardian}
           handleRemoveGuardian={handleRemoveGuardian}
         />

@@ -1,6 +1,6 @@
 import { ChainId } from '@portkey/types';
-import { getChainInfo } from '../../../hooks/useChainInfo';
-import { CustomContractBasic, did } from '../../../utils';
+import { getChainInfo } from '../../hooks/useChainInfo';
+import { CustomContractBasic, did } from '..';
 
 export enum GuardianMth {
   addGuardian = 'AddGuardian',

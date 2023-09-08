@@ -52,7 +52,6 @@ function GuardianView({
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const reCaptchaHandler = useReCaptchaModal();
-  console.log('===currentGuardian', currentGuardian);
 
   const handleSwitch = useCallback(async () => {
     try {
@@ -141,72 +140,75 @@ function GuardianView({
     }
   }, [currentGuardian, sendCode, socialVerify, handleSwitch]);
 
-  const checkSwitch = useThrottleCallback(async (status: boolean) => {
-    if (status) {
-      const isLogin = Object.values(guardianList ?? {}).some(
-        (item: UserGuardianStatus) =>
-          item.isLoginGuardian && item.guardianIdentifier === currentGuardian?.guardianIdentifier,
-      );
-      if (isLogin) {
-        handleVerify();
-        return;
-      }
-      try {
-        await did.getHolderInfo({
-          chainId,
-          loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
-        });
-        CustomModal({
-          type: 'info',
-          okText: 'Close',
-          content: <>{t('This account address is already a login account and cannot be used')}</>,
-        });
-      } catch (error: any) {
-        if (error?.error?.code?.toString() === '3002') {
+  const checkSwitch = useThrottleCallback(
+    async (status: boolean) => {
+      if (status) {
+        const isLogin = Object.values(guardianList ?? {}).some(
+          (item: UserGuardianStatus) =>
+            item.isLoginGuardian && item.guardianIdentifier === currentGuardian?.guardianIdentifier,
+        );
+        if (isLogin) {
           handleVerify();
+          return;
+        }
+        try {
+          await did.getHolderInfo({
+            chainId,
+            loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
+          });
+          CustomModal({
+            type: 'info',
+            okText: 'Close',
+            content: <>{t('This account address is already a login account and cannot be used')}</>,
+          });
+        } catch (error: any) {
+          if (error?.error?.code?.toString() === '3002') {
+            handleVerify();
+          } else {
+            errorTip(
+              {
+                errorFields: 'GetHolderInfo',
+                error: handleErrorMessage(error),
+              },
+              isErrorTip,
+              onError,
+            );
+          }
+        }
+      } else {
+        let loginAccountNum = 0;
+        guardianList?.forEach((item) => {
+          if (item.isLoginGuardian) loginAccountNum++;
+        });
+        if (loginAccountNum > 1) {
+          handleSwitch();
         } else {
-          errorTip(
-            {
-              errorFields: 'GetHolderInfo',
-              error: handleErrorMessage(error),
-            },
-            isErrorTip,
-            onError,
-          );
+          CustomModal({
+            type: 'info',
+            okText: 'Close',
+            content: <>{t('This guardian is the only login account and cannot be turned off')}</>,
+          });
         }
       }
-    } else {
-      let loginAccountNum = 0;
-      guardianList?.forEach((item) => {
-        if (item.isLoginGuardian) loginAccountNum++;
-      });
-      if (loginAccountNum > 1) {
-        handleSwitch();
-      } else {
-        CustomModal({
-          type: 'info',
-          okText: 'Close',
-          content: <>{t('This guardian is the only login account and cannot be turned off')}</>,
-        });
-      }
-    }
-  }, []);
+    },
+    [chainId, currentGuardian, guardianList, handleSwitch, handleVerify, isErrorTip, onError, t],
+  );
   return (
     <div className="portkey-ui-guardian-view portkey-ui-flex-column">
       <>
         {header}
         <div className="guardian-view-body portkey-ui-flex-column portkey-ui-flex-1">
-          <div className="input-content portkey-ui-flex-column">
-            <div className="input-item">
-              <div className="input-item-label">{`Guardian ${currentGuardian.guardianType}`}</div>
-              <div className="input-item-control portkey-ui-flex">
+          <div className="guardian-view-input-content portkey-ui-flex-column">
+            <div className="guardian-view-input-item">
+              <div className="guardian-view-input-item-label">{`Guardian ${currentGuardian.guardianType}`}</div>
+              <div className="guardian-view-input-item-control portkey-ui-flex">
                 <CustomSvg type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
                 <GuardianAccountShow guardian={currentGuardian} />
               </div>
             </div>
-            <div className="input-item">
-              <div className="input-item-label">{t('Verifier')}</div>
-              <div className="input-item-control portkey-ui-flex">
+            <div className="guardian-view-input-item">
+              <div className="guardian-view-input-item-label">{t('Verifier')}</div>
+              <div className="guardian-view-input-item-control portkey-ui-flex">
                 <BaseVerifierIcon
                   src={currentGuardian?.verifier?.imageUrl}
                   fallback={currentGuardian?.verifier?.name[0]}
@@ -215,14 +217,18 @@ function GuardianView({
               </div>
             </div>
           </div>
-          <div className="login-content portkey-ui-flex-column">
-            <span className="login-content-label">{t('Login account')}</span>
-            <span className="login-content-value">
+          <div className="guardian-view-login-content portkey-ui-flex-column">
+            <span className="guardian-view-login-content-label">{t('Login account')}</span>
+            <span className="guardian-view-login-content-value">
               {t('The login account will be able to log in and control all your assets')}
             </span>
-            <div className="status-wrap">
-              <Switch className="login-switch" checked={currentGuardian?.isLoginGuardian} onChange={checkSwitch} />
-              <span className="status">{currentGuardian?.isLoginGuardian ? 'Open' : 'Close'}</span>
+            <div className="guardian-view-switch-status-wrap">
+              <Switch
+                className="guardian-view-switch-login-switch"
+                checked={currentGuardian?.isLoginGuardian}
+                onChange={checkSwitch}
+              />
+              <span className="guardian-view-switch-status">{currentGuardian?.isLoginGuardian ? 'Open' : 'Close'}</span>
             </div>
           </div>
         </div>

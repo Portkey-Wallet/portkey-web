@@ -1,10 +1,11 @@
 @import '../../assets/theme/constants.less';
 
-.account {
+.social-guardian-account {
   flex: 1;
   width: 0; // responsive placeholder, to fix overflow
-  color: @font-7;
+  color: var(--portkey-ui-font-7);
   word-wrap: break-word;
+  margin-left: 12px;
 }
 
 .account-text-one-row {
@@ -12,10 +13,10 @@
 }
 
 .account-text-two-row {
-  .name {
+  .social-guardian-name {
     .text-overflow(1);
   }
-  .detail {
+  .social-guardian-detail {
     font-size: 12px;
     line-height: 16px;
     .text-overflow(1);
