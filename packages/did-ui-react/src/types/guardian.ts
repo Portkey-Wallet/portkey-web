@@ -9,7 +9,7 @@ export interface BaseGuardianItem {
   identifier?: string;
   guardianIdentifier?: string;
   guardianType: AccountType;
-  key: string; // `${identifier}&${verifier?.name}`,
+  key: string; // `${identifier}&${verifier?.id}`,
   identifierHash?: string;
   salt?: string;
   thirdPartyEmail?: string;
