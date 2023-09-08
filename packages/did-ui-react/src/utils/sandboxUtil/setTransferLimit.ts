@@ -1,24 +1,15 @@
 import { ChainId } from '@portkey/types';
 import { CustomContractBasic, did } from '..';
 import { getChainInfo } from '../../hooks/useChainInfo';
-import { IGuardianItem } from '../../types';
+import { GuardianItem } from '../../components/Guardian/utils/type';
 
-export enum GuardianMth {
-  addGuardian = 'AddGuardian',
-  UpdateGuardian = 'UpdateGuardian',
-  RemoveGuardian = 'RemoveGuardian',
-  SetGuardianTypeForLogin = 'SetGuardianForLogin',
-  UnsetGuardianTypeForLogin = 'UnsetGuardianForLogin',
-}
-export const handleGuardianContract = async ({
-  type,
+export const setTransferLimit = async ({
   params,
   chainId,
   sandboxId = '',
   caHash,
 }: {
-  type: GuardianMth;
-  params: { guardiansApproved: IGuardianItem[]; symbol: string; singleLimit: number; dailyLimit: number };
+  params: { guardiansApproved: GuardianItem[]; symbol: string; singleLimit: number; dailyLimit: number };
   chainId: ChainId;
   sandboxId?: string;
   caHash: string;
@@ -31,7 +22,7 @@ export const handleGuardianContract = async ({
       rpcUrl: chainInfo?.endPoint,
       contractAddress: chainInfo?.caContractAddress || '',
     },
-    functionName: type,
+    functionName: 'SetTransferLimit',
     paramsOption: {
       caHash,
       ...params,

@@ -2,26 +2,54 @@ import clsx from 'clsx';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
-import { useMemo, useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
 import { divDecimals } from '../../utils/converter';
-import { IPaymentSecurityItem } from '@portkey/services';
+import {
+  AccountType,
+  GuardiansApproved,
+  IPaymentSecurityItem,
+  OperationTypeEnum,
+  VerifierItem,
+} from '@portkey/services';
 import { ITransferSettingsFormInit } from '../TransferSettings/index.components';
 import { Button, Form, FormProps, Input } from 'antd';
 import SwitchComponent from '../SwitchComponent';
 import { LimitFormatTip, NoLimit, SetLimitExplain, SingleExceedDaily } from '../../constants/security';
 import { isValidInteger } from '../../utils/reg';
-import { ValidData } from '../../types';
+import { OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
+import CustomPromptModal from '../CustomPromptModal';
+import GuardianApproval from '../GuardianApproval';
+import CustomSvg from '../CustomSvg';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
+import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
+import { ELF_SYMBOL } from '../../constants/assets';
+import { getChainInfo } from '../../hooks';
+import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
+import { usePortkey } from '../context';
+import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   initData?: IPaymentSecurityItem;
+  isErrorTip?: boolean;
   onClose?: () => void;
+  onSuccess?: (data: IPaymentSecurityItem) => void;
+  onGuardiansApproveError?: OnErrorFunc;
 }
 
 const { Item: FormItem } = Form;
 
-function TransferSettingsEditContent({ className, wrapperStyle, initData, onClose }: ITransferSettingsEditProps) {
+function TransferSettingsEditContent({
+  className,
+  wrapperStyle,
+  initData,
+  isErrorTip = true,
+  onClose,
+  onSuccess,
+  onGuardiansApproveError,
+}: ITransferSettingsEditProps) {
   const [form] = Form.useForm();
   const initValue: Partial<ITransferSettingsFormInit> = useMemo(
     () => ({
@@ -35,6 +63,79 @@ function TransferSettingsEditContent({ className, wrapperStyle, initData, onClos
   const [disable, setDisable] = useState(true);
   const [validSingleLimit, setValidSingleLimit] = useState<ValidData>({ validateStatus: '', errorMsg: '' });
   const [validDailyLimit, setValidDailyLimit] = useState<ValidData>({ validateStatus: '', errorMsg: '' });
+  const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
+  const verifierMap = useRef<{ [x: string]: VerifierItem }>();
+  const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
+  const [{ sandboxId }] = usePortkey();
+  const [{ caHash, originChainId }] = usePortkeyAsset();
+
+  const chainId = useMemo(() => initData?.chainId || originChainId, [initData?.chainId, originChainId]);
+  const symbol = useMemo(() => initData?.symbol || ELF_SYMBOL, [initData?.symbol]);
+
+  const getVerifierInfo = useCallback(async () => {
+    try {
+      const chainInfo = await getChainInfo(originChainId);
+      const list = await getVerifierList({
+        sandboxId,
+        chainId: originChainId,
+        rpcUrl: chainInfo?.endPoint,
+        chainType: 'aelf',
+        address: chainInfo?.caContractAddress,
+      });
+      const _verifierMap: { [x: string]: VerifierItem } = {};
+      list.forEach((item: VerifierItem) => {
+        _verifierMap[item.id] = item;
+      }, []);
+      verifierMap.current = _verifierMap;
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'getVerifierServers',
+          error,
+        },
+        isErrorTip,
+        onGuardiansApproveError,
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [isErrorTip, onGuardiansApproveError, originChainId, sandboxId]);
+
+  const getGuardianList = useCallback(async () => {
+    try {
+      const payload = await did.getHolderInfo({
+        caHash: caHash,
+        chainId: originChainId,
+      });
+      const { guardians } = payload?.guardianList ?? { guardians: [] };
+      const guardianAccounts = [...guardians];
+      const _guardianList: UserGuardianStatus[] = guardianAccounts.map((item) => {
+        const key = `${item.guardianIdentifier}&${item.verifierId}`;
+        const _guardian = {
+          ...item,
+          identifier: item.guardianIdentifier,
+          key,
+          guardianType: item.type as AccountType,
+          verifier: verifierMap.current?.[item.verifierId],
+        };
+        return _guardian;
+      });
+      _guardianList.reverse();
+      setGuardianList(_guardianList);
+      return _guardianList;
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'GetGuardianList',
+          error: handleErrorMessage(error),
+        },
+        isErrorTip,
+        onGuardiansApproveError,
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [caHash, isErrorTip, onGuardiansApproveError, originChainId]);
 
   const handleFormChange = useCallback(() => {
     const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
@@ -53,7 +154,6 @@ function TransferSettingsEditContent({ className, wrapperStyle, initData, onClos
 
   const handleRestrictedChange = useCallback(
     (checked: boolean) => {
-      console.log('🌈 🌈 🌈 🌈 🌈 🌈 checked', checked);
       setRestrictedValue(checked);
       handleFormChange();
     },
@@ -84,30 +184,62 @@ function TransferSettingsEditContent({ className, wrapperStyle, initData, onClos
     [handleFormChange],
   );
 
-  const handleSetLimit = useCallback(async () => {
-    // ====== clear guardian cache ====== start
-    // TODO
-    // ====== clear guardian cache ====== end
+  const approvalSuccess = useCallback(
+    async (approvalInfo: GuardiansApproved[]) => {
+      try {
+        setLoading(true);
+        const guardiansApproved = formatGuardianValue(approvalInfo);
+        const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
 
-    const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
-    const params = {
-      dailyLimit,
-      singleLimit,
-      symbol: initData?.symbol,
-      decimals: initData?.decimals,
-      restricted,
-    };
-    console.log('🌈 🌈 🌈 🌈 🌈 🌈 params', params);
-    // TODO GUARDIANS_APPROVAL
-  }, [form, initData?.decimals, initData?.symbol]);
+        await setTransferLimit({
+          params: {
+            dailyLimit,
+            singleLimit,
+            symbol: symbol,
+            guardiansApproved,
+          },
+          chainId: chainId,
+          sandboxId: '',
+          caHash: caHash || '',
+        });
 
-  const onFinish = useCallback(() => {
-    handleSetLimit();
-  }, [handleSetLimit]);
+        const params: IPaymentSecurityItem = {
+          dailyLimit,
+          singleLimit,
+          chainId: chainId,
+          symbol: symbol,
+          decimals: initData?.decimals || 8,
+          restricted,
+        };
+
+        onSuccess?.(params);
+      } catch (e) {
+        errorTip(
+          {
+            errorFields: 'Handle Add Guardian',
+            error: handleErrorMessage(e),
+          },
+          isErrorTip,
+          onGuardiansApproveError,
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [caHash, chainId, form, initData?.decimals, isErrorTip, onGuardiansApproveError, onSuccess, symbol],
+  );
+
+  const getData = useCallback(async () => {
+    setLoading(true);
+    await getVerifierInfo();
+    await getGuardianList();
+    setLoading(false);
+  }, [getGuardianList, getVerifierInfo]);
 
   useEffect(() => {
+    getData();
     handleFormChange();
-  }, [handleFormChange]);
+  }, [getData, handleFormChange]);
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
@@ -119,7 +251,7 @@ function TransferSettingsEditContent({ className, wrapperStyle, initData, onClos
         className="portkey-ui-flex-column portkey-ui-transfer-settings-edit-form"
         initialValues={initValue}
         requiredMark={false}
-        onFinish={onFinish}>
+        onFinish={() => setApprovalVisible(true)}>
         <div className="portkey-ui-form-content">
           <FormItem name="restricted" label={'Transfer settings'}>
             <SwitchComponent
@@ -139,7 +271,7 @@ function TransferSettingsEditContent({ className, wrapperStyle, initData, onClos
                 placeholder={'Enter limit'}
                 onChange={(e) => handleSingleLimitChange(e.target.value)}
                 maxLength={16}
-                suffix={initData?.symbol || ''}
+                suffix={symbol}
               />
             </FormItem>
             <FormItem
@@ -151,7 +283,7 @@ function TransferSettingsEditContent({ className, wrapperStyle, initData, onClos
                 placeholder={'Enter limit'}
                 onChange={(e) => handleDailyLimitChange(e.target.value)}
                 maxLength={16}
-                suffix={initData?.symbol || ''}
+                suffix={symbol}
               />
             </FormItem>
 
@@ -167,6 +299,23 @@ function TransferSettingsEditContent({ className, wrapperStyle, initData, onClos
           </Button>
         </FormItem>
       </Form>
+      <CustomPromptModal
+        className="portkey-ui-modal-approval"
+        open={approvalVisible}
+        onClose={() => setApprovalVisible(false)}>
+        <GuardianApproval
+          header={
+            <div className="portkey-ui-flex portkey-ui-modal-approval-back" onClick={() => setApprovalVisible(false)}>
+              <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
+            </div>
+          }
+          chainId={originChainId}
+          guardianList={guardianList}
+          onConfirm={approvalSuccess}
+          onError={onGuardiansApproveError}
+          operationType={OperationTypeEnum.modifyTransferLimit}
+        />
+      </CustomPromptModal>
     </div>
   );
 }

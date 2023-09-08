@@ -79,10 +79,3 @@ export interface IVerification {
   signature?: number[];
   verificationDoc?: string;
 }
-
-export interface IGuardianItem {
-  value?: string;
-  type: AccountTypeEnum;
-  identifierHash?: string;
-  verificationInfo: IVerification;
-}

@@ -30,6 +30,7 @@ import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
+import Guardian from '../Guardian';
 
 export enum AssetStep {
   overview = 'overview',
@@ -68,7 +69,7 @@ function AssetMain({
   onLifeCycleChange,
 }: AssetMainProps) {
   const [{ networkType }] = usePortkey();
-  const [{ caInfo, initialized, caHash }, { dispatch }] = usePortkeyAsset();
+  const [{ caInfo, initialized, originChainId, caHash }, { dispatch }] = usePortkeyAsset();
   const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
 
   const portkeyWebSocketUrl = useMemo(
@@ -347,6 +348,10 @@ function AssetMain({
         />
       )}
 
+      {assetStep === AssetStep.guardians && (
+        <Guardian caHash={caHash || ''} originChainId={originChainId} onBack={() => setAssetStep(AssetStep.my)} />
+      )}
+
       {assetStep === AssetStep.walletSecurity && (
         <WalletSecurity
           onClose={() => setAssetStep(AssetStep.my)}
@@ -374,7 +379,14 @@ function AssetMain({
       )}
 
       {assetStep === AssetStep.transferSettingsEdit && (
-        <TransferSettingsEdit initData={viewPaymentSecurity} onClose={() => setAssetStep(AssetStep.transferSettings)} />
+        <TransferSettingsEdit
+          initData={viewPaymentSecurity}
+          onClose={() => setAssetStep(AssetStep.transferSettings)}
+          onSuccess={(data) => {
+            setViewPaymentSecurity(data);
+            setAssetStep(AssetStep.transferSettings);
+          }}
+        />
       )}
     </div>
   );
