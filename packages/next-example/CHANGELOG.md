@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.8...v1.5.0-alpha.9) (2023-09-08)
+
+### Features
+
+- 🎸 guardian ([4a70bb4](https://github.com/Portkey-Wallet/portkey-web/commit/4a70bb4048eff9ec9b9547f76fe9555323ad5084))
+
 ## [1.5.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.5.0-alpha.8) (2023-09-08)
 
 ## [1.5.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.6...v1.5.0-alpha.7) (2023-09-07)

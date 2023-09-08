@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.8...v1.5.0-alpha.9) (2023-09-08)
+
+### Features
+
+- 🎸 guardian ([4a70bb4](https://github.com/Portkey-Wallet/portkey-web/commit/4a70bb4048eff9ec9b9547f76fe9555323ad5084))
+- 🎸 guardian type ([0174ebb](https://github.com/Portkey-Wallet/portkey-web/commit/0174ebb13ea31dc638717e16cae6c9fd1214dcd6))
+- 🎸 guardian type adjust ([ce05b84](https://github.com/Portkey-Wallet/portkey-web/commit/ce05b8459f41c8dc98552a2b92b0ed1cc4f8e29b))
+
+### Bug Fixes
+
+- 🐛 fix max allowance ([e1cb1fa](https://github.com/Portkey-Wallet/portkey-web/commit/e1cb1fa636ab1fcfd1be3cdeeafbafb551220878))
+- 🐛 guardian page list style ([f0b295c](https://github.com/Portkey-Wallet/portkey-web/commit/f0b295cc36c656bb613a0d6abcae01e79d3b6769))
+- 🐛 set allowance ([1cfb314](https://github.com/Portkey-Wallet/portkey-web/commit/1cfb3145683bbce87cfade407c8a3baa87c738d7))
+- 🐛 setLoading ([0ac8a51](https://github.com/Portkey-Wallet/portkey-web/commit/0ac8a51aa885f3923bf42f76b23a8d3f80012b9c))
+
 ## [1.5.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.5.0-alpha.8) (2023-09-08)
 
 ### Features
