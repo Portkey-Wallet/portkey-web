@@ -7,7 +7,7 @@ import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { dealURLLastChar, did } from '../../utils';
-import { IAssetItemType, IUserTokenItem } from '@portkey/services';
+import { IAssetItemType, IPaymentSecurityItem, IUserTokenItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
@@ -24,6 +24,11 @@ import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
 import './index.less';
+import My from '../My';
+import WalletSecurity from '../WalletSecurity';
+import PaymentSecurity from '../PaymentSecurity';
+import TransferSettings from '../TransferSettings';
+import TransferSettingsEdit from '../TransferSettingsEdit';
 
 export enum AssetStep {
   overview = 'overview',
@@ -34,6 +39,12 @@ export enum AssetStep {
   transactionDetail = 'transactionDetail',
   tokenDetail = 'tokenDetail',
   NFTDetail = 'NFTDetail',
+  my = 'my',
+  guardians = 'guardians',
+  walletSecurity = 'walletSecurity',
+  paymentSecurity = 'paymentSecurity',
+  transferSettings = 'transferSettings',
+  transferSettingsEdit = 'transferSettingsEdit',
 }
 
 export interface AssetMainProps
@@ -124,6 +135,12 @@ function AssetMain({
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
 
+  const [viewPaymentSecurity, setViewPaymentSecurity] = useState<IPaymentSecurityItem>();
+
+  const onAvatarClick = useCallback(async () => {
+    setAssetStep(AssetStep.my);
+  }, []);
+
   const onReceive = useCallback(async (v: BaseToken) => {
     setSelectToken(v);
     await sleep(50);
@@ -162,6 +179,7 @@ function AssetMain({
           isShowRamp={isShowRamp}
           faucet={faucet}
           backIcon={backIcon}
+          onAvatarClick={onAvatarClick}
           onBack={onOverviewBack}
           onReceive={onReceive}
           onBuy={onBuy}
@@ -209,8 +227,9 @@ function AssetMain({
             ...selectToken,
             tokenContractAddress: selectToken.address,
           }}
-          goBack={onBack}
-          goPreview={({ initState }) => {
+
+          onBack={onBack}
+          onShowPreview={({ initState }) => {
             setRampPreview(initState);
             setAssetStep(AssetStep.rampPreview);
           }}
@@ -225,7 +244,7 @@ function AssetMain({
           initState={rampPreview}
           portkeyServiceUrl={portkeyServiceUrl || ''}
           chainId={selectToken.chainId}
-          goBack={() => {
+          onBack={() => {
             setAssetStep(AssetStep.ramp);
           }}
           isBuySectionShow={true}
@@ -304,6 +323,44 @@ function AssetMain({
             onSend(info);
           }}
         />
+      )}
+
+      {assetStep === AssetStep.my && (
+        <My
+          onClose={() => setAssetStep(AssetStep.overview)}
+          onClickGuardians={() => setAssetStep(AssetStep.guardians)}
+          onClickWalletSecurity={() => setAssetStep(AssetStep.walletSecurity)}
+        />
+      )}
+
+      {assetStep === AssetStep.walletSecurity && (
+        <WalletSecurity
+          onClose={() => setAssetStep(AssetStep.my)}
+          onClickPaymentSecurity={() => setAssetStep(AssetStep.paymentSecurity)}
+        />
+      )}
+
+      {assetStep === AssetStep.paymentSecurity && (
+        <PaymentSecurity
+          onClose={() => setAssetStep(AssetStep.walletSecurity)}
+          networkType={networkType}
+          onClickItem={(data) => {
+            setViewPaymentSecurity(data);
+            setAssetStep(AssetStep.transferSettings);
+          }}
+        />
+      )}
+
+      {assetStep === AssetStep.transferSettings && (
+        <TransferSettings
+          onClose={() => setAssetStep(AssetStep.paymentSecurity)}
+          initData={viewPaymentSecurity}
+          onEdit={() => setAssetStep(AssetStep.transferSettingsEdit)}
+        />
+      )}
+
+      {assetStep === AssetStep.transferSettingsEdit && (
+        <TransferSettingsEdit initData={viewPaymentSecurity} onClose={() => setAssetStep(AssetStep.transferSettings)} />
       )}
     </div>
   );

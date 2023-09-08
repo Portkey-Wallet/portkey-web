@@ -23,6 +23,7 @@ export interface AssetOverviewProps {
   isShowRamp?: boolean;
   backIcon?: ReactNode;
   faucet?: IFaucetConfig;
+  onAvatarClick?: () => void;
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
   onBack?: () => void;
@@ -37,6 +38,7 @@ export function AssetOverviewContent({
   isShowRamp = true,
   faucet,
   backIcon = <></>,
+  onAvatarClick,
   onBuy,
   onSend,
   onBack,
@@ -143,6 +145,8 @@ export function AssetOverviewContent({
         networkType={networkType}
         backIcon={backIcon}
         nickName={accountInfo?.nickName}
+        walletAvatar={'master1'} // TODO random
+        onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
           // TODO select Token

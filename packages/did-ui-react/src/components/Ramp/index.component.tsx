@@ -39,6 +39,7 @@ import { usePortkey } from '../context';
 import { fetchTxFeeAsync } from '../../request/token';
 
 export default function RampMain({
+  className,
   initState,
   tokenInfo,
   portkeyWebSocketUrl,
@@ -46,8 +47,8 @@ export default function RampMain({
   isBuySectionShow = true,
   isSellSectionShow = true,
   isShowSelectInModal = true,
-  goBack,
-  goPreview,
+  onBack,
+  onShowPreview,
 }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
@@ -437,7 +438,7 @@ export default function RampMain({
     if ((side === RampTypeEnum.BUY && !isBuySectionShow) || (side === RampTypeEnum.SELL && !isSellSectionShow)) {
       setLoading(false);
       message.error(SERVICE_UNAVAILABLE_TEXT);
-      return goBack?.();
+      return onBack?.();
     }
 
     if (side === RampTypeEnum.SELL) {
@@ -482,7 +483,7 @@ export default function RampMain({
     setLoading(false);
 
     const { amount, currency, country, crypto, network } = valueSaveRef.current;
-    goPreview({
+    onShowPreview({
       initState: {
         crypto,
         network,
@@ -496,9 +497,9 @@ export default function RampMain({
   }, [
     isBuySectionShow,
     isSellSectionShow,
-    goPreview,
+    onShowPreview,
     chainId,
-    goBack,
+    onBack,
     isManagerSynced,
     tokenInfo.tokenContractAddress,
     tokenInfo.decimals,
@@ -523,8 +524,8 @@ export default function RampMain({
   );
 
   return (
-    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column'])} id="portkey-ui-ramp">
-      <BackHeaderForPage title={t('Buy')} leftCallBack={goBack} />
+    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column', className])} id="portkey-ui-ramp">
+      <BackHeaderForPage title={t('Buy')} leftCallBack={onBack} />
       <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
         <div className="portkey-ui-ramp-radio">
           <Radio.Group defaultValue={RampTypeEnum.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
