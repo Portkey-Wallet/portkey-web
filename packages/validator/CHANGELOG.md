@@ -32,6 +32,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @portkey/validator
 
 ## [1.5.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.5.0-alpha.0) (2023-09-06)
+## [1.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.4.3) (2023-09-07)
 
 **Note:** Version bump only for package @portkey/validator
 

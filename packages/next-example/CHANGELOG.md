@@ -36,6 +36,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Features
 
 - 🎸 add ManagerApprove ([46c88b7](https://github.com/Portkey-Wallet/portkey-web/commit/46c88b7c1a20c1de7c6c92b15b1b461319cf4ac3))
+## [1.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.4.3) (2023-09-07)
+
+### Features
+
 - 🎸 evoke portkey ([963de7f](https://github.com/Portkey-Wallet/portkey-web/commit/963de7f08282b43bb01d6ad489beca9653890751))
 
 ## [1.4.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.2...v1.4.0-alpha.3) (2023-08-30)

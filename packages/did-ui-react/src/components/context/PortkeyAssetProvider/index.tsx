@@ -28,7 +28,7 @@ export function usePortkeyAsset(): [AssetState, BasicActions] {
 function reducer(state: AssetState, { type, payload }: any) {
   switch (type) {
     case PortkeyAssetActions.setDIDWallet: {
-      return Object.assign({}, state, { ...payload });
+      return Object.assign({}, state, { ...payload, accountInfo: { ...state.accountInfo, ...payload.accountInfo } });
     }
     case PortkeyAssetActions.setCAInfo: {
       const caInfo = payload.caInfo as Required<WalletInfo>['caInfo'];

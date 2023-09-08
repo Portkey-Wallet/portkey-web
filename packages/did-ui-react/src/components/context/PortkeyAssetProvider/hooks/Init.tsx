@@ -33,15 +33,31 @@ export const useStateInit = () => {
           caHash: holderInfo.caHash,
         };
       });
+
+      dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
     },
-    [chainType, sandboxId],
+    [chainType, dispatch, sandboxId],
   );
+
+  const getAccountInfo = useCallback(async () => {
+    try {
+      await did.didWallet.getCAHolderInfo(originChainId);
+      dispatch(
+        basicAssetView.setDIDWallet.actions({
+          accountInfo: did.didWallet.accountInfo,
+        }),
+      );
+    } catch (error) {
+      console.error(error);
+    }
+  }, [dispatch, originChainId]);
 
   const getHolderInfo = useCallback(
     async ({ managerAddress, caHash }: { managerAddress: string; caHash: string }) => {
       if (!originChainId) throw Error('Please configure `originChainId` in PortkeyAssetProvider');
       if (!caHash) throw Error('Please configure `caHash` in PortkeyAssetProvider');
       const chainsInfo = await did.didWallet.getChainsInfo();
+      getAccountInfo();
       const holderInfo = await getHolderInfoByContract({
         sandboxId,
         chainId: originChainId,
@@ -60,10 +76,11 @@ export const useStateInit = () => {
           caHash: holderInfo.caHash,
         },
       };
+      dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
+
       // fetch other caAddress on other chain
       const chainIdList = Object.keys(chainsInfo).filter((chainId) => chainId !== originChainId);
-      await fetchCAAddressByChainId(chainIdList as ChainId[], caHash);
-      dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
+      fetchCAAddressByChainId(chainIdList as ChainId[], caHash);
 
       const guardian = holderInfo.guardianList.guardians.find((guardian) => guardian.isLoginGuardian);
       did
@@ -76,19 +93,11 @@ export const useStateInit = () => {
           dispatch(basicAssetView.setGuardianList.actions(guardians));
         });
 
-      if (guardian)
-        did.didWallet.accountInfo = {
-          loginAccount: guardian.guardianIdentifier || guardian.identifierHash,
-        };
-      try {
-        await did.didWallet.getCAHolderInfo(originChainId);
-      } catch (error) {
-        console.error(error);
-      }
+      if (guardian) did.didWallet.accountInfo.loginAccount = guardian.guardianIdentifier || guardian.identifierHash;
 
       return did;
     },
-    [chainType, dispatch, fetchCAAddressByChainId, originChainId, sandboxId],
+    [chainType, dispatch, fetchCAAddressByChainId, getAccountInfo, originChainId, sandboxId],
   );
 
   const loadManager = useCallback(async () => {
