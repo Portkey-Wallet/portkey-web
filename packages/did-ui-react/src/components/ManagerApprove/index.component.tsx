@@ -1,15 +1,17 @@
 import GuardianApprovalMain from '../GuardianApproval/index.component';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { ChainId } from '@portkey/types';
 import SetAllowanceMain, { BaseSetAllowanceProps, IAllowance } from '../SetAllowance/index.component';
-import { did, handleErrorMessage, setLoading } from '../../utils';
+import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } from '../../utils';
 import { getChain } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
-import { BaseGuardianItem } from '../../types';
-import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import { BaseGuardianItem, IGuardiansApproved } from '../../types';
+import { OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import BackHeader from '../BackHeader';
+import { divDecimals, timesDecimals } from '../../utils/converter';
+import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL } from '../../constants';
 import './index.less';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
@@ -19,13 +21,13 @@ export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
 
 export interface IManagerApproveResult {
   amount: string;
-  guardiansApproved: GuardiansApproved[];
+  guardiansApproved: IGuardiansApproved[];
 }
 
 export interface ManagerApproveInnerProps extends BaseManagerApproveInnerProps {
   onCancel?: () => void;
   onError?: (error: Error) => void;
-  onFinish?: (res: { amount: string; guardiansApproved: GuardiansApproved[] }) => void;
+  onFinish?: (res: { amount: string; guardiansApproved: IGuardiansApproved[] }) => void;
 }
 export enum ManagerApproveStep {
   SetAllowance = 'SetAllowance',
@@ -35,6 +37,7 @@ export enum ManagerApproveStep {
 const PrefixCls = 'manager-approval';
 
 export default function ManagerApproveInner({
+  max,
   originChainId,
   caHash,
   amount,
@@ -51,6 +54,8 @@ export default function ManagerApproveInner({
   const getVerifierListHandler = useCallback(async () => {
     const chainInfo = await getChain(originChainId);
     if (!chainInfo) throw Error('Missing verifier, please check params');
+    AuthServe.addRequestAuthCheck(originChainId);
+    AuthServe.setRefreshTokenConfig(originChainId);
     const list = await getVerifierList({
       chainId: originChainId,
       rpcUrl: chainInfo.endPoint,
@@ -97,7 +102,6 @@ export default function ManagerApproveInner({
         setLoading(true);
 
         const guardianList = await getGuardianList();
-        console.log(guardianList, 'guardianList==');
         setGuardianList(guardianList);
         setStep(ManagerApproveStep.GuardianApproval);
         setLoading(false);
@@ -109,6 +113,43 @@ export default function ManagerApproveInner({
     [getGuardianList, onError],
   );
 
+  const [tokenInfo, setTokenInfo] = useState<{
+    symbol: string;
+    tokenName: string;
+    supply: string;
+    totalSupply: string;
+    decimals: number;
+    issuer: string;
+    isBurnable: true;
+    issueChainId: number;
+    issued: string;
+  }>();
+
+  const getTokenInfo = useCallback(async () => {
+    try {
+      const chainInfo = await getChain(originChainId);
+      if (!chainInfo) throw Error('Missing verifier, please check params');
+      const result = await CustomContractBasic.callViewMethod({
+        contractOptions: {
+          contractAddress: chainInfo.defaultToken.address,
+          rpcUrl: chainInfo.endPoint,
+        },
+        functionName: 'GetTokenInfo',
+        paramsOption: {
+          symbol,
+        },
+      });
+      setTokenInfo(result.data);
+    } catch (error) {
+      console.error(error);
+      onError?.(Error('GetTokenInfo error'));
+    }
+  }, [onError, originChainId, symbol]);
+
+  useEffect(() => {
+    getTokenInfo();
+  }, [getTokenInfo]);
+
   return (
     <PortkeyStyleProvider>
       <div className="portkey-ui-flex-column portkey-ui-manager-approval-wrapper">
@@ -116,7 +157,8 @@ export default function ManagerApproveInner({
           <SetAllowanceMain
             className="portkey-ui-flex-column"
             symbol={symbol}
-            amount={allowance}
+            amount={divDecimals(allowance, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed()}
+            max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed()}
             dappInfo={dappInfo}
             onCancel={onCancel}
             onConfirm={allowanceConfirm}
@@ -130,12 +172,22 @@ export default function ManagerApproveInner({
             chainId={originChainId}
             guardianList={guardianList}
             onConfirm={(approvalInfo) => {
+              const approved: IGuardiansApproved[] = approvalInfo.map((guardian) => ({
+                type: AccountTypeEnum[guardian.type || 'Google'],
+                identifierHash: guardian.identifierHash || '',
+                verificationInfo: {
+                  id: guardian.verifierId,
+                  signature: Object.values(Buffer.from(guardian.signature as any, 'hex')),
+                  verificationDoc: guardian.verificationDoc,
+                },
+              }));
+
               onFinish?.({
-                amount: allowance,
-                guardiansApproved: approvalInfo,
+                amount: timesDecimals(allowance, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed(),
+                guardiansApproved: approved,
               });
             }}
-            onError={(error) => onError?.(Error(handleErrorMessage(error.error)))}
+            // onError={(error) => onError?.(Error(handleErrorMessage(error.error)))}
             operationType={OperationTypeEnum.managerApprove}
           />
         )}

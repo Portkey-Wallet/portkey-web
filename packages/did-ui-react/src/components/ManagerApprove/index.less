@@ -14,4 +14,19 @@
 .portkey-ui-manager-approval-wrapper {
   overflow: auto;
   height: 100%;
+  .btn-wrapper {
+    padding: 15px 16px 17px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    line-height: 20px;
+    button {
+      border-radius: var(--portkey-ui-primary-border-radius);
+      line-height: var(--portkey-ui-default-btn-h);
+      font-size: 16px;
+      &.portkey-ant-btn-default {
+        border-color: var(--portkey-ui-border-7);
+      }
+    }
+  }
 }

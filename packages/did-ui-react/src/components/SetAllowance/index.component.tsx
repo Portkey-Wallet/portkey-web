@@ -12,6 +12,7 @@ export interface BaseSetAllowanceProps {
   symbol: string;
   amount: number | string;
   className?: string;
+  max?: string;
   dappInfo?: { icon?: string; href?: string; name?: string };
 }
 
@@ -26,9 +27,8 @@ export interface SetAllowanceHandlerProps {
 
 export type SetAllowanceProps = BaseSetAllowanceProps & SetAllowanceHandlerProps;
 
-const formatAllowanceInput = (value: number | string) =>
-  parseInputNumberChange(value.toString(), new BigNumber(ALLOWANCE_MAX_LIMIT), 0);
 export default function SetAllowanceMain({
+  max,
   amount,
   dappInfo,
   symbol,
@@ -36,14 +36,23 @@ export default function SetAllowanceMain({
   onCancel,
   onConfirm,
 }: SetAllowanceProps) {
+  const formatAllowanceInput = useCallback(
+    (value: number | string) => parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined, 0),
+    [max],
+  );
+
   const [allowance, setAllowance] = useState<string>(formatAllowanceInput(amount));
 
   const [error, setError] = useState<string>('');
 
-  const inputChange = useCallback((amount: string | number) => {
-    setAllowance(formatAllowanceInput(amount));
-    setError('');
-  }, []);
+  const inputChange = useCallback(
+    (amount: string | number) => {
+      setAllowance(formatAllowanceInput(amount));
+      setError('');
+    },
+    [formatAllowanceInput],
+  );
+
   return (
     <div className={clsx(`${PrefixCls}-wrapper`, className)}>
       <div className={clsx('portkey-ui-flex-center', `${PrefixCls}-dapp-info`)}>
