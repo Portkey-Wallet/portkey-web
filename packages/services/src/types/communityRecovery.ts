@@ -14,6 +14,7 @@ export interface GuardiansApproved {
   verifierId: string;
   verificationDoc: string;
   signature: string;
+  identifierHash?: string;
 }
 
 export interface RegisterParams {

@@ -216,7 +216,7 @@ const GuardianApprovalMain = forwardRef(
           verifierId: item.verifier?.id || '',
           verificationDoc: item.verificationDoc || '',
           signature: item.signature || '',
-          identifierHash: item.identifierHash,
+          identifierHash: item.identifierHash || '',
         }));
       onConfirmRef.current?.(verificationList);
     }, [guardianList]);
