@@ -4,6 +4,8 @@ export { default as CustomSvg } from './CustomSvg';
 export { default as VerifierSelect } from './VerifierSelect';
 export { default as SetPinAndAddManager } from './SetPinAndAddManager';
 export { default as GuardianList } from './GuardianList';
+export { default as GuardianAdd } from './GuardianEdit';
+export { default as Guardian } from './Guardian';
 export { default as SignUpBase } from './SignUpBase';
 export { default as CryptoDesign } from './CryptoDesign';
 export { default as CodeVerify } from './CodeVerify';

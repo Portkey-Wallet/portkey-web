@@ -1,0 +1,24 @@
+@import '../../assets/theme/constants.less';
+
+.social-guardian-account {
+  flex: 1;
+  width: 0; // responsive placeholder, to fix overflow
+  color: var(--portkey-ui-font-7);
+  word-wrap: break-word;
+  margin-left: 12px;
+}
+
+.account-text-one-row {
+  .text-overflow(2);
+}
+
+.account-text-two-row {
+  .social-guardian-name {
+    .text-overflow(1);
+  }
+  .social-guardian-detail {
+    font-size: 12px;
+    line-height: 16px;
+    .text-overflow(1);
+  }
+}
