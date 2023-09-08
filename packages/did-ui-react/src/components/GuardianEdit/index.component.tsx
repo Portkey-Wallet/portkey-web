@@ -113,6 +113,7 @@ function GuardianEdit({
       ...currentGuardian!,
       key: currentKey,
       verifier,
+      verifierId: verifier.id,
     };
     curGuardian.current = _guardian;
     return true;
@@ -198,6 +199,7 @@ function GuardianEdit({
   }, []);
   const sendCode = useCallback(async () => {
     try {
+      setLoading(true);
       const _guardian = curGuardian?.current;
       const result = await verification.sendVerificationCode(
         {
@@ -232,6 +234,8 @@ function GuardianEdit({
         isErrorTip,
         onError,
       );
+    } finally {
+      setLoading(false);
     }
   }, [chainId, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
@@ -245,6 +249,7 @@ function GuardianEdit({
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
+        setLoading(true);
         if (isRemove) {
           await handleRemoveGuardian?.(approvalInfo);
         } else {
@@ -259,6 +264,8 @@ function GuardianEdit({
           isErrorTip,
           onError,
         );
+      } finally {
+        setLoading(false);
       }
     },
     [handleEditGuardian, handleRemoveGuardian, isErrorTip, isRemove, onError],
@@ -270,13 +277,26 @@ function GuardianEdit({
           AccountTypeEnum[currentGuardian?.guardianType as AccountType],
         )
       ) {
-        const { guardianIdentifier, verifierInfo } = await socialVerify?.(curGuardian.current!);
-        curGuardian.current = {
-          ...(curGuardian?.current as UserGuardianStatus),
-          identifierHash: guardianIdentifier,
-          verifierInfo,
-        };
-        setApprovalVisible(true);
+        try {
+          const { guardianIdentifier, verifierInfo } = await socialVerify?.(curGuardian.current!);
+          curGuardian.current = {
+            ...(curGuardian?.current as UserGuardianStatus),
+            identifierHash: guardianIdentifier,
+            verifierInfo,
+          };
+          setApprovalVisible(true);
+        } catch (e) {
+          errorTip(
+            {
+              errorFields: 'Handle Guardian',
+              error: handleErrorMessage(e),
+            },
+            isErrorTip,
+            onError,
+          );
+        } finally {
+          setLoading(false);
+        }
       } else {
         CustomModal({
           type: 'confirm',
@@ -296,7 +316,7 @@ function GuardianEdit({
         });
       }
     }
-  }, [checkValid, currentGuardian?.guardianType, sendCode, socialVerify]);
+  }, [checkValid, currentGuardian?.guardianType, isErrorTip, onError, sendCode, socialVerify]);
   const onClickRemove = useCallback(() => {
     return CustomModal({
       type: 'confirm',
@@ -314,13 +334,6 @@ function GuardianEdit({
       },
     });
   }, []);
-  const approvalGuardianList = useMemo(() => {
-    if (isRemove) {
-      return guardianList?.filter((item) => item.key !== currentGuardian?.key);
-    } else {
-      return guardianList?.filter((item) => item.key !== preGuardian?.key);
-    }
-  }, [currentGuardian?.key, guardianList, isRemove, preGuardian?.key]);
   useEffect(() => {
     const _key = `${currentGuardian?.guardianIdentifier}&${selectVerifierId}`;
     setCurrentKey(_key);
@@ -388,7 +401,7 @@ function GuardianEdit({
             </div>
           }
           chainId={originChainId}
-          guardianList={approvalGuardianList}
+          guardianList={guardianList?.filter((item) => item.key !== preGuardian?.key)}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={isRemove ? OperationTypeEnum.deleteGuardian : OperationTypeEnum.editGuardian}

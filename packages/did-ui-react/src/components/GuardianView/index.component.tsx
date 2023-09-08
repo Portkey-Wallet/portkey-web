@@ -8,7 +8,7 @@ import GuardianAccountShow from '../GuardianAccountShow';
 import BaseVerifierIcon from '../BaseVerifierIcon';
 import { Button, Switch } from 'antd';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
-import { did, errorTip, handleErrorMessage, verification } from '../../utils';
+import { did, errorTip, handleErrorMessage, setLoading, verification } from '../../utils';
 import { useThrottleCallback } from '../../hooks/throttle';
 import CustomModal from '../CustomModal';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
@@ -70,6 +70,7 @@ function GuardianView({
   }, [handleSetLoginGuardian, isErrorTip, onError]);
   const sendCode = useCallback(async () => {
     try {
+      setLoading(true);
       const _guardian = curGuardian.current;
       const result = await verification.sendVerificationCode(
         {
@@ -104,6 +105,8 @@ function GuardianView({
         isErrorTip,
         onError,
       );
+    } finally {
+      setLoading(false);
     }
   }, [chainId, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
@@ -120,8 +123,21 @@ function GuardianView({
         currentGuardian.guardianType,
       )
     ) {
-      await socialVerify?.(currentGuardian);
-      handleSwitch();
+      try {
+        await socialVerify?.(currentGuardian);
+        handleSwitch();
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'Social Verify',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      } finally {
+        setLoading(false);
+      }
     } else {
       CustomModal({
         type: 'confirm',
@@ -138,7 +154,7 @@ function GuardianView({
         onOk: sendCode,
       });
     }
-  }, [currentGuardian, sendCode, socialVerify, handleSwitch]);
+  }, [currentGuardian, socialVerify, handleSwitch, isErrorTip, onError, sendCode]);
 
   const checkSwitch = useThrottleCallback(
     async (status: boolean) => {
