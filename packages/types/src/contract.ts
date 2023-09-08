@@ -44,3 +44,20 @@ export interface IContract {
     sendOptions?: SendOptions,
   ): Promise<SendResult<T>>;
 }
+
+export type ICallViewMethod = (
+  functionName: string,
+  paramsOption?: any,
+  callOptions?: {
+    defaultBlock: number | string;
+    options?: any;
+    callback?: any;
+  },
+) => Promise<ViewResult>;
+
+export type ICallSendMethod = (
+  functionName: string,
+  account: string,
+  paramsOption?: any,
+  sendOptions?: SendOptions,
+) => Promise<SendResult>;

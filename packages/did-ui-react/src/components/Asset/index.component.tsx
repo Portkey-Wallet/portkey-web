@@ -6,7 +6,7 @@ import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { dealURLLastChar, did } from '../../utils';
+import { dealURLLastChar, did, handleErrorMessage, setLoading } from '../../utils';
 import { IAssetItemType, IPaymentSecurityItem, IUserTokenItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
@@ -29,6 +29,7 @@ import WalletSecurity from '../WalletSecurity';
 import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
+import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 
 export enum AssetStep {
   overview = 'overview',
@@ -67,7 +68,7 @@ function AssetMain({
   onLifeCycleChange,
 }: AssetMainProps) {
   const [{ networkType }] = usePortkey();
-  const [{ caInfo, initialized }, { dispatch }] = usePortkeyAsset();
+  const [{ caInfo, initialized, caHash }, { dispatch }] = usePortkeyAsset();
   const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
 
   const portkeyWebSocketUrl = useMemo(
@@ -157,10 +158,24 @@ function AssetMain({
     [portkeyWebSocketUrl],
   );
 
-  const onSend = useCallback(async (v: IAssetItemType) => {
-    setSendToken(v);
-    setAssetStep(AssetStep.send);
-  }, []);
+  const onSend = useCallback(
+    async (v: IAssetItemType) => {
+      try {
+        setLoading(true);
+        const res = await walletSecurityCheck({ caHash: caHash || '' });
+        setLoading(false);
+        if (typeof res === 'boolean') {
+          setSendToken(v);
+          setAssetStep(AssetStep.send);
+        }
+      } catch (error) {
+        const msg = handleErrorMessage(error);
+        message.error(msg);
+        setLoading(false);
+      }
+    },
+    [caHash],
+  );
 
   const onViewActivityItem = useCallback(async (v: ActivityItemType) => {
     setTransactionDetail(v);
@@ -227,7 +242,6 @@ function AssetMain({
             ...selectToken,
             tokenContractAddress: selectToken.address,
           }}
-
           onBack={onBack}
           onShowPreview={({ initState }) => {
             setRampPreview(initState);
@@ -242,7 +256,7 @@ function AssetMain({
       {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
         <RampPreviewMain
           initState={rampPreview}
-          portkeyServiceUrl={portkeyServiceUrl || ''}
+          portkeyServiceUrl={portkeyServiceUrl || 'https://did-portkey.portkey.finance'}
           chainId={selectToken.chainId}
           onBack={() => {
             setAssetStep(AssetStep.ramp);

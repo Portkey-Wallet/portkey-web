@@ -73,3 +73,16 @@ export interface IGuardiansApproved {
     verificationDoc: string;
   };
 }
+
+export interface IVerification {
+  id: string;
+  signature?: number[];
+  verificationDoc?: string;
+}
+
+export interface IGuardianItem {
+  value?: string;
+  type: AccountTypeEnum;
+  identifierHash?: string;
+  verificationInfo: IVerification;
+}

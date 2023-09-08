@@ -39,13 +39,15 @@ export default function AssetCard({
   const isMainnet = useMemo(() => networkType === 'MAIN', [networkType]);
   return (
     <div className="portkey-ui-asset-card-wrapper">
-      <TitleWrapper
-        className="portkey-ui-wallet-name"
-        leftElement={backIcon}
-        leftCallBack={onBack}
-        title={nickName || '--'}
-        rightElement={<CustomSvg className="portkey-ui-custom-avatar" type={walletAvatar} onClick={onAvatarClick} />}
-      />
+      <div className="portkey-ui-header-wrap">
+        <TitleWrapper
+          className="portkey-ui-wallet-name"
+          leftElement={backIcon}
+          leftCallBack={onBack}
+          title={nickName || '--'}
+        />
+        <CustomSvg className="portkey-ui-custom-avatar" type={walletAvatar} onClick={onAvatarClick} />
+      </div>
 
       <div className="portkey-ui-text-center portkey-ui-balance-amount">
         {isMainnet ? (
