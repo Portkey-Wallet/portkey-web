@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import { useMemo } from 'react';
 import './index.less';
 import BackHeaderForPage from '../BackHeaderForPage';
@@ -9,11 +8,16 @@ import MenuItem from '../MenuItem';
 export interface IWalletSecurityProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
-  onClose?: () => void;
+  onBack?: () => void;
   onClickPaymentSecurity: () => void;
 }
 
-function WalletSecurityContent({ className, wrapperStyle, onClose, onClickPaymentSecurity }: IWalletSecurityProps) {
+export default function WalletSecurityMain({
+  className,
+  wrapperStyle,
+  onBack,
+  onClickPaymentSecurity,
+}: IWalletSecurityProps) {
   const MenuList: IMenuItemType[] = useMemo(
     () => [
       {
@@ -26,7 +30,7 @@ function WalletSecurityContent({ className, wrapperStyle, onClose, onClickPaymen
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-wallet-security-wrapper', className)}>
-      <BackHeaderForPage title={`Wallet Security`} leftCallBack={onClose} />
+      <BackHeaderForPage title={`Wallet Security`} leftCallBack={onBack} />
       <div>
         {MenuList.map((item) => (
           <MenuItem key={item.label} onClick={item?.onClick}>
@@ -35,13 +39,5 @@ function WalletSecurityContent({ className, wrapperStyle, onClose, onClickPaymen
         ))}
       </div>
     </div>
-  );
-}
-
-export default function WalletSecurityMain(props: IWalletSecurityProps) {
-  return (
-    <PortkeySendProvider>
-      <WalletSecurityContent {...props} />
-    </PortkeySendProvider>
   );
 }

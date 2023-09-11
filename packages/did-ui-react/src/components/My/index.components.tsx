@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import { useMemo } from 'react';
 import './index.less';
 import BackHeaderForPage from '../BackHeaderForPage';
@@ -10,12 +9,12 @@ import CustomSvg from '../CustomSvg';
 export interface MyProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
-  onClose?: () => void;
+  onBack?: () => void;
   onClickGuardians: () => void;
   onClickWalletSecurity: () => void;
 }
 
-function MyContent({ className, wrapperStyle, onClose, onClickGuardians, onClickWalletSecurity }: MyProps) {
+export default function MyMain({ className, wrapperStyle, onBack, onClickGuardians, onClickWalletSecurity }: MyProps) {
   const MenuList: IMenuItemType[] = useMemo(
     () => [
       {
@@ -34,7 +33,7 @@ function MyContent({ className, wrapperStyle, onClose, onClickGuardians, onClick
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-my-wrapper', className)}>
-      <BackHeaderForPage title={`My`} leftCallBack={onClose} />
+      <BackHeaderForPage title={`My`} leftCallBack={onBack} />
       <div>
         {MenuList.map((item) => (
           <MenuItem
@@ -46,13 +45,5 @@ function MyContent({ className, wrapperStyle, onClose, onClickGuardians, onClick
         ))}
       </div>
     </div>
-  );
-}
-
-export default function MyMain(props: MyProps) {
-  return (
-    <PortkeySendProvider>
-      <MyContent {...props} />
-    </PortkeySendProvider>
   );
 }

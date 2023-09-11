@@ -342,7 +342,7 @@ function AssetMain({
 
       {assetStep === AssetStep.my && (
         <My
-          onClose={() => setAssetStep(AssetStep.overview)}
+          onBack={() => setAssetStep(AssetStep.overview)}
           onClickGuardians={() => setAssetStep(AssetStep.guardians)}
           onClickWalletSecurity={() => setAssetStep(AssetStep.walletSecurity)}
         />
@@ -354,15 +354,16 @@ function AssetMain({
 
       {assetStep === AssetStep.walletSecurity && (
         <WalletSecurity
-          onClose={() => setAssetStep(AssetStep.my)}
+          onBack={() => setAssetStep(AssetStep.my)}
           onClickPaymentSecurity={() => setAssetStep(AssetStep.paymentSecurity)}
         />
       )}
 
       {assetStep === AssetStep.paymentSecurity && (
         <PaymentSecurity
-          onClose={() => setAssetStep(AssetStep.walletSecurity)}
+          onBack={() => setAssetStep(AssetStep.walletSecurity)}
           networkType={networkType}
+          caHash={caHash || ''}
           onClickItem={(data) => {
             setViewPaymentSecurity(data);
             setAssetStep(AssetStep.transferSettings);
@@ -372,7 +373,7 @@ function AssetMain({
 
       {assetStep === AssetStep.transferSettings && (
         <TransferSettings
-          onClose={() => setAssetStep(AssetStep.paymentSecurity)}
+          onBack={() => setAssetStep(AssetStep.paymentSecurity)}
           initData={viewPaymentSecurity}
           onEdit={() => setAssetStep(AssetStep.transferSettingsEdit)}
         />
@@ -381,7 +382,9 @@ function AssetMain({
       {assetStep === AssetStep.transferSettingsEdit && (
         <TransferSettingsEdit
           initData={viewPaymentSecurity}
-          onClose={() => setAssetStep(AssetStep.transferSettings)}
+          caHash={caHash || ''}
+          originChainId={originChainId}
+          onBack={() => setAssetStep(AssetStep.transferSettings)}
           onSuccess={(data) => {
             setViewPaymentSecurity(data);
             setAssetStep(AssetStep.transferSettings);

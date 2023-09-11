@@ -296,6 +296,7 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
       if (!isNFT) {
         // transfer limit check
         const res = await handleCheckTransferLimit();
+
         if (typeof res !== 'boolean') return ExceedLimit;
 
         // insufficient balance check
