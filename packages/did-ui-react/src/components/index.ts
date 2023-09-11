@@ -64,6 +64,7 @@ export { default as PortkeyStyleProvider } from './PortkeyStyleProvider';
 export { default as BaseModalMethod } from './ModalMethod/BaseModalMethod';
 export { default as walletSecurityCheck } from './ModalMethod/WalletSecurityCheck';
 export { default as transferLimitCheck } from './ModalMethod/TransferLimitCheck';
+export { default as WalletSecurity } from './WalletSecurity';
 
 export * from './context/PortkeyAssetProvider';
 export * from './context/PortkeySendProvider';
