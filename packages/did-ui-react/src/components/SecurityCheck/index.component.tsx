@@ -4,15 +4,16 @@ import clsx from 'clsx';
 import './index.less';
 
 export interface SecurityCheckProps {
+  className?: string;
   onCancel?: () => void;
   onConfirm?: (res: any) => void;
 }
 
 const PrefixCls = 'portkey-ui-security-check';
 
-export default function SecurityCheckMain({ onCancel, onConfirm }: SecurityCheckProps) {
+export default function SecurityCheckMain({ className, onCancel, onConfirm }: SecurityCheckProps) {
   return (
-    <div className={clsx('portkey-ui-text-center', `${PrefixCls}-wrapper`)}>
+    <div className={clsx('portkey-ui-text-center', `${PrefixCls}-wrapper`, className)}>
       <div className={`${PrefixCls}-body`}>
         <div className={`${PrefixCls}-banner`}>
           <CustomSvg type="Security" />
@@ -24,7 +25,7 @@ export default function SecurityCheckMain({ onCancel, onConfirm }: SecurityCheck
       </div>
 
       <div className={`${PrefixCls}-footer`}>
-        <div className="btn-wrapper">
+        <div className="portkey-ui-btn-wrapper">
           <Button onClick={onCancel}>Not Now</Button>
           <Button type="primary" onClick={onConfirm}>
             Add Guardians
