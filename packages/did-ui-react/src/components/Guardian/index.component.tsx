@@ -47,6 +47,7 @@ export interface GuardianProps {
   chainType?: ChainType;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
+  onBack?: () => void;
 }
 
 function GuardianMain({
@@ -56,6 +57,7 @@ function GuardianMain({
   chainType = 'aelf',
   isErrorTip = true,
   onError,
+  onBack,
 }: GuardianProps) {
   const [{ sandboxId }] = usePortkey();
   const [step, setStep] = useState<GuardianStep>(GuardianStep.guardianList);
@@ -430,7 +432,7 @@ function GuardianMain({
             <TitleWrapper
               className="guardian-page-title"
               title="Guardians"
-              // leftCallBack={}
+              leftCallBack={onBack}
               rightElement={
                 <Button onClick={onAddGuardian} className="title-add-guardian-btn">
                   Add Guardians

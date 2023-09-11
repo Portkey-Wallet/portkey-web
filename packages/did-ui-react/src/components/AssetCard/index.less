@@ -1,5 +1,18 @@
 .portkey-ui-asset-card-wrapper {
   color: var(--portkey-ui-text-primary);
+
+  .portkey-ui-header-wrap {
+    position: relative;
+
+    .portkey-ui-custom-avatar {
+      position: absolute;
+      right: 24px;
+      top: 16px;
+      width: 40px;
+      height: 40px;
+    }
+  }
+
   .portkey-ui-wallet-name {
     position: relative;
     line-height: 28px;
@@ -8,12 +21,9 @@
     height: 72px;
     padding: 16px 24px;
     border-bottom: 1px solid var(--portkey-ui-default-border);
-
-    .portkey-ui-custom-avatar {
-      width: 40px;
-      height: 40px;
-    }
+    align-items: center;
   }
+
   .portkey-ui-balance-amount {
     font-size: 32px;
     font-style: normal;

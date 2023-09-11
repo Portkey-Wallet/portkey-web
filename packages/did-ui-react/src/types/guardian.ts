@@ -73,3 +73,9 @@ export interface IGuardiansApproved {
     verificationDoc: string;
   };
 }
+
+export interface IVerification {
+  id: string;
+  signature?: number[];
+  verificationDoc?: string;
+}

@@ -6,7 +6,7 @@ export default function CustomPromptModal({ onClose, ...props }: ICustomTokenMod
   return (
     <Modal
       {...props}
-      wrapClassName="custom-prompt-modal"
+      wrapClassName="portkey-ui-prompt-modal"
       maskClosable={true}
       closable={false}
       centered={true}

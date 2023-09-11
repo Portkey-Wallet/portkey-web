@@ -34,6 +34,9 @@ import { useCheckManagerSyncState } from '../../hooks/wallet';
 import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
+import { ExceedLimit } from '../../constants/security';
+import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
+import { getChain } from '../../hooks/useChainInfo';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -187,11 +190,36 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
     [retryCrossChain],
   );
 
+  const handleCheckTransferLimit = useCallback(async () => {
+    const chainInfo = await getChain(tokenInfo.chainId);
+    const privateKey = managementAccount?.privateKey;
+    if (!privateKey) throw WalletError.invalidPrivateKey;
+    if (!caHash) throw 'Please login';
+
+    const res = await transferLimitCheck({
+      rpcUrl: chainInfo?.endPoint || '',
+      caContractAddress: chainInfo?.caContractAddress || '',
+      privateKey,
+      caHash: caHash,
+      chainId: tokenInfo.chainId,
+      symbol: tokenInfo.symbol,
+      amount: amount,
+      decimals: tokenInfo.decimals,
+    });
+
+    return res;
+  }, [amount, caHash, managementAccount?.privateKey, tokenInfo.chainId, tokenInfo.decimals, tokenInfo.symbol]);
+
   const sendHandler = useCallback(async () => {
     try {
       if (!managementAccount?.privateKey || !caHash) return;
       if (!tokenInfo) throw 'No Symbol info';
       setLoading(true);
+
+      // transfer limit check
+      const res = await handleCheckTransferLimit();
+      if (typeof res !== 'boolean') return ExceedLimit;
+
       if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
         await crossChainTransfer({
           sandboxId,
@@ -244,7 +272,9 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
     caHash,
     chainType,
     defaultFee.crossChain,
-    managementAccount,
+    handleCheckTransferLimit,
+    managementAccount?.address,
+    managementAccount?.privateKey,
     onSuccess,
     sandboxId,
     showErrorModal,
@@ -264,6 +294,11 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
         return 'Synchronizing on-chain account information...';
       }
       if (!isNFT) {
+        // transfer limit check
+        const res = await handleCheckTransferLimit();
+        if (typeof res !== 'boolean') return ExceedLimit;
+
+        // insufficient balance check
         if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
           return TransactionError.TOKEN_NOT_ENOUGH;
         }
@@ -298,13 +333,16 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
     balance,
     caHash,
     checkManagerSyncState,
-    defaultFee,
-    defaultToken,
+    defaultFee.crossChain,
+    defaultToken.symbol,
     getTranslationInfo,
+    handleCheckTransferLimit,
     isNFT,
-    managementAccount,
-    toAccount,
-    tokenInfo,
+    managementAccount?.address,
+    toAccount.address,
+    tokenInfo.chainId,
+    tokenInfo.decimals,
+    tokenInfo.symbol,
   ]);
 
   const StageObj: TypeStageObj = useMemo(
@@ -355,6 +393,7 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
         handler: async () => {
           const res = await handleCheckPreview();
           console.log('handleCheckPreview res', res);
+          if (res === ExceedLimit) return;
           if (!res) {
             setTipMsg('');
             setStage(Stage.Preview);

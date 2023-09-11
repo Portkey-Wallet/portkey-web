@@ -145,7 +145,7 @@ export function AssetOverviewContent({
         networkType={networkType}
         backIcon={backIcon}
         nickName={accountInfo?.nickName}
-        walletAvatar={'master1'} // TODO random
+        walletAvatar={'master1'}
         onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {

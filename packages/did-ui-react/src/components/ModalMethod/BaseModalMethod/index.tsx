@@ -3,7 +3,7 @@ import { PORTKEY_PREFIX_CLS } from '../../../constants';
 import clsx from 'clsx';
 import './index.less';
 
-interface BaseModalFuncProps extends ModalFuncProps {
+export interface BaseModalFuncProps extends ModalFuncProps {
   visibleFooter?: boolean;
 }
 
