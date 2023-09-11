@@ -16,7 +16,7 @@ export const useGetAchTokenInfo = () => {
       return undefined;
     }
 
-    const rst = await getAchToken({ email: emailGuardian.guardianIdentifier || emailGuardian.identifierHash });
+    const rst = await getAchToken({ email: emailGuardian.guardianIdentifier || '' });
     const achTokenInfo = {
       token: rst.accessToken,
       expires: Date.now() + 24 * 60 * 60 * 1000,

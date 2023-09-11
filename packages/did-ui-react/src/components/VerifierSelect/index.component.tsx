@@ -335,6 +335,7 @@ export default function VerifierSelect({
         getContainer={'#select-verifier-content'}
         className="verify-confirm-modal"
         closable={false}
+        maskClosable={false}
         open={open}
         width={320}
         onCancel={() => setOpen(false)}>

@@ -24,13 +24,13 @@ import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
 import './index.less';
-import My from '../My';
-import WalletSecurity from '../WalletSecurity';
 import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import Guardian from '../Guardian';
+import MenuListMain from '../MenuList/index.components';
+import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 
 export enum AssetStep {
   overview = 'overview',
@@ -187,6 +187,15 @@ function AssetMain({
     setAssetStep(preStepRef.current);
   }, []);
 
+  const myMenuList = useMyMenuList({
+    onClickGuardians: () => setAssetStep(AssetStep.guardians),
+    onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
+  });
+
+  const WalletSecurityMenuList = useWalletSecurityMenuList({
+    onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
+  });
+
   return (
     <div className={clsx('portkey-ui-asset-wrapper', className)}>
       {(!assetStep || assetStep === AssetStep.overview) && (
@@ -341,10 +350,13 @@ function AssetMain({
       )}
 
       {assetStep === AssetStep.my && (
-        <My
-          onBack={() => setAssetStep(AssetStep.overview)}
-          onClickGuardians={() => setAssetStep(AssetStep.guardians)}
-          onClickWalletSecurity={() => setAssetStep(AssetStep.walletSecurity)}
+        // My
+        <MenuListMain
+          menuList={myMenuList}
+          headerConfig={{
+            title: 'My',
+            onBack: () => setAssetStep(AssetStep.overview),
+          }}
         />
       )}
 
@@ -353,9 +365,13 @@ function AssetMain({
       )}
 
       {assetStep === AssetStep.walletSecurity && (
-        <WalletSecurity
-          onBack={() => setAssetStep(AssetStep.my)}
-          onClickPaymentSecurity={() => setAssetStep(AssetStep.paymentSecurity)}
+        // My - WalletSecurity
+        <MenuListMain
+          menuList={WalletSecurityMenuList}
+          headerConfig={{
+            title: 'Wallet Security',
+            onBack: () => setAssetStep(AssetStep.my),
+          }}
         />
       )}
 

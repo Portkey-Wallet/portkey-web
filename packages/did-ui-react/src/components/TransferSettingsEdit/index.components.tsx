@@ -16,7 +16,7 @@ import SwitchComponent from '../SwitchComponent';
 import { LimitFormatTip, NoLimit, SetLimitExplain, SingleExceedDaily } from '../../constants/security';
 import { isValidInteger } from '../../utils/reg';
 import { OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
-import CustomPromptModal from '../CustomPromptModal';
+import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
 import CustomSvg from '../CustomSvg';
 import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
@@ -301,7 +301,7 @@ export default function TransferSettingsEditMain({
           </Button>
         </FormItem>
       </Form>
-      <CustomPromptModal
+      <CommonBaseModal
         className="portkey-ui-modal-approval"
         open={approvalVisible}
         onClose={() => setApprovalVisible(false)}>
@@ -317,7 +317,7 @@ export default function TransferSettingsEditMain({
           onError={onGuardiansApproveError}
           operationType={OperationTypeEnum.modifyTransferLimit}
         />
-      </CustomPromptModal>
+      </CommonBaseModal>
     </div>
   );
 }
