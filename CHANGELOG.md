@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.4.4-alpha.0) (2023-09-14)
+
+### Bug Fixes
+
+- 🐛 npx git-cz ([03304cc](https://github.com/Portkey-Wallet/portkey-web/commit/03304ccee2129caaebce08d18362737d74d6baa2))
+
 ## [1.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.4.3) (2023-09-07)
 
 ### Features
