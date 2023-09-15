@@ -71,7 +71,7 @@ const transferLimitCheck = async ({
       return TransferDailyLimitModal({ wrapClassName, className, data: settingParams, ...props });
     }
 
-    return;
+    return true;
   } catch (error) {
     const msg = handleErrorMessage(error);
     message.error(msg);

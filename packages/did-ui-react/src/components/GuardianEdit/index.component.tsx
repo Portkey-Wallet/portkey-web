@@ -16,7 +16,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import GuardianApproval from '../GuardianApproval';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CustomModal from '../CustomModal';
-import CustomPromptModal from '../CustomPromptModal';
+import CommonBaseModal from '../CommonBaseModal';
 import './index.less';
 
 const guardianIconMap: any = {
@@ -373,7 +373,7 @@ function GuardianEdit({
           </Button>
         </div>
       </div>
-      <CustomPromptModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
           chainId={chainId}
           operationType={OperationTypeEnum.editGuardian}
@@ -389,8 +389,8 @@ function GuardianEdit({
           onError={onError}
           onReSend={reSendCode}
         />
-      </CustomPromptModal>
-      <CustomPromptModal
+      </CommonBaseModal>
+      <CommonBaseModal
         className="portkey-ui-modal-approval"
         open={approvalVisible}
         onClose={() => setApprovalVisible(false)}>
@@ -406,7 +406,7 @@ function GuardianEdit({
           onError={onError}
           operationType={isRemove ? OperationTypeEnum.deleteGuardian : OperationTypeEnum.editGuardian}
         />
-      </CustomPromptModal>
+      </CommonBaseModal>
     </div>
   );
 }

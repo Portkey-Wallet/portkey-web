@@ -23,7 +23,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import GuardianApproval from '../GuardianApproval';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CustomModal from '../CustomModal';
-import CustomPromptModal from '../CustomPromptModal';
+import CommonBaseModal from '../CommonBaseModal';
 import './index.less';
 
 export interface GuardianAddProps {
@@ -445,7 +445,7 @@ function GuardianAdd({
           {t('Confirm')}
         </Button>
       </div>
-      <CustomPromptModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
           chainId={chainId}
           operationType={OperationTypeEnum.addGuardian}
@@ -461,8 +461,8 @@ function GuardianAdd({
           onError={onError}
           onReSend={reSendCode}
         />
-      </CustomPromptModal>
-      <CustomPromptModal
+      </CommonBaseModal>
+      <CommonBaseModal
         className="portkey-ui-modal-approval"
         open={approvalVisible}
         onClose={() => setApprovalVisible(false)}>
@@ -478,7 +478,7 @@ function GuardianAdd({
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}
         />
-      </CustomPromptModal>
+      </CommonBaseModal>
     </div>
   );
 }

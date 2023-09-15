@@ -14,7 +14,7 @@ const walletSecurityCheck = async ({ wrapClassName, caHash, className, ...props 
   return new Promise((resolve) => {
     const modal = BaseModalFunc({
       ...props,
-      wrapClassName: 'portkey-ui-wallet-security-wrapper ' + wrapClassName,
+      wrapClassName: 'portkey-ui-common-modals ' + 'portkey-ui-wallet-security-wrapper ' + wrapClassName,
       className: 'portkey-ui-h-335 portkey-ui-wallet-security-modal ' + className,
       content: (
         <SecurityCheck

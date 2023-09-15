@@ -1,8 +1,9 @@
-import { Col, Modal, ModalProps, Row } from 'antd';
+import { Col, ModalProps, Row } from 'antd';
 import clsx from 'clsx';
 import { LeftOutlined } from '@ant-design/icons';
 import { ReactNode } from 'react';
 import { Theme } from '../types';
+import CommonBaseModal from '../CommonBaseModal';
 import './styles.less';
 
 export interface CommonModalProps extends ModalProps {
@@ -14,10 +15,10 @@ export interface CommonModalProps extends ModalProps {
 }
 
 export default function CommonModal(props: CommonModalProps) {
-  const { leftCallBack, width, title, leftElement, transitionName } = props;
+  const { leftCallBack, width, title, leftElement, transitionName, maskClosable } = props;
   return (
-    <Modal
-      maskClosable={false}
+    <CommonBaseModal
+      maskClosable={maskClosable}
       centered={props.centered ?? true}
       destroyOnClose
       footer={null}

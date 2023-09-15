@@ -1,11 +1,10 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
-import BaseModal from '../SignStep/components/BaseModal';
+import CommonBaseModal from '../CommonBaseModal';
 import CustomPassword from '../CustomPassword';
 import CustomSvg from '../CustomSvg';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
-
 import './index.less';
 
 type UI_TYPE = 'Modal' | 'Full';
@@ -69,9 +68,14 @@ export default function UnLock({
       {uiType === 'Full' ? (
         <div className="portkey-sign-full-wrapper">{mainContent()}</div>
       ) : (
-        <BaseModal destroyOnClose className={className} open={open} onCancel={onCancel}>
+        <CommonBaseModal
+          destroyOnClose
+          className={className}
+          maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
+          open={open}
+          onCancel={onCancel}>
           {mainContent()}
-        </BaseModal>
+        </CommonBaseModal>
       )}
     </PortkeyStyleProvider>
   );

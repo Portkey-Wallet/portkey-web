@@ -13,7 +13,7 @@ import { useThrottleCallback } from '../../hooks/throttle';
 import CustomModal from '../CustomModal';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
-import CustomPromptModal from '../CustomPromptModal';
+import CommonBaseModal from '../CommonBaseModal';
 import './index.less';
 
 export interface GuardianViewProps {
@@ -256,7 +256,7 @@ function GuardianView({
           </div>
         )}
       </>
-      <CustomPromptModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
           chainId={chainId}
           operationType={OperationTypeEnum.setLoginAccount}
@@ -272,7 +272,7 @@ function GuardianView({
           onError={onError}
           onReSend={reSendCode}
         />
-      </CustomPromptModal>
+      </CommonBaseModal>
     </div>
   );
 }
