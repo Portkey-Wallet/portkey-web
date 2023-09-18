@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.0...v1.4.4-alpha.1) (2023-09-18)
+
+### Features
+
+- 🎸 add contact sc ([d535590](https://github.com/Portkey-Wallet/portkey-web/commit/d53559003824f5f80fe52471995263ba43f1ee80))
+
 ## [1.4.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.4.4-alpha.0) (2023-09-14)
 
 **Note:** Version bump only for package @portkey/utils
