@@ -29,7 +29,7 @@ import './index.less';
 
 export interface GuardianAddProps {
   header?: ReactNode;
-  chainId?: ChainId;
+  targetChainId?: ChainId;
   originChainId?: ChainId;
   chainType?: ChainType;
   phoneCountry?: IPhoneCountry;
@@ -54,7 +54,6 @@ export interface ISocialInput {
 
 function GuardianAdd({
   header,
-  chainId = 'AELF',
   originChainId = 'AELF',
   isErrorTip = true,
   phoneCountry: defaultPhoneCountry,
@@ -307,7 +306,7 @@ function GuardianAdd({
             type: _guardian?.guardianType || 'Email',
             guardianIdentifier: _guardian?.guardianIdentifier || '',
             verifierId: _guardian?.verifier?.id || '',
-            chainId,
+            chainId: originChainId,
             operationType: OperationTypeEnum.addGuardian,
           },
         },
@@ -337,7 +336,7 @@ function GuardianAdd({
     } finally {
       setLoading(false);
     }
-  }, [chainId, reCaptchaHandler, isErrorTip, onError]);
+  }, [originChainId, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
     curGuardian.current = {
       ...(curGuardian?.current as UserGuardianStatus),
@@ -350,7 +349,7 @@ function GuardianAdd({
     async (approvalInfo: GuardiansApproved[]) => {
       try {
         setLoading(true);
-        handleAddGuardian?.(curGuardian.current!, approvalInfo);
+        await handleAddGuardian?.(curGuardian.current!, approvalInfo);
       } catch (e) {
         errorTip(
           {
@@ -370,12 +369,12 @@ function GuardianAdd({
     if (checkValid()) {
       if (socialValue?.id) {
         try {
-          console.log('===curGuardian.current,', curGuardian.current);
+          setLoading(true);
           const { guardianIdentifier, verifierInfo } = await socialVerify?.(curGuardian.current!);
           curGuardian.current = {
             ...(curGuardian?.current as UserGuardianStatus),
             identifierHash: guardianIdentifier,
-            verifierInfo,
+            ...verifierInfo,
           };
           setApprovalVisible(true);
         } catch (e) {
@@ -473,7 +472,7 @@ function GuardianAdd({
       </div>
       <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
-          originChainId={chainId}
+          originChainId={originChainId}
           operationType={OperationTypeEnum.addGuardian}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
