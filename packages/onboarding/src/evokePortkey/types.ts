@@ -13,9 +13,13 @@ export type EvokePortkeyByLogin = PartialOption<Omit<schemeUtils.ILoginHandleSch
 type EvokePortkeyByLinkDapp = PartialOption<Omit<schemeUtils.ILinkDappHandleSchemeParams, 'scheme'>, 'domain'> &
   IBaseEvokeAppOption;
 
+type EvokePortkeyByAddContact = PartialOption<Omit<schemeUtils.IAddContactHandleSchemeParams, 'scheme'>, 'domain'> &
+  IBaseEvokeAppOption;
+
 export interface IEvokePortkeyApp {
   evokePortkeyApp(params: EvokePortkeyByLogin): void;
   evokePortkeyApp(params: EvokePortkeyByLinkDapp): void;
+  evokePortkeyApp(params: EvokePortkeyByAddContact): void;
 }
 
 export interface IEvokeExtensionProps {
