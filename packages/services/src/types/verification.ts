@@ -6,6 +6,7 @@ export type SendVerificationCodeParams = {
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
+  targetChainId?: ChainId;
   operationType: OperationTypeEnum;
 };
 
@@ -27,6 +28,7 @@ export type VerifyVerificationCodeParams = {
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
+  targetChainId?: ChainId;
   operationType: OperationTypeEnum;
 };
 
@@ -51,6 +53,7 @@ export type VerifyGoogleTokenParams = {
   verifierId: string;
   chainId: ChainId;
   operationType: OperationTypeEnum;
+  targetChainId?: ChainId;
 };
 
 export type VerifyAppleTokenParams = {
@@ -58,6 +61,7 @@ export type VerifyAppleTokenParams = {
   verifierId: string;
   chainId: ChainId;
   operationType: OperationTypeEnum;
+  targetChainId?: ChainId;
 };
 
 export type SendAppleUserExtraInfoResult = { userId: string };

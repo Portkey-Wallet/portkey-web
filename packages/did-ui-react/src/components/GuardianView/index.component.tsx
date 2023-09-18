@@ -258,7 +258,7 @@ function GuardianView({
       </>
       <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
-          chainId={chainId}
+          originChainId={chainId}
           operationType={OperationTypeEnum.setLoginAccount}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={currentGuardian?.guardianIdentifier || ''}

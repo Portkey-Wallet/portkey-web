@@ -22,7 +22,6 @@ import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { usePortkey } from '../context';
 import { VerifierItem } from '@portkey/did';
 import { useThrottleEffect } from '../../hooks/throttle';
-import TitleWrapper from '../TitleWrapper';
 import { Button } from 'antd';
 import ConfigProvider from '../config-provider';
 import { useVerifyToken } from '../../hooks/authentication';
@@ -30,6 +29,7 @@ import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
 import { formatDelGuardianValue } from './utils/formatDelGuardianValue';
 import { GuardianMth, handleGuardianContract } from '../../utils/sandboxUtil/handleGuardianContract';
+import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
 
 export enum GuardianStep {
@@ -37,7 +37,6 @@ export enum GuardianStep {
   guardianAdd = 'guardianAdd',
   guardianEdit = 'guardianEdit',
   guardianView = 'guardianView',
-  guardianApproval = 'guardianApproval',
 }
 
 export interface GuardianProps {
@@ -429,8 +428,7 @@ function GuardianMain({
       {step === GuardianStep.guardianList && (
         <GuardianList
           header={
-            <TitleWrapper
-              className="guardian-page-title"
+            <BackHeaderForPage
               title="Guardians"
               leftCallBack={onBack}
               rightElement={
@@ -447,7 +445,7 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianView && (
         <GuardianView
-          header={<TitleWrapper className="guardian-page-title" title="Guardians" leftCallBack={onGoBackList} />}
+          header={<BackHeaderForPage title="Guardians" leftCallBack={onGoBackList} />}
           currentGuardian={currentGuardian!}
           onEditGuardian={editable ? onEditGuardian : undefined}
           handleSetLoginGuardian={handleSetLoginGuardian}
@@ -457,7 +455,7 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianAdd && (
         <GuardianAdd
-          header={<TitleWrapper className="guardian-page-title" title="Add Guardians" leftCallBack={onGoBackList} />}
+          header={<BackHeaderForPage title="Add Guardians" leftCallBack={onGoBackList} />}
           verifierList={verifierList}
           guardianList={guardianList}
           verifierMap={verifierMap.current}
@@ -468,7 +466,7 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianEdit && (
         <GuardianEdit
-          header={<TitleWrapper className="guardian-page-title" title="Edit Guardians" leftCallBack={onGoBackList} />}
+          header={<BackHeaderForPage title="Edit Guardians" leftCallBack={onGoBackList} />}
           verifierList={verifierList}
           currentGuardian={currentGuardian}
           guardianList={guardianList}

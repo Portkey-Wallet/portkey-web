@@ -113,7 +113,7 @@ function Example() {
             }}
           />
           <CodeVerify
-            chainId="AELF"
+            originChainId="AELF"
             isErrorTip
             accountType="Phone"
             verifier={{
