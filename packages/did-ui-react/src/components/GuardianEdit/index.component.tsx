@@ -375,7 +375,7 @@ function GuardianEdit({
       </div>
       <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
-          chainId={chainId}
+          originChainId={chainId}
           operationType={OperationTypeEnum.editGuardian}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
@@ -400,7 +400,7 @@ function GuardianEdit({
               <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
             </div>
           }
-          chainId={originChainId}
+          originChainId={originChainId}
           guardianList={guardianList?.filter((item) => item.key !== preGuardian?.key)}
           onConfirm={approvalSuccess}
           onError={onError}

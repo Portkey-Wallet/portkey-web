@@ -11,7 +11,8 @@ import './index.less';
 const MAX_TIMER = 60;
 
 export interface CodeVerifyProps extends BaseCodeVerifyProps {
-  chainId: ChainId;
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
   verifierSessionId: string;
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
@@ -20,7 +21,8 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
 }
 
 export default function CodeVerify({
-  chainId,
+  originChainId = 'AELF',
+  targetChainId,
   verifier,
   className,
   tipExtra,
@@ -49,7 +51,8 @@ export default function CodeVerify({
             verificationCode: code,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
-            chainId,
+            chainId: originChainId,
+            targetChainId,
             operationType,
           });
           setLoading(false);
@@ -74,7 +77,17 @@ export default function CodeVerify({
       }
     },
 
-    [verifierSessionId, guardianIdentifier, verifier.id, chainId, operationType, onSuccess, isErrorTip, onError],
+    [
+      verifierSessionId,
+      guardianIdentifier,
+      verifier.id,
+      originChainId,
+      operationType,
+      onSuccess,
+      isErrorTip,
+      onError,
+      targetChainId,
+    ],
   );
 
   const reCaptchaHandler = useReCaptchaModal();
@@ -88,7 +101,8 @@ export default function CodeVerify({
             type: accountType,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
-            chainId,
+            chainId: originChainId,
+            targetChainId,
             operationType,
           },
         },
@@ -112,7 +126,8 @@ export default function CodeVerify({
     }
   }, [
     accountType,
-    chainId,
+    originChainId,
+    targetChainId,
     guardianIdentifier,
     isErrorTip,
     onError,

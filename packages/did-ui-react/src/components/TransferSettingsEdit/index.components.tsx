@@ -311,7 +311,7 @@ export default function TransferSettingsEditMain({
               <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
             </div>
           }
-          chainId={originChainId}
+          originChainId={originChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}
           onError={onGuardiansApproveError}

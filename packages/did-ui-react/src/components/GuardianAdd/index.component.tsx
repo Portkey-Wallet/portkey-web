@@ -7,6 +7,7 @@ import { ChainId, ChainType } from '@portkey/types';
 import {
   EmailError,
   EmailReg,
+  did,
   errorTip,
   handleErrorMessage,
   handleVerificationDoc,
@@ -56,7 +57,7 @@ function GuardianAdd({
   chainId = 'AELF',
   originChainId = 'AELF',
   isErrorTip = true,
-  phoneCountry,
+  phoneCountry: defaultPhoneCountry,
   verifierList,
   guardianList,
   verifierMap = {},
@@ -79,6 +80,7 @@ function GuardianAdd({
   const curGuardian = useRef<UserGuardianStatus | undefined>();
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
+  const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
   const guardianAccount = useMemo(
     () => emailValue || socialValue?.id || (countryCode && phoneNumber),
     [countryCode, emailValue, phoneNumber, socialValue?.id],
@@ -140,6 +142,24 @@ function GuardianAdd({
     setSelectVerifierId(id);
     setIsExist(false);
   }, []);
+
+  const getPhoneCountry = useCallback(async () => {
+    try {
+      const countryData = await did.services.getPhoneCountryCodeWithLocal();
+      setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'getPhoneCountry',
+          error,
+        },
+        isErrorTip,
+        onError,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const checkValid = useCallback(() => {
     if (selectGuardianType === AccountTypeEnum[AccountTypeEnum.Email]) {
       if (!EmailReg.test(emailValue as string)) {
@@ -279,6 +299,7 @@ function GuardianAdd({
   }, []);
   const sendCode = useCallback(async () => {
     try {
+      setLoading(true);
       const _guardian = curGuardian?.current;
       const result = await verification.sendVerificationCode(
         {
@@ -313,6 +334,8 @@ function GuardianAdd({
         isErrorTip,
         onError,
       );
+    } finally {
+      setLoading(false);
     }
   }, [chainId, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
@@ -345,7 +368,6 @@ function GuardianAdd({
   );
   const onConfirm = useCallback(async () => {
     if (checkValid()) {
-      setLoading(true);
       if (socialValue?.id) {
         try {
           console.log('===curGuardian.current,', curGuardian.current);
@@ -396,7 +418,7 @@ function GuardianAdd({
         break;
       }
       case AccountTypeEnum[AccountTypeEnum.Phone]: {
-        _key = `+${phoneCountry}${phoneNumber}&${selectVerifierId}`;
+        _key = `+${countryCode?.code}${phoneNumber}&${selectVerifierId}`;
         break;
       }
       case AccountTypeEnum[AccountTypeEnum.Apple]:
@@ -406,7 +428,11 @@ function GuardianAdd({
       }
     }
     setCurrentKey(_key);
-  }, [currentKey, emailValue, phoneCountry, phoneNumber, selectGuardianType, selectVerifierId, socialValue]);
+  }, [currentKey, emailValue, countryCode?.code, phoneNumber, selectGuardianType, selectVerifierId, socialValue]);
+  useEffect(() => {
+    // Get phoneCountry by service, update phoneCountry
+    getPhoneCountry();
+  }, [getPhoneCountry]);
   return (
     <div className="portkey-ui-guardian-edit portkey-ui-flex-column">
       {header}
@@ -447,7 +473,7 @@ function GuardianAdd({
       </div>
       <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
-          chainId={chainId}
+          originChainId={chainId}
           operationType={OperationTypeEnum.addGuardian}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
@@ -472,7 +498,7 @@ function GuardianAdd({
               <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
             </div>
           }
-          chainId={originChainId}
+          originChainId={originChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}
           onError={onError}
