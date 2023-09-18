@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import GuardianList from '../GuardianPageList';
 import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
-import { AccountType, GuardiansApproved, OperationTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import GuardianView from '../GuardianView';
 import {
   AuthServe,
@@ -16,7 +16,7 @@ import {
   socialLoginAuth,
 } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
-import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
+import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { usePortkey } from '../context';
@@ -41,7 +41,7 @@ export enum GuardianStep {
 
 export interface GuardianProps {
   caHash: string;
-  chainId?: ChainId;
+  targetChainId?: ChainId;
   originChainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
@@ -51,7 +51,6 @@ export interface GuardianProps {
 
 function GuardianMain({
   caHash,
-  chainId = 'AELF',
   originChainId = 'AELF',
   chainType = 'aelf',
   isErrorTip = true,
@@ -73,10 +72,10 @@ function GuardianMain({
   const verifyToken = useVerifyToken();
   const getVerifierInfo = useCallback(async () => {
     try {
-      const chainInfo = await getChainInfo(chainId);
+      const chainInfo = await getChainInfo(originChainId);
       const list = await getVerifierList({
         sandboxId,
-        chainId,
+        chainId: originChainId,
         rpcUrl: chainInfo?.endPoint,
         chainType,
         address: chainInfo?.caContractAddress,
@@ -99,7 +98,7 @@ function GuardianMain({
     } finally {
       setLoading(false);
     }
-  }, [chainId, chainType, isErrorTip, onError, sandboxId]);
+  }, [originChainId, chainType, isErrorTip, onError, sandboxId]);
 
   const getGuardianList = useCallback(async () => {
     try {
@@ -238,7 +237,7 @@ function GuardianMain({
       } catch (error) {
         errorTip(
           {
-            errorFields: 'socialAuth',
+            errorFields: 'Social Auth',
             error: handleErrorMessage(error),
           },
           isErrorTip,
@@ -258,7 +257,7 @@ function GuardianMain({
           accessToken: _guardian?.accessToken,
           id: info?.id,
           verifierId: _guardian?.verifierId || '',
-          chainId,
+          chainId: originChainId,
           clientId,
           redirectURI,
           operationType: isAdd ? OperationTypeEnum.addGuardian : OperationTypeEnum.editGuardian,
@@ -271,7 +270,7 @@ function GuardianMain({
       } catch (error) {
         return errorTip(
           {
-            errorFields: 'GuardianApproval',
+            errorFields: 'Guardian Social Verify',
             error: handleErrorMessage(error),
           },
           isErrorTip,
@@ -281,18 +280,18 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [chainId, isAdd, isErrorTip, onError, socialBasic, socialUserInfo, verifyToken],
+    [originChainId, isAdd, isErrorTip, onError, socialBasic, socialUserInfo, verifyToken],
   );
 
   const handleAddGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
       const params = formatAddGuardianValue({ currentGuardian, approvalInfo });
       try {
-        const res = await handleGuardianContract({
+        await handleGuardianContract({
           type: GuardianMth.addGuardian,
           params,
           sandboxId,
-          chainId,
+          chainId: originChainId,
           caHash,
         });
         console.log('===handleAddGuardian res', res);
@@ -311,7 +310,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [caHash, chainId, getGuardianList, isErrorTip, onError, sandboxId],
+    [caHash, originChainId, getGuardianList, isErrorTip, onError, sandboxId],
   );
   const handleEditGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
@@ -325,10 +324,10 @@ function GuardianMain({
           type: GuardianMth.UpdateGuardian,
           params,
           sandboxId,
-          chainId,
+          chainId: originChainId,
           caHash,
         });
-        getGuardianList();
+        await getGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
         return errorTip(
@@ -343,7 +342,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [caHash, chainId, getGuardianList, isErrorTip, onError, preGuardian, sandboxId],
+    [caHash, originChainId, getGuardianList, isErrorTip, onError, preGuardian, sandboxId],
   );
   const handleRemoveGuardian = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
@@ -356,10 +355,10 @@ function GuardianMain({
           type: GuardianMth.RemoveGuardian,
           params,
           sandboxId,
-          chainId,
+          chainId: originChainId,
           caHash,
         });
-        getGuardianList();
+        await getGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
         return errorTip(
@@ -374,11 +373,11 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [caHash, chainId, currentGuardian, getGuardianList, isErrorTip, onError, sandboxId],
+    [caHash, originChainId, currentGuardian, getGuardianList, isErrorTip, onError, sandboxId],
   );
   const handleSetLoginGuardian = useCallback(async () => {
     const guardian = {
-      type: currentGuardian?.guardianType,
+      type: AccountTypeEnum[currentGuardian?.guardianType as AccountType],
       verifierId: currentGuardian?.verifier?.id,
       identifierHash: currentGuardian?.identifierHash,
     };
@@ -389,7 +388,7 @@ function GuardianMain({
           : GuardianMth.SetGuardianTypeForLogin,
         params: { guardian },
         sandboxId,
-        chainId,
+        chainId: originChainId,
         caHash,
       });
       const _guardianList = await getGuardianList();
@@ -407,11 +406,11 @@ function GuardianMain({
         onError,
       );
     } finally {
-      setLoading(true);
+      setLoading(false);
     }
   }, [
     caHash,
-    chainId,
+    originChainId,
     currentGuardian?.guardianIdentifier,
     currentGuardian?.guardianType,
     currentGuardian?.identifierHash,
@@ -472,7 +471,6 @@ function GuardianMain({
           guardianList={guardianList}
           preGuardian={preGuardian}
           verifierMap={verifierMap.current}
-          socialVerify={socialVerify}
           handleEditGuardian={handleEditGuardian}
           handleRemoveGuardian={handleRemoveGuardian}
         />

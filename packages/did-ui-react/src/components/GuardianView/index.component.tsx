@@ -18,7 +18,7 @@ import './index.less';
 
 export interface GuardianViewProps {
   header?: ReactNode;
-  chainId?: ChainId;
+  targetChainId?: ChainId;
   originChainId?: ChainId;
   editable?: boolean;
   isErrorTip?: boolean;
@@ -39,7 +39,7 @@ const guardianIconMap: any = {
 
 function GuardianView({
   header,
-  chainId = 'AELF',
+  originChainId = 'AELF',
   onEditGuardian,
   isErrorTip,
   currentGuardian,
@@ -55,6 +55,7 @@ function GuardianView({
 
   const handleSwitch = useCallback(async () => {
     try {
+      setLoading(true);
       await handleSetLoginGuardian();
       setVerifierVisible(false);
     } catch (e) {
@@ -66,6 +67,8 @@ function GuardianView({
         isErrorTip,
         onError,
       );
+    } finally {
+      setLoading(false);
     }
   }, [handleSetLoginGuardian, isErrorTip, onError]);
   const sendCode = useCallback(async () => {
@@ -78,7 +81,7 @@ function GuardianView({
             type: _guardian?.guardianType || 'Email',
             guardianIdentifier: _guardian?.guardianIdentifier || '',
             verifierId: _guardian?.verifier?.id || '',
-            chainId,
+            chainId: originChainId,
             operationType: OperationTypeEnum.setLoginAccount,
           },
         },
@@ -108,7 +111,7 @@ function GuardianView({
     } finally {
       setLoading(false);
     }
-  }, [chainId, reCaptchaHandler, isErrorTip, onError]);
+  }, [originChainId, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
     curGuardian.current = {
       ...(curGuardian.current as UserGuardianStatus),
@@ -169,7 +172,7 @@ function GuardianView({
         }
         try {
           await did.getHolderInfo({
-            chainId,
+            chainId: originChainId,
             loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
           });
           CustomModal({
@@ -207,8 +210,12 @@ function GuardianView({
         }
       }
     },
-    [chainId, currentGuardian, guardianList, handleSwitch, handleVerify, isErrorTip, onError, t],
+    [originChainId, currentGuardian, guardianList, handleSwitch, handleVerify, isErrorTip, onError, t],
   );
+  const handleBackView = useCallback(() => {
+    curGuardian.current = currentGuardian;
+    setVerifierVisible(false);
+  }, [currentGuardian]);
   return (
     <div className="portkey-ui-guardian-view portkey-ui-flex-column">
       <>
@@ -256,18 +263,18 @@ function GuardianView({
           </div>
         )}
       </>
-      <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal open={verifierVisible} onClose={handleBackView}>
         <VerifierPage
-          originChainId={chainId}
+          originChainId={originChainId}
           operationType={OperationTypeEnum.setLoginAccount}
-          onBack={() => setVerifierVisible(false)}
-          guardianIdentifier={currentGuardian?.guardianIdentifier || ''}
+          onBack={handleBackView}
+          guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
           verifierSessionId={curGuardian?.current?.verifierInfo?.sessionId || ''}
-          isLoginGuardian={currentGuardian?.isLoginGuardian}
-          isCountdownNow={currentGuardian?.isInitStatus}
-          accountType={currentGuardian?.guardianType}
+          isLoginGuardian={curGuardian?.current?.isLoginGuardian}
+          isCountdownNow={curGuardian?.current?.isInitStatus}
+          accountType={curGuardian?.current?.guardianType}
           isErrorTip={isErrorTip}
-          verifier={currentGuardian?.verifier as VerifierItem}
+          verifier={curGuardian?.current?.verifier as VerifierItem}
           onSuccess={handleSwitch}
           onError={onError}
           onReSend={reSendCode}
