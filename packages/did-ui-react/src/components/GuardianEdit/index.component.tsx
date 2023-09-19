@@ -1,6 +1,6 @@
 import { Button, message } from 'antd';
 import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
-import { useState, useMemo, useCallback, memo, ReactNode, useRef } from 'react';
+import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
 import { ChainId, ChainType } from '@portkey/types';
@@ -31,10 +31,10 @@ export interface GuardianEditProps {
   guardianList?: UserGuardianStatus[];
   currentGuardian?: UserGuardianStatus;
   preGuardian?: UserGuardianStatus;
-  verifierMap?: { [x: string]: VerifierItem };
   onError?: OnErrorFunc;
   handleEditGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
   handleRemoveGuardian?: (approvalInfo: GuardiansApproved[]) => Promise<any>;
+  handleSetLoginGuardian: () => Promise<any>;
 }
 export interface ISocialInput {
   id: string;
@@ -52,18 +52,18 @@ function GuardianEdit({
   currentGuardian,
   preGuardian,
   guardianList,
-  verifierMap = {},
   onError,
   handleEditGuardian,
   handleRemoveGuardian,
+  handleSetLoginGuardian,
 }: GuardianEditProps) {
   const { t } = useTranslation();
-  const [currentKey, setCurrentKey] = useState<string>('');
   const [isExist, setIsExist] = useState<boolean>(false);
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [selectVerifierId, setSelectVerifierId] = useState<string | undefined>(currentGuardian?.verifier?.id);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const [isRemove, setIsRemove] = useState<boolean>(false);
+  const verifierMap = useRef<{ [x: string]: VerifierItem }>();
   const editBtnDisable = useMemo(
     () => isExist || selectVerifierId === preGuardian?.verifier?.id,
     [isExist, preGuardian?.verifier?.id, selectVerifierId],
@@ -79,35 +79,38 @@ function GuardianEdit({
       })),
     [verifierList],
   );
-  const handleVerifierChange = useCallback(
-    (id: string) => {
-      setSelectVerifierId(id);
-      setIsExist(false);
-      const _key = `${currentGuardian?.guardianIdentifier}&${id}`;
-      setCurrentKey(_key);
-    },
-    [currentGuardian?.guardianIdentifier],
-  );
+  useEffect(() => {
+    const _verifierMap: { [x: string]: VerifierItem } = {};
+    verifierList?.forEach((item: VerifierItem) => {
+      _verifierMap[item.id] = item;
+    }, []);
+    verifierMap.current = _verifierMap;
+  }, [verifierList]);
+  const handleVerifierChange = useCallback((id: string) => {
+    setSelectVerifierId(id);
+    setIsExist(false);
+  }, []);
   const checkValid = useCallback(() => {
-    const _isExist = guardianList?.some((item) => item.key === currentKey);
+    const _key = `${currentGuardian?.guardianIdentifier}&${selectVerifierId}`;
+    const _isExist = guardianList?.some((item) => item.key === _key);
     if (_isExist) {
       setIsExist(true);
       return false;
     }
-    const verifier = verifierMap[selectVerifierId!];
+    const verifier = verifierMap.current?.[selectVerifierId!];
     if (!verifier) {
       message.error('Can not get the current verifier message');
       return false;
     }
     const _guardian: UserGuardianStatus = {
       ...currentGuardian!,
-      key: currentKey,
+      key: _key,
       verifier,
       verifierId: verifier.id,
     };
     curGuardian.current = _guardian;
     return true;
-  }, [currentGuardian, currentKey, guardianList, selectVerifierId, verifierMap]);
+  }, [currentGuardian, guardianList, selectVerifierId]);
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
@@ -137,23 +140,64 @@ function GuardianEdit({
       setApprovalVisible(true);
     }
   }, [checkValid]);
+
+  const removeLoginGuardians = useCallback(async () => {
+    try {
+      setLoading(true);
+      await handleSetLoginGuardian();
+      setIsRemove(true);
+      setApprovalVisible(true);
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'Unset Login Guardian',
+          error: handleErrorMessage(error),
+        },
+        isErrorTip,
+        onError,
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [handleSetLoginGuardian, isErrorTip, onError]);
+
   const onClickRemove = useCallback(() => {
-    return CustomModal({
-      type: 'confirm',
-      okText: 'Yes',
-      cancelText: 'No',
-      content: (
-        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
-          <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
-          <div>Removing a guardian requires guardian approval</div>
-        </div>
-      ),
-      onOk: () => {
-        setIsRemove(true);
-        setApprovalVisible(true);
-      },
-    });
-  }, []);
+    const isLoginAccountList = guardianList?.filter((item) => item.isLoginGuardian) || [];
+    if (currentGuardian?.isLoginGuardian) {
+      if (isLoginAccountList.length === 1) {
+        CustomModal({
+          type: 'info',
+          content: <>{t('This guardian is the only login account and cannot be removed')}</>,
+        });
+      } else {
+        CustomModal({
+          type: 'confirm',
+          okText: 'confirm',
+          content: (
+            <>{t('This guardian is set as a login account. Click "Confirm" to unset and remove this guardian')}</>
+          ),
+          onOk: removeLoginGuardians,
+        });
+      }
+    } else {
+      CustomModal({
+        type: 'confirm',
+        okText: 'Yes',
+        cancelText: 'No',
+        content: (
+          <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+            <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
+            <div>Removing a guardian requires guardian approval</div>
+          </div>
+        ),
+        onOk: () => {
+          setIsRemove(true);
+          setApprovalVisible(true);
+        },
+      });
+    }
+  }, [currentGuardian?.isLoginGuardian, guardianList, removeLoginGuardians, t]);
+
   return (
     <div className="portkey-ui-guardian-edit portkey-ui-flex-column">
       {header}

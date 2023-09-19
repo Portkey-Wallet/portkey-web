@@ -2,29 +2,17 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import GuardianList from '../GuardianPageList';
 import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
-import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
-import {
-  AuthServe,
-  did,
-  errorTip,
-  getGoogleUserInfo,
-  handleErrorMessage,
-  handleVerificationDoc,
-  parseAppleIdentityToken,
-  setLoading,
-  socialLoginAuth,
-} from '../../utils';
+import { AuthServe, did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
-import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus } from '../../types';
+import { OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { usePortkey } from '../context';
 import { VerifierItem } from '@portkey/did';
 import { useThrottleEffect } from '../../hooks/throttle';
 import { Button } from 'antd';
-import ConfigProvider from '../config-provider';
-import { useVerifyToken } from '../../hooks/authentication';
 import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
 import { formatDelGuardianValue } from './utils/formatDelGuardianValue';
@@ -64,12 +52,10 @@ function GuardianMain({
   const [preGuardian, setPreGuardian] = useState<UserGuardianStatus>();
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>();
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
-  const [isAdd, setIsAdd] = useState<boolean>(true);
   useThrottleEffect(() => {
     AuthServe.addRequestAuthCheck(originChainId);
   }, []);
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);
-  const verifyToken = useVerifyToken();
   const getVerifierInfo = useCallback(async () => {
     try {
       const chainInfo = await getChainInfo(originChainId);
@@ -148,7 +134,6 @@ function GuardianMain({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const onAddGuardian = useCallback(() => {
-    setIsAdd(true);
     setStep(GuardianStep.guardianAdd);
   }, []);
   const onViewGuardian = useCallback((item: UserGuardianStatus) => {
@@ -156,7 +141,6 @@ function GuardianMain({
     setStep(GuardianStep.guardianView);
   }, []);
   const onEditGuardian = useCallback(() => {
-    setIsAdd(false);
     setPreGuardian(currentGuardian);
     setStep(GuardianStep.guardianEdit);
   }, [currentGuardian]);
@@ -164,125 +148,6 @@ function GuardianMain({
     setStep(GuardianStep.guardianList);
     setCurrentGuardian(undefined);
   }, []);
-
-  const socialBasic = useCallback(
-    (v: ISocialLogin) => {
-      try {
-        const socialLogin = ConfigProvider.config.socialLogin;
-        let clientId;
-        let redirectURI;
-        let customLoginHandler;
-        switch (v) {
-          case 'Apple':
-            clientId = socialLogin?.Apple?.clientId;
-            redirectURI = socialLogin?.Apple?.redirectURI;
-            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-            break;
-          case 'Google':
-            clientId = socialLogin?.Google?.clientId;
-            customLoginHandler = socialLogin?.Google?.customLoginHandler;
-            break;
-          default:
-            throw 'accountType is not supported';
-        }
-        return { clientId, redirectURI, customLoginHandler };
-      } catch (error) {
-        errorTip(
-          {
-            errorFields: 'socialBasic',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-          onError,
-        );
-      }
-    },
-    [isErrorTip, onError],
-  );
-  const socialUserInfo = useCallback(async (v: ISocialLogin, accessToken: string) => {
-    let info = {};
-    if (v === 'Google') {
-      const userInfo = await getGoogleUserInfo(accessToken);
-      console.log('===google', userInfo);
-      if (!userInfo?.id) throw userInfo;
-      info = {
-        id: userInfo.id,
-        firstName: userInfo.firstName,
-        thirdPartyEmail: userInfo.email,
-        accessToken,
-        isPrivate: false,
-      };
-    } else if (v === 'Apple') {
-      const userInfo = parseAppleIdentityToken(accessToken);
-      if (userInfo) {
-        info = {
-          ...userInfo,
-        };
-      }
-    }
-    return info;
-  }, []);
-  const socialAuth = useCallback(
-    async (v: ISocialLogin) => {
-      try {
-        const { clientId, redirectURI } = socialBasic(v) || {};
-        const response = await socialLoginAuth({
-          type: v,
-          clientId,
-          redirectURI,
-        });
-        if (!response?.token) throw new Error('add guardian failed');
-        const info = await socialUserInfo(v, response.token);
-        return info;
-      } catch (error) {
-        errorTip(
-          {
-            errorFields: 'Social Auth',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-          onError,
-        );
-      }
-    },
-    [isErrorTip, onError, socialBasic, socialUserInfo],
-  );
-  const socialVerify = useCallback(
-    async (_guardian: UserGuardianStatus) => {
-      try {
-        const { clientId, redirectURI, customLoginHandler } =
-          socialBasic(_guardian?.guardianType as ISocialLogin) || {};
-        const info: any = await socialUserInfo(_guardian?.guardianType as ISocialLogin, _guardian?.accessToken || '');
-        const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
-          accessToken: _guardian?.accessToken,
-          id: info?.id,
-          verifierId: _guardian?.verifierId || '',
-          chainId: originChainId,
-          clientId,
-          redirectURI,
-          operationType: isAdd ? OperationTypeEnum.addGuardian : OperationTypeEnum.editGuardian,
-          customLoginHandler,
-        });
-        if (!rst) return;
-        const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
-        const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
-        return { verifierInfo, guardianIdentifier };
-      } catch (error) {
-        return errorTip(
-          {
-            errorFields: 'Guardian Social Verify',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-          onError,
-        );
-      } finally {
-        setLoading(false);
-      }
-    },
-    [originChainId, isAdd, isErrorTip, onError, socialBasic, socialUserInfo, verifyToken],
-  );
-
   const handleAddGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
       const params = formatAddGuardianValue({ currentGuardian, approvalInfo });
@@ -294,7 +159,6 @@ function GuardianMain({
           chainId: originChainId,
           caHash,
         });
-        console.log('===handleAddGuardian res', res);
         await getGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
@@ -449,7 +313,6 @@ function GuardianMain({
           onEditGuardian={editable ? onEditGuardian : undefined}
           handleSetLoginGuardian={handleSetLoginGuardian}
           guardianList={guardianList}
-          socialVerify={socialVerify}
         />
       )}
       {step === GuardianStep.guardianAdd && (
@@ -457,9 +320,6 @@ function GuardianMain({
           header={<BackHeaderForPage title="Add Guardians" leftCallBack={onGoBackList} />}
           verifierList={verifierList}
           guardianList={guardianList}
-          verifierMap={verifierMap.current}
-          socialAuth={socialAuth}
-          socialVerify={socialVerify}
           handleAddGuardian={handleAddGuardian}
         />
       )}
@@ -470,9 +330,9 @@ function GuardianMain({
           currentGuardian={currentGuardian}
           guardianList={guardianList}
           preGuardian={preGuardian}
-          verifierMap={verifierMap.current}
           handleEditGuardian={handleEditGuardian}
           handleRemoveGuardian={handleRemoveGuardian}
+          handleSetLoginGuardian={handleSetLoginGuardian}
         />
       )}
     </div>

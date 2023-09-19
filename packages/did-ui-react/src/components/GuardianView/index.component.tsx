@@ -3,31 +3,39 @@ import { memo, useCallback, ReactNode, useState, useRef } from 'react';
 import { AccountTypeEnum, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { useTranslation } from 'react-i18next';
 import CustomSvg from '../CustomSvg';
-import { OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
+import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
 import GuardianAccountShow from '../GuardianAccountShow';
 import BaseVerifierIcon from '../BaseVerifierIcon';
 import { Button, Switch } from 'antd';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
-import { did, errorTip, handleErrorMessage, setLoading, verification } from '../../utils';
+import {
+  did,
+  errorTip,
+  handleErrorMessage,
+  handleVerificationDoc,
+  setLoading,
+  socialLoginAuth,
+  verification,
+} from '../../utils';
 import { useThrottleCallback } from '../../hooks/throttle';
 import CustomModal from '../CustomModal';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import CommonBaseModal from '../CommonBaseModal';
+import { useVerifyToken } from '../../hooks';
+import ConfigProvider from '../config-provider';
 import './index.less';
 
 export interface GuardianViewProps {
   header?: ReactNode;
   targetChainId?: ChainId;
   originChainId?: ChainId;
-  editable?: boolean;
   isErrorTip?: boolean;
   currentGuardian: UserGuardianStatus;
   guardianList?: UserGuardianStatus[];
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: () => Promise<any>;
-  socialVerify?: (item: UserGuardianStatus) => Promise<any>;
 }
 
 const guardianIconMap: any = {
@@ -46,13 +54,86 @@ function GuardianView({
   guardianList,
   handleSetLoginGuardian,
   onError,
-  socialVerify,
 }: GuardianViewProps) {
   const { t } = useTranslation();
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const reCaptchaHandler = useReCaptchaModal();
-
+  const verifyToken = useVerifyToken();
+  const socialBasic = useCallback(
+    (v: ISocialLogin) => {
+      try {
+        const socialLogin = ConfigProvider.config.socialLogin;
+        let clientId;
+        let redirectURI;
+        let customLoginHandler;
+        switch (v) {
+          case 'Apple':
+            clientId = socialLogin?.Apple?.clientId;
+            redirectURI = socialLogin?.Apple?.redirectURI;
+            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
+            break;
+          case 'Google':
+            clientId = socialLogin?.Google?.clientId;
+            customLoginHandler = socialLogin?.Google?.customLoginHandler;
+            break;
+          default:
+            throw 'accountType is not supported';
+        }
+        return { clientId, redirectURI, customLoginHandler };
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'get social account basic',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+    },
+    [isErrorTip, onError],
+  );
+  const socialVerify = useCallback(
+    async (_guardian: UserGuardianStatus) => {
+      try {
+        const { clientId, redirectURI, customLoginHandler } =
+          socialBasic(_guardian?.guardianType as ISocialLogin) || {};
+        const response = await socialLoginAuth({
+          type: _guardian?.guardianType as ISocialLogin,
+          clientId,
+          redirectURI,
+        });
+        if (!response?.token) throw new Error('auth failed');
+        const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
+          accessToken: response?.token,
+          id: _guardian.guardianIdentifier || '',
+          verifierId: _guardian?.verifier?.id || '',
+          chainId: originChainId,
+          clientId,
+          redirectURI,
+          operationType: OperationTypeEnum.addGuardian,
+          customLoginHandler,
+        });
+        if (!rst) return;
+        const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
+        const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+        return { verifierInfo, guardianIdentifier };
+      } catch (error) {
+        return errorTip(
+          {
+            errorFields: 'Guardian Social Verify',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [socialBasic, verifyToken, originChainId, isErrorTip, onError],
+  );
   const handleSwitch = useCallback(async () => {
     try {
       setLoading(true);
