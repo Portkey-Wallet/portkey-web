@@ -5,6 +5,7 @@ export enum SCHEME_ACTION {
   login = 'login',
   linkDapp = 'linkDapp',
   addContact = 'addContact',
+  addGroup = 'addGroup',
 }
 
 export interface IBaseHandleSchemeParams {
@@ -33,11 +34,16 @@ export interface IAddContactHandleSchemeParams extends IBaseHandleSchemeParams {
   action: 'addContact';
   custom: PortkeyID;
 }
+export interface IAddGroupHandleSchemeParams extends IBaseHandleSchemeParams {
+  action: 'addGroup';
+  custom: PortkeyID;
+}
 
 export interface IScheme {
   formatScheme(params: ILoginHandleSchemeParams): string;
   formatScheme(params: ILinkDappHandleSchemeParams): string;
   formatScheme(params: IAddContactHandleSchemeParams): string;
+  formatScheme(params: IAddGroupHandleSchemeParams): string;
 }
 
 export const formatScheme: IScheme['formatScheme'] = ({ scheme = DID_APP_SCHEMA, domain, action, custom }) => {
