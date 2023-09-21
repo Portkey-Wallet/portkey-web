@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.2...v1.4.4-alpha.3) (2023-09-21)
+
+### Features
+
+- 🎸 addGroup ([ad85559](https://github.com/Portkey-Wallet/portkey-web/commit/ad855591bbd265b4531357d8cbe18bd2c1b1da97))
+
+### Bug Fixes
+
+- 🐛 evoke portkey add group ([b0b4901](https://github.com/Portkey-Wallet/portkey-web/commit/b0b49018d69eea7d654cfb1744299cb57eec992e))
+
 ## [1.4.4-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.1...v1.4.4-alpha.2) (2023-09-18)
 
 **Note:** Version bump only for package root
