@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.4.4-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.3...v1.4.4-alpha.4) (2023-09-22)
+
+### Features
+
+- 🎸 export evoke type ([28240f0](https://github.com/Portkey-Wallet/portkey-web/commit/28240f0f3aa360d3eec970d4fdea00cc1ee0a2cd))
+
 ## [1.4.4-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.2...v1.4.4-alpha.3) (2023-09-21)
 
 ### Features
