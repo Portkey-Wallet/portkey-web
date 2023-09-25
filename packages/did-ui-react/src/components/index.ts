@@ -66,6 +66,8 @@ export { default as walletSecurityCheck } from './ModalMethod/WalletSecurityChec
 export { default as transferLimitCheck } from './ModalMethod/TransferLimitCheck';
 export { default as WalletSecurity } from './WalletSecurity';
 export { default as SecurityCheck } from './SecurityCheck';
+export { default as NFTCheckout } from './NFTRamp';
+export { default as ACHCheckout } from './NFTRamp/ACHCheckout';
 
 export * from './context/PortkeyAssetProvider';
 export * from './context/PortkeySendProvider';
