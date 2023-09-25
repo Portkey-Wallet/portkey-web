@@ -1,6 +1,22 @@
+import { getContractBasic } from '@portkey/contracts';
+import {
+  ConfigProvider,
+  PortkeyAssetProvider,
+  did,
+  getChain,
+  handleErrorMessage,
+  managerApprove,
+  NFTCheckout,
+  ACHCheckout,
+} from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
+import { aelf } from '@portkey/utils';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
+ConfigProvider.setGlobalConfig({
+  // test3
+  serviceUrl: 'http://192.168.66.203:5001',
+});
 
 export default function AppleAuth() {
   const [status, setStatus] = useState<string>();
@@ -49,6 +65,29 @@ export default function AppleAuth() {
         }}>
         VConsole
       </button>
+
+      <div>-----</div>
+
+      <div id="nft-checkout">-----</div>
+
+      {/* <PortkeyAssetProvider pin="111111" originChainId="AELF"> */}
+      <button
+        onClick={async () => {
+          try {
+            const result = await NFTCheckout({
+              orderId: 'f637021e-5420-657a-dab6-4bb95b1d0422',
+              appId: '0FdW9QJP7U96H01p',
+              rampWebUrl: 'https://nft-sbx.alchemytech.cc',
+              originChainId: 'AELF',
+              merchantName: 'Alchemy',
+            });
+          } catch (error) {
+            console.log('NFTCheckout:', error);
+          }
+        }}>
+        nft checkout
+      </button>
+      {/* </PortkeyAssetProvider> */}
     </div>
   );
 }

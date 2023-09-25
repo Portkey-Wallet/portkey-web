@@ -3,10 +3,10 @@
   "name": "@portkey/next-example",
   "version": "1.4.4-alpha.5",
   "scripts": {
-    "dev": "PORT=4000 next dev",
+    "dev": "PORT=3000 next dev",
     "start": "next start",
     "lint": "next lint",
-    "dev:analyze": "PORT=4000 ANALYZE=true next dev"
+    "dev:analyze": "PORT=3000 ANALYZE=true next dev"
   },
   "dependencies": {
     "@portkey/did-ui-react": "^1.4.4-alpha.5",
