@@ -218,15 +218,17 @@ function GuardianAdd({
       };
     } else if (v === 'Apple') {
       const userInfo = parseAppleIdentityToken(accessToken);
+      const appleUserExtraInfo = await did.services.getAppleUserExtraInfo({
+        userId: userInfo?.userId,
+      });
+      const { firstName, isPrivate } = appleUserExtraInfo;
       if (userInfo) {
-        // TODO
-        const firstName = '';
         info = {
           id: userInfo.userId,
           firstName,
           thirdPartyEmail: userInfo.email,
           accessToken,
-          isPrivate: userInfo.isPrivate,
+          isPrivate,
         };
       }
     }
