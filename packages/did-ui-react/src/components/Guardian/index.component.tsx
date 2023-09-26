@@ -269,8 +269,6 @@ function GuardianMain({
         isErrorTip,
         onError,
       );
-    } finally {
-      setLoading(false);
     }
   }, [
     caHash,
