@@ -208,8 +208,9 @@ function GuardianView({
       )
     ) {
       try {
+        setLoading(true);
         await socialVerify?.(currentGuardian);
-        handleSwitch();
+        await handleSwitch();
       } catch (error) {
         errorTip(
           {
@@ -248,7 +249,7 @@ function GuardianView({
             item.isLoginGuardian && item.guardianIdentifier === currentGuardian?.guardianIdentifier,
         );
         if (isLogin) {
-          handleVerify();
+          await handleVerify();
           return;
         }
         try {
@@ -263,7 +264,7 @@ function GuardianView({
           });
         } catch (error: any) {
           if (error?.error?.code?.toString() === '3002') {
-            handleVerify();
+            await handleVerify();
           } else {
             errorTip(
               {
@@ -281,7 +282,7 @@ function GuardianView({
           if (item.isLoginGuardian) loginAccountNum++;
         });
         if (loginAccountNum > 1) {
-          handleSwitch();
+          await handleSwitch();
         } else {
           CustomModal({
             type: 'info',
