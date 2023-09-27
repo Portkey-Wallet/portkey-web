@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.9...v1.5.0-alpha.12) (2023-09-27)
+
+### Features
+
+- 🎸 add apple userInfo ([af1b322](https://github.com/Portkey-Wallet/portkey-web/commit/af1b32230c267e1483657cff3d8235624f452db1))
+- 🎸 change structure ([d4e0a0c](https://github.com/Portkey-Wallet/portkey-web/commit/d4e0a0c18d61e4d306be66e5b6ca948eb4e702ad))
+- 🎸 delete useless modal ([43b0bd1](https://github.com/Portkey-Wallet/portkey-web/commit/43b0bd155fb947ddbbbb6f0394519b7387fcf34c))
+- 🎸 dev edit limit ([f0db6f2](https://github.com/Portkey-Wallet/portkey-web/commit/f0db6f20b4b259715c78e56d70312ac4afe58f35))
+- 🎸 dev security ([ec813c9](https://github.com/Portkey-Wallet/portkey-web/commit/ec813c99e608713012eeea51fbe1eda3d0e18a91))
+- 🎸 guardian ([63435b8](https://github.com/Portkey-Wallet/portkey-web/commit/63435b80b92dfa173bd5bd9b8e42a3627b81c3ca))
+
+### Bug Fixes
+
+- 🐛 apple account guardian ([cdd21a6](https://github.com/Portkey-Wallet/portkey-web/commit/cdd21a69fc539061cfd8495ba543ba4c2aa3d56b))
+- 🐛 guardian update ([a43a892](https://github.com/Portkey-Wallet/portkey-web/commit/a43a8921c3b16ebdd0a1bcd5c0c8706dc84193de))
+- 🐛 update originChainId ([65c1e39](https://github.com/Portkey-Wallet/portkey-web/commit/65c1e39ac59ecb0feda68a0e5179c22e78b7fbd1))
+
 ## [1.5.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.10...v1.5.0-alpha.11) (2023-09-11)
 
 **Note:** Version bump only for package root
@@ -107,6 +124,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - 🎸 add ManagerApprove ([46c88b7](https://github.com/Portkey-Wallet/portkey-web/commit/46c88b7c1a20c1de7c6c92b15b1b461319cf4ac3))
 - 🎸 add wallet security check ([edd0eae](https://github.com/Portkey-Wallet/portkey-web/commit/edd0eaebc61061f815c721e98b20608d8ab05302))
+
 ## [1.4.4-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.3...v1.4.4-alpha.4) (2023-09-22)
 
 ### Features
