@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.9...v1.5.0-alpha.12) (2023-09-27)
+
+**Note:** Version bump only for package @portkey/onboarding
+
 ## [1.5.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.10...v1.5.0-alpha.11) (2023-09-11)
 
 **Note:** Version bump only for package @portkey/onboarding
@@ -64,6 +68,32 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @portkey/onboarding
 
 ## [1.5.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.5.0-alpha.0) (2023-09-06)
+
+## [1.4.4-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.3...v1.4.4-alpha.4) (2023-09-22)
+
+### Features
+
+- 🎸 export evoke type ([28240f0](https://github.com/Portkey-Wallet/portkey-web/commit/28240f0f3aa360d3eec970d4fdea00cc1ee0a2cd))
+
+## [1.4.4-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.2...v1.4.4-alpha.3) (2023-09-21)
+
+### Bug Fixes
+
+- 🐛 evoke portkey add group ([b0b4901](https://github.com/Portkey-Wallet/portkey-web/commit/b0b49018d69eea7d654cfb1744299cb57eec992e))
+
+## [1.4.4-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.1...v1.4.4-alpha.2) (2023-09-18)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.4.4-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.0...v1.4.4-alpha.1) (2023-09-18)
+
+### Features
+
+- 🎸 add evokePortkeyApp type ([f533f79](https://github.com/Portkey-Wallet/portkey-web/commit/f533f791aea50194274efc82369c4ef5dff2eba8))
+
+## [1.4.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.4.4-alpha.0) (2023-09-14)
+
+**Note:** Version bump only for package @portkey/onboarding
 
 ## [1.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.4.3) (2023-09-07)
 

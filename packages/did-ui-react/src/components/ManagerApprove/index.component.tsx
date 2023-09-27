@@ -16,7 +16,7 @@ import './index.less';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
-  targetChainId?: ChainId;
+  targetChainId: ChainId;
   caHash: string;
 }
 

@@ -1,7 +1,7 @@
 import { ChainId, ChainType } from '@portkey/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes, handleErrorMessage, isExtension } from '../index';
 import { getChain } from '../../hooks/useChainInfo';
-import { encodedParams, getContractBasic, getContractMethods } from '@portkey/contracts';
+import { getContractBasic } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
 import { PortkeyUIError } from '../../constants/error';
 
@@ -58,10 +58,10 @@ export const getCATransactionRawOnWeb = async (params: Omit<CATransactionRawPara
     methodName,
   };
 
-  const methods = await getContractMethods((contract as any).aelfInstance, options.contractAddress);
-  const inputType = methods[options.methodName];
+  // const methods = await getContractMethods((contract as any).aelfInstance, options.contractAddress);
+  // const inputType = methods[options.methodName];
 
-  options.args = await encodedParams(inputType, paramsOption);
+  options.args = paramsOption;
 
   const rawResult = await contract.encodedTx('ManagerForwardCall', options);
   if (!rawResult || !rawResult.data) {

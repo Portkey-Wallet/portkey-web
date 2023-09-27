@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.9...v1.5.0-alpha.12) (2023-09-27)
+
+### Features
+
+- 🎸 add apple userInfo ([af1b322](https://github.com/Portkey-Wallet/portkey-web/commit/af1b32230c267e1483657cff3d8235624f452db1))
+
+### Bug Fixes
+
+- 🐛 update originChainId ([65c1e39](https://github.com/Portkey-Wallet/portkey-web/commit/65c1e39ac59ecb0feda68a0e5179c22e78b7fbd1))
+
 ## [1.5.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.10...v1.5.0-alpha.11) (2023-09-11)
 
 **Note:** Version bump only for package @portkey/services
@@ -82,6 +92,26 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - 🎸 add ManagerApprove ([46c88b7](https://github.com/Portkey-Wallet/portkey-web/commit/46c88b7c1a20c1de7c6c92b15b1b461319cf4ac3))
 - 🎸 add wallet security check ([edd0eae](https://github.com/Portkey-Wallet/portkey-web/commit/edd0eaebc61061f815c721e98b20608d8ab05302))
+
+## [1.4.4-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.3...v1.4.4-alpha.4) (2023-09-22)
+
+**Note:** Version bump only for package @portkey/services
+
+## [1.4.4-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.2...v1.4.4-alpha.3) (2023-09-21)
+
+**Note:** Version bump only for package @portkey/services
+
+## [1.4.4-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.1...v1.4.4-alpha.2) (2023-09-18)
+
+**Note:** Version bump only for package @portkey/services
+
+## [1.4.4-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.0...v1.4.4-alpha.1) (2023-09-18)
+
+**Note:** Version bump only for package @portkey/services
+
+## [1.4.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.4.4-alpha.0) (2023-09-14)
+
+**Note:** Version bump only for package @portkey/services
 
 ## [1.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.4.3) (2023-09-07)
 
