@@ -107,6 +107,38 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 - 🎸 add ManagerApprove ([46c88b7](https://github.com/Portkey-Wallet/portkey-web/commit/46c88b7c1a20c1de7c6c92b15b1b461319cf4ac3))
 - 🎸 add wallet security check ([edd0eae](https://github.com/Portkey-Wallet/portkey-web/commit/edd0eaebc61061f815c721e98b20608d8ab05302))
+## [1.4.4-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.3...v1.4.4-alpha.4) (2023-09-22)
+
+### Features
+
+- 🎸 export evoke type ([28240f0](https://github.com/Portkey-Wallet/portkey-web/commit/28240f0f3aa360d3eec970d4fdea00cc1ee0a2cd))
+
+## [1.4.4-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.2...v1.4.4-alpha.3) (2023-09-21)
+
+### Features
+
+- 🎸 addGroup ([ad85559](https://github.com/Portkey-Wallet/portkey-web/commit/ad855591bbd265b4531357d8cbe18bd2c1b1da97))
+
+### Bug Fixes
+
+- 🐛 evoke portkey add group ([b0b4901](https://github.com/Portkey-Wallet/portkey-web/commit/b0b49018d69eea7d654cfb1744299cb57eec992e))
+
+## [1.4.4-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.1...v1.4.4-alpha.2) (2023-09-18)
+
+**Note:** Version bump only for package root
+
+## [1.4.4-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.0...v1.4.4-alpha.1) (2023-09-18)
+
+### Features
+
+- 🎸 add contact sc ([d535590](https://github.com/Portkey-Wallet/portkey-web/commit/d53559003824f5f80fe52471995263ba43f1ee80))
+- 🎸 add evokePortkeyApp type ([f533f79](https://github.com/Portkey-Wallet/portkey-web/commit/f533f791aea50194274efc82369c4ef5dff2eba8))
+
+## [1.4.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.4.4-alpha.0) (2023-09-14)
+
+### Bug Fixes
+
+- 🐛 npx git-cz ([03304cc](https://github.com/Portkey-Wallet/portkey-web/commit/03304ccee2129caaebce08d18362737d74d6baa2))
 
 ## [1.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.4.3) (2023-09-07)
 
