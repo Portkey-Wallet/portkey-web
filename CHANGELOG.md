@@ -3,6 +3,20 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.13...v1.5.0-alpha.14) (2023-09-28)
+
+### Features
+
+- 🎸 add apple userInfo ([e882b60](https://github.com/Portkey-Wallet/portkey-web/commit/e882b60cf58b48d7c1ea887113507b2d48905377))
+- 🎸 add ManagerApproveInnerProps type ([933136d](https://github.com/Portkey-Wallet/portkey-web/commit/933136da9fded91bf5f3f9365cb01ba82aa70efc))
+- 🎸 export IAllowance ([ddb760f](https://github.com/Portkey-Wallet/portkey-web/commit/ddb760f57c0d8a9b25e00426befdee9dafda30ba))
+- 🎸 guardian ([dc2ba41](https://github.com/Portkey-Wallet/portkey-web/commit/dc2ba41bfa35d63c244bb38ff57d284b1272cb2e))
+
+### Bug Fixes
+
+- 🐛 apple account guardian ([4e0bb3a](https://github.com/Portkey-Wallet/portkey-web/commit/4e0bb3ac7badbd7f6b75f51ca98a9749c73d4ef4))
+- 🐛 guardian update ([db5dadc](https://github.com/Portkey-Wallet/portkey-web/commit/db5dadc5628c083627c9a1a9aa3f1d97f2d21d15))
+
 ## [1.5.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.12...v1.5.0-alpha.13) (2023-09-27)
 
 **Note:** Version bump only for package root
