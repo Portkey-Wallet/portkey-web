@@ -100,10 +100,10 @@ export default function SetAllowanceMain({
             disabled={BigNumber(allowance).isNaN()}
             onClick={() => {
               if (!isValidNumber(allowance)) return setError('Please enter a positive whole number');
-              if (BigNumber(allowance).lte(0)) return setError('Please enter a nonzero value');
+              if (BigNumber(allowance).lte(0)) return setError('Please enter a non-zero value');
               onConfirm?.({ allowance });
             }}>
-            Pre-authorize
+            Authorize
           </Button>
         </div>
       </div>
