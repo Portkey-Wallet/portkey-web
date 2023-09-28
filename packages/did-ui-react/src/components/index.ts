@@ -69,6 +69,7 @@ export { default as MenuItem } from './MenuItem';
 export { default as MenuList } from './MenuList';
 
 export type { ManagerApproveInnerProps } from './ManagerApprove/index.component';
+export type { IAllowance } from './SetAllowance/index.component';
 
 export * from './context/PortkeyAssetProvider';
 export * from './context/PortkeySendProvider';
