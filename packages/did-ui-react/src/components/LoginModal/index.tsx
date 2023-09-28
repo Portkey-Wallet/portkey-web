@@ -1,6 +1,7 @@
 import { Button } from 'antd';
 import { CreateWalletType } from '../types';
 import CommonModal from '../CommonModal';
+import './index.less';
 
 export default function LoginModal({
   open,
@@ -21,6 +22,7 @@ export default function LoginModal({
       closable={false}
       open={open}
       width={320}
+      className="portkey-ui-login-modal"
       title={'Continue with this account?'}
       onCancel={onCancel}>
       <p className="modal-content">

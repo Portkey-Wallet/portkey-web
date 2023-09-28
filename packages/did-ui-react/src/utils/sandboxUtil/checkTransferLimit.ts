@@ -1,10 +1,9 @@
 import BigNumber from 'bignumber.js';
-import { ContractBasic } from '@portkey/contracts';
 import { ZERO } from '../../constants/misc';
 import { timesDecimals, divDecimals } from '../converter';
+import { CustomContractBasic } from './CustomContractBasic';
 
 export type CheckTransferLimitParams = {
-  caContract: ContractBasic;
   symbol: string;
   decimals: number | string;
   amount: string;
@@ -27,20 +26,42 @@ export type CheckTransferLimitResult = {
 export const checkTransferLimit = async ({
   caHash,
   params,
+  rpcUrl,
+  caContractAddress,
+  sandboxId = '',
 }: {
   caHash: string;
   params: CheckTransferLimitParams;
+  rpcUrl: string;
+  caContractAddress: string;
+  sandboxId?: string;
 }): Promise<CheckTransferLimitResult | undefined> => {
-  const { caContract, symbol, decimals, amount } = params;
+  const { symbol, decimals, amount } = params;
 
   const [limitReq, defaultLimitReq] = await Promise.all([
-    caContract.callViewMethod('GetTransferLimit', {
-      caHash: caHash,
-      symbol: symbol,
+    CustomContractBasic.callViewMethod({
+      contractOptions: {
+        rpcUrl: rpcUrl,
+        contractAddress: caContractAddress,
+      },
+      functionName: 'GetTransferLimit',
+      paramsOption: {
+        caHash: caHash,
+        symbol: symbol,
+      },
+      sandboxId,
     }),
-    caContract.callViewMethod('GetDefaultTokenTransferLimit', {
-      caHash: caHash,
-      symbol: symbol,
+    CustomContractBasic.callViewMethod({
+      contractOptions: {
+        rpcUrl: rpcUrl,
+        contractAddress: caContractAddress,
+      },
+      functionName: 'GetDefaultTokenTransferLimit',
+      paramsOption: {
+        caHash: caHash,
+        symbol: symbol,
+      },
+      sandboxId,
     }),
   ]);
 

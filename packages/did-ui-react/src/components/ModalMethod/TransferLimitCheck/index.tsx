@@ -1,23 +1,20 @@
-import BaseModalFunc, { BaseModalFuncProps } from '../BaseModalMethod';
+import { BaseModalFuncProps } from '../BaseModalMethod';
 import { ChainId } from '@portkey/types';
-import { ExceedDailyLimit, ExceedSingleLimit } from '../../../constants/security';
 import { IPaymentSecurityItem } from '@portkey/services';
-import { ExtensionContractBasic } from '../../../utils/sandboxUtil/ExtensionContractBasic';
 import { checkTransferLimit } from '../../../utils/sandboxUtil/checkTransferLimit';
-import { handleErrorMessage, setLoading } from '../../../utils';
-import { message } from 'antd';
+import { modalMethod } from './modalMethod';
 
 interface ITransferLimitCheckProps {
   wrapClassName?: string;
   className?: string;
   rpcUrl: string;
   caContractAddress: string;
-  privateKey: string;
   caHash: string;
   chainId: ChainId;
   symbol: string;
   decimals: number | string;
   amount: string;
+  sandboxId?: string;
 }
 
 interface ITransferLimitModalProps extends BaseModalFuncProps {
@@ -31,72 +28,59 @@ const transferLimitCheck = async ({
   className,
   rpcUrl,
   caContractAddress,
-  privateKey,
   caHash,
   chainId,
   symbol,
   decimals,
   amount,
+  sandboxId,
   ...props
 }: ITransferLimitCheckProps) => {
-  try {
-    setLoading(true);
-    const caContract = new ExtensionContractBasic({
-      rpcUrl,
-      contractAddress: caContractAddress,
-      privateKey,
-    });
+  const limitRes = await checkTransferLimit({
+    rpcUrl,
+    caContractAddress,
+    sandboxId,
+    caHash,
+    params: { symbol, decimals, amount },
+  });
 
-    const limitRes = await checkTransferLimit({
-      caHash,
-      params: { caContract, symbol, decimals, amount },
-    });
+  const settingParams: IPaymentSecurityItem = {
+    chainId: chainId,
+    symbol,
+    singleLimit: limitRes?.singleBalance.toString() || '',
+    dailyLimit: limitRes?.dailyLimit.toString() || '',
+    restricted: !limitRes?.dailyLimit.eq(-1),
+    decimals,
+  };
 
-    setLoading(false);
-
-    const settingParams: IPaymentSecurityItem = {
-      chainId: chainId,
-      symbol,
-      singleLimit: limitRes?.singleBalance.toString() || '',
-      dailyLimit: limitRes?.dailyLimit.toString() || '',
-      restricted: !limitRes?.dailyLimit.eq(-1),
-      decimals,
-    };
-
-    if (limitRes?.isSingleLimited) {
-      return TransferSingleLimitModal({ wrapClassName, className, data: settingParams, ...props });
-    }
-
-    if (limitRes?.isDailyLimited) {
-      return TransferDailyLimitModal({ wrapClassName, className, data: settingParams, ...props });
-    }
-
-    return true;
-  } catch (error) {
-    const msg = handleErrorMessage(error);
-    message.error(msg);
-
-    setLoading(false);
-    // TODO error tip
+  if (limitRes?.isSingleLimited) {
+    TransferSingleLimitModal({ wrapClassName, className, data: settingParams, ...props });
+    return false;
   }
-};
 
+  if (limitRes?.isDailyLimited) {
+    TransferDailyLimitModal({ wrapClassName, className, data: settingParams, ...props });
+    return false;
+  }
+
+  return true;
+};
 function TransferSingleLimitModal({ wrapClassName, className, data, onOk, ...props }: ITransferLimitModalProps) {
   return new Promise((resolve) => {
-    const modal = BaseModalFunc({
+    modalMethod({
       ...props,
-      wrapClassName: 'portkey-ui-transfer-limit-wrapper ' + wrapClassName,
+      wrapClassName: 'portkey-ui-common-modals portkey-ui-transfer-limit-wrapper ' + wrapClassName,
       className: 'portkey-ui-h-335 portkey-ui-transfer-limit-modal ' + className,
       okText: 'Modify',
       cancelText: 'Cancel',
-      content: ExceedSingleLimit,
+      content: (
+        <div className="portkey-ui-common-modals-only-content">{`Maximum limit per transaction exceeded. To proceed, please modify the transfer limit first.`}</div>
+      ),
       onCancel: () => {
         resolve(false);
-        modal.destroy();
       },
       onOk: () => {
         resolve(true);
-        modal.destroy();
         onOk?.(data);
       },
     });
@@ -105,20 +89,20 @@ function TransferSingleLimitModal({ wrapClassName, className, data, onOk, ...pro
 
 function TransferDailyLimitModal({ wrapClassName, className, data, onOk, ...props }: ITransferLimitModalProps) {
   return new Promise((resolve) => {
-    const modal = BaseModalFunc({
+    modalMethod({
       ...props,
-      wrapClassName: 'portkey-ui-transfer-limit-wrapper ' + wrapClassName,
+      wrapClassName: 'portkey-ui-common-modals portkey-ui-transfer-limit-wrapper ' + wrapClassName,
       className: 'portkey-ui-h-335 portkey-ui-transfer-limit-modal ' + className,
       okText: 'Modify',
       cancelText: 'Cancel',
-      content: ExceedDailyLimit,
+      content: (
+        <div className="portkey-ui-common-modals-only-content">{`Maximum daily limit exceeded. To proceed, please modify the transfer limit first.`}</div>
+      ),
       onCancel: () => {
         resolve(false);
-        modal.destroy();
       },
       onOk: () => {
         resolve(true);
-        modal.destroy();
         onOk?.(data);
       },
     });

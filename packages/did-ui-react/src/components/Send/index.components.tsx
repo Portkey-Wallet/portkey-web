@@ -34,7 +34,6 @@ import { useCheckManagerSyncState } from '../../hooks/wallet';
 import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
-import { ExceedLimit } from '../../constants/security';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
 import { getChain } from '../../hooks/useChainInfo';
 
@@ -53,6 +52,8 @@ enum Stage {
   'Amount',
   'Preview',
 }
+
+const ExceedLimit = 'ExceedLimit';
 
 type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
@@ -199,7 +200,6 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
     const res = await transferLimitCheck({
       rpcUrl: chainInfo?.endPoint || '',
       caContractAddress: chainInfo?.caContractAddress || '',
-      privateKey,
       caHash: caHash,
       chainId: tokenInfo.chainId,
       symbol: tokenInfo.symbol,
@@ -217,8 +217,8 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
       setLoading(true);
 
       // transfer limit check
-      const res = await handleCheckTransferLimit();
-      if (typeof res !== 'boolean') return ExceedLimit;
+      const limitRes = await handleCheckTransferLimit();
+      if (!limitRes) return;
 
       if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
         await crossChainTransfer({
@@ -295,9 +295,9 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
       }
       if (!isNFT) {
         // transfer limit check
-        const res = await handleCheckTransferLimit();
+        const limitRes = await handleCheckTransferLimit();
 
-        if (typeof res !== 'boolean') return ExceedLimit;
+        if (!limitRes) return ExceedLimit;
 
         // insufficient balance check
         if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
