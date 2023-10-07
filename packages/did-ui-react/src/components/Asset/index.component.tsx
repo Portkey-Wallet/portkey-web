@@ -68,7 +68,7 @@ function AssetMain({
   onOverviewBack,
   onLifeCycleChange,
 }: AssetMainProps) {
-  const [{ networkType }] = usePortkey();
+  const [{ networkType, sandboxId }] = usePortkey();
   const [{ caInfo, initialized, originChainId, caHash }, { dispatch }] = usePortkeyAsset();
   const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
 
@@ -165,14 +165,15 @@ function AssetMain({
         setLoading(true);
         const res = await walletSecurityCheck({ caHash: caHash || '' });
         setLoading(false);
-        if (typeof res === 'boolean') {
+        if (res) {
           setSendToken(v);
           setAssetStep(AssetStep.send);
         }
       } catch (error) {
+        setLoading(false);
+
         const msg = handleErrorMessage(error);
         message.error(msg);
-        setLoading(false);
       }
     },
     [caHash],
@@ -400,6 +401,7 @@ function AssetMain({
           initData={viewPaymentSecurity}
           caHash={caHash || ''}
           originChainId={originChainId}
+          sandboxId={sandboxId}
           onBack={() => setAssetStep(AssetStep.transferSettings)}
           onSuccess={(data) => {
             setViewPaymentSecurity(data);

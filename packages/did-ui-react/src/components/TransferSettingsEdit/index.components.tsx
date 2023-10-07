@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
 import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
-import { divDecimals } from '../../utils/converter';
+import { divDecimals, timesDecimals } from '../../utils/converter';
 import {
   AccountType,
   GuardiansApproved,
@@ -24,9 +24,9 @@ import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
 import { ELF_SYMBOL } from '../../constants/assets';
 import { getChainInfo } from '../../hooks';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
-import { usePortkey } from '../context';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 import { ChainId } from '@portkey/types';
+import { sleep } from '@portkey/utils';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -35,6 +35,7 @@ export interface ITransferSettingsEditProps extends FormProps {
   originChainId: ChainId;
   initData?: IPaymentSecurityItem;
   isErrorTip?: boolean;
+  sandboxId?: string;
   onBack?: () => void;
   onSuccess?: (data: IPaymentSecurityItem) => void;
   onGuardiansApproveError?: OnErrorFunc;
@@ -49,6 +50,7 @@ export default function TransferSettingsEditMain({
   originChainId,
   initData,
   isErrorTip = true,
+  sandboxId = '',
   onBack,
   onSuccess,
   onGuardiansApproveError,
@@ -69,9 +71,8 @@ export default function TransferSettingsEditMain({
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
-  const [{ sandboxId }] = usePortkey();
 
-  const chainId = useMemo(() => initData?.chainId || originChainId, [initData?.chainId, originChainId]);
+  const targetChainId = useMemo(() => initData?.chainId || originChainId, [initData?.chainId, originChainId]);
   const symbol = useMemo(() => initData?.symbol || ELF_SYMBOL, [initData?.symbol]);
 
   const getVerifierInfo = useCallback(async () => {
@@ -192,23 +193,28 @@ export default function TransferSettingsEditMain({
         setLoading(true);
         const guardiansApproved = formatGuardianValue(approvalInfo);
         const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
+        const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData?.decimals)) : '-1';
+        const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData?.decimals)) : '-1';
 
         await setTransferLimit({
           params: {
-            dailyLimit,
-            singleLimit,
+            dailyLimit: transDailyLimit,
+            singleLimit: transSingleLimit,
             symbol: symbol,
             guardiansApproved,
           },
-          chainId: chainId,
-          sandboxId: '',
+          targetChainId: targetChainId,
+          sandboxId,
           caHash: caHash || '',
         });
 
+        // Guarantee that the contract can query the latest data
+        await sleep(1000);
+
         const params: IPaymentSecurityItem = {
-          dailyLimit,
-          singleLimit,
-          chainId: chainId,
+          dailyLimit: transDailyLimit,
+          singleLimit: transSingleLimit,
+          chainId: targetChainId,
           symbol: symbol,
           decimals: initData?.decimals || 8,
           restricted,
@@ -228,7 +234,17 @@ export default function TransferSettingsEditMain({
         setLoading(false);
       }
     },
-    [caHash, chainId, form, initData?.decimals, isErrorTip, onGuardiansApproveError, onSuccess, symbol],
+    [
+      caHash,
+      form,
+      initData?.decimals,
+      isErrorTip,
+      onGuardiansApproveError,
+      onSuccess,
+      sandboxId,
+      symbol,
+      targetChainId,
+    ],
   );
 
   const getData = useCallback(async () => {
@@ -312,6 +328,7 @@ export default function TransferSettingsEditMain({
             </div>
           }
           originChainId={originChainId}
+          targetChainId={targetChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}
           onError={onGuardiansApproveError}

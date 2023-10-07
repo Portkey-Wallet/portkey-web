@@ -376,11 +376,12 @@ export default function RampMain({
         try {
           setLoading(true);
           const res = await walletSecurityCheck({ caHash: caHash || '' });
-          if (typeof res !== 'boolean') return setLoading(false);
+          if (!res) return setLoading(false);
         } catch (error) {
+          setLoading(false);
+
           const msg = handleErrorMessage(error);
           message.error(msg);
-          setLoading(false);
         }
       }
 
@@ -461,7 +462,6 @@ export default function RampMain({
       const res = await transferLimitCheck({
         rpcUrl: chainInfo?.endPoint || '',
         caContractAddress: chainInfo?.caContractAddress || '',
-        privateKey,
         caHash: caHash,
         chainId: tokenInfo.chainId,
         symbol: tokenInfo.symbol,
@@ -471,9 +471,10 @@ export default function RampMain({
 
       return res;
     } catch (error) {
+      setLoading(false);
+
       const msg = handleErrorMessage(error);
       message.error(msg);
-      setLoading(false);
     }
   }, [amount, caHash, managementAccount?.privateKey, tokenInfo.chainId, tokenInfo.decimals, tokenInfo.symbol]);
 
@@ -503,11 +504,11 @@ export default function RampMain({
       try {
         // CHECK 2: security
         const securityRes = await walletSecurityCheck({ caHash: caHash || '' });
-        if (typeof securityRes !== 'boolean') return setLoading(false);
+        if (!securityRes) return setLoading(false);
 
         // CHECK 3: transfer limit
         const limitRes = await handleCheckTransferLimit();
-        if (typeof limitRes !== 'boolean') return setLoading(false);
+        if (!limitRes) return setLoading(false);
 
         // CHECK 4: search balance from contract
         const result = await getBalanceByContract({
