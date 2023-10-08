@@ -11,9 +11,10 @@ export default function BaseModalFunc({
   className = '',
   wrapClassName = '',
   visibleFooter = true,
+  type = 'confirm',
   ...props
 }: BaseModalFuncProps) {
-  return Modal.confirm({
+  return Modal[type]({
     width: 430,
     icon: null,
     centered: true,

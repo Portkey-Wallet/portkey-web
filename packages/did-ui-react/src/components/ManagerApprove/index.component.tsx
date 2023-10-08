@@ -16,6 +16,7 @@ import './index.less';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
+  targetChainId: ChainId;
   caHash: string;
 }
 
@@ -39,6 +40,7 @@ const PrefixCls = 'manager-approval';
 export default function ManagerApproveInner({
   max,
   originChainId,
+  targetChainId,
   caHash,
   amount,
   dappInfo,
@@ -173,7 +175,8 @@ export default function ManagerApproveInner({
           <GuardianApprovalMain
             className={`${PrefixCls}-guardian-approve`}
             header={<BackHeader onBack={() => setStep(ManagerApproveStep.SetAllowance)} />}
-            chainId={originChainId}
+            originChainId={originChainId}
+            targetChainId={targetChainId}
             guardianList={guardianList}
             onConfirm={(approvalInfo) => {
               const approved: IGuardiansApproved[] = approvalInfo.map((guardian) => ({

@@ -1,4 +1,4 @@
-import { AccountType, GuardiansApproved } from '@portkey/services';
+import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey/services';
 import { UserGuardianStatus } from '../../../types';
 import { GuardianItem } from './type';
 import { formatGuardianValue } from './formatGuardianValue';
@@ -11,7 +11,7 @@ export const formatAddGuardianValue = ({
   currentGuardian?: UserGuardianStatus;
 }) => {
   const guardianToAdd: GuardianItem = {
-    type: currentGuardian?.guardianType as AccountType,
+    type: AccountTypeEnum[currentGuardian?.guardianType as AccountType],
     identifierHash: currentGuardian?.identifierHash,
     verificationInfo: {
       id: currentGuardian?.verifier?.id || '',

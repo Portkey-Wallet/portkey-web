@@ -1,4 +1,4 @@
-import { AccountType } from '@portkey/services';
+import { AccountTypeEnum } from '@portkey/services';
 
 export interface verificationInfo {
   id: string;
@@ -7,7 +7,7 @@ export interface verificationInfo {
 }
 export interface GuardianItem {
   value?: string;
-  type: AccountType;
+  type: AccountTypeEnum;
   identifierHash?: string;
   verificationInfo: verificationInfo;
 }

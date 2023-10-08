@@ -1,20 +1,30 @@
 import { Button } from 'antd';
 import { CreateWalletType } from '../types';
 import CommonModal from '../CommonModal';
+import './index.less';
 
 export default function LoginModal({
   open,
   type = 'Login',
+  maskClosable = false,
   onCancel,
   onConfirm,
 }: {
   open?: boolean;
   type?: CreateWalletType;
+  maskClosable?: boolean;
   onCancel?: () => void;
   onConfirm?: () => void;
 }) {
   return (
-    <CommonModal closable={false} open={open} width={320} title={'Continue with this account?'} onCancel={onCancel}>
+    <CommonModal
+      maskClosable={maskClosable}
+      closable={false}
+      open={open}
+      width={320}
+      className="portkey-ui-login-modal"
+      title={'Continue with this account?'}
+      onCancel={onCancel}>
       <p className="modal-content">
         {type === 'Login' && 'This account has not been registered yet. Click "Confirm" to complete the registration.'}
         {type === 'SignUp' && 'This account already exists. Click "Confirm" to log in.'}

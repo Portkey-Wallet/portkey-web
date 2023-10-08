@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
 import MenuItem from '../MenuItem';
@@ -11,14 +10,14 @@ import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import LoadingMore from '../LoadingMore';
 import { did, handleErrorMessage, setLoading } from '../../utils';
 import { message } from 'antd';
-import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { IPaymentSecurityItem } from '@portkey/services';
 
 export interface IPaymentSecurityProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   networkType: string;
-  onClose?: () => void;
+  caHash: string;
+  onBack?: () => void;
   onClickItem: (data: IPaymentSecurityItem) => void;
 }
 
@@ -32,13 +31,19 @@ export interface ISecurityListResponse {
 const MAX_RESULT_COUNT = 20;
 const SKIP_COUNT = 0;
 
-function PaymentSecurityContent({ className, wrapperStyle, networkType, onClose, onClickItem }: IPaymentSecurityProps) {
+export default function PaymentSecurityMain({
+  className,
+  wrapperStyle,
+  networkType,
+  caHash,
+  onBack,
+  onClickItem,
+}: IPaymentSecurityProps) {
   const isMainnet = useMemo(() => networkType === 'MAIN', [networkType]);
 
   const [securityList, setSecurityList] = useState<IPaymentSecurityItem[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const loadingFlag = useRef(false);
-  const [{ caHash }] = usePortkeyAsset();
 
   const getSecurityList = useCallback(async () => {
     try {
@@ -94,7 +99,7 @@ function PaymentSecurityContent({ className, wrapperStyle, networkType, onClose,
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-payment-security-wrapper', className)}>
-      <BackHeaderForPage title={`Payment Security`} leftCallBack={onClose} />
+      <BackHeaderForPage title={`Payment Security`} leftCallBack={onBack} />
       {securityList.length > 0 && (
         <>
           <List className="portkey-ui-payment-security-list">
@@ -128,13 +133,5 @@ function PaymentSecurityContent({ className, wrapperStyle, networkType, onClose,
       )}
       {!securityList || (securityList?.length === 0 && <div className="no-data-text">{`No asset`}</div>)}
     </div>
-  );
-}
-
-export default function PaymentSecurityMain(props: IPaymentSecurityProps) {
-  return (
-    <PortkeySendProvider>
-      <PaymentSecurityContent {...props} />
-    </PortkeySendProvider>
   );
 }

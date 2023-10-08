@@ -18,7 +18,8 @@ const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
 export interface GuardianApprovalProps {
   header?: ReactNode;
-  chainId: ChainId;
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
   className?: string;
   guardianList?: BaseGuardianItem[];
   isErrorTip?: boolean;
@@ -33,7 +34,8 @@ const GuardianApprovalMain = forwardRef(
   (
     {
       header,
-      chainId,
+      originChainId = 'AELF',
+      targetChainId,
       className,
       guardianList: defaultGuardianList,
       isErrorTip = true,
@@ -128,7 +130,8 @@ const GuardianApprovalMain = forwardRef(
             accessToken,
             id,
             verifierId: item.verifier?.id,
-            chainId,
+            chainId: originChainId,
+            targetChainId,
             clientId,
             redirectURI,
             operationType,
@@ -163,7 +166,7 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [chainId, isErrorTip, onError, operationType, verifyToken],
+      [originChainId, targetChainId, isErrorTip, onError, operationType, verifyToken],
     );
 
     const onVerifyingHandler = useCallback(
@@ -237,7 +240,8 @@ const GuardianApprovalMain = forwardRef(
       <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
         {typeof verifyAccountIndex === 'number' ? (
           <VerifierPage
-            chainId={chainId}
+            targetChainId={targetChainId}
+            originChainId={originChainId}
             operationType={operationType}
             onBack={() => setVerifyAccountIndex(undefined)}
             guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
@@ -255,7 +259,8 @@ const GuardianApprovalMain = forwardRef(
           <>
             {header}
             <GuardianList
-              chainId={chainId}
+              originChainId={originChainId}
+              targetChainId={targetChainId}
               expiredTime={expiredTime}
               operationType={operationType}
               guardianList={guardianList}

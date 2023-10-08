@@ -2,9 +2,14 @@
 
 .portkey-ui-wrapper,
 .portkey-ui-common-modals,
-.portkey-ui-base-modal,
-.portkey-ui-prompt-modal {
+.portkey-ui-base-modal {
   // modal
+  .portkey-ant-modal-content {
+    .portkey-ant-modal-body {
+      height: 100%;
+      min-height: auto;
+    }
+  }
   .portkey-ant-modal-content,
   .portkey-ant-modal-header {
     background-color: var(--portkey-ui-default-bg);

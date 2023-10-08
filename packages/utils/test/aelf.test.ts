@@ -33,7 +33,8 @@ describe('aelf describe', () => {
       functionName: 'Transfer',
       paramsOption: {
         symbol: 'ELF',
-        owner: 'soAcchsFZGEsFeaEsk9tyMnFauPgJfMyZMRrfcntGjrtC7YvE',
+        amount: 1,
+        to: 'soAcchsFZGEsFeaEsk9tyMnFauPgJfMyZMRrfcntGjrtC7YvE',
       },
       contract,
     });
@@ -44,18 +45,14 @@ describe('aelf describe', () => {
     } catch (error) {
       expect(error).not.toBeUndefined();
     }
-
     try {
       await encodedTx({
-        instance: {
-          chain: {
-            getChainStatus: () => undefined,
-          },
-        },
+        instance: { chain: { getChainStatus: () => undefined } },
         functionName: 'Transfer',
         paramsOption: {
           symbol: 'ELF',
-          owner: 'soAcchsFZGEsFeaEsk9tyMnFauPgJfMyZMRrfcntGjrtC7YvE',
+          amount: 1,
+          to: 'soAcchsFZGEsFeaEsk9tyMnFauPgJfMyZMRrfcntGjrtC7YvE',
         },
         contract,
       });

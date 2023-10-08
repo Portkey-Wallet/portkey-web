@@ -3,31 +3,39 @@ import { memo, useCallback, ReactNode, useState, useRef } from 'react';
 import { AccountTypeEnum, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { useTranslation } from 'react-i18next';
 import CustomSvg from '../CustomSvg';
-import { OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
+import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
 import GuardianAccountShow from '../GuardianAccountShow';
 import BaseVerifierIcon from '../BaseVerifierIcon';
 import { Button, Switch } from 'antd';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
-import { did, errorTip, handleErrorMessage, setLoading, verification } from '../../utils';
+import {
+  did,
+  errorTip,
+  handleErrorMessage,
+  handleVerificationDoc,
+  setLoading,
+  socialLoginAuth,
+  verification,
+} from '../../utils';
 import { useThrottleCallback } from '../../hooks/throttle';
 import CustomModal from '../CustomModal';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
-import CustomPromptModal from '../CustomPromptModal';
+import CommonBaseModal from '../CommonBaseModal';
+import { useVerifyToken } from '../../hooks';
+import ConfigProvider from '../config-provider';
 import './index.less';
 
 export interface GuardianViewProps {
   header?: ReactNode;
-  chainId?: ChainId;
+  targetChainId?: ChainId;
   originChainId?: ChainId;
-  editable?: boolean;
   isErrorTip?: boolean;
   currentGuardian: UserGuardianStatus;
   guardianList?: UserGuardianStatus[];
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: () => Promise<any>;
-  socialVerify?: (item: UserGuardianStatus) => Promise<any>;
 }
 
 const guardianIconMap: any = {
@@ -39,22 +47,96 @@ const guardianIconMap: any = {
 
 function GuardianView({
   header,
-  chainId = 'AELF',
+  originChainId = 'AELF',
   onEditGuardian,
   isErrorTip,
   currentGuardian,
   guardianList,
   handleSetLoginGuardian,
   onError,
-  socialVerify,
 }: GuardianViewProps) {
   const { t } = useTranslation();
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const reCaptchaHandler = useReCaptchaModal();
-
+  const verifyToken = useVerifyToken();
+  const socialBasic = useCallback(
+    (v: ISocialLogin) => {
+      try {
+        const socialLogin = ConfigProvider.config.socialLogin;
+        let clientId;
+        let redirectURI;
+        let customLoginHandler;
+        switch (v) {
+          case 'Apple':
+            clientId = socialLogin?.Apple?.clientId;
+            redirectURI = socialLogin?.Apple?.redirectURI;
+            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
+            break;
+          case 'Google':
+            clientId = socialLogin?.Google?.clientId;
+            customLoginHandler = socialLogin?.Google?.customLoginHandler;
+            break;
+          default:
+            throw 'accountType is not supported';
+        }
+        return { clientId, redirectURI, customLoginHandler };
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'get social account basic',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+    },
+    [isErrorTip, onError],
+  );
+  const socialVerify = useCallback(
+    async (_guardian: UserGuardianStatus) => {
+      try {
+        const { clientId, redirectURI, customLoginHandler } =
+          socialBasic(_guardian?.guardianType as ISocialLogin) || {};
+        const response = await socialLoginAuth({
+          type: _guardian?.guardianType as ISocialLogin,
+          clientId,
+          redirectURI,
+        });
+        if (!response?.token) throw new Error('auth failed');
+        const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
+          accessToken: response?.token,
+          id: _guardian.guardianIdentifier || '',
+          verifierId: _guardian?.verifier?.id || '',
+          chainId: originChainId,
+          clientId,
+          redirectURI,
+          operationType: OperationTypeEnum.addGuardian,
+          customLoginHandler,
+        });
+        if (!rst) return;
+        const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
+        const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+        return { verifierInfo, guardianIdentifier };
+      } catch (error) {
+        return errorTip(
+          {
+            errorFields: 'Guardian Social Verify',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [socialBasic, verifyToken, originChainId, isErrorTip, onError],
+  );
   const handleSwitch = useCallback(async () => {
     try {
+      setLoading(true);
       await handleSetLoginGuardian();
       setVerifierVisible(false);
     } catch (e) {
@@ -66,6 +148,8 @@ function GuardianView({
         isErrorTip,
         onError,
       );
+    } finally {
+      setLoading(false);
     }
   }, [handleSetLoginGuardian, isErrorTip, onError]);
   const sendCode = useCallback(async () => {
@@ -78,7 +162,7 @@ function GuardianView({
             type: _guardian?.guardianType || 'Email',
             guardianIdentifier: _guardian?.guardianIdentifier || '',
             verifierId: _guardian?.verifier?.id || '',
-            chainId,
+            chainId: originChainId,
             operationType: OperationTypeEnum.setLoginAccount,
           },
         },
@@ -108,7 +192,7 @@ function GuardianView({
     } finally {
       setLoading(false);
     }
-  }, [chainId, reCaptchaHandler, isErrorTip, onError]);
+  }, [originChainId, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
     curGuardian.current = {
       ...(curGuardian.current as UserGuardianStatus),
@@ -124,8 +208,9 @@ function GuardianView({
       )
     ) {
       try {
+        setLoading(true);
         await socialVerify?.(currentGuardian);
-        handleSwitch();
+        await handleSwitch();
       } catch (error) {
         errorTip(
           {
@@ -164,12 +249,12 @@ function GuardianView({
             item.isLoginGuardian && item.guardianIdentifier === currentGuardian?.guardianIdentifier,
         );
         if (isLogin) {
-          handleVerify();
+          await handleVerify();
           return;
         }
         try {
           await did.getHolderInfo({
-            chainId,
+            chainId: originChainId,
             loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
           });
           CustomModal({
@@ -179,7 +264,7 @@ function GuardianView({
           });
         } catch (error: any) {
           if (error?.error?.code?.toString() === '3002') {
-            handleVerify();
+            await handleVerify();
           } else {
             errorTip(
               {
@@ -197,7 +282,7 @@ function GuardianView({
           if (item.isLoginGuardian) loginAccountNum++;
         });
         if (loginAccountNum > 1) {
-          handleSwitch();
+          await handleSwitch();
         } else {
           CustomModal({
             type: 'info',
@@ -207,8 +292,12 @@ function GuardianView({
         }
       }
     },
-    [chainId, currentGuardian, guardianList, handleSwitch, handleVerify, isErrorTip, onError, t],
+    [originChainId, currentGuardian, guardianList, handleSwitch, handleVerify, isErrorTip, onError, t],
   );
+  const handleBackView = useCallback(() => {
+    curGuardian.current = currentGuardian;
+    setVerifierVisible(false);
+  }, [currentGuardian]);
   return (
     <div className="portkey-ui-guardian-view portkey-ui-flex-column">
       <>
@@ -256,23 +345,23 @@ function GuardianView({
           </div>
         )}
       </>
-      <CustomPromptModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal open={verifierVisible} onClose={handleBackView}>
         <VerifierPage
-          chainId={chainId}
+          originChainId={originChainId}
           operationType={OperationTypeEnum.setLoginAccount}
-          onBack={() => setVerifierVisible(false)}
-          guardianIdentifier={currentGuardian?.guardianIdentifier || ''}
+          onBack={handleBackView}
+          guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
           verifierSessionId={curGuardian?.current?.verifierInfo?.sessionId || ''}
-          isLoginGuardian={currentGuardian?.isLoginGuardian}
-          isCountdownNow={currentGuardian?.isInitStatus}
-          accountType={currentGuardian?.guardianType}
+          isLoginGuardian={curGuardian?.current?.isLoginGuardian}
+          isCountdownNow={curGuardian?.current?.isInitStatus}
+          accountType={curGuardian?.current?.guardianType}
           isErrorTip={isErrorTip}
-          verifier={currentGuardian?.verifier as VerifierItem}
+          verifier={curGuardian?.current?.verifier as VerifierItem}
           onSuccess={handleSwitch}
           onError={onError}
           onReSend={reSendCode}
         />
-      </CustomPromptModal>
+      </CommonBaseModal>
     </div>
   );
 }

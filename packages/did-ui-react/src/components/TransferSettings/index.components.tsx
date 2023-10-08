@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import { ReactNode, useMemo } from 'react';
 import BackHeaderForPage from '../BackHeaderForPage';
 import { Button, Form, FormProps, Input } from 'antd';
@@ -16,7 +15,7 @@ export interface TransferSettingsProps extends FormProps {
   closeIcon?: ReactNode;
   initData?: IPaymentSecurityItem;
   onEdit: () => void;
-  onClose?: () => void;
+  onBack?: () => void;
 }
 
 export interface ITransferSettingsFormInit {
@@ -27,7 +26,14 @@ export interface ITransferSettingsFormInit {
 
 const { Item: FormItem } = Form;
 
-function TransferSettingsContent({ className, wrapperStyle, initData, form, onClose, onEdit }: TransferSettingsProps) {
+export default function TransferSettingsMain({
+  className,
+  wrapperStyle,
+  initData,
+  form,
+  onBack,
+  onEdit,
+}: TransferSettingsProps) {
   const initValue: Partial<ITransferSettingsFormInit> = useMemo(() => {
     return {
       singleLimit:
@@ -54,7 +60,7 @@ function TransferSettingsContent({ className, wrapperStyle, initData, form, onCl
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-wrapper', className)}>
-      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={onClose} />
+      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={onBack} />
       <Form
         form={form}
         autoComplete="off"
@@ -97,13 +103,5 @@ function TransferSettingsContent({ className, wrapperStyle, initData, form, onCl
         </FormItem>
       </Form>
     </div>
-  );
-}
-
-export default function TransferSettingsMain(props: TransferSettingsProps) {
-  return (
-    <PortkeySendProvider>
-      <TransferSettingsContent {...props} />
-    </PortkeySendProvider>
   );
 }

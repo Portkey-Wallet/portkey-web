@@ -1,9 +1,8 @@
 import clsx from 'clsx';
-import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
 import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
-import { divDecimals } from '../../utils/converter';
+import { divDecimals, timesDecimals } from '../../utils/converter';
 import {
   AccountType,
   GuardiansApproved,
@@ -17,36 +16,42 @@ import SwitchComponent from '../SwitchComponent';
 import { LimitFormatTip, NoLimit, SetLimitExplain, SingleExceedDaily } from '../../constants/security';
 import { isValidInteger } from '../../utils/reg';
 import { OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
-import CustomPromptModal from '../CustomPromptModal';
+import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
 import CustomSvg from '../CustomSvg';
-import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
 import { ELF_SYMBOL } from '../../constants/assets';
 import { getChainInfo } from '../../hooks';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
-import { usePortkey } from '../context';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
+import { ChainId } from '@portkey/types';
+import { sleep } from '@portkey/utils';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
+  caHash: string;
+  originChainId: ChainId;
   initData?: IPaymentSecurityItem;
   isErrorTip?: boolean;
-  onClose?: () => void;
+  sandboxId?: string;
+  onBack?: () => void;
   onSuccess?: (data: IPaymentSecurityItem) => void;
   onGuardiansApproveError?: OnErrorFunc;
 }
 
 const { Item: FormItem } = Form;
 
-function TransferSettingsEditContent({
+export default function TransferSettingsEditMain({
   className,
   wrapperStyle,
+  caHash,
+  originChainId,
   initData,
   isErrorTip = true,
-  onClose,
+  sandboxId = '',
+  onBack,
   onSuccess,
   onGuardiansApproveError,
 }: ITransferSettingsEditProps) {
@@ -66,10 +71,8 @@ function TransferSettingsEditContent({
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
-  const [{ sandboxId }] = usePortkey();
-  const [{ caHash, originChainId }] = usePortkeyAsset();
 
-  const chainId = useMemo(() => initData?.chainId || originChainId, [initData?.chainId, originChainId]);
+  const targetChainId = useMemo(() => initData?.chainId || originChainId, [initData?.chainId, originChainId]);
   const symbol = useMemo(() => initData?.symbol || ELF_SYMBOL, [initData?.symbol]);
 
   const getVerifierInfo = useCallback(async () => {
@@ -190,23 +193,28 @@ function TransferSettingsEditContent({
         setLoading(true);
         const guardiansApproved = formatGuardianValue(approvalInfo);
         const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
+        const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData?.decimals)) : '-1';
+        const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData?.decimals)) : '-1';
 
         await setTransferLimit({
           params: {
-            dailyLimit,
-            singleLimit,
+            dailyLimit: transDailyLimit,
+            singleLimit: transSingleLimit,
             symbol: symbol,
             guardiansApproved,
           },
-          chainId: chainId,
-          sandboxId: '',
+          targetChainId: targetChainId,
+          sandboxId,
           caHash: caHash || '',
         });
 
+        // Guarantee that the contract can query the latest data
+        await sleep(1000);
+
         const params: IPaymentSecurityItem = {
-          dailyLimit,
-          singleLimit,
-          chainId: chainId,
+          dailyLimit: transDailyLimit,
+          singleLimit: transSingleLimit,
+          chainId: targetChainId,
           symbol: symbol,
           decimals: initData?.decimals || 8,
           restricted,
@@ -226,7 +234,17 @@ function TransferSettingsEditContent({
         setLoading(false);
       }
     },
-    [caHash, chainId, form, initData?.decimals, isErrorTip, onGuardiansApproveError, onSuccess, symbol],
+    [
+      caHash,
+      form,
+      initData?.decimals,
+      isErrorTip,
+      onGuardiansApproveError,
+      onSuccess,
+      sandboxId,
+      symbol,
+      targetChainId,
+    ],
   );
 
   const getData = useCallback(async () => {
@@ -243,7 +261,7 @@ function TransferSettingsEditContent({
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
-      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={onClose} />
+      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={onBack} />
       <Form
         form={form}
         autoComplete="off"
@@ -299,7 +317,7 @@ function TransferSettingsEditContent({
           </Button>
         </FormItem>
       </Form>
-      <CustomPromptModal
+      <CommonBaseModal
         className="portkey-ui-modal-approval"
         open={approvalVisible}
         onClose={() => setApprovalVisible(false)}>
@@ -309,21 +327,14 @@ function TransferSettingsEditContent({
               <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
             </div>
           }
-          chainId={originChainId}
+          originChainId={originChainId}
+          targetChainId={targetChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}
           onError={onGuardiansApproveError}
           operationType={OperationTypeEnum.modifyTransferLimit}
         />
-      </CustomPromptModal>
+      </CommonBaseModal>
     </div>
-  );
-}
-
-export default function TransferSettingsEditMain(props: ITransferSettingsEditProps) {
-  return (
-    <PortkeySendProvider>
-      <TransferSettingsEditContent {...props} />
-    </PortkeySendProvider>
   );
 }

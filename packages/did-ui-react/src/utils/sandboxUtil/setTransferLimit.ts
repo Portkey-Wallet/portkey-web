@@ -5,16 +5,18 @@ import { GuardianItem } from '../../components/Guardian/utils/type';
 
 export const setTransferLimit = async ({
   params,
-  chainId,
+  targetChainId,
   sandboxId = '',
   caHash,
 }: {
-  params: { guardiansApproved: GuardianItem[]; symbol: string; singleLimit: number; dailyLimit: number };
-  chainId: ChainId;
+  params: { guardiansApproved: GuardianItem[]; symbol: string; singleLimit: string; dailyLimit: string };
+  targetChainId?: ChainId;
   sandboxId?: string;
   caHash: string;
 }) => {
-  const chainInfo = await getChainInfo(chainId);
+  if (!targetChainId) throw Error('No chainId');
+
+  const chainInfo = await getChainInfo(targetChainId);
   const res = await CustomContractBasic.callSendMethod({
     sandboxId,
     privateKey: did?.didWallet?.managementAccount?.privateKey || '',

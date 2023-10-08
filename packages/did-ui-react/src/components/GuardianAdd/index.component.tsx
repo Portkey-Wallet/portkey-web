@@ -7,13 +7,24 @@ import { ChainId, ChainType } from '@portkey/types';
 import {
   EmailError,
   EmailReg,
+  did,
   errorTip,
+  getGoogleUserInfo,
   handleErrorMessage,
   handleVerificationDoc,
+  parseAppleIdentityToken,
   setLoading,
+  socialLoginAuth,
   verification,
 } from '../../utils';
-import { ICountryItem, ISocialLogin, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
+import {
+  ICountryItem,
+  ISocialLogin,
+  IVerificationInfo,
+  OnErrorFunc,
+  UserGuardianStatus,
+  VerifyStatus,
+} from '../../types';
 import CustomSvg from '../CustomSvg';
 import { useTranslation } from 'react-i18next';
 import PhoneNumberInput from '../PhoneNumberInput';
@@ -23,23 +34,21 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import GuardianApproval from '../GuardianApproval';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CustomModal from '../CustomModal';
-import CustomPromptModal from '../CustomPromptModal';
+import CommonBaseModal from '../CommonBaseModal';
+import ConfigProvider from '../config-provider';
+import { useVerifyToken } from '../../hooks';
 import './index.less';
 
 export interface GuardianAddProps {
   header?: ReactNode;
-  chainId?: ChainId;
+  targetChainId?: ChainId;
   originChainId?: ChainId;
   chainType?: ChainType;
   phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
   verifierList?: VerifierItem[];
-  verifierMap?: { [x: string]: VerifierItem };
   isErrorTip?: boolean;
-  setCurrentGuardian?: (item: UserGuardianStatus) => void;
   onError?: OnErrorFunc;
-  socialAuth?: (v: ISocialLogin) => Promise<any>;
-  socialVerify?: (item: UserGuardianStatus) => Promise<any>;
   handleAddGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
 }
 
@@ -53,16 +62,12 @@ export interface ISocialInput {
 
 function GuardianAdd({
   header,
-  chainId = 'AELF',
   originChainId = 'AELF',
   isErrorTip = true,
-  phoneCountry,
+  phoneCountry: defaultPhoneCountry,
   verifierList,
   guardianList,
-  verifierMap = {},
   onError,
-  socialAuth,
-  socialVerify,
   handleAddGuardian,
 }: GuardianAddProps) {
   const { t } = useTranslation();
@@ -72,15 +77,17 @@ function GuardianAdd({
   const [countryCode, setCountryCode] = useState<ICountryItem | undefined>();
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [socialValue, setSocialValue] = useState<ISocialInput | undefined>();
-  const [currentKey, setCurrentKey] = useState<string>('');
+  const verifierMap = useRef<{ [x: string]: VerifierItem }>();
   const [isExist, setIsExist] = useState<boolean>(false);
   const [error, setError] = useState<string | undefined>('');
   const reCaptchaHandler = useReCaptchaModal();
   const curGuardian = useRef<UserGuardianStatus | undefined>();
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
+  const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
+  const verifyToken = useVerifyToken();
   const guardianAccount = useMemo(
-    () => emailValue || socialValue?.id || (countryCode && phoneNumber),
+    () => emailValue || socialValue?.id || (countryCode && phoneNumber ? `+${countryCode.code}${phoneNumber}` : ''),
     [countryCode, emailValue, phoneNumber, socialValue?.id],
   );
   const addBtnDisable = useMemo(
@@ -127,6 +134,13 @@ function GuardianAdd({
       })),
     [verifierList],
   );
+  useEffect(() => {
+    const _verifierMap: { [x: string]: VerifierItem } = {};
+    verifierList?.forEach((item: VerifierItem) => {
+      _verifierMap[item.id] = item;
+    }, []);
+    verifierMap.current = _verifierMap;
+  }, [verifierList]);
   const handleGuardianTypeChange = useCallback((value: AccountType) => {
     setSelectGuardianType(value);
     setEmailValue('');
@@ -140,6 +154,146 @@ function GuardianAdd({
     setSelectVerifierId(id);
     setIsExist(false);
   }, []);
+  const getPhoneCountry = useCallback(async () => {
+    try {
+      const countryData = await did.services.getPhoneCountryCodeWithLocal();
+      setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'getPhoneCountry',
+          error,
+        },
+        isErrorTip,
+        onError,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+  const socialBasic = useCallback(
+    (v: ISocialLogin) => {
+      try {
+        const socialLogin = ConfigProvider.config.socialLogin;
+        let clientId;
+        let redirectURI;
+        let customLoginHandler;
+        switch (v) {
+          case 'Apple':
+            clientId = socialLogin?.Apple?.clientId;
+            redirectURI = socialLogin?.Apple?.redirectURI;
+            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
+            break;
+          case 'Google':
+            clientId = socialLogin?.Google?.clientId;
+            customLoginHandler = socialLogin?.Google?.customLoginHandler;
+            break;
+          default:
+            throw 'accountType is not supported';
+        }
+        return { clientId, redirectURI, customLoginHandler };
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'get social account basic',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+    },
+    [isErrorTip, onError],
+  );
+  const socialUserInfo = useCallback(async (v: ISocialLogin, accessToken: string) => {
+    let info = {};
+    if (v === 'Google') {
+      const userInfo = await getGoogleUserInfo(accessToken);
+      if (!userInfo?.id) throw userInfo;
+      info = {
+        id: userInfo.id,
+        firstName: userInfo.firstName,
+        thirdPartyEmail: userInfo.email,
+        accessToken,
+        isPrivate: false,
+      };
+    } else if (v === 'Apple') {
+      const userInfo = parseAppleIdentityToken(accessToken);
+      const appleUserExtraInfo = await did.services.getAppleUserExtraInfo({
+        userId: userInfo?.userId,
+      });
+      const { firstName, isPrivate } = appleUserExtraInfo;
+      if (userInfo) {
+        info = {
+          id: userInfo.userId,
+          firstName,
+          thirdPartyEmail: userInfo.email,
+          accessToken,
+          isPrivate,
+        };
+      }
+    }
+    return info;
+  }, []);
+  const socialAuth = useCallback(
+    async (v: ISocialLogin) => {
+      try {
+        const { clientId, redirectURI } = socialBasic(v) || {};
+        const response = await socialLoginAuth({
+          type: v,
+          clientId,
+          redirectURI,
+        });
+        if (!response?.token) throw new Error('add guardian failed');
+        const info = await socialUserInfo(v, response.token);
+        return info;
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'Social Auth',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+    },
+    [isErrorTip, onError, socialBasic, socialUserInfo],
+  );
+  const socialVerify = useCallback(
+    async (_guardian: UserGuardianStatus) => {
+      try {
+        const { clientId, redirectURI, customLoginHandler } =
+          socialBasic(_guardian?.guardianType as ISocialLogin) || {};
+        const info: any = await socialUserInfo(_guardian?.guardianType as ISocialLogin, _guardian?.accessToken || '');
+        const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
+          accessToken: _guardian?.accessToken,
+          id: info?.id,
+          verifierId: _guardian?.verifierId || '',
+          chainId: originChainId,
+          clientId,
+          redirectURI,
+          operationType: OperationTypeEnum.addGuardian,
+          customLoginHandler,
+        });
+        if (!rst) return;
+        const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
+        const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+        return { verifierInfo, guardianIdentifier };
+      } catch (error) {
+        return errorTip(
+          {
+            errorFields: 'Guardian Social Verify',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [socialBasic, socialUserInfo, verifyToken, originChainId, isErrorTip, onError],
+  );
   const checkValid = useCallback(() => {
     if (selectGuardianType === AccountTypeEnum[AccountTypeEnum.Email]) {
       if (!EmailReg.test(emailValue as string)) {
@@ -147,35 +301,36 @@ function GuardianAdd({
         return false;
       }
     }
-    const _isExist = guardianList?.some((item) => item.key === currentKey);
-    if (_isExist) {
-      setIsExist(true);
-      return false;
-    }
-    const verifier = verifierMap[selectVerifierId!];
+    const verifier = verifierMap.current?.[selectVerifierId!];
     if (!verifier) {
       message.error('Can not get the current verifier message');
       return false;
     }
+    const _key = `${guardianAccount}&${verifier.id}`;
+    const _isExist = guardianList?.some((item) => item.key === _key);
+    if (_isExist) {
+      setIsExist(true);
+      return false;
+    }
     const _guardian: UserGuardianStatus = {
       isLoginGuardian: false,
-      key: currentKey,
+      key: _key,
       verifier,
       guardianType: selectGuardianType as AccountType,
-      guardianIdentifier: currentKey.split('&')?.[0],
-      identifier: currentKey.split('&')?.[0],
+      guardianIdentifier: guardianAccount,
+      identifier: guardianAccount,
       verifierId: selectVerifierId,
       ...socialValue,
     };
     curGuardian.current = _guardian;
     return true;
-  }, [currentKey, emailValue, guardianList, selectGuardianType, selectVerifierId, socialValue, verifierMap]);
+  }, [emailValue, guardianAccount, guardianList, selectGuardianType, selectVerifierId, socialValue]);
   const handleSocialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
         setLoading(true);
-        const info = await socialAuth?.(v);
-        setSocialValue(info);
+        const info = await socialAuth(v);
+        setSocialValue(info as ISocialInput);
       } catch (error) {
         return errorTip(
           {
@@ -279,6 +434,7 @@ function GuardianAdd({
   }, []);
   const sendCode = useCallback(async () => {
     try {
+      setLoading(true);
       const _guardian = curGuardian?.current;
       const result = await verification.sendVerificationCode(
         {
@@ -286,7 +442,7 @@ function GuardianAdd({
             type: _guardian?.guardianType || 'Email',
             guardianIdentifier: _guardian?.guardianIdentifier || '',
             verifierId: _guardian?.verifier?.id || '',
-            chainId,
+            chainId: originChainId,
             operationType: OperationTypeEnum.addGuardian,
           },
         },
@@ -313,8 +469,10 @@ function GuardianAdd({
         isErrorTip,
         onError,
       );
+    } finally {
+      setLoading(false);
     }
-  }, [chainId, reCaptchaHandler, isErrorTip, onError]);
+  }, [originChainId, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
     curGuardian.current = {
       ...(curGuardian?.current as UserGuardianStatus),
@@ -327,7 +485,7 @@ function GuardianAdd({
     async (approvalInfo: GuardiansApproved[]) => {
       try {
         setLoading(true);
-        handleAddGuardian?.(curGuardian.current!, approvalInfo);
+        await handleAddGuardian?.(curGuardian.current!, approvalInfo);
       } catch (e) {
         errorTip(
           {
@@ -345,15 +503,15 @@ function GuardianAdd({
   );
   const onConfirm = useCallback(async () => {
     if (checkValid()) {
-      setLoading(true);
       if (socialValue?.id) {
         try {
-          console.log('===curGuardian.current,', curGuardian.current);
-          const { guardianIdentifier, verifierInfo } = await socialVerify?.(curGuardian.current!);
+          setLoading(true);
+          const res = await socialVerify(curGuardian.current!);
+          const { guardianIdentifier, verifierInfo } = res || {};
           curGuardian.current = {
             ...(curGuardian?.current as UserGuardianStatus),
             identifierHash: guardianIdentifier,
-            verifierInfo,
+            ...verifierInfo,
           };
           setApprovalVisible(true);
         } catch (e) {
@@ -389,24 +547,9 @@ function GuardianAdd({
     }
   }, [checkValid, isErrorTip, onError, sendCode, socialValue, socialVerify]);
   useEffect(() => {
-    let _key = '';
-    switch (selectGuardianType) {
-      case AccountTypeEnum[AccountTypeEnum.Email]: {
-        _key = `${emailValue}&${selectVerifierId}`;
-        break;
-      }
-      case AccountTypeEnum[AccountTypeEnum.Phone]: {
-        _key = `+${phoneCountry}${phoneNumber}&${selectVerifierId}`;
-        break;
-      }
-      case AccountTypeEnum[AccountTypeEnum.Apple]:
-      case AccountTypeEnum[AccountTypeEnum.Google]: {
-        _key = `${socialValue?.id}&${selectVerifierId}`;
-        break;
-      }
-    }
-    setCurrentKey(_key);
-  }, [currentKey, emailValue, phoneCountry, phoneNumber, selectGuardianType, selectVerifierId, socialValue]);
+    // Get phoneCountry by service, update phoneCountry
+    getPhoneCountry();
+  }, [getPhoneCountry]);
   return (
     <div className="portkey-ui-guardian-edit portkey-ui-flex-column">
       {header}
@@ -445,9 +588,9 @@ function GuardianAdd({
           {t('Confirm')}
         </Button>
       </div>
-      <CustomPromptModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
-          chainId={chainId}
+          originChainId={originChainId}
           operationType={OperationTypeEnum.addGuardian}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
@@ -461,8 +604,8 @@ function GuardianAdd({
           onError={onError}
           onReSend={reSendCode}
         />
-      </CustomPromptModal>
-      <CustomPromptModal
+      </CommonBaseModal>
+      <CommonBaseModal
         className="portkey-ui-modal-approval"
         open={approvalVisible}
         onClose={() => setApprovalVisible(false)}>
@@ -472,13 +615,13 @@ function GuardianAdd({
               <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
             </div>
           }
-          chainId={originChainId}
+          originChainId={originChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}
         />
-      </CustomPromptModal>
+      </CommonBaseModal>
     </div>
   );
 }

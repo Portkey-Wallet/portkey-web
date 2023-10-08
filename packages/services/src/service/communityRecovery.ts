@@ -26,6 +26,7 @@ import {
   VerifyGoogleTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
+  GetAppleUserExtraInfoParams,
 } from '../types/verification';
 import { Search } from './search';
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
@@ -104,6 +105,13 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       method: 'POST',
       url: '/api/app/userExtraInfo/appleUserExtraInfo',
       params,
+    });
+  }
+
+  getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<any> {
+    return this._request.send({
+      method: 'GET',
+      url: `/api/app/userExtraInfo/${params.userId}`,
     });
   }
 

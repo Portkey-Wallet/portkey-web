@@ -24,13 +24,13 @@ import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
 import './index.less';
-import My from '../My';
-import WalletSecurity from '../WalletSecurity';
 import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import Guardian from '../Guardian';
+import MenuListMain from '../MenuList/index.components';
+import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 
 export enum AssetStep {
   overview = 'overview',
@@ -68,7 +68,7 @@ function AssetMain({
   onOverviewBack,
   onLifeCycleChange,
 }: AssetMainProps) {
-  const [{ networkType }] = usePortkey();
+  const [{ networkType, sandboxId }] = usePortkey();
   const [{ caInfo, initialized, originChainId, caHash }, { dispatch }] = usePortkeyAsset();
   const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
 
@@ -165,14 +165,15 @@ function AssetMain({
         setLoading(true);
         const res = await walletSecurityCheck({ caHash: caHash || '' });
         setLoading(false);
-        if (typeof res === 'boolean') {
+        if (res) {
           setSendToken(v);
           setAssetStep(AssetStep.send);
         }
       } catch (error) {
+        setLoading(false);
+
         const msg = handleErrorMessage(error);
         message.error(msg);
-        setLoading(false);
       }
     },
     [caHash],
@@ -186,6 +187,15 @@ function AssetMain({
   const onBack = useCallback(() => {
     setAssetStep(preStepRef.current);
   }, []);
+
+  const myMenuList = useMyMenuList({
+    onClickGuardians: () => setAssetStep(AssetStep.guardians),
+    onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
+  });
+
+  const WalletSecurityMenuList = useWalletSecurityMenuList({
+    onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
+  });
 
   return (
     <div className={clsx('portkey-ui-asset-wrapper', className)}>
@@ -341,10 +351,13 @@ function AssetMain({
       )}
 
       {assetStep === AssetStep.my && (
-        <My
-          onClose={() => setAssetStep(AssetStep.overview)}
-          onClickGuardians={() => setAssetStep(AssetStep.guardians)}
-          onClickWalletSecurity={() => setAssetStep(AssetStep.walletSecurity)}
+        // My
+        <MenuListMain
+          menuList={myMenuList}
+          headerConfig={{
+            title: 'My',
+            onBack: () => setAssetStep(AssetStep.overview),
+          }}
         />
       )}
 
@@ -353,16 +366,21 @@ function AssetMain({
       )}
 
       {assetStep === AssetStep.walletSecurity && (
-        <WalletSecurity
-          onClose={() => setAssetStep(AssetStep.my)}
-          onClickPaymentSecurity={() => setAssetStep(AssetStep.paymentSecurity)}
+        // My - WalletSecurity
+        <MenuListMain
+          menuList={WalletSecurityMenuList}
+          headerConfig={{
+            title: 'Wallet Security',
+            onBack: () => setAssetStep(AssetStep.my),
+          }}
         />
       )}
 
       {assetStep === AssetStep.paymentSecurity && (
         <PaymentSecurity
-          onClose={() => setAssetStep(AssetStep.walletSecurity)}
+          onBack={() => setAssetStep(AssetStep.walletSecurity)}
           networkType={networkType}
+          caHash={caHash || ''}
           onClickItem={(data) => {
             setViewPaymentSecurity(data);
             setAssetStep(AssetStep.transferSettings);
@@ -372,7 +390,7 @@ function AssetMain({
 
       {assetStep === AssetStep.transferSettings && (
         <TransferSettings
-          onClose={() => setAssetStep(AssetStep.paymentSecurity)}
+          onBack={() => setAssetStep(AssetStep.paymentSecurity)}
           initData={viewPaymentSecurity}
           onEdit={() => setAssetStep(AssetStep.transferSettingsEdit)}
         />
@@ -381,7 +399,10 @@ function AssetMain({
       {assetStep === AssetStep.transferSettingsEdit && (
         <TransferSettingsEdit
           initData={viewPaymentSecurity}
-          onClose={() => setAssetStep(AssetStep.transferSettings)}
+          caHash={caHash || ''}
+          originChainId={originChainId}
+          sandboxId={sandboxId}
+          onBack={() => setAssetStep(AssetStep.transferSettings)}
           onSuccess={(data) => {
             setViewPaymentSecurity(data);
             setAssetStep(AssetStep.transferSettings);
