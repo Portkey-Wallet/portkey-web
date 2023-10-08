@@ -6,9 +6,16 @@ interface WalletSecurityCheckModalProps {
   wrapClassName?: string;
   className?: string;
   caHash: string;
+  onOk?: () => void;
 }
 
-const walletSecurityCheck = async ({ wrapClassName, caHash, className, ...props }: WalletSecurityCheckModalProps) => {
+const walletSecurityCheck = async ({
+  wrapClassName,
+  caHash,
+  className,
+  onOk,
+  ...props
+}: WalletSecurityCheckModalProps) => {
   const result = await did.services.security.getWalletBalanceCheck({ caHash });
   if (!result.isSafe) {
     new Promise((resolve) => {
@@ -25,6 +32,7 @@ const walletSecurityCheck = async ({ wrapClassName, caHash, className, ...props 
             }}
             onConfirm={() => {
               resolve(true);
+              onOk?.();
               modal.destroy();
             }}
           />

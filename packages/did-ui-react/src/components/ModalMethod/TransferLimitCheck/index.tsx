@@ -15,6 +15,7 @@ interface ITransferLimitCheckProps {
   decimals: number | string;
   amount: string;
   sandboxId?: string;
+  onOk?: (data: IPaymentSecurityItem) => void;
 }
 
 interface ITransferLimitModalProps extends BaseModalFuncProps {
@@ -34,6 +35,7 @@ const transferLimitCheck = async ({
   decimals,
   amount,
   sandboxId,
+  onOk,
   ...props
 }: ITransferLimitCheckProps) => {
   const limitRes = await checkTransferLimit({
@@ -54,12 +56,12 @@ const transferLimitCheck = async ({
   };
 
   if (limitRes?.isSingleLimited) {
-    TransferSingleLimitModal({ wrapClassName, className, data: settingParams, ...props });
+    TransferSingleLimitModal({ wrapClassName, className, data: settingParams, onOk, ...props });
     return false;
   }
 
   if (limitRes?.isDailyLimited) {
-    TransferDailyLimitModal({ wrapClassName, className, data: settingParams, ...props });
+    TransferDailyLimitModal({ wrapClassName, className, data: settingParams, onOk, ...props });
     return false;
   }
 

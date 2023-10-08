@@ -33,6 +33,7 @@ export interface AssetOverviewProps {
   onViewActivityItem?: (item: ActivityItemType) => void;
   onViewTokenItem?: (v: TokenItemShowType) => void;
   onNFTView?: (item: NFTItemBaseExpand) => void;
+  onModifyGuardians?: () => void;
 }
 
 export function AssetOverviewContent({
@@ -48,6 +49,7 @@ export function AssetOverviewContent({
   onReceive,
   onViewTokenItem,
   onViewActivityItem,
+  onModifyGuardians,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
   const [{ accountInfo, tokenListInfo, caInfo, caHash, NFTCollection }, { dispatch }] = usePortkeyAsset();
@@ -159,7 +161,7 @@ export function AssetOverviewContent({
         onSend={async () => {
           try {
             setLoading(true);
-            const res = await walletSecurityCheck({ caHash: caHash || '' });
+            const res = await walletSecurityCheck({ caHash: caHash || '', onOk: onModifyGuardians });
             setLoading(false);
             if (res) {
               setAssetOpen(true);

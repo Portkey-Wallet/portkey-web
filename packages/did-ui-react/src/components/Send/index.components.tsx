@@ -1,4 +1,4 @@
-import { IAssetItemType } from '@portkey/services';
+import { IAssetItemType, IPaymentSecurityItem } from '@portkey/services';
 import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
@@ -45,6 +45,7 @@ export interface SendProps {
   onCancel?: () => void;
   onClose?: () => void;
   onSuccess?: () => void;
+  onModifyLimit?: (data: IPaymentSecurityItem) => void;
 }
 
 enum Stage {
@@ -59,7 +60,16 @@ type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
 };
 
-function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, onClose, onSuccess }: SendProps) {
+function SendContent({
+  assetItem,
+  closeIcon,
+  className,
+  wrapperStyle,
+  onCancel,
+  onClose,
+  onSuccess,
+  onModifyLimit,
+}: SendProps) {
   const [{ accountInfo, managementAccount, caInfo, caHash }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(Stage.Address);
@@ -205,10 +215,19 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
       symbol: tokenInfo.symbol,
       amount: amount,
       decimals: tokenInfo.decimals,
+      onOk: onModifyLimit,
     });
 
     return res;
-  }, [amount, caHash, managementAccount?.privateKey, tokenInfo.chainId, tokenInfo.decimals, tokenInfo.symbol]);
+  }, [
+    amount,
+    caHash,
+    managementAccount?.privateKey,
+    onModifyLimit,
+    tokenInfo.chainId,
+    tokenInfo.decimals,
+    tokenInfo.symbol,
+  ]);
 
   const sendHandler = useCallback(async () => {
     try {

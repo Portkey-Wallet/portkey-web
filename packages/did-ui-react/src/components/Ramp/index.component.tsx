@@ -52,6 +52,8 @@ export default function RampMain({
   isShowSelectInModal = true,
   onBack,
   onShowPreview,
+  onModifyLimit,
+  onModifyGuardians,
 }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
@@ -316,7 +318,7 @@ export default function RampMain({
           valueSaveRef.current.amount = initCrypto;
 
           // CHECK 2: security
-          walletSecurityCheck({ caHash: caHash || '' }).catch((error) => {
+          walletSecurityCheck({ caHash: caHash || '', onOk: onModifyGuardians }).catch((error) => {
             const msg = handleErrorMessage(error);
             console.log('check security error: ', msg);
           });
@@ -328,7 +330,7 @@ export default function RampMain({
         updateTimerRef.current = undefined;
       };
     }
-  }, [initialized, isBuySectionShow, isSellSectionShow, initState, updateCrypto, caHash]);
+  }, [initialized, isBuySectionShow, isSellSectionShow, initState, updateCrypto, caHash, onModifyGuardians]);
 
   const handleInputChange = useCallback(
     async (v: string) => {
@@ -375,7 +377,7 @@ export default function RampMain({
       if (side === RampTypeEnum.SELL) {
         try {
           setLoading(true);
-          const res = await walletSecurityCheck({ caHash: caHash || '' });
+          const res = await walletSecurityCheck({ caHash: caHash || '', onOk: onModifyGuardians });
           if (!res) return setLoading(false);
         } catch (error) {
           setLoading(false);
@@ -413,7 +415,7 @@ export default function RampMain({
         setLoading(false);
       }
     },
-    [caHash, isBuySectionShow, isSellSectionShow, stopInterval, t, updateCrypto],
+    [caHash, isBuySectionShow, isSellSectionShow, onModifyGuardians, stopInterval, t, updateCrypto],
   );
 
   const handleSelect = useCallback(
@@ -467,6 +469,7 @@ export default function RampMain({
         symbol: tokenInfo.symbol,
         amount: amount,
         decimals: tokenInfo.decimals,
+        onOk: onModifyLimit,
       });
 
       return res;
@@ -476,7 +479,15 @@ export default function RampMain({
       const msg = handleErrorMessage(error);
       message.error(msg);
     }
-  }, [amount, caHash, managementAccount?.privateKey, tokenInfo.chainId, tokenInfo.decimals, tokenInfo.symbol]);
+  }, [
+    amount,
+    caHash,
+    managementAccount?.privateKey,
+    onModifyLimit,
+    tokenInfo.chainId,
+    tokenInfo.decimals,
+    tokenInfo.symbol,
+  ]);
 
   const handleNext = useCallback(async () => {
     const { side } = valueSaveRef.current;
@@ -503,7 +514,7 @@ export default function RampMain({
 
       try {
         // CHECK 2: security
-        const securityRes = await walletSecurityCheck({ caHash: caHash || '' });
+        const securityRes = await walletSecurityCheck({ caHash: caHash || '', onOk: onModifyGuardians });
         if (!securityRes) return setLoading(false);
 
         // CHECK 3: transfer limit
@@ -565,6 +576,7 @@ export default function RampMain({
     onBack,
     isManagerSynced,
     caHash,
+    onModifyGuardians,
     handleCheckTransferLimit,
     sandboxId,
     chainType,

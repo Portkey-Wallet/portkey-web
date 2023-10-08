@@ -19,6 +19,8 @@ export interface IPaymentSecurityItem {
   dailyLimit: string;
   restricted: boolean;
   decimals: number | string;
+  defaultSingleLimit?: string;
+  defaultDailyLimit?: string;
 }
 
 export interface IPaymentSecurityListParams {
