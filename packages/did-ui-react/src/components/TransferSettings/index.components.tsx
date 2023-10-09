@@ -71,8 +71,8 @@ export default function TransferSettingsMain({
         <div className="portkey-ui-form-content">
           {!initData?.restricted && (
             <>
-              <FormItem name="restricted" label={'Transfer settings'}>
-                <SwitchComponent checked={false} disabled={true} text={'Off'} />
+              <FormItem name="restricted" label={'Transfer Settings'}>
+                <SwitchComponent checked={false} disabled={true} text={'OFF'} />
               </FormItem>
               <div className="limit-tip">{NoLimit}</div>
             </>

@@ -4,7 +4,9 @@ export interface IWalletBalanceCheckParams {
   caHash: string;
 }
 export interface IWalletBalanceCheckResponse {
-  isSafe: boolean;
+  isOriginChainSafe: boolean;
+  isSynchronizing: boolean;
+  isTransferSafe: boolean;
 }
 
 export interface ISecurityService {
@@ -19,6 +21,8 @@ export interface IPaymentSecurityItem {
   dailyLimit: string;
   restricted: boolean;
   decimals: number | string;
+  defaultSingleLimit?: string;
+  defaultDailyLimit?: string;
 }
 
 export interface IPaymentSecurityListParams {

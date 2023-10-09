@@ -6,7 +6,7 @@ import { PageRouter } from './routes';
 import './theme.css';
 
 function Index() {
-  const [dark, setDark] = useState<boolean>(true);
+  const [dark, setDark] = useState<boolean>(false);
   const [networkType, setNetworkType] = useState<NetworkType>('MAIN');
 
   useEffect(() => {
