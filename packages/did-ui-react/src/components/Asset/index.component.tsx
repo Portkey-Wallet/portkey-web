@@ -6,7 +6,7 @@ import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { WalletError, dealURLLastChar, did, handleErrorMessage, setLoading } from '../../utils';
+import { WalletError, dealURLLastChar, did, handleErrorMessage } from '../../utils';
 import { IAssetItemType, IPaymentSecurityItem, IUserTokenItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
@@ -242,7 +242,6 @@ function AssetMain({
             setAssetStep(AssetStep.NFTDetail);
             setNFTDetail(v);
           }}
-          onModifyGuardians={() => setAssetStep(AssetStep.guardians)}
         />
       )}
       {assetStep === AssetStep.receive && caInfo && selectToken && (
@@ -316,6 +315,7 @@ function AssetMain({
             setViewPaymentSecurity({ ...data, ...res });
             setAssetStep(AssetStep.transferSettingsEdit);
           }}
+          onModifyGuardians={() => setAssetStep(AssetStep.guardians)}
         />
       )}
 

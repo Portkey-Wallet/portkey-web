@@ -59,36 +59,73 @@ const walletSecurityCheck = async ({
   }
 };
 
-export const addGuardiansModal = ({ wrapClassName, className, onOk, ...props }: AddGuardiansModalProps) => {
+let AddGuardiansModalInstance: ReturnType<typeof BaseModalFunc> | null;
+let prevWrapClsx: string;
+let prevClsx: string;
+
+export const addGuardiansModal = ({ wrapClassName = '', className = '', onOk, ...props }: AddGuardiansModalProps) => {
   return new Promise((resolve) => {
-    const modal = BaseModalFunc({
+    const modalConfig = {
       ...props,
-      wrapClassName: 'portkey-ui-common-modals ' + 'portkey-ui-wallet-security-wrapper ' + wrapClassName,
-      className: 'portkey-ui-wallet-security-modal ' + className,
+      wrapClassName: 'portkey-ui-wallet-security-wrapper' + wrapClassName,
+      className: 'portkey-ui-wallet-security-modal' + className,
       content: (
         <SecurityCheck
           {...props}
           onCancel={() => {
             resolve(false);
-            modal.destroy();
+            AddGuardiansModalInstance!.destroy();
+            AddGuardiansModalInstance = null;
           }}
           onConfirm={() => {
             resolve(true);
             onOk?.();
-            modal.destroy();
+            AddGuardiansModalInstance!.destroy();
+            AddGuardiansModalInstance = null;
           }}
         />
       ),
-    });
+    };
+    if (AddGuardiansModalInstance) {
+      AddGuardiansModalInstance.update((prevConfig) => {
+        return {
+          ...prevConfig,
+          ...modalConfig,
+          className: prevConfig.className?.replace(prevClsx, className),
+          wrapClassName: prevConfig.wrapClassName?.replace(prevWrapClsx, wrapClassName),
+        };
+      });
+      prevWrapClsx = wrapClassName;
+      prevClsx = className;
+    } else {
+      prevWrapClsx = wrapClassName;
+      prevClsx = className;
+      AddGuardiansModalInstance = BaseModalFunc(modalConfig);
+    }
   });
 };
 
+let SynchronizingModalInstance: ReturnType<typeof BaseModalFunc> | null;
+
 export const synchronizingModal = () => {
-  return CustomModal({
-    type: 'info',
-    content: 'Syncing guardian info, which may take 1-2 minutes. Please try again later.',
-    okText: 'Ok',
-  });
+  if (SynchronizingModalInstance) {
+    SynchronizingModalInstance.update((prevConfig) => {
+      return {
+        ...prevConfig,
+        ...{
+          type: 'info',
+          content: 'Syncing guardian info, which may take 1-2 minutes. Please try again later.',
+          okText: 'Ok',
+        },
+      };
+    });
+  } else {
+    return (SynchronizingModalInstance = CustomModal({
+      type: 'info',
+      content: 'Syncing guardian info, which may take 1-2 minutes. Please try again later.',
+      okText: 'Ok',
+    }));
+  }
 };
 
 export default walletSecurityCheck;

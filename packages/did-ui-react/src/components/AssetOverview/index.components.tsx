@@ -31,7 +31,6 @@ export interface AssetOverviewProps {
   onViewActivityItem?: (item: ActivityItemType) => void;
   onViewTokenItem?: (v: TokenItemShowType) => void;
   onNFTView?: (item: NFTItemBaseExpand) => void;
-  onModifyGuardians?: () => void;
 }
 
 export function AssetOverviewContent({
@@ -47,10 +46,9 @@ export function AssetOverviewContent({
   onReceive,
   onViewTokenItem,
   onViewActivityItem,
-  onModifyGuardians,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
-  const [{ accountInfo, tokenListInfo, caInfo, caHash, NFTCollection }, { dispatch }] = usePortkeyAsset();
+  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection }, { dispatch }] = usePortkeyAsset();
 
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
