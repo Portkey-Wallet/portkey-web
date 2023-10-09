@@ -17,8 +17,6 @@ import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import CustomAssetModal from '../CustomAssetModal';
 import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
-import { handleErrorMessage, setLoading } from '../../utils';
-import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItem[];
@@ -159,19 +157,7 @@ export function AssetOverviewContent({
           onBuy?.(supportToken[0]);
         }}
         onSend={async () => {
-          try {
-            setLoading(true);
-            const res = await walletSecurityCheck({ caHash: caHash || '', onOk: onModifyGuardians });
-            setLoading(false);
-            if (res) {
-              setAssetOpen(true);
-            }
-          } catch (error) {
-            setLoading(false);
-
-            const msg = handleErrorMessage(error);
-            message.error(msg);
-          }
+          setAssetOpen(true);
         }}
         onReceive={() => setTokenOpen(true)}
         onFaucet={onFaucet}

@@ -74,7 +74,7 @@ export default function RampMain({
   const chainId = useMemo(() => tokenInfo?.chainId || DEFAULT_CHAIN_ID, [tokenInfo?.chainId]);
   const symbol = useMemo(() => tokenInfo?.symbol || DEFAULT_SYMBOL, [tokenInfo?.symbol]);
 
-  const [{ managementAccount, caInfo, initialized, caHash }] = usePortkeyAsset();
+  const [{ managementAccount, caInfo, initialized, caHash, originChainId }] = usePortkeyAsset();
   const isManagerSynced = useMemo(
     () => !!managementAccount?.address && managementAccount.address?.length > 0,
     [managementAccount?.address],
@@ -316,9 +316,13 @@ export default function RampMain({
           valueSaveRef.current.side = side;
           setAmount(initCrypto);
           valueSaveRef.current.amount = initCrypto;
-
           // CHECK 2: security
-          walletSecurityCheck({ caHash: caHash || '', onOk: onModifyGuardians }).catch((error) => {
+          walletSecurityCheck({
+            originChainId: originChainId,
+            targetChainId: tokenInfo.chainId,
+            caHash: caHash || '',
+            onOk: onModifyGuardians,
+          }).catch((error) => {
             const msg = handleErrorMessage(error);
             console.log('check security error: ', msg);
           });
@@ -330,7 +334,17 @@ export default function RampMain({
         updateTimerRef.current = undefined;
       };
     }
-  }, [initialized, isBuySectionShow, isSellSectionShow, initState, updateCrypto, caHash, onModifyGuardians]);
+  }, [
+    initialized,
+    isBuySectionShow,
+    isSellSectionShow,
+    initState,
+    updateCrypto,
+    caHash,
+    onModifyGuardians,
+    originChainId,
+    tokenInfo.chainId,
+  ]);
 
   const handleInputChange = useCallback(
     async (v: string) => {
@@ -377,7 +391,12 @@ export default function RampMain({
       if (side === RampTypeEnum.SELL) {
         try {
           setLoading(true);
-          const res = await walletSecurityCheck({ caHash: caHash || '', onOk: onModifyGuardians });
+          const res = await walletSecurityCheck({
+            originChainId: originChainId,
+            targetChainId: tokenInfo.chainId,
+            caHash: caHash || '',
+            onOk: onModifyGuardians,
+          });
           if (!res) return setLoading(false);
         } catch (error) {
           setLoading(false);
@@ -415,7 +434,17 @@ export default function RampMain({
         setLoading(false);
       }
     },
-    [caHash, isBuySectionShow, isSellSectionShow, onModifyGuardians, stopInterval, t, updateCrypto],
+    [
+      caHash,
+      isBuySectionShow,
+      isSellSectionShow,
+      onModifyGuardians,
+      originChainId,
+      stopInterval,
+      t,
+      tokenInfo.chainId,
+      updateCrypto,
+    ],
   );
 
   const handleSelect = useCallback(
@@ -469,6 +498,7 @@ export default function RampMain({
         symbol: tokenInfo.symbol,
         amount: amount,
         decimals: tokenInfo.decimals,
+        businessFrom: 'ramp-sell',
         onOk: onModifyLimit,
       });
 
@@ -514,7 +544,12 @@ export default function RampMain({
 
       try {
         // CHECK 2: security
-        const securityRes = await walletSecurityCheck({ caHash: caHash || '', onOk: onModifyGuardians });
+        const securityRes = await walletSecurityCheck({
+          originChainId: originChainId,
+          targetChainId: tokenInfo.chainId,
+          caHash: caHash || '',
+          onOk: onModifyGuardians,
+        });
         if (!securityRes) return setLoading(false);
 
         // CHECK 3: transfer limit
@@ -575,13 +610,15 @@ export default function RampMain({
     chainId,
     onBack,
     isManagerSynced,
+    originChainId,
+    tokenInfo.chainId,
+    tokenInfo.tokenContractAddress,
+    tokenInfo.decimals,
     caHash,
     onModifyGuardians,
     handleCheckTransferLimit,
     sandboxId,
     chainType,
-    tokenInfo.tokenContractAddress,
-    tokenInfo.decimals,
     symbol,
     setInsufficientFundsMsg,
   ]);

@@ -27,12 +27,12 @@ import './index.less';
 import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
-import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import Guardian from '../Guardian';
 import MenuListMain from '../MenuList/index.components';
 import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
+import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 
 export enum AssetStep {
   overview = 'overview',
@@ -57,6 +57,8 @@ export interface AssetMainProps
   rampState?: IRampInitState;
   className?: string;
   overrideAchConfig?: IAchConfig;
+  isShowRampBuy?: boolean;
+  isShowRampSell?: boolean;
   onLifeCycleChange?(liftCycle: `${AssetStep}`): void;
 }
 
@@ -67,6 +69,8 @@ function AssetMain({
   backIcon,
   className,
   overrideAchConfig,
+  isShowRampBuy = false,
+  isShowRampSell = true,
   onOverviewBack,
   onLifeCycleChange,
 }: AssetMainProps) {
@@ -139,7 +143,7 @@ function AssetMain({
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
 
-  const [viewPaymentSecurity, setViewPaymentSecurity] = useState<IPaymentSecurityItem>();
+  const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>();
 
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);
@@ -161,25 +165,10 @@ function AssetMain({
     [portkeyWebSocketUrl],
   );
 
-  const onSend = useCallback(
-    async (v: IAssetItemType) => {
-      try {
-        setLoading(true);
-        const res = await walletSecurityCheck({ caHash: caHash || '', onOk: () => setAssetStep(AssetStep.guardians) });
-        setLoading(false);
-        if (res) {
-          setSendToken(v);
-          setAssetStep(AssetStep.send);
-        }
-      } catch (error) {
-        setLoading(false);
-
-        const msg = handleErrorMessage(error);
-        message.error(msg);
-      }
-    },
-    [caHash],
-  );
+  const onSend = useCallback(async (v: IAssetItemType) => {
+    setSendToken(v);
+    setAssetStep(AssetStep.send);
+  }, []);
 
   const onViewActivityItem = useCallback(async (v: ActivityItemType) => {
     setTransactionDetail(v);
@@ -286,8 +275,8 @@ function AssetMain({
             setRampPreview(initState);
             setAssetStep(AssetStep.rampPreview);
           }}
-          isBuySectionShow={true}
-          isSellSectionShow={true}
+          isBuySectionShow={isShowRampBuy}
+          isSellSectionShow={isShowRampSell}
           isShowSelectInModal={true}
           isMainnet={networkType === MAINNET}
           onModifyLimit={async (data) => {
@@ -446,7 +435,9 @@ function AssetMain({
           onSuccess={async (data) => {
             const res = await getLimitFromContract(data);
             setViewPaymentSecurity({ ...data, ...res });
-            setAssetStep(AssetStep.transferSettings);
+            if (data?.businessFrom === 'ramp-sell') return setAssetStep(AssetStep.ramp);
+            if (data?.businessFrom === 'send') return setAssetStep(AssetStep.send);
+            return setAssetStep(AssetStep.transferSettings);
           }}
         />
       )}

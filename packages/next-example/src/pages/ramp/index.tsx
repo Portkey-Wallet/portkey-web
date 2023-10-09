@@ -28,6 +28,7 @@ export default function RampPage() {
           portkeyWebSocketUrl={'http://192.168.66.240:5577/ca'}
           isMainnet={true}
           isShowSelectInModal={true}
+          isBuySectionShow={false}
         />
       </PortkeyAssetProvider>
     </div>

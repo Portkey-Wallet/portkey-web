@@ -34,13 +34,19 @@ export interface ITransferSettingsEditProps extends FormProps {
   wrapperStyle?: React.CSSProperties;
   caHash: string;
   originChainId: ChainId;
-  initData?: IPaymentSecurityItem;
+  initData?: ITransferLimitItemWithRoute;
   isErrorTip?: boolean;
   sandboxId?: string;
   onBack?: () => void;
-  onSuccess?: (data: IPaymentSecurityItem) => void;
+  onSuccess?: (data: ITransferLimitItemWithRoute) => void;
   onGuardiansApproveError?: OnErrorFunc;
 }
+
+export interface ITransferLimitItemWithRoute extends IPaymentSecurityItem {
+  businessFrom?: IBusinessFrom;
+}
+
+export type IBusinessFrom = 'ramp-sell' | 'send';
 
 const { Item: FormItem } = Form;
 
@@ -229,13 +235,14 @@ export default function TransferSettingsEditMain({
         // Guarantee that the contract can query the latest data
         await sleep(1000);
 
-        const params: IPaymentSecurityItem = {
+        const params: ITransferLimitItemWithRoute = {
           dailyLimit: transDailyLimit,
           singleLimit: transSingleLimit,
           chainId: targetChainId,
           symbol: symbol,
           decimals: initData?.decimals || 8,
           restricted,
+          businessFrom: initData?.businessFrom,
         };
 
         onSuccess?.(params);
@@ -255,6 +262,7 @@ export default function TransferSettingsEditMain({
     [
       caHash,
       form,
+      initData?.businessFrom,
       initData?.decimals,
       isErrorTip,
       onGuardiansApproveError,

@@ -1,4 +1,4 @@
-import { IAssetItemType, IPaymentSecurityItem } from '@portkey/services';
+import { IAssetItemType } from '@portkey/services';
 import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
@@ -36,6 +36,8 @@ import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
 import { getChain } from '../../hooks/useChainInfo';
+import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -45,7 +47,8 @@ export interface SendProps {
   onCancel?: () => void;
   onClose?: () => void;
   onSuccess?: () => void;
-  onModifyLimit?: (data: IPaymentSecurityItem) => void;
+  onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
+  onModifyGuardians?: () => void;
 }
 
 enum Stage {
@@ -55,6 +58,7 @@ enum Stage {
 }
 
 const ExceedLimit = 'ExceedLimit';
+const WalletIsNotSecure = 'WalletIsNotSecure';
 
 type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
@@ -69,8 +73,9 @@ function SendContent({
   onClose,
   onSuccess,
   onModifyLimit,
+  onModifyGuardians,
 }: SendProps) {
-  const [{ accountInfo, managementAccount, caInfo, caHash }] = usePortkeyAsset();
+  const [{ accountInfo, managementAccount, caInfo, caHash, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(Stage.Address);
 
@@ -215,6 +220,7 @@ function SendContent({
       symbol: tokenInfo.symbol,
       amount: amount,
       decimals: tokenInfo.decimals,
+      businessFrom: 'send',
       onOk: onModifyLimit,
     });
 
@@ -313,6 +319,15 @@ function SendContent({
         return 'Synchronizing on-chain account information...';
       }
       if (!isNFT) {
+        // wallet security check
+        const res = await walletSecurityCheck({
+          originChainId: originChainId,
+          targetChainId: tokenInfo.chainId,
+          caHash: caHash || '',
+          onOk: onModifyGuardians,
+        });
+        if (!res) return WalletIsNotSecure;
+
         // transfer limit check
         const limitRes = await handleCheckTransferLimit();
 
@@ -359,6 +374,8 @@ function SendContent({
     handleCheckTransferLimit,
     isNFT,
     managementAccount?.address,
+    onModifyGuardians,
+    originChainId,
     toAccount.address,
     tokenInfo.chainId,
     tokenInfo.decimals,
@@ -413,7 +430,7 @@ function SendContent({
         handler: async () => {
           const res = await handleCheckPreview();
           console.log('handleCheckPreview res', res);
-          if (res === ExceedLimit) return;
+          if (res === ExceedLimit || res === WalletIsNotSecure) return;
           if (!res) {
             setTipMsg('');
             setStage(Stage.Preview);

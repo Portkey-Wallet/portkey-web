@@ -4,7 +4,9 @@ export interface IWalletBalanceCheckParams {
   caHash: string;
 }
 export interface IWalletBalanceCheckResponse {
-  isSafe: boolean;
+  isOriginChainSafe: boolean;
+  isSynchronizing: boolean;
+  isTransferSafe: boolean;
 }
 
 export interface ISecurityService {
