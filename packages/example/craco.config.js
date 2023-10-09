@@ -2,15 +2,21 @@
 const path = require('path')
 const resolve = dir => path.resolve(__dirname, dir);
 const webpack = require('webpack');
+const apiConfig = require('./rewrites')
 
 module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        target: 'http://192.168.67.51:5577',
+        target: apiConfig.test2.api,
         changeOrigin: true,
         secure: true,
       },
+      '/connect': {
+        target: apiConfig.test2.connect,
+        changeOrigin: true,
+        secure: true,
+      }
     },
   },
   webpack: {
