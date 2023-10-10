@@ -96,7 +96,7 @@ export default function VerifierSelect({
       errorTip(
         {
           errorFields: 'getVerifierServers',
-          error,
+          error: handleErrorMessage(error),
         },
         isErrorTip,
         onError,

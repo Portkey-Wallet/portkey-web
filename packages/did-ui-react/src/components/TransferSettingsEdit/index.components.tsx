@@ -93,7 +93,7 @@ export default function TransferSettingsEditMain({
       errorTip(
         {
           errorFields: 'getVerifierServers',
-          error,
+          error: handleErrorMessage(error),
         },
         isErrorTip,
         onGuardiansApproveError,

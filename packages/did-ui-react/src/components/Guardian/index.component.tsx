@@ -196,7 +196,7 @@ function GuardianMain({
       } catch (e) {
         return errorTip(
           {
-            errorFields: 'HandldEditGuardian',
+            errorFields: 'HandleEditGuardian',
             error: handleErrorMessage(e),
           },
           isErrorTip,
