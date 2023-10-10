@@ -76,7 +76,7 @@ function GuardianMain({
       errorTip(
         {
           errorFields: 'getVerifierServers',
-          error,
+          error: handleErrorMessage(error),
         },
         isErrorTip,
         onError,
@@ -264,7 +264,7 @@ function GuardianMain({
       errorTip(
         {
           errorFields: 'SetLoginGuardian',
-          error: e,
+          error: handleErrorMessage(e),
         },
         isErrorTip,
         onError,
