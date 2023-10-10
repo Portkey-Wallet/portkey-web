@@ -1,4 +1,4 @@
-import { randomId, setLoading, errorTip, did, extraDataEncode } from '../../utils';
+import { randomId, setLoading, errorTip, did, extraDataEncode, handleErrorMessage } from '../../utils';
 import { useCallback, useRef, useEffect } from 'react';
 import SetPinBase from '../SetPinBase/index.component';
 import clsx from 'clsx';
@@ -194,7 +194,7 @@ export default function SetPinAndAddManager({
             {
               errorFields: 'SetPinAndAddManager',
               ...walletResult,
-              error: walletResult.error,
+              error: handleErrorMessage(walletResult.error),
             },
             isErrorTip,
             onErrorRef.current,
@@ -236,7 +236,7 @@ export default function SetPinAndAddManager({
         return errorTip(
           {
             errorFields: 'SetPinAndAddManager',
-            error,
+            error: handleErrorMessage(error),
           },
           isErrorTip,
           onErrorRef.current,

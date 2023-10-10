@@ -17,7 +17,6 @@ import {
   socialLoginAuth,
   verification,
 } from '../../utils';
-import { useThrottleCallback } from '../../hooks/throttle';
 import CustomModal from '../CustomModal';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
@@ -49,7 +48,7 @@ function GuardianView({
   header,
   originChainId = 'AELF',
   onEditGuardian,
-  isErrorTip,
+  isErrorTip = true,
   currentGuardian,
   guardianList,
   handleSetLoginGuardian,
@@ -58,6 +57,7 @@ function GuardianView({
   const { t } = useTranslation();
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
+  const [switchDisable, setSwitchDisable] = useState<boolean>(false);
   const reCaptchaHandler = useReCaptchaModal();
   const verifyToken = useVerifyToken();
   const socialBasic = useCallback(
@@ -241,7 +241,7 @@ function GuardianView({
     }
   }, [currentGuardian, socialVerify, handleSwitch, isErrorTip, onError, sendCode]);
 
-  const checkSwitch = useThrottleCallback(
+  const checkSwitch = useCallback(
     async (status: boolean) => {
       if (status) {
         const isLogin = Object.values(guardianList ?? {}).some(
@@ -253,6 +253,7 @@ function GuardianView({
           return;
         }
         try {
+          setSwitchDisable(true);
           await did.getHolderInfo({
             chainId: originChainId,
             loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
@@ -275,6 +276,8 @@ function GuardianView({
               onError,
             );
           }
+        } finally {
+          setSwitchDisable(false);
         }
       } else {
         let loginAccountNum = 0;
@@ -329,6 +332,7 @@ function GuardianView({
             </span>
             <div className="guardian-view-switch-status-wrap">
               <Switch
+                loading={switchDisable}
                 className="guardian-view-switch-login-switch"
                 checked={currentGuardian?.isLoginGuardian}
                 onChange={checkSwitch}

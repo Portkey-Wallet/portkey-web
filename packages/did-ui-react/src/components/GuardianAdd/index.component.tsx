@@ -162,7 +162,7 @@ function GuardianAdd({
       errorTip(
         {
           errorFields: 'getPhoneCountry',
-          error,
+          error: handleErrorMessage(error),
         },
         isErrorTip,
         onError,
@@ -546,6 +546,10 @@ function GuardianAdd({
       }
     }
   }, [checkValid, isErrorTip, onError, sendCode, socialValue, socialVerify]);
+  const onCloseApproval = useCallback(() => {
+    setVerifierVisible(false);
+    setApprovalVisible(false);
+  }, []);
   useEffect(() => {
     // Get phoneCountry by service, update phoneCountry
     getPhoneCountry();
@@ -605,13 +609,10 @@ function GuardianAdd({
           onReSend={reSendCode}
         />
       </CommonBaseModal>
-      <CommonBaseModal
-        className="portkey-ui-modal-approval"
-        open={approvalVisible}
-        onClose={() => setApprovalVisible(false)}>
+      <CommonBaseModal className="portkey-ui-modal-approval" open={approvalVisible} onClose={onCloseApproval}>
         <GuardianApproval
           header={
-            <div className="portkey-ui-flex portkey-ui-modal-approval-back" onClick={() => setApprovalVisible(false)}>
+            <div className="portkey-ui-flex portkey-ui-modal-approval-back" onClick={onCloseApproval}>
               <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
             </div>
           }
