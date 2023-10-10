@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { ReactNode, useMemo } from 'react';
 import BackHeaderForPage from '../BackHeaderForPage';
 import { Button, Form, FormProps, Input } from 'antd';
-import { IPaymentSecurityItem } from '@portkey/services';
+import { ITransferLimitItem } from '@portkey/services';
 import { formatWithCommas } from '../../utils/converter';
 import { AmountSign } from '../../types/activity';
 import { NoLimit, SetLimitExplain } from '../../constants/security';
@@ -13,7 +13,7 @@ export interface TransferSettingsProps extends FormProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   closeIcon?: ReactNode;
-  initData?: IPaymentSecurityItem;
+  initData?: ITransferLimitItem;
   onEdit: () => void;
   onBack?: () => void;
 }

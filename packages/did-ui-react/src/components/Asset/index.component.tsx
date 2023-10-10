@@ -7,7 +7,7 @@ import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { WalletError, dealURLLastChar, did, handleErrorMessage } from '../../utils';
-import { IAssetItemType, IPaymentSecurityItem, IUserTokenItem } from '@portkey/services';
+import { IAssetItemType, ITransferLimitItem, IUserTokenItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
@@ -189,7 +189,7 @@ function AssetMain({
   });
 
   const getLimitFromContract = useCallback(
-    async (data: IPaymentSecurityItem) => {
+    async (data: ITransferLimitItem) => {
       // get limit from caContract
       try {
         const chainInfo = await getChain(data.chainId);

@@ -3,13 +3,7 @@ import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
 import { useMemo, useState, useCallback, useRef } from 'react';
 import { divDecimals, timesDecimals } from '../../utils/converter';
-import {
-  AccountType,
-  GuardiansApproved,
-  IPaymentSecurityItem,
-  OperationTypeEnum,
-  VerifierItem,
-} from '@portkey/services';
+import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { ITransferSettingsFormInit } from '../TransferSettings/index.components';
 import { Button, Form, FormProps, Input } from 'antd';
 import SwitchComponent from '../SwitchComponent';
@@ -42,7 +36,7 @@ export interface ITransferSettingsEditProps extends FormProps {
   onGuardiansApproveError?: OnErrorFunc;
 }
 
-export interface ITransferLimitItemWithRoute extends IPaymentSecurityItem {
+export interface ITransferLimitItemWithRoute extends ITransferLimitItem {
   businessFrom?: IBusinessFrom;
 }
 

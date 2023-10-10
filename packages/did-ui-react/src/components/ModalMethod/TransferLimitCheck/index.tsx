@@ -1,6 +1,6 @@
 import { BaseModalFuncProps } from '../BaseModalMethod';
 import { ChainId } from '@portkey/types';
-import { IPaymentSecurityItem } from '@portkey/services';
+import { ITransferLimitItem } from '@portkey/services';
 import { checkTransferLimit } from '../../../utils/sandboxUtil/checkTransferLimit';
 import { modalMethod } from './modalMethod';
 import { IBusinessFrom, ITransferLimitItemWithRoute } from '../../TransferSettingsEdit/index.components';
@@ -23,7 +23,7 @@ interface ITransferLimitCheckProps {
 interface ITransferLimitModalProps extends BaseModalFuncProps {
   wrapClassName?: string;
   className?: string;
-  data?: IPaymentSecurityItem;
+  data?: ITransferLimitItem;
 }
 
 const transferLimitCheck = async ({
