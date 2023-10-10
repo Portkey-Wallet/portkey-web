@@ -311,6 +311,8 @@ export default function TransferSettingsEditMain({
             />
           </FormItem>
 
+          <div className="portkey-ui-divide" />
+
           <div className={!restrictedValue ? 'portkey-ui-hidden-form' : ''}>
             <FormItem
               name="singleLimit"
