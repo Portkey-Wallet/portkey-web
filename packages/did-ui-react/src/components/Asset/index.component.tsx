@@ -69,7 +69,7 @@ function AssetMain({
   backIcon,
   className,
   overrideAchConfig,
-  isShowRampBuy = false,
+  isShowRampBuy = true,
   isShowRampSell = true,
   onOverviewBack,
   onLifeCycleChange,

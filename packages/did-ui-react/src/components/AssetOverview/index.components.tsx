@@ -130,10 +130,13 @@ export function AssetOverviewContent({
   }, [networkType, tokenListInfo?.list]);
 
   const allTokenList = useMemo(() => allToken?.map((tokenItem) => tokenItem.token), [allToken]);
-  const supportToken = useMemo(
-    () => allTokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL),
-    [allTokenList],
-  );
+
+  const supportToken = useMemo(() => {
+    if (Array.isArray(allTokenList) && allTokenList?.length > 0) {
+      return allTokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL);
+    }
+    return tokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL);
+  }, [allTokenList, tokenList]);
 
   const [isGetNFTCollectionPending, setIsGetNFTCollection] = useState<boolean>();
 
