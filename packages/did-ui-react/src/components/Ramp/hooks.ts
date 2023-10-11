@@ -1,6 +1,6 @@
 import { message } from 'antd';
 import { useCallback, useRef } from 'react';
-import { dealURLLastChar, did, randomId, setLoading } from '../../utils';
+import { dealURLLastChar, did, handleErrorMessage, randomId, setLoading } from '../../utils';
 import { ACH_MERCHANT_NAME, DEFAULT_CHAIN_ID, SELL_SOCKET_TIMEOUT, STAGE } from '../../constants/ramp';
 import SparkMD5 from 'spark-md5';
 import AElf from 'aelf-sdk';
@@ -189,9 +189,11 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
         }
       } catch (error: any) {
         if (error?.code === 'TIMEOUT') {
-          message.warn(error?.message || 'The waiting time is too long, it will be put on hold in the background.');
+          message.warn(
+            handleErrorMessage(error, 'The waiting time is too long, it will be put on hold in the background.'),
+          );
         } else {
-          message.error(error.message);
+          message.error(handleErrorMessage(error));
         }
       } finally {
         setLoading(false);

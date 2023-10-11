@@ -14,7 +14,7 @@ export interface ISecurityService {
   getPaymentSecurityList(params: IPaymentSecurityListParams): Promise<IPaymentSecurityListResponse>;
 }
 
-export interface IPaymentSecurityItem {
+export interface ITransferLimitItem {
   chainId: ChainId;
   symbol: string;
   singleLimit: string;
@@ -32,7 +32,7 @@ export interface IPaymentSecurityListParams {
 }
 
 export interface IPaymentSecurityListResponse {
-  data: IPaymentSecurityItem[];
+  data: ITransferLimitItem[];
   totalRecordCount: number;
   code?: number;
   message?: string;

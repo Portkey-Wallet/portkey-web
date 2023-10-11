@@ -11,7 +11,7 @@ export interface ILoadingMoreProps {
 export default function LoadingMore({
   hasMore = false,
   loadingText = 'Loading',
-  noDataText = 'No Data',
+  noDataText = '',
   className = '',
   loadMore,
 }: ILoadingMoreProps) {

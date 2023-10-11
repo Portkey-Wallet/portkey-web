@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { ReactNode, useMemo } from 'react';
 import BackHeaderForPage from '../BackHeaderForPage';
 import { Button, Form, FormProps, Input } from 'antd';
-import { IPaymentSecurityItem } from '@portkey/services';
+import { ITransferLimitItem } from '@portkey/services';
 import { formatWithCommas } from '../../utils/converter';
 import { AmountSign } from '../../types/activity';
 import { NoLimit, SetLimitExplain } from '../../constants/security';
@@ -13,7 +13,7 @@ export interface TransferSettingsProps extends FormProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   closeIcon?: ReactNode;
-  initData?: IPaymentSecurityItem;
+  initData?: ITransferLimitItem;
   onEdit: () => void;
   onBack?: () => void;
 }
@@ -70,16 +70,17 @@ export default function TransferSettingsMain({
         requiredMark={false}>
         <div className="portkey-ui-form-content">
           {!initData?.restricted && (
-            <>
+            <div className="section-one">
               <FormItem name="restricted" label={'Transfer Settings'}>
                 <SwitchComponent checked={false} disabled={true} text={'OFF'} />
               </FormItem>
-              <div className="limit-tip">{NoLimit}</div>
-            </>
+              <div className="portkey-ui-divide" />
+              <div className="portkey-ui-limit-tip">{NoLimit}</div>
+            </div>
           )}
 
           {initData?.restricted && (
-            <>
+            <div className="section-two">
               <FormItem name="singleLimit" label={'Limit per Transaction'}>
                 <Input
                   placeholder={'Enter limit'}
@@ -91,8 +92,8 @@ export default function TransferSettingsMain({
               <FormItem name="dailyLimit" label={'Daily Limit'}>
                 <Input placeholder={'Enter limit'} disabled={true} />
               </FormItem>
-              <div className="limit-tip">{SetLimitExplain}</div>
-            </>
+              <div className="portkey-ui-limit-tip">{SetLimitExplain}</div>
+            </div>
           )}
         </div>
 

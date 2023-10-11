@@ -10,7 +10,7 @@ import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import LoadingMore from '../LoadingMore';
 import { did, handleErrorMessage, setLoading } from '../../utils';
 import { message } from 'antd';
-import { IPaymentSecurityItem } from '@portkey/services';
+import { ITransferLimitItem } from '@portkey/services';
 
 export interface IPaymentSecurityProps {
   className?: string;
@@ -18,11 +18,11 @@ export interface IPaymentSecurityProps {
   networkType: string;
   caHash: string;
   onBack?: () => void;
-  onClickItem: (data: IPaymentSecurityItem) => void;
+  onClickItem: (data: ITransferLimitItem) => void;
 }
 
 export interface ISecurityListResponse {
-  data: IPaymentSecurityItem[];
+  data: ITransferLimitItem[];
   totalRecordCount: number;
   code?: number;
   message?: string;
@@ -41,7 +41,7 @@ export default function PaymentSecurityMain({
 }: IPaymentSecurityProps) {
   const isMainnet = useMemo(() => networkType === 'MAIN', [networkType]);
 
-  const [securityList, setSecurityList] = useState<IPaymentSecurityItem[]>([]);
+  const [securityList, setSecurityList] = useState<ITransferLimitItem[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const loadingFlag = useRef(false);
 

@@ -274,9 +274,9 @@ function SendContent({
       onSuccess?.();
     } catch (error: any) {
       console.log('sendHandler==error', error);
-      if (!error?.type) return message.error(error);
+      if (!error?.type) return message.error(handleErrorMessage(error));
       if (error.type === 'managerTransfer') {
-        return message.error(error);
+        return message.error(handleErrorMessage(error));
       } else if (error.type === 'crossChainTransfer') {
         // dispatch(addFailedActivity(error.data));
         // TODO
