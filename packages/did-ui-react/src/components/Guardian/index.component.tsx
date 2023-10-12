@@ -18,6 +18,7 @@ import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
 import { formatDelGuardianValue } from './utils/formatDelGuardianValue';
 import { GuardianMth, handleGuardianContract } from '../../utils/sandboxUtil/handleGuardianContract';
 import BackHeaderForPage from '../BackHeaderForPage';
+import clsx from 'clsx';
 import './index.less';
 
 export enum GuardianStep {
@@ -29,7 +30,7 @@ export enum GuardianStep {
 
 export interface GuardianProps {
   caHash: string;
-  targetChainId?: ChainId;
+  className?: string;
   originChainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
@@ -39,6 +40,7 @@ export interface GuardianProps {
 
 function GuardianMain({
   caHash,
+  className,
   originChainId = 'AELF',
   chainType = 'aelf',
   isErrorTip = true,
@@ -285,7 +287,7 @@ function GuardianMain({
   ]);
 
   return (
-    <div className="portkey-ui-guardian-page">
+    <div className={clsx('portkey-ui-guardian-page', className)}>
       {step === GuardianStep.guardianList && (
         <GuardianList
           header={
@@ -300,7 +302,6 @@ function GuardianMain({
             />
           }
           guardianList={guardianList}
-          onAddGuardian={onAddGuardian}
           onViewGuardian={onViewGuardian}
         />
       )}

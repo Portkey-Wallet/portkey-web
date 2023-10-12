@@ -2,12 +2,10 @@ import VerifierPair from '../../../VerifierPair';
 import { useCallback, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
-import { ChainId } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus } from '../../../../types';
 import CustomSvg from '../../../CustomSvg';
 
 interface GuardianItemProps {
-  chainId: ChainId;
   item: UserGuardianStatus;
   onClick?: (item: UserGuardianItem) => void;
 }
