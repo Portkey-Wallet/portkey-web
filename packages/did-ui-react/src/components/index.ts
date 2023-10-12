@@ -70,6 +70,9 @@ export { default as transferLimitCheck } from './ModalMethod/TransferLimitCheck'
 export { default as SecurityCheck } from './SecurityCheck';
 export { default as MenuItem } from './MenuItem';
 export { default as MenuList } from './MenuList';
+export { default as PaymentSecurity } from './PaymentSecurity';
+export { default as TransferSettings } from './TransferSettings';
+export { default as TransferSettingsEdit } from './TransferSettingsEdit';
 
 export type { ManagerApproveInnerProps } from './ManagerApprove/index.component';
 export type { IAllowance } from './SetAllowance/index.component';
