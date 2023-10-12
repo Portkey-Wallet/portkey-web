@@ -28,7 +28,7 @@ export interface ITransferSettingsEditProps extends FormProps {
   wrapperStyle?: React.CSSProperties;
   caHash: string;
   originChainId: ChainId;
-  initData?: ITransferLimitItemWithRoute;
+  initData: ITransferLimitItemWithRoute;
   isErrorTip?: boolean;
   sandboxId?: string;
   onBack?: () => void;
@@ -59,13 +59,13 @@ export default function TransferSettingsEditMain({
   const [form] = Form.useForm();
   const initValue: Partial<ITransferSettingsFormInit> = useMemo(
     () => ({
-      singleLimit: divDecimals(initData?.singleLimit, initData?.decimals).toString(),
-      dailyLimit: divDecimals(initData?.dailyLimit, initData?.decimals).toString(),
-      restricted: initData?.restricted,
+      singleLimit: divDecimals(initData.singleLimit, initData.decimals).toString(),
+      dailyLimit: divDecimals(initData.dailyLimit, initData.decimals).toString(),
+      restricted: initData.restricted,
     }),
-    [initData?.dailyLimit, initData?.decimals, initData?.restricted, initData?.singleLimit],
+    [initData.dailyLimit, initData.decimals, initData.restricted, initData.singleLimit],
   );
-  const [restrictedValue, setRestrictedValue] = useState(!!initData?.restricted);
+  const [restrictedValue, setRestrictedValue] = useState(!!initData.restricted);
   const [disable, setDisable] = useState(true);
   const [validSingleLimit, setValidSingleLimit] = useState<ValidData>({ validateStatus: '', errorMsg: '' });
   const [validDailyLimit, setValidDailyLimit] = useState<ValidData>({ validateStatus: '', errorMsg: '' });
@@ -73,8 +73,8 @@ export default function TransferSettingsEditMain({
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
 
-  const targetChainId = useMemo(() => initData?.chainId || originChainId, [initData?.chainId, originChainId]);
-  const symbol = useMemo(() => initData?.symbol || ELF_SYMBOL, [initData?.symbol]);
+  const targetChainId = useMemo(() => initData.chainId || originChainId, [initData.chainId, originChainId]);
+  const symbol = useMemo(() => initData.symbol || ELF_SYMBOL, [initData.symbol]);
 
   const getVerifierInfo = useCallback(async () => {
     try {
@@ -211,8 +211,8 @@ export default function TransferSettingsEditMain({
         setLoading(true);
         const guardiansApproved = formatGuardianValue(approvalInfo);
         const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
-        const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData?.decimals)) : '-1';
-        const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData?.decimals)) : '-1';
+        const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
+        const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData.decimals)) : '-1';
 
         await setTransferLimit({
           params: {
@@ -234,9 +234,9 @@ export default function TransferSettingsEditMain({
           singleLimit: transSingleLimit,
           chainId: targetChainId,
           symbol: symbol,
-          decimals: initData?.decimals || 8,
+          decimals: initData.decimals || 8,
           restricted,
-          businessFrom: initData?.businessFrom,
+          businessFrom: initData.businessFrom,
         };
 
         onSuccess?.(params);
@@ -256,8 +256,8 @@ export default function TransferSettingsEditMain({
     [
       caHash,
       form,
-      initData?.businessFrom,
-      initData?.decimals,
+      initData.businessFrom,
+      initData.decimals,
       isErrorTip,
       onGuardiansApproveError,
       onSuccess,
@@ -284,9 +284,9 @@ export default function TransferSettingsEditMain({
   useEffectOnce(() => {
     getData();
 
-    if (initData && !initData?.restricted) {
-      form.setFieldValue('singleLimit', divDecimals(initData?.defaultSingleLimit, initData.decimals).toFixed());
-      form.setFieldValue('dailyLimit', divDecimals(initData?.defaultDailyLimit, initData.decimals).toFixed());
+    if (initData && !initData.restricted) {
+      form.setFieldValue('singleLimit', divDecimals(initData.defaultSingleLimit, initData.decimals).toFixed());
+      form.setFieldValue('dailyLimit', divDecimals(initData.defaultDailyLimit, initData.decimals).toFixed());
     }
     handleDisableCheck();
   });
@@ -322,7 +322,7 @@ export default function TransferSettingsEditMain({
               <Input
                 placeholder={'Enter limit'}
                 onChange={handleSingleLimitChange}
-                maxLength={18 - Number(initData?.decimals)}
+                maxLength={18 - Number(initData.decimals)}
                 suffix={symbol}
               />
             </FormItem>
@@ -334,7 +334,7 @@ export default function TransferSettingsEditMain({
               <Input
                 placeholder={'Enter limit'}
                 onChange={handleDailyLimitChange}
-                maxLength={18 - Number(initData?.decimals)}
+                maxLength={18 - Number(initData.decimals)}
                 suffix={symbol}
               />
             </FormItem>

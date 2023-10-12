@@ -11,14 +11,15 @@ import LoadingMore from '../LoadingMore';
 import { did, handleErrorMessage, setLoading } from '../../utils';
 import { message } from 'antd';
 import { ITransferLimitItem } from '@portkey/services';
+import { NetworkType } from '../../types';
 
 export interface IPaymentSecurityProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
-  networkType: string;
+  networkType: NetworkType;
   caHash: string;
   onBack?: () => void;
-  onClickItem: (data: ITransferLimitItem) => void;
+  onClickItem?: (data: ITransferLimitItem) => void;
 }
 
 export interface ISecurityListResponse {
@@ -119,7 +120,7 @@ export default function PaymentSecurityMain({
                     </>
                   }
                   height={92}
-                  onClick={() => onClickItem(item)}>
+                  onClick={() => onClickItem?.(item)}>
                   <div className="token-info">
                     <div className="token-symbol">{item.symbol}</div>
                     <div className="token-network">{transNetworkText(item.chainId, isMainnet)}</div>

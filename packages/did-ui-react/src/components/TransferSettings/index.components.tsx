@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import BackHeaderForPage from '../BackHeaderForPage';
 import { Button, Form, FormProps, Input } from 'antd';
 import { ITransferLimitItem } from '@portkey/services';
@@ -12,9 +12,9 @@ import SwitchComponent from '../SwitchComponent';
 export interface TransferSettingsProps extends FormProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
-  closeIcon?: ReactNode;
-  initData?: ITransferLimitItem;
-  onEdit: () => void;
+  initData: ITransferLimitItem;
+  isShowEditButton?: boolean;
+  onEdit?: () => void;
   onBack?: () => void;
 }
 
@@ -31,6 +31,7 @@ export default function TransferSettingsMain({
   wrapperStyle,
   initData,
   form,
+  isShowEditButton = true,
   onBack,
   onEdit,
 }: TransferSettingsProps) {
@@ -38,25 +39,25 @@ export default function TransferSettingsMain({
     return {
       singleLimit:
         formatWithCommas({
-          amount: initData?.singleLimit,
-          decimals: initData?.decimals,
+          amount: initData.singleLimit,
+          decimals: initData.decimals,
           digits: 0,
           sign: AmountSign.EMPTY,
         }) +
         ' ' +
-        initData?.symbol,
+        initData.symbol,
       dailyLimit:
         formatWithCommas({
-          amount: initData?.dailyLimit,
-          decimals: initData?.decimals,
+          amount: initData.dailyLimit,
+          decimals: initData.decimals,
           digits: 0,
           sign: AmountSign.EMPTY,
         }) +
         ' ' +
-        initData?.symbol,
-      restricted: initData?.restricted,
+        initData.symbol,
+      restricted: initData.restricted,
     };
-  }, [initData?.dailyLimit, initData?.decimals, initData?.restricted, initData?.singleLimit, initData?.symbol]);
+  }, [initData.dailyLimit, initData.decimals, initData.restricted, initData.singleLimit, initData.symbol]);
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-wrapper', className)}>
@@ -69,7 +70,7 @@ export default function TransferSettingsMain({
         initialValues={initValue}
         requiredMark={false}>
         <div className="portkey-ui-form-content">
-          {!initData?.restricted && (
+          {!initData.restricted && (
             <div className="section-one">
               <FormItem name="restricted" label={'Transfer Settings'}>
                 <SwitchComponent checked={false} disabled={true} text={'OFF'} />
@@ -79,14 +80,14 @@ export default function TransferSettingsMain({
             </div>
           )}
 
-          {initData?.restricted && (
+          {initData.restricted && (
             <div className="section-two">
               <FormItem name="singleLimit" label={'Limit per Transaction'}>
                 <Input
                   placeholder={'Enter limit'}
                   disabled={true}
-                  value={initData?.singleLimit + ' ' + initData?.symbol}
-                  defaultValue={initData?.singleLimit + ' ' + initData?.symbol}
+                  value={initData.singleLimit + ' ' + initData.symbol}
+                  defaultValue={initData.singleLimit + ' ' + initData.symbol}
                 />
               </FormItem>
               <FormItem name="dailyLimit" label={'Daily Limit'}>
@@ -96,12 +97,13 @@ export default function TransferSettingsMain({
             </div>
           )}
         </div>
-
-        <FormItem className="portkey-ui-footer-btn-wrap">
-          <Button className="portkey-ui-footer-btn" type="primary" onClick={onEdit}>
-            {'Edit'}
-          </Button>
-        </FormItem>
+        {isShowEditButton && (
+          <FormItem className="portkey-ui-footer-btn-wrap">
+            <Button className="portkey-ui-footer-btn" type="primary" onClick={onEdit}>
+              {'Edit'}
+            </Button>
+          </FormItem>
+        )}
       </Form>
     </div>
   );

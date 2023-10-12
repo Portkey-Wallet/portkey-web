@@ -62,6 +62,15 @@ export interface AssetMainProps
   onLifeCycleChange?(liftCycle: `${AssetStep}`): void;
 }
 
+const InitTransferLimitData: ITransferLimitItemWithRoute = {
+  chainId: 'AELF',
+  symbol: 'ELF',
+  singleLimit: '20000000000',
+  dailyLimit: '100000000000',
+  restricted: true,
+  decimals: 8,
+};
+
 function AssetMain({
   isShowRamp = true,
   rampState,
@@ -143,7 +152,7 @@ function AssetMain({
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
 
-  const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>();
+  const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
 
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);
