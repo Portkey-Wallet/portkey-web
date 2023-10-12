@@ -23,11 +23,12 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
 import ConfigProvider from '../config-provider';
+import clsx from 'clsx';
 import './index.less';
 
 export interface GuardianViewProps {
   header?: ReactNode;
-  targetChainId?: ChainId;
+  className?: string;
   originChainId?: ChainId;
   isErrorTip?: boolean;
   currentGuardian: UserGuardianStatus;
@@ -46,6 +47,7 @@ const guardianIconMap: any = {
 
 function GuardianView({
   header,
+  className,
   originChainId = 'AELF',
   onEditGuardian,
   isErrorTip = true,
@@ -302,7 +304,7 @@ function GuardianView({
     setVerifierVisible(false);
   }, [currentGuardian]);
   return (
-    <div className="portkey-ui-guardian-view portkey-ui-flex-column">
+    <div className={clsx('portkey-ui-guardian-view', 'portkey-ui-flex-column', className)}>
       <>
         {header}
         <div className="guardian-view-body portkey-ui-flex-column portkey-ui-flex-1">
