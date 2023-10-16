@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.17...v1.5.0-alpha.18) (2023-10-16)
+
+### Bug Fixes
+
+- 🐛 manage approve nft ([585df0c](https://github.com/Portkey-Wallet/portkey-web/commit/585df0cd0a69c8fa1b7313ad4d727e03fbf266f2))
+
 ## [1.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.16...v1.5.0-alpha.17) (2023-10-16)
 
 ### Features
