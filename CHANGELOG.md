@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.16...v1.5.0-alpha.17) (2023-10-16)
+
+### Features
+
+- 🎸 adjust double modal ([1295927](https://github.com/Portkey-Wallet/portkey-web/commit/1295927fd7795b11ba84b577070c545521ee68ff))
+- 🎸 adjust transfer limit ([1b1953b](https://github.com/Portkey-Wallet/portkey-web/commit/1b1953b3e85d24560d6af250214ccb6981a1848c))
+- 🎸 change ts name ([caac77f](https://github.com/Portkey-Wallet/portkey-web/commit/caac77f525968b950f93d9862c7e15fd05f93b82))
+- 🎸 change ui ([0273752](https://github.com/Portkey-Wallet/portkey-web/commit/027375293742d7d447f8b352e51f030fbb70b8fd))
+- 🎸 dev wallet security ([88f82f3](https://github.com/Portkey-Wallet/portkey-web/commit/88f82f309c808111138240424d2a3f5c1570373d))
+- 🎸 use handleErrorMessage ([55ec470](https://github.com/Portkey-Wallet/portkey-web/commit/55ec470df2f84df51ab002b82ab5bae2480ff395))
+
+### Bug Fixes
+
+- 🐛 approve nft ([679c4d1](https://github.com/Portkey-Wallet/portkey-web/commit/679c4d14c9bf987d97f2f2ed73022a07fe8ad910))
+- 🐛 error tip ([b3fe65c](https://github.com/Portkey-Wallet/portkey-web/commit/b3fe65ce9a610d22d1e0fb039ca414baee35328c))
+- 🐛 error tip ([36626d6](https://github.com/Portkey-Wallet/portkey-web/commit/36626d67b99cf076840e02b52b2780d841471d76))
+- 🐛 token list update ([5ac3495](https://github.com/Portkey-Wallet/portkey-web/commit/5ac3495b6cef2395ebf82577fe741685247b06de))
+
 ## [1.5.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.15...v1.5.0-alpha.16) (2023-10-07)
 
 **Note:** Version bump only for package root

@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.16...v1.5.0-alpha.17) (2023-10-16)
+
+### Features
+
+- 🎸 adjust transfer limit ([1b1953b](https://github.com/Portkey-Wallet/portkey-web/commit/1b1953b3e85d24560d6af250214ccb6981a1848c))
+- 🎸 change ts name ([caac77f](https://github.com/Portkey-Wallet/portkey-web/commit/caac77f525968b950f93d9862c7e15fd05f93b82))
+- 🎸 dev wallet security ([88f82f3](https://github.com/Portkey-Wallet/portkey-web/commit/88f82f309c808111138240424d2a3f5c1570373d))
+
 ## [1.5.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.15...v1.5.0-alpha.16) (2023-10-07)
 
 **Note:** Version bump only for package @portkey/services
