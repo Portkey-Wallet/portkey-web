@@ -1,5 +1,5 @@
 import GuardianApprovalMain from '../GuardianApproval/index.component';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChainId } from '@portkey/types';
 import SetAllowanceMain, { BaseSetAllowanceProps, IAllowance } from '../SetAllowance/index.component';
 import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } from '../../utils';
@@ -11,7 +11,8 @@ import { OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import BackHeader from '../BackHeader';
 import { divDecimals, timesDecimals } from '../../utils/converter';
-import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL } from '../../constants';
+import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL, DEFAULT_NFT_DECIMAL } from '../../constants';
+import { isNFT } from '../../utils/assets';
 import './index.less';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
@@ -63,9 +64,10 @@ export default function ManagerApproveInner({
     issued: string;
   }>();
 
-  const [allowance, setAllowance] = useState<string>(
-    divDecimals(amount, tokenInfo?.decimals ?? DEFAULT_DECIMAL).toFixed(),
-  );
+  const DEFAULT_SYMBOL_DECIMAL = useMemo(() => (isNFT(symbol) ? DEFAULT_NFT_DECIMAL : DEFAULT_DECIMAL), [symbol]);
+
+  const [allowance, setAllowance] = useState<string>(divDecimals(amount, DEFAULT_SYMBOL_DECIMAL).toFixed());
+
   const [guardianList, setGuardianList] = useState<BaseGuardianItem[]>();
 
   const getVerifierListHandler = useCallback(async () => {
@@ -144,12 +146,14 @@ export default function ManagerApproveInner({
           symbol,
         },
       });
+      if (!result.data) throw `${symbol} does not exist in this chain`;
       setTokenInfo(result.data);
+      setAllowance(divDecimals(amount, result.data?.decimals).toFixed());
     } catch (error) {
       console.error(error);
-      onError?.(Error('GetTokenInfo error'));
+      onError?.(Error(handleErrorMessage(error)));
     }
-  }, [onError, originChainId, symbol]);
+  }, [amount, onError, originChainId, symbol]);
 
   useEffect(() => {
     getTokenInfo();
@@ -163,10 +167,11 @@ export default function ManagerApproveInner({
             className="portkey-ui-flex-column"
             symbol={symbol}
             amount={allowance}
-            recommendedAmount={divDecimals(amount, tokenInfo?.decimals ?? DEFAULT_DECIMAL).toFixed()}
-            max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals ?? DEFAULT_DECIMAL).toFixed(0)}
+            recommendedAmount={divDecimals(amount, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed()}
+            max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0)}
             dappInfo={dappInfo}
             onCancel={onCancel}
+            onAllowanceChange={setAllowance}
             onConfirm={allowanceConfirm}
           />
         )}
@@ -190,7 +195,7 @@ export default function ManagerApproveInner({
               }));
 
               onFinish?.({
-                amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_DECIMAL).toFixed(0),
+                amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
                 guardiansApproved: approved,
               });
             }}
