@@ -64,7 +64,7 @@ export default function ManagerApproveInner({
   }>();
 
   const [allowance, setAllowance] = useState<string>(
-    divDecimals(amount, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed(),
+    divDecimals(amount, tokenInfo?.decimals ?? DEFAULT_DECIMAL).toFixed(),
   );
   const [guardianList, setGuardianList] = useState<BaseGuardianItem[]>();
 
@@ -163,8 +163,8 @@ export default function ManagerApproveInner({
             className="portkey-ui-flex-column"
             symbol={symbol}
             amount={allowance}
-            recommendedAmount={divDecimals(amount, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed()}
-            max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed(0)}
+            recommendedAmount={divDecimals(amount, tokenInfo?.decimals ?? DEFAULT_DECIMAL).toFixed()}
+            max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals ?? DEFAULT_DECIMAL).toFixed(0)}
             dappInfo={dappInfo}
             onCancel={onCancel}
             onConfirm={allowanceConfirm}
@@ -190,7 +190,7 @@ export default function ManagerApproveInner({
               }));
 
               onFinish?.({
-                amount: timesDecimals(allowance, tokenInfo?.decimals || DEFAULT_DECIMAL).toFixed(0),
+                amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_DECIMAL).toFixed(0),
                 guardiansApproved: approved,
               });
             }}
