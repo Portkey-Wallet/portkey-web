@@ -158,16 +158,22 @@ function AssetMain({
     setAssetStep(AssetStep.my);
   }, []);
 
-  const onReceive = useCallback(async (v: BaseToken) => {
-    setSelectToken(v);
+  const onReceive = useCallback(async (v: any) => {
+    setSelectToken({
+      ...v,
+      address: v.address || v.tokenContractAddress,
+    });
     await sleep(50);
     setAssetStep(AssetStep.receive);
   }, []);
 
   const onBuy = useCallback(
-    async (v: BaseToken) => {
+    async (v: any) => {
       if (!portkeyWebSocketUrl) return message.error('Please configure socket service url in setGlobalConfig');
-      setSelectToken(v);
+      setSelectToken({
+        ...v,
+        address: v.address || v.tokenContractAddress,
+      });
       await sleep(50);
       setAssetStep(AssetStep.ramp);
     },
