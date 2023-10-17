@@ -1,8 +1,9 @@
 import { BaseModalFuncProps } from '../BaseModalMethod';
 import { ChainId } from '@portkey/types';
-import { IPaymentSecurityItem } from '@portkey/services';
+import { ITransferLimitItem } from '@portkey/services';
 import { checkTransferLimit } from '../../../utils/sandboxUtil/checkTransferLimit';
 import { modalMethod } from './modalMethod';
+import { IBusinessFrom, ITransferLimitItemWithRoute } from '../../TransferSettingsEdit/index.components';
 
 interface ITransferLimitCheckProps {
   wrapClassName?: string;
@@ -15,12 +16,14 @@ interface ITransferLimitCheckProps {
   decimals: number | string;
   amount: string;
   sandboxId?: string;
+  businessFrom?: IBusinessFrom;
+  onOk?: (data: ITransferLimitItemWithRoute) => void;
 }
 
 interface ITransferLimitModalProps extends BaseModalFuncProps {
   wrapClassName?: string;
   className?: string;
-  data?: IPaymentSecurityItem;
+  data?: ITransferLimitItem;
 }
 
 const transferLimitCheck = async ({
@@ -34,6 +37,8 @@ const transferLimitCheck = async ({
   decimals,
   amount,
   sandboxId,
+  businessFrom,
+  onOk,
   ...props
 }: ITransferLimitCheckProps) => {
   const limitRes = await checkTransferLimit({
@@ -44,22 +49,23 @@ const transferLimitCheck = async ({
     params: { symbol, decimals, amount },
   });
 
-  const settingParams: IPaymentSecurityItem = {
+  const settingParams: ITransferLimitItemWithRoute = {
     chainId: chainId,
     symbol,
     singleLimit: limitRes?.singleBalance.toString() || '',
     dailyLimit: limitRes?.dailyLimit.toString() || '',
     restricted: !limitRes?.dailyLimit.eq(-1),
     decimals,
+    businessFrom,
   };
 
   if (limitRes?.isSingleLimited) {
-    TransferSingleLimitModal({ wrapClassName, className, data: settingParams, ...props });
+    TransferSingleLimitModal({ wrapClassName, className, data: settingParams, onOk, ...props });
     return false;
   }
 
   if (limitRes?.isDailyLimited) {
-    TransferDailyLimitModal({ wrapClassName, className, data: settingParams, ...props });
+    TransferDailyLimitModal({ wrapClassName, className, data: settingParams, onOk, ...props });
     return false;
   }
 

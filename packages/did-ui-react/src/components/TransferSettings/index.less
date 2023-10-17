@@ -12,7 +12,31 @@
     height: calc(100% - 72px);
     .portkey-ui-form-content {
       flex: 1;
-      padding: 24px;
+      padding: 24px 0;
+
+      .section-one,
+      .section-two {
+        .portkey-ant-form-item {
+          padding: 0 24px;
+          input {
+            font-size: 14px;
+          }
+        }
+      }
+
+      .portkey-ui-divide {
+        width: 100%;
+        height: 1px;
+        background-color: var(--portkey-ui-border-2);
+        margin-bottom: 24px;
+      }
+
+      .portkey-ui-limit-tip {
+        font-size: 14px;
+        text-align: left;
+        color: var(--portkey-ui-font-8);
+        padding: 0 24px;
+      }
 
       .portkey-ant-form-item-label > label {
         color: var(--portkey-ui-font-6);

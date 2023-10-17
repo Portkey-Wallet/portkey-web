@@ -3,7 +3,7 @@ import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } fr
 import { useState, useMemo, useCallback, useEffect, memo, ReactNode, useRef } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId } from '@portkey/types';
 import {
   EmailError,
   EmailReg,
@@ -37,13 +37,14 @@ import CustomModal from '../CustomModal';
 import CommonBaseModal from '../CommonBaseModal';
 import ConfigProvider from '../config-provider';
 import { useVerifyToken } from '../../hooks';
+import { useEffectOnce } from 'react-use';
+import clsx from 'clsx';
 import './index.less';
 
 export interface GuardianAddProps {
   header?: ReactNode;
-  targetChainId?: ChainId;
+  className?: string;
   originChainId?: ChainId;
-  chainType?: ChainType;
   phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
   verifierList?: VerifierItem[];
@@ -62,9 +63,10 @@ export interface ISocialInput {
 
 function GuardianAdd({
   header,
+  className,
   originChainId = 'AELF',
   isErrorTip = true,
-  phoneCountry: defaultPhoneCountry,
+  phoneCountry: customPhoneCountry,
   verifierList,
   guardianList,
   onError,
@@ -84,7 +86,7 @@ function GuardianAdd({
   const curGuardian = useRef<UserGuardianStatus | undefined>();
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
-  const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
+  const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(customPhoneCountry);
   const verifyToken = useVerifyToken();
   const guardianAccount = useMemo(
     () => emailValue || socialValue?.id || (countryCode && phoneNumber ? `+${countryCode.code}${phoneNumber}` : ''),
@@ -162,7 +164,7 @@ function GuardianAdd({
       errorTip(
         {
           errorFields: 'getPhoneCountry',
-          error,
+          error: handleErrorMessage(error),
         },
         isErrorTip,
         onError,
@@ -546,12 +548,15 @@ function GuardianAdd({
       }
     }
   }, [checkValid, isErrorTip, onError, sendCode, socialValue, socialVerify]);
-  useEffect(() => {
-    // Get phoneCountry by service, update phoneCountry
-    getPhoneCountry();
-  }, [getPhoneCountry]);
+  const onCloseApproval = useCallback(() => {
+    setVerifierVisible(false);
+    setApprovalVisible(false);
+  }, []);
+  useEffectOnce(() => {
+    !customPhoneCountry && getPhoneCountry();
+  });
   return (
-    <div className="portkey-ui-guardian-edit portkey-ui-flex-column">
+    <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
       {header}
       <div className="guardian-add-body portkey-ui-flex-column portkey-ui-flex-1">
         <div className="input-item">
@@ -605,13 +610,10 @@ function GuardianAdd({
           onReSend={reSendCode}
         />
       </CommonBaseModal>
-      <CommonBaseModal
-        className="portkey-ui-modal-approval"
-        open={approvalVisible}
-        onClose={() => setApprovalVisible(false)}>
+      <CommonBaseModal className="portkey-ui-modal-approval" open={approvalVisible} onClose={onCloseApproval}>
         <GuardianApproval
           header={
-            <div className="portkey-ui-flex portkey-ui-modal-approval-back" onClick={() => setApprovalVisible(false)}>
+            <div className="portkey-ui-flex portkey-ui-modal-approval-back" onClick={onCloseApproval}>
               <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
             </div>
           }

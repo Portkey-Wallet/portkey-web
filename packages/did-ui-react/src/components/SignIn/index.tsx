@@ -395,7 +395,7 @@ const SignIn = forwardRef(
         errorTip(
           {
             errorFields: 'getPhoneCountry',
-            error,
+            error: handleErrorMessage(error),
           },
           isErrorTip,
           onError,

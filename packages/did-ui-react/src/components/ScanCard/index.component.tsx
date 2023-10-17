@@ -7,7 +7,7 @@ import ScanBase from '../ScanBase';
 import { GridType, LoginFinishWithoutPin } from '../types';
 import type { ChainId, ChainType } from '@portkey/types';
 import type { portkey } from '@portkey/accounts';
-import { did, errorTip } from '../../utils';
+import { did, errorTip, handleErrorMessage } from '../../utils';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
 import clsx from 'clsx';
 import { randomId } from '@portkey/utils';
@@ -59,7 +59,7 @@ export default function ScanCard({
       return errorTip(
         {
           errorFields: 'ScanBase',
-          error,
+          error: handleErrorMessage(error),
         },
         isErrorTip,
         onError,

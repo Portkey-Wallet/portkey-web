@@ -3,7 +3,7 @@ import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId } from '@portkey/types';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { OnErrorFunc, UserGuardianStatus } from '../../types';
 import CustomSvg from '../CustomSvg';
@@ -12,6 +12,7 @@ import GuardianApproval from '../GuardianApproval';
 import CustomModal from '../CustomModal';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianAccountShow from '../GuardianAccountShow';
+import clsx from 'clsx';
 import './index.less';
 
 const guardianIconMap: any = {
@@ -23,11 +24,10 @@ const guardianIconMap: any = {
 
 export interface GuardianEditProps {
   header?: ReactNode;
-  targetChainId?: ChainId;
+  className?: string;
   originChainId?: ChainId;
   verifierList?: VerifierItem[];
   isErrorTip?: boolean;
-  chainType?: ChainType;
   guardianList?: UserGuardianStatus[];
   currentGuardian?: UserGuardianStatus;
   preGuardian?: UserGuardianStatus;
@@ -46,6 +46,7 @@ export interface ISocialInput {
 
 function GuardianEdit({
   header,
+  className,
   originChainId = 'AELF',
   isErrorTip = true,
   verifierList,
@@ -199,7 +200,7 @@ function GuardianEdit({
   }, [currentGuardian?.isLoginGuardian, guardianList, removeLoginGuardians, t]);
 
   return (
-    <div className="portkey-ui-guardian-edit portkey-ui-flex-column">
+    <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
       {header}
       <div className="guardian-edit-body portkey-ui-flex-column portkey-ui-flex-1">
         <div className="input-item">

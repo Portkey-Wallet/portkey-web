@@ -1,15 +1,9 @@
 import clsx from 'clsx';
 import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
-import { useMemo, useState, useEffect, useCallback, useRef } from 'react';
+import { useMemo, useState, useCallback, useRef } from 'react';
 import { divDecimals, timesDecimals } from '../../utils/converter';
-import {
-  AccountType,
-  GuardiansApproved,
-  IPaymentSecurityItem,
-  OperationTypeEnum,
-  VerifierItem,
-} from '@portkey/services';
+import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { ITransferSettingsFormInit } from '../TransferSettings/index.components';
 import { Button, Form, FormProps, Input } from 'antd';
 import SwitchComponent from '../SwitchComponent';
@@ -27,19 +21,26 @@ import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
+import { useEffectOnce } from 'react-use';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   caHash: string;
   originChainId: ChainId;
-  initData?: IPaymentSecurityItem;
+  initData: ITransferLimitItemWithRoute;
   isErrorTip?: boolean;
   sandboxId?: string;
   onBack?: () => void;
-  onSuccess?: (data: IPaymentSecurityItem) => void;
+  onSuccess?: (data: ITransferLimitItemWithRoute) => void;
   onGuardiansApproveError?: OnErrorFunc;
 }
+
+export interface ITransferLimitItemWithRoute extends ITransferLimitItem {
+  businessFrom?: IBusinessFrom;
+}
+
+export type IBusinessFrom = 'ramp-sell' | 'send';
 
 const { Item: FormItem } = Form;
 
@@ -58,13 +59,13 @@ export default function TransferSettingsEditMain({
   const [form] = Form.useForm();
   const initValue: Partial<ITransferSettingsFormInit> = useMemo(
     () => ({
-      singleLimit: divDecimals(initData?.singleLimit, initData?.decimals).toString(),
-      dailyLimit: divDecimals(initData?.dailyLimit, initData?.decimals).toString(),
-      restricted: initData?.restricted,
+      singleLimit: divDecimals(initData.singleLimit, initData.decimals).toString(),
+      dailyLimit: divDecimals(initData.dailyLimit, initData.decimals).toString(),
+      restricted: initData.restricted,
     }),
-    [initData?.dailyLimit, initData?.decimals, initData?.restricted, initData?.singleLimit],
+    [initData.dailyLimit, initData.decimals, initData.restricted, initData.singleLimit],
   );
-  const [restrictedValue, setRestrictedValue] = useState(!!initData?.restricted);
+  const [restrictedValue, setRestrictedValue] = useState(!!initData.restricted);
   const [disable, setDisable] = useState(true);
   const [validSingleLimit, setValidSingleLimit] = useState<ValidData>({ validateStatus: '', errorMsg: '' });
   const [validDailyLimit, setValidDailyLimit] = useState<ValidData>({ validateStatus: '', errorMsg: '' });
@@ -72,8 +73,8 @@ export default function TransferSettingsEditMain({
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
 
-  const targetChainId = useMemo(() => initData?.chainId || originChainId, [initData?.chainId, originChainId]);
-  const symbol = useMemo(() => initData?.symbol || ELF_SYMBOL, [initData?.symbol]);
+  const targetChainId = useMemo(() => initData.chainId || originChainId, [initData.chainId, originChainId]);
+  const symbol = useMemo(() => initData.symbol || ELF_SYMBOL, [initData.symbol]);
 
   const getVerifierInfo = useCallback(async () => {
     try {
@@ -94,7 +95,7 @@ export default function TransferSettingsEditMain({
       errorTip(
         {
           errorFields: 'getVerifierServers',
-          error,
+          error: handleErrorMessage(error),
         },
         isErrorTip,
         onGuardiansApproveError,
@@ -140,52 +141,69 @@ export default function TransferSettingsEditMain({
     }
   }, [caHash, isErrorTip, onGuardiansApproveError, originChainId]);
 
-  const handleFormChange = useCallback(() => {
+  const handleDisableCheck = useCallback(() => {
     const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
 
     if (restricted) {
-      if (Number(singleLimit) > Number(dailyLimit)) {
-        setDisable(true);
-        return setValidSingleLimit({ validateStatus: 'error', errorMsg: SingleExceedDaily });
-      } else {
+      setDisable(!singleLimit || !dailyLimit);
+    } else {
+      setDisable(false);
+    }
+  }, [form]);
+
+  const handleFormChange = useCallback(() => {
+    const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
+
+    let errorCount = 0;
+
+    if (restricted) {
+      // Transfers restricted
+      // CHECK 1: singleLimit is a positive integer
+      if (isValidInteger(singleLimit)) {
         setValidSingleLimit({ validateStatus: '', errorMsg: '' });
+      } else {
+        setValidSingleLimit({ validateStatus: 'error', errorMsg: LimitFormatTip });
+        errorCount++;
+      }
+      // CHECK 2: dailyLimit is a positive integer
+      if (isValidInteger(dailyLimit)) {
+        setValidDailyLimit({ validateStatus: '', errorMsg: '' });
+      } else {
+        setValidDailyLimit({ validateStatus: 'error', errorMsg: LimitFormatTip });
+        errorCount++;
+      }
+      // CHECK 3: dailyLimit >= singleLimit
+      if (isValidInteger(singleLimit) && isValidInteger(dailyLimit)) {
+        if (Number(dailyLimit) >= Number(singleLimit)) {
+          setValidSingleLimit({ validateStatus: '', errorMsg: '' });
+        } else {
+          setValidSingleLimit({ validateStatus: 'error', errorMsg: SingleExceedDaily });
+          errorCount++;
+        }
       }
     }
 
-    setDisable(!((restricted && singleLimit && dailyLimit) || !restricted));
+    return errorCount;
   }, [form]);
 
   const handleRestrictedChange = useCallback(
     (checked: boolean) => {
       setRestrictedValue(checked);
-      handleFormChange();
+
+      handleDisableCheck();
     },
-    [handleFormChange],
+    [handleDisableCheck],
   );
 
-  const handleSingleLimitChange = useCallback(
-    (v: string) => {
-      if (isValidInteger(v)) {
-        setValidSingleLimit({ validateStatus: '', errorMsg: '' });
-        handleFormChange();
-      } else {
-        return setValidSingleLimit({ validateStatus: 'error', errorMsg: LimitFormatTip });
-      }
-    },
-    [handleFormChange],
-  );
+  const handleSingleLimitChange = useCallback(() => {
+    handleDisableCheck();
+    setValidSingleLimit({ validateStatus: '', errorMsg: '' });
+  }, [handleDisableCheck]);
 
-  const handleDailyLimitChange = useCallback(
-    (v: string) => {
-      if (isValidInteger(v)) {
-        setValidDailyLimit({ validateStatus: '', errorMsg: '' });
-        handleFormChange();
-      } else {
-        return setValidDailyLimit({ validateStatus: 'error', errorMsg: LimitFormatTip });
-      }
-    },
-    [handleFormChange],
-  );
+  const handleDailyLimitChange = useCallback(() => {
+    handleDisableCheck();
+    setValidDailyLimit({ validateStatus: '', errorMsg: '' });
+  }, [handleDisableCheck]);
 
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
@@ -193,8 +211,8 @@ export default function TransferSettingsEditMain({
         setLoading(true);
         const guardiansApproved = formatGuardianValue(approvalInfo);
         const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
-        const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData?.decimals)) : '-1';
-        const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData?.decimals)) : '-1';
+        const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
+        const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData.decimals)) : '-1';
 
         await setTransferLimit({
           params: {
@@ -211,13 +229,14 @@ export default function TransferSettingsEditMain({
         // Guarantee that the contract can query the latest data
         await sleep(1000);
 
-        const params: IPaymentSecurityItem = {
+        const params: ITransferLimitItemWithRoute = {
           dailyLimit: transDailyLimit,
           singleLimit: transSingleLimit,
           chainId: targetChainId,
           symbol: symbol,
-          decimals: initData?.decimals || 8,
+          decimals: initData.decimals || 8,
           restricted,
+          businessFrom: initData.businessFrom,
         };
 
         onSuccess?.(params);
@@ -237,7 +256,8 @@ export default function TransferSettingsEditMain({
     [
       caHash,
       form,
-      initData?.decimals,
+      initData.businessFrom,
+      initData.decimals,
       isErrorTip,
       onGuardiansApproveError,
       onSuccess,
@@ -247,6 +267,13 @@ export default function TransferSettingsEditMain({
     ],
   );
 
+  const onFinish = () => {
+    const errorCount = handleFormChange();
+    if (errorCount > 0) return;
+
+    setApprovalVisible(true);
+  };
+
   const getData = useCallback(async () => {
     setLoading(true);
     await getVerifierInfo();
@@ -254,10 +281,15 @@ export default function TransferSettingsEditMain({
     setLoading(false);
   }, [getGuardianList, getVerifierInfo]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     getData();
-    handleFormChange();
-  }, [getData, handleFormChange]);
+
+    if (initData && !initData.restricted) {
+      form.setFieldValue('singleLimit', divDecimals(initData.defaultSingleLimit, initData.decimals).toFixed());
+      form.setFieldValue('dailyLimit', divDecimals(initData.defaultDailyLimit, initData.decimals).toFixed());
+    }
+    handleDisableCheck();
+  });
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
@@ -269,15 +301,17 @@ export default function TransferSettingsEditMain({
         className="portkey-ui-flex-column portkey-ui-transfer-settings-edit-form"
         initialValues={initValue}
         requiredMark={false}
-        onFinish={() => setApprovalVisible(true)}>
+        onFinish={onFinish}>
         <div className="portkey-ui-form-content">
-          <FormItem name="restricted" label={'Transfer settings'}>
+          <FormItem name="restricted" label={'Transfer Settings'}>
             <SwitchComponent
               onChange={handleRestrictedChange}
               checked={restrictedValue}
-              text={restrictedValue ? 'On' : 'Off'}
+              text={restrictedValue ? 'ON' : 'OFF'}
             />
           </FormItem>
+
+          <div className="portkey-ui-divide" />
 
           <div className={!restrictedValue ? 'portkey-ui-hidden-form' : ''}>
             <FormItem
@@ -287,8 +321,8 @@ export default function TransferSettingsEditMain({
               help={validSingleLimit.errorMsg}>
               <Input
                 placeholder={'Enter limit'}
-                onChange={(e) => handleSingleLimitChange(e.target.value)}
-                maxLength={16}
+                onChange={handleSingleLimitChange}
+                maxLength={18 - Number(initData.decimals)}
                 suffix={symbol}
               />
             </FormItem>
@@ -299,8 +333,8 @@ export default function TransferSettingsEditMain({
               help={validDailyLimit.errorMsg}>
               <Input
                 placeholder={'Enter limit'}
-                onChange={(e) => handleDailyLimitChange(e.target.value)}
-                maxLength={16}
+                onChange={handleDailyLimitChange}
+                maxLength={18 - Number(initData.decimals)}
                 suffix={symbol}
               />
             </FormItem>

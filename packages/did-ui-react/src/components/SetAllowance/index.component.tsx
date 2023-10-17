@@ -1,5 +1,5 @@
 import { Button, Input } from 'antd';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { parseInputNumberChange } from '../../utils/input';
 import BigNumber from 'bignumber.js';
 import './index.less';
@@ -22,6 +22,7 @@ export interface IAllowance {
 export interface SetAllowanceHandlerProps {
   onCancel?: () => void;
   onConfirm?: (res: IAllowance) => void;
+  onAllowanceChange?: (amount: string) => void;
 }
 
 export type SetAllowanceProps = BaseSetAllowanceProps & {
@@ -36,6 +37,7 @@ export default function SetAllowanceMain({
   className,
   recommendedAmount = 0,
   onCancel,
+  onAllowanceChange,
   onConfirm,
 }: SetAllowanceProps) {
   const formatAllowanceInput = useCallback(
@@ -43,16 +45,16 @@ export default function SetAllowanceMain({
     [max],
   );
 
-  const [allowance, setAllowance] = useState<string>(formatAllowanceInput(amount));
+  const allowance = useMemo(() => formatAllowanceInput(amount), [amount, formatAllowanceInput]);
 
   const [error, setError] = useState<string>('');
 
   const inputChange = useCallback(
     (amount: string | number) => {
-      setAllowance(formatAllowanceInput(amount));
+      onAllowanceChange?.(formatAllowanceInput(amount));
       setError('');
     },
-    [formatAllowanceInput],
+    [formatAllowanceInput, onAllowanceChange],
   );
 
   return (

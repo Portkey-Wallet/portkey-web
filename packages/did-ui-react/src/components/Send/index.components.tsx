@@ -36,6 +36,8 @@ import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
 import { getChain } from '../../hooks/useChainInfo';
+import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -45,6 +47,8 @@ export interface SendProps {
   onCancel?: () => void;
   onClose?: () => void;
   onSuccess?: () => void;
+  onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
+  onModifyGuardians?: () => void;
 }
 
 enum Stage {
@@ -54,13 +58,24 @@ enum Stage {
 }
 
 const ExceedLimit = 'ExceedLimit';
+const WalletIsNotSecure = 'WalletIsNotSecure';
 
 type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
 };
 
-function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, onClose, onSuccess }: SendProps) {
-  const [{ accountInfo, managementAccount, caInfo, caHash }] = usePortkeyAsset();
+function SendContent({
+  assetItem,
+  closeIcon,
+  className,
+  wrapperStyle,
+  onCancel,
+  onClose,
+  onSuccess,
+  onModifyLimit,
+  onModifyGuardians,
+}: SendProps) {
+  const [{ accountInfo, managementAccount, caInfo, caHash, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(Stage.Address);
 
@@ -205,10 +220,20 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
       symbol: tokenInfo.symbol,
       amount: amount,
       decimals: tokenInfo.decimals,
+      businessFrom: 'send',
+      onOk: onModifyLimit,
     });
 
     return res;
-  }, [amount, caHash, managementAccount?.privateKey, tokenInfo.chainId, tokenInfo.decimals, tokenInfo.symbol]);
+  }, [
+    amount,
+    caHash,
+    managementAccount?.privateKey,
+    onModifyLimit,
+    tokenInfo.chainId,
+    tokenInfo.decimals,
+    tokenInfo.symbol,
+  ]);
 
   const sendHandler = useCallback(async () => {
     try {
@@ -249,9 +274,9 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
       onSuccess?.();
     } catch (error: any) {
       console.log('sendHandler==error', error);
-      if (!error?.type) return message.error(error);
+      if (!error?.type) return message.error(handleErrorMessage(error));
       if (error.type === 'managerTransfer') {
-        return message.error(error);
+        return message.error(handleErrorMessage(error));
       } else if (error.type === 'crossChainTransfer') {
         // dispatch(addFailedActivity(error.data));
         // TODO
@@ -294,6 +319,15 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
         return 'Synchronizing on-chain account information...';
       }
       if (!isNFT) {
+        // wallet security check
+        const res = await walletSecurityCheck({
+          originChainId: originChainId,
+          targetChainId: tokenInfo.chainId,
+          caHash: caHash || '',
+          onOk: onModifyGuardians,
+        });
+        if (!res) return WalletIsNotSecure;
+
         // transfer limit check
         const limitRes = await handleCheckTransferLimit();
 
@@ -340,6 +374,8 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
     handleCheckTransferLimit,
     isNFT,
     managementAccount?.address,
+    onModifyGuardians,
+    originChainId,
     toAccount.address,
     tokenInfo.chainId,
     tokenInfo.decimals,
@@ -394,7 +430,7 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
         handler: async () => {
           const res = await handleCheckPreview();
           console.log('handleCheckPreview res', res);
-          if (res === ExceedLimit) return;
+          if (res === ExceedLimit || res === WalletIsNotSecure) return;
           if (!res) {
             setTipMsg('');
             setStage(Stage.Preview);

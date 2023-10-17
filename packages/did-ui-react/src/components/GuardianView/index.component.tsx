@@ -17,18 +17,18 @@ import {
   socialLoginAuth,
   verification,
 } from '../../utils';
-import { useThrottleCallback } from '../../hooks/throttle';
 import CustomModal from '../CustomModal';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
 import ConfigProvider from '../config-provider';
+import clsx from 'clsx';
 import './index.less';
 
 export interface GuardianViewProps {
   header?: ReactNode;
-  targetChainId?: ChainId;
+  className?: string;
   originChainId?: ChainId;
   isErrorTip?: boolean;
   currentGuardian: UserGuardianStatus;
@@ -47,9 +47,10 @@ const guardianIconMap: any = {
 
 function GuardianView({
   header,
+  className,
   originChainId = 'AELF',
   onEditGuardian,
-  isErrorTip,
+  isErrorTip = true,
   currentGuardian,
   guardianList,
   handleSetLoginGuardian,
@@ -58,6 +59,7 @@ function GuardianView({
   const { t } = useTranslation();
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
+  const [switchDisable, setSwitchDisable] = useState<boolean>(false);
   const reCaptchaHandler = useReCaptchaModal();
   const verifyToken = useVerifyToken();
   const socialBasic = useCallback(
@@ -241,7 +243,7 @@ function GuardianView({
     }
   }, [currentGuardian, socialVerify, handleSwitch, isErrorTip, onError, sendCode]);
 
-  const checkSwitch = useThrottleCallback(
+  const checkSwitch = useCallback(
     async (status: boolean) => {
       if (status) {
         const isLogin = Object.values(guardianList ?? {}).some(
@@ -253,6 +255,7 @@ function GuardianView({
           return;
         }
         try {
+          setSwitchDisable(true);
           await did.getHolderInfo({
             chainId: originChainId,
             loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
@@ -275,6 +278,8 @@ function GuardianView({
               onError,
             );
           }
+        } finally {
+          setSwitchDisable(false);
         }
       } else {
         let loginAccountNum = 0;
@@ -299,7 +304,7 @@ function GuardianView({
     setVerifierVisible(false);
   }, [currentGuardian]);
   return (
-    <div className="portkey-ui-guardian-view portkey-ui-flex-column">
+    <div className={clsx('portkey-ui-guardian-view', 'portkey-ui-flex-column', className)}>
       <>
         {header}
         <div className="guardian-view-body portkey-ui-flex-column portkey-ui-flex-1">
@@ -329,6 +334,7 @@ function GuardianView({
             </span>
             <div className="guardian-view-switch-status-wrap">
               <Switch
+                loading={switchDisable}
                 className="guardian-view-switch-login-switch"
                 checked={currentGuardian?.isLoginGuardian}
                 onChange={checkSwitch}

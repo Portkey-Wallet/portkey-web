@@ -4,7 +4,9 @@ export interface IWalletBalanceCheckParams {
   caHash: string;
 }
 export interface IWalletBalanceCheckResponse {
-  isSafe: boolean;
+  isOriginChainSafe: boolean;
+  isSynchronizing: boolean;
+  isTransferSafe: boolean;
 }
 
 export interface ISecurityService {
@@ -12,13 +14,15 @@ export interface ISecurityService {
   getPaymentSecurityList(params: IPaymentSecurityListParams): Promise<IPaymentSecurityListResponse>;
 }
 
-export interface IPaymentSecurityItem {
+export interface ITransferLimitItem {
   chainId: ChainId;
   symbol: string;
   singleLimit: string;
   dailyLimit: string;
   restricted: boolean;
   decimals: number | string;
+  defaultSingleLimit?: string;
+  defaultDailyLimit?: string;
 }
 
 export interface IPaymentSecurityListParams {
@@ -28,7 +32,7 @@ export interface IPaymentSecurityListParams {
 }
 
 export interface IPaymentSecurityListResponse {
-  data: IPaymentSecurityItem[];
+  data: ITransferLimitItem[];
   totalRecordCount: number;
   code?: number;
   message?: string;
