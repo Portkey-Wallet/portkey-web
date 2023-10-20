@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.20](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.19...v1.5.0-alpha.20) (2023-10-20)
+
+### Bug Fixes
+
+- 🐛 Manager approve get token info error ([b683ab7](https://github.com/Portkey-Wallet/portkey-web/commit/b683ab7ca1f34edd42a565ea1754fec9155cf286))
+
 ## [1.5.0-alpha.19](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.5...v1.5.0-alpha.19) (2023-10-17)
 
 ## [1.5.0-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.17...v1.5.0-alpha.18) (2023-10-16)
