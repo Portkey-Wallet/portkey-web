@@ -134,7 +134,7 @@ export default function ManagerApproveInner({
 
   const getTokenInfo = useCallback(async () => {
     try {
-      const chainInfo = await getChain(originChainId);
+      const chainInfo = await getChain(targetChainId);
       if (!chainInfo) throw Error('Missing verifier, please check params');
       const result = await CustomContractBasic.callViewMethod({
         contractOptions: {
@@ -153,7 +153,7 @@ export default function ManagerApproveInner({
       console.error(error);
       onError?.(Error(handleErrorMessage(error)));
     }
-  }, [amount, onError, originChainId, symbol]);
+  }, [amount, onError, symbol, targetChainId]);
 
   useEffect(() => {
     getTokenInfo();
