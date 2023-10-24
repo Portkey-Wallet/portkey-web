@@ -5,6 +5,7 @@ import BigNumber from 'bignumber.js';
 import './index.less';
 import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
+import { divDecimals } from '../../utils/converter';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
@@ -56,13 +57,12 @@ export default function SetAllowanceMain({
     (amount: string | number) => {
       if (isValidNumber(`${amount}`)) {
         onAllowanceChange?.(formatAllowanceInput(amount));
-      } else {
-        const _amount = amount ? allowance : '';
-        onAllowanceChange?.(_amount);
+      } else if (!amount) {
+        onAllowanceChange?.('');
       }
       setError('');
     },
-    [allowance, formatAllowanceInput, onAllowanceChange],
+    [formatAllowanceInput, onAllowanceChange],
   );
 
   return (

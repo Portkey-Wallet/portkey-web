@@ -2,7 +2,7 @@ import GuardianApprovalMain from '../GuardianApproval/index.component';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChainId } from '@portkey/types';
 import SetAllowanceMain, { BaseSetAllowanceProps, IAllowance } from '../SetAllowance/index.component';
-import { AuthServe, CustomContractBasic, did, handleErrorMessage, isValidNumber, setLoading } from '../../utils';
+import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } from '../../utils';
 import { getChain } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
@@ -155,15 +155,6 @@ export default function ManagerApproveInner({
     }
   }, [amount, onError, symbol, targetChainId]);
 
-  const handleAllowanceChange = useCallback((value: string) => {
-    if (!value) {
-      return setAllowance('');
-    }
-    if (isValidNumber(value)) {
-      return setAllowance(value);
-    }
-  }, []);
-
   useEffect(() => {
     getTokenInfo();
   }, [getTokenInfo]);
@@ -181,7 +172,7 @@ export default function ManagerApproveInner({
             max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0)}
             dappInfo={dappInfo}
             onCancel={onCancel}
-            onAllowanceChange={handleAllowanceChange}
+            onAllowanceChange={setAllowance}
             onConfirm={allowanceConfirm}
           />
         )}
