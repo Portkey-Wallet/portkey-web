@@ -318,21 +318,21 @@ function SendContent({
       if (!_isManagerSynced) {
         return 'Synchronizing on-chain account information...';
       }
+
+      // wallet security check
+      const res = await walletSecurityCheck({
+        originChainId: originChainId,
+        targetChainId: tokenInfo.chainId,
+        caHash: caHash || '',
+        onOk: onModifyGuardians,
+      });
+      if (!res) return WalletIsNotSecure;
+
+      // transfer limit check
+      const limitRes = await handleCheckTransferLimit();
+      if (!limitRes) return ExceedLimit;
+
       if (!isNFT) {
-        // wallet security check
-        const res = await walletSecurityCheck({
-          originChainId: originChainId,
-          targetChainId: tokenInfo.chainId,
-          caHash: caHash || '',
-          onOk: onModifyGuardians,
-        });
-        if (!res) return WalletIsNotSecure;
-
-        // transfer limit check
-        const limitRes = await handleCheckTransferLimit();
-
-        if (!limitRes) return ExceedLimit;
-
         // insufficient balance check
         if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
           return TransactionError.TOKEN_NOT_ENOUGH;
