@@ -5,10 +5,12 @@ import BigNumber from 'bignumber.js';
 import './index.less';
 import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
+import { divDecimals } from '../../utils/converter';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
   symbol: string;
+  decimals?: number;
   amount: number | string;
   className?: string;
   max?: string | number;
@@ -32,6 +34,7 @@ export type SetAllowanceProps = BaseSetAllowanceProps & {
 export default function SetAllowanceMain({
   max = Infinity,
   amount,
+  decimals,
   dappInfo,
   symbol,
   className,
@@ -41,8 +44,9 @@ export default function SetAllowanceMain({
   onConfirm,
 }: SetAllowanceProps) {
   const formatAllowanceInput = useCallback(
-    (value: number | string) => parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined),
-    [max],
+    (value: number | string) =>
+      parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined, decimals),
+    [decimals, max],
   );
 
   const allowance = useMemo(() => formatAllowanceInput(amount), [amount, formatAllowanceInput]);
@@ -51,7 +55,11 @@ export default function SetAllowanceMain({
 
   const inputChange = useCallback(
     (amount: string | number) => {
-      onAllowanceChange?.(formatAllowanceInput(amount));
+      if (isValidNumber(`${amount}`)) {
+        onAllowanceChange?.(formatAllowanceInput(amount));
+      } else if (!amount) {
+        onAllowanceChange?.('');
+      }
       setError('');
     },
     [formatAllowanceInput, onAllowanceChange],
