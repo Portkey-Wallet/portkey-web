@@ -1,6 +1,6 @@
 {
   "name": "@portkey/socket",
-  "version": "1.5.0-alpha.21",
+  "version": "1.5.0-alpha.22",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@abp/signalr": "^7.0.0",
-    "@portkey/utils": "^1.5.0-alpha.21"
+    "@portkey/utils": "^1.5.0-alpha.22"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }
