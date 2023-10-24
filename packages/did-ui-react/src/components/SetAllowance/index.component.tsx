@@ -54,10 +54,15 @@ export default function SetAllowanceMain({
 
   const inputChange = useCallback(
     (amount: string | number) => {
-      onAllowanceChange?.(formatAllowanceInput(amount));
+      if (isValidNumber(`${amount}`)) {
+        onAllowanceChange?.(formatAllowanceInput(amount));
+      } else {
+        const _amount = amount ? allowance : '';
+        onAllowanceChange?.(_amount);
+      }
       setError('');
     },
-    [formatAllowanceInput, onAllowanceChange],
+    [allowance, formatAllowanceInput, onAllowanceChange],
   );
 
   return (
