@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.21](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.20...v1.5.0-alpha.21) (2023-10-24)
+
+### Features
+
+- 🎸 update SetAllowanceProps ([ddc6d93](https://github.com/Portkey-Wallet/portkey-web/commit/ddc6d936390ac8fd9f3067dbb78292fc91d98c82))
+
+### Bug Fixes
+
+- 🐛 update set allowance input change ([24e6b1b](https://github.com/Portkey-Wallet/portkey-web/commit/24e6b1b8b4ad8161e078b9df49af8b80b7016a52))
+- 🐛 update setallowance input change ([1534325](https://github.com/Portkey-Wallet/portkey-web/commit/1534325a7e4a373b998522f994005b8b4e80b2b2))
+
 ## [1.5.0-alpha.20](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.19...v1.5.0-alpha.20) (2023-10-20)
 
 ### Bug Fixes
