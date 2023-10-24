@@ -9,6 +9,7 @@ import clsx from 'clsx';
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
   symbol: string;
+  decimals?: number;
   amount: number | string;
   className?: string;
   max?: string | number;
@@ -32,6 +33,7 @@ export type SetAllowanceProps = BaseSetAllowanceProps & {
 export default function SetAllowanceMain({
   max = Infinity,
   amount,
+  decimals,
   dappInfo,
   symbol,
   className,
@@ -41,8 +43,9 @@ export default function SetAllowanceMain({
   onConfirm,
 }: SetAllowanceProps) {
   const formatAllowanceInput = useCallback(
-    (value: number | string) => parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined),
-    [max],
+    (value: number | string) =>
+      parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined, decimals),
+    [decimals, max],
   );
 
   const allowance = useMemo(() => formatAllowanceInput(amount), [amount, formatAllowanceInput]);
