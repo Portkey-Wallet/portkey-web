@@ -9,7 +9,7 @@
     "dev:analyze": "PORT=4000 ANALYZE=true next dev"
   },
   "dependencies": {
-    "next": "12.2.0",
+    "next": "13.5.0",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "@portkey/did": "^0.0.1-alpha.3.3",
