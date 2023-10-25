@@ -33,6 +33,7 @@ import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import useDebounce from '../../hooks/useDebounce';
 
 export enum AssetStep {
   overview = 'overview',
@@ -121,7 +122,7 @@ function AssetMain({
     setAllToken(result.items);
   }, [caAddressInfos]);
 
-  useThrottleEffect(() => {
+  const getAssetInfo = useCallback(() => {
     if (initialized && caAddressInfos) {
       // TODO Request all data at once, no paging request
       basicAssetViewAsync
@@ -140,6 +141,8 @@ function AssetMain({
       getAllTokenList();
     }
   }, [caAddressInfos, dispatch, getAllTokenList, initialized, maxNftNum]);
+
+  useDebounce(getAssetInfo, 300);
 
   const [selectToken, setSelectToken] = useState<BaseToken>();
 
