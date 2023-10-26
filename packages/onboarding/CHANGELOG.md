@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.22...v1.5.0-alpha.23) (2023-10-26)
+
+**Note:** Version bump only for package @portkey/onboarding
+
 ## [1.5.0-alpha.22](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.21...v1.5.0-alpha.22) (2023-10-24)
 
 **Note:** Version bump only for package @portkey/onboarding

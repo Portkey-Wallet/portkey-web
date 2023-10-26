@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.22...v1.5.0-alpha.23) (2023-10-26)
+
+### Features
+
+- 🎸 change security and limit check ([efd1209](https://github.com/Portkey-Wallet/portkey-web/commit/efd12094ca2638b55d204b3395dc3ef1af2cb985))
+
+### Bug Fixes
+
+- 🐛 get asset list ([15b0fba](https://github.com/Portkey-Wallet/portkey-web/commit/15b0fba64d4544874aaf7005509a53a85763ae18))
+
 ## [1.5.0-alpha.22](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.21...v1.5.0-alpha.22) (2023-10-24)
 
 ### Bug Fixes
