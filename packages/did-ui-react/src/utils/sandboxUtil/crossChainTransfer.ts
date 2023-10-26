@@ -8,6 +8,7 @@ import { getChain } from '../../hooks/useChainInfo';
 import { getContractBasic } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
 import { crossChainTransferToCa } from './crossChainTransferToCa';
+import { getBalanceByContract } from './getBalance';
 
 interface CrossChainTransferParams {
   sandboxId?: string;
@@ -84,6 +85,32 @@ const crossChainTransfer = async ({
       contractAddress: chainInfo.caContractAddress,
       chainType,
     });
+    if (tokenInfo.symbol !== DEFAULT_TOKEN.symbol) {
+      const managerBalanceRes = await getBalanceByContract({
+        sandboxId,
+        chainType,
+        chainId: chainId,
+        tokenContractAddress: tokenInfo.address,
+        paramsOption: {
+          owner: managerAddress,
+          symbol: DEFAULT_TOKEN.symbol,
+        },
+      });
+      const managerBalance = managerBalanceRes.balance;
+      const crossChainFeeAmount = timesDecimals(crossChainFee, DEFAULT_TOKEN.decimals);
+
+      if (crossChainFeeAmount.gt(managerBalance)) {
+        const managerTransferCrossFeeRes = await contract.callSendMethod('ManagerTransfer', account.address, {
+          caHash,
+          symbol: DEFAULT_TOKEN.symbol,
+          to: managerAddress,
+          amount: crossChainFeeAmount.toFixed(0),
+          memo,
+        });
+
+        if (!managerTransferCrossFeeRes.transactionId) throw 'ManagerTransfer missing transactionId';
+      }
+    }
     managerTransferResult = await contract.callSendMethod('ManagerTransfer', account.address, {
       caHash,
       symbol: tokenInfo.symbol,
@@ -91,6 +118,7 @@ const crossChainTransfer = async ({
       amount,
       memo,
     });
+
     if (!managerTransferResult.transactionId) throw 'ManagerTransfer missing transactionId';
   } catch (error) {
     throw {

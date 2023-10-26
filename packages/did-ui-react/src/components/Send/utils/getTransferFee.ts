@@ -4,10 +4,12 @@ import { BaseToken } from '../../types/assets';
 import { DEFAULT_TOKEN } from '../../../constants/assets';
 import { getChain } from '../../../hooks/useChainInfo';
 import { getTransactionFee } from '../../../utils/sandboxUtil/getTransactionFee';
-import { divDecimalsStr } from '../../../utils/converter';
+import { divDecimalsStr, timesDecimals } from '../../../utils/converter';
 import { ZERO } from '../../../constants/misc';
+import { getBalanceByContract } from '../../../utils/sandboxUtil/getBalance';
 
 const getTransferFee = async ({
+  sandboxId,
   managerAddress,
   toAddress,
   privateKey,
@@ -17,7 +19,9 @@ const getTransferFee = async ({
   caHash,
   amount,
   memo = '',
+  crossChainFee,
 }: {
+  sandboxId?: string;
   managerAddress: string;
   chainType: ChainType;
   chainId: ChainId;
@@ -27,13 +31,14 @@ const getTransferFee = async ({
   caHash: string;
   amount: number;
   memo?: string;
+  crossChainFee?: number;
 }) => {
   const chainInfo = await getChain(chainId);
   if (!chainInfo) throw 'Please check network connection and chainId';
 
   if (isCrossChain(toAddress, chainId)) {
     // first
-
+    let _firstFee = ZERO;
     const firstTxResult = await getTransactionFee({
       contractAddress: chainInfo.caContractAddress,
       rpcUrl: chainInfo.endPoint,
@@ -48,7 +53,42 @@ const getTransferFee = async ({
         memo,
       },
     });
-    const _firstFee = firstTxResult['ELF'];
+    _firstFee = firstTxResult['ELF'];
+
+    if (token.symbol !== DEFAULT_TOKEN.symbol) {
+      const managerBalanceRes = await getBalanceByContract({
+        sandboxId,
+        chainType,
+        chainId: chainId,
+        tokenContractAddress: token.address,
+        paramsOption: {
+          owner: managerAddress,
+          symbol: DEFAULT_TOKEN.symbol,
+        },
+      });
+      const managerBalance = managerBalanceRes.balance;
+
+      const crossChainFeeAmount = timesDecimals(crossChainFee, DEFAULT_TOKEN.decimals);
+      if (crossChainFeeAmount.gt(managerBalance)) {
+        const crossELFRes = await getTransactionFee({
+          contractAddress: chainInfo.caContractAddress,
+          rpcUrl: chainInfo.endPoint,
+          chainType,
+          methodName: 'ManagerTransfer',
+          privateKey,
+          paramsOption: {
+            caHash,
+            symbol: DEFAULT_TOKEN.symbol,
+            to: managerAddress,
+            amount: crossChainFeeAmount.toFixed(0),
+            memo,
+          },
+        });
+        const crossELFFee = crossELFRes['ELF'];
+
+        _firstFee = ZERO.plus(_firstFee).plus(crossELFFee);
+      }
+    }
     const firstFee = divDecimalsStr(_firstFee, DEFAULT_TOKEN.decimals);
     console.log(firstTxResult, 'transactionRes===cross');
     if (Number.isNaN(ZERO.plus(firstFee).toNumber())) {

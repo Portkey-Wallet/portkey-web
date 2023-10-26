@@ -5,13 +5,7 @@ import TitleWrapper from '../TitleWrapper';
 import { Button, Modal, message } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
-import {
-  getAddressChainId,
-  getAelfAddress,
-  supplementAllAelfAddress,
-  isCrossChain,
-  isDIDAddress,
-} from '../../utils/aelf';
+import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
 import { ChainId } from '@portkey/types';
 import ToAccount from './components/ToAccount';
@@ -38,6 +32,7 @@ import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
 import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
+import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -151,6 +146,7 @@ function SendContent({
           token: tokenInfo,
           caHash,
           amount: timesDecimals(num || amount, tokenInfo.decimals).toNumber(),
+          crossChainFee: defaultFee.crossChain,
         });
         return feeRes;
       } catch (error) {
@@ -158,7 +154,7 @@ function SendContent({
         console.log('getFee===error', _error);
       }
     },
-    [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo],
+    [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo, defaultFee.crossChain],
   );
 
   const retryCrossChain = useCallback(
@@ -223,13 +219,51 @@ function SendContent({
       businessFrom: 'send',
       onOk: onModifyLimit,
     });
+    // check ELF when cross transfer
+    let isELFExceedLimit = true;
+    if (isCrossChain(toAccount.address, tokenInfo.chainId) && tokenInfo.symbol !== defaultToken.symbol) {
+      const managerBalanceRes = await getBalanceByContract({
+        sandboxId,
+        chainType,
+        chainId: tokenInfo.chainId,
+        tokenContractAddress: tokenInfo.address,
+        paramsOption: {
+          owner: managementAccount.address,
+          symbol: defaultToken.symbol,
+        },
+      });
+      const managerBalance = managerBalanceRes.balance;
+      const crossChainFeeAmount = timesDecimals(defaultFee.crossChain, defaultToken.decimals);
+      if (crossChainFeeAmount.gt(managerBalance)) {
+        const res = await transferLimitCheck({
+          rpcUrl: chainInfo?.endPoint || '',
+          caContractAddress: chainInfo?.caContractAddress || '',
+          caHash: caHash,
+          chainId: tokenInfo.chainId,
+          symbol: defaultToken.symbol,
+          amount: `${defaultFee.crossChain}`,
+          decimals: defaultToken.decimals,
+          businessFrom: 'send',
+          onOk: onModifyLimit,
+        });
+        isELFExceedLimit = res;
+      }
+    }
 
-    return res;
+    return res && isELFExceedLimit;
   }, [
     amount,
     caHash,
+    chainType,
+    defaultFee.crossChain,
+    defaultToken.decimals,
+    defaultToken.symbol,
+    managementAccount?.address,
     managementAccount?.privateKey,
     onModifyLimit,
+    sandboxId,
+    toAccount.address,
+    tokenInfo.address,
     tokenInfo.chainId,
     tokenInfo.decimals,
     tokenInfo.symbol,
@@ -479,10 +513,7 @@ function SendContent({
             caAddress={caInfo?.[tokenInfo.chainId].caAddress || ''}
             nickname={accountInfo?.nickName}
             type={!isNFT ? 'token' : 'nft'}
-            toAccount={{
-              ...toAccount,
-              address: supplementAllAelfAddress(toAccount.address, undefined, tokenInfo.chainId),
-            }}
+            toAccount={toAccount}
             amount={amount}
             balanceInUsd={tokenInfo.balanceInUsd}
             symbol={tokenInfo?.symbol || ''}
