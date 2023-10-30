@@ -48,6 +48,8 @@ export type RecoveryResult = {
 export type GetCAHolderByManagerParams = {
   manager: string;
   chainId: string;
+  caHash?: string;
+  caAddresses?: string[];
 };
 
 export type Maybe<T> = T | null;
