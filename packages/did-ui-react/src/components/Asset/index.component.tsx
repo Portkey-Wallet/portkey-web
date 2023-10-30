@@ -33,6 +33,7 @@ import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import useDebounce from '../../hooks/useDebounce';
 
 export enum AssetStep {
   overview = 'overview',
@@ -121,7 +122,7 @@ function AssetMain({
     setAllToken(result.items);
   }, [caAddressInfos]);
 
-  useThrottleEffect(() => {
+  const getAssetInfo = useCallback(() => {
     if (initialized && caAddressInfos) {
       // TODO Request all data at once, no paging request
       basicAssetViewAsync
@@ -141,6 +142,8 @@ function AssetMain({
     }
   }, [caAddressInfos, dispatch, getAllTokenList, initialized, maxNftNum]);
 
+  useDebounce(getAssetInfo, 300);
+
   const [selectToken, setSelectToken] = useState<BaseToken>();
 
   const [sendToken, setSendToken] = useState<IAssetItemType>();
@@ -158,16 +161,22 @@ function AssetMain({
     setAssetStep(AssetStep.my);
   }, []);
 
-  const onReceive = useCallback(async (v: BaseToken) => {
-    setSelectToken(v);
+  const onReceive = useCallback(async (v: any) => {
+    setSelectToken({
+      ...v,
+      address: v.address || v.tokenContractAddress,
+    });
     await sleep(50);
     setAssetStep(AssetStep.receive);
   }, []);
 
   const onBuy = useCallback(
-    async (v: BaseToken) => {
+    async (v: any) => {
       if (!portkeyWebSocketUrl) return message.error('Please configure socket service url in setGlobalConfig');
-      setSelectToken(v);
+      setSelectToken({
+        ...v,
+        address: v.address || v.tokenContractAddress,
+      });
       await sleep(50);
       setAssetStep(AssetStep.ramp);
     },

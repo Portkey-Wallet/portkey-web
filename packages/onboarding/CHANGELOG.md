@@ -3,6 +3,62 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.23...v1.5.0) (2023-10-30)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.5.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.22...v1.5.0-alpha.23) (2023-10-26)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.5.0-alpha.22](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.21...v1.5.0-alpha.22) (2023-10-24)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.5.0-alpha.21](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.20...v1.5.0-alpha.21) (2023-10-24)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.5.0-alpha.20](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.19...v1.5.0-alpha.20) (2023-10-20)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.5.0-alpha.19](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.5...v1.5.0-alpha.19) (2023-10-17)
+
+## [1.5.0-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.17...v1.5.0-alpha.18) (2023-10-16)
+
+## [1.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.16...v1.5.0-alpha.17) (2023-10-16)
+
+## [1.5.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.14...v1.5.0-alpha.15) (2023-10-07)
+
+## [1.5.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.13...v1.5.0-alpha.14) (2023-09-28)
+
+## [1.5.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.12...v1.5.0-alpha.13) (2023-09-27)
+
+## [1.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.4...v1.5.0-alpha.12) (2023-09-27)
+
+## [1.5.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.8...v1.5.0-alpha.9) (2023-09-08)
+
+## [1.5.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.5.0-alpha.8) (2023-09-08)
+
+## [1.5.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.6...v1.5.0-alpha.7) (2023-09-07)
+
+## [1.5.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.5...v1.5.0-alpha.6) (2023-09-06)
+
+## [1.5.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.4...v1.5.0-alpha.5) (2023-09-06)
+
+## [1.5.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.3...v1.5.0-alpha.4) (2023-09-06)
+
+## [1.5.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.2...v1.5.0-alpha.3) (2023-09-06)
+
+## [1.5.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.1...v1.5.0-alpha.2) (2023-09-06)
+
+## [1.5.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.0...v1.5.0-alpha.1) (2023-09-06)
+
+## [1.5.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.5.0-alpha.0) (2023-09-06)
+
+**Note:** Version bump only for package @portkey/onboarding
+
 ## [1.5.0-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.17...v1.5.0-alpha.18) (2023-10-16)
 
 **Note:** Version bump only for package @portkey/onboarding
