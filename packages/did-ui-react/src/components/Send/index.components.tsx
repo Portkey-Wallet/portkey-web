@@ -5,13 +5,7 @@ import TitleWrapper from '../TitleWrapper';
 import { Button, Modal, message } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
-import {
-  getAddressChainId,
-  getAelfAddress,
-  supplementAllAelfAddress,
-  isCrossChain,
-  isDIDAddress,
-} from '../../utils/aelf';
+import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
 import { ChainId } from '@portkey/types';
 import ToAccount from './components/ToAccount';
@@ -479,10 +473,7 @@ function SendContent({
             caAddress={caInfo?.[tokenInfo.chainId].caAddress || ''}
             nickname={accountInfo?.nickName}
             type={!isNFT ? 'token' : 'nft'}
-            toAccount={{
-              ...toAccount,
-              address: supplementAllAelfAddress(toAccount.address, undefined, tokenInfo.chainId),
-            }}
+            toAccount={toAccount}
             amount={amount}
             balanceInUsd={tokenInfo.balanceInUsd}
             symbol={tokenInfo?.symbol || ''}

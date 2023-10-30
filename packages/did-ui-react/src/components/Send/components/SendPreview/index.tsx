@@ -71,12 +71,14 @@ export default function SendPreview({
     } else {
       return (
         <>
-          {isMainnet &&
-            amountInUsdShow({
-              balance: ZERO.plus(amount).minus(crossChainFee).toString(),
-              decimal: 0,
-              price: defaultTokenPrice,
-            })}
+          <span className="usd">
+            {isMainnet &&
+              amountInUsdShow({
+                balance: ZERO.plus(amount).minus(crossChainFee).toString(),
+                decimal: 0,
+                price: defaultTokenPrice,
+              })}
+          </span>
           {formatAmountShow(ZERO.plus(amount).minus(crossChainFee))}
         </>
       );
