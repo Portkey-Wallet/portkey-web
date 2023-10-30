@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.23...v1.5.0) (2023-10-30)
+
+### Bug Fixes
+
+- 🐛 cross chain show ([427da1e](https://github.com/Portkey-Wallet/portkey-web/commit/427da1ee0c66c7fa78b42a8103c52d31372de906))
+
 ## [1.5.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.0-alpha.22...v1.5.0-alpha.23) (2023-10-26)
 
 ### Features
