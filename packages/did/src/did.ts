@@ -1,6 +1,7 @@
 import { portkey } from '@portkey/accounts';
 import {
   AccountLoginParams,
+  CheckManagerParams,
   EditManagerParams,
   GetHolderInfoParams,
   IDID,
@@ -111,5 +112,8 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   }
   reset() {
     this.didWallet.reset();
+  }
+  checkManagerIsExist(params: CheckManagerParams): Promise<boolean> {
+    return this.didWallet.checkManagerIsExist(params);
   }
 }

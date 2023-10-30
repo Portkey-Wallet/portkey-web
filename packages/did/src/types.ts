@@ -29,6 +29,13 @@ export type EditManagerParams = {
   caHash?: string;
   managerInfo?: IManagerInfo;
 };
+
+export type CheckManagerParams = {
+  chainId: ChainId;
+  caHash: string;
+  managementAddress: string;
+};
+
 export type ScanLoginParams = EditManagerParams;
 
 export type AccountLoginParams = Omit<RecoveryParams, 'manager'>;
@@ -73,6 +80,14 @@ export interface IDIDAccountMethods extends IAccountMethods {
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   getVerifierServers(chainId: ChainId): Promise<VerifierItem[]>;
   getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo>;
+  /**
+   * @param caHash - CA wallet hash
+   * @param managementAddress - address of managementAccount
+   * @param chainId - If you want to check whether the manager synchronization is completed, the chainId is the chainId of the target chain.
+   *  If you want to check if the manager is removed from the Portkey wallet, the chainId is originChainId
+   * @returns boolean
+   */
+  checkManagerIsExist(params: CheckManagerParams): Promise<boolean>;
 }
 
 export interface IDIDWallet extends IDIDBaseWallet, IDIDAccountMethods {}
