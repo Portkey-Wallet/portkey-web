@@ -44,7 +44,7 @@ import './index.less';
 export interface GuardianAddProps {
   header?: ReactNode;
   className?: string;
-  originChainId?: ChainId;
+  originChainId: ChainId;
   phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
   verifierList?: VerifierItem[];
@@ -64,7 +64,7 @@ export interface ISocialInput {
 function GuardianAdd({
   header,
   className,
-  originChainId = 'AELF',
+  originChainId,
   isErrorTip = true,
   phoneCountry: customPhoneCountry,
   verifierList,
@@ -282,7 +282,7 @@ function GuardianAdd({
         const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
         return { verifierInfo, guardianIdentifier };
       } catch (error) {
-        return errorTip(
+        errorTip(
           {
             errorFields: 'Guardian Social Verify',
             error: handleErrorMessage(error),
@@ -510,12 +510,14 @@ function GuardianAdd({
           setLoading(true);
           const res = await socialVerify(curGuardian.current!);
           const { guardianIdentifier, verifierInfo } = res || {};
-          curGuardian.current = {
-            ...(curGuardian?.current as UserGuardianStatus),
-            identifierHash: guardianIdentifier,
-            ...verifierInfo,
-          };
-          setApprovalVisible(true);
+          if (guardianIdentifier && verifierInfo) {
+            curGuardian.current = {
+              ...(curGuardian?.current as UserGuardianStatus),
+              identifierHash: guardianIdentifier,
+              ...verifierInfo,
+            };
+            setApprovalVisible(true);
+          }
         } catch (e) {
           errorTip(
             {

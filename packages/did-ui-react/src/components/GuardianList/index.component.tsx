@@ -11,7 +11,7 @@ import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
 
 export interface GuardianListProps {
-  originChainId?: ChainId;
+  originChainId: ChainId;
   targetChainId?: ChainId;
   className?: string;
   guardianList?: UserGuardianStatus[];
@@ -25,7 +25,7 @@ export interface GuardianListProps {
 }
 
 function GuardianList({
-  originChainId = 'AELF',
+  originChainId,
   targetChainId,
   className,
   guardianList = [],

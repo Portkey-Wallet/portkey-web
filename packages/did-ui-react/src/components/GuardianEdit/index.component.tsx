@@ -25,7 +25,7 @@ const guardianIconMap: any = {
 export interface GuardianEditProps {
   header?: ReactNode;
   className?: string;
-  originChainId?: ChainId;
+  originChainId: ChainId;
   verifierList?: VerifierItem[];
   isErrorTip?: boolean;
   guardianList?: UserGuardianStatus[];
@@ -47,7 +47,7 @@ export interface ISocialInput {
 function GuardianEdit({
   header,
   className,
-  originChainId = 'AELF',
+  originChainId,
   isErrorTip = true,
   verifierList,
   currentGuardian,
