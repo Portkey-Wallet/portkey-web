@@ -9,7 +9,6 @@ import { ChainId, ChainType } from '@portkey/types';
 import { OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
-import { usePortkey } from '../context';
 import { VerifierItem } from '@portkey/did';
 import { useThrottleEffect } from '../../hooks/throttle';
 import { Button } from 'antd';
@@ -31,11 +30,13 @@ export enum GuardianStep {
 export interface GuardianProps {
   caHash: string;
   className?: string;
+  sandboxId?: string;
   originChainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   onBack?: () => void;
+  onAddGuardianFinish?: () => void;
 }
 
 function GuardianMain({
@@ -44,10 +45,11 @@ function GuardianMain({
   originChainId = 'AELF',
   chainType = 'aelf',
   isErrorTip = true,
+  sandboxId,
   onError,
   onBack,
+  onAddGuardianFinish,
 }: GuardianProps) {
-  const [{ sandboxId }] = usePortkey();
   const [step, setStep] = useState<GuardianStep>(GuardianStep.guardianList);
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
   const [currentGuardian, setCurrentGuardian] = useState<UserGuardianStatus>();
@@ -163,6 +165,7 @@ function GuardianMain({
         });
         await getGuardianList();
         setStep(GuardianStep.guardianList);
+        onAddGuardianFinish?.();
       } catch (e) {
         return errorTip(
           {
@@ -176,7 +179,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [caHash, originChainId, getGuardianList, isErrorTip, onError, sandboxId],
+    [sandboxId, originChainId, caHash, getGuardianList, onAddGuardianFinish, isErrorTip, onError],
   );
   const handleEditGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
