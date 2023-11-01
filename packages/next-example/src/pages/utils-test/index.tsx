@@ -1,7 +1,20 @@
-import { handleErrorMessage, managerApprove } from '@portkey/did-ui-react';
+import {
+  handleErrorMessage,
+  managerApprove,
+  checkWalletSecurity,
+  ConfigProvider,
+  did,
+  PortkeyProvider,
+} from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
 import { message } from 'antd';
 import { useEffect, useState } from 'react';
+
+ConfigProvider.setGlobalConfig({
+  requestDefaults: {
+    timeout: 30000,
+  },
+});
 
 export default function AppleAuth() {
   const [status, setStatus] = useState<string>();
@@ -70,6 +83,26 @@ export default function AppleAuth() {
         }}>
         managerApprove
       </button>
+
+      <div>-----</div>
+      <PortkeyProvider sandboxId="" networkType="MAIN">
+        <button
+          onClick={async () => {
+            try {
+              await did.load('111111');
+              const result = await checkWalletSecurity({
+                originChainId: 'AELF',
+                targetChainId: 'tDVV',
+                caHash: did.didWallet.caInfo['AELF'].caHash,
+              });
+              console.log(result, 'result===');
+            } catch (error) {
+              message.error(handleErrorMessage(error));
+            }
+          }}>
+          checkWalletSecurity
+        </button>
+      </PortkeyProvider>
     </div>
   );
 }
