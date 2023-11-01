@@ -134,6 +134,7 @@ export default function ManagerApproveInner({
 
   const getTokenInfo = useCallback(async () => {
     try {
+      setLoading(true);
       const chainInfo = await getChain(targetChainId);
       if (!chainInfo) throw Error('Missing verifier, please check params');
       const result = await CustomContractBasic.callViewMethod({
@@ -146,12 +147,16 @@ export default function ManagerApproveInner({
           symbol,
         },
       });
+      setLoading(false);
       if (!result.data) throw `${symbol} does not exist in this chain`;
       setTokenInfo(result.data);
       setAllowance(divDecimals(amount, result.data?.decimals).toFixed());
     } catch (error) {
       console.error(error);
+      setLoading(false);
       onError?.(Error(handleErrorMessage(error)));
+    } finally {
+      setLoading(false);
     }
   }, [amount, onError, symbol, targetChainId]);
 
