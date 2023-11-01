@@ -11,12 +11,11 @@ interface BaseCheckWalletSecurityProps {
 export type CheckWalletSecurityProps = BaseCheckWalletSecurityInnerProps & BaseCheckWalletSecurityProps;
 
 export interface CheckWalletSecurityResult {
-  status: 'Synchronizing' | 'TransferSafe' | 'OriginChainSafe' | 'AddGuardian' | 'Cancel' | 'Error';
+  status: 'Synchronizing' | 'TransferSafe' | 'OriginChainSafe' | 'Cancel' | 'Error';
   message?: string;
 }
 
 const syncingTip = 'Syncing guardian info, which may take 1-2 minutes. Please try again later.';
-const justAddedTip = 'Just added guardian';
 
 const walletSecurityCheck = async ({
   wrapClassName = '',
@@ -40,9 +39,6 @@ const walletSecurityCheck = async ({
   // know the chain of operations
   if (originChainId === targetChainId) {
     if (res.isOriginChainSafe) return { status: 'OriginChainSafe' };
-    // TODO addGuardians
-    // addGuardiansModal({ wrapClassName, className, onOk, ...props });
-    // return false;
   } else {
     if (res.isTransferSafe) return { status: 'TransferSafe' };
     if (res.isSynchronizing)
@@ -54,9 +50,10 @@ const walletSecurityCheck = async ({
 
   return new Promise((resolve) => {
     const modal = BaseModalFunc({
+      maskClosable: true,
       ...props,
       wrapClassName: wrapClassName,
-      className: 'portkey-ui-h-566 ' + className,
+      className: className,
       content: (
         <CheckWalletSecurityInner
           caHash={caHash}
@@ -70,10 +67,13 @@ const walletSecurityCheck = async ({
             modal.destroy();
           }}
           onFinish={() => {
+            const isSameChainId = originChainId === targetChainId;
+
             resolve({
-              status: 'AddGuardian',
-              message: originChainId !== targetChainId ? syncingTip : justAddedTip,
+              status: isSameChainId ? 'OriginChainSafe' : 'Synchronizing',
+              message: isSameChainId ? 'AddGuardian: OriginChainSafe' : `AddGuardian:${syncingTip}`,
             });
+
             modal.destroy();
           }}
           onError={(error) => {
