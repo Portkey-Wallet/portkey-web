@@ -4,6 +4,7 @@ import { useState } from 'react';
 import SecurityCheckMain from '../SecurityCheck/index.component';
 import GuardianMain from '../Guardian/index.component';
 import './index.less';
+import clsx from 'clsx';
 
 const preFixCls = 'portkey-ui-check-wallet-security';
 
@@ -33,7 +34,7 @@ export default function CheckWalletSecurityInner({
 
   return (
     <PortkeyStyleProvider>
-      <div className={`${preFixCls}-content`}>
+      <div className={clsx(`${preFixCls}-content`, step === Step.addGuardian && `${preFixCls}-add-guardian`)}>
         {!step ||
           (step === Step.confirmModal && (
             <SecurityCheckMain
