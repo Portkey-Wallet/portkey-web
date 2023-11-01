@@ -32,7 +32,7 @@ export interface GuardianProps {
   caHash: string;
   className?: string;
   sandboxId?: string;
-  originChainId?: ChainId;
+  originChainId: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
@@ -321,6 +321,7 @@ function GuardianMain({
       {step === GuardianStep.guardianView && (
         <GuardianView
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          originChainId={originChainId}
           currentGuardian={currentGuardian!}
           onEditGuardian={editable ? onEditGuardian : undefined}
           handleSetLoginGuardian={handleSetLoginGuardian}
@@ -330,6 +331,7 @@ function GuardianMain({
       {step === GuardianStep.guardianAdd && (
         <GuardianAdd
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          originChainId={originChainId}
           verifierList={verifierList}
           guardianList={guardianList}
           handleAddGuardian={handleAddGuardian}
@@ -338,6 +340,7 @@ function GuardianMain({
       {step === GuardianStep.guardianEdit && (
         <GuardianEdit
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          originChainId={originChainId}
           verifierList={verifierList}
           currentGuardian={currentGuardian}
           guardianList={guardianList}

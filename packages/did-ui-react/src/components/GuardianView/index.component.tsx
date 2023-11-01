@@ -29,7 +29,7 @@ import './index.less';
 export interface GuardianViewProps {
   header?: ReactNode;
   className?: string;
-  originChainId?: ChainId;
+  originChainId: ChainId;
   isErrorTip?: boolean;
   currentGuardian: UserGuardianStatus;
   guardianList?: UserGuardianStatus[];
@@ -48,7 +48,7 @@ const guardianIconMap: any = {
 function GuardianView({
   header,
   className,
-  originChainId = 'AELF',
+  originChainId,
   onEditGuardian,
   isErrorTip = true,
   currentGuardian,

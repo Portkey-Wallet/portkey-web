@@ -18,7 +18,7 @@ const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
 export interface GuardianApprovalProps {
   header?: ReactNode;
-  originChainId?: ChainId;
+  originChainId: ChainId;
   targetChainId?: ChainId;
   className?: string;
   guardianList?: BaseGuardianItem[];
@@ -34,7 +34,7 @@ const GuardianApprovalMain = forwardRef(
   (
     {
       header,
-      originChainId = 'AELF',
+      originChainId,
       targetChainId,
       className,
       guardianList: defaultGuardianList,
