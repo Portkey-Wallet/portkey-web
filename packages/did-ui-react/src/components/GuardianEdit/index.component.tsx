@@ -1,4 +1,4 @@
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
@@ -14,6 +14,7 @@ import CommonBaseModal from '../CommonBaseModal';
 import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
 import './index.less';
+import singleMessage from '../CustomAnt/message';
 
 const guardianIconMap: any = {
   Email: 'Email',
@@ -100,7 +101,7 @@ function GuardianEdit({
     }
     const verifier = verifierMap.current?.[selectVerifierId!];
     if (!verifier) {
-      message.error('Can not get the current verifier message');
+      singleMessage.error('Can not get the current verifier message');
       return false;
     }
     const _guardian: UserGuardianStatus = {

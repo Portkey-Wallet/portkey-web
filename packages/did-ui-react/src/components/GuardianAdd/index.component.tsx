@@ -1,4 +1,4 @@
-import { Button, Input, message } from 'antd';
+import { Button, Input } from 'antd';
 import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { useState, useMemo, useCallback, useEffect, memo, ReactNode, useRef } from 'react';
 import CommonSelect from '../CommonSelect';
@@ -40,6 +40,7 @@ import { useVerifyToken } from '../../hooks';
 import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
 import './index.less';
+import singleMessage from '../CustomAnt/message';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -305,7 +306,7 @@ function GuardianAdd({
     }
     const verifier = verifierMap.current?.[selectVerifierId!];
     if (!verifier) {
-      message.error('Can not get the current verifier message');
+      singleMessage.error('Can not get the current verifier message');
       return false;
     }
     const _key = `${guardianAccount}&${verifier.id}`;

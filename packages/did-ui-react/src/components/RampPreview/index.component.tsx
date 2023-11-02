@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import { setLoading } from '../../utils';
 import clsx from 'clsx';
 import { RampTypeEnum } from '../../types';
@@ -26,6 +26,7 @@ import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getOrderQuote } from '../Ramp/utils';
 import { getAchSignature, getRampOrderNo } from './utils';
 import { useGetAchTokenInfo } from './hooks';
+import singleMessage from '../CustomAnt/message';
 
 export default function RampPreviewMain({
   className,
@@ -108,13 +109,13 @@ export default function RampPreviewMain({
 
   const goPayPage = useCallback(async () => {
     const { side } = data;
-    if (!caInfo) return message.error('Please confirm whether to log in');
+    if (!caInfo) return singleMessage.error('Please confirm whether to log in');
     setLoading(true);
 
     // Compatible with the situation where the function is turned off when the user is on the page.
     if ((side === RampTypeEnum.BUY && !isBuySectionShow) || (side === RampTypeEnum.SELL && !isSellSectionShow)) {
       setLoading(false);
-      message.error(SERVICE_UNAVAILABLE_TEXT);
+      singleMessage.error(SERVICE_UNAVAILABLE_TEXT);
       onBack?.();
     }
 
@@ -159,7 +160,7 @@ export default function RampPreviewMain({
       await new Promise((resolve) => setTimeout(resolve, 500));
       onBack?.();
     } catch (error) {
-      message.error('There is a network error, please try again.');
+      singleMessage.error('There is a network error, please try again.');
     } finally {
       setLoading(false);
     }

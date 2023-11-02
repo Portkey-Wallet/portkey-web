@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Radio, RadioChangeEvent, message } from 'antd';
+import { Button, Radio, RadioChangeEvent } from 'antd';
 import { useEffectOnce } from 'react-use';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
@@ -40,6 +40,7 @@ import { fetchTxFeeAsync } from '../../request/token';
 import { getChain } from '../../hooks/useChainInfo';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
+import singleMessage from '../CustomAnt/message';
 
 export default function RampMain({
   className,
@@ -402,7 +403,7 @@ export default function RampMain({
           setLoading(false);
 
           const msg = handleErrorMessage(error);
-          message.error(msg);
+          singleMessage.error(msg);
         }
       }
 
@@ -507,7 +508,7 @@ export default function RampMain({
       setLoading(false);
 
       const msg = handleErrorMessage(error);
-      message.error(msg);
+      singleMessage.error(msg);
     }
   }, [
     amount,
@@ -521,7 +522,7 @@ export default function RampMain({
 
   const handleNext = useCallback(async () => {
     const { side } = valueSaveRef.current;
-    if (!caInfo) return message.error('Please confirm whether to log in');
+    if (!caInfo) return singleMessage.error('Please confirm whether to log in');
 
     setLoading(true);
 
@@ -529,7 +530,7 @@ export default function RampMain({
     // Compatible with the situation where the function is turned off when the user is on the page.
     if ((side === RampTypeEnum.BUY && !isBuySectionShow) || (side === RampTypeEnum.SELL && !isSellSectionShow)) {
       setLoading(false);
-      message.error(SERVICE_UNAVAILABLE_TEXT);
+      singleMessage.error(SERVICE_UNAVAILABLE_TEXT);
       return onBack?.();
     }
 
@@ -581,7 +582,7 @@ export default function RampMain({
         }
       } catch (error) {
         const msg = handleErrorMessage(error);
-        message.error(msg);
+        singleMessage.error(msg);
 
         setLoading(false);
         return;

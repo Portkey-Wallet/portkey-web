@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import { useCallback, useRef } from 'react';
 import { dealURLLastChar, did, handleErrorMessage, randomId, setLoading } from '../../utils';
 import { ACH_MERCHANT_NAME, DEFAULT_CHAIN_ID, SELL_SOCKET_TIMEOUT, STAGE } from '../../constants/ramp';
@@ -13,6 +12,7 @@ import { IBaseWalletAccount } from '@portkey/types';
 import { CAInfo } from '@portkey/did';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { usePortkey } from '../context';
+import singleMessage from '../CustomAnt/message';
 
 interface TransferParams {
   symbol: string;
@@ -185,15 +185,15 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
             caInfo: caInfoRef.current,
             paymentSellTransfer,
           });
-          message.success('Transaction completed.');
+          singleMessage.success('Transaction completed.');
         }
       } catch (error: any) {
         if (error?.code === 'TIMEOUT') {
-          message.warn(
+          singleMessage.warn(
             handleErrorMessage(error, 'The waiting time is too long, it will be put on hold in the background.'),
           );
         } else {
-          message.error(handleErrorMessage(error));
+          singleMessage.error(handleErrorMessage(error));
         }
       } finally {
         setLoading(false);

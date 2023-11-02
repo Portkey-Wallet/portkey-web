@@ -9,9 +9,9 @@ import { transNetworkText } from '../../utils/converter';
 import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import LoadingMore from '../LoadingMore';
 import { did, handleErrorMessage, setLoading } from '../../utils';
-import { message } from 'antd';
 import { ITransferLimitItem } from '@portkey/services';
 import { NetworkType } from '../../types';
+import singleMessage from '../CustomAnt/message';
 
 export interface IPaymentSecurityProps {
   className?: string;
@@ -64,7 +64,7 @@ export default function PaymentSecurityMain({
       loadingFlag.current = false;
     } catch (error) {
       const msg = handleErrorMessage(error, 'get security error');
-      message.error(msg);
+      singleMessage.error(msg);
 
       setLoading(false);
       loadingFlag.current = false;
@@ -89,7 +89,7 @@ export default function PaymentSecurityMain({
       }
     } catch (error) {
       const msg = handleErrorMessage(error, 'get security error');
-      message.error(msg);
+      singleMessage.error(msg);
       loadingFlag.current = false;
     }
   }, [caHash, securityList, totalCount]);
