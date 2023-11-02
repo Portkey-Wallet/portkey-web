@@ -9,7 +9,6 @@ import { ChainId, ChainType } from '@portkey/types';
 import { OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
-import { usePortkey } from '../context';
 import { VerifierItem } from '@portkey/did';
 import { useThrottleEffect } from '../../hooks/throttle';
 import { Button } from 'antd';
@@ -19,6 +18,7 @@ import { formatDelGuardianValue } from './utils/formatDelGuardianValue';
 import { GuardianMth, handleGuardianContract } from '../../utils/sandboxUtil/handleGuardianContract';
 import BackHeaderForPage from '../BackHeaderForPage';
 import clsx from 'clsx';
+import CustomSvg from '../CustomSvg';
 import './index.less';
 
 export enum GuardianStep {
@@ -31,11 +31,13 @@ export enum GuardianStep {
 export interface GuardianProps {
   caHash: string;
   className?: string;
-  originChainId?: ChainId;
+  sandboxId?: string;
+  originChainId: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   onBack?: () => void;
+  onAddGuardianFinish?: () => void;
 }
 
 function GuardianMain({
@@ -44,10 +46,11 @@ function GuardianMain({
   originChainId = 'AELF',
   chainType = 'aelf',
   isErrorTip = true,
+  sandboxId,
   onError,
   onBack,
+  onAddGuardianFinish,
 }: GuardianProps) {
-  const [{ sandboxId }] = usePortkey();
   const [step, setStep] = useState<GuardianStep>(GuardianStep.guardianList);
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
   const [currentGuardian, setCurrentGuardian] = useState<UserGuardianStatus>();
@@ -163,6 +166,7 @@ function GuardianMain({
         });
         await getGuardianList();
         setStep(GuardianStep.guardianList);
+        onAddGuardianFinish?.();
       } catch (e) {
         return errorTip(
           {
@@ -176,7 +180,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [caHash, originChainId, getGuardianList, isErrorTip, onError, sandboxId],
+    [sandboxId, originChainId, caHash, getGuardianList, onAddGuardianFinish, isErrorTip, onError],
   );
   const handleEditGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
@@ -286,14 +290,23 @@ function GuardianMain({
     sandboxId,
   ]);
 
+  const renderBackHeaderLeftEle = useCallback(
+    (goBack?: () => void) => (
+      <div className="portkey-ui-guardian-left portkey-ui-flex-center">
+        <CustomSvg type="LeftArrow" onClick={goBack} />
+        Guardians
+      </div>
+    ),
+    [],
+  );
+
   return (
     <div className={clsx('portkey-ui-guardian-page', className)}>
       {step === GuardianStep.guardianList && (
         <GuardianList
           header={
             <BackHeaderForPage
-              title="Guardians"
-              leftCallBack={onBack}
+              leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
                 <Button onClick={onAddGuardian} className="title-add-guardian-btn">
                   Add Guardians
@@ -307,7 +320,8 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianView && (
         <GuardianView
-          header={<BackHeaderForPage title="Guardians" leftCallBack={onGoBackList} />}
+          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          originChainId={originChainId}
           currentGuardian={currentGuardian!}
           onEditGuardian={editable ? onEditGuardian : undefined}
           handleSetLoginGuardian={handleSetLoginGuardian}
@@ -316,7 +330,8 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianAdd && (
         <GuardianAdd
-          header={<BackHeaderForPage title="Add Guardians" leftCallBack={onGoBackList} />}
+          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          originChainId={originChainId}
           verifierList={verifierList}
           guardianList={guardianList}
           handleAddGuardian={handleAddGuardian}
@@ -324,7 +339,8 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianEdit && (
         <GuardianEdit
-          header={<BackHeaderForPage title="Edit Guardians" leftCallBack={onGoBackList} />}
+          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          originChainId={originChainId}
           verifierList={verifierList}
           currentGuardian={currentGuardian}
           guardianList={guardianList}

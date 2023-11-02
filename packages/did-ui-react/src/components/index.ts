@@ -67,6 +67,7 @@ export { default as PortkeyStyleProvider } from './PortkeyStyleProvider';
 export { default as BaseModalMethod } from './ModalMethod/BaseModalMethod';
 export { default as walletSecurityCheck } from './ModalMethod/WalletSecurityCheck';
 export { default as transferLimitCheck } from './ModalMethod/TransferLimitCheck';
+export { default as checkWalletSecurity } from './ModalMethod/CheckWalletSecurity';
 export { default as SecurityCheck } from './SecurityCheck';
 export { default as NFTCheckout } from './NFTRamp';
 export { default as ACHCheckout } from './NFTRamp/ACHCheckout';

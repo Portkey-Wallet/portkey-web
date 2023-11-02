@@ -17,7 +17,6 @@ import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
 import { message } from 'antd';
 import { useUpdateEffect } from 'react-use';
-import { useThrottleEffect } from '../../hooks/throttle';
 import SendMain from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
@@ -408,7 +407,12 @@ function AssetMain({
       )}
 
       {assetStep === AssetStep.guardians && (
-        <Guardian caHash={caHash || ''} originChainId={originChainId} onBack={() => setAssetStep(AssetStep.my)} />
+        <Guardian
+          sandboxId={sandboxId}
+          caHash={caHash || ''}
+          originChainId={originChainId}
+          onBack={() => setAssetStep(AssetStep.my)}
+        />
       )}
 
       {assetStep === AssetStep.walletSecurity && (

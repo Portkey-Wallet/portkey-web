@@ -19,8 +19,8 @@ export default function BaseModalFunc({
     icon: null,
     centered: true,
     ...props,
-    wrapClassName: 'portkey-ui-wrapper portkey-ui-common-modals portkey-ui-modal-func-wrapper' + wrapClassName,
-    className: clsx('portkey-ui-modal-func', visibleFooter && 'portkey-ui-modal-func-visible-footer', className),
+    wrapClassName: 'portkey-ui-wrapper portkey-ui-common-modals portkey-ui-modal-func-wrapper ' + wrapClassName,
+    className: clsx('portkey-ui-modal-func', visibleFooter && 'portkey-ui-modal-func-visible-footer ', className),
     prefixCls: `${PORTKEY_PREFIX_CLS}-modal`,
   });
 }

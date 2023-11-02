@@ -1,13 +1,10 @@
-import { getContractBasic } from '@portkey/contracts';
 import {
-  ConfigProvider,
-  PortkeyAssetProvider,
-  did,
-  getChain,
   handleErrorMessage,
   managerApprove,
-  NFTCheckout,
-  ACHCheckout,
+  checkWalletSecurity,
+  ConfigProvider,
+  did,
+  PortkeyProvider,
 } from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
 import { aelf } from '@portkey/utils';
@@ -16,6 +13,12 @@ import { useEffect, useState } from 'react';
 ConfigProvider.setGlobalConfig({
   // test3
   serviceUrl: 'http://192.168.66.203:5001',
+});
+
+ConfigProvider.setGlobalConfig({
+  requestDefaults: {
+    timeout: 30000,
+  },
 });
 
 export default function AppleAuth() {
@@ -104,26 +107,25 @@ export default function AppleAuth() {
         managerApprove
       </button>
 
-      <div id="nft-checkout">-----</div>
-
-      {/* <PortkeyAssetProvider pin="111111" originChainId="AELF"> */}
-      <button
-        onClick={async () => {
-          try {
-            const result = await NFTCheckout({
-              orderId: 'f637021e-5420-657a-dab6-4bb95b1d0422',
-              appId: '0FdW9QJP7U96H01p',
-              rampWebUrl: 'https://nft-sbx.alchemytech.cc',
-              originChainId: 'AELF',
-              merchantName: 'Alchemy',
-            });
-          } catch (error) {
-            console.log('NFTCheckout:', error);
-          }
-        }}>
-        nft checkout
-      </button>
-      {/* </PortkeyAssetProvider> */}
+      <div>-----</div>
+      <PortkeyProvider sandboxId="" networkType="MAIN">
+        <button
+          onClick={async () => {
+            try {
+              await did.load('111111');
+              const result = await checkWalletSecurity({
+                originChainId: 'AELF',
+                targetChainId: 'tDVV',
+                caHash: did.didWallet.caInfo['AELF'].caHash,
+              });
+              console.log(result, 'result===');
+            } catch (error) {
+              message.error(handleErrorMessage(error));
+            }
+          }}>
+          checkWalletSecurity
+        </button>
+      </PortkeyProvider>
     </div>
   );
 }

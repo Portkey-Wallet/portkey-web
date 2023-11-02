@@ -32,11 +32,7 @@ export class RequestDefaultsConfig {
   public timeout?: number;
   public connectUrl?: string;
   constructor(config?: IRequestDefaults) {
-    if (config) {
-      Object.entries(config).forEach(([key, value]) => {
-        this[key as keyof IRequestDefaults] = value;
-      });
-    }
+    this.setConfig(config);
   }
   setConfig(config?: IRequestDefaults) {
     if (config) {
@@ -71,6 +67,9 @@ export class DIDConfig implements IDIDConfig {
         case 'requestDefaults':
           this.requestConfig.setConfig(value);
           this.requestDefaults = value;
+          const connectRequestDefaults = { ...value };
+          delete connectRequestDefaults.baseURL;
+          this.connectRequestConfig.setConfig(connectRequestDefaults);
           break;
         case 'connectUrl':
           this.connectRequestConfig.setConfig({
