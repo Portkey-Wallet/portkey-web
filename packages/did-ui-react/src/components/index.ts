@@ -56,6 +56,7 @@ export { default as AssetOverview } from './AssetOverview';
 export { default as ReceiveCard } from './ReceiveCard';
 export { default as Transaction } from './Transaction';
 export { default as NFTCheckout } from './NFTRamp';
+export * from './NFTRamp/types';
 export { default as ACHCheckout } from './NFTRamp/ACHCheckout';
 
 export * from './context/PortkeyAssetProvider';

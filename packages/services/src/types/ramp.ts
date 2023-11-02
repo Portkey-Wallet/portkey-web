@@ -99,6 +99,7 @@ export type GetAchNFTSignatureParams = {
   appId: string;
   timestamp: string;
   timeout: string;
+  language?: string;
 
   fiat?: string; // fiat type, char code with ISO4217 encoding currency unit, USD/EUR/SGD/JPY/GBP, etc.
   amount?: string; // Total NFT order fiat amount. The payment channel fee that the user needs to pay will be deducted from the amount. Required parameter for fiat-based
@@ -145,6 +146,7 @@ export type NFTOrderSections = {
   merchantOrderId: string;
   nftPicture: string;
   sectionName: string;
+  nftCollectionName: string;
   expireTime?: string;
   createTime?: string;
 };
