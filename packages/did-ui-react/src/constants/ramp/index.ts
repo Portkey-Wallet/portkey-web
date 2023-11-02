@@ -73,6 +73,8 @@ export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL
 
 export const ACH_MERCHANT_NAME = 'Alchemy';
 
+export const OUR_PRODUCT_NAME = 'Portkey';
+
 export const FAUCET_URL = 'https://testnet-faucet.aelf.io/';
 
 export const SELL_SOCKET_TIMEOUT = 20 * 1000;

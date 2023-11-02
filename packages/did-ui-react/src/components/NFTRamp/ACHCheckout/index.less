@@ -1,17 +1,33 @@
 .portkey-ui-ach-checkout-wrapper {
   overflow: auto;
-  min-height: 600px;
   height: 100%;
   width: 100%;
   iframe {
     height: 100%;
+    width: 100%;
     margin: auto;
+    border: 1px solid var(--portkey-ui-default-border);
+    border-radius: 6px;
   }
 }
 
-.portkey-ui-ach-checkout-inner {
-  height: 700px;
+.portkey-ui-ach-checkout-header {
   width: 100%;
+  font-size: 24px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 28px;
+  color: var(--portkey-ui-text-primary);
+  padding: 24px;
+}
+
+.portkey-ui-ach-checkout-inner {
+  width: 100%;
+  height: 100%;
+  &:not(.portkey-ui-ach-checkout-result-inner) {
+    padding: 0 24px 24px;
+    height: 668px;
+  }
   .loading-wrapper {
     height: 100%;
     width: 100%;

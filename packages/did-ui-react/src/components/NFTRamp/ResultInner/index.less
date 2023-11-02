@@ -10,18 +10,22 @@
   font-style: normal;
   font-weight: 500;
   line-height: 28px;
-  padding: 24px 0;
+  padding: 24px;
 }
 
 .portkey-ui-ach-checkout-result-order {
   border-bottom: 1px solid var(--portkey-ui-default-border);
-  padding: 0 24px 16px;
+  padding: 0 24px;
+}
+
+.portkey-ui-ach-checkout-result-order-id-wrapper {
+  padding: 24px 0;
 }
 
 .portkey-ui-ach-checkout-result-nft {
   background: var(--portkey-ui-bg-4);
   padding: 16px;
-  margin-bottom: 16px;
+  align-items: center;
 }
 
 .portkey-ui-ach-checkout-result-nft-picture {
@@ -32,8 +36,10 @@
 }
 
 .portkey-ui-ach-checkout-result-nft-picture-wrapper {
-  width: 64px;
-  height: 64px;
+  width: 80px;
+  height: 80px;
+  border: 1px solid var(--portkey-ui-border-8);
+  border-radius: 6px;
 }
 
 .portkey-ui-ach-checkout-result-nft-item {
@@ -77,7 +83,7 @@
 
 .portkey-ui-ach-checkout-result-social {
   flex: 1;
-  padding: 0 24px;
+  padding: 40px 24px;
   border-bottom: 1px solid var(--portkey-ui-default-border);
 }
 
@@ -94,8 +100,8 @@
 .portkey-ui-ach-checkout-result-social-media {
   gap: 24px;
   .portkey-ui-custom-svg {
-    width: 24px;
-    height: 24px;
+    width: 16px;
+    height: 16px;
     path {
       fill: var(--portkey-ui-text-primary);
     }
