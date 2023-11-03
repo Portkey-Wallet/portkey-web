@@ -12,7 +12,6 @@ import { isValidInteger } from '../../utils/reg';
 import { OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
-import CustomSvg from '../CustomSvg';
 import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
 import { ELF_SYMBOL } from '../../constants/assets';
@@ -22,6 +21,7 @@ import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { useEffectOnce } from 'react-use';
+import BackHeader from '../BackHeader';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -356,11 +356,7 @@ export default function TransferSettingsEditMain({
         open={approvalVisible}
         onClose={() => setApprovalVisible(false)}>
         <GuardianApproval
-          header={
-            <div className="portkey-ui-flex portkey-ui-modal-approval-back" onClick={() => setApprovalVisible(false)}>
-              <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
-            </div>
-          }
+          header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
           targetChainId={targetChainId}
           guardianList={guardianList}
