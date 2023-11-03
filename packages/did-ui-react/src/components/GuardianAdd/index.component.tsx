@@ -39,6 +39,7 @@ import ConfigProvider from '../config-provider';
 import { useVerifyToken } from '../../hooks';
 import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
+import BackHeader from '../BackHeader';
 import './index.less';
 
 export interface GuardianAddProps {
@@ -614,11 +615,7 @@ function GuardianAdd({
       </CommonBaseModal>
       <CommonBaseModal className="portkey-ui-modal-approval" open={approvalVisible} onClose={onCloseApproval}>
         <GuardianApproval
-          header={
-            <div className="portkey-ui-flex portkey-ui-modal-approval-back" onClick={onCloseApproval}>
-              <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
-            </div>
-          }
+          header={<BackHeader onBack={onCloseApproval} />}
           originChainId={originChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}

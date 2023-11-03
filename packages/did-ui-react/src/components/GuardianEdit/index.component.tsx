@@ -13,6 +13,7 @@ import CustomModal from '../CustomModal';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
+import BackHeader from '../BackHeader';
 import './index.less';
 
 const guardianIconMap: any = {
@@ -237,11 +238,7 @@ function GuardianEdit({
         open={approvalVisible}
         onClose={() => setApprovalVisible(false)}>
         <GuardianApproval
-          header={
-            <div className="portkey-ui-flex portkey-ui-modal-approval-back" onClick={() => setApprovalVisible(false)}>
-              <CustomSvg style={{ width: 12, height: 12 }} type="LeftArrow" /> Back
-            </div>
-          }
+          header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
           guardianList={guardianList?.filter((item) => item.key !== preGuardian?.key)}
           onConfirm={approvalSuccess}
