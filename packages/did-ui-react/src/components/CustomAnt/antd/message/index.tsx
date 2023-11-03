@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import RCNotification from 'rc-notification';
 import type { NoticeContent, NotificationInstance as RCNotificationInstance } from 'rc-notification/lib/Notification';
 import * as React from 'react';
-import { messagePrefixCls } from './constants';
+import { messagePrefixCls } from '../../constants';
 import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../../constants';
 
 let messageInstance: RCNotificationInstance | null;

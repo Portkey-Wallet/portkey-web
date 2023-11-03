@@ -1,5 +1,5 @@
 import { PORTKEY_PREFIX_CLS } from '../../constants';
-import { messagePrefixCls } from './antd/message/constants';
+import { messagePrefixCls } from './constants';
 import message, { ArgsProps, MessageApi, MessageInstance, typeList } from './antd/message';
 import { randomId } from '../../utils';
 import { renderToString } from 'react-dom/server';
