@@ -16,6 +16,7 @@ import {
   AccountLoginParams,
   BaseDIDWallet,
   CAInfo,
+  CheckManagerParams,
   EditManagerParams,
   GetHolderInfoParams,
   IDIDWallet,
@@ -351,5 +352,34 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.caInfo = {};
     this.accountInfo = {};
     this.managementAccount = undefined;
+  }
+
+  public async checkManagerIsExistByGQL(params: CheckManagerParams) {
+    const chainId = params.chainId;
+    const caHash = params.caHash;
+    // Check if manager exists via GQL
+    const resultByQGL = await this.services.getHolderInfoByManager({
+      manager: params.managementAddress,
+      chainId,
+      caHash: caHash,
+    });
+    const info = resultByQGL[0];
+    return Boolean(info && info.caAddress);
+  }
+
+  public async checkManagerIsExistByContract(params: CheckManagerParams) {
+    const caHash = params.caHash;
+    // Check if manager exists via Contract
+    const resultByContract = await this.getHolderInfoByContract({
+      caHash,
+      chainId: params.chainId,
+    });
+    const managerInfos = resultByContract.managerInfos;
+    const isExist = managerInfos?.some(manager => manager?.address === params.managementAddress);
+    return Boolean(isExist);
+  }
+
+  public async checkManagerIsExist(params: CheckManagerParams) {
+    return (await this.checkManagerIsExistByGQL(params)) || (await this.checkManagerIsExistByContract(params));
   }
 }
