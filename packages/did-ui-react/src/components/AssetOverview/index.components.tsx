@@ -12,11 +12,11 @@ import CustomTokenModal from '../CustomTokenModal';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { IAssetItemType, IUserTokenItem } from '@portkey/services';
 import { ELF_SYMBOL } from '../../constants/assets';
-import { message } from 'antd';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import CustomAssetModal from '../CustomAssetModal';
 import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
+import singleMessage from '../CustomAnt/message';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItem[];
@@ -146,7 +146,7 @@ export function AssetOverviewContent({
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
           // TODO select Token
-          if (!supportToken?.[0]) return message.error('There is no token that meets the requirements');
+          if (!supportToken?.[0]) return singleMessage.error('There is no token that meets the requirements');
 
           onBuy?.(supportToken[0]);
         }}

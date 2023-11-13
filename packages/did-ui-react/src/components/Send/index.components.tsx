@@ -2,7 +2,7 @@ import { IAssetItemType } from '@portkey/services';
 import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
-import { Button, Modal, message } from 'antd';
+import { Button, Modal } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
 import {
@@ -34,6 +34,8 @@ import { useCheckManagerSyncState } from '../../hooks/wallet';
 import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
+import { getChain } from '../../hooks/useChainInfo';
+import singleMessage from '../CustomAnt/message';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -217,24 +219,24 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
           toAddress: toAccount.address,
         });
       }
-      message.success('success');
+      singleMessage.success('success');
       onSuccess?.();
     } catch (error: any) {
       console.log('sendHandler==error', error);
-      if (!error?.type) return message.error(error);
+      if (!error?.type) return singleMessage.error(handleErrorMessage(error));
       if (error.type === 'managerTransfer') {
-        return message.error(error);
+        return singleMessage.error(handleErrorMessage(error));
       } else if (error.type === 'crossChainTransfer') {
         // dispatch(addFailedActivity(error.data));
         // TODO
         console.log('addFailedActivity', error);
 
         showErrorModal(error.data);
-        message.error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
 
         // return;
       } else {
-        message.error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
       }
     } finally {
       setLoading(false);
