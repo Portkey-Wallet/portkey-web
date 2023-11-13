@@ -4,6 +4,7 @@ import {
   handleErrorMessage,
   CommonBaseModal,
   portkeyNotification,
+  modalMethod,
 } from '@portkey/did-ui-react';
 import { message, ConfigProvider, Modal, notification } from 'antd';
 import { useState } from 'react';
@@ -128,6 +129,23 @@ export default function UI() {
             }}>
             portkey Modal
           </button>
+          <button
+            onClick={async () => {
+              const isOk = await modalMethod({
+                wrapClassName: 'verify-confirm-modal',
+                type: 'confirm',
+                content: (
+                  <p className="modal-content">
+                    {` will send a verification code to `}
+                    <span className="bold">{'identifier'}</span>
+                    {` to verify your ${'accountType'} address.`}
+                  </p>
+                ),
+              });
+            }}>
+            modalMethod
+          </button>
+
           <CommonBaseModal
             prefixCls="portkey-ant-modal"
             open={openModal}

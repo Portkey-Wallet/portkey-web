@@ -287,6 +287,7 @@ const SignIn = forwardRef(
 
     const onSignInFinished: OnSignInFinishedFun = useCallback(
       async (result) => {
+        console.log(result, 'result==onSignInFinished');
         const { type, value } = result.result;
         if (result.isFinished) {
           // Sign in by scan

@@ -1,6 +1,7 @@
 import { Modal, ModalProps } from 'antd';
 import clsx from 'clsx';
 import './index.less';
+import { PORTKEY_PREFIX_CLS } from '../../constants';
 
 export type ICommonBaseModalProps = ModalProps & { onClose?: () => void };
 export default function CommonBaseModal({
@@ -22,6 +23,7 @@ export default function CommonBaseModal({
       className={clsx(['portkey-ui-base-modal', className])}
       width={width}
       maskClosable={maskClosable}
+      prefixCls={`${PORTKEY_PREFIX_CLS}-modal`}
       closable={closable}
       centered={centered}
       onCancel={onClose || onCancel}
