@@ -1,5 +1,6 @@
+import { PortkeyStyleProvider, handleErrorMessage, singleMessage } from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
-import { message } from 'antd';
+import { message, ConfigProvider } from 'antd';
 import { useEffect, useState } from 'react';
 
 export default function AppleAuth() {
@@ -41,7 +42,6 @@ export default function AppleAuth() {
         thirdParty
       </button>
       <div>-----</div>
-
       <button
         onClick={async () => {
           const VConsole = require('vconsole');

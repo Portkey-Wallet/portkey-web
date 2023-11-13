@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Radio, RadioChangeEvent, message } from 'antd';
+import { Button, Radio, RadioChangeEvent } from 'antd';
 import { useEffectOnce } from 'react-use';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
@@ -26,7 +26,7 @@ import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../t
 import { divDecimals, formatAmountShow } from '../../utils/converter';
 import BackHeaderForPage from '../BackHeaderForPage';
 import CustomSvg from '../CustomSvg';
-import { setLoading } from '../../utils';
+import { handleErrorMessage, setLoading } from '../../utils';
 import { handleKeyDown } from '../../utils/keyDown';
 import CustomModal from '../CustomModal';
 import { IRampProps } from '.';
@@ -37,6 +37,8 @@ import { useHandleAchSell } from './hooks';
 import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
 import { usePortkey } from '../context';
 import { fetchTxFeeAsync } from '../../request/token';
+import { getChain } from '../../hooks/useChainInfo';
+import singleMessage from '../CustomAnt/message';
 
 export default function RampMain({
   initState,
@@ -429,14 +431,14 @@ export default function RampMain({
 
   const handleNext = useCallback(async () => {
     const { side } = valueSaveRef.current;
-    if (!caInfo) return message.error('Please confirm whether to log in');
+    if (!caInfo) return singleMessage.error('Please confirm whether to log in');
 
     setLoading(true);
 
     // Compatible with the situation where the function is turned off when the user is on the page.
     if ((side === RampTypeEnum.BUY && !isBuySectionShow) || (side === RampTypeEnum.SELL && !isSellSectionShow)) {
       setLoading(false);
-      message.error(SERVICE_UNAVAILABLE_TEXT);
+      singleMessage.error(SERVICE_UNAVAILABLE_TEXT);
       return goBack?.();
     }
 
@@ -474,6 +476,9 @@ export default function RampMain({
           return;
         }
       } catch (error) {
+        const msg = handleErrorMessage(error);
+        singleMessage.error(msg);
+
         setLoading(false);
         return;
       }
@@ -494,19 +499,19 @@ export default function RampMain({
       chainId: chainId,
     });
   }, [
+    caInfo,
     isBuySectionShow,
     isSellSectionShow,
     goPreview,
     chainId,
     goBack,
     isManagerSynced,
-    tokenInfo.tokenContractAddress,
-    tokenInfo.decimals,
-    caInfo,
-    symbol,
-    setInsufficientFundsMsg,
     sandboxId,
     chainType,
+    tokenInfo.tokenContractAddress,
+    tokenInfo.decimals,
+    symbol,
+    setInsufficientFundsMsg,
   ]);
 
   const renderRate = useMemo(
