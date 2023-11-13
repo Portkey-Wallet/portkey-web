@@ -116,7 +116,7 @@ function Step2OfLogin({
         }
         return Object.assign(temGuardian, baseGuardian);
       });
-
+      console.log(currentGuardiansList, 'currentGuardiansList==');
       setGuardianList(currentGuardiansList);
     } catch (error) {
       errorTip(
