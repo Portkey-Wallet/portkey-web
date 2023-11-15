@@ -20,11 +20,13 @@ export type Step2SignUpLifeCycleType = 'SignUpCodeVerify';
 export type Step2SignInLifeCycleType = 'GuardianApproval';
 
 export type SetPinAndAddManagerCycleType = 'SetPinAndAddManager';
+export type Step2OfSkipGuardianApprove = 'Step2OfSkipGuardianApprove';
 
 export type LifeCycleType =
   | SignInLifeCycleType
   | Step2SignUpLifeCycleType
   | Step2SignInLifeCycleType
+  | Step2OfSkipGuardianApprove
   | SetPinAndAddManagerCycleType;
 
 export type UI_TYPE = 'Modal' | 'Full';

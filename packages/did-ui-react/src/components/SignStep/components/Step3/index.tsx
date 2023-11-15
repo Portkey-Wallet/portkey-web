@@ -46,7 +46,7 @@ function Step3({
 
   return (
     <div className="step-page-wrapper">
-      <BackHeader onBack={onBackHandler} />
+      <BackHeader leftElement={type === 'recovery' ? false : undefined} onBack={onBackHandler} />
       <SetPinAndAddManagerCom
         {...props}
         className="step-set-pin content-padding"

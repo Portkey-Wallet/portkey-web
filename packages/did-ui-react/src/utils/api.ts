@@ -38,6 +38,9 @@ export class Verification extends StorageBaseLoader {
       const storageVerifierMap = await this._store.getItem(this._defaultKeyName);
       if (storageVerifierMap) this.verifierMap = JSON.parse(storageVerifierMap);
       if (typeof this.verifierMap !== 'object') this.verifierMap = {};
+      Object.entries(this.verifierMap).forEach(([key, item]) => {
+        if (item.time + this._expirationTime < Date.now()) this.delete(key);
+      });
     } catch (error) {
       console.log(error, '====load-verification');
     }

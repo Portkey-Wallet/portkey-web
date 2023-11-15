@@ -11,12 +11,12 @@ import Step1, { OnSignInFinishedFun } from '../SignStep/components/Step1';
 import Step2OfSignUp from '../SignStep/components/Step2OfSignUp';
 import Step2OfLogin from '../SignStep/components/Step2OfLogin';
 import Step3 from '../SignStep/components/Step3';
+import Step2OfSkipGuardianApprove from '../SignStep/components/Step2OfSkipGuardianApprove';
 import { useEffectOnce } from 'react-use';
 import type {
   IVerifyInfo,
   DIDWalletInfo,
   IGuardianIdentifierInfo,
-  IPhoneCountry,
   AddManagerType,
   LoginFinishWithoutPin,
   TVerifierItem,
@@ -25,19 +25,20 @@ import type { ChainId } from '@portkey/types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, SignInProps, TVerifyCodeInfo } from '../SignStep/types';
 import clsx from 'clsx';
-import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import { UserGuardianStatus } from '../../types';
 import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
 import { sleep } from '@portkey/utils';
-import { modalMethod } from '../../utils/modalMethod';
+import useSignInHandler from './hooks/onSignIn';
+import useSendCode from './hooks/useSendCode';
 import './index.less';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
-  Step2OfLogin: ['GuardianApproval'],
+  Step2OfLogin: ['GuardianApproval', 'Step2OfSkipGuardianApprove'],
   Step2OfSignUp: ['SignUpCodeVerify'],
   SignIn: ['SignUp', 'Login', 'LoginByScan'],
 };
@@ -52,7 +53,7 @@ const SignIn = forwardRef(
       // If you set isShowScan to true, make sure you configure `network`
       isShowScan,
       defaultLifeCycle: defaultLifeCycleInfo,
-      phoneCountry: defaultPhoneCountry,
+      phoneCountry,
       extraElement,
       termsOfService,
       design = 'CryptoDesign',
@@ -173,7 +174,8 @@ const SignIn = forwardRef(
       dealStep(defaultLifeCycleInfo as any);
     });
 
-    const { getRecommendationVerifier, verifySocialToken, sendVerifyCode } = useVerifier();
+    const { getRecommendationVerifier, verifySocialToken } = useVerifier();
+    const sendCodeConfirm = useSendCode();
 
     const onStep2OfSignUpFinish = useCallback(
       (res: TSignUpVerifier, value?: IGuardianIdentifierInfo) => {
@@ -226,39 +228,17 @@ const SignIn = forwardRef(
               value,
             );
           } else {
-            const isOk = await modalMethod({
-              wrapClassName: 'verify-confirm-modal',
-              type: 'confirm',
-              content: (
-                <p className="modal-content">
-                  {`${verifier.name ?? ''} will send a verification code to `}
-                  <span className="bold">{identifier}</span>
-                  {` to verify your ${accountType} address.`}
-                </p>
-              ),
+            const verifyCodeInfo = await sendCodeConfirm({
+              verifier,
+              accountType,
+              identifierInfo: value,
             });
-            if (isOk) {
-              const result = await sendVerifyCode({
-                accountType,
-                guardianIdentifier: identifier,
-                verifier,
-                chainId,
-                operationType: OperationTypeEnum.register,
-              });
-
-              if (!result?.verifierSessionId) return;
-              const verifyCodeInfo = {
-                verifier,
-                verifierSessionId: result.verifierSessionId,
-              };
-              setVerifierCodeInfo(verifyCodeInfo);
-              changeLifeCycle('SignUpCodeVerify', {
-                guardianIdentifierInfo: value,
-                verifyCodeInfo,
-              });
-            } else {
-              // Cancel
-            }
+            if (!verifyCodeInfo) return;
+            setVerifierCodeInfo(verifyCodeInfo);
+            changeLifeCycle('SignUpCodeVerify', {
+              guardianIdentifierInfo: value,
+              verifyCodeInfo,
+            });
           }
         } catch (error) {
           setLoading(false);
@@ -280,9 +260,44 @@ const SignIn = forwardRef(
         isErrorTip,
         onError,
         onStep2OfSignUpFinish,
-        sendVerifyCode,
+        sendCodeConfirm,
         verifySocialToken,
       ],
+    );
+
+    const onSignInHandler = useSignInHandler({ isErrorTip, onError });
+
+    const onSignIn = useCallback(
+      async (guardianIdentifierInfo: IGuardianIdentifierInfo) => {
+        try {
+          console.log(guardianIdentifierInfo, 'onSignIn==guardianIdentifierInfo');
+          const signResult = await onSignInHandler(guardianIdentifierInfo);
+          if (!signResult) return;
+          defaultLiftCyclePropsRef.current = {
+            guardianIdentifierInfo,
+            guardianList: signResult.value.guardianList,
+          };
+          defaultLifeCycleRef.current = undefined;
+
+          const approvedList = signResult.value?.approvedList;
+          approvedList && setApprovedList(approvedList);
+          console.log(signResult, 'signResult===');
+          setLifeCycle(signResult.nextStep);
+        } catch (error) {
+          console.log(error, 'error==onSignIn==');
+          errorTip(
+            {
+              errorFields: 'SignIn',
+              error: handleErrorMessage(error),
+            },
+            isErrorTip,
+            onError,
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [isErrorTip, onError, onSignInHandler],
     );
 
     const onSignInFinished: OnSignInFinishedFun = useCallback(
@@ -293,16 +308,16 @@ const SignIn = forwardRef(
           // Sign in by scan
           onFinishRef?.current?.(value as DIDWalletInfo);
         } else {
-          setGuardianIdentifierInfo(value as IGuardianIdentifierInfo);
+          const identifier = value as IGuardianIdentifierInfo;
+          setGuardianIdentifierInfo(identifier);
           if (type === 'SignUp') {
-            await onSignUp(value as IGuardianIdentifierInfo);
+            await onSignUp(identifier);
           } else {
-            changeLifeCycle('GuardianApproval', { guardianIdentifierInfo: value });
-            setApprovedList(undefined);
+            await onSignIn(identifier);
           }
         }
       },
-      [changeLifeCycle, onSignUp],
+      [onSignIn, onSignUp],
     );
 
     const onStep2Cancel = useCallback(
@@ -380,6 +395,8 @@ const SignIn = forwardRef(
       [changeLifeCycle, clearStorage, isErrorTip, onError, walletWithoutPin],
     );
 
+    console.log(lifeCycle, 'lifeCycle==');
+
     const onModalCancel = useCallback(() => {
       onCancel?.();
       clearStorage();
@@ -387,32 +404,8 @@ const SignIn = forwardRef(
       changeLifeCycle('Login', null);
     }, [changeLifeCycle, clearStorage, onCancel]);
 
-    const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
-
-    const getPhoneCountry = useCallback(async () => {
-      try {
-        const countryData = await did.services.getPhoneCountryCodeWithLocal();
-        setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
-      } catch (error) {
-        errorTip(
-          {
-            errorFields: 'getPhoneCountry',
-            error,
-          },
-          isErrorTip,
-          onError,
-        );
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
-
-    useEffect(() => {
-      // Get phoneCountry by service, update phoneCountry
-      getPhoneCountry();
-    }, [getPhoneCountry]);
-
     const onStep2LoginFinish = useCallback(
-      (list: GuardiansApproved[]) => {
+      async (list: GuardiansApproved[]) => {
         setApprovedList(list);
         changeLifeCycle('SetPinAndAddManager', {
           guardianIdentifierInfo,
@@ -423,14 +416,60 @@ const SignIn = forwardRef(
     );
 
     const onGuardianListChange = useCallback(
-      (guardianList: UserGuardianStatus[]) => {
+      (
+        guardianList: UserGuardianStatus[],
+        lifeCycle: 'Step2OfSkipGuardianApprove' | 'GuardianApproval' = 'GuardianApproval',
+      ) => {
         console.log('onGuardianListChange', guardianList);
-        changeLifeCycle('GuardianApproval', {
+        changeLifeCycle(lifeCycle, {
           guardianIdentifierInfo,
           guardianList,
         });
       },
       [changeLifeCycle, guardianIdentifierInfo],
+    );
+
+    const renderStep2OfLogin = useCallback(
+      (_lifeCycle: LifeCycleType) => {
+        if (!guardianIdentifierInfo)
+          return <div className="portkey-ui-text-center">Missing `guardianIdentifierInfo`</div>;
+        if (_lifeCycle === 'Step2OfSkipGuardianApprove')
+          return (
+            <Step2OfSkipGuardianApprove
+              guardianList={defaultLiftCyclePropsRef.current?.guardianList}
+              guardianIdentifierInfo={guardianIdentifierInfo}
+              isErrorTip={isErrorTip}
+              onError={onErrorRef?.current}
+              onFinish={onStep2LoginFinish}
+              onCancel={() => onStep2Cancel('Login')}
+              onGuardianListChange={(v) => onGuardianListChange(v, 'Step2OfSkipGuardianApprove')}
+            />
+          );
+        return (
+          <Step2OfLogin
+            guardianList={defaultLiftCyclePropsRef.current?.guardianList}
+            approvedList={approvedList}
+            chainType={chainType}
+            chainId={chainId}
+            guardianIdentifierInfo={guardianIdentifierInfo}
+            isErrorTip={isErrorTip}
+            onError={onErrorRef?.current}
+            onFinish={onStep2LoginFinish}
+            onCancel={() => onStep2Cancel('Login')}
+            onGuardianListChange={(v) => onGuardianListChange(v, 'GuardianApproval')}
+          />
+        );
+      },
+      [
+        approvedList,
+        chainId,
+        chainType,
+        guardianIdentifierInfo,
+        isErrorTip,
+        onGuardianListChange,
+        onStep2Cancel,
+        onStep2LoginFinish,
+      ],
     );
 
     const mainContent = useCallback(() => {
@@ -471,24 +510,9 @@ const SignIn = forwardRef(
         );
       }
       if (LifeCycleMap['Step2OfLogin'].includes(lifeCycle)) {
-        if (!guardianIdentifierInfo)
-          return <div className="portkey-ui-text-center">Missing `guardianIdentifierInfo`</div>;
-
-        return (
-          <Step2OfLogin
-            guardianList={defaultLiftCyclePropsRef.current?.guardianList}
-            approvedList={approvedList}
-            chainType={chainType}
-            chainId={chainId}
-            guardianIdentifierInfo={guardianIdentifierInfo}
-            isErrorTip={isErrorTip}
-            onError={onErrorRef?.current}
-            onFinish={onStep2LoginFinish}
-            onCancel={() => onStep2Cancel('Login')}
-            onGuardianListChange={onGuardianListChange}
-          />
-        );
+        return renderStep2OfLogin(lifeCycle);
       }
+
       if (LifeCycleMap['Step3'].includes(lifeCycle))
         return (
           <Step3
@@ -526,14 +550,11 @@ const SignIn = forwardRef(
       onStep3Finish,
       onStep3Cancel,
       onCreatePending,
-      chainType,
+      renderStep2OfLogin,
       verifierCodeInfo,
       changeLifeCycle,
       onStep2OfSignUpFinish,
       onStep2Cancel,
-      chainId,
-      onStep2LoginFinish,
-      onGuardianListChange,
     ]);
 
     return (
