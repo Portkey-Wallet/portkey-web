@@ -85,7 +85,7 @@ export const useStateInit = () => {
       const guardian = holderInfo.guardianList.guardians.find((guardian) => guardian.isLoginGuardian);
       did
         .getHolderInfo({
-          chainId: originChainId as ChainId,
+          chainId: originChainId,
           caHash,
         })
         .then((payload) => {
@@ -106,8 +106,6 @@ export const useStateInit = () => {
   }, [managerPrivateKey]);
 
   const loadCaInfo = useCallback(async () => {
-    AuthServe.addRequestAuthCheck(originChainId);
-    AuthServe.setRefreshTokenConfig(originChainId);
     if (!pin) {
       await loadManager();
     } else {

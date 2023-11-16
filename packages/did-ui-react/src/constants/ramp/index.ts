@@ -28,6 +28,16 @@ export enum TransDirectEnum {
   TOKEN_SELL = 'TokenSell',
 }
 
+export enum NFTTransDirectEnum {
+  NFT_BUY = 'NFTBuy',
+  NFT_SELL = 'NFTSell',
+}
+
+export enum NFTCheckoutByACH {
+  MARKET = 'MARKET',
+  MINT = 'MINT',
+}
+
 // testnet
 // export const AchConfig: IAchConfig = {
 //   appId: 'f83Is2y7L425rxl8',
@@ -42,6 +52,17 @@ export const AchConfig: IAchConfig = {
   updateAchOrder: '/api/app/thirdPart/order/alchemy',
 };
 
+export const ACH_NFT_CONFIG = {
+  TESTNET: {
+    appId: 'f83Is2y7L425rxl8', // TODO
+    baseUrl: 'https://nft-sbx.alchemytech.cc',
+  },
+  MAINNET: {
+    appId: 'P0e0l39jipsNYT46', // TODO
+    baseUrl: 'https://nftcheckout.alchemypay.org',
+  },
+};
+
 export const DEFAULT_CHAIN_ID = 'AELF';
 
 export const DEFAULT_SYMBOL = 'ELF';
@@ -51,6 +72,8 @@ export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge/';
 export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK';
 
 export const ACH_MERCHANT_NAME = 'Alchemy';
+
+export const OUR_PRODUCT_NAME = 'Portkey';
 
 export const FAUCET_URL = 'https://testnet-faucet.aelf.io/';
 
