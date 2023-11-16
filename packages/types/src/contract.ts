@@ -17,6 +17,9 @@ export type SendOptions = {
    * receipt: The transaction has been confirmed and returns receipt
    */
   onMethod: 'transactionHash' | 'receipt' | 'confirmation';
+
+  // append params;
+  appendParams?: any;
 };
 
 export type CallOptions = {
