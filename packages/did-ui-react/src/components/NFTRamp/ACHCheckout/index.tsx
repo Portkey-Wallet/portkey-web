@@ -216,7 +216,6 @@ export default function ACHCheckout({
         targetFiat,
         type,
         uniqueId: orderInfo.id, // NFT Unique Identity, Required for NFT type MARKET 🔺
-        quantity: orderInfo?.cryptoQuantity || '1', // NFT quantity, Required for NFT type MINT 🔺
         name: orderInfo.nftOrderSection?.nftSymbol, // NFT name
         picture: orderInfo.nftOrderSection?.nftPicture, // NFT pic rendering URL, 220px * 220 px
         redirectUrl: redirectUrl, // Redirect URL after buying NFT succeed
@@ -224,7 +223,8 @@ export default function ACHCheckout({
         merchantOrderNo: orderInfo.id, // Merchant defined order ID
         merchantName: OUR_PRODUCT_NAME, // orderInfo.nftOrderSection?.merchantName || 'Alchemy', // Merchant name
       };
-
+      // quantity: orderInfo?.cryptoQuantity || '1', // NFT quantity, Required for NFT type MINT 🔺
+      if (type === 'MINT') getSignatureParams.quantity = orderInfo?.cryptoQuantity || '1';
       const [signature, token] = await Promise.all([getSignature(getSignatureParams), getACHToken()]);
       const query: any = {
         ...getSignatureParams,
