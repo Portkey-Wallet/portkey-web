@@ -31,7 +31,7 @@ const walletSecurityCheck = async ({
     checkTransferSafeChainId: targetChainId,
   });
 
-  const checkAccelerateIsReady = async () => {
+  const checkAccelerateIsReady = async (): Promise<boolean> => {
     setLoading(true);
     let accelerateGuardianTxId;
     if (Array.isArray(res.accelerateGuardians)) {
@@ -40,13 +40,14 @@ const walletSecurityCheck = async ({
       );
       accelerateGuardianTxId = _accelerateGuardian?.transactionId || '';
     }
-    await checkAccelerate({
+    const accelerateRes = await checkAccelerate({
       accelerateGuardianTxId,
       originChainId,
       accelerateChainId: targetChainId,
       caHash,
     });
     setLoading(false);
+    return accelerateRes;
   };
 
   if (res.isTransferSafe) return { status: 'TransferSafe' };
@@ -73,8 +74,14 @@ const walletSecurityCheck = async ({
               }}
               onConfirm={async () => {
                 modal.destroy();
-                await checkAccelerateIsReady();
-                resolve({ status: 'TransferSafe' });
+                const isAccelerate = await checkAccelerateIsReady();
+                const res: CheckWalletSecurityResult = isAccelerate
+                  ? { status: 'TransferSafe' }
+                  : {
+                      status: 'Synchronizing',
+                      message: syncingTip,
+                    };
+                resolve(res);
               }}
             />
           ),

@@ -100,9 +100,12 @@ export const handleAccelerate = async ({
   originChainId,
   accelerateChainId,
   caHash,
-}: IHandleAccelerateProps) => {
+}: IHandleAccelerateProps): Promise<boolean> => {
   const originChainInfo = await getChain(originChainId);
-  if (!originChainInfo?.endPoint) return message.error(SecurityAccelerateErrorTip);
+  if (!originChainInfo?.endPoint) {
+    message.error(SecurityAccelerateErrorTip);
+    return false;
+  }
 
   const result = await getAelfTxResult(originChainInfo?.endPoint, accelerateGuardianTxId);
   if (result.Status !== 'MINED' || !result.Transaction?.Params) return message.error(SecurityAccelerateErrorTip);
@@ -119,8 +122,10 @@ export const handleAccelerate = async ({
       caHash,
     });
     message.success('Guardian added');
+    return true;
   } catch (error: any) {
     message.error(SecurityAccelerateErrorTip);
+    return false;
   }
 };
 
@@ -129,16 +134,17 @@ export const checkAccelerate = async ({
   originChainId,
   accelerateChainId,
   caHash,
-}: ICheckAccelerateProps) => {
+}: ICheckAccelerateProps): Promise<boolean> => {
   try {
     if (accelerateGuardianTxId) {
-      await handleAccelerate({ accelerateGuardianTxId, originChainId, accelerateChainId, caHash });
+      return await handleAccelerate({ accelerateGuardianTxId, originChainId, accelerateChainId, caHash });
     } else {
       const res = await getAccelerateGuardianTxId(caHash, accelerateChainId, originChainId);
       if (res.isSafe) {
         message.success('Guardian added');
+        return true;
       } else if (res.accelerateGuardian?.transactionId) {
-        await handleAccelerate({
+        return await handleAccelerate({
           accelerateGuardianTxId: res.accelerateGuardian.transactionId,
           originChainId,
           accelerateChainId,
@@ -146,9 +152,11 @@ export const checkAccelerate = async ({
         });
       } else {
         message.error(SecurityAccelerateErrorTip);
+        return false;
       }
     }
   } catch (error: any) {
     message.error(SecurityAccelerateErrorTip);
+    return false;
   }
 };
