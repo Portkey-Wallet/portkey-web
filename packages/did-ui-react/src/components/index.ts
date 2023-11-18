@@ -69,6 +69,7 @@ export { default as walletSecurityCheck } from './ModalMethod/WalletSecurityChec
 export { default as transferLimitCheck } from './ModalMethod/TransferLimitCheck';
 export { default as checkWalletSecurity } from './ModalMethod/CheckWalletSecurity';
 export { default as SecurityCheck } from './SecurityCheck';
+export { default as SecurityCheckAndAccelerate } from './SecurityCheckAndAccelerate';
 export { default as MenuItem } from './MenuItem';
 export { default as MenuList } from './MenuList';
 export { default as PaymentSecurity } from './PaymentSecurity';

@@ -28,22 +28,28 @@ export enum GuardianStep {
   guardianView = 'guardianView',
 }
 
+export interface IAddGuardianFinishCbParams {
+  syncRes: boolean;
+}
+
 export interface GuardianProps {
   caHash: string;
   className?: string;
   sandboxId?: string;
   originChainId: ChainId;
+  accelerateChainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   onBack?: () => void;
-  onAddGuardianFinish?: () => void;
+  onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
 }
 
 function GuardianMain({
   caHash,
   className,
   originChainId = 'AELF',
+  accelerateChainId,
   chainType = 'aelf',
   isErrorTip = true,
   sandboxId,
@@ -156,6 +162,7 @@ function GuardianMain({
   const handleAddGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
       const params = formatAddGuardianValue({ currentGuardian, approvalInfo });
+      let syncRes = true;
       try {
         await handleGuardianContract({
           type: GuardianMth.addGuardian,
@@ -164,9 +171,30 @@ function GuardianMain({
           chainId: originChainId,
           caHash,
         });
+        if (accelerateChainId && originChainId !== accelerateChainId) {
+          try {
+            await handleGuardianContract({
+              type: GuardianMth.addGuardian,
+              params,
+              sandboxId,
+              chainId: accelerateChainId,
+              caHash,
+            });
+          } catch (error: any) {
+            syncRes = false;
+            errorTip(
+              {
+                errorFields: 'HandleAddGuardianAccelerate',
+                error: handleErrorMessage(error),
+              },
+              false,
+              onError,
+            );
+          }
+        }
         await getGuardianList();
         setStep(GuardianStep.guardianList);
-        onAddGuardianFinish?.();
+        onAddGuardianFinish?.({ syncRes });
       } catch (e) {
         return errorTip(
           {
@@ -180,7 +208,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [sandboxId, originChainId, caHash, getGuardianList, onAddGuardianFinish, isErrorTip, onError],
+    [sandboxId, originChainId, caHash, getGuardianList, onAddGuardianFinish, isErrorTip, onError, accelerateChainId],
   );
   const handleEditGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {

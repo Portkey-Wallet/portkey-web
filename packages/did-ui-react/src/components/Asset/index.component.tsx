@@ -110,6 +110,7 @@ function AssetMain({
   }, [caInfo]);
 
   const [allToken, setAllToken] = useState<IUserTokenItem[]>();
+  const [accelerateChainId, setAccelerateChainId] = useState<ChainId>(originChainId);
   const getAllTokenList = useCallback(async () => {
     if (!caAddressInfos) return;
     const chainIdArray = caAddressInfos.map((info) => info.chainId);
@@ -197,7 +198,10 @@ function AssetMain({
   }, []);
 
   const myMenuList = useMyMenuList({
-    onClickGuardians: () => setAssetStep(AssetStep.guardians),
+    onClickGuardians: () => {
+      setAccelerateChainId(originChainId);
+      setAssetStep(AssetStep.guardians);
+    },
     onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
   });
 
@@ -300,7 +304,10 @@ function AssetMain({
             setViewPaymentSecurity({ ...data, ...res });
             setAssetStep(AssetStep.transferSettingsEdit);
           }}
-          onModifyGuardians={() => setAssetStep(AssetStep.guardians)}
+          onModifyGuardians={() => {
+            setAccelerateChainId(selectToken.chainId);
+            setAssetStep(AssetStep.guardians);
+          }}
         />
       )}
       {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
@@ -332,7 +339,10 @@ function AssetMain({
             setViewPaymentSecurity({ ...data, ...res });
             setAssetStep(AssetStep.transferSettingsEdit);
           }}
-          onModifyGuardians={() => setAssetStep(AssetStep.guardians)}
+          onModifyGuardians={() => {
+            setAccelerateChainId(sendToken.chainId as ChainId);
+            setAssetStep(AssetStep.guardians);
+          }}
         />
       )}
 
@@ -411,6 +421,7 @@ function AssetMain({
           sandboxId={sandboxId}
           caHash={caHash || ''}
           originChainId={originChainId}
+          accelerateChainId={accelerateChainId}
           onBack={() => setAssetStep(AssetStep.my)}
         />
       )}
