@@ -9,7 +9,7 @@ export enum GuardianMth {
   SetGuardianTypeForLogin = 'SetGuardianForLogin',
   UnsetGuardianTypeForLogin = 'UnsetGuardianForLogin',
 }
-export const handleGuardianContract = async ({
+export const handleGuardianByContract = async ({
   type,
   params,
   chainId,

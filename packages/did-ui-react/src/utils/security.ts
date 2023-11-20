@@ -3,7 +3,7 @@ import { did } from './did';
 import { ChainId } from '@portkey/types';
 import { getChain } from '../hooks';
 import { message } from 'antd';
-import { GuardianMth, handleGuardianContract } from './sandboxUtil/handleGuardianContract';
+import { GuardianMth, handleGuardianByContract } from './sandboxUtil/handleGuardianByContract';
 import { getAelfTxResult } from './aelf';
 import { SecurityAccelerateErrorTip } from '../constants/security';
 
@@ -112,7 +112,7 @@ export const handleAccelerate = async ({
   const params = JSON.parse(result.Transaction.Params);
 
   try {
-    await handleGuardianContract({
+    await handleGuardianByContract({
       type: GuardianMth.addGuardian,
       params: {
         guardianToAdd: params.guardianToAdd,

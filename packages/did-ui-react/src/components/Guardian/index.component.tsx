@@ -15,7 +15,7 @@ import { Button } from 'antd';
 import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
 import { formatDelGuardianValue } from './utils/formatDelGuardianValue';
-import { GuardianMth, handleGuardianContract } from '../../utils/sandboxUtil/handleGuardianContract';
+import { GuardianMth, handleGuardianByContract } from '../../utils/sandboxUtil/handleGuardianByContract';
 import BackHeaderForPage from '../BackHeaderForPage';
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
@@ -164,7 +164,7 @@ function GuardianMain({
       const params = formatAddGuardianValue({ currentGuardian, approvalInfo });
       let syncRes = true;
       try {
-        await handleGuardianContract({
+        await handleGuardianByContract({
           type: GuardianMth.addGuardian,
           params,
           sandboxId,
@@ -173,7 +173,7 @@ function GuardianMain({
         });
         if (accelerateChainId && originChainId !== accelerateChainId) {
           try {
-            await handleGuardianContract({
+            await handleGuardianByContract({
               type: GuardianMth.addGuardian,
               params,
               sandboxId,
@@ -218,7 +218,7 @@ function GuardianMain({
         approvalInfo,
       });
       try {
-        await handleGuardianContract({
+        await handleGuardianByContract({
           type: GuardianMth.UpdateGuardian,
           params,
           sandboxId,
@@ -249,7 +249,7 @@ function GuardianMain({
         approvalInfo,
       });
       try {
-        await handleGuardianContract({
+        await handleGuardianByContract({
           type: GuardianMth.RemoveGuardian,
           params,
           sandboxId,
@@ -280,7 +280,7 @@ function GuardianMain({
       identifierHash: currentGuardian?.identifierHash,
     };
     try {
-      await handleGuardianContract({
+      await handleGuardianByContract({
         type: currentGuardian?.isLoginGuardian
           ? GuardianMth.UnsetGuardianTypeForLogin
           : GuardianMth.SetGuardianTypeForLogin,
