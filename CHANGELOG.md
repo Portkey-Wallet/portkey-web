@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.4...v1.5.1-alpha.5) (2023-11-20)
+
+### Features
+
+- 🎸 security accelerate ([b3004fd](https://github.com/Portkey-Wallet/portkey-web/commit/b3004fde44a6ccff76c86f9df1fb4976063fe4a9))
+- 🎸 update accelerate logic ([64ab6e0](https://github.com/Portkey-Wallet/portkey-web/commit/64ab6e069604c842891717a96b72bcfc4463b911))
+
+### Bug Fixes
+
+- 🐛 update handleGuardianByContract ([21149d2](https://github.com/Portkey-Wallet/portkey-web/commit/21149d2a550cb31085808235c00c1706f44f8296))
+
 ## [1.5.1-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.3...v1.5.1-alpha.4) (2023-11-03)
 
 ### Bug Fixes
