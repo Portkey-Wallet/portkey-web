@@ -11,6 +11,7 @@ describe('securityService describe', () => {
   test('test getWalletBalanceCheck', async () => {
     const result = await securityService.getWalletBalanceCheck({
       caHash: 'caHash_mock',
+      checkTransferSafeChainId: 'tDVV',
     });
 
     expect(result).toHaveProperty('isSafe');

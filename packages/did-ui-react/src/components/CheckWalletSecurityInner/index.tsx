@@ -11,12 +11,17 @@ const preFixCls = 'portkey-ui-check-wallet-security';
 export interface BaseCheckWalletSecurityInnerProps {
   caHash: string;
   originChainId: ChainId;
+  targetChainId: ChainId;
+}
+
+export interface ICheckWalletSecurityParams {
+  syncRes: boolean;
 }
 
 export interface CheckWalletSecurityInnerProps extends BaseCheckWalletSecurityInnerProps {
   onCancel?: () => void;
   onError?: (error: Error) => void;
-  onFinish?: () => void;
+  onFinish?: (params: ICheckWalletSecurityParams) => void;
 }
 
 enum Step {
@@ -27,6 +32,7 @@ enum Step {
 export default function CheckWalletSecurityInner({
   caHash,
   originChainId,
+  targetChainId,
   onCancel,
   onFinish,
 }: CheckWalletSecurityInnerProps) {
@@ -49,6 +55,7 @@ export default function CheckWalletSecurityInner({
           <GuardianMain
             caHash={caHash || ''}
             originChainId={originChainId}
+            accelerateChainId={targetChainId}
             onAddGuardianFinish={onFinish}
             onBack={() => setStep(Step.confirmModal)}
           />

@@ -2,11 +2,23 @@ import { ChainId } from '@portkey/types';
 
 export interface IWalletBalanceCheckParams {
   caHash: string;
+  checkTransferSafeChainId: ChainId;
+}
+
+export interface IAccelerateGuardian {
+  type: string;
+  verifierId: string;
+  identifierHash: string;
+  salt: string;
+  isLoginAccount: boolean;
+  transactionId: string;
+  chainId: ChainId;
 }
 export interface IWalletBalanceCheckResponse {
   isOriginChainSafe: boolean;
   isSynchronizing: boolean;
   isTransferSafe: boolean;
+  accelerateGuardians: IAccelerateGuardian[];
 }
 
 export interface ISecurityService {

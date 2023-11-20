@@ -1,11 +1,12 @@
 import BaseModalFunc from '../BaseModalMethod';
 import CheckWalletSecurityInner, { BaseCheckWalletSecurityInnerProps } from '../../CheckWalletSecurityInner';
-import { did, handleErrorMessage } from '../../../utils';
+import { CheckSecurityResult, checkAccelerate, did, handleErrorMessage, setLoading } from '../../../utils';
 import { ChainId } from '@portkey/types';
+import SecurityCheckAndAccelerate from '../../SecurityCheckAndAccelerate';
 interface BaseCheckWalletSecurityProps {
   wrapClassName?: string;
   className?: string;
-  targetChainId?: ChainId;
+  targetChainId: ChainId;
 }
 
 export type CheckWalletSecurityProps = BaseCheckWalletSecurityInnerProps & BaseCheckWalletSecurityProps;
@@ -25,27 +26,67 @@ const walletSecurityCheck = async ({
   originChainId,
   ...props
 }: CheckWalletSecurityProps): Promise<CheckWalletSecurityResult> => {
-  const res = await did.services.security.getWalletBalanceCheck({ caHash });
+  const res: CheckSecurityResult = await did.services.security.getWalletBalanceCheck({
+    caHash,
+    checkTransferSafeChainId: targetChainId,
+  });
 
-  if (!targetChainId) {
-    if (res.isTransferSafe) return { status: 'TransferSafe' };
-    if (res.isSynchronizing)
-      return {
-        status: 'Synchronizing',
-        message: syncingTip,
-      };
-  }
+  const checkAccelerateIsReady = async (): Promise<boolean> => {
+    setLoading(true);
+    let accelerateGuardianTxId;
+    if (Array.isArray(res.accelerateGuardians)) {
+      const _accelerateGuardian = res.accelerateGuardians.find(
+        (item) => item.transactionId && item.chainId === originChainId,
+      );
+      accelerateGuardianTxId = _accelerateGuardian?.transactionId || '';
+    }
+    const accelerateRes = await checkAccelerate({
+      accelerateGuardianTxId,
+      originChainId,
+      accelerateChainId: targetChainId,
+      caHash,
+    });
+    setLoading(false);
+    return accelerateRes;
+  };
 
-  // know the chain of operations
+  if (res.isTransferSafe) return { status: 'TransferSafe' };
+
   if (originChainId === targetChainId) {
     if (res.isOriginChainSafe) return { status: 'OriginChainSafe' };
   } else {
-    if (res.isTransferSafe) return { status: 'TransferSafe' };
-    if (res.isSynchronizing)
-      return {
-        status: 'Synchronizing',
-        message: syncingTip,
-      };
+    if (res.isSynchronizing && res.isOriginChainSafe)
+      return new Promise((resolve) => {
+        const modal = BaseModalFunc({
+          maskClosable: true,
+          ...props,
+          wrapClassName: wrapClassName,
+          className: className,
+          content: (
+            <SecurityCheckAndAccelerate
+              {...props}
+              onClose={() => {
+                resolve({
+                  status: 'Synchronizing',
+                  message: syncingTip,
+                });
+                modal.destroy();
+              }}
+              onConfirm={async () => {
+                modal.destroy();
+                const isAccelerate = await checkAccelerateIsReady();
+                const res: CheckWalletSecurityResult = isAccelerate
+                  ? { status: 'TransferSafe' }
+                  : {
+                      status: 'Synchronizing',
+                      message: syncingTip,
+                    };
+                resolve(res);
+              }}
+            />
+          ),
+        });
+      });
   }
 
   return new Promise((resolve) => {
@@ -57,6 +98,7 @@ const walletSecurityCheck = async ({
       content: (
         <CheckWalletSecurityInner
           caHash={caHash}
+          targetChainId={targetChainId}
           originChainId={originChainId}
           {...props}
           onCancel={() => {
@@ -66,14 +108,18 @@ const walletSecurityCheck = async ({
             });
             modal.destroy();
           }}
-          onFinish={() => {
-            const isSameChainId = originChainId === targetChainId;
-
-            resolve({
-              status: isSameChainId ? 'OriginChainSafe' : 'Synchronizing',
-              message: isSameChainId ? 'AddGuardian: OriginChainSafe' : `AddGuardian:${syncingTip}`,
-            });
-
+          onFinish={({ syncRes }) => {
+            let _res: CheckWalletSecurityResult = {
+              status: 'TransferSafe',
+              message: 'AddGuardian: CurrentChainSafe',
+            };
+            if (originChainId !== targetChainId && !syncRes) {
+              _res = {
+                status: 'Synchronizing',
+                message: `AddGuardian:${syncingTip}`,
+              };
+            }
+            resolve(_res);
             modal.destroy();
           }}
           onError={(error) => {

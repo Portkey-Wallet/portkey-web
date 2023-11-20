@@ -1,19 +1,29 @@
 import BaseModalFunc from '../BaseModalMethod';
-import { did } from '../../../utils';
+import { did, setLoading, checkAccelerate } from '../../../utils';
 import SecurityCheck from '../../SecurityCheck';
-import CustomModal from '../../CustomModal';
+import SecurityCheckAndAccelerate from '../../SecurityCheckAndAccelerate';
 import { ChainId } from '@portkey/types';
+import { IWalletBalanceCheckResponse, IAccelerateGuardian } from '@portkey/services';
 
 interface WalletSecurityCheckModalProps extends AddGuardiansModalProps {
   caHash: string;
   originChainId: ChainId;
-  targetChainId?: ChainId;
+  targetChainId: ChainId;
 }
 
 interface AddGuardiansModalProps {
   wrapClassName?: string;
   className?: string;
   onOk?: () => void;
+}
+
+interface SyncAccelerateModalProps {
+  wrapClassName?: string;
+  className?: string;
+  accelerateGuardianTxId?: string;
+  accelerateChainId: ChainId;
+  originChainId: ChainId;
+  caHash: string;
 }
 
 const walletSecurityCheck = async ({
@@ -25,33 +35,37 @@ const walletSecurityCheck = async ({
   onOk,
   ...props
 }: WalletSecurityCheckModalProps) => {
-  const res = await did.services.security.getWalletBalanceCheck({ caHash });
+  const res: IWalletBalanceCheckResponse = await did.services.security.getWalletBalanceCheck({
+    caHash,
+    checkTransferSafeChainId: targetChainId,
+  });
 
-  // don’t know the chain of operations
-  if (!targetChainId) {
-    if (res.isTransferSafe) return true;
-    if (res.isSynchronizing) {
-      synchronizingModal();
-      return false;
-    }
-    addGuardiansModal({
-      wrapClassName,
-      className,
-      onOk,
-      ...props,
-    });
-    return false;
-  }
+  if (res.isTransferSafe) return true;
 
-  // know the chain of operations
   if (originChainId === targetChainId) {
     if (res.isOriginChainSafe) return true;
     addGuardiansModal({ wrapClassName, className, onOk, ...props });
     return false;
   } else {
-    if (res.isTransferSafe) return true;
-    if (res.isSynchronizing) {
-      synchronizingModal();
+    if (res.isSynchronizing && res.isOriginChainSafe) {
+      let accelerateGuardianTxId = '';
+      if (Array.isArray(res.accelerateGuardians)) {
+        const _accelerateGuardian = res.accelerateGuardians.find(
+          (item: IAccelerateGuardian) => item.transactionId && item.chainId === originChainId,
+        );
+        if (_accelerateGuardian) {
+          accelerateGuardianTxId = _accelerateGuardian.transactionId;
+        }
+      }
+      syncAccelerateModal({
+        wrapClassName,
+        className,
+        accelerateChainId: targetChainId,
+        caHash,
+        originChainId,
+        accelerateGuardianTxId,
+        ...props,
+      });
       return false;
     }
     addGuardiansModal({ wrapClassName, className, onOk, ...props });
@@ -105,27 +119,69 @@ export const addGuardiansModal = ({ wrapClassName = '', className = '', onOk, ..
   });
 };
 
-let SynchronizingModalInstance: ReturnType<typeof BaseModalFunc> | null;
+let SyncAccelerateModalInstance: ReturnType<typeof BaseModalFunc> | null;
+let syncPrevWrapClsx: string;
+let syncPrevClsx: string;
 
-export const synchronizingModal = () => {
-  if (SynchronizingModalInstance) {
-    SynchronizingModalInstance.update((prevConfig) => {
-      return {
-        ...prevConfig,
-        ...{
-          type: 'info',
-          content: 'Syncing guardian info, which may take 1-2 minutes. Please try again later.',
-          okText: 'Ok',
-        },
-      };
+export const syncAccelerateModal = async ({
+  accelerateGuardianTxId,
+  caHash,
+  accelerateChainId,
+  originChainId,
+  wrapClassName = '',
+  className = '',
+  ...props
+}: SyncAccelerateModalProps) => {
+  const checkAccelerateIsReady = async () => {
+    setLoading(true);
+    await checkAccelerate({
+      accelerateGuardianTxId,
+      originChainId,
+      accelerateChainId,
+      caHash,
     });
-  } else {
-    return (SynchronizingModalInstance = CustomModal({
-      type: 'info',
-      content: 'Syncing guardian info, which may take 1-2 minutes. Please try again later.',
-      okText: 'Ok',
-    }));
-  }
+    setLoading(false);
+  };
+
+  return new Promise((resolve) => {
+    const modalConfig = {
+      ...props,
+      wrapClassName: 'portkey-ui-wallet-security-wrapper' + wrapClassName,
+      className: 'portkey-ui-wallet-security-modal' + className,
+      content: (
+        <SecurityCheckAndAccelerate
+          {...props}
+          onClose={() => {
+            resolve(false);
+            SyncAccelerateModalInstance!.destroy();
+            SyncAccelerateModalInstance = null;
+          }}
+          onConfirm={async () => {
+            resolve(true);
+            SyncAccelerateModalInstance!.destroy();
+            SyncAccelerateModalInstance = null;
+            await checkAccelerateIsReady();
+          }}
+        />
+      ),
+    };
+    if (SyncAccelerateModalInstance) {
+      SyncAccelerateModalInstance.update((prevConfig) => {
+        return {
+          ...prevConfig,
+          ...modalConfig,
+          className: prevConfig.className?.replace(syncPrevClsx, className),
+          wrapClassName: prevConfig.wrapClassName?.replace(syncPrevWrapClsx, wrapClassName),
+        };
+      });
+      syncPrevWrapClsx = wrapClassName;
+      syncPrevClsx = className;
+    } else {
+      syncPrevWrapClsx = wrapClassName;
+      syncPrevClsx = className;
+      SyncAccelerateModalInstance = BaseModalFunc(modalConfig);
+    }
+  });
 };
 
 export default walletSecurityCheck;
