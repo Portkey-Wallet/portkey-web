@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.6...v1.5.1-alpha.7) (2023-11-21)
+
+### Features
+
+- 🎸 add modal onCancel ([b2b7dad](https://github.com/Portkey-Wallet/portkey-web/commit/b2b7dadc464507c2d37beeaf0bb087a2c7d453d9))
+
 ## [1.5.1-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.5...v1.5.1-alpha.6) (2023-11-21)
 
 ## [1.4.4-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.6...v1.4.4-alpha.7) (2023-11-13)
