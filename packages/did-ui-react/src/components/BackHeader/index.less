@@ -1,16 +1,23 @@
+@import '../../assets/theme/constants.less';
+
 .back-header {
   line-height: 20px;
   color: var(--portkey-ui-text-primary);
-;
   font-size: 14px;
   padding: 24px 16px;
   .default-left-ele {
     cursor: pointer;
     .left-arrow {
-      width: 12px;
-      height: 12px;
+      width: 20px;
+      height: 20px;
       font-size: 12px;
       line-height: 1;
     }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .back-header {
+    padding: 18px 20px;
   }
 }

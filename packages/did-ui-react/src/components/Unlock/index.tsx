@@ -1,11 +1,10 @@
-import { useCallback } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
-import BaseModal from '../SignStep/components/BaseModal';
+import CommonBaseModal from '../CommonBaseModal';
 import CustomPassword from '../CustomPassword';
 import CustomSvg from '../CustomSvg';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
-
 import './index.less';
 
 type UI_TYPE = 'Modal' | 'Full';
@@ -31,20 +30,21 @@ export default function UnLock({
   isWrongPassword = false,
   uiType = 'Modal',
   open,
-  value,
+  value = '',
   className,
   onCancel,
   onUnlock,
   onChange,
 }: UnlockProps) {
   const { t } = useTranslation();
+  const disabled = useMemo(() => value.length < 6, [value?.length]);
   const mainContent = useCallback(() => {
     return (
       <div className="unlock-body">
         <CustomSvg type="Portkey" style={{ width: '80px', height: '80px' }} />
         <h1 className="unlock-title">Welcome back!</h1>
         <div className="password-wrap">
-          <span className="password-label">Enter Pin</span>
+          {/* <span className="password-label">Enter Pin</span> */}
           <CustomPassword
             value={value}
             placeholder={t('Enter Pin')}
@@ -53,25 +53,28 @@ export default function UnLock({
             onChange={(e) => {
               onChange(e.target.value);
             }}
+            onPressEnter={() => {
+              if (!disabled) onUnlock();
+            }}
           />
           <div className="error-tips">{isWrongPassword ? 'Incorrect pin' : ''}</div>
         </div>
 
-        <Button disabled={value?.length < 6} className="submit-btn" type="primary" onClick={onUnlock}>
+        <Button disabled={disabled} className="submit-btn" type="primary" onClick={onUnlock}>
           Unlock
         </Button>
       </div>
     );
-  }, [value, t, isWrongPassword, onChange, onUnlock]);
+  }, [value, t, isWrongPassword, disabled, onUnlock, onChange]);
 
   return (
     <PortkeyStyleProvider>
       {uiType === 'Full' ? (
         <div className="portkey-sign-full-wrapper">{mainContent()}</div>
       ) : (
-        <BaseModal destroyOnClose className={className} open={open} onCancel={onCancel}>
+        <CommonBaseModal destroyOnClose className={className} open={open} onClose={onCancel}>
           {mainContent()}
-        </BaseModal>
+        </CommonBaseModal>
       )}
     </PortkeyStyleProvider>
   );

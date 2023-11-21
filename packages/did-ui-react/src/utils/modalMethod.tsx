@@ -1,6 +1,6 @@
 import { ModalFuncProps } from 'antd';
 import { PORTKEY_PREFIX_CLS } from '../constants';
-import Modal from '../components/CustomAnt/antd/modal';
+import { Modal } from '../components/CustomAnt';
 
 export function modalMethod({ type = 'confirm', wrapClassName, className, onOk, onCancel, ...props }: ModalFuncProps) {
   return new Promise((resolve) => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE, Unlock } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
@@ -33,6 +33,10 @@ export default function Sign() {
   const [defaultLifeCycle, setLifeCycle] = useState<any>();
   const [design, setDesign] = useState<TDesign>('Web2Design');
   const [uiType, setUIType] = useState<UI_TYPE>('Modal');
+
+  const [lockOpen, setLockOpen] = useState<boolean>();
+  const [password, setPassword] = useState<string>();
+
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
   }, []);
@@ -130,6 +134,27 @@ export default function Sign() {
       </button>
       <div id="wrapper"></div>
       <div>-----------</div>
+      <button
+        onClick={() => {
+          setLockOpen(true);
+        }}>
+        setLockOpen
+      </button>
+      <Unlock
+        isWrongPassword
+        onUnlock={() => {
+          console.log('onUnlock=====');
+        }}
+        uiType={uiType}
+        open={lockOpen}
+        value={password}
+        onCancel={() => {
+          setLockOpen(false);
+        }}
+        onChange={v => {
+          setPassword(v);
+        }}
+      />
     </div>
   );
 }

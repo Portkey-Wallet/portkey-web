@@ -17,6 +17,7 @@ export interface SignUpBaseProps {
   phoneCountry?: IPhoneCountry;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
+  isMobile?: boolean;
   wrapperClassName?: string;
   extraElement?: ReactNode; // extra element
   termsOfService?: ReactNode;
@@ -34,6 +35,7 @@ export default function SignUpBase({
   socialLogin,
   phoneCountry,
   isErrorTip = true,
+  isMobile,
   networkType,
   wrapperClassName,
   extraElement,
@@ -75,6 +77,7 @@ export default function SignUpBase({
         <SocialLogin
           type="Sign up"
           className="portkey-ui-flex-1"
+          isMobile={isMobile}
           extraElement={extraElement}
           termsOfService={termsOfService}
           isErrorTip={isErrorTip}

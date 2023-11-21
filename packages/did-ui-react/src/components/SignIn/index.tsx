@@ -5,7 +5,6 @@
  * First you have to configure networkList using ConfigProvider.setGlobalConfig
  */
 
-import BaseModal from '../SignStep/components/BaseModal';
 import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import Step1, { OnSignInFinishedFun } from '../SignStep/components/Step1';
 import Step2OfSignUp from '../SignStep/components/Step2OfSignUp';
@@ -34,6 +33,7 @@ import useVerifier from '../../hooks/useVerifier';
 import { sleep } from '@portkey/utils';
 import { modalMethod } from '../../utils/modalMethod';
 import './index.less';
+import CommonBaseModal from '../CommonBaseModal';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -543,14 +543,14 @@ const SignIn = forwardRef(
             <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
           </Container>
         ) : (
-          <BaseModal
+          <CommonBaseModal
             destroyOnClose
             className={className}
             open={open}
             getContainer={getContainer ? getContainer : '#portkey-ui-root'}
-            onCancel={onModalCancel}>
+            onClose={onModalCancel}>
             {mainContent()}
-          </BaseModal>
+          </CommonBaseModal>
         )}
       </PortkeyStyleProvider>
     );

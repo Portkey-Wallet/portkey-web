@@ -10,6 +10,7 @@ import ConfigProvider from '../config-provider';
 import { usePortkey } from '../context';
 import { useSignHandler } from '../../hooks/useSignHandler';
 import './index.less';
+import useMobile from '../../hooks/useMobile';
 
 export interface CryptoDesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -41,6 +42,8 @@ export default function CryptoDesignBaseCom({
 
   const _socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
   const [{ theme }] = usePortkey();
+
+  const isMobile = useMobile();
 
   useEffect(() => {
     validateEmailRef.current = validateEmail;
@@ -91,6 +94,7 @@ export default function CryptoDesignBaseCom({
       {_type === 'SignUp' && (
         <SignUpBase
           isErrorTip={isErrorTip}
+          isMobile={isMobile}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           extraElement={extraElement}
@@ -108,6 +112,7 @@ export default function CryptoDesignBaseCom({
       {_type === 'LoginByScan' && (
         <ScanCard
           chainId={defaultChainId}
+          isMobile={isMobile}
           backIcon={<CustomSvg type="PC" />}
           chainType={chainType}
           networkType={networkType}
@@ -120,6 +125,7 @@ export default function CryptoDesignBaseCom({
       {_type === 'Login' && (
         <LoginCard
           theme={theme}
+          isMobile={isMobile}
           isErrorTip={isErrorTip}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}

@@ -10,6 +10,7 @@ import {
   SignIn,
   Web2Design,
   ISignIn,
+  CommonModal,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
 import { Store } from '../../utils';
@@ -50,6 +51,23 @@ function Example() {
         }}
       />
 
+      <CommonModal
+        type="modal"
+        closable={false}
+        open={isLoading}
+        className="confirm-return-modal"
+        title={'Leave this page?'}
+        width={320}
+        getContainer={'#set-pin-wrapper'}>
+        <p className="modal-content">Are you sure you want to leave this page? All changes will not be saved.</p>
+        <div className="btn-wrapper">
+          {/* <Button onClick={() => setReturnOpen(false)}>No</Button>
+          <Button type="primary" onClick={() => onCancel?.('register')}>
+            Yes
+          </Button> */}
+        </div>
+      </CommonModal>
+
       <button
         onClick={() => {
           ref.current?.setOpen(true);
@@ -63,12 +81,12 @@ function Example() {
         ShowLoading
       </button>
 
-      <PortkeyLoading
+      {/* <PortkeyLoading
         loading={isLoading}
         loadingText={'Synchronizing on-chain account information...'}
         cancelable
         onCancel={() => setLoading(false)}
-      />
+      /> */}
       <div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
           <CryptoDesign

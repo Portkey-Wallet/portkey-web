@@ -57,8 +57,6 @@ const GuardianApproval = forwardRef(
       onConfirmRef.current = onConfirm;
     });
 
-    console.log(guardianList, defaultGuardianList, 'guardianList==GuardianApproval');
-
     useUpdateEffect(() => {
       onGuardianListChange?.(guardianList);
     }, [guardianList]);

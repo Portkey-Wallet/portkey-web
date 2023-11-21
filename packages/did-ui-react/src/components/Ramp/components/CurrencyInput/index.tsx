@@ -8,7 +8,6 @@ import { countryCodeMap } from '../../../../constants/ramp';
 export interface ICurrencyInputProps {
   value: string;
   fiatList: FiatType[];
-  isShowSelectInModal?: boolean;
   onChange: (val: string) => void;
   readOnly: boolean;
   onKeyDown: (e: IKeyDownParams) => void;
@@ -19,7 +18,6 @@ export interface ICurrencyInputProps {
 export default function CurrencyInput({
   value,
   fiatList,
-  isShowSelectInModal = true,
   onChange,
   readOnly,
   onKeyDown,
@@ -52,7 +50,6 @@ export default function CurrencyInput({
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         onSelect={onSelect}
-        isModal={isShowSelectInModal}
       />
     </>
   );
