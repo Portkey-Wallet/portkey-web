@@ -15,7 +15,7 @@ export interface BaseCheckWalletSecurityInnerProps {
 }
 
 export interface ICheckWalletSecurityParams {
-  syncRes: boolean;
+  syncStatus: boolean;
 }
 
 export interface CheckWalletSecurityInnerProps extends BaseCheckWalletSecurityInnerProps {

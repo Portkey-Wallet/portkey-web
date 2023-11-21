@@ -17,17 +17,19 @@ const managerApprove = async ({
   guardiansApproved: IGuardiansApproved[];
 }> =>
   new Promise((resolve, reject) => {
+    const onCancel = () => {
+      reject(Error('User Cancel'));
+      modal.destroy();
+    };
     const modal = BaseModalFunc({
       ...props,
       wrapClassName: 'portkey-ui-manager-approve-modal-wrapper ' + wrapClassName,
       className: 'portkey-ui-h-566 portkey-ui-manager-approve-modal ' + className,
+      onCancel,
       content: (
         <ManagerApproveContent
           {...props}
-          onCancel={() => {
-            reject(Error('User Cancel'));
-            modal.destroy();
-          }}
+          onCancel={onCancel}
           onFinish={(res) => {
             resolve(res);
             modal.destroy();

@@ -57,21 +57,23 @@ const walletSecurityCheck = async ({
   } else {
     if (res.isSynchronizing && res.isOriginChainSafe)
       return new Promise((resolve) => {
+        const onCancel = () => {
+          resolve({
+            status: 'Synchronizing',
+            message: syncingTip,
+          });
+          modal.destroy();
+        };
         const modal = BaseModalFunc({
           maskClosable: true,
           ...props,
-          wrapClassName: wrapClassName,
-          className: className,
+          wrapClassName,
+          className,
+          onCancel,
           content: (
             <SecurityCheckAndAccelerate
               {...props}
-              onClose={() => {
-                resolve({
-                  status: 'Synchronizing',
-                  message: syncingTip,
-                });
-                modal.destroy();
-              }}
+              onClose={onCancel}
               onConfirm={async () => {
                 modal.destroy();
                 const isAccelerate = await checkAccelerateIsReady();
@@ -90,30 +92,32 @@ const walletSecurityCheck = async ({
   }
 
   return new Promise((resolve) => {
+    const onCancel = () => {
+      resolve({
+        status: 'Cancel',
+        message: 'User Cancel',
+      });
+      modal.destroy();
+    };
     const modal = BaseModalFunc({
       maskClosable: true,
       ...props,
-      wrapClassName: wrapClassName,
-      className: className,
+      wrapClassName,
+      className,
+      onCancel,
       content: (
         <CheckWalletSecurityInner
           caHash={caHash}
           targetChainId={targetChainId}
           originChainId={originChainId}
           {...props}
-          onCancel={() => {
-            resolve({
-              status: 'Cancel',
-              message: 'User Cancel',
-            });
-            modal.destroy();
-          }}
-          onFinish={({ syncRes }) => {
+          onCancel={onCancel}
+          onFinish={({ syncStatus }) => {
             let _res: CheckWalletSecurityResult = {
               status: 'TransferSafe',
               message: 'AddGuardian: CurrentChainSafe',
             };
-            if (originChainId !== targetChainId && !syncRes) {
+            if (originChainId !== targetChainId && !syncStatus) {
               _res = {
                 status: 'Synchronizing',
                 message: `AddGuardian:${syncingTip}`,

@@ -29,7 +29,7 @@ export enum GuardianStep {
 }
 
 export interface IAddGuardianFinishCbParams {
-  syncRes: boolean;
+  syncStatus: boolean;
 }
 
 export interface GuardianProps {
@@ -162,7 +162,7 @@ function GuardianMain({
   const handleAddGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
       const params = formatAddGuardianValue({ currentGuardian, approvalInfo });
-      let syncRes = true;
+      let syncStatus = true;
       try {
         await handleGuardianByContract({
           type: GuardianMth.addGuardian,
@@ -181,7 +181,7 @@ function GuardianMain({
               caHash,
             });
           } catch (error: any) {
-            syncRes = false;
+            syncStatus = false;
             errorTip(
               {
                 errorFields: 'HandleAddGuardianAccelerate',
@@ -194,7 +194,7 @@ function GuardianMain({
         }
         await getGuardianList();
         setStep(GuardianStep.guardianList);
-        onAddGuardianFinish?.({ syncRes });
+        onAddGuardianFinish?.({ syncStatus });
       } catch (e) {
         return errorTip(
           {
