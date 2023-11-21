@@ -79,18 +79,20 @@ let prevClsx: string;
 
 export const addGuardiansModal = ({ wrapClassName = '', className = '', onOk, ...props }: AddGuardiansModalProps) => {
   return new Promise((resolve) => {
+    const onCancel = () => {
+      resolve(false);
+      AddGuardiansModalInstance!.destroy();
+      AddGuardiansModalInstance = null;
+    };
     const modalConfig = {
       ...props,
       wrapClassName: 'portkey-ui-wallet-security-wrapper' + wrapClassName,
       className: 'portkey-ui-wallet-security-modal' + className,
+      oncancel: onCancel,
       content: (
         <SecurityCheck
           {...props}
-          onCancel={() => {
-            resolve(false);
-            AddGuardiansModalInstance!.destroy();
-            AddGuardiansModalInstance = null;
-          }}
+          onCancel={onCancel}
           onConfirm={() => {
             resolve(true);
             onOk?.();
@@ -144,18 +146,20 @@ export const syncAccelerateModal = async ({
   };
 
   return new Promise((resolve) => {
+    const oncancel = () => {
+      resolve(false);
+      SyncAccelerateModalInstance!.destroy();
+      SyncAccelerateModalInstance = null;
+    };
     const modalConfig = {
       ...props,
       wrapClassName: 'portkey-ui-wallet-security-wrapper' + wrapClassName,
       className: 'portkey-ui-wallet-security-modal' + className,
+      oncancel,
       content: (
         <SecurityCheckAndAccelerate
           {...props}
-          onClose={() => {
-            resolve(false);
-            SyncAccelerateModalInstance!.destroy();
-            SyncAccelerateModalInstance = null;
-          }}
+          onClose={oncancel}
           onConfirm={async () => {
             resolve(true);
             SyncAccelerateModalInstance!.destroy();
