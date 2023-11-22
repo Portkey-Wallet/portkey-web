@@ -32,9 +32,10 @@ import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
 import { sleep } from '@portkey/utils';
-import useSignInHandler from './hooks/onSignIn';
+import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
 import './index.less';
+import useLoginWallet from '../../hooks/useLoginWallet';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -48,6 +49,7 @@ type TSignUpVerifier = { verifier: TVerifierItem } & IVerifyInfo;
 const SignIn = forwardRef(
   (
     {
+      pin,
       defaultChainId = 'AELF',
       isErrorTip = true,
       // If you set isShowScan to true, make sure you configure `network`
@@ -177,6 +179,66 @@ const SignIn = forwardRef(
     const { getRecommendationVerifier, verifySocialToken } = useVerifier();
     const sendCodeConfirm = useSendCode();
 
+    const clearStorage = useCallback(() => {
+      setWalletWithoutPin(undefined);
+      setGuardianIdentifierInfo(undefined);
+      setOriginChainId(undefined);
+      setApprovedList(undefined);
+    }, []);
+
+    const createWallet = useLoginWallet({
+      isErrorTip,
+      onError,
+      onCreatePending,
+    });
+
+    const loginDefaultByPin = useCallback(
+      async (info: { guardianIdentifierInfo: IGuardianIdentifierInfo; approvedList: GuardiansApproved[] } | null) => {
+        try {
+          if (typeof pin !== 'string') throw Error('loginDefaultByPin: Not use default pin');
+          let didWallet: any;
+          if (info === null) {
+            if (!walletWithoutPin) throw Error('loginDefaultByPin: Can not get `walletWithoutPin`');
+            didWallet = { ...walletWithoutPin, pin };
+          } else {
+            const guardianIdentifierInfo = info.guardianIdentifierInfo;
+            const approvedList = info.approvedList;
+            const type: AddManagerType = guardianIdentifierInfo?.isLoginGuardian ? 'recovery' : 'register';
+            const params = {
+              pin,
+              type,
+              chainId: guardianIdentifierInfo.chainId,
+              accountType: guardianIdentifierInfo.accountType,
+              guardianIdentifier: guardianIdentifierInfo?.identifier,
+              guardianApprovedList: approvedList,
+            };
+            console.log(params, 'didWallet==createWallet');
+            didWallet = await createWallet(params);
+          }
+
+          if (didWallet) {
+            onFinishRef.current?.(didWallet);
+            setOpen(false);
+            // TODO
+            changeLifeCycle('Login', null);
+            // setLifeCycle('Login');
+            clearStorage();
+            return;
+          }
+          return;
+        } catch (error) {
+          const errorMessage = handleErrorMessage(error);
+          console.log('loginDefaultByPin:errorMessage==', errorMessage);
+          //
+        }
+        changeLifeCycle('SetPinAndAddManager', {
+          guardianIdentifierInfo,
+          approvedList,
+        });
+      },
+      [approvedList, changeLifeCycle, clearStorage, createWallet, guardianIdentifierInfo, pin, walletWithoutPin],
+    );
+
     const onStep2OfSignUpFinish = useCallback(
       (res: TSignUpVerifier, value?: IGuardianIdentifierInfo) => {
         const identifier = value || guardianIdentifierInfo;
@@ -191,12 +253,14 @@ const SignIn = forwardRef(
           },
         ];
         setApprovedList(list);
-        changeLifeCycle('SetPinAndAddManager', {
-          guardianIdentifierInfo: identifier,
-          approvedList: list,
-        });
+
+        identifier &&
+          loginDefaultByPin({
+            guardianIdentifierInfo: identifier,
+            approvedList: list,
+          });
       },
-      [changeLifeCycle, guardianIdentifierInfo],
+      [guardianIdentifierInfo, loginDefaultByPin],
     );
 
     const onSignUp = useCallback(
@@ -281,6 +345,13 @@ const SignIn = forwardRef(
 
           const approvedList = signResult.value?.approvedList;
           approvedList && setApprovedList(approvedList);
+          if (signResult.nextStep === NextStepType.SetPinAndAddManager) {
+            await loginDefaultByPin({
+              guardianIdentifierInfo,
+              approvedList: approvedList || [],
+            });
+            return;
+          }
           console.log(signResult, 'signResult===');
           setLifeCycle(signResult.nextStep);
         } catch (error) {
@@ -297,7 +368,7 @@ const SignIn = forwardRef(
           setLoading(false);
         }
       },
-      [isErrorTip, onError, onSignInHandler],
+      [isErrorTip, loginDefaultByPin, onError, onSignInHandler],
     );
 
     const onSignInFinished: OnSignInFinishedFun = useCallback(
@@ -342,19 +413,12 @@ const SignIn = forwardRef(
       [changeLifeCycle, guardianIdentifierInfo],
     );
 
-    const clearStorage = useCallback(() => {
-      setWalletWithoutPin(undefined);
-      setGuardianIdentifierInfo(undefined);
-      setOriginChainId(undefined);
-      setApprovedList(undefined);
-    }, []);
-
     const onLoginFinishWithoutPin: LoginFinishWithoutPin = useCallback(
       (wallet) => {
         setWalletWithoutPin(wallet);
-        changeLifeCycle('SetPinAndAddManager', null);
+        guardianIdentifierInfo && loginDefaultByPin(null);
       },
-      [changeLifeCycle],
+      [guardianIdentifierInfo, loginDefaultByPin],
     );
 
     const onSignInStepChange = useCallback(
@@ -395,8 +459,6 @@ const SignIn = forwardRef(
       [changeLifeCycle, clearStorage, isErrorTip, onError, walletWithoutPin],
     );
 
-    console.log(lifeCycle, 'lifeCycle==');
-
     const onModalCancel = useCallback(() => {
       onCancel?.();
       clearStorage();
@@ -407,12 +469,13 @@ const SignIn = forwardRef(
     const onStep2LoginFinish = useCallback(
       async (list: GuardiansApproved[]) => {
         setApprovedList(list);
-        changeLifeCycle('SetPinAndAddManager', {
-          guardianIdentifierInfo,
-          approvedList: list,
-        });
+        guardianIdentifierInfo &&
+          loginDefaultByPin({
+            guardianIdentifierInfo,
+            approvedList: list,
+          });
       },
-      [changeLifeCycle, guardianIdentifierInfo],
+      [guardianIdentifierInfo, loginDefaultByPin],
     );
 
     const onGuardianListChange = useCallback(
@@ -518,7 +581,6 @@ const SignIn = forwardRef(
           <Step3
             guardianIdentifierInfo={guardianIdentifierInfo}
             onlyGetPin={Boolean(walletWithoutPin)}
-            type={guardianIdentifierInfo?.isLoginGuardian ? 'recovery' : 'register'}
             guardianApprovedList={approvedList || []}
             isErrorTip={isErrorTip}
             onError={onErrorRef?.current}

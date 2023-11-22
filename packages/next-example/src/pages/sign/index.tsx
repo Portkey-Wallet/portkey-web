@@ -41,6 +41,7 @@ export default function Sign() {
     <div>
       <div>-----------</div>
       <SignIn
+        pin={'23aa'}
         ref={ref}
         design={design}
         uiType={uiType}

@@ -64,6 +64,10 @@ export type TStep3LifeCycle = {
 
 export interface SignInProps {
   defaultChainId?: ChainId;
+  /**
+   * You can configure the default pin
+   */
+  pin?: string;
 
   defaultLifeCycle?: Partial<TStep1LifeCycle | TStep2SignUpLifeCycle | TStep2SignInLifeCycle | TStep3LifeCycle>;
   isErrorTip?: boolean;
