@@ -13,6 +13,8 @@ interface Props {
   onError?: OnErrorFunc;
 }
 
+const socialTypeList = ['Apple', 'Google'];
+
 export enum NextStepType {
   Step2OfSkipGuardianApprove = 'Step2OfSkipGuardianApprove',
   SetPinAndAddManager = 'SetPinAndAddManager',
@@ -78,21 +80,10 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         verifierId: guardian.verifier?.id || '',
         verificationDoc: result.verificationDoc,
         signature: result.verificationDoc,
+        status: VerifyStatus.Verified,
       };
 
-      return {
-        nextStep: NextStepType.SetPinAndAddManager,
-        value: {
-          guardianIdentifierInfo,
-          approvedList: [approvedItem],
-          guardianList: [
-            {
-              ...guardian,
-              ...approvedItem,
-            },
-          ],
-        },
-      };
+      return approvedItem;
     },
     [verifySocialToken],
   );
@@ -131,16 +122,59 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         setLoading(false);
         throw 'Get GuardianList error';
       }
-      if (guardianList.length !== 1) return toGuardianApprove(guardianIdentifierInfo, guardianList);
+      if (guardianList.length !== 1) {
+        try {
+          const guardianIndex = guardianList.findIndex(
+            (item) =>
+              item.guardianIdentifier === guardianIdentifierInfo.identifier &&
+              item.guardianType === guardianIdentifierInfo.accountType,
+          );
+          const guardian = guardianList[guardianIndex];
+
+          if (!guardian) throw 'No match';
+          const accountType = guardian.guardianType;
+          if (!socialTypeList.includes(accountType)) throw 'No match for Apple or Google';
+          const approvedItem = await approveAppleAndGoogle(guardianIdentifierInfo, guardian);
+          guardianList[guardianIndex] = {
+            ...guardian,
+            ...approvedItem,
+          };
+          return {
+            nextStep: NextStepType.Step2OfSkipGuardianApprove,
+            value: {
+              guardianIdentifierInfo,
+              approvedList: [approvedItem],
+              guardianList,
+            },
+          };
+        } catch (error) {
+          //
+          console.log(error);
+        }
+
+        return toGuardianApprove(guardianIdentifierInfo, guardianList);
+      }
       // guardianList.length === 1
       const guardian = guardianList[0];
       console.log(guardian, 'guardian=getGuardians');
       const accountType = guardian.guardianType;
       // Apple and Google approve;
-      if (accountType === 'Apple' || accountType === 'Google') {
+      if (socialTypeList.includes(accountType)) {
         try {
-          const nextStep = await approveAppleAndGoogle(guardianIdentifierInfo, guardian);
-          return nextStep;
+          const approvedItem = await approveAppleAndGoogle(guardianIdentifierInfo, guardian);
+          return {
+            nextStep: NextStepType.SetPinAndAddManager,
+            value: {
+              guardianIdentifierInfo,
+              approvedList: [approvedItem],
+              guardianList: [
+                {
+                  ...guardian,
+                  ...approvedItem,
+                },
+              ],
+            },
+          };
         } catch (error) {
           return toGuardianApprove(guardianIdentifierInfo, guardianList);
         } finally {
