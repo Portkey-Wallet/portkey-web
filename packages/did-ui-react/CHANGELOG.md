@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.8...v1.5.1) (2023-11-22)
+
+### Bug Fixes
+
+- 🐛 set social account login guardian ([d7d6b8f](https://github.com/Portkey-Wallet/portkey-web/commit/d7d6b8f7568686d80688f464c1dc9cbb5d262943))
+
 ## [1.5.1-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.7...v1.5.1-alpha.8) (2023-11-21)
 
 **Note:** Version bump only for package @portkey/did-ui-react
