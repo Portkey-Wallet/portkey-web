@@ -98,43 +98,29 @@ function GuardianView({
   );
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
-      try {
-        const { clientId, redirectURI, customLoginHandler } =
-          socialBasic(_guardian?.guardianType as ISocialLogin) || {};
-        const response = await socialLoginAuth({
-          type: _guardian?.guardianType as ISocialLogin,
-          clientId,
-          redirectURI,
-        });
-        if (!response?.token) throw new Error('auth failed');
-        const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
-          accessToken: response?.token,
-          id: _guardian.guardianIdentifier || '',
-          verifierId: _guardian?.verifier?.id || '',
-          chainId: originChainId,
-          clientId,
-          redirectURI,
-          operationType: OperationTypeEnum.addGuardian,
-          customLoginHandler,
-        });
-        if (!rst) return;
-        const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
-        const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
-        return { verifierInfo, guardianIdentifier };
-      } catch (error) {
-        return errorTip(
-          {
-            errorFields: 'Guardian Social Verify',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-          onError,
-        );
-      } finally {
-        setLoading(false);
-      }
+      const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
+      const response = await socialLoginAuth({
+        type: _guardian?.guardianType as ISocialLogin,
+        clientId,
+        redirectURI,
+      });
+      if (!response?.token) throw new Error('auth failed');
+      const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
+        accessToken: response?.token,
+        id: _guardian.guardianIdentifier || '',
+        verifierId: _guardian?.verifier?.id || '',
+        chainId: originChainId,
+        clientId,
+        redirectURI,
+        operationType: OperationTypeEnum.addGuardian,
+        customLoginHandler,
+      });
+      if (!rst) return;
+      const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
+      const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+      return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, verifyToken, originChainId, isErrorTip, onError],
+    [socialBasic, verifyToken, originChainId],
   );
   const handleSwitch = useCallback(async () => {
     try {
