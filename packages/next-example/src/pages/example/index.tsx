@@ -11,6 +11,8 @@ import {
   Web2Design,
   ISignIn,
   CommonModal,
+  PortkeyStyleProvider,
+  PortkeyNumberKeyboard,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
 import { Store } from '../../utils';
@@ -89,7 +91,7 @@ function Example() {
       /> */}
       <div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
-          <CryptoDesign
+          {/* <CryptoDesign
             style={{ height: 600, border: '1px solid gray' }}
             termsOfService={'https://portkey.finance/terms-of-service'}
             onError={(error: any) => {
@@ -129,7 +131,7 @@ function Example() {
             onFinish={result => {
               console.log('SetPinAndAddManager:onConfirm', result);
             }}
-          />
+          /> */}
           <CodeVerify
             chainId="AELF"
             isErrorTip
@@ -151,7 +153,7 @@ function Example() {
               console.log('SetPinAndAddManager:onConfirm', result);
             }}
           />
-          <GuardianApproval
+          {/* <GuardianApproval
             chainId="AELF"
             operationType={OperationTypeEnum.communityRecovery}
             wrapperStyle={{ height: 600 }}
@@ -196,9 +198,9 @@ function Example() {
                 key: '',
               },
             ]}
-          />
+          /> */}
         </div>
-        <div>
+        {/* <div>
           <Web2Design
             phoneCountry={{
               iso: 'CN',
@@ -253,7 +255,10 @@ function Example() {
               console.log('onSuccess:', value);
             }}
           />
-        </div>
+        </div> */}
+        <PortkeyStyleProvider>
+          <PortkeyNumberKeyboard visible />
+        </PortkeyStyleProvider>
       </div>
     </div>
   );

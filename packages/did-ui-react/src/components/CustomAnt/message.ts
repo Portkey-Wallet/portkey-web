@@ -46,7 +46,6 @@ typeList.forEach((type) => {
       : {
           content: _content,
         };
-    console.log(content.content, 'content.content==');
     message.destroy(content.content as any);
 
     return message[type](setDefaultArgs(content, defaultMessageArgs), params[1], params[2]);

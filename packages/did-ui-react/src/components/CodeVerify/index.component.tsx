@@ -7,6 +7,8 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
 import './index.less';
+import { sleep } from '@portkey/utils';
+import useMobile from '../../hooks/useMobile';
 
 const MAX_TIMER = 60;
 
@@ -38,6 +40,16 @@ export default function CodeVerify({
   const [pinVal, setPinVal] = useState<string>();
   const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
   const uiRef = useRef<ICodeVerifyUIInterface>();
+  const [codeError, setCodeError] = useState<boolean>();
+  const isMobile = useMobile();
+
+  const setInputError = useCallback(async (isError?: boolean) => {
+    if (!isError) return setCodeError(isError);
+    setCodeError(true);
+    await sleep(1000);
+    setCodeError(false);
+  }, []);
+
   const onFinish = useCallback(
     async (code: string) => {
       try {
@@ -53,6 +65,7 @@ export default function CodeVerify({
             operationType,
           });
           setLoading(false);
+          console.log(result, 'verifyErrorHandler==');
 
           if (result.signature) return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
           setPinVal('');
@@ -62,7 +75,10 @@ export default function CodeVerify({
       } catch (error: any) {
         setLoading(false);
         setPinVal('');
+        console.log(error, 'error==verifyErrorHandler=');
         const _error = verifyErrorHandler(error);
+        console.log(error, _error, 'error==verifyErrorHandler=');
+        if (_error.indexOf('Invalid code')) return setInputError(true);
         errorTip(
           {
             errorFields: 'CodeVerify',
@@ -74,7 +90,17 @@ export default function CodeVerify({
       }
     },
 
-    [verifierSessionId, guardianIdentifier, verifier.id, chainId, operationType, onSuccess, isErrorTip, onError],
+    [
+      verifierSessionId,
+      guardianIdentifier,
+      verifier.id,
+      chainId,
+      operationType,
+      onSuccess,
+      setInputError,
+      isErrorTip,
+      onError,
+    ],
   );
 
   const reCaptchaHandler = useReCaptchaModal();
@@ -126,6 +152,8 @@ export default function CodeVerify({
     <CodeVerifyUI
       ref={uiRef}
       code={pinVal}
+      error={codeError}
+      enableKeyboard={isMobile}
       tipExtra={tipExtra}
       verifier={verifier}
       className={className}
