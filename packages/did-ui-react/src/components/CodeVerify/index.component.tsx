@@ -6,9 +6,8 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
-import './index.less';
 import { sleep } from '@portkey/utils';
-import useMobile from '../../hooks/useMobile';
+import './index.less';
 
 const MAX_TIMER = 60;
 
@@ -41,7 +40,6 @@ export default function CodeVerify({
   const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
   const uiRef = useRef<ICodeVerifyUIInterface>();
   const [codeError, setCodeError] = useState<boolean>();
-  const isMobile = useMobile();
 
   const setInputError = useCallback(async (isError?: boolean) => {
     if (!isError) return setCodeError(isError);
@@ -153,7 +151,6 @@ export default function CodeVerify({
       ref={uiRef}
       code={pinVal}
       error={codeError}
-      enableKeyboard={isMobile}
       tipExtra={tipExtra}
       verifier={verifier}
       className={className}

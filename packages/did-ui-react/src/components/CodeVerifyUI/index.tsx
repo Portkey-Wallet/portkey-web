@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next';
 import { useEffectOnce } from 'react-use';
 import { BaseCodeVerifyProps } from '../types';
 import './index.less';
-import PortkeyNumberKeyboard from '../PortkeyNumberKeyboard';
 
 const MAX_TIMER = 60;
 
@@ -19,7 +18,6 @@ export interface ICodeVerifyUIInterface {
 export interface BaseCodeVerifyUIProps extends BaseCodeVerifyProps {
   code?: string;
   error?: boolean;
-  enableKeyboard?: boolean;
   onCodeChange?: (code: string) => void;
   onReSend?: () => void;
   onCodeFinish?: (code: string) => void;
@@ -35,7 +33,6 @@ const CodeVerifyUI = forwardRef(
       tipExtra,
       isLoginGuardian,
       guardianIdentifier,
-      enableKeyboard,
       accountType = 'Email',
       code,
       onReSend,
@@ -106,8 +103,6 @@ const CodeVerifyUI = forwardRef(
             {btnText}
           </Button>
         </div>
-
-        <PortkeyNumberKeyboard visible={enableKeyboard} />
       </div>
     );
   },

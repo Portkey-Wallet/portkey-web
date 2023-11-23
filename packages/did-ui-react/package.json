@@ -47,7 +47,7 @@
     "@rc-component/portal": "1.0.2",
     "aelf-sdk": "3.2.45-beta.0",
     "antd": "4.24.4",
-    "antd-mobile": "5.26.0",
+    "antd-mobile": "5.33.0",
     "bignumber.js": "^9.1.0",
     "clsx": "^1.2.1",
     "lottie-web": "5.9.6",

@@ -1,3 +1,4 @@
+'use client';
 import {
   ConfigProvider,
   CryptoDesign,
@@ -256,9 +257,6 @@ function Example() {
             }}
           />
         </div> */}
-        <PortkeyStyleProvider>
-          <PortkeyNumberKeyboard visible />
-        </PortkeyStyleProvider>
       </div>
     </div>
   );

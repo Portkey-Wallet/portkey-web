@@ -32,8 +32,9 @@ import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
 import { sleep } from '@portkey/utils';
 import { modalMethod } from '../../utils/modalMethod';
-import './index.less';
 import CommonBaseModal from '../CommonBaseModal';
+import './index.less';
+import { PORTKEY_ROOT_ID } from '../../constants';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -547,7 +548,7 @@ const SignIn = forwardRef(
             destroyOnClose
             className={className}
             open={open}
-            getContainer={getContainer ? getContainer : '#portkey-ui-root'}
+            getContainer={getContainer ? getContainer : `#${PORTKEY_ROOT_ID}`}
             onClose={onModalCancel}>
             {mainContent()}
           </CommonBaseModal>
