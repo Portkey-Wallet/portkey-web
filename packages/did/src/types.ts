@@ -15,6 +15,8 @@ import {
   ChainId,
   BaseWalletFactory,
   IConfig,
+  SendOptions,
+  TransactionStatus,
 } from '@portkey/types';
 
 export type LoginType = 'scan' | 'account';
@@ -69,10 +71,12 @@ export type LoginResult = {
   sessionId: string;
   error: Error | undefined;
 };
+export type LogoutResult = { transactionId: string; status?: TransactionStatus };
+
 export interface IDIDAccountMethods extends IAccountMethods {
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
-  logout(params: EditManagerParams): Promise<boolean>;
+  logout(params: EditManagerParams, options?: SendOptions): Promise<LogoutResult>;
   getLoginStatus(params: { chainId: ChainId; sessionId: string }): Promise<RecoverStatusResult>;
   register(params: Omit<RegisterParams, 'manager'>): Promise<RegisterResult>;
   getRegisterStatus(params: { chainId: ChainId; sessionId: string }): Promise<RegisterStatusResult>;
