@@ -79,8 +79,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         identifier: guardian.identifier || guardian.identifierHash || '',
         verifierId: guardian.verifier?.id || '',
         verificationDoc: result.verificationDoc,
-        signature: result.verificationDoc,
-        status: VerifyStatus.Verified,
+        signature: result.signature,
       };
 
       return approvedItem;
@@ -116,7 +115,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
   > = useCallback(
     async (guardianIdentifierInfo: IGuardianIdentifierInfo) => {
       setLoading(true);
-      const guardianList = await getGuardians(guardianIdentifierInfo);
+      const guardianList: UserGuardianStatus[] | undefined = await getGuardians(guardianIdentifierInfo);
 
       if (!guardianList) {
         setLoading(false);
@@ -138,6 +137,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
           guardianList[guardianIndex] = {
             ...guardian,
             ...approvedItem,
+            status: VerifyStatus.Verified,
           };
           return {
             nextStep: NextStepType.Step2OfSkipGuardianApprove,

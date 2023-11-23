@@ -469,8 +469,8 @@ const SignIn = forwardRef(
     const onStep2LoginFinish = useCallback(
       async (list: GuardiansApproved[]) => {
         setApprovedList(list);
-        guardianIdentifierInfo &&
-          loginDefaultByPin({
+        if (guardianIdentifierInfo)
+          await loginDefaultByPin({
             guardianIdentifierInfo,
             approvedList: list,
           });

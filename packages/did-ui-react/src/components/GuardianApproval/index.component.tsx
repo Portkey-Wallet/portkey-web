@@ -243,9 +243,9 @@ const GuardianApproval = forwardRef(
             signature: item.signature || '',
           }));
         await onConfirmRef.current?.(verificationList);
+        setFetching(false);
       } catch (error) {
         console.error(handleErrorMessage(error));
-      } finally {
         setFetching(false);
       }
 
