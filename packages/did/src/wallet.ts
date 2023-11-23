@@ -10,7 +10,15 @@ import {
   RegisterParams,
   RegisterStatusResult,
 } from '@portkey/services';
-import { IBaseWalletAccount, IKeyStore, ISignature, IAccountProvider, IStorageSuite, ChainId } from '@portkey/types';
+import {
+  IBaseWalletAccount,
+  IKeyStore,
+  ISignature,
+  IAccountProvider,
+  IStorageSuite,
+  ChainId,
+  SendOptions,
+} from '@portkey/types';
 import { aes } from '@portkey/utils';
 import {
   AccountLoginParams,
@@ -22,6 +30,7 @@ import {
   IDIDWallet,
   LoginResult,
   LoginType,
+  LogoutResult,
   RegisterResult,
   ScanLoginParams,
   VerifierItem,
@@ -196,11 +205,16 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (req.error) throw req.error;
     return req.data;
   }
-  public async removeManager(params: EditManagerParams) {
+  public async removeManager(params: EditManagerParams, sendOption?: SendOptions) {
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
     const { chainId, ...contractParams } = params;
     const contract = await this.getContractByChainInfo(chainId);
-    const req = await contract.callSendMethod('RemoveManagerInfo', this.managementAccount.address, contractParams);
+    const req = await contract.callSendMethod(
+      'RemoveManagerInfo',
+      this.managementAccount.address,
+      contractParams,
+      sendOption,
+    );
     if (req.error) throw req.error;
     // delete current manager
     if (
@@ -210,6 +224,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.caInfo = {};
       this.accountInfo = {};
     }
+    if (sendOption?.onMethod === 'transactionHash') return req;
     return req.data;
   }
   getHolderInfo(params: Partial<Pick<GetHolderInfoParams, 'manager' | 'chainId'>>): Promise<GetCAHolderByManagerResult>;
@@ -257,7 +272,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.chainsInfo = chainsInfo;
     return this.chainsInfo;
   }
-  async logout(params: EditManagerParams): Promise<boolean> {
+  async logout(params: EditManagerParams, sendOption?: SendOptions): Promise<LogoutResult> {
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
     if (!this.chainsInfo) await this.getChainsInfo();
     if (!params.caHash && this.caInfo[params.chainId]) params.caHash = this.caInfo[params.chainId].caHash;
@@ -267,9 +282,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
         extraData: 'extraData',
       };
     if (!params.caHash) throw new Error('caHash does not exist');
-    const req = await this.removeManager(params);
-    if (req.error) throw req.error;
-    return true;
+    const req = await this.removeManager(params, sendOption);
+    return { status: req?.Status, transactionId: req?.transactionId || req?.TransactionId };
   }
   public async getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo> {
     if (!this.connectServices) throw new Error('connectServices does not exist');
