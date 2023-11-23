@@ -1,26 +1,25 @@
 import { Button } from 'antd';
 import BackHeader from '../../../BackHeader';
 import CommonModal from '../../../CommonModal';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useMemo, useState } from 'react';
 import { OnErrorFunc } from '../../../../types';
 import SetPinAndAddManagerCom, { SetPinAndAddManagerProps } from '../../../SetPinAndAddManager/index.component';
 import { AddManagerType, IGuardianIdentifierInfo } from '../../../types';
 import './index.less';
 
-interface Step3Props extends Omit<SetPinAndAddManagerProps, 'chainId' | 'guardianIdentifier'> {
+interface Step3Props extends Omit<SetPinAndAddManagerProps, 'type' | 'accountType' | 'chainId' | 'guardianIdentifier'> {
   guardianIdentifierInfo?: IGuardianIdentifierInfo;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   onCancel?: (type?: AddManagerType) => void;
 }
 
-type PartialOption<T, K extends keyof T> = Omit<T, K> & {
-  [K in keyof T]?: T[K];
-};
+// type PartialOption<T, K extends keyof T> = Omit<T, K> & {
+//   [K in keyof T]?: T[K];
+// };
 
 function Step3({
   guardianIdentifierInfo,
-  type = 'register',
   guardianApprovedList = [],
   isErrorTip,
   onFinish,
@@ -29,8 +28,13 @@ function Step3({
   onCreatePending,
   onlyGetPin,
   ...props
-}: PartialOption<Step3Props, 'type'>) {
+}: Step3Props) {
   const [returnOpen, setReturnOpen] = useState<boolean>(false);
+
+  const type = useMemo(
+    () => (guardianIdentifierInfo?.isLoginGuardian ? 'recovery' : 'register'),
+    [guardianIdentifierInfo?.isLoginGuardian],
+  );
 
   const onBackHandler = useCallback(() => {
     if (onlyGetPin) {
@@ -46,21 +50,25 @@ function Step3({
 
   return (
     <div className="step-page-wrapper">
-      <BackHeader onBack={onBackHandler} />
-      <SetPinAndAddManagerCom
-        {...props}
-        className="step-set-pin content-padding"
-        chainId={guardianIdentifierInfo?.chainId}
-        accountType={guardianIdentifierInfo?.accountType}
-        guardianIdentifier={guardianIdentifierInfo?.identifier}
-        type={type}
-        guardianApprovedList={guardianApprovedList}
-        isErrorTip={isErrorTip}
-        onlyGetPin={onlyGetPin}
-        onFinish={onFinish}
-        onError={onError}
-        onCreatePending={onCreatePending}
-      />
+      <BackHeader leftElement={type === 'recovery' ? false : undefined} onBack={onBackHandler} />
+      {guardianIdentifierInfo ? (
+        <SetPinAndAddManagerCom
+          {...props}
+          className="step-set-pin content-padding"
+          chainId={guardianIdentifierInfo.chainId}
+          accountType={guardianIdentifierInfo.accountType}
+          guardianIdentifier={guardianIdentifierInfo.identifier}
+          type={type}
+          guardianApprovedList={guardianApprovedList}
+          isErrorTip={isErrorTip}
+          onlyGetPin={onlyGetPin}
+          onFinish={onFinish}
+          onError={onError}
+          onCreatePending={onCreatePending}
+        />
+      ) : (
+        'Missing `guardianIdentifierInfo`, please check params'
+      )}
       <CommonModal
         closable={false}
         open={returnOpen}

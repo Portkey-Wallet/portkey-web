@@ -1,6 +1,12 @@
-import { ConfigProvider, PortkeyAssetProvider, ReceiveCard, Send, Transaction } from '@portkey/did-ui-react';
+import {
+  ConfigProvider,
+  PortkeyAssetProvider,
+  ReceiveCard,
+  Send,
+  Transaction,
+  singleMessage,
+} from '@portkey/did-ui-react';
 import React, { useMemo } from 'react';
-import { message } from 'antd';
 import { ActivityItemType } from '@portkey/types';
 
 ConfigProvider.setGlobalConfig({
@@ -66,7 +72,7 @@ export default function AssetComponent() {
               console.log('Send onCancel');
             }}
             onSuccess={() => {
-              message.success('Send success');
+              singleMessage.success('Send success');
             }}
             onClose={() => {
               console.log('Send onClose');
@@ -95,7 +101,7 @@ export default function AssetComponent() {
               },
             ]}
             onClose={() => {
-              message.error('Close');
+              singleMessage.error('Close');
             }}
           />
         </div>

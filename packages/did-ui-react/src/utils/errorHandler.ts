@@ -1,7 +1,7 @@
 import { handleContractError } from '@portkey/contracts';
 import { ErrorInfo, OnErrorFunc } from '../types';
-import { message } from 'antd';
 import { textProcessor } from './textProcessor';
+import { singleMessage } from '../components';
 
 export const verifyErrorHandler = (error: any) => {
   // let _error = isVerifyApiError(error);
@@ -42,7 +42,7 @@ export const contractErrorHandler = (error: any) => {
 
 export const errorTip = (errorInfo: ErrorInfo, isShowTip?: boolean, onError?: OnErrorFunc) => {
   const msgError = errorInfo?.error?.error?.message || errorInfo?.error?.message || errorInfo?.error;
-  if (isShowTip) msgError && message.error(msgError);
+  if (isShowTip) msgError && singleMessage.error(msgError);
   onError?.(errorInfo);
 };
 
