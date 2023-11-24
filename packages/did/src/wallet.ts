@@ -273,7 +273,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     return this.chainsInfo;
   }
   async logout(params: EditManagerParams, sendOption?: SendOptions): Promise<LogoutResult> {
-    if (!this.managementAccount) throw new Error('managerAccount does not exist');
+    if (!this.managementAccount) throw new Error('ManagerAccount does not exist, please login.');
     if (!this.chainsInfo) await this.getChainsInfo();
     if (!params.caHash && this.caInfo[params.chainId]) params.caHash = this.caInfo[params.chainId].caHash;
     if (!params.managerInfo)

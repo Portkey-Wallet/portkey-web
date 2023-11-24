@@ -122,33 +122,45 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         throw 'Get GuardianList error';
       }
       if (guardianList.length !== 1) {
-        try {
-          const guardianIndex = guardianList.findIndex(
-            (item) =>
-              item.guardianIdentifier === guardianIdentifierInfo.identifier &&
-              item.guardianType === guardianIdentifierInfo.accountType,
-          );
-          const guardian = guardianList[guardianIndex];
+        const approvedList: GuardiansApproved[] = [];
 
-          if (!guardian) throw 'No match';
-          const accountType = guardian.guardianType;
-          if (!socialTypeList.includes(accountType)) throw 'No match for Apple or Google';
-          const approvedItem = await approveAppleAndGoogle(guardianIdentifierInfo, guardian);
-          guardianList[guardianIndex] = {
-            ...guardian,
-            ...approvedItem,
-            status: VerifyStatus.Verified,
-          };
+        try {
+          await Promise.all(
+            guardianList.map(async (item, index) => {
+              if (
+                item.guardianIdentifier === guardianIdentifierInfo.identifier &&
+                item.guardianType === guardianIdentifierInfo.accountType &&
+                item.isLoginGuardian
+              ) {
+                const guardian = item;
+
+                if (!guardian) throw 'No match';
+                const accountType = guardian.guardianType;
+                if (!socialTypeList.includes(accountType)) throw 'No match for Apple or Google';
+                try {
+                  const approvedItem = await approveAppleAndGoogle(guardianIdentifierInfo, guardian);
+                  approvedList.push(approvedItem);
+                  guardianList[index] = {
+                    ...guardian,
+                    ...approvedItem,
+                    status: VerifyStatus.Verified,
+                  };
+                } catch (error) {
+                  return;
+                }
+              }
+            }),
+          );
+
           return {
             nextStep: NextStepType.Step2OfSkipGuardianApprove,
             value: {
               guardianIdentifierInfo,
-              approvedList: [approvedItem],
+              approvedList,
               guardianList,
             },
           };
         } catch (error) {
-          //
           console.log(error);
         }
 
