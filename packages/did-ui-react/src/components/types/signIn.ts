@@ -1,9 +1,10 @@
 import { AccountType } from '@portkey/services';
 import { ChainId } from '@portkey/types';
-import { CountryItem } from '../../types';
+import { ICountryItem } from '../../types';
+import { SignInProps } from '../SignStep/types';
 
 export interface GuardianInputInfo {
-  identifier: string; // account
+  identifier: string;
   accountType: AccountType;
   authenticationInfo?: {
     appleIdToken?: string;
@@ -11,16 +12,19 @@ export interface GuardianInputInfo {
   };
 }
 
-export interface SignInSuccess extends GuardianInputInfo {
+export interface IGuardianIdentifierInfo extends GuardianInputInfo {
   chainId: ChainId;
-  isLoginIdentifier?: boolean;
+  isLoginGuardian?: boolean;
 }
 
 export interface IPhoneCountry {
-  country: CountryItem['country'];
-  countryList: CountryItem[];
+  /** @deprecated Use `iso` replacement */
+  country?: ICountryItem['country'];
+  iso?: ICountryItem['iso'];
+  countryList?: ICountryItem[];
 }
-
-export type SignInInterface = {
+export type ISignIn = {
   setOpen: (open: boolean) => void;
+  setCurrentLifeCycle: (cycle: Required<SignInProps['defaultLifeCycle']>) => void;
 };
+export type SignInInterface = ISignIn;

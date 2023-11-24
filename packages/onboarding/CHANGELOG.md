@@ -1,0 +1,70 @@
+# Change Log
+
+All notable changes to this project will be documented in this file.
+See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
+
+## [1.4.4-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.4...v1.4.4-alpha.5) (2023-10-17)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.4.4-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.3...v1.4.4-alpha.4) (2023-09-22)
+
+### Features
+
+- 🎸 export evoke type ([28240f0](https://github.com/Portkey-Wallet/portkey-web/commit/28240f0f3aa360d3eec970d4fdea00cc1ee0a2cd))
+
+## [1.4.4-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.2...v1.4.4-alpha.3) (2023-09-21)
+
+### Bug Fixes
+
+- 🐛 evoke portkey add group ([b0b4901](https://github.com/Portkey-Wallet/portkey-web/commit/b0b49018d69eea7d654cfb1744299cb57eec992e))
+
+## [1.4.4-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.1...v1.4.4-alpha.2) (2023-09-18)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.4.4-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.4-alpha.0...v1.4.4-alpha.1) (2023-09-18)
+
+### Features
+
+- 🎸 add evokePortkeyApp type ([f533f79](https://github.com/Portkey-Wallet/portkey-web/commit/f533f791aea50194274efc82369c4ef5dff2eba8))
+
+## [1.4.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.3...v1.4.4-alpha.0) (2023-09-14)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.2...v1.4.3) (2023-09-07)
+
+### Features
+
+- 🎸 evoke portkey ([963de7f](https://github.com/Portkey-Wallet/portkey-web/commit/963de7f08282b43bb01d6ad489beca9653890751))
+
+## [1.4.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.2...v1.4.0-alpha.3) (2023-08-30)
+
+## [1.4.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.1-alpha.1...v1.4.0-alpha.2) (2023-08-30)
+
+### Features
+
+- 🎸 add evoke by thirdParty ([ac85ccf](https://github.com/Portkey-Wallet/portkey-web/commit/ac85ccfe40f57d681f332a1b705748b36e3e9e57))
+
+## [1.4.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.0...v1.4.0-alpha.1) (2023-08-25)
+
+### Features
+
+- 🎸 evoke app ([8eb74f7](https://github.com/Portkey-Wallet/portkey-web/commit/8eb74f7df14744324a9579c712c283bb63b5377b))
+
+## [1.4.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.2...v1.4.0-alpha.3) (2023-08-30)
+
+**Note:** Version bump only for package @portkey/onboarding
+
+## [1.4.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.1...v1.4.0-alpha.2) (2023-08-30)
+
+### Features
+
+- 🎸 add evoke by thirdParty ([ac85ccf](https://github.com/Portkey-Wallet/portkey-web/commit/ac85ccfe40f57d681f332a1b705748b36e3e9e57))
+
+## [1.4.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.4.0-alpha.0...v1.4.0-alpha.1) (2023-08-25)
+
+### Features
+
+- 🎸 evoke app ([8eb74f7](https://github.com/Portkey-Wallet/portkey-web/commit/8eb74f7df14744324a9579c712c283bb63b5377b))

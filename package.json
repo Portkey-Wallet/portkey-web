@@ -5,6 +5,8 @@
     "packages/*"
   ],
   "scripts": {
+    "lint": "eslint . --ext .tsx,.ts",
+    "publish:npm": "lerna publish --force-publish --conventional-commits",
     "postinstall": "husky install",
     "version": "yarn run bootstrap && yarn build",
     "bootstrap": "lerna bootstrap",
@@ -48,6 +50,8 @@
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^3.1.3",
+    "eslint-plugin-tsdoc": "^0.2.17 ",
+    "fix-esm-import-path": "^1.4.0",
     "husky": "^8.0.1",
     "isomorphic-fetch": "^3.0.0",
     "istanbul-badges-readme": "^1.8.5",

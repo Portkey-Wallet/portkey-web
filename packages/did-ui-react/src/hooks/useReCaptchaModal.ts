@@ -3,15 +3,25 @@ import { did } from '../utils';
 import { handleErrorMessage } from '../utils';
 import { setReCaptchaModal } from '../utils/reCaptcha';
 import useReCaptcha from './useReCaptcha';
-import { ReCaptchaType } from '../components';
+import { ReCaptchaResponseType } from '../components';
+import { OperationTypeEnum } from '@portkey/services';
+
 export default function useReCaptchaModal() {
   const reCaptchaInfo = useReCaptcha();
 
   return useCallback(
-    async (open?: boolean): Promise<{ type: ReCaptchaType; message?: any }> => {
+    async (
+      open?: boolean,
+      operationType: OperationTypeEnum = OperationTypeEnum.register,
+    ): Promise<{ type: ReCaptchaResponseType; message?: any }> => {
       if (open) {
         let needGoogleRecaptcha = true;
-        needGoogleRecaptcha = await did.services.checkGoogleRecaptcha();
+        // When the operationType is register, the google recaptcha is required.
+        if (operationType !== OperationTypeEnum.register) {
+          needGoogleRecaptcha = await did.services.checkGoogleRecaptcha({
+            operationType,
+          });
+        }
         if (!needGoogleRecaptcha) return { type: 'success', message: 'not use' };
       }
 

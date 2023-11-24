@@ -2,9 +2,7 @@
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
-[![NPM Package][npm-image]][npm-url]
-[![Dependency Status][deps-image]][deps-url]
-[![Dev Dependency Status][deps-dev-image]][deps-dev-url]
+[![NPM Package Version][npm-image-version]][npm-url]
 
 ## Installation
 
@@ -36,3 +34,6 @@ yarn add @portkey/utils
 | format   | Uses `prettier` to format the code                 |
 
 ## Usage
+
+[npm-image-version]: https://img.shields.io/npm/v/@portkey/utils
+[npm-url]: https://npmjs.org/package/@portkey/utils

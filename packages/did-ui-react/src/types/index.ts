@@ -1,9 +1,10 @@
 export * from './error';
 export * from './guardian';
-export * from './network';
 export * from './wallet';
 export * from './country';
 export * from './device';
+export * from './ramp';
+export * from './assets';
 
 type GenerateType<T> = {
   [K in keyof T]: T[K];
@@ -28,3 +29,26 @@ export interface LoadingInfo {
 }
 
 export type LoadingInfoType = LoadingInfo | string;
+
+export enum UseRecaptcha {
+  register = 0,
+  communityRecovery = 1,
+  optGuardian = 2,
+}
+
+export interface IKeyDownParams {
+  key: string;
+  preventDefault: () => any;
+}
+
+export type BaseListInfo<T> = {
+  list: T[];
+  skipCount: number;
+  maxResultCount: number;
+  totalRecordCount: number;
+};
+
+export interface PaginationPage {
+  pageSize: number;
+  page: number;
+}

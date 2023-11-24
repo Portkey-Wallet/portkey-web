@@ -1,5 +1,3 @@
-@import '../../assets/theme/color.less';
-
 .portkey-ui-loading-wrapper {
   background-color: rgb(00 00 00 / 50%);
   z-index: 9999;
@@ -8,12 +6,24 @@
   align-items: center;
   flex-direction: column;
 
-  .loading-text {
-    margin-top: 24px;
+  .loading-indicator {
+    width: 250px;
+    padding: 16px;
+    background-color: var(--portkey-ui-default-bg);
+    border-radius: var(--portkey-ui-border-radius-1);
+    min-height: 120px;
     text-align: center;
-    line-height: 22px;
-    color: @font-5;
-    font-size: 16px;
+    .loading {
+      width: 44px;
+      height: 44px;
+    }
+  }
+
+  .loading-text {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--portkey-ui-text-primary);
   }
   .display-none {
     display: none;
@@ -25,8 +35,5 @@
     cursor: pointer;
     width: 24px;
     height: 24px;
-    // path {
-    //   fill: @font-5;
-    // }
   }
 }

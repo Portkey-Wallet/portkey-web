@@ -1,11 +1,12 @@
-@import '../../assets/theme/color.less';
+@import '../../assets/theme/constants.less';
+
 .set-pin-wrapper {
   height: 100%;
   .set-pin-title {
-    font-size: 40px;
+    font-size: var(--portkey-ui-title-text-1);
     text-align: center;
     font-weight: 400;
-    color: @font-11;
+    color: var(--portkey-ui-text-primary);
     margin-bottom: 40px;
   }
 
@@ -17,10 +18,13 @@
     > .title {
       margin-bottom: 40px;
     }
-    .ant-form-vertical {
+    .set-pin-form {
+      padding-bottom: 48px;
+    }
+    .portkey-ant-form-vertical {
       flex: 1;
       position: relative;
-      .ant-form-item-row {
+      .portkey-ant-form-item-row {
         flex: 1;
       }
       .submit-btn-form-item {
@@ -35,12 +39,12 @@
       padding-bottom: 4px;
     }
     .submit-btn {
-      border-radius: 22px;
+      border-radius: var(--portkey-ui-primary-border-radius);
     }
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: @screen-max-w-768) {
   .set-pin-wrapper .set-pin-title {
     font-size: 32px;
     line-height: 38px;

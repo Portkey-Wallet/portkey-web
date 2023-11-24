@@ -12,8 +12,12 @@ import {
   RegisterResult,
   GetRegisterInfoParams,
   RegisterInfo,
+  IPhoneCountryCodeResult,
+  CheckGoogleRecaptchaParams,
 } from '../types/communityRecovery';
 import {
+  GetRecommendationVerifierParams,
+  VerifierItem,
   SendAppleUserExtraInfoParams,
   SendAppleUserExtraInfoResult,
   SendVerificationCodeRequestParams,
@@ -34,10 +38,17 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     super(request);
     this._didGraphQL = didGraphQL;
   }
-  checkGoogleRecaptcha(): Promise<boolean> {
+  async getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/phone/info',
+    });
+  }
+  checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/isGoogleRecaptchaOpen',
+      params,
     });
   }
   getHolderInfo(params: GetHolderInfoParams): Promise<IHolderInfo> {
@@ -111,6 +122,13 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
         ...params,
         accessToken: params.identityToken,
       },
+    });
+  }
+  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/getVerifierServer',
+      params,
     });
   }
 }

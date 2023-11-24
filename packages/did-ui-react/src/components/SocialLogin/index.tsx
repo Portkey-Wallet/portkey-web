@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { useMemo, useRef, useEffect } from 'react';
+import { useMemo, useRef, useEffect, ReactNode } from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import { ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
@@ -7,19 +7,21 @@ import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
 import SocialContent from '../SocialContent';
 import TermsOfServiceItem from '../TermsOfServiceItem';
-import { CreateWalletType, LoginFinishWithoutPin } from '../types';
+import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import './index.less';
 
 interface SocialLoginProps {
   type: RegisterType;
+  theme?: Theme;
   className?: string;
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
-  termsOfServiceUrl?: string;
+  termsOfService?: ReactNode;
+  extraElement?: ReactNode; // extra element
   networkType?: string;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
-  switchGuardinType?: () => void;
+  switchGuardianType?: () => void;
   switchType?: (type: CreateWalletType) => void;
   onLoginByPortkey?: LoginFinishWithoutPin;
 
@@ -29,28 +31,30 @@ interface SocialLoginProps {
 
 export default function SocialLogin({
   type,
+  theme,
   className,
   isShowScan,
-  isErrorTip,
+  isErrorTip = true,
   socialLogin,
   networkType,
-  termsOfServiceUrl,
+  extraElement,
+  termsOfService,
   onBack,
   onError,
   onFinish,
-  switchGuardinType,
+  switchGuardianType: switchGuardianType,
   onLoginByPortkey,
   switchType,
 }: SocialLoginProps) {
   const { t } = useTranslation();
   const onBackRef = useRef<SocialLoginProps['onBack']>(onBack);
   const onFinishRef = useRef<SocialLoginProps['onFinish']>(onFinish);
-  const switchGuardinTypeRef = useRef<SocialLoginProps['switchGuardinType']>(switchGuardinType);
+  const switchGuardianTypeRef = useRef<SocialLoginProps['switchGuardianType']>(switchGuardianType);
   const switchTypeRef = useRef<SocialLoginProps['switchType']>(switchType);
   useEffect(() => {
     onBackRef.current = onBack;
     onFinishRef.current = onFinish;
-    switchGuardinTypeRef.current = switchGuardinType;
+    switchGuardianTypeRef.current = switchGuardianType;
     switchTypeRef.current = switchType;
   });
 
@@ -58,16 +62,17 @@ export default function SocialLogin({
 
   return (
     <>
-      <div className={clsx('social-login-wrapper', className)}>
-        <h1 className="flex-between-center social-login-title">
+      <div className={clsx('portkey-ui-flex-column', 'social-login-wrapper', className)}>
+        <h1 className="portkey-ui-flex-between-center font-medium social-login-title">
           {!isLogin && <CustomSvg type="BackLeft" onClick={onBackRef?.current} />}
           {isLogin && <span></span>}
           <span className="title">{t(type)}</span>
           {isLogin && isShowScan && <CustomSvg type="QRCode" onClick={() => switchTypeRef?.current?.('LoginByScan')} />}
           {!isLogin && <span className="empty"></span>}
         </h1>
-        <div className="social-login-content">
+        <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
           <SocialContent
+            theme={theme}
             isErrorTip={isErrorTip}
             networkType={networkType}
             socialLogin={socialLogin}
@@ -77,9 +82,11 @@ export default function SocialLogin({
             onError={onError}
           />
           <DividerCenter />
-          <Button type="primary" className="login-by-input-btn" onClick={switchGuardinTypeRef?.current}>
+          <Button type="primary" className="login-by-input-btn" onClick={switchGuardianTypeRef?.current}>
             {t(`${type} with Phone / Email`)}
           </Button>
+          {extraElement}
+
           {isLogin && (
             <div className="go-sign-up">
               <span>{t('No account?')}</span>
@@ -94,7 +101,8 @@ export default function SocialLogin({
           )}
         </div>
       </div>
-      <TermsOfServiceItem termsOfServiceUrl={termsOfServiceUrl} />
+
+      <TermsOfServiceItem termsOfService={termsOfService} />
     </>
   );
 }

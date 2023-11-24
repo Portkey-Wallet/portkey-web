@@ -1,11 +1,21 @@
 .reCaptcha-modal-container {
-  .ant-modal-body {
-    padding: 0 24px 16px;
+  &.portkey-ui-common-modals {
+    .portkey-ant-modal-content {
+      background-color: transparent;
+    }
+    .portkey-ant-modal-header {
+      display: none;
+    }
   }
+
   .reCaptcha-modal-inner {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
+    iframe {
+      min-height: 566px;
+      height: 566px;
+    }
   }
 }

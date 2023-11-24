@@ -1,9 +1,18 @@
-const rewrite = [
-    { source: '/api/:path*', destination: 'https://did-portkey.portkey.finance/api/:path*' },
-    {
-        source: '/AElfIndexer_DApp/PortKeyIndexerCASchema/:path*',
-        destination: 'https://dapp-portkey.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/:path*',
-    },
-];
+module.exports = [
+    // test1
+    { source: '/api/:path*', destination: 'http://192.168.66.240:5577/api/:path*' },
+    { source: '/connect/:path*', destination: 'http://192.168.66.240:8080/connect/:path*' },
 
-module.exports = rewrite;
+    // test2
+    // { source: '/api/:path*', destination: 'http://192.168.67.51:5577/api/:path*' },
+    // { source: '/connect/:path*', destination: 'http://192.168.67.51:8080/connect/:path*' },
+
+    // mainnet
+    // { source: '/api/:path*', destination: 'https://did-portkey.portkey.finance/api/:path*' },
+    // { source: '/connect/:path*', destination: 'https://auth-portkey.portkey.finance/connect/:path*' },
+
+    // testnet
+    // { source: '/api/:path*', destination: 'https://did-portkey-test.portkey.finance/api/:path*' },
+    // { source: '/connect/:path*', destination: 'https://auth-portkey-test.portkey.finance/connect/:path*' },
+
+];

@@ -1,4 +1,4 @@
-@import '../../assets/theme/color.less';
+@import '../../assets/theme/constants.less';
 
 .scan-card-wrapper {
   text-align: center;
@@ -7,9 +7,8 @@
     text-align: center;
     padding-top: 120px;
     line-height: 28px;
-    color: @font-11;
+    color: var(--portkey-ui-text-primary);
     font-size: 24px;
-    font-weight: 500;
     padding-bottom: 8px;
     position: relative;
 
@@ -21,20 +20,45 @@
       cursor: pointer;
     }
   }
+  .scan-text-inner-reverse {
+    max-width: 232px;
+    margin: auto;
+    .scan-title {
+      padding-top: 24px;
+      line-height: 36px;
+    }
+  }
+  .scan-card-content {
+    min-height: 200px;
+  }
+
   .scan-content {
     width: 100%;
+    canvas {
+      margin: auto;
+      border: var(--portkey-ui-scan-border);
+    }
   }
   .description {
     line-height: 20px;
-    color: @font-13;
+    color: var(--portkey-ui-text-secondary);
     font-size: 14px;
     margin-bottom: 45px;
     z-index: 10;
     position: relative;
   }
+  .waiting-wrapper {
+    margin-top: 24px;
+  }
+  .waiting-text {
+    color: var(--portkey-ui-text-secondary);
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 8px;
+  }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: @screen-max-w-768) {
   .scan-card-wrapper {
     .scan-card-content {
       padding: 0 16px 16px;

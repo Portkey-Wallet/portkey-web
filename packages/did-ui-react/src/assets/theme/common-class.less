@@ -1,4 +1,4 @@
-.flex-row-center {
+.portkey-ui-flex-row-center {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -8,47 +8,71 @@
   height: @card-height;
 }
 
-.flex-column {
+.portkey-ui-flex-column {
   display: flex;
   flex-direction: column;
 }
 
-.flex {
+.portkey-ui-flex-column-reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.portkey-ui-justify-end {
+  justify-content: flex-end;
+}
+
+.portkey-ui-justify-start {
+  justify-content: flex-start;
+}
+
+.portkey-ui-justify-center {
+  justify-content: center;
+}
+
+.portkey-ui-flex {
   display: flex;
 }
-.flex-1 {
+.portkey-ui-flex-1 {
   flex: 1;
 }
-.flex-between-center {
+.portkey-ui-w-100 {
+  width: 100%;
+}
+.portkey-ui-flex-between-center {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.flex-between {
+.portkey-ui-flex-between {
   display: flex;
   justify-content: space-between;
 }
-.flex-column-center {
+.portkey-ui-flex-column-center {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
-.cursor-pointer {
+.portkey-ui-cursor-pointer {
   cursor: pointer;
 }
-.margin-auto {
+.portkey-ui-margin-auto {
   margin: auto;
 }
-.flex-center {
+.portkey-ui-flex-center {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.text-center {
+.portkey-ui-flex-start-center {
+  display: flex;
+  align-items: center;
+}
+.portkey-ui-text-center {
   text-align: center;
 }
-.text-right {
+.portkey-ui-text-right {
   text-align: right;
 }
 
@@ -94,12 +118,8 @@ td {
   line-height: unset;
 }
 
-.grid-span2 {
-  grid-column-start: span 2;
-}
-
-.fix-max-content {
-  position: absolute;
+.portkey-ui-fix-max-content {
+  position: fixed;
   top: 0;
   bottom: 0;
   left: 0;
@@ -108,29 +128,19 @@ td {
   overflow-y: auto;
 }
 
-.custom-svg {
+.portkey-ui-custom-svg {
   width: 16px;
   height: 16px;
 }
-
-@font-face {
-  font-family: Roboto-Regular;
-  src: url('../assets/fonts/Roboto-Regular.ttf');
+/** font weight */
+.font-normal {
+  font-weight: 400;
 }
 
-@font-face {
-  font-family: Roboto-Regular;
+.font-medium {
   font-weight: 500;
-  src: url('../assets/fonts/Roboto-Medium.ttf');
 }
 
-@font-face {
-  font-family: Roboto-Regular;
+.font-semibold {
   font-weight: 600;
-  src: url('../assets/fonts/Roboto-Bold.ttf');
-}
-
-.portkey-ui-wrapper {
-  font-family: Roboto-Regular;
-  background-color: #fff;
 }

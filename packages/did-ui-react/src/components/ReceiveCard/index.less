@@ -1,0 +1,101 @@
+.portkey-ui-receive-content {
+  background-color: var(--portkey-ui-default-bg);
+  height: 100%;
+  width: 440px;
+  margin: auto;
+  padding-bottom: 40px;
+
+  .portkey-ui-receive-header {
+    padding: 24px 16px;
+    .leftarrow-icon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+    }
+  }
+
+  .portkey-ui-receive-inner {
+    padding-top: 48px;
+    text-align: center;
+    .portkey-ui-receive-title {
+      color: var(--portkey-ui-text-primary);
+      text-align: center;
+      font-size: 16px;
+      line-height: 22px;
+    }
+    .token-info {
+      margin: 32px 0 24px;
+
+      .icon {
+        background-color: var(--portkey-ui-bg-6);
+        border: 1px solid var(--portkey-ui-border-1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--portkey-ui-text-primary);
+      }
+      .icon,
+      .portkey-ui-custom-svg {
+        width: 24px;
+        height: 24px;
+        margin-bottom: 9px;
+        svg {
+          width: 24px;
+          height: 24px;
+        }
+      }
+      .symbol {
+        line-height: 20px;
+        font-size: 14px;
+        color: var(--portkey-ui-text-primary);
+        margin-bottom: 2px;
+      }
+      .network {
+        line-height: 16px;
+        font-size: 12px;
+        color: var(--portkey-ui-text-secondary);
+      }
+    }
+    .scan-content {
+      width: 100%;
+      #portkey-qr-code {
+        width: 180px !important;
+        height: 180px !important;
+      }
+      canvas {
+        margin: auto;
+        border: var(--portkey-ui-scan-border);
+      }
+    }
+    .receive-address {
+      margin-left: 64px;
+      margin-right: 64px;
+      margin-top: 32px;
+      background-color: var(--portkey-ui-bg-4);
+      border-radius: 6px;
+      padding: 10px;
+      position: relative;
+
+      .address {
+        font-size: 12px;
+        text-align: center;
+        word-break: break-all;
+        color: var(--portkey-ui-text-primary);
+        line-height: 16px;
+      }
+
+      .copy-icon {
+        position: absolute;
+        top: 50%;
+        right: -38px;
+        transform: translateY(-50%);
+
+        .portkey-ui-custom-svg {
+          width: 14px;
+          height: 14px;
+        }
+      }
+    }
+  }
+}

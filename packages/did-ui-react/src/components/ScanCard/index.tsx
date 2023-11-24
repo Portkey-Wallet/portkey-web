@@ -1,10 +1,10 @@
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import ScanCardCom, { ScanCardProps } from './index.component';
-import { BaseConfigProvider } from '../config-provider';
 
 export default function ScanCard(props?: ScanCardProps) {
   return (
-    <BaseConfigProvider>
+    <PortkeyStyleProvider>
       <ScanCardCom {...props} />
-    </BaseConfigProvider>
+    </PortkeyStyleProvider>
   );
 }

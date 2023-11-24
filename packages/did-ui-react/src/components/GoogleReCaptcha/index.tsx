@@ -1,5 +1,5 @@
 /**
- * @file Google reCAPTCHA component.
+ * @remarks Google reCAPTCHA component.
  * Fork https://github.com/matei-radu/react-recaptcha-v2
  */
 /*

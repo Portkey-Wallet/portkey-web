@@ -4,17 +4,23 @@ import CustomSvg from '../CustomSvg';
 import InputInfo, { InputInfoProps } from '../InputInfo';
 import type { IPhoneCountry } from '../types';
 import './index.less';
+import { AccountType } from '@portkey/services';
+import clsx from 'clsx';
 
 export default function InputLogin({
   type,
+  className,
   phoneCountry,
+  defaultAccountType,
   onBack,
   onFinish,
   validateEmail,
   validatePhone,
 }: {
   type: RegisterType;
+  className?: string;
   phoneCountry?: IPhoneCountry;
+  defaultAccountType?: AccountType;
   onBack?: () => void;
   onFinish?: InputInfoProps['onFinish'];
   validateEmail?: ValidatorHandler;
@@ -23,14 +29,15 @@ export default function InputLogin({
   const { t } = useTranslation();
 
   return (
-    <div className="login-content">
-      <h1 className="flex-between-center login-title">
+    <div className={clsx('login-content', className)}>
+      <h1 className="portkey-ui-flex-between-center font-medium login-title">
         <CustomSvg type="BackLeft" onClick={onBack} />
         <span>{t(type)}</span>
         <span className="empty"></span>
       </h1>
       <InputInfo
         phoneCountry={phoneCountry}
+        defaultActiveKey={defaultAccountType}
         validatePhone={validatePhone}
         validateEmail={validateEmail}
         confirmText={t(type)}

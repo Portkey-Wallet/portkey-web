@@ -1,0 +1,31 @@
+.dark {
+  --portkey-ui-text-primary: #e5e8ef;
+  --portkey-ui-text-secondary: #9ba0b0;
+  --portkey-ui-scan-bg: #2a2e3a;
+  --portkey-ui-segmented-bg: #131620;
+  --portkey-ui-segmented-selected-bg: #343948;
+  --portkey-ui-bg-6: #343948;
+  --portkey-ui-bg-4: #343948;
+  --portkey-ui-border-1: #393d47;
+  --portkey-ui-default-border: #393d47;
+  --portkey-ui-primary-border: transparent;
+  --portkey-ui-input-border: transparent;
+  --portkey-ui-text-tip: #5c6170;
+  --portkey-ui-input-text: #d2d3d5;
+  --portkey-ui-input-placeholder: #5c6170;
+  --portkey-ui-text-disabled: #5c6170;
+  --portkey-ui-font-7: #5c6170;
+  --portkey-ui-icon-fill: #E5E8EF;
+  --portkey-ui-segmented-input-border: #131620;
+  --portkey-ui-btn-bg: #343948;
+  --portkey-ui-input-bg: #131620;
+  --portkey-ui-select-bg: #343948;
+  --portkey-ui-select-dropdown-bg: #1e212b;
+  --portkey-ui-default-bg: #1e212b;
+  --portkey-ui-box-shadow-2: 0px 0px 24px 0px rgba(0, 0, 0, 0.5);
+
+  --portkey-ui-form-label: #9ba0b0;
+  --portkey-ui-text-error: #ff496a;
+  --portkey-ui-title-text-1: 24px;
+  --portkey-ui-scan-border: 8px solid #fff;
+}

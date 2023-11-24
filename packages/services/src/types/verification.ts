@@ -1,11 +1,12 @@
 import { ChainId } from '@portkey/types';
-import { AccountType } from '.';
+import { AccountType, CheckGoogleRecaptchaParams, OperationTypeEnum } from '.';
 
 export type SendVerificationCodeParams = {
   type: AccountType;
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
+  operationType: OperationTypeEnum;
 };
 
 export type SendVerificationCodeRequestParams = {
@@ -19,12 +20,14 @@ export type SendVerificationCodeRequestParams = {
 export type SendVerificationCodeResult = {
   verifierSessionId: string;
 };
+
 export type VerifyVerificationCodeParams = {
   verifierSessionId: string;
   verificationCode: string;
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
+  operationType: OperationTypeEnum;
 };
 
 export type VerifyVerificationCodeResult = {
@@ -47,20 +50,33 @@ export type VerifyGoogleTokenParams = {
   accessToken: string;
   verifierId: string;
   chainId: ChainId;
+  operationType: OperationTypeEnum;
 };
 
 export type VerifyAppleTokenParams = {
   identityToken: string;
   verifierId: string;
   chainId: ChainId;
+  operationType: OperationTypeEnum;
 };
 
 export type SendAppleUserExtraInfoResult = { userId: string };
+
+export type GetRecommendationVerifierParams = {
+  chainId: ChainId;
+};
+
+export type VerifierItem = {
+  id: string;
+  name: string;
+  imageUrl: string;
+};
 export interface IVerificationService {
   getVerificationCode(params: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult>;
   verifyVerificationCode(params: VerifyVerificationCodeParams): Promise<VerifyVerificationCodeResult>;
   sendAppleUserExtraInfo(params: SendAppleUserExtraInfoParams): Promise<SendAppleUserExtraInfoResult>;
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
-  checkGoogleRecaptcha(): Promise<boolean>;
+  checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
+  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
 }

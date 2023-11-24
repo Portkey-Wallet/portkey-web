@@ -6,6 +6,7 @@ import {
   RegisterParams,
   RegisterStatusResult,
   IHolderInfo,
+  CAHolderInfo,
 } from '@portkey/services';
 import {
   IAccountMethods,
@@ -68,9 +69,10 @@ export interface IDIDAccountMethods extends IAccountMethods {
   getLoginStatus(params: { chainId: ChainId; sessionId: string }): Promise<RecoverStatusResult>;
   register(params: Omit<RegisterParams, 'manager'>): Promise<RegisterResult>;
   getRegisterStatus(params: { chainId: ChainId; sessionId: string }): Promise<RegisterStatusResult>;
-  getHolderInfo(params: Pick<GetHolderInfoParams, 'manager' | 'chainId'>): Promise<GetCAHolderByManagerResult>;
+  getHolderInfo(params: Partial<Pick<GetHolderInfoParams, 'manager' | 'chainId'>>): Promise<GetCAHolderByManagerResult>;
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   getVerifierServers(chainId: ChainId): Promise<VerifierItem[]>;
+  getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo>;
 }
 
 export interface IDIDWallet extends IDIDBaseWallet, IDIDAccountMethods {}
@@ -92,11 +94,11 @@ export interface VerifierItem {
   id: string;
   name: string;
   imageUrl: string;
-  endPoints: string[];
-  verifierAddresses: string[];
+  endPoints?: string[];
+  verifierAddresses?: string[];
 }
 
 export interface IDIDConfig extends IConfig {
-  graphQLClient: IGraphQLClient;
+  graphQLClient?: IGraphQLClient;
   setConfig(options: IConfig): void;
 }

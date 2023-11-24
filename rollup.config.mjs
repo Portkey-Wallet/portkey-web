@@ -1,5 +1,4 @@
 import esbuild from 'rollup-plugin-esbuild';
-import litCss from 'rollup-plugin-lit-css';
 import postcss from 'rollup-plugin-postcss';
 import url from '@rollup/plugin-url';
 import postcssUrl from 'postcss-url';
@@ -29,11 +28,6 @@ export default function createConfig(packageName) {
     },
   });
 
-  const litCssPlugin = litCss({
-    include: ['**/*.css'],
-    uglify: true,
-  });
-
   const copyPlugin = copy({
     targets: [
       // Need to copy the files over for usage
@@ -50,6 +44,7 @@ export default function createConfig(packageName) {
     use: {
       sass: null,
       stylus: null,
+      less: { javascriptEnabled: true },
     },
     extract: path.resolve('dist/assets/index.css'),
     plugins: [
@@ -76,13 +71,13 @@ export default function createConfig(packageName) {
   return [
     {
       input: './index.ts',
-      plugins: [litCssPlugin, minifyHtml, esbuildPlugin, postcssPlugin, urlPlugin, copyPlugin, terserPlugin],
+      plugins: [minifyHtml, esbuildPlugin, postcssPlugin, urlPlugin, copyPlugin, terserPlugin],
       output: [{ file: './dist/index.js', format: 'es', ...output }],
     },
-    {
-      input: './src/sandbox/index.ts',
-      plugins: [esbuildPlugin, urlPlugin, terserPlugin],
-      output: [{ file: './src/sandbox/index.js', format: 'es', ...output }],
-    },
+    // {
+    //   input: './src/sandbox/index.ts',
+    //   plugins: [esbuildPlugin, urlPlugin, terserPlugin],
+    //   output: [{ file: './src/sandbox/index.js', format: 'es', ...output }],
+    // },
   ];
 }

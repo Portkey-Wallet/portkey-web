@@ -1,19 +1,19 @@
-import { useState, useCallback, ReactNode, useRef, useEffect, memo, forwardRef, useImperativeHandle } from 'react';
+import { useState, useCallback, ReactNode, useRef, useEffect, memo, forwardRef } from 'react';
 import clsx from 'clsx';
 import GuardianList from '../GuardianList/index.component';
 import VerifierPage from './components/VerifierPage';
-import { errorTip, handleErrorMessage, handleVerificationDoc, parseAppleIdentityToken, setLoading } from '../../utils';
+import { errorTip, handleErrorMessage, handleVerificationDoc, setLoading } from '../../utils';
 import type { ChainId } from '@portkey/types';
-import { HOUR, MINUTE, portkeyDidUIPrefix } from '../../constants';
+import { HOUR, MINUTE } from '../../constants';
 import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
-import type { GuardiansApproved } from '@portkey/services';
-import { VerifierItem } from '@portkey/did';
+import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
-import { did } from '../../utils';
+import { useUpdateEffect } from 'react-use';
+import { TVerifierItem } from '../types';
 import './index.less';
 
-const GuardianListStorageKey = `${portkeyDidUIPrefix}GuardianListInfo`;
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
 export interface GuardianApprovalProps {
@@ -22,129 +22,55 @@ export interface GuardianApprovalProps {
   className?: string;
   guardianList?: BaseGuardianItem[];
   isErrorTip?: boolean;
-  appleIdToken?: string; // apple social login id token
+  wrapperStyle?: React.CSSProperties;
+  operationType?: OperationTypeEnum;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => void;
+  onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
 }
 
 const GuardianApproval = forwardRef(
   (
-    { header, chainId, className, guardianList, isErrorTip, appleIdToken, onError, onConfirm }: GuardianApprovalProps,
+    {
+      header,
+      chainId,
+      className,
+      guardianList: defaultGuardianList,
+      isErrorTip = true,
+      wrapperStyle,
+      operationType = OperationTypeEnum.communityRecovery,
+      onError,
+      onConfirm,
+      onGuardianListChange,
+    }: GuardianApprovalProps,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
   ) => {
     const [verifyAccountIndex, setVerifyAccountIndex] = useState<number | undefined>();
-    const [_guardianList, setGuardianList] = useState<UserGuardianStatus[]>(guardianList || []);
+    const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>([]);
     const [expiredTime, setExpiredTime] = useState<number>();
     const onErrorRef = useRef<GuardianApprovalProps['onError']>(onError);
     const onConfirmRef = useRef<GuardianApprovalProps['onConfirm']>(onConfirm);
-
-    const clearStorage = useCallback(() => {
-      ConfigProvider.config.storageMethod?.removeItem(GuardianListStorageKey);
-    }, []);
-
-    useImperativeHandle(ref, () => ({ clearStorage }));
 
     useEffect(() => {
       onErrorRef.current = onError;
       onConfirmRef.current = onConfirm;
     });
 
-    const getAppleApproved = useCallback(
-      (guardianList: UserGuardianStatus[]) => {
-        try {
-          if (!appleIdToken) return;
-          const { isExpired: tokenIsExpired, userId } = parseAppleIdentityToken(appleIdToken) || {};
+    console.log(guardianList, defaultGuardianList, 'guardianList==GuardianApproval');
 
-          if (tokenIsExpired) return;
-          // let matchUser = false;
-          guardianList.forEach(async (item, index) => {
-            if (item.identifier === userId || item.identifierHash === userId) {
-              // matchUser = true;
-              if (!item.verifier?.id) return;
-              const result = await did.services.verifyAppleToken({
-                verifierId: item.verifier?.id,
-                chainId,
-                identityToken: appleIdToken,
-              });
-
-              const verifierInfo: IVerificationInfo = { ...result, verifierId: item?.verifier?.id };
-              const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
-              setVerifyAccountIndex(undefined);
-              setGuardianList((v) => {
-                v[index] = {
-                  ...item,
-                  identifier: userId,
-                  ...verifierInfo,
-                  identifierHash: guardianIdentifier,
-                  status: VerifyStatus.Verified,
-                };
-                return [...v];
-              });
-            }
-          });
-          // if (!matchUser) throw 'appleIdToken does not match';
-        } catch (error) {
-          errorTip(
-            {
-              errorFields: 'getAppleApproved',
-              error: handleErrorMessage(error),
-            },
-            isErrorTip,
-            onErrorRef.current,
-          );
-        }
-      },
-      [appleIdToken, chainId, isErrorTip],
-    );
-
-    const getGuardianList = useCallback(async () => {
-      try {
-        const infoStr = await ConfigProvider.config.storageMethod?.getItem(GuardianListStorageKey);
-        if (!infoStr) {
-          guardianList?.length && !_guardianList.length && setGuardianList(guardianList);
-          return;
-        }
-        const info: {
-          expiredTime: number;
-          guardianList: UserGuardianStatus[];
-        } = JSON.parse(infoStr);
-        const localGuardianList = info.guardianList;
-        if (info.expiredTime <= Date.now()) {
-          ConfigProvider.config.storageMethod?.removeItem(GuardianListStorageKey);
-        }
-        const guardianListTem: UserGuardianStatus[] = [];
-        let isSameGuardian = true;
-        guardianList?.forEach((item, index) => {
-          if (item.identifier === localGuardianList[index].identifier) {
-            const guardian = localGuardianList[index];
-            guardianListTem.push(guardian);
-          } else {
-            isSameGuardian = false;
-          }
-        });
-        if (!isSameGuardian) {
-          setGuardianList(guardianList as UserGuardianStatus[]);
-          getAppleApproved(guardianList as UserGuardianStatus[]);
-          return;
-        }
-        setGuardianList(guardianListTem);
-        getAppleApproved(guardianListTem);
-      } catch (error) {
-        // console.error(error, 'getGuardianList===');
-      }
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [getAppleApproved, guardianList]);
+    useUpdateEffect(() => {
+      onGuardianListChange?.(guardianList);
+    }, [guardianList]);
 
     useEffect(() => {
-      getGuardianList();
-    }, [getGuardianList]);
+      defaultGuardianList?.length && setGuardianList(defaultGuardianList);
+    }, [defaultGuardianList]);
 
     const onSendCodeHandler = useCallback(
       async (item: UserGuardianStatus, index: number) => {
         try {
           if (!expiredTime) setExpiredTime(getExpiredTime());
-
-          setVerifyAccountIndex(index);
           setGuardianList((v) => {
             v[index] = {
               ...item,
@@ -152,14 +78,15 @@ const GuardianApproval = forwardRef(
               isInitStatus: true,
             };
 
-            return v;
+            return [...v];
           });
+          setVerifyAccountIndex(index);
         } catch (error: any) {
-          console.log(error, 'error===');
+          console.error(error, 'error===');
           return errorTip(
             {
               errorFields: 'GuardianApproval',
-              error: error?.error?.message ?? error?.type ?? 'Something error',
+              error: handleErrorMessage(error),
             },
             isErrorTip,
             onErrorRef?.current,
@@ -176,24 +103,20 @@ const GuardianApproval = forwardRef(
         try {
           setLoading(true);
           const accessToken = item?.accessToken;
+          const socialLogin = ConfigProvider.config.socialLogin;
           let clientId;
           let redirectURI;
-          let storageInfo = '';
           let customLoginHandler;
           switch (item.guardianType) {
             case 'Apple':
-              clientId = ConfigProvider.config.socialLogin?.Apple?.clientId;
-              redirectURI = ConfigProvider.config.socialLogin?.Apple?.redirectURI;
-              customLoginHandler = ConfigProvider.config.socialLogin?.Apple?.customLoginHandler;
-              storageInfo = JSON.stringify({
-                expiredTime: getExpiredTime(),
-                guardianList: _guardianList,
-              });
-              ConfigProvider.config.storageMethod?.setItem(GuardianListStorageKey, storageInfo);
+              clientId = socialLogin?.Apple?.clientId;
+              redirectURI = socialLogin?.Apple?.redirectURI;
+              customLoginHandler = socialLogin?.Apple?.customLoginHandler;
+
               break;
             case 'Google':
-              clientId = ConfigProvider.config.socialLogin?.Google?.clientId;
-              customLoginHandler = ConfigProvider.config.socialLogin?.Google?.customLoginHandler;
+              clientId = socialLogin?.Google?.clientId;
+              customLoginHandler = socialLogin?.Google?.customLoginHandler;
               break;
             default:
               throw 'accountType is not supported';
@@ -206,8 +129,9 @@ const GuardianApproval = forwardRef(
             id,
             verifierId: item.verifier?.id,
             chainId,
-            clientId: clientId ?? '',
+            clientId,
             redirectURI,
+            operationType,
             customLoginHandler,
           });
           if (!rst && item.guardianType === 'Apple') return;
@@ -239,7 +163,7 @@ const GuardianApproval = forwardRef(
           setLoading(false);
         }
       },
-      [chainId, isErrorTip, _guardianList, onError, verifyToken],
+      [chainId, isErrorTip, onError, operationType, verifyToken],
     );
 
     const onVerifyingHandler = useCallback(
@@ -251,14 +175,13 @@ const GuardianApproval = forwardRef(
           setVerifyAccountIndex(index);
           setGuardianList((v) => {
             v[index].isInitStatus = false;
-            return v;
+            return [...v];
           });
         } catch (error: any) {
-          console.log(error, 'error===');
           return errorTip(
             {
               errorFields: 'GuardianApproval',
-              error: error?.error?.message ?? error?.type ?? 'Something error',
+              error: handleErrorMessage(error, 'Something error'),
             },
             isErrorTip,
             onError,
@@ -277,7 +200,7 @@ const GuardianApproval = forwardRef(
             verificationDoc: res.verificationDoc,
             signature: res.signature,
           };
-          return v;
+          return [...v];
         });
         setVerifyAccountIndex(undefined);
       },
@@ -285,7 +208,7 @@ const GuardianApproval = forwardRef(
     );
 
     const onConfirmHandler = useCallback(() => {
-      const verificationList = _guardianList
+      const verificationList = guardianList
         .filter((item) => Boolean(item.signature && item.verificationDoc))
         .map((item) => ({
           type: item.guardianType,
@@ -295,37 +218,34 @@ const GuardianApproval = forwardRef(
           signature: item.signature || '',
         }));
       onConfirmRef.current?.(verificationList);
-      ConfigProvider.config.storageMethod?.removeItem(GuardianListStorageKey);
-    }, [_guardianList]);
+    }, [guardianList]);
 
-    const onReSendVerifyHandler = useCallback(
-      ({ verifierSessionId }: { verifier: VerifierItem; verifierSessionId: string }, verifyAccountIndex: number) => {
-        setGuardianList((v) => {
-          const list = [...v];
-          if (list[verifyAccountIndex]) {
-            list[verifyAccountIndex].verifierInfo = { sessionId: verifierSessionId };
-          } else {
-            return list;
-          }
+    const onReSendVerifyHandler = useCallback(({ verifierSessionId }: TVerifyCodeInfo, verifyAccountIndex: number) => {
+      setGuardianList((v) => {
+        const list = [...v];
+        if (list[verifyAccountIndex]) {
+          list[verifyAccountIndex].verifierInfo = { sessionId: verifierSessionId };
+        } else {
           return list;
-        });
-      },
-      [],
-    );
+        }
+        return list;
+      });
+    }, []);
 
     return (
-      <div className={clsx('ui-guardian-approval-wrapper', className)}>
+      <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
         {typeof verifyAccountIndex === 'number' ? (
           <VerifierPage
             chainId={chainId}
+            operationType={operationType}
             onBack={() => setVerifyAccountIndex(undefined)}
-            guardianIdentifier={_guardianList[verifyAccountIndex].identifier || ''}
-            verifierSessionId={_guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
-            isLoginAccount={_guardianList[verifyAccountIndex].isLoginAccount}
-            isCountdownNow={_guardianList[verifyAccountIndex].isInitStatus}
-            accountType={_guardianList[verifyAccountIndex].guardianType}
+            guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
+            verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
+            isLoginGuardian={guardianList[verifyAccountIndex].isLoginGuardian}
+            isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
+            accountType={guardianList[verifyAccountIndex].guardianType}
             isErrorTip={isErrorTip}
-            verifier={_guardianList[verifyAccountIndex].verifier as VerifierItem}
+            verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
             onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
             onError={onError}
             onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}
@@ -336,7 +256,8 @@ const GuardianApproval = forwardRef(
             <GuardianList
               chainId={chainId}
               expiredTime={expiredTime}
-              guardianList={_guardianList}
+              operationType={operationType}
+              guardianList={guardianList}
               isErrorTip={isErrorTip}
               onSend={onSendCodeHandler}
               onVerifying={onVerifyingHandler}

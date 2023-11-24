@@ -15,6 +15,7 @@ describe('verification describe', () => {
         type: 'Email',
         verifierId: 'verifierId_mock',
         guardianIdentifier: 'guardianIdentifier_mock',
+        operationType: 0,
       },
       headers: {
         reCaptchaToken: 'xxxx',
@@ -30,6 +31,7 @@ describe('verification describe', () => {
       guardianIdentifier: 'guardianIdentifier_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      operationType: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -54,6 +56,7 @@ describe('verification describe', () => {
       accessToken: 'accessToken_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      operationType: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -64,13 +67,23 @@ describe('verification describe', () => {
       identityToken: 'identityToken_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      operationType: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
   });
 
   test('test checkGoogleRecaptcha', async () => {
-    const result = await verification.checkGoogleRecaptcha();
+    const result = await verification.checkGoogleRecaptcha({
+      operationType: 0,
+    });
     expect(typeof result).toEqual('boolean');
+  });
+
+  test('test getRecommendationVerifier', async () => {
+    const result = await verification.getRecommendationVerifier({ chainId: 'AELF' });
+    expect(result).toHaveProperty('id');
+    expect(result).toHaveProperty('name');
+    expect(result).toHaveProperty('imageUrl');
   });
 });

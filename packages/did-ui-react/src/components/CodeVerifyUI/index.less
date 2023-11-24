@@ -1,0 +1,99 @@
+@import '../../assets/theme/constants.less';
+
+.verifier-account-wrapper {
+  height: 100%;
+  .login-icon {
+    display: inline-block;
+    border-bottom-right-radius: 9px;
+    border-top-left-radius: 9px;
+    line-height: 18px;
+    background-color: var(--portkey-ui-bg-1);
+    padding: 0 8px;
+    text-align: center;
+    color: var(--portkey-ui-font-3);
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+  .icon-pair {
+    margin-right: 12px;
+    .base-verifier-icon {
+      margin-left: -8px;
+    }
+    .email-icon {
+      width: 32px;
+      height: 32px;
+    }
+  }
+  .login-account {
+    line-height: 20px;
+    color: var(--portkey-ui-text-primary);
+    font-size: 14px;
+    word-wrap: break-word;
+    .text-overflow(2);
+  }
+  .login-account-wrapper {
+    padding-bottom: 25px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--portkey-ui-default-border);
+  }
+  .send-tip {
+    line-height: 22px;
+    color: var(--portkey-ui-text-primary);
+    font-size: 16px;
+    .account {
+      color: var(--portkey-ui-font-4);
+    }
+  }
+  .password-wrapper {
+    padding-top: 26px;
+
+    /** pin */
+
+    .adm-passcode-input,
+    .adm-passcode-input-cell-container {
+      width: 100%;
+    }
+
+    .adm-passcode-input-cell {
+      margin: 0;
+      width: auto;
+      flex: 1;
+      font-size: 36px;
+      line-height: 52px;
+      height: 52px;
+      color: var(--portkey-ui-text-primary);
+      font-weight: 500;
+    }
+    .adm-passcode-input.adm-passcode-input-seperated .adm-passcode-input-cell {
+      border: 0;
+      border-bottom: 1px solid var(--portkey-ui-default-border);
+      border-radius: 0;
+    }
+    .adm-passcode-input.adm-passcode-input-seperated .adm-passcode-input-cell-focused {
+      box-shadow: none;
+    }
+
+    .adm-passcode-input.adm-passcode-input-seperated .adm-passcode-input-cell:not(:last-child) {
+      margin-right: 20px;
+    }
+
+    /** btn */
+    .resend-btn {
+      width: auto;
+      margin: auto;
+      display: block;
+      margin-top: 24px;
+      color: var(--portkey-ui-font-4);
+      &:hover {
+        background-color: transparent;
+      }
+      span {
+        line-height: 20px;
+        font-size: 14px;
+      }
+      &.resend-after-btn {
+        color: var(--portkey-ui-text-tip);
+      }
+    }
+  }
+}

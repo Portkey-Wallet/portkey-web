@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import { ChainId } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
+import { OperationTypeEnum } from '@portkey/services';
 
 interface GuardianItemProps {
   chainId: ChainId;
@@ -14,6 +15,7 @@ interface GuardianItemProps {
   isExpired?: boolean;
   item: UserGuardianStatus;
   isErrorTip?: boolean;
+  operationType?: OperationTypeEnum;
   onError?: OnErrorFunc;
   onSend?: (item: UserGuardianItem) => void;
   onVerifying?: (item: UserGuardianItem) => void;
@@ -24,7 +26,8 @@ function GuardianItems({
   disabled,
   item,
   isExpired,
-  isErrorTip,
+  isErrorTip = true,
+  operationType = OperationTypeEnum.communityRecovery,
   onError,
   onSend,
   onVerifying,
@@ -39,17 +42,17 @@ function GuardianItems({
     switch (guardian.guardianType) {
       case 'Email':
       case 'Phone':
-        return <div className="account-text">{guardian.identifier || guardian.identifierHash}</div>;
+        return <div className="account-text account-text-one-row">{guardian.identifier}</div>;
       case 'Google':
         return (
-          <div className="account-text">
+          <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
             <div className="detail">{guardian.thirdPartyEmail}</div>
           </div>
         );
       case 'Apple':
         return (
-          <div className="account-text">
+          <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
             <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail}</div>
           </div>
@@ -69,6 +72,7 @@ function GuardianItems({
               guardianIdentifier: (item.identifier || item.identifierHash || '').replaceAll(/\s/g, ''),
               verifierId: item.verifier?.id || '',
               chainId,
+              operationType,
             },
           },
           reCaptchaHandler,
@@ -95,7 +99,7 @@ function GuardianItems({
         );
       }
     },
-    [reCaptchaHandler, chainId, onSend, isErrorTip, onError],
+    [chainId, operationType, reCaptchaHandler, onSend, isErrorTip, onError],
   );
 
   const verifyingHandler = useCallback(
@@ -106,9 +110,9 @@ function GuardianItems({
   );
 
   return (
-    <li className={clsx('flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
-      {item.isLoginAccount && <div className="login-icon">{t('Login Account')}</div>}
-      <div className="flex-between-center">
+    <li className={clsx('portkey-ui-flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
+      {item.isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
+      <div className="portkey-ui-w-100 portkey-ui-flex-between-center">
         <VerifierPair
           guardianType={item.guardianType}
           verifierSrc={item.verifier?.imageUrl}

@@ -1,77 +1,63 @@
-import { Button } from 'antd';
-import { useCallback, useEffect, useRef, useState } from 'react';
-import { PasscodeInput } from 'antd-mobile';
-import { DIGIT_CODE } from '../../constants/misc';
-import clsx from 'clsx';
-import VerifierPair from '../VerifierPair';
-import { useTranslation } from 'react-i18next';
+import { useCallback, useState, useRef } from 'react';
 import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verification } from '../../utils';
-import { useEffectOnce } from 'react-use';
-import { OnErrorFunc } from '../../types';
 import type { ChainId } from '@portkey/types';
-import type { AccountType } from '@portkey/services';
-import type { VerifierItem } from '@portkey/did';
+import { OperationTypeEnum } from '@portkey/services';
+import { TVerifyCodeInfo } from '../SignStep/types';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
+import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
+import { BaseCodeVerifyProps } from '../types';
 import './index.less';
 
 const MAX_TIMER = 60;
 
-export interface CodeVerifyProps {
+export interface CodeVerifyProps extends BaseCodeVerifyProps {
   chainId: ChainId;
-  verifier: VerifierItem;
-  className?: string;
-  accountType?: AccountType;
-  isCountdownNow?: boolean;
-  isLoginAccount?: boolean;
-  guardianIdentifier: string;
   verifierSessionId: string;
   isErrorTip?: boolean;
-  onError?: OnErrorFunc;
+  operationType: OperationTypeEnum;
   onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
-  onReSend?: (result: { verifier: VerifierItem; verifierSessionId: string }) => void;
+  onReSend?: (result: TVerifyCodeInfo) => void;
 }
 
 export default function CodeVerify({
   chainId,
   verifier,
   className,
-  isErrorTip,
+  tipExtra,
+  isErrorTip = true,
+  operationType,
   isCountdownNow,
-  isLoginAccount,
+  isLoginGuardian,
   guardianIdentifier,
   accountType = 'Email',
-  verifierSessionId,
+  verifierSessionId: defaultVerifierSessionId,
   onError,
   onReSend,
   onSuccess,
 }: CodeVerifyProps) {
-  const [timer, setTimer] = useState<number>(0);
   const [pinVal, setPinVal] = useState<string>();
-  const timerRef = useRef<NodeJS.Timer>();
-  const [_verifierSessionId, setVerifierSessionId] = useState<string>(verifierSessionId);
-  const { t } = useTranslation();
-
-  useEffectOnce(() => {
-    isCountdownNow && setTimer(MAX_TIMER);
-  });
-
+  const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
+  const uiRef = useRef<ICodeVerifyUIInterface>();
   const onFinish = useCallback(
     async (code: string) => {
       try {
         if (code && code.length === 6) {
-          if (!_verifierSessionId) throw Error('Missing verifierSessionId!!!');
+          if (!verifierSessionId) throw Error(`VerifierSessionId(${verifierSessionId}) is invalid`);
           setLoading(true);
           const result = await verification.checkVerificationCode({
-            verifierSessionId: _verifierSessionId,
+            verifierSessionId,
             verificationCode: code,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
             chainId,
+            operationType,
           });
           setLoading(false);
 
           if (result.signature) return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
           setPinVal('');
+        } else {
+          throw Error('Please check if the PIN code is entered correctly');
         }
       } catch (error: any) {
         setLoading(false);
@@ -88,7 +74,7 @@ export default function CodeVerify({
       }
     },
 
-    [_verifierSessionId, guardianIdentifier, verifier.id, chainId, onSuccess, isErrorTip, onError],
+    [verifierSessionId, guardianIdentifier, verifier.id, chainId, operationType, onSuccess, isErrorTip, onError],
   );
 
   const reCaptchaHandler = useReCaptchaModal();
@@ -103,15 +89,16 @@ export default function CodeVerify({
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
             chainId,
+            operationType,
           },
         },
         reCaptchaHandler,
       );
-      if (result.verifierSessionId) {
-        setTimer(MAX_TIMER);
-        onReSend?.({ verifier, ...result });
-        setVerifierSessionId(result.verifierSessionId);
-      }
+      if (!result.verifierSessionId)
+        return console.warn('The request was rejected, please check whether the parameters are correct');
+      uiRef.current?.setTimer(MAX_TIMER);
+      onReSend?.({ verifier, ...result });
+      setVerifierSessionId(result.verifierSessionId);
     } catch (error: any) {
       const msg = handleErrorMessage(error);
       errorTip(
@@ -123,54 +110,32 @@ export default function CodeVerify({
         onError,
       );
     }
-  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, onReSend, reCaptchaHandler, verifier]);
-
-  useEffect(() => {
-    if (timer !== MAX_TIMER) return;
-    timerRef.current && clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setTimer((t) => {
-        const newTime = t - 1;
-        if (newTime <= 0) {
-          timerRef.current && clearInterval(timerRef.current);
-          timerRef.current = undefined;
-          return 0;
-        }
-        return newTime;
-      });
-    }, 1000);
-  }, [timer]);
+  }, [
+    accountType,
+    chainId,
+    guardianIdentifier,
+    isErrorTip,
+    onError,
+    onReSend,
+    operationType,
+    reCaptchaHandler,
+    verifier,
+  ]);
 
   return (
-    <div className={clsx('verifier-account-wrapper', className)}>
-      {isLoginAccount && <div className="login-icon">{t('Login Account')}</div>}
-      <div className="flex-row-center login-account-wrapper">
-        <VerifierPair guardianType={accountType} verifierSrc={verifier.imageUrl} verifierName={verifier.name} />
-        <span className="login-account">{guardianIdentifier || ''}</span>
-      </div>
-      <div className="send-tip">
-        {`A ${DIGIT_CODE.length}-digit code was sent to `}
-        <span className="account">{guardianIdentifier}</span>
-        <br />
-        {`Enter it within ${DIGIT_CODE.expiration} minutes`}
-      </div>
-      <div className="password-wrapper">
-        <PasscodeInput
-          value={pinVal}
-          length={DIGIT_CODE.length}
-          seperated
-          plain
-          onChange={(v) => setPinVal(v)}
-          onFill={onFinish}
-        />
-        <Button
-          type="text"
-          disabled={!!timer}
-          onClick={resendCode}
-          className={clsx('text-center resend-btn', timer && 'resend-after-btn')}>
-          {timer ? `Resend after ${timer}s` : t('Resend')}
-        </Button>
-      </div>
-    </div>
+    <CodeVerifyUI
+      ref={uiRef}
+      code={pinVal}
+      tipExtra={tipExtra}
+      verifier={verifier}
+      className={className}
+      isCountdownNow={isCountdownNow}
+      isLoginGuardian={isLoginGuardian}
+      guardianIdentifier={guardianIdentifier}
+      accountType={accountType}
+      onCodeChange={setPinVal}
+      onReSend={resendCode}
+      onCodeFinish={onFinish}
+    />
   );
 }

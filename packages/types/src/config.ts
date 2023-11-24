@@ -4,4 +4,5 @@ export interface IConfig {
   requestDefaults?: IRequestDefaults;
   graphQLUrl?: string;
   storageMethod?: IStorageSuite;
+  connectUrl?: string;
 }

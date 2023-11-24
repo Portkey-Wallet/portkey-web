@@ -18,6 +18,15 @@ const formatResponse = (response: string) => {
     return response;
   }
 };
+const formatError = (res: any, status: number) => {
+  if (typeof res === 'string')
+    return {
+      message: res,
+      status,
+    };
+
+  return { ...res, status };
+};
 
 const defaultHeaders = {
   Accept: 'text/plain;v=1.0',
@@ -56,7 +65,7 @@ export const fetchFormat = async (config: RequestOpts, signal: IAbortSignal) => 
   const res = formatResponse(text);
 
   if ((result.status as number).toString()[0] !== '2' || !result.ok) {
-    throw res ? res : result.statusText;
+    throw formatError(res ? res : result.statusText, result.status);
   }
   return res;
 };

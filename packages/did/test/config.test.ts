@@ -10,6 +10,7 @@ describe('config describe', () => {
     requestDefaults: {
       baseURL: 'https://did-portkey-test.portkey.finance',
     },
+    connectUrl: 'https://auth-portkey-test.portkey.finance',
     graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
     storageMethod: new StorageMock('mock1'),
   };
@@ -28,6 +29,10 @@ describe('config describe', () => {
       storageMethod: myStore,
     });
     expect(config.storageMethod.storage).toHaveProperty('name', 'mock2');
+  });
+
+  test('test connectUrl', () => {
+    expect(config.connectRequestConfig.baseURL).toEqual(configOptions.connectUrl);
   });
 
   test('test graphQLUrl', () => {
@@ -78,5 +83,15 @@ describe('config describe', () => {
       requestDefaults: undefined,
     });
     expect(config.requestDefaults).toBeUndefined();
+  });
+
+  test('test setConfig connectUrl', () => {
+    const config = new DIDConfig({
+      requestDefaults: undefined,
+    });
+    config.setConfig({
+      connectUrl: 'connectUrl_mock',
+    });
+    expect(config.connectRequestConfig.baseURL).toEqual('connectUrl_mock');
   });
 });

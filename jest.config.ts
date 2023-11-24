@@ -7,10 +7,10 @@ const path = require('path');
 const { lstatSync, readdirSync } = require('fs');
 // get listing of packages in the mono repo
 const basePath = path.resolve(__dirname, 'packages');
-const packages = readdirSync(basePath).filter(name => lstatSync(path.join(basePath, name)).isDirectory());
+const packages = readdirSync(basePath).filter((name: string) => lstatSync(path.join(basePath, name)).isDirectory());
 
 const moduleNameMapper: any = {};
-packages.forEach(key => {
+packages.forEach((key: string) => {
   moduleNameMapper[`@portkey/${key}/test/(.+)$`] = `<rootDir>/packages/${key}/test/$1`;
   moduleNameMapper[`@portkey/${key}`] = `<rootDir>/packages/${key}/src`;
 });

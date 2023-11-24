@@ -1,7 +1,16 @@
 {
   "name": "@portkey/graphql",
-  "version": "0.0.1-alpha.1.8",
+  "version": "1.4.4-alpha.5",
   "description": "",
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
+  },
   "author": "",
   "license": "ISC",
   "publishConfig": {
@@ -17,21 +26,21 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/graphql"
   },
-  "type": "commonjs",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
-  "exports": "./dist/index.js",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "build": "tsc",
+    "build": "yarn build:cjs & yarn build:esm & yarn build:types",
+    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && yarn esm:fix",
+    "build:types": "tsc --build tsconfig.types.json",
+    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
     "start": "tsc --watch",
     "generate": "rm -rf ./**/*/__generated__ && node gqlg.js && graphql-codegen --config codegen.config.ts && eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
+    "@portkey/types": "^1.4.4-alpha.5",
     "graphql": "^16.6.0",
-    "subscriptions-transport-ws": "^0.11.0",
-    "@portkey/types": "^0.0.1-alpha.1.4"
+    "subscriptions-transport-ws": "^0.11.0"
   },
   "devDependencies": {
     "@graphql-codegen/cli": "^2.16.2",
@@ -42,5 +51,6 @@
     "gql-generator": "^1.0.19",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.4"
-  }
+  },
+  "gitHead": "df2d5f465b4d184997734e87625e1e686adb6822"
 }

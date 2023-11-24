@@ -137,4 +137,9 @@ describe('search describe', () => {
       expect(error).not.toBeUndefined();
     }
   });
+
+  test('test caholderindex', async () => {
+    const result = await search.getCAHolderInfo('Authorization_mock', 'caAddress_mock');
+    expect(result).toHaveProperty('caAddress');
+  });
 });

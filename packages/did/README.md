@@ -57,7 +57,7 @@ The `@portkey/did` library is a collection of modules that contain functionality
 - `@portkey/utils` is for the portkey utils.
 - `@portkey/contracts` is for the portkey contracts.
 - `@portkey/graphql` is for the portkey graphql.
-- `@portkey/contracts` is for the portkey request.
+- `@portkey/request` is for the portkey request.
 - `@portkey/types` is for the portkey types.
 - `@portkey/utils` is for the portkey utils.
 - `@portkey/validator` is for the portkey validator.
@@ -302,17 +302,19 @@ Example
 
 ```ts
 did.services.getVerificationCode({
-  params:{
+  params: {
     chainId: 'chainId',
     guardianIdentifier: 'guardianIdentifier',
     type: 'Email',
     verifierId: 'verifierId',
+    operationType: 'operationType',
   },
   headers: {
-    reCaptchaToken: 'reCaptchaToken'
-  }
+    reCaptchaToken: 'reCaptchaToken',
+  },
 });
 ```
+[operationType types](../services/src/types/communityRecovery.ts)
 
 #### services.verifyVerificationCode
 
@@ -331,6 +333,7 @@ did.services.verifyVerificationCode({
   guardianIdentifier: 'guardianIdentifier',
   verifierId: 'verifierId',
   verificationCode: 'verificationCode',
+  operationType: 'operationType',
 });
 ```
 
@@ -345,10 +348,11 @@ verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCo
 Example
 
 ```ts
-did.services.verifyVerificationCode({
+did.services.verifyGoogleToken({
+  chainId: 'chainId',
   accessToken: 'accessToken',
   verifierId: 'verifierId',
-  chainId: 'chainId',
+  operationType: 'operationType',
 });
 ```
 
@@ -364,9 +368,10 @@ Example
 
 ```ts
 did.services.verifyAppleToken({
-  identityToken: 'identityToken',
-  verifierId: 'verifierId',
   chainId: 'chainId',
+  verifierId: 'verifierId',
+  identityToken: 'identityToken',
+  operationType: 'operationType',
 });
 ```
 

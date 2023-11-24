@@ -1,9 +1,10 @@
 import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
-import BaseModal from '../SignIn/components/BaseModal';
+import BaseModal from '../SignStep/components/BaseModal';
 import CustomPassword from '../CustomPassword';
 import CustomSvg from '../CustomSvg';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 
 import './index.less';
 
@@ -41,13 +42,13 @@ export default function UnLock({
     return (
       <div className="unlock-body">
         <CustomSvg type="Portkey" style={{ width: '80px', height: '80px' }} />
-        <h1>Welcome back!</h1>
+        <h1 className="unlock-title">Welcome back!</h1>
         <div className="password-wrap">
           <span className="password-label">Enter Pin</span>
           <CustomPassword
             value={value}
             placeholder={t('Enter Pin')}
-            className="password-input"
+            className="portkey-ui-unlock-input"
             maxLength={16}
             onChange={(e) => {
               onChange(e.target.value);
@@ -64,14 +65,14 @@ export default function UnLock({
   }, [value, t, isWrongPassword, onChange, onUnlock]);
 
   return (
-    <div>
+    <PortkeyStyleProvider>
       {uiType === 'Full' ? (
-        <div className="step-page-full-wrapper">{mainContent()}</div>
+        <div className="portkey-sign-full-wrapper">{mainContent()}</div>
       ) : (
         <BaseModal destroyOnClose className={className} open={open} onCancel={onCancel}>
           {mainContent()}
         </BaseModal>
       )}
-    </div>
+    </PortkeyStyleProvider>
   );
 }

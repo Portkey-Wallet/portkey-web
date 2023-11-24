@@ -2,16 +2,16 @@ import { Input } from 'antd';
 import clsx from 'clsx';
 import { ChangeEvent, MouseEventHandler, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import CustomSvg from '../CustomSvg';
-import { CountryItem } from '../../types';
+import { ICountryItem } from '../../types';
 import { countryCodeFilter } from '../../constants/country';
 import './index.less';
 
 interface AreaCodeProps {
   open?: boolean;
-  value?: CountryItem['country'];
-  areaList?: CountryItem[];
+  value?: ICountryItem['iso'];
+  areaList?: ICountryItem[];
   onCancel?: () => void;
-  onChange?: (item: CountryItem) => void;
+  onChange?: (item: ICountryItem) => void;
 }
 
 export default function AreaCode({ open, value, areaList, onChange, onCancel }: AreaCodeProps) {
@@ -48,10 +48,10 @@ export default function AreaCode({ open, value, areaList, onChange, onCancel }: 
   }, []);
 
   const item = useCallback(
-    (countryItem: CountryItem) => (
+    (countryItem: ICountryItem) => (
       <li
-        key={countryItem.country}
-        className={clsx('flex-between-center area-code-item', value === countryItem.country && 'active-item')}
+        key={countryItem.iso}
+        className={clsx('portkey-ui-flex-between-center area-code-item', value === countryItem.iso && 'active-item')}
         onClick={() => onChange?.(countryItem)}>
         <span>{countryItem.country}</span>
         <span>+ {countryItem.code}</span>
@@ -62,7 +62,10 @@ export default function AreaCode({ open, value, areaList, onChange, onCancel }: 
 
   const allList = useMemo(() => areaList?.map((country) => item(country)), [areaList, item]);
 
-  const noDate = useMemo(() => <div className="flex-center no-search-result">There is no search result.</div>, []);
+  const noDate = useMemo(
+    () => <div className="portkey-ui-flex-center no-search-result">There is no search result.</div>,
+    [],
+  );
 
   const filterList = useMemo(() => {
     const list = countryCodeFilter(searchVal, areaList);

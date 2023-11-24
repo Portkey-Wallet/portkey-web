@@ -7,17 +7,18 @@ import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
 import { ISocialLoginConfig, OnErrorFunc } from '../../types';
-import { ChainId } from '@portkey/types';
-import type { AccountType } from '@portkey/services';
+import { ChainId, ChainType } from '@portkey/types';
+import { AccountType, OperationTypeEnum } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
 import { verification, setLoading, errorTip, verifyErrorHandler, handleErrorMessage } from '../../utils';
-import './index.less';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
 import { portkeyDidUIPrefix } from '../../constants';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
-import useChainInfo from '../../hooks/useChainInfo';
+import { getChainInfo } from '../../hooks/useChainInfo';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
+import { usePortkey } from '../context';
+import './index.less';
 
 type SelectVerifierStorageInfo = {
   verifier: VerifierItem;
@@ -35,13 +36,14 @@ export interface VerifierSelectConfirmResult {
 
 export interface VerifierSelectProps {
   chainId?: ChainId;
-  sandboxId?: string;
   verifierList?: VerifierItem[];
   defaultVerifier?: string;
   guardianIdentifier: string;
   className?: string;
   accountType?: AccountType;
   isErrorTip?: boolean;
+  operationType?: OperationTypeEnum;
+  chainType?: ChainType;
   // socialLogin porps
   appleIdToken?: string; // apple authorized
   googleAccessToken?: string; // google authorized
@@ -53,14 +55,15 @@ export interface VerifierSelectProps {
 export default function VerifierSelect({
   chainId = 'AELF',
   className,
-  sandboxId,
   isErrorTip = true,
-  verifierList: _verifierList,
+  verifierList: defaultVerifierList,
   guardianIdentifier,
+  chainType = 'aelf',
   accountType = 'Email',
   defaultVerifier,
   appleIdToken,
   googleAccessToken,
+  operationType = OperationTypeEnum.register,
   onError,
   onConfirm,
 }: VerifierSelectProps) {
@@ -72,33 +75,40 @@ export default function VerifierSelect({
     onConfirmRef.current = onConfirm;
   });
 
-  const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>(_verifierList);
+  const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>(defaultVerifierList);
 
   const socialLogin = useMemo<ISocialLoginConfig | undefined>(() => ConfigProvider.getSocialLoginConfig(), []);
+  const [{ sandboxId }] = usePortkey();
 
-  const chainInfo = useChainInfo(chainId, onError);
-
-  useEffect(() => {
-    chainInfo &&
-      getVerifierList({
+  const getVerifierInfo = useCallback(async () => {
+    try {
+      setLoading(true);
+      const chainInfo = await getChainInfo(chainId);
+      const list = await getVerifierList({
         sandboxId,
         chainId,
         rpcUrl: chainInfo?.endPoint,
-        chainType: 'aelf',
+        chainType,
         address: chainInfo?.caContractAddress,
-      })
-        .then((list) => setVerifierList(list))
-        .catch((err) =>
-          errorTip(
-            {
-              errorFields: 'getVerifierServers',
-              error: err,
-            },
-            isErrorTip,
-            onError,
-          ),
-        );
-  }, [_verifierList, chainId, chainInfo, isErrorTip, onError, sandboxId]);
+      });
+      setVerifierList(list);
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'getVerifierServers',
+          error,
+        },
+        isErrorTip,
+        onError,
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [chainId, chainType, isErrorTip, onError, sandboxId]);
+
+  useEffect(() => {
+    getVerifierInfo();
+  }, [getVerifierInfo]);
 
   const selectItems = useMemo(
     () =>
@@ -106,7 +116,6 @@ export default function VerifierSelect({
         value: item.id,
         iconUrl: item.imageUrl ?? '',
         label: item.name,
-        url: item.endPoints[0],
         icon: <img src={item.imageUrl} />,
         id: item.id,
       })),
@@ -150,6 +159,7 @@ export default function VerifierSelect({
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: selectItem.id,
             chainId,
+            operationType,
           },
         },
         reCaptchaHandler,
@@ -172,7 +182,7 @@ export default function VerifierSelect({
         onError,
       );
     }
-  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, reCaptchaHandler, selectItem]);
+  }, [accountType, chainId, guardianIdentifier, isErrorTip, onError, operationType, reCaptchaHandler, selectItem]);
 
   const onConfirmAuth = useCallback(async () => {
     try {
@@ -204,6 +214,7 @@ export default function VerifierSelect({
         chainId,
         clientId: clientId ?? '',
         redirectURI,
+        operationType: OperationTypeEnum.register,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);
@@ -232,11 +243,7 @@ export default function VerifierSelect({
     isErrorTip,
     onError,
     selectItem,
-    socialLogin?.Apple?.clientId,
-    socialLogin?.Apple?.customLoginHandler,
-    socialLogin?.Apple?.redirectURI,
-    socialLogin?.Google?.clientId,
-    socialLogin?.Google?.customLoginHandler,
+    socialLogin,
     verifyToken,
   ]);
 

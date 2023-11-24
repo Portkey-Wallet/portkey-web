@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@portkey/next-example",
-  "version": "0.0.1-alpha.1.4",
+  "version": "1.4.4-alpha.5",
   "scripts": {
     "dev": "PORT=4000 next dev",
     "start": "next start",
@@ -9,14 +9,17 @@
     "dev:analyze": "PORT=4000 ANALYZE=true next dev"
   },
   "dependencies": {
+    "@portkey/did-ui-react": "^1.4.4-alpha.5",
+    "@portkey/onboarding": "^1.4.4-alpha.5",
+    "aelf-sdk": "3.2.45-beta.0",
     "next": "12.2.0",
-    "react": "18.2.0",
-    "react-dom": "18.2.0",
-    "@portkey/did": "^0.0.1-alpha.3.3",
     "next-transpile-modules": "^10.0.0",
-    "@portkey/did-ui-react": "^0.0.1-alpha.7.3"
+    "react": "18.2.0",
+    "react-dom": "18.2.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "vconsole": "3.15.1"
+  },
   "browserslist": {
     "production": [
       ">0.2%",

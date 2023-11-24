@@ -42,6 +42,7 @@ describe('communityRecovery describe', () => {
         type: 'Email',
         verifierId: 'verifierId_mock',
         guardianIdentifier: 'guardianIdentifier_mock',
+        operationType: 0,
       },
       headers: {
         reCaptchaToken: 'xxxx',
@@ -57,6 +58,7 @@ describe('communityRecovery describe', () => {
       guardianIdentifier: 'guardianIdentifier_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      operationType: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -128,6 +130,7 @@ describe('communityRecovery describe', () => {
       accessToken: 'accessToken_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      operationType: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -138,13 +141,31 @@ describe('communityRecovery describe', () => {
       identityToken: 'identityToken_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
+      operationType: 0,
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
   });
 
   test('test checkGoogleRecaptcha', async () => {
-    const result = await communityRecovery.checkGoogleRecaptcha();
+    const result = await communityRecovery.checkGoogleRecaptcha({
+      operationType: 0,
+    });
     expect(typeof result).toEqual('boolean');
+  });
+
+  test('test getPhoneCountryCodeWithLocal', async () => {
+    const result = await communityRecovery.getPhoneCountryCodeWithLocal();
+    expect(Array.isArray(result.data)).toBeTruthy();
+    expect(result.locateData).toHaveProperty('country');
+    expect(result.locateData).toHaveProperty('code');
+    expect(result.locateData).toHaveProperty('iso');
+  });
+
+  test('test getRecommendationVerifier', async () => {
+    const result = await communityRecovery.getRecommendationVerifier({ chainId: 'AELF' });
+    expect(result).toHaveProperty('id');
+    expect(result).toHaveProperty('name');
+    expect(result).toHaveProperty('imageUrl');
   });
 });

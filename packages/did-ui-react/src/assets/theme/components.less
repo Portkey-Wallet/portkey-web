@@ -1,46 +1,54 @@
+@import './constants.less';
+
 .portkey-ui-wrapper,
+.portkey-ui-common-modals,
 .portkey-ui-base-modal {
+  // modal
+  .portkey-ant-modal-content,
+  .portkey-ant-modal-header {
+    background-color: var(--portkey-ui-default-bg);
+  }
   /* button */
-  .ant-btn-dangerous.ant-btn-link span {
+  .portkey-ant-btn-dangerous.portkey-ant-btn-link span {
     text-decoration: underline;
   }
 
-  .ant-btn {
-    // border-radius: 4px;
+  .portkey-ant-btn {
+    background-color: var(--portkey-ui-default-btn-bg);
     width: 100%;
     height: auto;
     padding: 0;
   }
 
-  .ant-btn-default {
-    color: @font-9;
-    border-color: @border-3;
+  .portkey-ant-btn-default {
+    color: var(--portkey-ui-font-4);
+    border-color: var(--portkey-ui-default-btn-border);
     &:disabled,
     &:disabled:hover,
     &:disabled:focus,
     &:disabled:active {
-      border-color: @border-8;
+      border-color: var(--portkey-ui-border-5);
       box-shadow: none !important;
     }
   }
 
-  .ant-btn-primary {
-    background-color: @bg-7;
-    border-color: @border-3;
+  .portkey-ant-btn-primary {
+    background-color: var(--portkey-ui-primary-btn-bg);
+    border-color: var(--portkey-ui-primary-border);
     &:hover,
     &:focus {
-      color: white;
-      background-color: @hover1;
-      border-color: @border-4;
+      color: var(--portkey-ui-font-12);
+      background-color: var(--portkey-ui-bg-9);
+      border-color: var(--portkey-ui-primary-border);
     }
 
     &:disabled,
     &:disabled:hover,
     &:disabled:focus,
     &:disabled:active {
-      color: white;
-      background-color: @bg-7;
-      border-color: @border-3;
+      color: var(--portkey-ui-font-12);
+      background-color: var(--portkey-ui-primary-btn-bg);
+      border-color: var(--portkey-ui-primary-border);
       box-shadow: none !important;
       opacity: 0.3;
     }
@@ -48,56 +56,58 @@
 
   /* input */
 
-  .ant-input {
+  .portkey-ant-input {
     font-size: 16px;
-
+    background-color: var(--portkey-ui-input-bg);
     &::placeholder {
       font-size: 14px;
       line-height: 20px;
-      color: @font-12;
+      color: var(--portkey-ui-input-placeholder);
     }
   }
-
-  .ant-input-affix-wrapper:not(.ant-input-affix-wrapper-disabled):hover,
-  .ant-input-password:hover,
-  .ant-input:hover,
-  .ant-input:focus {
-    border-color: @border-1 !important;
+  .portkey-ant-input-affix-wrapper {
+    background-color: var(--portkey-ui-input-bg);
+  }
+  .portkey-ant-input-affix-wrapper:not(.portkey-ant-input-affix-wrapper-disabled):hover,
+  .portkey-ant-input-password:hover,
+  .portkey-ant-input:hover,
+  .portkey-ant-input:focus {
+    border-color: var(--portkey-ui-input-border) !important;
     box-shadow: none;
   }
 
-  .ant-input-affix-wrapper:focus,
-  .ant-input-affix-wrapper-focused {
+  .portkey-ant-input-affix-wrapper:focus,
+  .portkey-ant-input-affix-wrapper-focused {
     box-shadow: none;
   }
 
-  .ant-input,
-  .ant-input-password {
+  .portkey-ant-input,
+  .portkey-ant-input-password {
     padding: 12px 16px;
-    border-radius: 6px;
-    color: @font-2;
+    border-radius: var(--portkey-ui-border-radius-1);
+    color: var(--portkey-ui-input-text);
     line-height: 22px;
-    border-color: @border-1;
+    border-color: var(--portkey-ui-input-border);
     &:hover {
-      border-color: @hover2;
+      border-color: var(--portkey-ui-border-7);
     }
   }
 
-  .ant-input-password-icon {
+  .portkey-ant-input-password-icon {
     width: 16px;
     height: 16px;
   }
 
   /* form */
-  .ant-form {
-    .ant-form-item-explain {
+  .portkey-ant-form {
+    .portkey-ant-form-item-explain {
       line-height: 16px;
       height: 16px;
       margin-top: 4px;
     }
-    .ant-form-item-has-error {
+    .portkey-ant-form-item-has-error {
       padding-bottom: 24px;
-      .ant-form-item-control {
+      .portkey-ant-form-item-control {
         & > div:nth-of-type(2) {
           line-height: 20px;
           height: 20px !important;
@@ -107,78 +117,129 @@
         }
       }
     }
-    .ant-input-affix-wrapper-status-error {
-      border-color: @border-7;
+    .portkey-ant-input-affix-wrapper-status-error {
+      border-color: var(--portkey-ui-border-4);
     }
 
-    .ant-form-item-explain-error {
-      color: @font-14;
+    .portkey-ant-form-item-explain-error {
+      color: var(--portkey-ui-text-error);
       font-size: 12px;
     }
 
-    .ant-form-item {
+    .portkey-ant-form-item {
       margin-bottom: 24px;
     }
-    .ant-form-item-label {
+    .portkey-ant-form-item-label {
       line-height: 22px;
       font-size: 16px;
-      padding-bottom: 16px;
-      color: @font-2;
+      color: var(--portkey-ui-form-label);
     }
-    .ant-form-item-label > label {
-      color: @font-2;
+    .portkey-ant-form-item-label > label {
+      color: var(--portkey-ui-form-label);
       line-height: 22px;
       font-size: 16px;
     }
-    .ant-btn-primary {
-      line-height: 46px;
+    .portkey-ant-btn-primary {
+      line-height: var(--portkey-ui-default-btn-h);
       font-size: 16px;
     }
   }
 
-  .ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless).ant-input,
-  .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(
-      .ant-input-affix-wrapper-borderless
-    ).ant-input-affix-wrapper,
-  .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(
-      .ant-input-affix-wrapper-borderless
-    ).ant-input-affix-wrapper:focus {
-    border-color: #c5cbd5;
+  .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(.portkey-ant-input-borderless).portkey-ant-input,
+  .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
+      .portkey-ant-input-affix-wrapper-borderless
+    ).portkey-ant-input-affix-wrapper,
+  .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
+      .portkey-ant-input-affix-wrapper-borderless
+    ).portkey-ant-input-affix-wrapper:focus {
+    border-color: var(--portkey-ui-input-border);
   }
   // to change  border color of the errored input
-  .ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless).ant-input:hover,
-  .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(
-      .ant-input-affix-wrapper-borderless
-    ).ant-input-affix-wrapper,
-  .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(
-      .ant-input-affix-wrapper-borderless
-    ).ant-input-affix-wrapper:hover {
-    border-color: @border-3 !important;
+  .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(
+      .portkey-ant-input-borderless
+    ).portkey-ant-input:hover,
+  .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
+      .portkey-ant-input-affix-wrapper-borderless
+    ).portkey-ant-input-affix-wrapper,
+  .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
+      .portkey-ant-input-affix-wrapper-borderless
+    ).portkey-ant-input-affix-wrapper:hover {
+    background-color: var(--portkey-ui-input-bg);
+
+    border-color: var(--portkey-ui-primary-border) !important;
   }
 
-  .ant-input-status-error:not(.ant-input-disabled):not(.ant-input-borderless).ant-input:focus,
-  .ant-input-affix-wrapper-status-error:not(.ant-input-affix-wrapper-disabled):not(
-      .ant-input-affix-wrapper-borderless
-    ).ant-input-affix-wrapper-focused {
-    border-color: @border-3 !important;
-    box-shadow: 0 0 0 2px rgb(91 142 244 / 20%);
+  .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(
+      .portkey-ant-input-borderless
+    ).portkey-ant-input:focus,
+  .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
+      .portkey-ant-input-affix-wrapper-borderless
+    ).portkey-ant-input-affix-wrapper-focused {
+    border-color: var(--portkey-ui-primary-border) !important;
+    box-shadow: none;
   }
 
   /* tabs */
-  .ant-tabs-tab.ant-tabs-tab-active .ant-tabs-tab-btn {
-    color: @font-9;
-    .ant-tabs-ink-bar {
-      background: @bg-7;
+
+  .portkey-ant-tabs {
+    color: var(--portkey-ui-text-primary);
+  }
+  .portkey-ant-tabs-tab.portkey-ant-tabs-tab-active .portkey-ant-tabs-tab-btn {
+    color: var(--portkey-ui-font-4);
+    .portkey-ant-tabs-ink-bar {
+      background: var(--portkey-ui-primary-bg);
     }
   }
-  .ant-tabs-tab:hover {
-    color: @font-18;
+  .portkey-ant-tabs-tab:hover {
+    color: var(--portkey-ui-text-hover);
+  }
+
+  /** select */
+  .portkey-ant-select-dropdown {
+    background-color: var(--portkey-ui-select-dropdown-bg);
+  }
+  .portkey-ant-select:not(.portkey-ant-select-customize-input) .portkey-ant-select-selector {
+    background-color: var(--portkey-ui-select-bg);
+    border-color: var(--portkey-ui-input-border);
+  }
+  /* mobile */
+  // password code
+  .adm-passcode-input-cell {
+    background-color: transparent;
   }
 }
 
 @media (max-width: 575px) {
-  .ant-form .ant-form-item .ant-form-item-label,
-  .ant-form .ant-form-item .ant-form-item-control {
+  .portkey-ant-form .portkey-ant-form-item .portkey-ant-form-item-label,
+  .portkey-ant-form .portkey-ant-form-item .portkey-ant-form-item-control {
     flex: 1;
+  }
+}
+
+.portkey-ui-modal-method-wrapper {
+  .portkey-ant-modal-content {
+    border-radius: var(--portkey-ui-border-radius-2);
+    background-color: var(--portkey-ui-default-bg);
+  }
+  .portkey-ant-modal-confirm-content {
+    margin-top: 0;
+  }
+  .portkey-ant-modal-confirm-btns {
+    margin-top: 0;
+    padding: 16px;
+    border-top: 1px solid var(--portkey-ui-default-border);
+    display: flex;
+    .portkey-ant-btn {
+      flex: 1;
+      border-radius: var(--portkey-ui-rounded-full);
+    }
+    .portkey-ant-btn-default {
+      line-height: var(--portkey-ui-default-btn-h);
+      border: 1px solid var(--portkey-ui-primary-border);
+    }
+    .portkey-ant-btn-primary {
+      line-height: var(--portkey-ui-default-btn-h);
+      margin-left: 16px;
+    }
   }
 }

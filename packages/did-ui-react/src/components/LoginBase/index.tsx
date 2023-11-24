@@ -1,10 +1,10 @@
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import LoginBaseCom, { LoginBaseProps } from './index.component';
-import { BaseConfigProvider } from '../config-provider';
 
 export default function LoginBase(props?: LoginBaseProps) {
   return (
-    <BaseConfigProvider>
+    <PortkeyStyleProvider>
       <LoginBaseCom {...props} />
-    </BaseConfigProvider>
+    </PortkeyStyleProvider>
   );
 }

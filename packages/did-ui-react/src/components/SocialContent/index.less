@@ -1,23 +1,22 @@
-@import '../../assets/theme/color.less';
 .social-content-wrapper {
-  .ant-btn-default.social-login-btn {
-    border: 1px solid @border-1;
-    border-radius: 24px;
-    line-height: 46px;
-    color: @font-13;
+  .portkey-ant-btn-default.social-login-btn {
+    border: 1px solid var(--portkey-ui-border-1);
+    border-radius: var(--portkey-ui-primary-border-radius);
+    line-height: var(--portkey-ui-default-btn-h);
+    color: var(--portkey-ui-text-secondary);
     font-size: 14px;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-bottom: 12px;
-    .custom-svg,
-    .custom-svg svg {
+    .portkey-ui-custom-svg,
+    .portkey-ui-custom-svg svg {
       height: 24px;
       width: 24px;
       line-height: 1;
       font-size: 24px;
     }
-    .custom-svg {
+    .portkey-ui-custom-svg {
       margin-right: 12px;
     }
     &:last-of-type {

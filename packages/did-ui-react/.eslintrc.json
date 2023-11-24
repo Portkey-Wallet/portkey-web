@@ -32,7 +32,8 @@
     "@typescript-eslint/explicit-module-boundary-types": 0,
     "@typescript-eslint/ban-types": 0,
     "@typescript-eslint/no-explicit-any": 0,
-    "@typescript-eslint/no-non-null-assertion": 0
+    "@typescript-eslint/no-non-null-assertion": 0,
+    "tsdoc/syntax": 1
   },
   "env": {
     "browser": true,
@@ -44,6 +45,6 @@
     "browser": "readonly"
   },
 
-  "plugins": ["react"],
+  "plugins": ["react", "eslint-plugin-tsdoc"],
   "ignorePatterns": ["dist"]
 }

@@ -7,6 +7,7 @@ import CommonTooltip from '../CommonTooltip/index.component';
 import GuardianItems from './components/GuardianItems';
 import { ChainId } from '@portkey/types';
 import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
+import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
 
 export interface GuardianListProps {
@@ -15,6 +16,7 @@ export interface GuardianListProps {
   guardianList?: UserGuardianStatus[];
   expiredTime?: number;
   isErrorTip?: boolean;
+  operationType?: OperationTypeEnum;
   onError?: OnErrorFunc;
   onConfirm?: () => void;
   onSend?: (item: UserGuardianStatus, index: number) => void;
@@ -26,7 +28,8 @@ function GuardianList({
   className,
   guardianList = [],
   expiredTime,
-  isErrorTip,
+  isErrorTip = true,
+  operationType = OperationTypeEnum.communityRecovery,
   onError,
   onConfirm,
   onSend,
@@ -65,8 +68,8 @@ function GuardianList({
       <div className="guardian-list-content">
         <div className="guardian-list-title">{t('Guardian Approval')}</div>
         <p className="guardian-list-description">{isExpired ? t('Expired') : t('Expire after 1 hour')}</p>
-        <div className="flex-between-center approve-count">
-          <span className="flex-row-center">
+        <div className="portkey-ui-flex-between-center approve-count">
+          <span className="portkey-ui-flex-row-center">
             {t("Guardians' approval")}
             <CommonTooltip
               placement="top"
@@ -85,6 +88,7 @@ function GuardianList({
             <GuardianItems
               chainId={chainId}
               key={item.key}
+              operationType={operationType}
               disabled={alreadyApprovalLength >= approvalLength && item.status !== VerifyStatus.Verified}
               isExpired={isExpired}
               item={item}
@@ -98,7 +102,7 @@ function GuardianList({
             <div className="btn-wrap">
               <Button
                 type="primary"
-                className="recovery-wallet-btn"
+                className="confirm-approve-btn"
                 disabled={alreadyApprovalLength <= 0 || alreadyApprovalLength !== approvalLength}
                 onClick={onConfirm}>
                 {t('Confirm')}

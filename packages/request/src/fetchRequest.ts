@@ -12,7 +12,7 @@ export class FetchRequest implements IBaseRequest {
     const { headers, baseURL, url, method, timeout = DEFAULT_FETCH_TIMEOUT } = this._defaults || {};
 
     const _config = { ...config };
-    _config.headers = _config.headers || headers;
+    _config.headers = { ...headers, ..._config.headers };
     _config.method = _config.method || method;
     _config.url = _config.url || url;
     if (baseURL) _config.url = baseURL + _config.url;

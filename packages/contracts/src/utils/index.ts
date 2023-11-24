@@ -1,32 +1,69 @@
-import { ContractBasic } from '../contractBasic';
 import AElf from 'aelf-sdk';
-import { IBlockchainWallet } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { aelf } from '@portkey/utils';
+import { AElfWallet, TransactionResult } from '@portkey/types';
+
+import {
+  IGetContract,
+  IEOAInstanceOptions,
+  IPortkeyContract,
+  IProviderOptions,
+  ICAInstanceOptions,
+  ContractProps,
+} from '../types';
+import { AElfCAContract } from '../caContract';
+import { ContractBasic } from '../contract';
 
 const methodsMap: { [key: string]: any } = {};
 
-export async function getContractBasic({
-  contractAddress,
-  aelfInstance,
-  account,
-  rpcUrl,
-}: {
-  rpcUrl?: string;
-  contractAddress: string;
-  aelfInstance?: any;
-  account: { address: string } | IBlockchainWallet;
-}) {
+export const getContractBasic: IGetContract['getContractBasic'] = async (
+  options: IProviderOptions | IEOAInstanceOptions | ICAInstanceOptions,
+) => {
+  const { contractAddress, chainType = 'aelf', callType = 'eoa' } = options;
+
+  if (chainType === 'ethereum') throw new Error('Not yet supported');
+
+  // use provider
+  if ('chainProvider' in options) {
+    const { chainProvider } = options;
+    return chainProvider.getContract(contractAddress) as IPortkeyContract;
+  }
+
+  const { aelfInstance, rpcUrl, account } = options;
   let instance = aelfInstance;
   if (rpcUrl) instance = aelf.getAelfInstance(rpcUrl);
   if (!instance) throw new Error('Get instance error');
-  const aelfContract = await instance.chain.contractAt(contractAddress, account);
-  return new ContractBasic({
-    aelfContract,
+
+  const contractOptions: ContractProps = {
+    type: chainType,
     contractAddress,
     aelfInstance: instance,
-    rpcUrl: instance.currentProvider.host,
-  });
+    rpcUrl: (instance as any)?.currentProvider?.host || 'host',
+  };
+
+  // use ca contract
+  if (callType === 'ca') {
+    const { caContractAddress, caHash } = options as ICAInstanceOptions;
+    const [aelfContract, caContract] = await Promise.all([
+      instance.chain.contractAt(contractAddress, account as AElfWallet),
+      instance.chain.contractAt(caContractAddress, account as AElfWallet),
+    ]);
+    return new AElfCAContract({
+      ...contractOptions,
+      caHash,
+      caContract,
+      aelfContract,
+      caContractAddress,
+    });
+  }
+  const aelfContract = await instance.chain.contractAt(contractAddress, account as AElfWallet);
+
+  // use basic contract
+  return new ContractBasic({ ...contractOptions, aelfContract });
+};
+
+export function handleGetTxResult(instance: any) {
+  return instance.getTxResult ? instance.getTxResult : instance.chain.getTxResult;
 }
 
 export async function getTxResult(
@@ -34,17 +71,17 @@ export async function getTxResult(
   TransactionId: string,
   reGetCount = 0,
   notExistedReGetCount = 0,
-): Promise<any> {
-  const txFun = instance.chain.getTxResult;
+): Promise<TransactionResult> {
+  const txFun = handleGetTxResult(instance);
+
   const txResult = await txFun(TransactionId);
-  if (txResult.error && txResult.errorMessage) {
+  if (txResult.error && txResult.errorMessage)
     throw Error(txResult.errorMessage.message || txResult.errorMessage.Message);
-  }
+
   const result = txResult?.result || txResult;
 
-  if (!result) {
-    throw Error('Can not get transaction result.');
-  }
+  if (!result) throw Error('Can not get transaction result.');
+
   const lowerCaseStatus = result.Status.toLowerCase();
 
   if (lowerCaseStatus === 'notexisted') {
@@ -62,17 +99,14 @@ export async function getTxResult(
     return getTxResult(instance, TransactionId, reGetCount, notExistedReGetCount);
   }
 
-  if (lowerCaseStatus === 'mined') {
-    return result;
-  }
-
+  if (lowerCaseStatus === 'mined') return result;
   throw Error(result.Error || `Transaction: ${result.Status}`);
 }
 
 export function handleContractError(error?: any, req?: any) {
   if (typeof error === 'string') return { message: error };
   if (error?.message) return error;
-  if (error.Error) {
+  if (error?.Error) {
     return {
       message: error.Error.Details || error.Error.Message || error.Error || error.Status,
       code: error.Error.Code,
@@ -104,7 +138,7 @@ export const getFileDescriptorsSet = async (instance: any, contractAddress: stri
   return getServicesFromFileDescriptors(fds);
 };
 
-export async function getContractMethods(instance: any, address: any) {
+export async function getContractMethods(instance: any, address: string) {
   const key = instance.currentProvider.host + address;
   if (!methodsMap[key]) {
     const methods = await getFileDescriptorsSet(instance, address);
@@ -130,7 +164,16 @@ export const encodedParams = async (inputType: any, params: any) => {
   return inputType.encode(message).finish();
 };
 
-type HandleContractParamsParams = { paramsOption: any; functionName: string; instance: any };
+export type HandleContractParamsParams = {
+  paramsOption: {
+    contractAddress: string;
+    methodName: string;
+    args: any;
+    caHash: string;
+  };
+  functionName: string;
+  instance: any;
+};
 
 export const handleManagerForwardCall = async ({ paramsOption, instance }: HandleContractParamsParams) => {
   const { contractAddress, methodName, args, caHash } = paramsOption || {};

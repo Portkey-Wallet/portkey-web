@@ -1,4 +1,6 @@
 import {
+  GetRecommendationVerifierParams,
+  VerifierItem,
   IVerificationService,
   SendAppleUserExtraInfoParams,
   SendAppleUserExtraInfoResult,
@@ -9,17 +11,18 @@ import {
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
 } from '../types/verification';
-import { BaseService } from '../types';
+import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
 
 export class Verification<T extends IBaseRequest = IBaseRequest>
   extends BaseService<T>
   implements IVerificationService
 {
-  checkGoogleRecaptcha(): Promise<boolean> {
+  checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/isGoogleRecaptchaOpen',
+      params,
     });
   }
   getVerificationCode(requestParams: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult> {
@@ -58,6 +61,13 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
         ...params,
         accessToken: params.identityToken,
       },
+    });
+  }
+  getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/getVerifierServer',
+      params,
     });
   }
 }

@@ -1,11 +1,9 @@
-@import '../../assets/theme/color.less';
-
 .area-code-wrapper {
   position: absolute;
   width: 100%;
   margin-top: 9px;
-  background: @bg-11;
-  border-radius: 6px;
+  background: var(--portkey-ui-default-bg);
+  border-radius: var(--portkey-ui-border-radius-1);
   z-index: 99;
   height: 300px;
   display: flex;
@@ -14,23 +12,23 @@
   .input-wrapper {
     padding: 16px;
   }
-  .ant-input-affix-wrapper {
+  .portkey-ant-input-affix-wrapper {
     border: none;
   }
   .search-input {
-    background-color: @bg-13;
-    border-radius: 6px;
+    background-color: var(--portkey-ui-bg-6) !important;
+    border-radius: var(--portkey-ui-border-radius-1);
     padding: 7px 8px;
-    .ant-input {
+    .portkey-ant-input {
       background-color: transparent;
-      color: @font-1;
+      color: var(--portkey-ui-input-text);
     }
     .portkey-input-prefix {
       margin-right: 8px;
     }
     .search-svg {
       path {
-        fill: @font-13;
+        fill: var(--portkey-ui-text-secondary);
       }
     }
   }
@@ -41,11 +39,11 @@
     &::-webkit-scrollbar {
       width: 6px;
       height: 10px;
-      border-radius: 5px;
+      border-radius: var(--portkey-ui-border-radius-1);
     }
     &::-webkit-scrollbar-thumb {
-      background-color: @bg-18;
-      border-radius: 8px;
+      background-color: var(--portkey-ui-bg-8);
+      border-radius: var(--portkey-ui-border-radius-2);
     }
   }
   .area-code-item {
@@ -53,32 +51,27 @@
     padding-right: 10px;
     cursor: pointer;
     & > span:first-child {
-      color: @font-11;
+      color: var(--portkey-ui-text-primary);
       font-size: 16px;
       line-height: 22px;
     }
     & > span:last-child {
       font-size: 14px;
       line-height: 20px;
-      color: @font-13;
+      color: var(--portkey-ui-text-secondary);
       text-align: right;
     }
     &:hover {
       & > span {
-        color: @font-9;
+        color: var(--portkey-ui-font-4);
       }
     }
   }
-  // .area-code-item.active-item {
-  //   background-color: @bg-9;
-  //   & > span {
-  //     color: @font-9;
-  //   }
-  // }
+
   .no-search-result {
     margin-top: 72px;
     font-size: 14px;
     line-height: 20px;
-    color: @font-12;
+    color: var(--portkey-ui-text-tip);
   }
 }

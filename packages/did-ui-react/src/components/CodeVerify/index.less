@@ -1,4 +1,4 @@
-@import '../../assets/theme/color.less';
+@import '../../assets/theme/constants.less';
 
 .verifier-account-wrapper {
   height: 100%;
@@ -7,10 +7,10 @@
     border-bottom-right-radius: 9px;
     border-top-left-radius: 9px;
     line-height: 18px;
-    background-color: @bg-4;
+    background-color: var(--portkey-ui-bg-1);
     padding: 0 8px;
     text-align: center;
-    color: @font-8;
+    color: var(--portkey-ui-font-3);
     font-size: 12px;
     margin-bottom: 6px;
   }
@@ -26,20 +26,22 @@
   }
   .login-account {
     line-height: 20px;
-    color: @font-11;
+    color: var(--portkey-ui-text-primary);
     font-size: 14px;
+    word-wrap: break-word;
+    .text-overflow(2);
   }
   .login-account-wrapper {
     padding-bottom: 25px;
     margin-bottom: 24px;
-    border-bottom: 1px solid @border-2;
+    border-bottom: 1px solid var(--portkey-ui-default-border);
   }
   .send-tip {
     line-height: 22px;
-    color: @font-11;
+    color: var(--portkey-ui-text-primary);
     font-size: 16px;
     .account {
-      color: @font-9;
+      color: var(--portkey-ui-font-4);
     }
   }
   .password-wrapper {
@@ -59,12 +61,12 @@
       font-size: 36px;
       line-height: 52px;
       height: 52px;
-      color: @font-11;
+      color: var(--portkey-ui-text-primary);
       font-weight: 500;
     }
     .adm-passcode-input.adm-passcode-input-seperated .adm-passcode-input-cell {
       border: 0;
-      border-bottom: 1px solid @border-2;
+      border-bottom: 1px solid var(--portkey-ui-default-border);
       border-radius: 0;
     }
     .adm-passcode-input.adm-passcode-input-seperated .adm-passcode-input-cell-focused {
@@ -81,7 +83,8 @@
       margin: auto;
       display: block;
       margin-top: 24px;
-      color: @font-9;
+      color: var(--portkey-ui-font-4);
+      background-color: transparent;
       &:hover {
         background-color: transparent;
       }
@@ -90,7 +93,7 @@
         font-size: 14px;
       }
       &.resend-after-btn {
-        color: @font-12;
+        color: var(--portkey-ui-text-tip);
       }
     }
   }

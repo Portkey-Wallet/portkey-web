@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef, useEffect, useMemo } from 'react';
+import { useState, useCallback, useRef, useEffect, useMemo, ReactNode } from 'react';
 import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
 import InputLogin from '../InputLogin';
 import { IPhoneCountry, LoginFinishWithoutPin } from '../types';
@@ -18,7 +18,8 @@ export interface SignUpBaseProps {
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
   wrapperClassName?: string;
-  termsOfServiceUrl?: string;
+  extraElement?: ReactNode; // extra element
+  termsOfService?: ReactNode;
   networkType?: string;
   onLoginByPortkey?: LoginFinishWithoutPin;
   onBack?: () => void;
@@ -32,10 +33,11 @@ export interface SignUpBaseProps {
 export default function SignUpBase({
   socialLogin,
   phoneCountry,
-  isErrorTip,
+  isErrorTip = true,
   networkType,
   wrapperClassName,
-  termsOfServiceUrl,
+  extraElement,
+  termsOfService,
   onBack,
   onError,
   onInputFinish,
@@ -72,13 +74,14 @@ export default function SignUpBase({
       ) : (
         <SocialLogin
           type="Sign up"
-          className="flex-1"
-          termsOfServiceUrl={termsOfServiceUrl}
+          className="portkey-ui-flex-1"
+          extraElement={extraElement}
+          termsOfService={termsOfService}
           isErrorTip={isErrorTip}
           networkType={networkType}
           socialLogin={_socialLogin}
           onFinish={onSocialSignFinish}
-          switchGuardinType={() => setStep(STEP.inputLogin)}
+          switchGuardianType={() => setStep(STEP.inputLogin)}
           onBack={_onBack}
           onError={onError}
           onLoginByPortkey={onLoginByPortkey}

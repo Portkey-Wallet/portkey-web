@@ -1,16 +1,16 @@
-@import '../../assets/theme/color.less';
-
 .login-content {
   flex: 1;
   .login-title {
     text-align: center;
     padding: 24px 0 24px;
     line-height: 28px;
-    color: @font-11;
+    color: var(--portkey-ui-text-primary);
     font-size: 24px;
-    font-weight: 500;
     .backleft-icon {
       cursor: pointer;
+      .arrow-path {
+        fill: var(--portkey-ui-icon-fill);
+      }
     }
     .backleft-icon,
     .empty {
@@ -19,14 +19,14 @@
       display: flex;
     }
   }
-  .custom-svg {
+  .portkey-ui-custom-svg {
     display: flex;
   }
   .qrcode-icon,
   .pc-icon {
     width: 80px;
     height: 80px;
-    border-radius: 8px;
+    border-radius: var(--portkey-ui-icon-b-r-1);
     top: 4px;
     right: 4px;
     cursor: pointer;
@@ -34,11 +34,10 @@
   }
 
   .sign-btn {
-    border-radius: 24px;
-    line-height: 48px;
+    border-radius: var(--portkey-ui-primary-border-radius);
+    line-height: var(--portkey-ui-default-btn-h);
     font-size: 16px;
-    color: @font-9;
-    background-color: @bg-9;
-    border: none;
+    color: var(--portkey-ui-font-4);
+    background-color: var(--portkey-ui-bg-3);
   }
 }

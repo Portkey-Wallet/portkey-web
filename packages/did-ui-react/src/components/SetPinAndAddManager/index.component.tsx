@@ -28,11 +28,11 @@ export default function SetPinAndAddManager({
   type,
   chainId = 'AELF',
   className,
-  isErrorTip,
   onlyGetPin,
   accountType = 'Email',
   guardianIdentifier,
   guardianApprovedList,
+  isErrorTip = true,
   onError,
   onFinish,
   onCreatePending,
@@ -176,7 +176,9 @@ export default function SetPinAndAddManager({
         if (onlyGetPin) return onFinish?.(pin);
         if (!guardianIdentifier) throw 'Missing account!!!';
         did.reset();
-        setLoading(true, 'Creating address on the chain...');
+        const loadingText = type === 'recovery' ? 'Initiating social recovery...' : 'Creating address on the chain...';
+
+        setLoading(true, loadingText);
 
         let walletResult: RegisterResult | LoginResult;
         if (type === 'register') {
@@ -213,14 +215,21 @@ export default function SetPinAndAddManager({
           throw walletResult;
         }
         const wallet = did.didWallet.managementAccount!.wallet;
+        setLoading(false);
         onFinishRef?.current?.({
           caInfo: {
             caAddress: walletResult.status.caAddress,
             caHash: walletResult.status.caHash,
           },
+          accountInfo: {
+            managerUniqueId: walletResult.sessionId,
+            guardianIdentifier,
+            accountType,
+            type,
+          },
           chainId,
           pin,
-          walletInfo: { ...wallet, wallet },
+          walletInfo: wallet,
         });
       } catch (error: any) {
         setLoading(false);
@@ -232,11 +241,19 @@ export default function SetPinAndAddManager({
           isErrorTip,
           onErrorRef.current,
         );
-      } finally {
-        setLoading(false);
       }
     },
-    [onlyGetPin, onFinish, guardianIdentifier, type, isErrorTip, chainId, requestRegisterWallet, requestRecoveryWallet],
+    [
+      onlyGetPin,
+      onFinish,
+      guardianIdentifier,
+      type,
+      accountType,
+      chainId,
+      requestRegisterWallet,
+      requestRecoveryWallet,
+      isErrorTip,
+    ],
   );
 
   return (

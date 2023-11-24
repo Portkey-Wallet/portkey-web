@@ -30,31 +30,35 @@ export class RequestDefaultsConfig {
   public url?: string;
   public method?: HTTPMethod;
   public timeout?: number;
+  public connectUrl?: string;
   constructor(config?: IRequestDefaults) {
     if (config) {
       Object.entries(config).forEach(([key, value]) => {
-        this[key] = value;
+        this[key as keyof IRequestDefaults] = value;
       });
     }
   }
   setConfig(config?: IRequestDefaults) {
     if (config) {
       Object.entries(config).forEach(([key, value]) => {
-        this[key] = value;
+        this[key as keyof IRequestDefaults] = value;
       });
     }
   }
 }
 
 export class DIDConfig implements IDIDConfig {
-  public requestDefaults: IRequestDefaults;
+  public requestDefaults?: IRequestDefaults;
   public requestConfig: RequestDefaultsConfig;
-  public graphQLClient: IGraphQLClient;
+  public connectRequestConfig: RequestDefaultsConfig;
+  public graphQLClient: IGraphQLClient | undefined;
   public graphQLUrl?: string;
+  public connectUrl?: string;
   public storageMethod: StorageConfig;
   constructor(options?: IConfig) {
     this.storageMethod = new StorageConfig();
     this.requestConfig = new RequestDefaultsConfig();
+    this.connectRequestConfig = new RequestDefaultsConfig();
     if (options) this.setConfig(options);
   }
   setConfig(options: IConfig) {
@@ -66,12 +70,20 @@ export class DIDConfig implements IDIDConfig {
           break;
         case 'requestDefaults':
           this.requestConfig.setConfig(value);
+          this.requestDefaults = value;
+          break;
+        case 'connectUrl':
+          this.connectRequestConfig.setConfig({
+            ...this.requestDefaults,
+            ...(options.requestDefaults || {}),
+            baseURL: value,
+          });
           break;
         default:
           if (key === 'graphQLUrl' && typeof value === 'string') {
             this.graphQLClient = getGraphQLClientProvider(value);
           }
-          this[key] = value;
+          this[key as keyof IConfig] = value;
           break;
       }
     });

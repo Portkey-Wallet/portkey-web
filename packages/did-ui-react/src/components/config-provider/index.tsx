@@ -1,7 +1,7 @@
 import { localConfigProvider } from './LocalConfig';
-import _BaseConfigProvider from './BaseConfigProvider';
+import BaseConfigProvider from './BaseConfigProvider';
 
 const ConfigProvider = localConfigProvider;
 
-export const BaseConfigProvider = _BaseConfigProvider;
+export const PortkeyProvider = BaseConfigProvider;
 export default ConfigProvider;

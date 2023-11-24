@@ -1,108 +1,135 @@
-import React, { useEffect, useRef } from 'react';
-import { IStorageSuite } from '@portkey/types';
-import phoneCountry from './phoneCountry.json';
-import { ConfigProvider, SignIn, SignInInterface } from '@portkey/did-ui-react';
+import React, { useEffect, useRef, useState } from 'react';
+import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE } from '@portkey/did-ui-react';
+import { Store } from '../../utils';
+import { ChainId } from '@portkey/types';
+import { sleep } from '@portkey/utils';
 
-export class Store implements IStorageSuite {
-  async getItem(key: string) {
-    return localStorage.getItem(key);
-  }
-  async setItem(key: string, value: string) {
-    return localStorage.setItem(key, value);
-  }
-  async removeItem(key: string) {
-    return localStorage.removeItem(key);
-  }
-}
+const PIN = '111111';
+let CHAIN_ID: ChainId = 'AELF';
 
 const myStore = new Store();
+ConfigProvider.setGlobalConfig({
+  connectUrl: 'https://auth-portkey-test.portkey.finance',
+  storageMethod: myStore,
+  socialLogin: {
+    Portkey: {
+      websiteName: 'website demo',
+      websiteIcon: '',
+    },
+  },
+  requestDefaults: {
+    timeout: 30000,
+  },
+  serviceUrl: 'https://localtest-applesign2.portkey.finance',
+  /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
+  // reCaptchaConfig: {
+  //   siteKey: '',
+  // },
+  graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
+});
 
 export default function Sign() {
+  const ref = useRef<ISignIn>();
+  const [defaultLifeCycle, setLifeCycle] = useState<any>();
+  const [design, setDesign] = useState<TDesign>('Web2Design');
+  const [uiType, setUIType] = useState<UI_TYPE>('Modal');
   useEffect(() => {
-    try {
-      ConfigProvider.setGlobalConfig({
-        storageMethod: myStore,
-        socialLogin: {
-          Apple: {
-            clientId: process.env.NEXT_PUBLIC_APP_APPLE_ID || '',
-            redirectURI: 'https://localtest-applesign.portkey.finance/api/app/appleAuth/bingoReceive' || '',
-          },
-          Google: {
-            clientId: process.env.NEXT_PUBLIC_GG_APP_ID || '',
-          },
-          Portkey: {
-            websiteName: 'website demo',
-            websiteIcon: '',
-          },
-        },
-
-        graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
-        reCaptchaConfig: {
-          siteKey: process.env.NEXT_PUBLIC_GG_RECAPTCHATOKEN_SITE_KEY,
-        },
-        network: {
-          defaultNetwork: 'TESTNET',
-          // networkList: [
-          //   {
-          //     name: 'aelf Testnet',
-          //     walletType: 'aelf',
-          //     networkType: 'TESTNET',
-          //     isActive: true,
-          //     apiUrl: 'http://192.168.66.240:15577',
-          //     graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
-          //     connectUrl: 'http://192.168.66.240:8080',
-          //     tokenClaimContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',
-          //   },
-          //   {
-          //     name: 'aelf Mainnet',
-          //     walletType: 'aelf',
-          //     networkType: 'MAIN',
-          //     isActive: true,
-          //     apiUrl: 'https://did-portkey-test.portkey.finance',
-          //     graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
-          //     connectUrl: 'https://auth-portkey-test.portkey.finance',
-          //     tokenClaimContractAddress: '233wFn5JbyD4i8R5Me4cW4z6edfFGRn5bpWnGuY8fjR7b2kRsD',
-          //   },
-          // ],
-        },
-      });
-    } catch (error) {
-      console.error(error);
-    }
+    typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
   }, []);
-
-  const ref = useRef<SignInInterface>();
 
   return (
     <div>
+      <div>-----------</div>
       <SignIn
         ref={ref}
-        uiType="Modal"
-        className="sign-in"
-        termsOfServiceUrl="https://www.portkey.finance"
-        phoneCountry={{
-          country: 'any',
-          countryList: phoneCountry.countryCode,
-        }}
-        onFinish={res => {
+        design={design}
+        uiType={uiType}
+        extraElement={<div style={{ height: 300, background: 'red' }}></div>}
+        getContainer="#wrapper"
+        isShowScan
+        className="sign-in-wrapper"
+        termsOfService={'https://portkey.finance/terms-of-service'}
+        onFinish={async res => {
           console.log(res, 'onFinish====');
+          CHAIN_ID = res.chainId;
+          did.save(PIN);
         }}
         onError={error => {
           console.log(error, 'onError====error');
         }}
         onCancel={() => {
           ref?.current.setOpen(false);
+          setLifeCycle(undefined);
         }}
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
         }}
+        // defaultLifeCycle={defaultLifeCycle as any}
+        onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
+          console.log(
+            'onLifeCycleChange:',
+            lifeCycle,
+            nextLifeCycleProps,
+            { [lifeCycle]: nextLifeCycleProps },
+            JSON.stringify({ [lifeCycle]: nextLifeCycleProps }),
+          );
+          localStorage.setItem('portkeyLifeCycle', JSON.stringify({ [lifeCycle]: nextLifeCycleProps }));
+        }}
       />
+
       <button
-        onClick={() => {
-          ref?.current.setOpen(true);
+        onClick={async () => {
+          setDesign('CryptoDesign');
+          await sleep(50);
+          ref.current?.setOpen(true);
         }}>
-        setOpen
+        CryptoDesign
       </button>
+      <button
+        onClick={async () => {
+          setDesign('SocialDesign');
+          await sleep(50);
+          ref.current?.setOpen(true);
+        }}>
+        SocialDesign
+      </button>
+      <button
+        onClick={async () => {
+          setDesign('Web2Design');
+          await sleep(50);
+          ref.current?.setOpen(true);
+        }}>
+        Web2Design
+      </button>
+      <div>-----------</div>
+      <button
+        onClick={async () => {
+          setUIType(v => (v === 'Full' ? 'Modal' : 'Full'));
+        }}>
+        setUIType
+      </button>
+
+      <button
+        onClick={async () => {
+          ref.current.setCurrentLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
+        }}>
+        setCurrentLifeCycle
+      </button>
+
+      <div>-----------</div>
+
+      <button
+        onClick={async () => {
+          // Mock pin: 111111
+          const wallet = await did.load(PIN);
+          console.log('wallet:', wallet);
+          // Mock chainId: 'AELF'
+          did.logout({ chainId: CHAIN_ID });
+        }}>
+        logout
+      </button>
+      <div id="wrapper"></div>
+      <div>-----------</div>
     </div>
   );
 }

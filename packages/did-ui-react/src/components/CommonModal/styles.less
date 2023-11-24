@@ -1,32 +1,30 @@
-@import '../../assets/theme/color.less';
-
 .portkey-ui-common-modals {
   line-height: 1.2;
-  .ant-modal-content {
-    border-radius: 8px;
+  .portkey-ant-modal-content {
+    border-radius: var(--portkey-ui-border-radius-2);
     box-shadow: none;
   }
-  .ant-modal-header {
+  .portkey-ant-modal-header {
     border: none;
-    border-radius: 8px;
+    border-radius: var(--portkey-ui-border-radius-2);
     padding: 0;
-    .ant-modal-title {
+    .portkey-ant-modal-title {
       line-height: 22px;
       font-size: 18px;
       padding: 24px 24px 16px;
-      color: @font-10;
+      color: var(--portkey-ui-text-primary);
       font-weight: 400;
     }
   }
-  .ant-modal-body {
+  .portkey-ant-modal-body {
     padding: 0;
     line-height: 20px;
     font-size: 14px;
     .modal-content {
-      color: @font-13;
+      color: var(--portkey-ui-text-secondary);
       padding: 0 24px 24px;
       text-align: center;
-      border-bottom: 1px solid @border-2;
+      border-bottom: 1px solid var(--portkey-ui-default-border);
     }
     .btn-wrapper {
       padding: 15px 16px 17px;
@@ -35,13 +33,13 @@
       column-gap: 16px;
       line-height: 20px;
       button {
-        border-radius: 24px;
-        line-height: 48px;
+        border-radius: var(--portkey-ui-primary-border-radius);
+        line-height: var(--portkey-ui-default-btn-h);
         font-size: 16px;
       }
     }
   }
-  .ant-btn {
-    line-height: 48px;
+  .portkey-ant-btn {
+    line-height: var(--portkey-ui-default-btn-h);
   }
 }

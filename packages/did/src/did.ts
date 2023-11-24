@@ -12,13 +12,16 @@ import {
 } from './types';
 import { DIDWallet } from './wallet';
 import {
-  CommunityRecovery,
   GetCAHolderByManagerResult,
-  ICommunityRecoveryService,
+  Services,
   IHolderInfo,
   RecoverStatusResult,
   RegisterParams,
   RegisterStatusResult,
+  Connect,
+  IConnectService,
+  CAHolderInfo,
+  IServices,
 } from '@portkey/services';
 import { FetchRequest } from '@portkey/request';
 import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
@@ -26,22 +29,37 @@ import { ISignature, IKeyStore, IDIDBaseWallet, IConfig, IBaseRequest, ChainId }
 import { DIDConfig } from './config';
 export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public didWallet: DIDWallet<portkey.WalletAccount>;
-  public services: ICommunityRecoveryService;
+  public services: IServices;
+  public connectServices: IConnectService;
   public config: DIDConfig;
   public didGraphQL: IDIDGraphQL;
   public fetchRequest: IBaseRequest;
+  public connectRequest: IBaseRequest;
+
   public accountProvider: portkey.AccountProvider;
   constructor() {
     this.accountProvider = new portkey.AccountProvider();
     this.config = new DIDConfig();
     this.fetchRequest = new FetchRequest(this.config.requestConfig);
+    this.connectRequest = new FetchRequest(this.config.connectRequestConfig);
     this.didGraphQL = new DIDGraphQL({ config: this.config });
-    this.services = new CommunityRecovery(this.fetchRequest, this.didGraphQL);
+    this.connectServices = new Connect(this.connectRequest);
+    this.services = new Services(this.fetchRequest, this.didGraphQL);
+
     this.didWallet = new DIDWallet({
       accountProvider: this.accountProvider,
-      service: this.services,
+      service: this.services.communityRecovery,
       storage: this.config.storageMethod,
+      connectService: this.connectServices,
     });
+  }
+  public async signTransaction<T extends Record<string, unknown>>(
+    tx: Record<string, unknown>,
+  ): Promise<T & ISignature> {
+    return this.didWallet.signTransaction(tx as any);
+  }
+  getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo> {
+    return this.didWallet.getCAHolderInfo(originChainId);
   }
   async getLoginStatus(params: { chainId: ChainId; sessionId: string }): Promise<RecoverStatusResult> {
     return this.didWallet.getLoginStatus(params);
@@ -74,12 +92,11 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   register(params: Omit<RegisterParams, 'manager'>): Promise<RegisterResult> {
     return this.didWallet.register(params);
   }
-  getHolderInfo(params: Pick<GetHolderInfoParams, 'manager'>): Promise<GetCAHolderByManagerResult>;
+  getHolderInfo(params: Partial<Pick<GetHolderInfoParams, 'manager' | 'chainId'>>): Promise<GetCAHolderByManagerResult>;
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   public async getHolderInfo(params: any): Promise<any> {
     return this.didWallet.getHolderInfo(params);
   }
-  signTransaction: <T extends Record<string, unknown>>(tx: T) => Promise<T & ISignature>;
   sign(data: string): Buffer {
     return this.didWallet.sign(data);
   }

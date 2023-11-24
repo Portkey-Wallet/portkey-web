@@ -1,12 +1,14 @@
 import { Button } from 'antd';
 import { forwardRef, useCallback, useImperativeHandle, useState, useRef, useEffect } from 'react';
-import { CountryItem, ValidatorHandler } from '../../types';
+import { ICountryItem, ValidatorHandler } from '../../types';
 import { handleErrorMessage, setLoading } from '../../utils';
 import PhoneNumberInput from '../PhoneNumberInput';
 import { IPhoneCountry } from '../types';
 import './index.less';
+import clsx from 'clsx';
 
 interface PhoneTabProps {
+  className?: string;
   phoneCountry?: IPhoneCountry;
   countryList?: IPhoneCountry['countryList'];
   confirmText: string;
@@ -14,8 +16,8 @@ interface PhoneTabProps {
   onFinish?: (phoneNumber: { code: string; phoneNumber: string }) => void;
 }
 
-const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: PhoneTabProps, ref) => {
-  const [countryCode, setCountryCode] = useState<CountryItem | undefined>();
+const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, onFinish }: PhoneTabProps, ref) => {
+  const [countryCode, setCountryCode] = useState<ICountryItem | undefined>();
   const [error, setError] = useState<string>();
   const validateRef = useRef<PhoneTabProps['validate']>();
   const onFinishRef = useRef<PhoneTabProps['onFinish']>();
@@ -32,9 +34,9 @@ const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: 
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
   return (
-    <div className="phone-tab-wrapper">
+    <div className={clsx('phone-tab-wrapper', className)}>
       <PhoneNumberInput
-        country={countryCode?.country ?? phoneCountry?.country}
+        iso={countryCode?.iso ?? phoneCountry?.iso}
         countryList={phoneCountry?.countryList}
         phoneNumber={phoneNumber}
         onAreaChange={(v) => {
@@ -54,11 +56,12 @@ const PhoneTab = forwardRef(({ phoneCountry, confirmText, validate, onFinish }: 
         type="primary"
         onClick={async () => {
           try {
-            if (!countryCode?.code) throw Error('Please select a country code');
+            const code = countryCode?.code || phoneCountry?.countryList?.find((v) => v.iso === phoneCountry.iso)?.code;
+            if (!code) throw Error('Please select a country code');
             if (!phoneNumber) throw Error('Please enter a phone number');
-            await validatePhone(`+${countryCode.code} ${phoneNumber}`);
+            await validatePhone(`+${code} ${phoneNumber}`);
             onFinishRef.current?.({
-              code: countryCode.code,
+              code,
               phoneNumber,
             });
           } catch (error) {

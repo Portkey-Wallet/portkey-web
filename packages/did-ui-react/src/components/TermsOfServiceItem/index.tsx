@@ -1,15 +1,22 @@
+import { ReactNode } from 'react';
 import './index.less';
 
 interface TermsOfServiceProps {
-  termsOfServiceUrl?: string;
+  termsOfService?: ReactNode;
 }
-export default function TermsOfServiceItem({ termsOfServiceUrl }: TermsOfServiceProps) {
-  return termsOfServiceUrl ? (
-    <div className="terms-of-service-item">
-      <span>Use the application according to</span>
-      <a href={termsOfServiceUrl} target="_blank" rel="noreferrer" className="terms-text">
-        Terms of service
-      </a>
-    </div>
-  ) : null;
+export default function TermsOfServiceItem({ termsOfService }: TermsOfServiceProps) {
+  return (
+    <>
+      {typeof termsOfService === 'string' ? (
+        <div className="terms-of-service-item">
+          <span>Use the application according to</span>
+          <a href={termsOfService} target="_blank" rel="noreferrer" className="font-medium terms-text">
+            Terms of service
+          </a>
+        </div>
+      ) : (
+        termsOfService
+      )}
+    </>
+  );
 }

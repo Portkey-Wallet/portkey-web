@@ -1,7 +1,16 @@
 {
   "name": "@portkey/did",
-  "version": "0.0.1-alpha.3.3",
+  "version": "1.4.4-alpha.5",
   "description": "",
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
+  },
   "author": "",
   "license": "ISC",
   "publishConfig": {
@@ -17,14 +26,14 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/did"
   },
-  "type": "commonjs",
-  "types": "./dist/index.d.ts",
-  "main": "./dist/index.js",
-  "exports": "./dist/index.js",
   "scripts": {
     "clean": "rm -rf dist",
     "prebuild": "yarn clean",
-    "build": "tsc",
+    "build": "yarn build:cjs & yarn build:esm & yarn build:types",
+    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && yarn esm:fix",
+    "build:types": "tsc --build tsconfig.types.json",
+    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
     "lint": "eslint --ext .js,.ts .",
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
@@ -32,17 +41,18 @@
     "test": "jest"
   },
   "dependencies": {
-    "aelf-sdk": "^3.2.44",
-    "@portkey/types": "^0.0.1-alpha.1.6",
-    "@portkey/request": "^0.0.1-alpha.1.7",
-    "@portkey/accounts": "^0.0.1-alpha.1.6",
-    "@portkey/services": "^0.0.1-alpha.2.3",
-    "@portkey/contracts": "^0.0.1-alpha.1.8",
-    "@portkey/graphql": "^0.0.1-alpha.1.8",
-    "@portkey/utils": "^0.0.1-alpha.1.8",
+    "@portkey/accounts": "^1.4.4-alpha.5",
+    "@portkey/contracts": "^1.4.4-alpha.5",
+    "@portkey/graphql": "^1.4.4-alpha.5",
+    "@portkey/request": "^1.4.4-alpha.5",
+    "@portkey/services": "^1.4.4-alpha.5",
+    "@portkey/types": "^1.4.4-alpha.5",
+    "@portkey/utils": "^1.4.4-alpha.5",
+    "aelf-sdk": "3.2.45-beta.0",
     "react": "^18.2.0"
   },
   "devDependencies": {
     "imap": "^0.8.19"
-  }
+  },
+  "gitHead": "df2d5f465b4d184997734e87625e1e686adb6822"
 }

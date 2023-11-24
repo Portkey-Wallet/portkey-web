@@ -20,11 +20,11 @@ keeping their original UI.
 <h2>📦 Installation</h2>
 
 ```bash
-npm install "@portkey/did-ui-react
+npm install "@portkey/did-ui-react"
 ```
 
 ```bash
-yarn add "@portkey/did-ui-react
+yarn add "@portkey/did-ui-react"
 ```
 
 ## 🔨 Usage
@@ -32,19 +32,26 @@ yarn add "@portkey/did-ui-react
 ```tsx
 import { SignIn , DIDWalletInfo} from '@portkey/did-ui-react';
 import { useState, useEffect, useCallback } from 'react';
+import "@portkey/did-ui-react/dist/assets/index.css";
 
 const App = () => {
-  const [open, setOpen] = useState<boolean>();
-
-  useEffect(() => {
-    setOpen(true);
-  }, []);
+  const ref = useRef<ISignIn>();
 
   const onFinish = useCallback((didWallet: DIDWalletInfo) => {
-    console.log('didWallet:', didWallet)
+    console.log('didWallet:', didWallet);
   }, []);
 
-  return (<SignIn open={open} onFinish={onFinish} />);
+  return (
+    <PortkeyProvider networkType={'TESTNET'}>
+      <button
+        onClick={() => {
+          ref.current?.setOpen(true);
+        }}>
+        Sign In
+      </button>
+      <SignIn ref={ref} onFinish={onFinish} />
+    </PortkeyProvider>
+  );
 };
 
 ```
@@ -56,13 +63,13 @@ please configure your provider address using ```ConfigProvider.setGlobalConfig``
 
 ```tsx
 
-import {ConfigProvider} from '@portkey/did-ui-react';
+import { ConfigProvider } from '@portkey/did-ui-react';
 
 ConfigProvider.setGlobalConfig({
   requestDefaults: {
     baseURL: 'http://localhost:3000',
   },
-  graphQLUrl: 'http://localhost:3000/graphQL'
+  graphQLUrl: 'http://localhost:3000/graphQL',
 });
 
 ```
@@ -83,6 +90,26 @@ ConfigProvider.setGlobalConfig({
   storageMethod: new IStorageSuite()
 })
 
+```
+
+### Example
+
+[Bingogame](https://bingogame-pro.portkey.finance/)
+
+[Bingogame Github](https://github.com/Portkey-Wallet/portkey-bingo-game)
+
+You can also use the ```next-example``` in the current project. [next-example](../next-example/src/pages/sign/index.tsx)
+
+```bash
+  yarn next-example dev
+```
+
+or
+
+You can also use the ```example``` in the current project. [example](../example/src/index.tsx)
+
+```bash
+ yarn example dev
 ```
 
 ### TypeScript
