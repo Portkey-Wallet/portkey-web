@@ -338,6 +338,128 @@ class FetchRequestMock {
           totalRecordCount: 1,
         };
         break;
+      case '/api/app/user/assets/searchUserAssets':
+        result = {
+          data: [
+            {
+              chainId: 'AELF',
+              symbol: 'ELF',
+              address: 'address_mock',
+              tokenInfo: {
+                balance: '100000000',
+                decimals: '8',
+                balanceInUsd: '1',
+                tokenContractAddress: 'tokenContractAddress_mock',
+              },
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
+
+      // activity
+      case '/api/app/user/activities/activities':
+      case '/api/app/user/activities/transactions':
+        result = {
+          data: [
+            {
+              transactionType: 'Transfer',
+              from: 'from_mock',
+              to: 'to_mock',
+              fromAddress: 'fromAddress_mock',
+              toAddress: 'toAddress_mock',
+              fromChainId: 'AELF',
+              toChainId: 'AELF',
+              status: 'status_mock',
+              transactionId: 'transactionId_mock',
+              blockHash: 'blockHash_mock',
+              timestamp: 'timestamp_mock',
+              isReceived: true,
+              amount: '100000000',
+              symbol: 'ELF',
+              transactionFees: [
+                {
+                  symbol: 'ELF',
+                  fee: 0.01,
+                  feeInUsd: '0.01',
+                  decimals: '8',
+                },
+              ],
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
+      case '/api/app/user/activities/activity':
+        result = {
+          transactionType: 'Transfer',
+          from: 'from_mock',
+          to: 'to_mock',
+          fromAddress: 'fromAddress_mock',
+          toAddress: 'toAddress_mock',
+          fromChainId: 'AELF',
+          toChainId: 'AELF',
+          status: 'status_mock',
+          transactionId: 'transactionId_mock',
+          blockHash: 'blockHash_mock',
+          timestamp: 'timestamp_mock',
+          isReceived: true,
+          amount: '100000000',
+          symbol: 'ELF',
+          transactionFees: [
+            {
+              symbol: 'ELF',
+              fee: 0.01,
+              feeInUsd: '0.01',
+              decimals: '8',
+            },
+          ],
+        };
+        break;
+
+      // security
+      case '/api/app/user/security/balanceCheck':
+        result = {
+          isSafe: true,
+        };
+        break;
+      case '/api/app/user/security/transferLimit':
+        result = {
+          data: [
+            {
+              chainId: 'AELF',
+              symbol: 'ELF',
+              singleLimit: '100000000',
+              dailyLimit: '100000000',
+              restricted: true,
+              decimals: '8',
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
+
+      // transaction
+      case '/api/app/user/assets/recentTransactionUsers':
+        result = {
+          data: [
+            {
+              chainId: 'AELF',
+              caAddress: 'caAddress_mock',
+              address: 'address_mock',
+              addressChainId: 'AELF',
+              transactionTime: 'transactionTime_mock',
+              addresses: [
+                {
+                  chainId: 'AELF',
+                  address: 'address_mock',
+                },
+              ],
+            },
+          ],
+          totalRecordCount: 1,
+        };
+        break;
 
       default:
         break;
