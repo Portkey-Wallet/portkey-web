@@ -28,8 +28,8 @@ export interface IActivityApiParams {
 export interface IActivityListWithAddressApiParams {
   maxResultCount: number;
   skipCount: number;
-  caAddressInfos: CaAddressInfosType[];
-  targetAddressInfos: CaAddressInfosType[];
+  caAddressInfos: CaAddressInfosType;
+  targetAddressInfos: CaAddressInfosType;
 }
 
 export type IActivityService = {

@@ -45,14 +45,18 @@ describe('aelf describe', () => {
     } catch (error) {
       expect(error).not.toBeUndefined();
     }
+
     try {
       await encodedTx({
-        instance: { chain: { getChainStatus: () => undefined } },
+        instance: {
+          chain: {
+            getChainStatus: () => undefined,
+          },
+        },
         functionName: 'Transfer',
         paramsOption: {
           symbol: 'ELF',
-          amount: 1,
-          to: 'soAcchsFZGEsFeaEsk9tyMnFauPgJfMyZMRrfcntGjrtC7YvE',
+          owner: 'soAcchsFZGEsFeaEsk9tyMnFauPgJfMyZMRrfcntGjrtC7YvE',
         },
         contract,
       });
