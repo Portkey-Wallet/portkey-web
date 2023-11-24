@@ -1,8 +1,26 @@
-import { useState, useCallback, ReactNode, useRef, useEffect, memo, forwardRef } from 'react';
+import {
+  useState,
+  useCallback,
+  ReactNode,
+  useRef,
+  useEffect,
+  memo,
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+} from 'react';
+import type { SetStateAction, Dispatch } from 'react';
 import clsx from 'clsx';
 import GuardianList from '../GuardianList/index.component';
 import VerifierPage from './components/VerifierPage';
-import { errorTip, handleErrorMessage, handleVerificationDoc, setLoading } from '../../utils';
+import {
+  errorTip,
+  getAlreadyApprovalLength,
+  getApprovalCount,
+  handleErrorMessage,
+  handleVerificationDoc,
+  setLoading,
+} from '../../utils';
 import type { ChainId } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
 import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
@@ -25,8 +43,12 @@ export interface GuardianApprovalProps {
   wrapperStyle?: React.CSSProperties;
   operationType?: OperationTypeEnum;
   onError?: OnErrorFunc;
-  onConfirm?: (guardianList: GuardiansApproved[]) => void;
+  onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
+}
+
+export interface IGuardianApprovalInstance {
+  setVerifyAccountIndex: Dispatch<SetStateAction<number | undefined>>;
 }
 
 const GuardianApproval = forwardRef(
@@ -43,7 +65,6 @@ const GuardianApproval = forwardRef(
       onConfirm,
       onGuardianListChange,
     }: GuardianApprovalProps,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
   ) => {
     const [verifyAccountIndex, setVerifyAccountIndex] = useState<number | undefined>();
@@ -56,6 +77,8 @@ const GuardianApproval = forwardRef(
       onErrorRef.current = onError;
       onConfirmRef.current = onConfirm;
     });
+
+    useImperativeHandle(ref, () => ({ setVerifyAccountIndex }));
 
     useUpdateEffect(() => {
       onGuardianListChange?.(guardianList);
@@ -205,17 +228,26 @@ const GuardianApproval = forwardRef(
       [],
     );
 
-    const onConfirmHandler = useCallback(() => {
-      const verificationList = guardianList
-        .filter((item) => Boolean(item.signature && item.verificationDoc))
-        .map((item) => ({
-          type: item.guardianType,
-          identifier: item.identifier || item.identifierHash || '',
-          verifierId: item.verifier?.id || '',
-          verificationDoc: item.verificationDoc || '',
-          signature: item.signature || '',
-        }));
-      onConfirmRef.current?.(verificationList);
+    const onConfirmHandler = useCallback(async () => {
+      setFetching(true);
+      try {
+        const verificationList = guardianList
+          .filter((item) => Boolean(item.signature && item.verificationDoc))
+          .map((item) => ({
+            type: item.guardianType,
+            identifier: item.identifier || item.identifierHash || '',
+            verifierId: item.verifier?.id || '',
+            verificationDoc: item.verificationDoc || '',
+            signature: item.signature || '',
+          }));
+        await onConfirmRef.current?.(verificationList);
+        setFetching(false);
+      } catch (error) {
+        console.error(handleErrorMessage(error));
+        setFetching(false);
+      }
+
+      setFetching(false);
     }, [guardianList]);
 
     const onReSendVerifyHandler = useCallback(({ verifierSessionId }: TVerifyCodeInfo, verifyAccountIndex: number) => {
@@ -229,6 +261,19 @@ const GuardianApproval = forwardRef(
         return list;
       });
     }, []);
+
+    const approvalLength = useMemo(() => getApprovalCount(guardianList.length), [guardianList.length]);
+
+    const alreadyApprovalLength = useMemo(() => getAlreadyApprovalLength(guardianList), [guardianList]);
+
+    const [isFetching, setFetching] = useState<boolean>(false);
+
+    useUpdateEffect(() => {
+      const disabled = alreadyApprovalLength <= 0 || alreadyApprovalLength !== approvalLength;
+      if (!disabled) {
+        onConfirmHandler();
+      }
+    }, [approvalLength, alreadyApprovalLength]);
 
     return (
       <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
@@ -255,6 +300,9 @@ const GuardianApproval = forwardRef(
               chainId={chainId}
               expiredTime={expiredTime}
               operationType={operationType}
+              isFetching={isFetching}
+              approvalLength={approvalLength}
+              alreadyApprovalLength={alreadyApprovalLength}
               guardianList={guardianList}
               isErrorTip={isErrorTip}
               onSend={onSendCodeHandler}

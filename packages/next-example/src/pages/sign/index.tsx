@@ -45,6 +45,7 @@ export default function Sign() {
     <div>
       <div>-----------</div>
       <SignIn
+        pin={'23aa'}
         ref={ref}
         design={design}
         uiType={uiType}
@@ -128,7 +129,8 @@ export default function Sign() {
           const wallet = await did.load(PIN);
           console.log('wallet:', wallet);
           // Mock chainId: 'AELF'
-          did.logout({ chainId: CHAIN_ID });
+          const result = await did.logout({ chainId: CHAIN_ID }, { onMethod: 'transactionHash' });
+          console.log(result, 'logout====');
         }}>
         logout
       </button>

@@ -14,11 +14,11 @@ export default function AppleAuth() {
             action: 'login',
             custom: {},
             onStatusChange: status => {
-              message.error(status);
+              singleMessage.error(status);
               setStatus(status);
             },
           });
-          message.warning('evokePortkeyApp');
+          singleMessage.warning('evokePortkeyApp');
         }}>
         evokePortkeyApp
       </button>
@@ -27,7 +27,7 @@ export default function AppleAuth() {
       <button
         onClick={async () => {
           const result = await evokePortkey.extension();
-          // message.error(navigator.userAgent);
+          // singleMessage.error(navigator.userAgent);
           console.log(result, '=result==');
         }}>
         extension
@@ -36,7 +36,7 @@ export default function AppleAuth() {
       <button
         onClick={async () => {
           const result = await evokePortkey.thirdParty();
-          // message.error(navigator.userAgent);
+          // singleMessage.error(navigator.userAgent);
           console.log(result, '=result==');
         }}>
         thirdParty
