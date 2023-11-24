@@ -28,11 +28,23 @@ ConfigProvider.setGlobalConfig({
 function Example() {
   const [isLoading, setLoading] = useState<any>();
   const ref = useRef<ISignIn>();
-
+  const [visible, setVisible] = useState<boolean>();
+  const [val, setVal] = useState<string>('');
+  console.log(visible, 'visible===');
   return (
     <div>
       <div id="wrapper"></div>
-
+      <div>----------</div>
+      <button
+        onClick={() => {
+          setVisible(v => !v);
+        }}>
+        PortkeyNumberKeyboard
+      </button>
+      <div>----------</div>
+      PortkeyNumberKeyboard input: &nbsp;{val}
+      <PortkeyNumberKeyboard visible={visible} onInput={v => setVal(_v => _v + v)} onDelete={() => setVal('')} />
+      <div>----------</div>
       <SignIn
         ref={ref}
         uiType="Modal"
@@ -53,7 +65,6 @@ function Example() {
           console.log(info, 'onCreatePending====info');
         }}
       />
-
       <CommonModal
         type="modal"
         closable={false}
@@ -70,7 +81,6 @@ function Example() {
           </Button> */}
         </div>
       </CommonModal>
-
       <button
         onClick={() => {
           ref.current?.setOpen(true);
@@ -83,7 +93,6 @@ function Example() {
         }}>
         ShowLoading
       </button>
-
       {/* <PortkeyLoading
         loading={isLoading}
         loadingText={'Synchronizing on-chain account information...'}
