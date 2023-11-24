@@ -1,6 +1,6 @@
 import { ConfigProvider } from 'antd';
-import React from 'react';
+import { PORTKEY_PREFIX_CLS } from '../../constants';
 
 export default function PortkeyStyleProvider({ children }: { children: React.ReactNode }) {
-  return <ConfigProvider prefixCls="portkey-ant">{children}</ConfigProvider>;
+  return <ConfigProvider prefixCls={PORTKEY_PREFIX_CLS}>{children}</ConfigProvider>;
 }

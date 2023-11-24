@@ -37,7 +37,6 @@ import { useHandleAchSell } from './hooks';
 import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
 import { usePortkey } from '../context';
 import { fetchTxFeeAsync } from '../../request/token';
-import { getChain } from '../../hooks/useChainInfo';
 import singleMessage from '../CustomAnt/message';
 
 export default function RampMain({
@@ -47,7 +46,6 @@ export default function RampMain({
   isMainnet,
   isBuySectionShow = true,
   isSellSectionShow = true,
-  isShowSelectInModal = true,
   goBack,
   goPreview,
 }: IRampProps) {
@@ -551,7 +549,6 @@ export default function RampMain({
             curToken={curToken}
             errMsg={errMsg}
             fiatList={buyFiatList}
-            isShowSelectInModal={isShowSelectInModal}
           />
         )}
         {page === RampTypeEnum.SELL && (
@@ -569,7 +566,6 @@ export default function RampMain({
             errMsg={errMsg}
             warningMsg={warningMsg}
             fiatList={sellFiatList}
-            isShowSelectInModal={isShowSelectInModal}
           />
         )}
         {rate !== '' && renderRate}

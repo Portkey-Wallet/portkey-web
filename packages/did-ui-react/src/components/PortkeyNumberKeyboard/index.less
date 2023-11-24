@@ -1,0 +1,31 @@
+.portkey-ui-number-keyboard-wrapper {
+  padding: 14px;
+  background-color: var(--portkey-ui-keyboard-bg);
+  .adm-number-keyboard-key {
+    border: none;
+    height: 56px;
+    .antd-mobile-icon {
+      // color: var(--portkey-ui-font-7);
+      font-size: 24px;
+      width: 24px;
+      height: 24px;
+    }
+  }
+  .adm-number-keyboard-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 8px;
+  }
+  .adm-number-keyboard-key.adm-number-keyboard-key-extra,
+  .adm-number-keyboard-key.adm-number-keyboard-key-number {
+    background-color: var(--portkey-ui-keyboard-bg);
+    border-radius: 6px;
+    &::before {
+      background-color: transparent;
+    }
+    &:active,
+    &:focus {
+      background-color: var(--portkey-ui-keyboard-active-bg);
+    }
+  }
+}

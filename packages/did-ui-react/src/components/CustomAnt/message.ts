@@ -1,4 +1,4 @@
-import { PORTKEY_PREFIX_CLS } from '../../constants';
+import { PORTKEY_PREFIX_CLS, PORTKEY_ROOT_ID } from '../../constants';
 import { messagePrefixCls } from './constants';
 import message, { ArgsProps, MessageApi, MessageInstance, typeList } from './antd/message';
 import { randomId } from '../../utils';
@@ -9,7 +9,7 @@ const singleMessage = {} as Omit<MessageApi, 'useMessage'>;
 const defaultMessageArgs: Partial<ArgsProps> = {
   prefixCls: messagePrefixCls,
   rootPrefixCls: PORTKEY_PREFIX_CLS,
-  getPopupContainer: () => document.getElementById('portkey-ui-root') || document.getElementsByName('body')[0],
+  getPopupContainer: () => document.getElementById(PORTKEY_ROOT_ID) || document.getElementsByName('body')[0],
 };
 
 function isArgsProps(content: Parameters<MessageInstance['success']>[0]): content is ArgsProps {
@@ -46,7 +46,6 @@ typeList.forEach((type) => {
       : {
           content: _content,
         };
-    console.log(content.content, 'content.content==');
     message.destroy(content.content as any);
 
     return message[type](setDefaultArgs(content, defaultMessageArgs), params[1], params[2]);

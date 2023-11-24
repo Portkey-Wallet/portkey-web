@@ -1,11 +1,11 @@
 import classNames from 'classnames';
 import { ConfigProvider } from 'antd';
 import ActionButton from 'antd/lib/_util/ActionButton';
-import { getTransitionName } from '../../_util/motion';
 import warning from 'antd/lib/_util/warning';
 import type { ModalFuncProps } from 'antd';
 import Dialog from './Modal';
 import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../../constants';
+import { getTransitionName } from 'antd/lib/_util/motion';
 
 interface ConfirmDialogProps extends ModalFuncProps {
   afterClose?: () => void;

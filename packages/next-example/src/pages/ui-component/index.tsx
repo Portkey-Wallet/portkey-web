@@ -5,6 +5,9 @@ import {
   CommonBaseModal,
   portkeyNotification,
   modalMethod,
+  Drawer,
+  PortkeyModal,
+  PhoneNumberInput,
 } from '@portkey/did-ui-react';
 import { message, ConfigProvider, Modal, notification } from 'antd';
 import { useState } from 'react';
@@ -16,7 +19,7 @@ ConfigProvider.config({
 export default function UI() {
   const [openModal, setOpenModal] = useState<boolean>();
   const [antModal, setAntModal] = useState<boolean>();
-
+  console.log(openModal, 'openModal===');
   return (
     <div>
       <div>-----</div>
@@ -27,7 +30,7 @@ export default function UI() {
               prefixCls: 'portkey-ant',
             });
           } catch (error) {
-            message.error(handleErrorMessage(error));
+            singleMessage.error(handleErrorMessage(error));
           }
         }}>
         prefixCls: portkey-ant
@@ -39,7 +42,7 @@ export default function UI() {
               prefixCls: 'ant',
             });
           } catch (error) {
-            message.error(handleErrorMessage(error));
+            singleMessage.error(handleErrorMessage(error));
           }
         }}>
         prefixCls: ant
@@ -81,6 +84,64 @@ export default function UI() {
           <div>--------</div>
         </Modal>
         <div>--------</div>
+
+        {/* <CommonBaseModal
+          prefixCls="portkey-ant-modal"
+          open={openModal}
+          closable
+          afterClose={() => {
+            console.log(openModal, 'afterClose afterOpenChange');
+          }}
+          onCancel={() => {
+            console.log('onCancel===', openModal);
+            setOpenModal(false);
+          }}>
+          <div>--------</div>
+          <div>--------</div>
+          <div>--------</div>
+          CommonBaseModal
+          <div>--------</div>
+          <div>--------</div>
+          <div>--------</div>
+        </CommonBaseModal> */}
+
+        {/* <Drawer
+          title="Basic Drawer"
+          placement={'bottom'}
+          height={300}
+          closable={false}
+          onClose={() => setOpenModal(false)}
+          afterOpenChange={open => {
+            console.log(open, openModal, 'afterOpenChange=--');
+          }}
+          open={openModal}
+          key={'placement'}>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+        </Drawer> */}
+
+        <PortkeyModal
+          // type="drawer"
+          height={800}
+          placement={'bottom'}
+          open={openModal}
+          title="PORTKEY MODAL"
+          onClose={() => setOpenModal(false)}
+          footer={null}
+          afterOpenChange={open => {
+            console.log(open, openModal, 'afterOpenChange=PortkeyModal');
+          }}>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <p>Some contents...</p>
+          <button
+            onClick={() => {
+              singleMessage.error('afterOpenChange message');
+            }}>
+            btn
+          </button>
+        </PortkeyModal>
 
         <PortkeyStyleProvider>
           <button
@@ -145,23 +206,6 @@ export default function UI() {
             }}>
             modalMethod
           </button>
-
-          <CommonBaseModal
-            prefixCls="portkey-ant-modal"
-            open={openModal}
-            closable
-            onCancel={() => {
-              console.log('onCancel===', openModal);
-              setOpenModal(false);
-            }}>
-            <div>--------</div>
-            <div>--------</div>
-            <div>--------</div>
-            CommonBaseModal
-            <div>--------</div>
-            <div>--------</div>
-            <div>--------</div>
-          </CommonBaseModal>
         </PortkeyStyleProvider>
       </ConfigProvider>
     </div>

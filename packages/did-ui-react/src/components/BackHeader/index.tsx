@@ -14,7 +14,6 @@ export default function BackHeader({
     () => (
       <div className="portkey-ui-flex-row-center default-left-ele">
         <CustomSvg type="BackLeft" className="left-arrow" />
-        <span>Back</span>
       </div>
     ),
     [],

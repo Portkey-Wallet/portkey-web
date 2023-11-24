@@ -7,6 +7,7 @@
     flex-direction: column;
   }
   .guardian-list-description {
+    font-size: 16px;
     margin-bottom: 42px;
     text-align: center;
     color: var(--portkey-ui-text-primary);
@@ -147,8 +148,11 @@
 @media screen and (max-width: @screen-max-w-768) {
   .guardian-list-wrapper {
     .guardian-list-title {
-      font-size: 32px;
-      line-height: 38px;
+      font-size: var(--portkey-ui-title-text-2);
+      margin-bottom: 8px;
+    }
+    .guardian-list-description {
+      font-size: 14px;
     }
   }
 }

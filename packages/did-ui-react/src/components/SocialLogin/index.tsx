@@ -9,10 +9,12 @@ import SocialContent from '../SocialContent';
 import TermsOfServiceItem from '../TermsOfServiceItem';
 import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import './index.less';
+import TitleWrapper from '../TitleWrapper';
 
 interface SocialLoginProps {
   type: RegisterType;
   theme?: Theme;
+  isMobile?: boolean;
   className?: string;
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
@@ -36,6 +38,7 @@ export default function SocialLogin({
   isShowScan,
   isErrorTip = true,
   socialLogin,
+  isMobile = false,
   networkType,
   extraElement,
   termsOfService,
@@ -62,13 +65,28 @@ export default function SocialLogin({
 
   return (
     <>
-      <div className={clsx('portkey-ui-flex-column', 'social-login-wrapper', className)}>
+      <div
+        className={clsx(
+          'portkey-ui-flex-column',
+          'social-login-wrapper',
+          isMobile && 'social-login-mobile-wrapper',
+          className,
+        )}>
         <h1 className="portkey-ui-flex-between-center font-medium social-login-title">
           {!isLogin && <CustomSvg type="BackLeft" onClick={onBackRef?.current} />}
           {isLogin && <span></span>}
-          <span className="title">{t(type)}</span>
+          <div className={clsx('title')}>
+            {isMobile ? (
+              <>
+                <CustomSvg type="Portkey" style={{ width: '56px', height: '56px' }} />
+                {t(type)}
+              </>
+            ) : (
+              t(type)
+            )}
+          </div>
           {isLogin && isShowScan && <CustomSvg type="QRCode" onClick={() => switchTypeRef?.current?.('LoginByScan')} />}
-          {!isLogin && <span className="empty"></span>}
+          {!isLogin && !isMobile && <span className="empty"></span>}
         </h1>
         <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
           <SocialContent

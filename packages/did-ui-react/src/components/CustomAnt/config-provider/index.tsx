@@ -11,19 +11,13 @@ import defaultLocale from 'antd/lib/locale/default';
 import message from '../message';
 import notification from '../notification';
 import type { Theme } from 'antd/lib/config-provider/context';
-import {
-  ConfigConsumer,
-  ConfigConsumerProps,
-  ConfigContext,
-  CSPConfig,
-  DirectionType,
-} from 'antd/lib/config-provider/context';
+import { ConfigContext, ConfigConsumer, ConfigConsumerProps, CSPConfig, DirectionType } from './context';
 import { registerTheme } from 'antd/lib/config-provider/cssVariables';
 import { RenderEmptyHandler } from 'antd/lib/config-provider/defaultRenderEmpty';
 import { DisabledContextProvider } from 'antd/lib/config-provider/DisabledContext';
 import type { SizeType } from 'antd/lib/config-provider/SizeContext';
 import SizeContext, { SizeContextProvider } from 'antd/lib/config-provider/SizeContext';
-import { PORTKEY_PREFIX_CLS } from '../../../constants';
+import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../constants';
 import ValidateMessagesContext from './ValidateMessagesContext';
 
 export { ConfigContext, ConfigConsumer };
@@ -91,7 +85,7 @@ interface ProviderChildrenProps extends ConfigProviderProps {
 }
 
 export const defaultPrefixCls = PORTKEY_PREFIX_CLS;
-export const defaultIconPrefixCls = 'anticon';
+export const defaultIconPrefixCls = PORTKEY_ICON_PREFIX_CLS;
 let globalPrefixCls: string;
 let globalIconPrefixCls: string;
 
@@ -175,7 +169,8 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
 
       return suffixCls ? `${mergedPrefixCls}-${suffixCls}` : mergedPrefixCls;
     },
-    [parentContext, props],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [parentContext.getPrefixCls, props.prefixCls],
   );
 
   const config = {
@@ -202,6 +197,7 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
   // https://github.com/ant-design/ant-design/issues/27617
   const memoedConfig = useMemo(
     () => config,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     config,
     (prevConfig, currentConfig) => {
       const prevKeys = Object.keys(prevConfig) as Array<keyof typeof config>;
@@ -219,7 +215,7 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
       merge(
         defaultLocale.Form?.defaultValidateMessages || {},
         memoedConfig.locale?.Form?.defaultValidateMessages || {},
-        (memoedConfig.form as any)?.validateMessages || {},
+        memoedConfig.form?.validateMessages || {},
         form?.validateMessages || {},
       ),
     [memoedConfig, form?.validateMessages],
@@ -247,7 +243,7 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
     childNode = <DisabledContextProvider disabled={componentDisabled}>{childNode}</DisabledContextProvider>;
   }
 
-  return <ConfigContext.Provider value={memoedConfig as any}>{childNode}</ConfigContext.Provider>;
+  return <ConfigContext.Provider value={memoedConfig as ConfigConsumerProps}>{childNode}</ConfigContext.Provider>;
 };
 
 const ConfigProvider: React.FC<ConfigProviderProps> & {
@@ -277,6 +273,7 @@ const ConfigProvider: React.FC<ConfigProviderProps> & {
   );
 };
 
+// eslint-disable-next-line tsdoc/syntax
 /** @private internal Usage. do not use in your production */
 ConfigProvider.ConfigContext = ConfigContext;
 ConfigProvider.SizeContext = SizeContext;

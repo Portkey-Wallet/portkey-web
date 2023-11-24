@@ -4,13 +4,14 @@ import { notificationPrefixCls } from './constants';
 import { randomId } from '../../utils';
 import { renderToString } from 'react-dom/server';
 import { ReactElement } from 'react';
+import { PORTKEY_ROOT_ID } from '../../constants';
 const portkeyNotification = { ...notification };
 
 const methods = ['success', 'info', 'warning', 'error', 'open', 'warn'] as const;
 
 const defaultNotificationArgs: Partial<ArgsProps> = {
   prefixCls: notificationPrefixCls,
-  getContainer: () => document.getElementById('portkey-ui-root') || document.getElementsByName('body')[0],
+  getContainer: () => document.getElementById(PORTKEY_ROOT_ID) || document.getElementsByName('body')[0],
 };
 
 function setDefaultArgs(originalArgs: ArgsProps, defaultArgs: Partial<ArgsProps> = {}): ArgsProps {

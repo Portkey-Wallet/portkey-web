@@ -5,7 +5,6 @@
  * First you have to configure networkList using ConfigProvider.setGlobalConfig
  */
 
-import BaseModal from '../SignStep/components/BaseModal';
 import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import Step1, { OnSignInFinishedFun } from '../SignStep/components/Step1';
 import Step2OfSignUp from '../SignStep/components/Step2OfSignUp';
@@ -32,10 +31,12 @@ import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
 import { sleep } from '@portkey/utils';
+import CommonBaseModal from '../CommonBaseModal';
+import { PORTKEY_ROOT_ID } from '../../constants';
 import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
-import './index.less';
 import useLoginWallet from '../../hooks/useLoginWallet';
+import './index.less';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -626,14 +627,14 @@ const SignIn = forwardRef(
             <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
           </Container>
         ) : (
-          <BaseModal
+          <CommonBaseModal
             destroyOnClose
             className={className}
             open={open}
-            getContainer={getContainer ? getContainer : '#portkey-ui-root'}
-            onCancel={onModalCancel}>
+            getContainer={getContainer ? getContainer : `#${PORTKEY_ROOT_ID}`}
+            onClose={onModalCancel}>
             {mainContent()}
-          </BaseModal>
+          </CommonBaseModal>
         )}
       </PortkeyStyleProvider>
     );

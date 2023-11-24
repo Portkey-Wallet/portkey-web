@@ -49,7 +49,7 @@ export default function CustomAssetModal({
   );
 
   return (
-    <AssetModal {...props} maskClosable={false} onCancel={onCancel}>
+    <AssetModal {...props} onClose={onCancel}>
       <div className="portkey-ui-flex-column portkey-ui-custom-token-list">
         <TitleWrapper
           className="custom-token-header"

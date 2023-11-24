@@ -10,6 +10,7 @@ import './index.less';
 export interface LoginBaseProps {
   theme?: Theme;
   isShowScan?: boolean;
+  isMobile?: boolean;
   termsOfService?: ReactNode;
   extraElement?: ReactNode; // extra element
   phoneCountry?: IPhoneCountry;
@@ -31,6 +32,7 @@ enum STEP {
 }
 export default function LoginCard({
   theme,
+  isMobile,
   isShowScan,
   phoneCountry,
   isErrorTip = true,
@@ -64,6 +66,7 @@ export default function LoginCard({
       ) : (
         <SocialLogin
           theme={theme}
+          isMobile={isMobile}
           className="portkey-ui-flex-1"
           type="Login"
           networkType={networkType}

@@ -70,7 +70,7 @@ function Step3({
         'Missing `guardianIdentifierInfo`, please check params'
       )}
       <CommonModal
-        closable={false}
+        type="modal"
         open={returnOpen}
         className="confirm-return-modal"
         title={'Leave this page?'}

@@ -56,9 +56,10 @@ export { default as AssetOverview } from './AssetOverview';
 export { default as ReceiveCard } from './ReceiveCard';
 export { default as Transaction } from './Transaction';
 export { default as CommonBaseModal } from './CommonBaseModal';
+export { default as PortkeyModal } from './PortkeyModal';
+export { default as PortkeyNumberKeyboard } from './PortkeyNumberKeyboard';
 
-export { default as singleMessage } from './CustomAnt/message';
-export { default as portkeyNotification } from './CustomAnt/notification';
+export * from './CustomAnt';
 
 export * from './context/PortkeyAssetProvider';
 export * from './context/PortkeySendProvider';

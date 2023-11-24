@@ -1,13 +1,13 @@
 import { Button } from 'antd';
-import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from 'react';
+import { useEffect, useRef, useState, forwardRef, useImperativeHandle, useMemo } from 'react';
 import { PasscodeInput } from 'antd-mobile';
 import { DIGIT_CODE } from '../../constants/misc';
 import clsx from 'clsx';
 import VerifierPair from '../VerifierPair';
 import { useTranslation } from 'react-i18next';
 import { useEffectOnce } from 'react-use';
-import './index.less';
 import { BaseCodeVerifyProps } from '../types';
+import './index.less';
 
 const MAX_TIMER = 60;
 
@@ -17,6 +17,7 @@ export interface ICodeVerifyUIInterface {
 
 export interface BaseCodeVerifyUIProps extends BaseCodeVerifyProps {
   code?: string;
+  error?: boolean;
   onCodeChange?: (code: string) => void;
   onReSend?: () => void;
   onCodeFinish?: (code: string) => void;
@@ -27,6 +28,7 @@ const CodeVerifyUI = forwardRef(
     {
       verifier,
       className,
+      error = false,
       isCountdownNow,
       tipExtra,
       isLoginGuardian,
@@ -64,6 +66,11 @@ const CodeVerifyUI = forwardRef(
       }, 1000);
     }, [timer]);
 
+    const btnText = useMemo(() => {
+      if (error) return 'Invalid code';
+      return timer ? `Resend after ${timer}s` : 'Resend';
+    }, [error, timer]);
+
     return (
       <div className={clsx('verifier-account-wrapper', className)}>
         {isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
@@ -78,8 +85,9 @@ const CodeVerifyUI = forwardRef(
           <br />
           {`Enter it within ${DIGIT_CODE.expiration} minutes`}
         </div>
-        <div className="password-wrapper">
+        <div className={clsx('portkey-ui-code-verify-passcode', error && 'portkey-ui-code-verify-passcode-error')}>
           <PasscodeInput
+            // error={error}
             value={code}
             length={DIGIT_CODE.length}
             seperated
@@ -92,7 +100,7 @@ const CodeVerifyUI = forwardRef(
             disabled={!!timer}
             onClick={onReSend}
             className={clsx('portkey-ui-text-center resend-btn', timer && 'resend-after-btn')}>
-            {timer ? `Resend after ${timer}s` : t('Resend')}
+            {btnText}
           </Button>
         </div>
       </div>

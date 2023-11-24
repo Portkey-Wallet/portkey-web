@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import { usePortkey } from '../context';
 import { useSignHandler } from '../../hooks/useSignHandler';
 import './index.less';
+import useMobile from '../../hooks/useMobile';
 
 type SocialDesignType = AccountType | 'Scan' | null;
 export interface SocialDesignProps extends IBaseGetGuardianProps {
@@ -46,6 +47,8 @@ function SocialDesign({
   const { loginByApple, loginByGoogle } = useSocialLogin({ socialLogin });
 
   const [{ networkType, chainType }] = usePortkey();
+
+  const isMobile = useMobile();
 
   const handlerParam = useMemo(
     () => ({
@@ -92,6 +95,7 @@ function SocialDesign({
     <div className={clsx('portkey-ui-user-input-wrapper', className)} style={style}>
       {accountType === 'Scan' && (
         <ScanCard
+          isMobile={isMobile}
           chainId={defaultChainId}
           backIcon={<CustomSvg type="PC" />}
           chainType={chainType}

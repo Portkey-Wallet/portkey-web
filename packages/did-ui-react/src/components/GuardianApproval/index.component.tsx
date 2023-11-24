@@ -78,8 +78,6 @@ const GuardianApproval = forwardRef(
       onConfirmRef.current = onConfirm;
     });
 
-    console.log(guardianList, defaultGuardianList, 'guardianList==GuardianApproval');
-
     useImperativeHandle(ref, () => ({ setVerifyAccountIndex }));
 
     useUpdateEffect(() => {

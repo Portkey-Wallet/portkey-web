@@ -1,3 +1,4 @@
+'use client';
 import {
   ConfigProvider,
   CryptoDesign,
@@ -10,6 +11,9 @@ import {
   SignIn,
   Web2Design,
   ISignIn,
+  CommonModal,
+  PortkeyStyleProvider,
+  PortkeyNumberKeyboard,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
 import { Store } from '../../utils';
@@ -24,11 +28,23 @@ ConfigProvider.setGlobalConfig({
 function Example() {
   const [isLoading, setLoading] = useState<any>();
   const ref = useRef<ISignIn>();
-
+  const [visible, setVisible] = useState<boolean>();
+  const [val, setVal] = useState<string>('');
+  console.log(visible, 'visible===');
   return (
     <div>
       <div id="wrapper"></div>
-
+      <div>----------</div>
+      <button
+        onClick={() => {
+          setVisible(v => !v);
+        }}>
+        PortkeyNumberKeyboard
+      </button>
+      <div>----------</div>
+      PortkeyNumberKeyboard input: &nbsp;{val}
+      <PortkeyNumberKeyboard visible={visible} onInput={v => setVal(_v => _v + v)} onDelete={() => setVal('')} />
+      <div>----------</div>
       <SignIn
         ref={ref}
         uiType="Modal"
@@ -49,7 +65,22 @@ function Example() {
           console.log(info, 'onCreatePending====info');
         }}
       />
-
+      <CommonModal
+        type="modal"
+        closable={false}
+        open={isLoading}
+        className="confirm-return-modal"
+        title={'Leave this page?'}
+        width={320}
+        getContainer={'#set-pin-wrapper'}>
+        <p className="modal-content">Are you sure you want to leave this page? All changes will not be saved.</p>
+        <div className="btn-wrapper">
+          {/* <Button onClick={() => setReturnOpen(false)}>No</Button>
+          <Button type="primary" onClick={() => onCancel?.('register')}>
+            Yes
+          </Button> */}
+        </div>
+      </CommonModal>
       <button
         onClick={() => {
           ref.current?.setOpen(true);
@@ -62,16 +93,15 @@ function Example() {
         }}>
         ShowLoading
       </button>
-
-      <PortkeyLoading
+      {/* <PortkeyLoading
         loading={isLoading}
         loadingText={'Synchronizing on-chain account information...'}
         cancelable
         onCancel={() => setLoading(false)}
-      />
+      /> */}
       <div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
-          <CryptoDesign
+          {/* <CryptoDesign
             style={{ height: 600, border: '1px solid gray' }}
             termsOfService={'https://portkey.finance/terms-of-service'}
             onError={(error: any) => {
@@ -111,7 +141,7 @@ function Example() {
             onFinish={result => {
               console.log('SetPinAndAddManager:onConfirm', result);
             }}
-          />
+          /> */}
           <CodeVerify
             chainId="AELF"
             isErrorTip
@@ -133,7 +163,7 @@ function Example() {
               console.log('SetPinAndAddManager:onConfirm', result);
             }}
           />
-          <GuardianApproval
+          {/* <GuardianApproval
             chainId="AELF"
             operationType={OperationTypeEnum.communityRecovery}
             wrapperStyle={{ height: 600 }}
@@ -178,9 +208,9 @@ function Example() {
                 key: '',
               },
             ]}
-          />
+          /> */}
         </div>
-        <div>
+        {/* <div>
           <Web2Design
             phoneCountry={{
               iso: 'CN',
@@ -235,7 +265,7 @@ function Example() {
               console.log('onSuccess:', value);
             }}
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

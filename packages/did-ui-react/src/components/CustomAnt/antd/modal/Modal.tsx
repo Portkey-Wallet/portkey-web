@@ -72,6 +72,8 @@ export interface ModalProps {
   focusTriggerAfterClose?: boolean;
   children?: React.ReactNode;
   mousePosition?: MousePosition;
+  height?: number | string;
+  rootClassName?: string;
 }
 
 type getContainerFunc = () => HTMLElement;
@@ -198,6 +200,7 @@ const Modal: React.FC<ModalProps> = (props) => {
     [`${prefixCls}-centered`]: !!centered,
     [`${prefixCls}-wrap-rtl`]: direction === 'rtl',
   });
+
   return (
     <NoCompactStyle>
       <NoFormStyle status override>

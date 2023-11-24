@@ -1,33 +1,25 @@
-import { Col, Modal, ModalProps, Row } from 'antd';
+import { Col, Row } from 'antd';
 import clsx from 'clsx';
 import { LeftOutlined } from '@ant-design/icons';
 import { ReactNode } from 'react';
-import { Theme } from '../types';
+import CommonBaseModal from '../CommonBaseModal';
+import { PortkeyModalProps } from '../PortkeyModal';
 import './styles.less';
-import { PORTKEY_PREFIX_CLS } from '../../constants';
 
-export interface CommonModalProps extends ModalProps {
-  theme?: Theme;
+export interface CommonModalProps extends PortkeyModalProps {
   className?: string;
   leftCallBack?: () => void;
   leftElement?: ReactNode;
-  transitionName?: string;
 }
 
 export default function CommonModal(props: CommonModalProps) {
-  const { leftCallBack, width, title, leftElement, transitionName } = props;
+  const { leftCallBack, width, title, leftElement } = props;
   return (
-    <Modal
-      maskClosable={false}
-      centered={props.centered ?? true}
+    <CommonBaseModal
       destroyOnClose
-      footer={null}
-      maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
       {...props}
-      prefixCls={`${PORTKEY_PREFIX_CLS}-modal`}
       width={width ? width : '400px'}
       className={clsx('portkey-ui-common-modals', props.className)}
-      transitionName={transitionName}
       title={
         <Row justify="space-between">
           {leftCallBack || leftElement ? (
