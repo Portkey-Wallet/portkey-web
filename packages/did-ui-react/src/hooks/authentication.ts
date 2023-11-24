@@ -26,7 +26,6 @@ export function useVerifyGoogleToken() {
     } else {
       isRequest = true;
     }
-    console.log(accessToken, isRequest, 'accessToken==');
     if (isRequest) {
       let googleInfo;
       if (params?.customLoginHandler) {

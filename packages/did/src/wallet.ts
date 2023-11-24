@@ -369,23 +369,20 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }
 
   public async checkManagerIsExistByGQL(params: CheckManagerParams) {
-    const chainId = params.chainId;
-    const caHash = params.caHash;
     // Check if manager exists via GQL
     const resultByQGL = await this.services.getHolderInfoByManager({
       manager: params.managementAddress,
-      chainId,
-      caHash: caHash,
+      chainId: params.chainId,
+      caHash: params.caHash,
     });
     const info = resultByQGL[0];
     return Boolean(info && info.caAddress);
   }
 
   public async checkManagerIsExistByContract(params: CheckManagerParams) {
-    const caHash = params.caHash;
     // Check if manager exists via Contract
     const resultByContract = await this.getHolderInfoByContract({
-      caHash,
+      caHash: params.caHash,
       chainId: params.chainId,
     });
     const managerInfos = resultByContract.managerInfos;

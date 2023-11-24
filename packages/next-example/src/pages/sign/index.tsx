@@ -136,27 +136,54 @@ export default function Sign() {
       </button>
       <div id="wrapper"></div>
       <div>-----------</div>
+
       <button
-        onClick={() => {
-          setLockOpen(true);
+        onClick={async () => {
+          // Mock pin: 111111
+          const wallet = await did.load(PIN);
+          console.log(wallet, 'wallet==load');
         }}>
-        setLockOpen
+        load
       </button>
-      <Unlock
-        isWrongPassword
-        onUnlock={() => {
-          console.log('onUnlock=====');
-        }}
-        uiType={uiType}
-        open={lockOpen}
-        value={password}
-        onCancel={() => {
-          setLockOpen(false);
-        }}
-        onChange={v => {
-          setPassword(v);
-        }}
-      />
+
+      <div>-----------</div>
+      <button
+        onClick={async () => {
+          const isExist = await did.checkManagerIsExist({
+            chainId: 'AELF',
+            caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
+            managementAddress: did.didWallet.managementAccount.address,
+          });
+          console.log(isExist, 'isExist=AELF');
+        }}>
+        checkManagerIsExist: AELF
+      </button>
+
+      <div>-----------</div>
+      <button
+        onClick={async () => {
+          const isExist = await did.checkManagerIsExist({
+            chainId: 'tDVV',
+            caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
+            managementAddress: did.didWallet.managementAccount.address,
+          });
+          console.log(isExist, 'isExist=tDVV');
+        }}>
+        checkManagerIsExist: tDVV
+      </button>
+
+      <div>-----------</div>
+      <button
+        onClick={async () => {
+          const isExist = await did.checkManagerIsExist({
+            chainId: 'tDVW',
+            caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
+            managementAddress: did.didWallet.managementAccount.address,
+          });
+          console.log(isExist, 'isExist=tDVW');
+        }}>
+        checkManagerIsExist: tDVW
+      </button>
     </div>
   );
 }
