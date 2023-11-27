@@ -14,6 +14,9 @@ import {
   CommonModal,
   PortkeyStyleProvider,
   PortkeyNumberKeyboard,
+  Unlock,
+  SetPinMobileBase,
+  PortkeyBaseNumberKeyboard,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
 import { Store } from '../../utils';
@@ -30,7 +33,8 @@ function Example() {
   const ref = useRef<ISignIn>();
   const [visible, setVisible] = useState<boolean>();
   const [val, setVal] = useState<string>('');
-  console.log(visible, 'visible===');
+  const [unlock, setUnlock] = useState<boolean>();
+  const [password, setPassword] = useState<string>('');
   return (
     <div>
       <div id="wrapper"></div>
@@ -44,6 +48,28 @@ function Example() {
       <div>----------</div>
       PortkeyNumberKeyboard input: &nbsp;{val}
       <PortkeyNumberKeyboard visible={visible} onInput={v => setVal(_v => _v + v)} onDelete={() => setVal('')} />
+      <div>----------</div>
+      <button
+        onClick={() => {
+          setUnlock(v => !v);
+        }}>
+        Unlock
+      </button>
+      <Unlock
+        open={unlock}
+        value={password}
+        isWrongPassword
+        keyboard
+        onChange={v => {
+          console.log(v, 'setPassword===');
+          setPassword(v);
+        }}
+        onUnlock={_p => {
+          console.log(password, _p, 'onUnlock==');
+        }}
+        onCancel={() => setUnlock(false)}
+      />
+      <div>----------</div>
       <div>----------</div>
       <SignIn
         ref={ref}
@@ -142,27 +168,7 @@ function Example() {
               console.log('SetPinAndAddManager:onConfirm', result);
             }}
           /> */}
-          <CodeVerify
-            chainId="AELF"
-            isErrorTip
-            accountType="Phone"
-            verifier={{
-              endPoints: ['http://192.168.66.240:16010'],
-              verifierAddresses: ['2mBnRTqXMb5Afz4CWM2QakLRVDfaq2doJNRNQT1MXoi2uc6Zy3'],
-              id: 'd0e2442158b870190362c8daea87a6687a59fef94937a88bd7dcb464e8e21025',
-              name: 'Portkey',
-              imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/Portkey.png',
-            }}
-            verifierSessionId={'080bbdcd-73f5-45a6-b65b-0d067474756f'}
-            guardianIdentifier={'+852 12233333'}
-            operationType={1}
-            onError={(error: any) => {
-              console.log('SetPinAndAddManager:onError', error);
-            }}
-            onSuccess={result => {
-              console.log('SetPinAndAddManager:onConfirm', result);
-            }}
-          />
+
           {/* <GuardianApproval
             chainId="AELF"
             operationType={OperationTypeEnum.communityRecovery}
@@ -267,6 +273,7 @@ function Example() {
           />
         </div> */}
       </div>
+      {/* <PortkeyBaseNumberKeyboard /> */}
     </div>
   );
 }

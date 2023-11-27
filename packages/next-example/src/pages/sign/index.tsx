@@ -45,8 +45,9 @@ export default function Sign() {
     <div>
       <div>-----------</div>
       <SignIn
-        pin={'23aa'}
+        // pin={'23aa'}
         ref={ref}
+        keyboard={true}
         design={design}
         uiType={uiType}
         extraElement={<div style={{ height: 300, background: 'red' }}></div>}

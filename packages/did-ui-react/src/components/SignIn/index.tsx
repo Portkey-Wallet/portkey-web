@@ -51,6 +51,7 @@ const SignIn = forwardRef(
   (
     {
       pin,
+      keyboard,
       defaultChainId = 'AELF',
       isErrorTip = true,
       // If you set isShowScan to true, make sure you configure `network`
@@ -580,6 +581,7 @@ const SignIn = forwardRef(
       if (LifeCycleMap['Step3'].includes(lifeCycle))
         return (
           <Step3
+            keyboard={keyboard}
             guardianIdentifierInfo={guardianIdentifierInfo}
             onlyGetPin={Boolean(walletWithoutPin)}
             guardianApprovedList={approvedList || []}
@@ -607,17 +609,18 @@ const SignIn = forwardRef(
       onOriginChainIdChange,
       onLoginFinishWithoutPin,
       termsOfService,
+      keyboard,
       guardianIdentifierInfo,
       walletWithoutPin,
       approvedList,
       onStep3Finish,
       onStep3Cancel,
       onCreatePending,
-      renderStep2OfLogin,
       verifierCodeInfo,
       changeLifeCycle,
       onStep2OfSignUpFinish,
       onStep2Cancel,
+      renderStep2OfLogin,
     ]);
 
     return (

@@ -68,6 +68,8 @@ export interface SignInProps {
    * You can configure the default pin
    */
   pin?: string;
+  /** When on mobile, use the numeric keypad  */
+  keyboard?: boolean;
 
   defaultLifeCycle?: Partial<TStep1LifeCycle | TStep2SignUpLifeCycle | TStep2SignInLifeCycle | TStep3LifeCycle>;
   isErrorTip?: boolean;

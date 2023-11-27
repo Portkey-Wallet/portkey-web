@@ -14,6 +14,8 @@ export { default as PortkeyLoading } from './PortkeyLoading';
 export { default as PortkeyQRCode } from './PortkeyQRCode';
 export { default as Unlock } from './Unlock';
 export { default as SetPinBase } from './SetPinBase';
+export { default as PortkeyBaseNumberKeyboard } from './PortkeyBaseNumberKeyboard';
+export { default as SetPinMobileBase } from './SetPinMobileBase';
 export { default as VerifierPair } from './VerifierPair';
 export { default as PhoneNumberInput } from './PhoneNumberInput';
 export { default as AreaCode } from './AreaCode';

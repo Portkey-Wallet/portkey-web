@@ -1,5 +1,4 @@
 import { Button } from 'antd';
-import BackHeader from '../../../BackHeader';
 import CommonModal from '../../../CommonModal';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { OnErrorFunc } from '../../../../types';
@@ -50,11 +49,11 @@ function Step3({
 
   return (
     <div className="step-page-wrapper">
-      <BackHeader leftElement={type === 'recovery' ? false : undefined} onBack={onBackHandler} />
       {guardianIdentifierInfo ? (
         <SetPinAndAddManagerCom
           {...props}
-          className="step-set-pin content-padding"
+          onBack={onBackHandler}
+          className="step-set-pin"
           chainId={guardianIdentifierInfo.chainId}
           accountType={guardianIdentifierInfo.accountType}
           guardianIdentifier={guardianIdentifierInfo.identifier}
