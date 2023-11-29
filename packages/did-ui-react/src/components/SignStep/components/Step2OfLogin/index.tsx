@@ -107,7 +107,7 @@ function Step2OfLogin({
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
         operationType={OperationTypeEnum.communityRecovery}
-        chainId={guardianIdentifierInfo.chainId}
+        originChainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}
         isErrorTip={isErrorTip}

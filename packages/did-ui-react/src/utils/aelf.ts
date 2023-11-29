@@ -1,6 +1,8 @@
 import AElf from 'aelf-sdk';
 import { isValidBase58 } from './valid';
 import { ChainId, ChainType } from '@portkey/types';
+import { getTxResult } from '@portkey/contracts';
+import { aelf } from '@portkey/utils';
 
 export function isAelfAddress(value?: string) {
   if (!value || !isValidBase58(value)) return false;
@@ -107,4 +109,9 @@ export const getChainIdByAddress = (address: string, chainType: ChainType = 'ael
     }
   }
   throw Error('Not support');
+};
+
+export const getAelfTxResult = (rpcUrl: string, txId: string) => {
+  const aelfInstance = aelf.getAelfInstance(rpcUrl);
+  return getTxResult(aelfInstance, txId);
 };

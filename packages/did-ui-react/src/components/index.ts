@@ -4,6 +4,11 @@ export { default as CustomSvg } from './CustomSvg';
 export { default as VerifierSelect } from './VerifierSelect';
 export { default as SetPinAndAddManager } from './SetPinAndAddManager';
 export { default as GuardianList } from './GuardianList';
+export { default as Guardian } from './Guardian';
+export { default as GuardianPageList } from './GuardianPageList';
+export { default as GuardianAdd } from './GuardianAdd';
+export { default as GuardianView } from './GuardianView';
+export { default as GuardianEdit } from './GuardianEdit';
 export { default as SignUpBase } from './SignUpBase';
 export { default as CryptoDesign } from './CryptoDesign';
 export { default as CodeVerify } from './CodeVerify';
@@ -57,6 +62,24 @@ export { default as Send } from './Send';
 export { default as AssetOverview } from './AssetOverview';
 export { default as ReceiveCard } from './ReceiveCard';
 export { default as Transaction } from './Transaction';
+export { default as managerApprove } from './ModalMethod/ManagerApprove';
+export { default as SetAllowance } from './SetAllowance';
+export { default as ManagerApproveInner } from './ManagerApprove/index.component';
+export { default as PortkeyStyleProvider } from './PortkeyStyleProvider';
+export { default as BaseModalMethod } from './ModalMethod/BaseModalMethod';
+export { default as walletSecurityCheck } from './ModalMethod/WalletSecurityCheck';
+export { default as transferLimitCheck } from './ModalMethod/TransferLimitCheck';
+export { default as checkWalletSecurity } from './ModalMethod/CheckWalletSecurity';
+export { default as SecurityCheck } from './SecurityCheck';
+export { default as SecurityCheckAndAccelerate } from './SecurityCheckAndAccelerate';
+export { default as MenuItem } from './MenuItem';
+export { default as MenuList } from './MenuList';
+export { default as PaymentSecurity } from './PaymentSecurity';
+export { default as TransferSettings } from './TransferSettings';
+export { default as TransferSettingsEdit } from './TransferSettingsEdit';
+
+export type { ManagerApproveInnerProps } from './ManagerApprove/index.component';
+export type { IAllowance } from './SetAllowance/index.component';
 export { default as CommonBaseModal } from './CommonBaseModal';
 export { default as PortkeyModal } from './PortkeyModal';
 export { default as PortkeyNumberKeyboard } from './PortkeyNumberKeyboard';
@@ -67,7 +90,5 @@ export * from './context/PortkeyAssetProvider';
 export * from './context/PortkeySendProvider';
 
 export * from './SignStep/types';
-
-export { default as PortkeyStyleProvider } from './PortkeyStyleProvider';
 
 export * from './types';

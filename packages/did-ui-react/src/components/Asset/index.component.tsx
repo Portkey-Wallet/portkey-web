@@ -6,8 +6,8 @@ import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { dealURLLastChar, did } from '../../utils';
-import { IAssetItemType, IUserTokenItem } from '@portkey/services';
+import { WalletError, dealURLLastChar, did, handleErrorMessage } from '../../utils';
+import { IAssetItemType, ITransferLimitItem, IUserTokenItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
@@ -21,9 +21,18 @@ import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
-import './index.less';
+import PaymentSecurity from '../PaymentSecurity';
+import TransferSettings from '../TransferSettings';
+import TransferSettingsEdit from '../TransferSettingsEdit';
+import Guardian from '../Guardian';
+import MenuListMain from '../MenuList/index.components';
+import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
+import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
+import { getChain } from '../../hooks/useChainInfo';
+import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import useDebounce from '../../hooks/useDebounce';
 import singleMessage from '../CustomAnt/message';
-import { useThrottleEffect } from '../../hooks/throttle';
+import './index.less';
 
 export enum AssetStep {
   overview = 'overview',
@@ -34,6 +43,12 @@ export enum AssetStep {
   transactionDetail = 'transactionDetail',
   tokenDetail = 'tokenDetail',
   NFTDetail = 'NFTDetail',
+  my = 'my',
+  guardians = 'guardians',
+  walletSecurity = 'walletSecurity',
+  paymentSecurity = 'paymentSecurity',
+  transferSettings = 'transferSettings',
+  transferSettingsEdit = 'transferSettingsEdit',
 }
 
 export interface AssetMainProps
@@ -42,8 +57,19 @@ export interface AssetMainProps
   rampState?: IRampInitState;
   className?: string;
   overrideAchConfig?: IAchConfig;
+  isShowRampBuy?: boolean;
+  isShowRampSell?: boolean;
   onLifeCycleChange?(liftCycle: `${AssetStep}`): void;
 }
+
+const InitTransferLimitData: ITransferLimitItemWithRoute = {
+  chainId: 'AELF',
+  symbol: 'ELF',
+  singleLimit: '20000000000',
+  dailyLimit: '100000000000',
+  restricted: true,
+  decimals: 8,
+};
 
 function AssetMain({
   isShowRamp = true,
@@ -52,11 +78,13 @@ function AssetMain({
   backIcon,
   className,
   overrideAchConfig,
+  isShowRampBuy = true,
+  isShowRampSell = true,
   onOverviewBack,
   onLifeCycleChange,
 }: AssetMainProps) {
-  const [{ networkType }] = usePortkey();
-  const [{ caInfo, initialized }, { dispatch }] = usePortkeyAsset();
+  const [{ networkType, sandboxId }] = usePortkey();
+  const [{ caInfo, initialized, originChainId, caHash, managementAccount }, { dispatch }] = usePortkeyAsset();
   const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
 
   const portkeyWebSocketUrl = useMemo(
@@ -82,6 +110,7 @@ function AssetMain({
   }, [caInfo]);
 
   const [allToken, setAllToken] = useState<IUserTokenItem[]>();
+  const [accelerateChainId, setAccelerateChainId] = useState<ChainId>(originChainId);
   const getAllTokenList = useCallback(async () => {
     if (!caAddressInfos) return;
     const chainIdArray = caAddressInfos.map((info) => info.chainId);
@@ -93,7 +122,7 @@ function AssetMain({
     setAllToken(result.items);
   }, [caAddressInfos]);
 
-  useThrottleEffect(() => {
+  const getAssetInfo = useCallback(() => {
     if (initialized && caAddressInfos) {
       // TODO Request all data at once, no paging request
       basicAssetViewAsync
@@ -113,8 +142,9 @@ function AssetMain({
     }
   }, [caAddressInfos, dispatch, getAllTokenList, initialized, maxNftNum]);
 
+  useDebounce(getAssetInfo, 300);
+
   const [selectToken, setSelectToken] = useState<BaseToken>();
-  console.log(selectToken, 'selectToken==');
 
   const [sendToken, setSendToken] = useState<IAssetItemType>();
 
@@ -124,6 +154,12 @@ function AssetMain({
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
+
+  const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
+
+  const onAvatarClick = useCallback(async () => {
+    setAssetStep(AssetStep.my);
+  }, []);
 
   const onReceive = useCallback(async (v: any) => {
     setSelectToken({
@@ -161,6 +197,43 @@ function AssetMain({
     setAssetStep(preStepRef.current);
   }, []);
 
+  const myMenuList = useMyMenuList({
+    onClickGuardians: () => {
+      setAccelerateChainId(originChainId);
+      setAssetStep(AssetStep.guardians);
+    },
+    onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
+  });
+
+  const WalletSecurityMenuList = useWalletSecurityMenuList({
+    onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
+  });
+
+  const getLimitFromContract = useCallback(
+    async (data: ITransferLimitItem) => {
+      // get limit from caContract
+      try {
+        const chainInfo = await getChain(data.chainId);
+        const privateKey = managementAccount?.privateKey;
+        if (!privateKey) throw WalletError.invalidPrivateKey;
+        if (!caHash) throw 'Please login';
+
+        const res = await getTransferLimit({
+          caHash: caHash,
+          symbol: data.symbol,
+          rpcUrl: chainInfo?.endPoint || '',
+          caContractAddress: chainInfo?.caContractAddress || '',
+          sandboxId,
+        });
+        return res;
+      } catch (error) {
+        const err = handleErrorMessage(error);
+        return singleMessage.error(err);
+      }
+    },
+    [caHash, managementAccount?.privateKey, sandboxId],
+  );
+
   return (
     <div className={clsx('portkey-ui-asset-wrapper', className)}>
       {(!assetStep || assetStep === AssetStep.overview) && (
@@ -169,6 +242,7 @@ function AssetMain({
           isShowRamp={isShowRamp}
           faucet={faucet}
           backIcon={backIcon}
+          onAvatarClick={onAvatarClick}
           onBack={onOverviewBack}
           onReceive={onReceive}
           onBuy={onBuy}
@@ -216,22 +290,31 @@ function AssetMain({
             ...selectToken,
             tokenContractAddress: selectToken.address,
           }}
-          goBack={onBack}
-          goPreview={({ initState }) => {
+          onBack={onBack}
+          onShowPreview={({ initState }) => {
             setRampPreview(initState);
             setAssetStep(AssetStep.rampPreview);
           }}
-          isBuySectionShow={true}
-          isSellSectionShow={true}
+          isBuySectionShow={isShowRampBuy}
+          isSellSectionShow={isShowRampSell}
           isMainnet={networkType === MAINNET}
+          onModifyLimit={async (data) => {
+            const res = await getLimitFromContract(data);
+            setViewPaymentSecurity({ ...data, ...res });
+            setAssetStep(AssetStep.transferSettingsEdit);
+          }}
+          onModifyGuardians={() => {
+            setAccelerateChainId(selectToken.chainId);
+            setAssetStep(AssetStep.guardians);
+          }}
         />
       )}
       {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
         <RampPreviewMain
           initState={rampPreview}
-          portkeyServiceUrl={portkeyServiceUrl || ''}
+          portkeyServiceUrl={portkeyServiceUrl || 'https://did-portkey.portkey.finance'}
           chainId={selectToken.chainId}
-          goBack={() => {
+          onBack={() => {
             setAssetStep(AssetStep.ramp);
           }}
           isBuySectionShow={true}
@@ -249,6 +332,15 @@ function AssetMain({
           }}
           onClose={() => {
             setAssetStep(AssetStep.overview);
+          }}
+          onModifyLimit={async (data) => {
+            const res = await getLimitFromContract(data);
+            setViewPaymentSecurity({ ...data, ...res });
+            setAssetStep(AssetStep.transferSettingsEdit);
+          }}
+          onModifyGuardians={() => {
+            setAccelerateChainId(sendToken.chainId as ChainId);
+            setAssetStep(AssetStep.guardians);
           }}
         />
       )}
@@ -308,6 +400,76 @@ function AssetMain({
             };
             preStepRef.current = AssetStep.NFTDetail;
             onSend(info);
+          }}
+        />
+      )}
+
+      {assetStep === AssetStep.my && (
+        // My
+        <MenuListMain
+          menuList={myMenuList}
+          headerConfig={{
+            title: 'My',
+            onBack: () => setAssetStep(AssetStep.overview),
+          }}
+        />
+      )}
+
+      {assetStep === AssetStep.guardians && (
+        <Guardian
+          sandboxId={sandboxId}
+          caHash={caHash || ''}
+          originChainId={originChainId}
+          accelerateChainId={accelerateChainId}
+          onBack={() => setAssetStep(AssetStep.my)}
+        />
+      )}
+
+      {assetStep === AssetStep.walletSecurity && (
+        // My - WalletSecurity
+        <MenuListMain
+          menuList={WalletSecurityMenuList}
+          headerConfig={{
+            title: 'Wallet Security',
+            onBack: () => setAssetStep(AssetStep.my),
+          }}
+        />
+      )}
+
+      {assetStep === AssetStep.paymentSecurity && (
+        <PaymentSecurity
+          onBack={() => setAssetStep(AssetStep.walletSecurity)}
+          networkType={networkType}
+          caHash={caHash || ''}
+          onClickItem={async (data) => {
+            const res = await getLimitFromContract(data);
+            setViewPaymentSecurity({ ...data, ...res });
+            setAssetStep(AssetStep.transferSettings);
+          }}
+        />
+      )}
+
+      {assetStep === AssetStep.transferSettings && (
+        <TransferSettings
+          onBack={() => setAssetStep(AssetStep.paymentSecurity)}
+          initData={viewPaymentSecurity}
+          onEdit={() => setAssetStep(AssetStep.transferSettingsEdit)}
+        />
+      )}
+
+      {assetStep === AssetStep.transferSettingsEdit && (
+        <TransferSettingsEdit
+          initData={viewPaymentSecurity}
+          caHash={caHash || ''}
+          originChainId={originChainId}
+          sandboxId={sandboxId}
+          onBack={() => setAssetStep(AssetStep.transferSettings)}
+          onSuccess={async (data) => {
+            const res = await getLimitFromContract(data);
+            setViewPaymentSecurity({ ...data, ...res });
+            if (data?.businessFrom === 'ramp-sell') return setAssetStep(AssetStep.ramp);
+            if (data?.businessFrom === 'send') return setAssetStep(AssetStep.send);
+            return setAssetStep(AssetStep.transferSettings);
           }}
         />
       )}

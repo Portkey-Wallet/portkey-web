@@ -23,7 +23,12 @@ export default function CustomModal({
   ...props
 }: CustomSelectProps) {
   return (
-    <CommonBaseModal {...props} destroyOnClose wrapClassName="custom-prompt-modal" className="ramp-modal">
+    <CommonBaseModal
+      {...props}
+      onClose={onClose}
+      destroyOnClose
+      wrapClassName="custom-prompt-modal"
+      className="ramp-modal">
       <SelectList
         fiatList={fiatList}
         drawerType={drawerType}

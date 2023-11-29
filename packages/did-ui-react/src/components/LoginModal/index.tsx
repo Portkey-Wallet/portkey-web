@@ -6,21 +6,25 @@ import './index.less';
 export default function LoginModal({
   open,
   type = 'Login',
+  maskClosable = false,
   onCancel,
   onConfirm,
 }: {
   open?: boolean;
   type?: CreateWalletType;
+  maskClosable?: boolean;
   onCancel?: () => void;
   onConfirm?: () => void;
 }) {
   return (
     <CommonModal
-      type={'modal'}
+      maskClosable={maskClosable}
+      closable={false}
       open={open}
       width={320}
-      className="portkey-ui-signup-confirm-modal"
       title={'Continue with this account?'}
+      type={'modal'}
+      className="portkey-ui-signup-confirm-modal"
       onClose={onCancel}>
       <p className="modal-content">
         {type === 'Login' && 'This account has not been registered yet. Click "Confirm" to complete the registration.'}

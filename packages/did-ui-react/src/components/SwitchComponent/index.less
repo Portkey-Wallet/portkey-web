@@ -1,0 +1,46 @@
+.portkey-ui-switch-component {
+  .portkey-ant-switch {
+    width: 43px;
+    height: 24px;
+    background-color: var(--portkey-ui-bg-6);
+    border: 2px solid var(--portkey-ui-border-1);
+    position: relative;
+
+    .portkey-ant-switch-handle {
+      top: 1px;
+    }
+
+    .portkey-ant-switch-inner {
+      font-size: 16px;
+      line-height: 22px;
+      color: var(--portkey-ui-font-8);
+      margin-left: 16px;
+      position: absolute;
+      top: 0;
+      right: -46px;
+    }
+
+    .portkey-ant-switch-handle::before {
+      background-color: var(--portkey-ui-bg-16);
+    }
+  }
+
+  .portkey-ant-switch-checked {
+    border: 2px solid var(--portkey-ui-border-7);
+
+    .portkey-ant-switch-handle::before {
+      background-color: var(--portkey-ui-bg-2);
+    }
+
+    .portkey-ant-switch-inner {
+      right: -62px;
+    }
+  }
+
+  .portkey-ui-switch-text {
+    font-size: 16px;
+    line-height: 22px;
+    color: var(--portkey-ui-font-8);
+    margin-left: 16px;
+  }
+}

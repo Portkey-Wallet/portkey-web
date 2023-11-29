@@ -1,4 +1,4 @@
-import { PortkeyProvider } from '@portkey/did-ui-react';
+import { PortkeyProvider, NetworkType } from '@portkey/did-ui-react';
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -6,7 +6,8 @@ import { PageRouter } from './routes';
 import './theme.css';
 
 function Index() {
-  const [dark, setDark] = useState<boolean>(true);
+  const [dark, setDark] = useState<boolean>(false);
+  const [networkType, setNetworkType] = useState<NetworkType>('MAIN');
 
   useEffect(() => {
     if (dark) {
@@ -17,13 +18,19 @@ function Index() {
   }, [dark]);
 
   return (
-    <PortkeyProvider networkType={'TESTNET'} theme={dark ? 'dark' : 'light'}>
+    <PortkeyProvider networkType={networkType} theme={dark ? 'dark' : 'light'}>
       <div style={{ background: dark ? '#1E212B' : '#fff' }} id={dark && 'ids'}>
         <button
           onClick={async () => {
             setDark(v => !v);
           }}>
           change theme
+        </button>
+        <button
+          onClick={async () => {
+            setNetworkType(v => (v === 'MAIN' ? 'TESTNET' : 'MAIN'));
+          }}>
+          Only change networkType
         </button>
         <PageRouter />
       </div>

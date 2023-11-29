@@ -2,9 +2,11 @@ import { useCallback } from 'react';
 import { ISocialLogin, VerifyTokenParams } from '../types';
 import { did, getGoogleUserInfo, parseAppleIdentityToken, socialLoginAuth } from '../utils';
 import { OperationTypeEnum } from '@portkey/services';
+import type { ChainId } from '@portkey/types';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
+  targetChainId?: ChainId;
 }
 
 interface BaseAuthProps {
@@ -52,6 +54,7 @@ export function useVerifyGoogleToken() {
       chainId: params.chainId,
       accessToken,
       operationType: params.operationType,
+      targetChainId: params.targetChainId,
     });
   }, []);
 }
@@ -83,6 +86,7 @@ export function useVerifyAppleToken() {
       chainId: params.chainId,
       identityToken: accessToken,
       operationType: params.operationType,
+      targetChainId: params.targetChainId,
     });
   }, []);
 }

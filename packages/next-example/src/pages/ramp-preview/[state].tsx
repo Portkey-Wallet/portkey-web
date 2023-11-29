@@ -34,7 +34,7 @@ export default function RampPreviewPage() {
               baseUrl: 'https://ramptest.alchemypay.org',
               updateAchOrder: '/api/app/thirdPart/order/alchemy',
             }}
-            goBack={function (): void {
+            onBack={function (): void {
               router.back();
             }}
           />

@@ -10,6 +10,7 @@ import {
   VerifyGoogleTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
+  GetAppleUserExtraInfoParams,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
@@ -44,6 +45,12 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       method: 'POST',
       url: '/api/app/userExtraInfo/appleUserExtraInfo',
       params,
+    });
+  }
+  getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<any> {
+    return this._request.send({
+      method: 'GET',
+      url: `/api/app/userExtraInfo/${params.userId}`,
     });
   }
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult> {

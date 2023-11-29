@@ -55,14 +55,17 @@
   .adm-passcode-input-cell-container {
     width: 100%;
   }
+  .adm-passcode-input-cell-container {
+    justify-content: center;
+  }
 
   .adm-passcode-input-cell {
     margin: 0;
-    width: auto;
-    flex: 1;
     font-size: 24px;
     line-height: 48px;
     height: 48px;
+    width: 48px;
+    max-width: 48px;
     color: var(--portkey-ui-text-primary);
     font-weight: 500;
   }
@@ -105,6 +108,20 @@
     }
     &.resend-after-btn {
       color: var(--portkey-ui-text-tip);
+    }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .portkey-ui-code-verify-passcode {
+    .adm-passcode-input-cell {
+      width: 44px;
+      max-width: 44px;
+    }
+    .adm-passcode-input.adm-passcode-input-seperated {
+      .adm-passcode-input-cell:not(:last-child) {
+        margin-right: 14px;
+      }
     }
   }
 }
