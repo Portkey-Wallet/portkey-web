@@ -9,7 +9,6 @@ import SocialContent from '../SocialContent';
 import TermsOfServiceItem from '../TermsOfServiceItem';
 import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import './index.less';
-import TitleWrapper from '../TitleWrapper';
 
 interface SocialLoginProps {
   type: RegisterType;

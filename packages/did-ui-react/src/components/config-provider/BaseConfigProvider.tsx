@@ -15,7 +15,7 @@ export default function BaseConfigProvider({
   theme = 'light',
   children,
 }: {
-  // Required when running on chrome extension
+  /** @alpha Required when running on chrome extension */
   sandboxId?: string;
   // Currently theme is used to control content such as pictures under the black/light theme
   theme?: Theme;

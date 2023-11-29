@@ -93,6 +93,7 @@ export class Verification extends StorageBaseLoader {
         setLoading(true);
         const req = await did.services.getVerificationCode(config);
         setLoading(false);
+        if (!req.verifierSessionId) return req;
         await this.set(key, { ...req, time: Date.now() });
         return req;
       }
