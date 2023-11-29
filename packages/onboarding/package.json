@@ -1,6 +1,6 @@
 {
   "name": "@portkey/onboarding",
-  "version": "1.4.4-alpha.7",
+  "version": "1.5.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -40,9 +40,11 @@
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@portkey/types": "^1.4.4-alpha.7",
-    "@portkey/utils": "^1.4.4-alpha.7",
+    "@portkey/detect-provider": "1.0.1",
+    "@portkey/types": "^1.5.1",
+    "@portkey/utils": "^1.5.1",
     "bowser": "^2.11.0",
     "query-string": "^7.1.1"
-  }
+  },
+  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

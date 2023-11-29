@@ -21,14 +21,11 @@ export interface IWalletCustomSendOptions<T = any> extends IBaseCustomSendOption
   contractOptions: IWalletContractOptions;
   privateKey: string;
 }
-export interface IProviderCustomSendOptions<T = any> extends IBaseCustomSendOptions<T> {
-  contractOptions: IProviderOptions;
-}
 
-export type ICustomSendOptions<T = any> = IProviderCustomSendOptions<T> | IWalletCustomSendOptions<T>;
+export type ICustomSendOptions<T = any> = IWalletCustomSendOptions<T>;
 
 export interface ICustomViewOptions<T = any> {
-  contractOptions: IWalletContractOptions | IProviderOptions;
+  contractOptions: IWalletContractOptions;
   functionName: string;
   paramsOption?: T;
   callOptions?: CallOptions;

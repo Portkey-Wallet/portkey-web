@@ -73,9 +73,8 @@ export type IRampInitState = {
   network: string;
   fiat: string;
   country: string;
-  amount?: string;
+  amount: string;
   side: RampTypeEnum;
-  tokenInfo?: any;
 };
 
 export type IRampPreviewInitState = {
@@ -131,3 +130,5 @@ export interface IUseHandleAchSellParams {
   tokenInfo: ITokenInfo;
   portkeyWebSocketUrl: string; // ip
 }
+
+export type NFTCheckoutType = 'MARKET' | 'MINT';

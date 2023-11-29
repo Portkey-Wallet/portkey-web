@@ -41,7 +41,7 @@ function Step2OfSkipGuardianApprove({
       <GuardianApproval
         ref={ref}
         operationType={OperationTypeEnum.communityRecovery}
-        chainId={guardianIdentifierInfo.chainId}
+        originChainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}
         isErrorTip={isErrorTip}

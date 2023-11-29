@@ -17,3 +17,4 @@ export * from './sandboxService';
 export * from './authServe';
 export * from './modalMethod';
 export * from './sandboxUtil/CustomContractBasic';
+export * from './security';

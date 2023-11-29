@@ -2,7 +2,14 @@ import { ModalFuncProps } from 'antd';
 import { PORTKEY_PREFIX_CLS, PORTKEY_ROOT_ID } from '../constants';
 import { Modal } from '../components/CustomAnt';
 
-export function modalMethod({ type = 'confirm', wrapClassName, className, onOk, onCancel, ...props }: ModalFuncProps) {
+export function modalMethod({
+  type = 'confirm',
+  wrapClassName = '',
+  className,
+  onOk,
+  onCancel,
+  ...props
+}: ModalFuncProps) {
   return new Promise((resolve) => {
     Modal[type]({
       width: 320,

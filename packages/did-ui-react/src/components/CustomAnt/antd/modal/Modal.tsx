@@ -81,11 +81,6 @@ type getContainerFunc = () => HTMLElement;
 export interface ModalFuncProps {
   prefixCls?: string;
   className?: string;
-  /**
-   * @deprecated `visible` is deprecated which will be removed in next major version. Please use
-   *   `open` instead.
-   */
-  visible?: boolean;
   open?: boolean;
   title?: React.ReactNode;
   closable?: boolean;
@@ -144,12 +139,6 @@ const Modal: React.FC<ModalProps> = (props) => {
     const { onOk } = props;
     onOk?.(e);
   };
-
-  warning(
-    !('visible' in props),
-    'Modal',
-    `\`visible\` will be removed in next major version, please use \`open\` instead.`,
-  );
 
   const {
     prefixCls: customizePrefixCls,

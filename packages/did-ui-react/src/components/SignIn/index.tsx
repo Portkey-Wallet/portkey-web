@@ -4,7 +4,6 @@
  *
  * First you have to configure networkList using ConfigProvider.setGlobalConfig
  */
-
 import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import Step1, { OnSignInFinishedFun } from '../SignStep/components/Step1';
 import Step2OfSignUp from '../SignStep/components/Step2OfSignUp';
@@ -633,6 +632,7 @@ const SignIn = forwardRef(
           <CommonBaseModal
             destroyOnClose
             className={className}
+            maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
             open={open}
             getContainer={getContainer ? getContainer : `#${PORTKEY_ROOT_ID}`}
             onClose={onModalCancel}>

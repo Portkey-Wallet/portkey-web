@@ -12,7 +12,8 @@ import './index.less';
 const MAX_TIMER = 60;
 
 export interface CodeVerifyProps extends BaseCodeVerifyProps {
-  chainId: ChainId;
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
   verifierSessionId: string;
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
@@ -21,7 +22,8 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
 }
 
 export default function CodeVerify({
-  chainId,
+  originChainId = 'AELF',
+  targetChainId,
   verifier,
   className,
   tipExtra,
@@ -59,7 +61,8 @@ export default function CodeVerify({
             verificationCode: code,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
-            chainId,
+            chainId: originChainId,
+            targetChainId,
             operationType,
           });
           setLoading(false);
@@ -73,10 +76,9 @@ export default function CodeVerify({
       } catch (error: any) {
         setLoading(false);
         setPinVal('');
-        console.log(error, 'error==verifyErrorHandler=');
         const _error = verifyErrorHandler(error);
         console.log(error, _error, 'error==verifyErrorHandler=');
-        if (_error.indexOf('Invalid code')) return setInputError(true);
+        if (_error.includes('Invalid code')) return setInputError(true);
         errorTip(
           {
             errorFields: 'CodeVerify',
@@ -92,12 +94,13 @@ export default function CodeVerify({
       verifierSessionId,
       guardianIdentifier,
       verifier.id,
-      chainId,
+      originChainId,
       operationType,
       onSuccess,
-      setInputError,
       isErrorTip,
       onError,
+      targetChainId,
+      setInputError,
     ],
   );
 
@@ -112,7 +115,8 @@ export default function CodeVerify({
             type: accountType,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
-            chainId,
+            chainId: originChainId,
+            targetChainId,
             operationType,
           },
         },
@@ -136,7 +140,8 @@ export default function CodeVerify({
     }
   }, [
     accountType,
-    chainId,
+    originChainId,
+    targetChainId,
     guardianIdentifier,
     isErrorTip,
     onError,

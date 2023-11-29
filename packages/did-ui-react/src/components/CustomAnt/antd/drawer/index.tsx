@@ -6,7 +6,6 @@ import type { CSSMotionProps } from 'rc-motion';
 import * as React from 'react';
 import { NoFormStyle } from 'antd/lib/form/context';
 import { NoCompactStyle } from 'antd/lib/space/Compact';
-import warning from 'antd/lib/_util/warning';
 import { getTransitionName } from 'antd/lib/_util/motion';
 import { tuple } from 'antd/lib/_util/type';
 import { ConfigContext } from '../../config-provider';
@@ -104,7 +103,7 @@ function Drawer(props: DrawerProps) {
     ['visible', 'open'],
     ['afterVisibleChange', 'afterOpenChange'],
   ].forEach(([deprecatedName, newName]) => {
-    warning(
+    console.warn(
       !(deprecatedName in props),
       'Drawer',
       `\`${deprecatedName}\` is deprecated which will be removed in next major version, please use \`${newName}\` instead.`,

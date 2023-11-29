@@ -3,9 +3,10 @@ import {
   IAssetsService,
   ICommunityRecoveryService,
   IRampService,
+  ISecurityService,
   ITokenService,
   ITransactionService,
-} from '.';
+} from './index';
 
 export interface IServices extends ICommunityRecoveryService {
   readonly communityRecovery: ICommunityRecoveryService;
@@ -14,4 +15,5 @@ export interface IServices extends ICommunityRecoveryService {
   readonly token: ITokenService;
   readonly transaction: ITransactionService;
   readonly activity: IActivityService;
+  readonly security: ISecurityService;
 }
