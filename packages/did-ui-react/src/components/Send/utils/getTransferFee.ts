@@ -5,9 +5,11 @@ import { DEFAULT_TOKEN } from '../../../constants/assets';
 import { getChain } from '../../../hooks/useChainInfo';
 import { getTransactionFee } from '../../../utils/sandboxUtil/getTransactionFee';
 import { divDecimalsStr } from '../../../utils/converter';
+import { wallet } from '@portkey/utils';
 import { ZERO } from '../../../constants/misc';
 
 const getTransferFee = async ({
+  caAddress,
   managerAddress,
   toAddress,
   privateKey,
@@ -18,6 +20,7 @@ const getTransferFee = async ({
   amount,
   memo = '',
 }: {
+  caAddress: string;
   managerAddress: string;
   chainType: ChainType;
   chainId: ChainId;
@@ -32,8 +35,6 @@ const getTransferFee = async ({
   if (!chainInfo) throw 'Please check network connection and chainId';
 
   if (isCrossChain(toAddress, chainId)) {
-    // first
-
     const firstTxResult = await getTransactionFee({
       contractAddress: chainInfo.caContractAddress,
       rpcUrl: chainInfo.endPoint,
@@ -48,13 +49,33 @@ const getTransferFee = async ({
         memo,
       },
     });
-    const _firstFee = firstTxResult['ELF'];
-    const firstFee = divDecimalsStr(_firstFee, DEFAULT_TOKEN.decimals);
     console.log(firstTxResult, 'transactionRes===cross');
-    if (Number.isNaN(ZERO.plus(firstFee).toNumber())) {
+    const { TransactionFees, TransactionFee } = firstTxResult;
+    if (TransactionFees) {
+      const { Fee, ChargingAddress } = TransactionFees;
+      const _fee = Fee?.[DEFAULT_TOKEN.symbol];
+      const fee = divDecimalsStr(_fee, DEFAULT_TOKEN.decimals);
+
+      // fee fro free
+      if (Number.isNaN(ZERO.plus(fee).toNumber())) {
+        return '0';
+      }
+
+      if (ChargingAddress) {
+        if (wallet.isEqAddress(caAddress, ChargingAddress) || wallet.isEqAddress(managerAddress, ChargingAddress)) {
+          return fee;
+        }
+      }
       return '0';
     } else {
-      return firstFee;
+      const _fee = TransactionFee?.[DEFAULT_TOKEN.symbol];
+      const fee = divDecimalsStr(_fee, DEFAULT_TOKEN.decimals);
+
+      // fee fro free
+      if (Number.isNaN(ZERO.plus(fee).toNumber())) {
+        return '0';
+      }
+      return fee;
     }
   } else {
     const transactionRes = await getTransactionFee({
@@ -76,8 +97,34 @@ const getTransferFee = async ({
       },
     });
     console.log(transactionRes, 'transactionRes===');
-    const feeRes = transactionRes['ELF'];
-    return divDecimalsStr(feeRes, DEFAULT_TOKEN.decimals);
+    const { TransactionFees, TransactionFee } = transactionRes;
+    if (TransactionFees) {
+      const { Fee, ChargingAddress } = TransactionFees;
+      const _fee = Fee?.[DEFAULT_TOKEN.symbol];
+      const fee = divDecimalsStr(_fee, DEFAULT_TOKEN.decimals);
+
+      // fee fro free
+      if (Number.isNaN(ZERO.plus(fee).toNumber())) {
+        return '0';
+      }
+
+      if (ChargingAddress) {
+        if (wallet.isEqAddress(caAddress, ChargingAddress)) {
+          return fee;
+        }
+        return '0';
+      }
+      return fee;
+    } else {
+      const _fee = TransactionFee?.[DEFAULT_TOKEN.symbol];
+      const fee = divDecimalsStr(_fee, DEFAULT_TOKEN.decimals);
+
+      // fee fro free
+      if (Number.isNaN(ZERO.plus(fee).toNumber())) {
+        return '0';
+      }
+      return fee;
+    }
   }
 };
 
