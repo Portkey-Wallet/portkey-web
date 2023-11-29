@@ -9,7 +9,7 @@ import {
   singleMessage,
 } from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
-import { message, ConfigProvider } from 'antd';
+import { message } from 'antd';
 import { useEffect, useState } from 'react';
 
 ConfigProvider.setGlobalConfig({
