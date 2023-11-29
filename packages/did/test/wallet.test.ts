@@ -288,6 +288,29 @@ describe('DIDWallet describe', () => {
     expect(result).toBeTruthy();
   });
 
+  test('test logout sendOptions', async () => {
+    await wallet.login('loginAccount', {
+      loginGuardianIdentifier: 'loginGuardianIdentifier_mock',
+      guardiansApproved: [],
+      extraData: 'extraData_mock',
+      chainId: 'AELF',
+      context: {
+        clientId: 'clientId_mock',
+        requestId: 'requestId_mock',
+      },
+    });
+    const result = await wallet.logout(
+      {
+        chainId: 'AELF',
+        caHash: 'caHash_mock',
+      },
+      {
+        onMethod: 'transactionHash',
+      },
+    );
+    expect(result).toBeTruthy();
+  });
+
   test('test signTransaction', async () => {
     const rawTxn = AElf.pbUtils.getTransaction(
       'ELF_65dDNxzcd35jESiidFXN5JV8Z7pCwaFnepuYQToNefSgqk9',
@@ -795,5 +818,59 @@ describe('DIDWallet error describe', () => {
       },
     });
     expect(result).toBeTruthy();
+  });
+
+  test('test checkManagerIsExistByGQL', async () => {
+    const wallet = getWallet();
+    try {
+      await wallet.checkManagerIsExistByGQL({
+        managementAddress: 'managementAddress',
+        chainId: 'AELF',
+        caHash: 'caHash',
+      });
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test checkManagerIsExistByContract', async () => {
+    const wallet = getWallet();
+    try {
+      await wallet.checkManagerIsExistByContract({
+        managementAddress: 'managementAddress',
+        chainId: 'AELF',
+        caHash: 'caHash',
+      });
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test checkManagerIsExistByContract1', async () => {
+    const wallet = getWallet();
+    try {
+      wallet.getHolderInfoByContract = () => ({} as any);
+
+      await wallet.checkManagerIsExistByContract({
+        managementAddress: 'managementAddress',
+        chainId: 'AELF',
+        caHash: 'caHash',
+      });
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test checkManagerIsExist', async () => {
+    const wallet = getWallet();
+    try {
+      await wallet.checkManagerIsExist({
+        managementAddress: 'managementAddress',
+        chainId: 'AELF',
+        caHash: 'caHash',
+      });
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
   });
 });

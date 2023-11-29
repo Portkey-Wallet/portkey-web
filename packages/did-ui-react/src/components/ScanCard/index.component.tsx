@@ -17,6 +17,7 @@ export interface ScanCardProps {
   chainId?: ChainId;
   backIcon?: ReactNode;
   networkType?: string;
+  isMobile?: boolean;
   chainType?: ChainType;
   isErrorTip?: boolean;
   wrapperClassName?: string;
@@ -30,6 +31,7 @@ export interface ScanCardProps {
 export default function ScanCard({
   chainId = 'AELF',
   backIcon,
+  isMobile = false,
   isErrorTip = true,
   gridType,
   chainType,
@@ -125,7 +127,14 @@ export default function ScanCard({
 
   return (
     <div className={clsx('scan-base-wrapper', wrapperClassName)}>
-      <ScanBase gridType={gridType} isWaitingAuth={isWaitingAuth} backIcon={backIcon} onBack={onBack} qrData={qrData} />
+      <ScanBase
+        isMobile={isMobile}
+        gridType={gridType}
+        isWaitingAuth={isWaitingAuth}
+        backIcon={backIcon}
+        onBack={onBack}
+        qrData={qrData}
+      />
     </div>
   );
 }

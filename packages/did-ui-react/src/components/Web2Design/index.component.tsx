@@ -15,6 +15,7 @@ import './index.less';
 import { useUpdateEffect } from 'react-use';
 import { useSignHandler } from '../../hooks/useSignHandler';
 import { devices } from '@portkey/utils';
+import useMobile from '../../hooks/useMobile';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -63,6 +64,8 @@ export default function Web2Design({
   });
 
   const isWide = useMedia('(max-width: 768px)');
+
+  const isMobile = useMobile();
 
   const littleSize = useMemo(() => {
     try {
@@ -173,6 +176,7 @@ export default function Web2Design({
         {showScan && (
           <ScanCard
             gridType={1}
+            isMobile={isMobile}
             chainId={defaultChainId}
             chainType={chainType}
             networkType={networkType}
@@ -184,7 +188,7 @@ export default function Web2Design({
         )}
       </div>
     ),
-    [chainType, defaultChainId, isErrorTip, networkType, onError, onLoginFinishWithoutPin, showScan],
+    [chainType, defaultChainId, isErrorTip, isMobile, networkType, onError, onLoginFinishWithoutPin, showScan],
   );
   const [showQRCode, setShowQRCode] = useState<boolean>();
 

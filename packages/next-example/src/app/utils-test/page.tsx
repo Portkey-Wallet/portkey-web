@@ -1,17 +1,9 @@
 'use client';
-import {
-  ConfigProvider,
-  PortkeyAssetProvider,
-  did,
-  handleErrorMessage,
-  NFTCheckout,
-  ACHCheckout,
-} from '@portkey/did-ui-react';
-import { Button } from 'antd';
+import { PortkeyAssetProvider, NFTCheckout, ConfigProvider, singleMessage } from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
-import { message } from 'antd';
-import { useEffect, useState } from 'react';
-import { getContractBasic } from '@portkey/contracts';
+import { Button } from 'antd';
+import { useState } from 'react';
+
 ConfigProvider.setGlobalConfig({
   // test3
   serviceUrl: 'http://elf.nzcong.cn:11158',
@@ -23,52 +15,46 @@ export default function AppleAuth() {
     <div>
       <div>--------</div>
       <Button
-        type="primary"
         onClick={() => {
           evokePortkey.app({
             action: 'login',
             custom: {},
             onStatusChange: status => {
-              message.error(status);
+              singleMessage.error(status);
               setStatus(status);
             },
           });
-          message.warning('evokePortkeyApp');
+          singleMessage.warning('evokePortkeyApp');
         }}>
         evokePortkeyApp
       </Button>
       {status}
       <div>--------</div>
       <Button
-        type="primary"
         onClick={async () => {
           const result = await evokePortkey.extension();
-          // message.error(navigator.userAgent);
+          // singleMessage.error(navigator.userAgent);
           console.log(result, '=result==');
         }}>
         extension
       </Button>
       <div>-----</div>
       <Button
-        type="primary"
         onClick={async () => {
           const result = await evokePortkey.thirdParty();
-          // message.error(navigator.userAgent);
+          // singleMessage.error(navigator.userAgent);
           console.log(result, '=result==');
         }}>
         thirdParty
       </Button>
       <div>-----</div>
-
       <Button
-        type="primary"
         onClick={async () => {
           const VConsole = require('vconsole');
           new VConsole();
         }}>
         VConsole
       </Button>
-
       <div id="nft-checkout">-----</div>
 
       <PortkeyAssetProvider pin="111111" originChainId="AELF">

@@ -1,4 +1,6 @@
-import { ModalFuncProps, Modal } from 'antd';
+import { ModalFuncProps } from 'antd';
+import { PORTKEY_PREFIX_CLS, PORTKEY_ROOT_ID } from '../constants';
+import { Modal } from '../components/CustomAnt';
 
 export function modalMethod({ type = 'confirm', wrapClassName, className, onOk, onCancel, ...props }: ModalFuncProps) {
   return new Promise((resolve) => {
@@ -10,6 +12,8 @@ export function modalMethod({ type = 'confirm', wrapClassName, className, onOk, 
       ...props,
       wrapClassName: 'portkey-ui-wrapper portkey-ui-modal-method-wrapper ' + wrapClassName,
       className: 'portkey-ui-modal-method ' + className,
+      prefixCls: `${PORTKEY_PREFIX_CLS}-modal`,
+      getContainer: document.getElementById(PORTKEY_ROOT_ID) || undefined,
       onOk: () => {
         onOk?.();
         resolve(true);
@@ -17,6 +21,7 @@ export function modalMethod({ type = 'confirm', wrapClassName, className, onOk, 
       onCancel: () => {
         onCancel?.();
         resolve(false);
+        // modal.destroy();
       },
     });
   });

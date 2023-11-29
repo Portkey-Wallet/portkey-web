@@ -1,6 +1,7 @@
 import { handleContractError } from '@portkey/contracts';
 import { ErrorInfo, OnErrorFunc } from '../types';
-import { message } from 'antd';
+import { textProcessor } from './textProcessor';
+import { singleMessage } from '../components';
 
 export const verifyErrorHandler = (error: any) => {
   // let _error = isVerifyApiError(error);
@@ -20,12 +21,14 @@ export const handleError = (error: any) => {
 };
 
 export const handleErrorMessage = (error: any, errorText?: string) => {
+  if (error.status === 500) {
+    return errorText || 'Failed to fetch data';
+  }
   error = handleError(error);
   error = handleContractError(error);
-  if (!error) return errorText;
-  if (typeof error === 'string') return error;
-  if (typeof error.message === 'string') return error.message;
-  return errorText;
+  if (typeof error === 'string') errorText = error;
+  if (typeof error.message === 'string') errorText = error.message;
+  return textProcessor.format(errorText || '') || '';
 };
 
 export const handleErrorCode = (error: any) => {
@@ -39,7 +42,7 @@ export const contractErrorHandler = (error: any) => {
 
 export const errorTip = (errorInfo: ErrorInfo, isShowTip?: boolean, onError?: OnErrorFunc) => {
   const msgError = errorInfo?.error?.error?.message || errorInfo?.error?.message || errorInfo?.error;
-  if (isShowTip) msgError && message.error(msgError);
+  if (isShowTip) msgError && singleMessage.error(msgError);
   onError?.(errorInfo);
 };
 

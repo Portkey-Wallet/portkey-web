@@ -134,4 +134,22 @@ describe('assetsService describe', () => {
       expect(item).toHaveProperty('token');
     }
   });
+
+  test('test getAccountAssetsByKeywords', async () => {
+    const result = await assetsService.getAccountAssetsByKeywords({
+      caAddressInfos: [{ caAddress: 'caAddress_mock', chainId: 'AELF' }],
+      skipCount: 0,
+      maxResultCount: 10,
+    });
+
+    expect(Array.isArray(result.data)).toBe(true);
+    expect(result).toHaveProperty('totalRecordCount');
+
+    if (result.data.length > 0) {
+      const item = result.data[0];
+      expect(item).toHaveProperty('chainId');
+      expect(item).toHaveProperty('symbol');
+      expect(item).toHaveProperty('address');
+    }
+  });
 });

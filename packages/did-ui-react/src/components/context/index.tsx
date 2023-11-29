@@ -29,19 +29,15 @@ function reducer(state: any, { type, payload }: any) {
   }
 }
 
-export default function Provider({
-  theme,
-  chainType,
-  sandboxId,
-  networkType,
-  children,
-}: {
+export interface ProviderProps {
   theme?: Theme;
+  /** @alpha Required when running on chrome extension */
   sandboxId?: string;
   chainType?: ChainType;
   networkType: NetworkType;
   children: React.ReactNode;
-}) {
+}
+export default function Provider({ theme, chainType, sandboxId, networkType, children }: ProviderProps) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
 
   return (

@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@portkey/next-example",
-  "version": "1.4.4-alpha.5",
+  "version": "1.4.4-alpha.7",
   "scripts": {
     "dev": "next dev",
     "start": "next start",
@@ -9,8 +9,8 @@
     "dev:analyze": "ANALYZE=true next dev"
   },
   "dependencies": {
-    "@portkey/did-ui-react": "^1.4.4-alpha.5",
-    "@portkey/onboarding": "^1.4.4-alpha.5",
+    "@portkey/did-ui-react": "^1.4.4-alpha.7",
+    "@portkey/onboarding": "^1.4.4-alpha.7",
     "aelf-sdk": "3.2.45-beta.0",
     "next": "13.5.4",
     "react": "18.2.0",

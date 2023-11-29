@@ -95,12 +95,11 @@ export default function ReCaptchaModal() {
 
   return (
     <CommonModal
-      closable={false}
+      type="modal"
       className={'reCaptcha-modal-container'}
       open={modalInfo?.open}
-      maskClosable
       width={600}
-      onCancel={onCancel}>
+      onClose={onCancel}>
       <div className="reCaptcha-modal-inner">
         <iframe
           onLoad={iframeLoad}

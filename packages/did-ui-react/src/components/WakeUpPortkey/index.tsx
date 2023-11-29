@@ -1,5 +1,5 @@
 import { portkey } from '@portkey/accounts';
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
@@ -11,6 +11,7 @@ import { DIDWalletInfo } from '../types';
 import { randomId } from '@portkey/utils';
 import { evokePortkey } from '@portkey/onboarding';
 import './index.less';
+import singleMessage from '../CustomAnt/message';
 
 export default function WakeUpPortkey({
   type,
@@ -82,12 +83,12 @@ export default function WakeUpPortkey({
         onStatusChange: (status) => {
           if (status === 'failure') {
             setLoading(false);
-            message.error('Evoke portkey app timeout');
+            singleMessage.error('Evoke portkey app timeout');
           }
         },
       });
     } catch (error) {
-      message.error(handleErrorMessage(error));
+      singleMessage.error(handleErrorMessage(error));
     } finally {
       // setLoading(false);
     }

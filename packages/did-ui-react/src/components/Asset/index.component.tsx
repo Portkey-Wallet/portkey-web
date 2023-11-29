@@ -15,15 +15,15 @@ import { MAINNET } from '../../constants/network';
 import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
-import { message } from 'antd';
 import { useUpdateEffect } from 'react-use';
-import { useThrottleEffect } from '../../hooks/throttle';
 import SendMain from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
 import './index.less';
+import singleMessage from '../CustomAnt/message';
+import { useThrottleEffect } from '../../hooks/throttle';
 
 export enum AssetStep {
   overview = 'overview',
@@ -136,7 +136,7 @@ function AssetMain({
 
   const onBuy = useCallback(
     async (v: any) => {
-      if (!portkeyWebSocketUrl) return message.error('Please configure socket service url in setGlobalConfig');
+      if (!portkeyWebSocketUrl) return singleMessage.error('Please configure socket service url in setGlobalConfig');
       setSelectToken({
         ...v,
         address: v.address || v.tokenContractAddress,
@@ -223,7 +223,6 @@ function AssetMain({
           }}
           isBuySectionShow={true}
           isSellSectionShow={true}
-          isShowSelectInModal={true}
           isMainnet={networkType === MAINNET}
         />
       )}

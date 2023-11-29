@@ -11,6 +11,12 @@ import {
   SignIn,
   Web2Design,
   ISignIn,
+  CommonModal,
+  PortkeyStyleProvider,
+  PortkeyNumberKeyboard,
+  Unlock,
+  SetPinMobileBase,
+  PortkeyBaseNumberKeyboard,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
 import { OperationTypeEnum } from '@portkey/services';
@@ -23,11 +29,46 @@ ConfigProvider.setGlobalConfig({
 function Example() {
   const [isLoading, setLoading] = useState<any>();
   const ref = useRef<ISignIn>();
-
+  const [visible, setVisible] = useState<boolean>();
+  const [val, setVal] = useState<string>('');
+  const [unlock, setUnlock] = useState<boolean>();
+  const [password, setPassword] = useState<string>('');
   return (
     <div>
       <div id="wrapper"></div>
-
+      <div>----------</div>
+      <button
+        onClick={() => {
+          setVisible(v => !v);
+        }}>
+        PortkeyNumberKeyboard
+      </button>
+      <div>----------</div>
+      PortkeyNumberKeyboard input: &nbsp;{val}
+      <PortkeyNumberKeyboard visible={visible} onInput={v => setVal(_v => _v + v)} onDelete={() => setVal('')} />
+      <div>----------</div>
+      <button
+        onClick={() => {
+          setUnlock(v => !v);
+        }}>
+        Unlock
+      </button>
+      <Unlock
+        open={unlock}
+        value={password}
+        isWrongPassword
+        keyboard
+        onChange={v => {
+          console.log(v, 'setPassword===');
+          setPassword(v);
+        }}
+        onUnlock={_p => {
+          console.log(password, _p, 'onUnlock==');
+        }}
+        onCancel={() => setUnlock(false)}
+      />
+      <div>----------</div>
+      <div>----------</div>
       <SignIn
         ref={ref}
         uiType="Modal"
@@ -48,7 +89,6 @@ function Example() {
           console.log(info, 'onCreatePending====info');
         }}
       />
-
       <Button
         type="primary"
         onClick={() => {
@@ -62,16 +102,15 @@ function Example() {
         }}>
         ShowLoading
       </button>
-
-      <PortkeyLoading
+      {/* <PortkeyLoading
         loading={isLoading}
         loadingText={'Synchronizing on-chain account information...'}
         cancelable
         onCancel={() => setLoading(false)}
-      />
+      /> */}
       <div>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
-          <CryptoDesign
+          {/* <CryptoDesign
             style={{ height: 600, border: '1px solid gray' }}
             termsOfService={'https://portkey.finance/terms-of-service'}
             onError={(error: any) => {
@@ -111,29 +150,9 @@ function Example() {
             onFinish={result => {
               console.log('SetPinAndAddManager:onConfirm', result);
             }}
-          />
-          <CodeVerify
-            chainId="AELF"
-            isErrorTip
-            accountType="Phone"
-            verifier={{
-              endPoints: ['http://192.168.66.240:16010'],
-              verifierAddresses: ['2mBnRTqXMb5Afz4CWM2QakLRVDfaq2doJNRNQT1MXoi2uc6Zy3'],
-              id: 'd0e2442158b870190362c8daea87a6687a59fef94937a88bd7dcb464e8e21025',
-              name: 'Portkey',
-              imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/Portkey.png',
-            }}
-            verifierSessionId={'080bbdcd-73f5-45a6-b65b-0d067474756f'}
-            guardianIdentifier={'+852 12233333'}
-            operationType={1}
-            onError={(error: any) => {
-              console.log('SetPinAndAddManager:onError', error);
-            }}
-            onSuccess={result => {
-              console.log('SetPinAndAddManager:onConfirm', result);
-            }}
-          />
-          <GuardianApproval
+          /> */}
+
+          {/* <GuardianApproval
             chainId="AELF"
             operationType={OperationTypeEnum.communityRecovery}
             wrapperStyle={{ height: 600 }}
@@ -178,9 +197,9 @@ function Example() {
                 key: '',
               },
             ]}
-          />
+          /> */}
         </div>
-        <div>
+        {/* <div>
           <Web2Design
             phoneCountry={{
               iso: 'CN',
@@ -235,8 +254,9 @@ function Example() {
               console.log('onSuccess:', value);
             }}
           />
-        </div>
+        </div> */}
       </div>
+      {/* <PortkeyBaseNumberKeyboard /> */}
     </div>
   );
 }
