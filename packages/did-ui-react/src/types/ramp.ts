@@ -73,9 +73,8 @@ export type IRampInitState = {
   network: string;
   fiat: string;
   country: string;
-  amount?: string;
+  amount: string;
   side: RampTypeEnum;
-  tokenInfo?: any;
 };
 
 export type IRampPreviewInitState = {

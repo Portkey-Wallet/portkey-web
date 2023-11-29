@@ -2,12 +2,14 @@ import 'isomorphic-fetch';
 import { describe, expect, test } from '@jest/globals';
 import { DIDConfig, RequestDefaultsConfig } from '../src/config';
 import { StorageMock } from './__mocks__/storageMock';
+import { IConfig } from '@portkey/types';
 
 const config = new DIDConfig();
 
 describe('config describe', () => {
-  const configOptions = {
+  const configOptions: IConfig = {
     requestDefaults: {
+      timeout: 1000,
       baseURL: 'https://did-portkey-test.portkey.finance',
     },
     connectUrl: 'https://auth-portkey-test.portkey.finance',
@@ -33,6 +35,20 @@ describe('config describe', () => {
 
   test('test connectUrl', () => {
     expect(config.connectRequestConfig.baseURL).toEqual(configOptions.connectUrl);
+  });
+  test('test connect timeout', () => {
+    expect(config.connectRequestConfig.timeout).toEqual(configOptions.requestDefaults?.timeout);
+  });
+
+  test('test reset connect timeout', () => {
+    config.setConfig({ requestDefaults: { timeout: 2000 } });
+    expect(config.connectRequestConfig.timeout).toEqual(2000);
+    expect(config.connectRequestConfig.baseURL).toEqual(configOptions.connectUrl);
+  });
+
+  test('test reset connectUrl', () => {
+    config.setConfig({ connectUrl: 'mock_connectUrl' });
+    expect(config.connectRequestConfig.baseURL).toEqual('mock_connectUrl');
   });
 
   test('test graphQLUrl', () => {

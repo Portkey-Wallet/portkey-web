@@ -1,3 +1,5 @@
+@import '../../assets/theme/constants.less';
+
 .step-page-wrapper {
   height: 100%;
   display: flex;
@@ -31,5 +33,11 @@
     .bold {
       font-weight: bold;
     }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .step-page-wrapper .content-padding {
+    padding: 0 24px 20px;
   }
 }

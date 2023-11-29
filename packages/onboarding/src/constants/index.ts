@@ -8,6 +8,6 @@ export const EXTENSION_DOWNLOAD_URL = {
   DEFAULT: 'https://portkey.finance/download',
 };
 
-// export const WEB_PAGE = 'https://openlogin.portkey.finance';
-export const WEB_PAGE = 'https://openlogin-test.portkey.finance';
+export const WEB_PAGE = 'https://openlogin.portkey.finance';
+// export const WEB_PAGE = 'https://openlogin-test.portkey.finance';
 // export const WEB_PAGE = 'http://192.168.11.245:3000';

@@ -4,6 +4,12 @@
 .portkey-ui-common-modals,
 .portkey-ui-base-modal {
   // modal
+  .portkey-ant-modal-content {
+    .portkey-ant-modal-body {
+      height: 100%;
+      min-height: auto;
+    }
+  }
   .portkey-ant-modal-content,
   .portkey-ant-modal-header {
     background-color: var(--portkey-ui-default-bg);
@@ -206,6 +212,19 @@
   // password code
   .adm-passcode-input-cell {
     background-color: transparent;
+  }
+}
+
+.portkey-ui-btn-wrapper {
+  padding: 15px 16px 17px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 16px;
+  line-height: 20px;
+  button {
+    border-radius: var(--portkey-ui-primary-border-radius);
+    line-height: var(--portkey-ui-default-btn-h);
+    font-size: 16px;
   }
 }
 

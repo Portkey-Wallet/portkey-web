@@ -17,12 +17,12 @@
     color: var(--portkey-ui-text-primary);
     margin-bottom: 16px;
     text-align: center;
+    line-height: normal;
   }
 
   .approve-count {
     line-height: 20px;
     font-size: 14px;
-    margin-bottom: 8px;
     padding-bottom: 12px;
     color: var(--portkey-ui-text-secondary);
     border-bottom: 1px solid var(--portkey-ui-default-border);
@@ -41,7 +41,7 @@
 
   .verifier-item {
     position: relative;
-    padding: 24px 0;
+    padding: 26px 0;
     border-bottom: 1px solid var(--portkey-ui-default-border);
     &:last-of-type {
       border-bottom: none;
@@ -121,13 +121,14 @@
     flex: 1;
 
     .btn-wrap {
+      border-top: 1px solid var(--portkey-ui-border-2);
       padding-top: 24px;
     }
   }
 
   .login-icon {
     position: absolute;
-    top: 0;
+    top: 4px;
     left: 0;
     border-bottom-right-radius: 9px;
     border-top-left-radius: 9px;

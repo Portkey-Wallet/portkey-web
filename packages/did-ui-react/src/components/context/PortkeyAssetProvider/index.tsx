@@ -30,6 +30,10 @@ function reducer(state: AssetState, { type, payload }: any) {
     case PortkeyAssetActions.setDIDWallet: {
       return Object.assign({}, state, { ...payload, accountInfo: { ...state.accountInfo, ...payload.accountInfo } });
     }
+    case PortkeyAssetActions.setTxFee: {
+      state.txFee = { ...state.txFee, ...payload.txFee };
+      return Object.assign({}, state);
+    }
     case PortkeyAssetActions.setCAInfo: {
       const caInfo = payload.caInfo as Required<WalletInfo>['caInfo'];
       if (!caInfo) return state;

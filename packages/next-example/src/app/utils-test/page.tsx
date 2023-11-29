@@ -1,12 +1,29 @@
 'use client';
-import { PortkeyAssetProvider, NFTCheckout, ConfigProvider, singleMessage } from '@portkey/did-ui-react';
-import { evokePortkey } from '@portkey/onboarding';
-import { Button } from 'antd';
-import { useState } from 'react';
 
 ConfigProvider.setGlobalConfig({
   // test3
-  serviceUrl: 'http://elf.nzcong.cn:11158',
+  serviceUrl: 'http://192.168.66.203:5001',
+});
+import {
+  handleErrorMessage,
+  managerApprove,
+  checkWalletSecurity,
+  ConfigProvider,
+  NFTCheckout,
+  did,
+  PortkeyProvider,
+  PortkeyStyleProvider,
+  singleMessage,
+  PortkeyAssetProvider,
+} from '@portkey/did-ui-react';
+import { evokePortkey } from '@portkey/onboarding';
+import { message, Button } from 'antd';
+import { useEffect, useState } from 'react';
+
+ConfigProvider.setGlobalConfig({
+  requestDefaults: {
+    timeout: 30000,
+  },
 });
 
 export default function AppleAuth() {
@@ -55,6 +72,47 @@ export default function AppleAuth() {
         }}>
         VConsole
       </Button>
+
+      <div>-----</div>
+
+      <Button
+        onClick={async () => {
+          try {
+            const result = await managerApprove({
+              originChainId: 'AELF',
+              symbol: 'TOKEN',
+              caHash: 'a79c76fd18879943980b9909f46ea644f9cd02eee5069d645d7046a874f7e212',
+              amount: '999',
+              targetChainId: 'AELF',
+            });
+            console.log(result, 'result===');
+          } catch (error) {
+            message.error(handleErrorMessage(error));
+          }
+        }}>
+        managerApprove
+      </Button>
+
+      <div>-----</div>
+      <PortkeyProvider sandboxId="" networkType="MAIN">
+        <Button
+          onClick={async () => {
+            try {
+              await did.load('111111');
+              const result = await checkWalletSecurity({
+                originChainId: 'AELF',
+                targetChainId: 'tDVV',
+                caHash: did.didWallet.caInfo['AELF'].caHash,
+              });
+              console.log(result, 'result===');
+            } catch (error) {
+              message.error(handleErrorMessage(error));
+            }
+          }}>
+          checkWalletSecurity
+        </Button>
+      </PortkeyProvider>
+
       <div id="nft-checkout">-----</div>
 
       <PortkeyAssetProvider pin="111111" originChainId="AELF">
