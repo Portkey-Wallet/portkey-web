@@ -3,27 +3,33 @@
   "name": "@portkey/next-example",
   "version": "1.5.1",
   "scripts": {
-    "dev": "next dev",
+    "dev": "PORT=3000 next dev",
     "start": "next start",
     "lint": "next lint",
-    "dev:analyze": "ANALYZE=true next dev"
+    "dev:analyze": "PORT=4000 ANALYZE=true next dev"
   },
   "dependencies": {
     "@portkey/did-ui-react": "^1.5.1",
     "@portkey/onboarding": "^1.5.1",
     "aelf-sdk": "3.2.45-beta.0",
-    "next": "13.5.4",
+    "next": "12.2.0",
+    "next-transpile-modules": "^10.0.0",
     "react": "18.2.0",
     "react-dom": "18.2.0"
   },
   "devDependencies": {
-    "vconsole": "3.15.1",
-    "typescript": "^5",
-    "@types/node": "^20",
-    "autoprefixer": "^10",
-    "postcss": "^8",
-    "tailwindcss": "^3",
-    "eslint": "^8",
-    "eslint-config-next": "13.5.4"
+    "vconsole": "3.15.1"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

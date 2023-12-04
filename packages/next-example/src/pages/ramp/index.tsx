@@ -1,6 +1,12 @@
-'use client';
 import { ConfigProvider, PortkeyAssetProvider, Ramp } from '@portkey/did-ui-react';
 import router from 'next/router';
+import { Store } from '../../utils';
+
+const myStore = new Store();
+
+ConfigProvider.setGlobalConfig({
+  storageMethod: myStore,
+});
 
 export default function RampPage() {
   return (

@@ -1,14 +1,16 @@
-'use client';
 import React, { useEffect, useRef, useState } from 'react';
 import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE, Unlock } from '@portkey/did-ui-react';
+import { Store } from '../../utils';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
 
+const myStore = new Store();
 ConfigProvider.setGlobalConfig({
   connectUrl: 'https://auth-portkey-test.portkey.finance',
+  storageMethod: myStore,
   socialLogin: {
     Portkey: {
       websiteName: 'website demo',
@@ -36,7 +38,7 @@ export default function Sign() {
   const [password, setPassword] = useState<string>();
 
   useEffect(() => {
-    typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') || '{}'));
+    typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
   }, []);
 
   return (
@@ -62,7 +64,7 @@ export default function Sign() {
           console.log(error, 'onError====error');
         }}
         onCancel={() => {
-          ref.current?.setOpen(false);
+          ref?.current.setOpen(false);
           setLifeCycle(undefined);
         }}
         onCreatePending={info => {
@@ -115,7 +117,7 @@ export default function Sign() {
 
       <button
         onClick={async () => {
-          ref.current?.setCurrentLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') || '{}'));
+          ref.current.setCurrentLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
         }}>
         setCurrentLifeCycle
       </button>

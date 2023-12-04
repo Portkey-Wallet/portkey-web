@@ -1,4 +1,3 @@
-'use client';
 import { ConfigProvider, Asset, PortkeyAssetProvider } from '@portkey/did-ui-react';
 import React from 'react';
 // import { Store } from '../../utils';
@@ -6,7 +5,7 @@ import React from 'react';
 
 ConfigProvider.setGlobalConfig({
   // storageMethod: myStore,
-  serviceUrl: 'http://192.168.66.240:5577',
+  serviceUrl: 'https://localtest-applesign2.portkey.finance',
 
   requestDefaults: {
     timeout: 30000,

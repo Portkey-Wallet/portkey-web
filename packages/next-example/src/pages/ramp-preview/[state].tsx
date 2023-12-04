@@ -1,8 +1,14 @@
-'use client';
 import { ConfigProvider, IRampPreviewInitState, PortkeyAssetProvider, RampPreview } from '@portkey/did-ui-react';
 import { useRouter } from 'next/router';
+import { Store } from '../../utils';
 import { useEffect, useState } from 'react';
 import { ChainId } from '@portkey/types';
+
+const myStore = new Store();
+
+ConfigProvider.setGlobalConfig({
+  storageMethod: myStore,
+});
 
 export default function RampPreviewPage() {
   const router = useRouter();

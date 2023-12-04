@@ -1,10 +1,9 @@
-'use client';
-import { NetworkType, PortkeyProvider } from '@portkey/did-ui-react';
-import React, { ReactNode, useState, useEffect } from 'react';
-import { Button } from 'antd';
 import '@portkey/did-ui-react/dist/assets/index.css';
+import { NetworkType, PortkeyProvider } from '@portkey/did-ui-react';
+import { useEffect, useState } from 'react';
+import './index.css';
 
-export default function Portkey({ children }: { children: ReactNode }) {
+export default function APP({ Component, pageProps }: any) {
   const [dark, setDark] = useState<boolean>(false);
   const [networkType, setNetworkType] = useState<NetworkType>('MAIN');
 
@@ -19,21 +18,20 @@ export default function Portkey({ children }: { children: ReactNode }) {
   return (
     <PortkeyProvider networkType={networkType} theme={dark ? 'dark' : 'light'}>
       <div style={{ background: dark ? '#1E212B' : '#fff' }} id={dark ? 'ids' : ''}>
-        <Button
-          type="primary"
+        <button
           onClick={async () => {
             setDark(v => !v);
           }}>
           change theme
-        </Button>
-        <Button
+        </button>
+        <button
           onClick={async () => {
             setNetworkType(v => (v === 'MAIN' ? 'TESTNET' : 'MAIN'));
           }}>
           Only change networkType
-        </Button>
+        </button>
+        <Component {...pageProps} />
       </div>
-      {children}
     </PortkeyProvider>
   );
 }

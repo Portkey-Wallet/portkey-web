@@ -19,10 +19,12 @@ import {
   PortkeyBaseNumberKeyboard,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
+import { Store } from '../../utils';
 import { OperationTypeEnum } from '@portkey/services';
-import { Button } from 'antd';
 
+const myStore = new Store();
 ConfigProvider.setGlobalConfig({
+  storageMethod: myStore,
   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
 });
 
@@ -89,13 +91,28 @@ function Example() {
           console.log(info, 'onCreatePending====info');
         }}
       />
-      <Button
-        type="primary"
+      <CommonModal
+        type="modal"
+        closable={false}
+        open={isLoading}
+        className="confirm-return-modal"
+        title={'Leave this page?'}
+        width={320}
+        getContainer={'#set-pin-wrapper'}>
+        <p className="modal-content">Are you sure you want to leave this page? All changes will not be saved.</p>
+        <div className="btn-wrapper">
+          {/* <Button onClick={() => setReturnOpen(false)}>No</Button>
+          <Button type="primary" onClick={() => onCancel?.('register')}>
+            Yes
+          </Button> */}
+        </div>
+      </CommonModal>
+      <button
         onClick={() => {
           ref.current?.setOpen(true);
         }}>
         setOpen
-      </Button>
+      </button>
       <button
         onClick={async () => {
           setLoading(true);
