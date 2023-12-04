@@ -5,6 +5,7 @@
 
 .portkey-ui-checkout-pending-inner-nft {
   padding-bottom: 24px;
+  width: 100%;
   border-bottom: 1px solid var(--portkey-ui-default-border);
 }
 
@@ -59,4 +60,36 @@
   font-style: normal;
   font-weight: 500;
   line-height: 20px;
+}
+
+.portkey-ui-checkout-pending-inner-wrapper {
+  .portkey-ui-btn-wrapper {
+    display: none;
+    grid-template-columns: 1fr;
+    padding-top: 8px;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .portkey-ui-checkout-pending-inner-wrapper,
+  .portkey-ui-checkout-pending-inner-content {
+    display: flex;
+    height: 100%;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .portkey-ui-checkout-pending-inner-content {
+    flex: 1;
+  }
+  .portkey-ui-checkout-pending-inner-nft {
+    border-bottom: none;
+  }
+
+  .portkey-ui-checkout-pending-inner-wrapper .portkey-ui-btn-wrapper {
+    padding-top: 20px;
+    border-top: 1px solid var(--portkey-ui-default-border);
+    display: grid;
+  }
 }

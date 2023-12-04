@@ -1,7 +1,7 @@
 // import type { ModalStaticFunctions } from '.';
 import { ModalStaticFunctions } from 'antd/lib/modal/confirm';
 import confirm, { modalGlobalConfig, withConfirm, withError, withInfo, withSuccess, withWarn } from './comfirm';
-import destroyFns from './destroyFns';
+import destroyFns from '../../utils/destroyFns';
 import type { ModalFuncProps } from './Modal';
 import OriginModal from './Modal';
 

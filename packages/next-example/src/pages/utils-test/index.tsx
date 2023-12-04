@@ -80,7 +80,7 @@ export default function AppleAuth() {
           try {
             const result = await managerApprove({
               originChainId: 'AELF',
-              symbol: 'TOKEN',
+              symbol: 'ELF',
               caHash: 'a79c76fd18879943980b9909f46ea644f9cd02eee5069d645d7046a874f7e212',
               amount: '999',
               targetChainId: 'AELF',

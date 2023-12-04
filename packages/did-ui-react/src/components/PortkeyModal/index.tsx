@@ -2,7 +2,9 @@ import { devices } from '@portkey/utils';
 import { useMemo } from 'react';
 import { useMedia } from 'react-use';
 import { Drawer, Modal } from '../CustomAnt';
-import { Button, type DrawerProps, type ModalProps } from 'antd';
+import { Button } from 'antd';
+import type { DrawerProps, ModalProps } from 'antd';
+
 import { getConfirmLocale } from 'antd/lib/modal/locale';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import clsx from 'clsx';
@@ -19,7 +21,7 @@ export type PortkeyBaseModalProps = Omit<
 >;
 type BaseAntdModalProps = PortkeyDrawerInModalProps & PortkeyBaseModalProps;
 
-const PORTKEY_MODAL_PREFIX_CLS = 'portkey-ui-modal_drawer';
+export const PORTKEY_MODAL_PREFIX_CLS = 'portkey-ui-modal_drawer';
 
 export interface PortkeyModalProps extends BaseAntdModalProps {
   type?: 'modal' | 'drawer' | 'auto';

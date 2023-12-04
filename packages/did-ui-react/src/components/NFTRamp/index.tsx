@@ -3,6 +3,7 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import ACHCheckout from './ACHCheckout';
 import { INFTCheckout, MerchantNameEnum } from './types';
 import BaseModalFunc from '../ModalMethod/BaseModalMethod';
+import clsx from 'clsx';
 import './index.less';
 
 /**
@@ -28,8 +29,17 @@ const NFTCheckout: INFTCheckout['nftCheckout'] = async ({
     const modal = BaseModalFunc({
       width: 550,
       maskClosable: true,
-      className: 'portkey-ui-nft-checkout-modal ' + className,
+      className: clsx('portkey-ui-nft-checkout-modal', className),
       wrapClassName,
+      onCancel: () => {
+        modal.destroy();
+        resolve({
+          status: 'cancel',
+          data: {
+            orderId,
+          },
+        });
+      },
       content: (
         <PortkeyStyleProvider>
           {merchantName === 'Alchemy' && (

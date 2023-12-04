@@ -208,7 +208,7 @@ export default function ACHCheckout({
       const getSignatureParams: GetAchNFTSignatureParams = {
         appId,
         language,
-        timestamp: orderInfo.nftOrderSection.createTime || Math.floor(Date.now()).toString(),
+        timestamp: orderInfo.nftOrderSection?.createTime || Math.floor(Date.now()).toString(),
         timeout: orderInfo.nftOrderSection?.expireTime || Math.floor(Date.now() + DAY).toString(), // time going to expire, UTC,13 digit
         crypto: orderInfo.crypto, // ELF/ETH.etc ELF default. Required parameter for crypto-based
         cryptoAmount: orderInfo.cryptoAmount, // Total NFT oder crypto amount，Required parameter for crypto-based
@@ -312,7 +312,7 @@ export default function ACHCheckout({
       {orderStatus === NFTCheckoutStatus.Start && (
         <>
           <header className={`portkey-ui-flex-between-center ${preFixCls}-header`}>
-            <span>Checkout with Alchemy Pay</span>
+            <span className="header-title">Checkout with Alchemy Pay</span>
             <CustomSvg
               type="Close2"
               onClick={() => {

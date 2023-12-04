@@ -5,7 +5,7 @@ import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined';
 import { render as reactRender, unmount as reactUnmount } from 'rc-util/lib/React/render';
 import warning from 'antd/lib/_util/warning';
 import ConfirmDialog from './ConfirmDialog';
-import destroyFns from './destroyFns';
+import destroyFns from '../../utils/destroyFns';
 import { getConfirmLocale } from './locale';
 import type { ModalFuncProps } from 'antd';
 import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../../constants';

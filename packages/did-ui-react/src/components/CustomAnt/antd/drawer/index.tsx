@@ -19,7 +19,7 @@ export interface PushState {
 }
 
 // Drawer diff props: 'open' | 'motion' | 'maskMotion' | 'wrapperClassName'
-export interface DrawerProps extends RcDrawerProps {
+export interface DrawerProps extends Omit<RcDrawerProps, 'visible' | 'afterVisibleChange'> {
   size?: sizeType;
   closable?: boolean;
   closeIcon?: React.ReactNode;
@@ -31,21 +31,12 @@ export interface DrawerProps extends RcDrawerProps {
   footerStyle?: React.CSSProperties;
 
   title?: React.ReactNode;
-  /**
-   * @deprecated `visible` is deprecated which will be removed in next major version. Please use
-   *   `open` instead.
-   */
-  visible?: boolean;
+
   open?: boolean;
 
   footer?: React.ReactNode;
   extra?: React.ReactNode;
 
-  /**
-   * @deprecated `afterVisibleChange` is deprecated which will be removed in next major version.
-   *   Please use `afterOpenChange` instead.
-   */
-  afterVisibleChange?: (visible: boolean) => void;
   afterOpenChange?: (open: boolean) => void;
 
   /* custom props */
@@ -66,7 +57,6 @@ function Drawer(props: DrawerProps) {
     bodyStyle,
     drawerStyle,
     className,
-    visible,
     open,
     children,
     style,
@@ -78,7 +68,6 @@ function Drawer(props: DrawerProps) {
     prefixCls: customizePrefixCls,
     getContainer: customizeGetContainer,
     extra,
-    afterVisibleChange,
     afterOpenChange,
     wrapClassName,
     rootClassName,
@@ -98,17 +87,6 @@ function Drawer(props: DrawerProps) {
       {closeIcon}
     </button>
   );
-
-  [
-    ['visible', 'open'],
-    ['afterVisibleChange', 'afterOpenChange'],
-  ].forEach(([deprecatedName, newName]) => {
-    console.warn(
-      !(deprecatedName in props),
-      'Drawer',
-      `\`${deprecatedName}\` is deprecated which will be removed in next major version, please use \`${newName}\` instead.`,
-    );
-  });
 
   function renderHeader() {
     if (!title && !closable) {
@@ -181,7 +159,7 @@ function Drawer(props: DrawerProps) {
           prefixCls={prefixCls}
           onClose={onClose}
           {...rest}
-          open={open ?? visible}
+          open={open}
           mask={mask}
           push={push}
           width={mergedWidth}
@@ -190,7 +168,6 @@ function Drawer(props: DrawerProps) {
           getContainer={getContainer}
           afterOpenChange={(isOpen) => {
             afterOpenChange?.(isOpen);
-            afterVisibleChange?.(isOpen);
           }}
           maskMotion={maskMotion}
           motion={panelMotion}
