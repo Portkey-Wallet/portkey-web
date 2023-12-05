@@ -62,7 +62,8 @@ const getTransferFee = async ({
       }
 
       if (ChargingAddress) {
-        if (wallet.isEqAddress(caAddress, ChargingAddress) || wallet.isEqAddress(managerAddress, ChargingAddress)) {
+        // no check manager address
+        if (wallet.isEqAddress(caAddress, ChargingAddress)) {
           return fee;
         }
       }
