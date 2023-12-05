@@ -69,7 +69,7 @@ function SendContent({
   onModifyLimit,
   onModifyGuardians,
 }: SendProps) {
-  const [{ accountInfo, managementAccount, caInfo, caHash, originChainId }] = usePortkeyAsset();
+  const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(Stage.Address);
 
@@ -136,7 +136,9 @@ function SendContent({
         const privateKey = managementAccount?.privateKey;
         if (!privateKey) throw WalletError.invalidPrivateKey;
         if (!caHash) throw 'Please login';
+        const _caAddress = caAddressInfos?.filter((caAdd) => caAdd.chainId === tokenInfo?.chainId)?.[0];
         const feeRes = await getTransferFee({
+          caAddress: _caAddress?.caAddress || '',
           chainId: tokenInfo.chainId,
           managerAddress: managementAccount.address,
           toAddress: toAccount?.address,
@@ -152,7 +154,7 @@ function SendContent({
         console.log('getFee===error', _error);
       }
     },
-    [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo],
+    [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo, caAddressInfos],
   );
 
   const retryCrossChain = useCallback(

@@ -65,7 +65,8 @@ export default function SendPreview({
     if (ZERO.plus(amount).isLessThanOrEqualTo(crossChainFee)) {
       return (
         <>
-          <span className="usd">{isMainnet && '$0'}</span>0
+          <span className="usd">{isMainnet && '$0 '}</span>
+          {`0 ${defaultToken.symbol}`}
         </>
       );
     } else {
@@ -78,12 +79,13 @@ export default function SendPreview({
                 decimal: 0,
                 price: defaultTokenPrice,
               })}
+            &nbsp;
           </span>
-          {formatAmountShow(ZERO.plus(amount).minus(crossChainFee))}
+          {`${formatAmountShow(ZERO.plus(amount).minus(crossChainFee))} ${symbol}`}
         </>
       );
     }
-  }, [amount, crossChainFee, defaultTokenPrice, isMainnet]);
+  }, [amount, crossChainFee, defaultTokenPrice, isMainnet, symbol, defaultToken]);
 
   return (
     <div className="portkey-ui-send-preview">

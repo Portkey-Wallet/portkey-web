@@ -67,5 +67,5 @@ export const getTransactionFee = async ({
   });
   if (!transaction?.Success) throw 'Transaction failed';
 
-  return transaction.TransactionFee;
+  return transaction;
 };
