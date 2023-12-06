@@ -3,7 +3,7 @@ import ConfigProvider from '../../config-provider';
 import ActionButtonEle from 'antd/lib/_util/ActionButton';
 import type { ModalFuncProps } from 'antd';
 import Dialog from './Modal';
-import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../../constants';
+import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS, PORTKEY_Z_INDEX } from '../../../../constants';
 import { getTransitionName } from 'antd/lib/_util/motion';
 
 const ActionButton = (ActionButtonEle as any).default || ActionButtonEle;
@@ -90,7 +90,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
         style={style}
         bodyStyle={bodyStyle}
         width={width}
-        zIndex={zIndex}
+        zIndex={zIndex || PORTKEY_Z_INDEX}
         afterClose={afterClose}
         keyboard={keyboard}
         centered={centered}

@@ -3619,6 +3619,13 @@
   dependencies:
     "@types/elliptic" "^6.4.14"
 
+"@portkey/types@^1.0.0-alpha.4":
+  version "1.5.1"
+  resolved "http://192.168.66.111:8081/repository/npm-public/@portkey/types/-/types-1.5.1.tgz#24bc1b8fb1514fd20abb5c9b2e21e0a908c82275"
+  integrity sha512-IYFe0l1Y3MH7fUJvSO/0OQ2bSZc0j1RCn2eASAoXSHWWtqESUKFn/lnDs9v7ha4S9kp/T1X7KUekNR+Ut9kYUA==
+  dependencies:
+    "@types/elliptic" "^6.4.14"
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"

@@ -10,6 +10,7 @@ import { getTransitionName } from 'antd/lib/_util/motion';
 import { tuple } from 'antd/lib/_util/type';
 import { ConfigContext } from '../../config-provider';
 import clsx from 'clsx';
+import { PORTKEY_Z_INDEX } from '../../../../constants';
 const CloseOutlined = (CloseOutlinedIcon as any).default || CloseOutlinedIcon;
 
 const SizeTypes = tuple('default', 'large');
@@ -72,6 +73,7 @@ function Drawer(props: DrawerProps) {
     afterOpenChange,
     wrapClassName,
     rootClassName,
+    zIndex = PORTKEY_Z_INDEX,
     ...rest
   } = props;
 
@@ -160,6 +162,7 @@ function Drawer(props: DrawerProps) {
           prefixCls={prefixCls}
           onClose={onClose}
           {...rest}
+          zIndex={zIndex}
           open={open}
           mask={mask}
           push={push}

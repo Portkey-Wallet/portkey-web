@@ -1,4 +1,4 @@
-import { PORTKEY_PREFIX_CLS, PORTKEY_ROOT_ID } from '../../constants';
+import { PORTKEY_PREFIX_CLS } from '../../constants';
 import { messagePrefixCls } from './constants';
 import message, { ArgsProps, MessageApi, MessageInstance, typeList } from './antd/message';
 import { randomId } from '../../utils';
@@ -9,7 +9,6 @@ const singleMessage = {} as Omit<MessageApi, 'useMessage'>;
 const defaultMessageArgs: Partial<ArgsProps> = {
   prefixCls: messagePrefixCls,
   rootPrefixCls: PORTKEY_PREFIX_CLS,
-  getPopupContainer: () => document.getElementById(PORTKEY_ROOT_ID) || document.getElementsByName('body')[0],
 };
 
 function isArgsProps(content: Parameters<MessageInstance['success']>[0]): content is ArgsProps {
