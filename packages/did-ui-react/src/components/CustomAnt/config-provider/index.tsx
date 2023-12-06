@@ -1,12 +1,11 @@
-import IconContext from '@ant-design/icons/lib/components/Context';
+import * as IconContext from '@ant-design/icons/lib/components/Context';
 import type { ValidateMessages } from 'rc-field-form/lib/interface';
-import useMemo from 'rc-util/lib/hooks/useMemo';
 import * as React from 'react';
 import { merge } from '../utils/set';
 import type { RequiredMark } from 'antd/lib/form/Form';
 import type { Locale } from 'antd/lib/locale-provider';
 import LocaleProvider from 'antd/lib/locale-provider';
-import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import LocaleReceiver from '../locale-provider/LocaleReceiver';
 import defaultLocale from 'antd/lib/locale/default';
 import message from '../message';
 import notification from '../notification';
@@ -19,6 +18,7 @@ import type { SizeType } from 'antd/lib/config-provider/SizeContext';
 import SizeContext, { SizeContextProvider } from 'antd/lib/config-provider/SizeContext';
 import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../constants';
 import ValidateMessagesContext from './ValidateMessagesContext';
+import useMemo from '../hooks/useMemo';
 
 export { ConfigContext, ConfigConsumer };
 
@@ -172,7 +172,6 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [parentContext.getPrefixCls, props.prefixCls],
   );
-
   const config = {
     ...parentContext,
     csp,
@@ -214,8 +213,8 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
     () =>
       merge(
         defaultLocale.Form?.defaultValidateMessages || {},
-        memoedConfig.locale?.Form?.defaultValidateMessages || {},
-        memoedConfig.form?.validateMessages || {},
+        memoedConfig?.locale?.Form?.defaultValidateMessages || {},
+        memoedConfig?.form?.validateMessages || {},
         form?.validateMessages || {},
       ),
     [memoedConfig, form?.validateMessages],
@@ -230,9 +229,8 @@ const ProviderChildren: React.FC<ProviderChildrenProps> = (props) => {
   if (locale) {
     childNode = <LocaleProvider locale={locale}>{childNode}</LocaleProvider>;
   }
-
   if (iconPrefixCls || csp) {
-    childNode = <IconContext.Provider value={memoIconContextValue}>{childNode}</IconContext.Provider>;
+    <IconContext.default.Provider value={memoIconContextValue}>{childNode}</IconContext.default.Provider>;
   }
 
   if (componentSize) {

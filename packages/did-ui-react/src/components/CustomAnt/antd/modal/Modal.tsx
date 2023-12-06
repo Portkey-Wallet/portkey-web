@@ -6,18 +6,19 @@ import * as React from 'react';
 import { Button } from 'antd';
 import type { ButtonProps } from 'antd';
 import { NoFormStyle } from 'antd/lib/form/context';
-import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import LocaleReceiver from '../../locale-provider/LocaleReceiver';
 import { getTransitionName } from 'antd/lib/_util/motion';
 import type { DirectionType } from 'antd/lib/config-provider';
 import { LegacyButtonType, convertLegacyProps } from 'antd/lib/button/button';
 import { NoCompactStyle } from 'antd/lib/space/Compact';
 import { canUseDocElement } from 'antd/lib/_util/styleChecker';
-import warning from 'antd/lib/_util/warning';
 import { getConfirmLocale } from 'antd/lib/modal/locale';
 import ConfigProvider from '../../config-provider';
 type MousePosition = { x: number; y: number } | null;
 
 let mousePosition: MousePosition;
+
+const CloseOutlinedIcon = (CloseOutlined as any).default || CloseOutlined;
 
 // ref: https://github.com/ant-design/ant-design/issues/15795
 const getClickPosition = (e: MouseEvent) => {
@@ -156,7 +157,7 @@ const Modal: React.FC<ModalProps> = (props) => {
   const prefixCls = getPrefixCls('modal', customizePrefixCls);
   const rootPrefixCls = getPrefixCls();
 
-  const defaultFooter = (
+  const defaultFooter = () => (
     <LocaleReceiver componentName="Modal" defaultLocale={getConfirmLocale()}>
       {(contextLocale) => {
         const { okText, okType = 'primary', cancelText, confirmLoading = false } = props;
@@ -181,7 +182,7 @@ const Modal: React.FC<ModalProps> = (props) => {
 
   const closeIconToRender = (
     <span className={`${prefixCls}-close-x`}>
-      {closeIcon || <CloseOutlined className={`${prefixCls}-close-icon`} />}
+      {closeIcon || (CloseOutlinedIcon && <CloseOutlinedIcon className={`${prefixCls}-close-icon`} />)}
     </span>
   );
 
@@ -199,7 +200,7 @@ const Modal: React.FC<ModalProps> = (props) => {
           getContainer={getContainer === undefined ? (getContextPopupContainer as getContainerFunc) : getContainer}
           prefixCls={prefixCls}
           wrapClassName={wrapClassNameExtended}
-          footer={footer === undefined ? defaultFooter : footer}
+          footer={footer === undefined ? defaultFooter() : footer}
           visible={open}
           mousePosition={restProps.mousePosition ?? mousePosition}
           onClose={handleCancel}

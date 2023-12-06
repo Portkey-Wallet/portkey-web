@@ -1,5 +1,5 @@
 import { devices } from '@portkey/utils';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useMedia } from 'react-use';
 import { Drawer, Modal } from '../CustomAnt';
 import { Button } from 'antd';
@@ -84,7 +84,7 @@ export default function PortkeyModal({
   const isWide = useMedia('(max-width: 768px)');
   const isMobile = useMemo(() => isWide || devices.isMobileDevices(), [isWide]);
 
-  const defaultFooter = useMemo(
+  const defaultFooter = useCallback(
     () => (
       <LocaleReceiver componentName="Modal" defaultLocale={getConfirmLocale()}>
         {(contextLocale) => {
@@ -132,7 +132,7 @@ export default function PortkeyModal({
         transitionName={transitionName}
         focusTriggerAfterClose={focusTriggerAfterClose}
         // mousePosition={mousePosition}
-        footer={footer === undefined ? defaultFooter : footer}
+        footer={footer === undefined ? defaultFooter() : footer}
         height={defaultHeight}
       />
     );
@@ -172,7 +172,7 @@ export default function PortkeyModal({
         maskMotion={maskMotion}
         wrapClassName={wrapClassName}
         size={size}
-        footer={footer === undefined ? defaultFooter : footer}
+        footer={footer === undefined ? defaultFooter() : footer}
         extra={extra}
         onClose={onClose}
         height={defaultHeight}

@@ -1,15 +1,16 @@
-import CheckCircleFilled from '@ant-design/icons/CheckCircleFilled';
+'use client';
+import CheckCircleFilled from '@ant-design/icons/CloseCircleFilled';
 import CloseCircleFilled from '@ant-design/icons/CloseCircleFilled';
 import ExclamationCircleFilled from '@ant-design/icons/ExclamationCircleFilled';
 import InfoCircleFilled from '@ant-design/icons/InfoCircleFilled';
 import LoadingOutlined from '@ant-design/icons/LoadingOutlined';
-import { ConfigProvider } from 'antd';
 import classNames from 'classnames';
 import RCNotification from 'rc-notification';
 import type { NoticeContent, NotificationInstance as RCNotificationInstance } from 'rc-notification/lib/Notification';
 import * as React from 'react';
 import { messagePrefixCls } from '../../constants';
 import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../../constants';
+import ConfigProvider from '../../config-provider';
 
 let messageInstance: RCNotificationInstance | null;
 let defaultDuration = 3;
@@ -113,11 +114,11 @@ export interface MessageType extends PromiseLike<any> {
 }
 
 const typeToIcon = {
-  info: InfoCircleFilled,
-  success: CheckCircleFilled,
-  error: CloseCircleFilled,
-  warning: ExclamationCircleFilled,
-  loading: LoadingOutlined,
+  info: (InfoCircleFilled as any).default || InfoCircleFilled,
+  success: (CheckCircleFilled as any).default || CheckCircleFilled,
+  error: (CloseCircleFilled as any).default || CloseCircleFilled,
+  warning: (ExclamationCircleFilled as any).default || ExclamationCircleFilled,
+  loading: (LoadingOutlined as any).default || LoadingOutlined,
 };
 
 export type NoticeType = keyof typeof typeToIcon;

@@ -1,4 +1,4 @@
-import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import CloseOutlinedIcon from '@ant-design/icons/CloseOutlined';
 import classNames from 'classnames';
 import RcDrawer from 'rc-drawer';
 import type { DrawerProps as RcDrawerProps } from 'rc-drawer';
@@ -10,6 +10,7 @@ import { getTransitionName } from 'antd/lib/_util/motion';
 import { tuple } from 'antd/lib/_util/type';
 import { ConfigContext } from '../../config-provider';
 import clsx from 'clsx';
+const CloseOutlined = (CloseOutlinedIcon as any).default || CloseOutlinedIcon;
 
 const SizeTypes = tuple('default', 'large');
 type sizeType = (typeof SizeTypes)[number];

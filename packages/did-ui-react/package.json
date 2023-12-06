@@ -69,7 +69,8 @@
     "postcss": "^8.4.21"
   },
   "peerDependencies": {
-    "rc-tabs": "12.5.1"
+    "rc-tabs": "12.5.1",
+    "@portkey/utils": "^1.5.1"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

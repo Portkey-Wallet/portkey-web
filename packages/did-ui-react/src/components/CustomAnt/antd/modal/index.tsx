@@ -1,6 +1,5 @@
-// import type { ModalStaticFunctions } from '.';
 import { ModalStaticFunctions } from 'antd/lib/modal/confirm';
-import confirm, { modalGlobalConfig, withConfirm, withError, withInfo, withSuccess, withWarn } from './comfirm';
+import confirm, { withConfirm, withError, withInfo, withSuccess, withWarn } from './comfirm';
 import destroyFns from '../../utils/destroyFns';
 import type { ModalFuncProps } from './Modal';
 import OriginModal from './Modal';
@@ -12,7 +11,6 @@ function modalWarn(props: ModalFuncProps) {
 type ModalType = typeof OriginModal &
   ModalStaticFunctions & {
     destroyAll: () => void;
-    config: typeof modalGlobalConfig;
   };
 
 const Modal = OriginModal as ModalType;
@@ -45,7 +43,5 @@ Modal.destroyAll = function destroyAllFn() {
     }
   }
 };
-
-Modal.config = modalGlobalConfig;
 
 export default Modal;
