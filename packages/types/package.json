@@ -39,7 +39,7 @@
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
-  "dependencies": {
+  "devDependencies": {
     "@types/elliptic": "^6.4.14"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"

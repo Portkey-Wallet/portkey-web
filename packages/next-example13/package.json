@@ -13,7 +13,7 @@
     "next": "14.0.3",
     "@portkey/did-ui-react": "^1.5.1",
     "@portkey/onboarding": "^1.5.1",
-    "aelf-sdk": "3.2.45-beta.0",
+    "aelf-sdk": "^3.2.45-beta.1",
     "next-transpile-modules": "^10.0.0"
   },
   "devDependencies": {

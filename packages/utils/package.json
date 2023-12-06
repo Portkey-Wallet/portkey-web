@@ -39,8 +39,8 @@
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
-  "dependencies": {
-    "aelf-sdk": "3.2.45-beta.0",
+  "peerDependencies": {
+    "aelf-sdk": "^3.2.45-beta.0",
     "query-string": "^7.1.1"
   },
   "devDependencies": {

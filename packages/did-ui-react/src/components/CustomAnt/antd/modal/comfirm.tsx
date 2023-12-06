@@ -125,7 +125,7 @@ export default function confirm(config: ModalFuncProps) {
 
 export function withWarn(props: ModalFuncProps): ModalFuncProps {
   return {
-    icon: <ExclamationCircleOutlinedIcon />,
+    icon: <ExclamationCircleOutlined />,
     okCancel: false,
     ...props,
     type: 'warning',

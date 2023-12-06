@@ -40,11 +40,11 @@
     "start": "tsc --watch",
     "test": "jest"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@portkey/types": "^1.5.1",
     "@portkey/utils": "^1.5.1",
     "@portkey/validator": "^1.5.1",
-    "aelf-sdk": "3.2.45-beta.0"
+    "aelf-sdk": "^3.2.45-beta.0"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

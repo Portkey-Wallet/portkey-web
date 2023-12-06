@@ -41,7 +41,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@abp/signalr": "^7.0.0",
+    "@abp/signalr": "^7.0.0"
+  },
+  "peerDependencies": {
     "@portkey/utils": "^1.5.1"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"

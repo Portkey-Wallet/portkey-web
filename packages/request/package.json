@@ -39,7 +39,7 @@
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
-  "dependencies": {
+  "peerDependencies": {
     "@portkey/types": "^1.5.1",
     "query-string": "^7.1.1"
   },
