@@ -20,7 +20,7 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/did-ui-react"
   },
-  "version": "1.5.1",
+  "version": "0.0.2-alpha.2",
   "main": "dist/index.js",
   "types": "dist/_types/index.d.ts",
   "type": "module",
@@ -41,10 +41,10 @@
   },
   "dependencies": {
     "@matt-block/react-recaptcha-v2": "^2.0.0",
-    "@portkey/services": "^1.5.1",
-    "@portkey/did": "^1.5.1",
-    "@portkey/onboarding": "^1.5.1",
-    "@portkey/socket": "^1.5.1",
+    "@portkey/did": "^0.0.2-alpha.2",
+    "@portkey/onboarding": "^0.0.2-alpha.2",
+    "@portkey/services": "^0.0.2-alpha.2",
+    "@portkey/socket": "^0.0.2-alpha.2",
     "@rc-component/portal": "1.0.2",
     "antd": "4.24.14",
     "antd-mobile": "5.33.0",

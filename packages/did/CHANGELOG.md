@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1...v0.0.2-alpha.2) (2023-12-06)
+
+### Features
+
+- 🎸 add logout options ([fd04c50](https://github.com/Portkey-Wallet/portkey-web/commit/fd04c50ed3ba04e266dccd9d545853406374509b))
+- 🎸 Check if manager exists ([f214928](https://github.com/Portkey-Wallet/portkey-web/commit/f21492861c599c696da37b543974b30286e9eac5))
+- 🎸 sign use number keyboard ([edfdad1](https://github.com/Portkey-Wallet/portkey-web/commit/edfdad1aaf341d96b19fa4130458408957512b54))
+
+### Bug Fixes
+
+- 🐛 guardian format ([d341735](https://github.com/Portkey-Wallet/portkey-web/commit/d341735cf3e5e54f53e75d5c14c686809765bf67))
+
 ## [1.5.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.8...v1.5.1) (2023-11-22)
 
 **Note:** Version bump only for package @portkey/did

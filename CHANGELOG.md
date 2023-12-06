@@ -3,6 +3,29 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.0.2-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1...v0.0.2-alpha.2) (2023-12-06)
+
+### Features
+
+- 🎸 add logout options ([fd04c50](https://github.com/Portkey-Wallet/portkey-web/commit/fd04c50ed3ba04e266dccd9d545853406374509b))
+- 🎸 add next13 ([64e97b3](https://github.com/Portkey-Wallet/portkey-web/commit/64e97b34895b07a7249e80ac7cd76b0a762c1520))
+- 🎸 change ant global message prefixcls ([a24fd17](https://github.com/Portkey-Wallet/portkey-web/commit/a24fd176390f4859f223d6057ac13d60131626df))
+- 🎸 Check if manager exists ([f214928](https://github.com/Portkey-Wallet/portkey-web/commit/f21492861c599c696da37b543974b30286e9eac5))
+- 🎸 checkout by ach ([b7eddba](https://github.com/Portkey-Wallet/portkey-web/commit/b7eddba99862531607975302c08b4df8352328ce))
+- 🎸 default pin ([a102146](https://github.com/Portkey-Wallet/portkey-web/commit/a1021468183a688c1de3f10b8a1f67d86fd299c1))
+- 🎸 format guardian approve ([3fadf93](https://github.com/Portkey-Wallet/portkey-web/commit/3fadf93892b8d42ba46c8581e51adcf9d63174ec))
+- 🎸 format muti guardian approved ([2c65e90](https://github.com/Portkey-Wallet/portkey-web/commit/2c65e909c47be642e19ad989009be79c9b5f2230))
+- 🎸 login by google and set default pin ([e5393d5](https://github.com/Portkey-Wallet/portkey-web/commit/e5393d5bb2d9f4b088f67ae71c7fa244a42569c6))
+- 🎸 modal ([4342c2e](https://github.com/Portkey-Wallet/portkey-web/commit/4342c2edb95003f877f8dc1b490c898db493f82b))
+- 🎸 modal prefixcls ([982522d](https://github.com/Portkey-Wallet/portkey-web/commit/982522d16e4bc5268f13a91fff50b053515f850e))
+- 🎸 portkey keyboard ([6d7cca9](https://github.com/Portkey-Wallet/portkey-web/commit/6d7cca92fe2bf6fbb3f8d9ead1092217d94b07f8))
+- 🎸 sign use number keyboard ([edfdad1](https://github.com/Portkey-Wallet/portkey-web/commit/edfdad1aaf341d96b19fa4130458408957512b54))
+
+### Bug Fixes
+
+- 🐛 guardian format ([d341735](https://github.com/Portkey-Wallet/portkey-web/commit/d341735cf3e5e54f53e75d5c14c686809765bf67))
+- 🐛 params ([e71f44e](https://github.com/Portkey-Wallet/portkey-web/commit/e71f44e0e9d8218f6ede0f8cff92d4f15243c442))
+
 ## [1.5.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.8...v1.5.1) (2023-11-22)
 
 ### Bug Fixes
