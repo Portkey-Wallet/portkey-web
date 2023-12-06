@@ -1,4 +1,4 @@
-import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import CloseOutlinedIcon from '@ant-design/icons/CloseOutlined';
 import classNames from 'classnames';
 import Dialog from 'rc-dialog';
 import * as React from 'react';
@@ -14,11 +14,12 @@ import { NoCompactStyle } from 'antd/lib/space/Compact';
 import { canUseDocElement } from 'antd/lib/_util/styleChecker';
 import { getConfirmLocale } from 'antd/lib/modal/locale';
 import ConfigProvider from '../../config-provider';
+import { PORTKEY_Z_INDEX } from '../../../../constants';
 type MousePosition = { x: number; y: number } | null;
 
 let mousePosition: MousePosition;
 
-const CloseOutlinedIcon = (CloseOutlined as any).default || CloseOutlined;
+const CloseOutlined = (CloseOutlinedIcon as any).default || CloseOutlinedIcon;
 
 // ref: https://github.com/ant-design/ant-design/issues/15795
 const getClickPosition = (e: MouseEvent) => {
@@ -151,6 +152,7 @@ const Modal: React.FC<ModalProps> = (props) => {
     closeIcon,
     focusTriggerAfterClose = true,
     width = 520,
+    zIndex = PORTKEY_Z_INDEX,
     ...restProps
   } = props;
 
@@ -182,7 +184,7 @@ const Modal: React.FC<ModalProps> = (props) => {
 
   const closeIconToRender = (
     <span className={`${prefixCls}-close-x`}>
-      {closeIcon || (CloseOutlinedIcon && <CloseOutlinedIcon className={`${prefixCls}-close-icon`} />)}
+      {closeIcon || (CloseOutlined && <CloseOutlined className={`${prefixCls}-close-icon`} />)}
     </span>
   );
 
@@ -197,11 +199,14 @@ const Modal: React.FC<ModalProps> = (props) => {
         <Dialog
           width={width}
           {...restProps}
-          getContainer={getContainer === undefined ? (getContextPopupContainer as getContainerFunc) : getContainer}
+          getContainer={
+            getContainer === undefined ? (getContextPopupContainer as getContainerFunc) || undefined : getContainer
+          }
           prefixCls={prefixCls}
           wrapClassName={wrapClassNameExtended}
           footer={footer === undefined ? defaultFooter() : footer}
           visible={open}
+          zIndex={zIndex}
           mousePosition={restProps.mousePosition ?? mousePosition}
           onClose={handleCancel}
           closeIcon={closeIconToRender}

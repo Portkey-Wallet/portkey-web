@@ -1,11 +1,12 @@
 import { Col, Row } from 'antd';
 import clsx from 'clsx';
-import { LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined as LeftOutlinedIcon } from '@ant-design/icons';
 import { ReactNode } from 'react';
 import CommonBaseModal from '../CommonBaseModal';
 import { PortkeyModalProps } from '../PortkeyModal';
 import './styles.less';
 
+const LeftOutlined = (LeftOutlinedIcon as any).default || LeftOutlinedIcon;
 export interface CommonModalProps extends PortkeyModalProps {
   className?: string;
   leftCallBack?: () => void;
@@ -24,7 +25,7 @@ export default function CommonModal(props: CommonModalProps) {
         <Row justify="space-between">
           {leftCallBack || leftElement ? (
             <Col className="common-modal-left-icon" flex={1} onClick={leftCallBack}>
-              {leftElement || <LeftOutlined />}
+              {leftElement || (LeftOutlined && <LeftOutlined />)}
             </Col>
           ) : null}
           <Col flex={2} style={{ textAlign: 'center' }}>

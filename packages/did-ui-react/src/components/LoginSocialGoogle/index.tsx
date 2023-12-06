@@ -3,9 +3,8 @@
  */
 import { Button } from 'antd';
 import React, { memo } from 'react';
-import { IResolveParams } from 'reactjs-social-login';
 import { IGoogleLoginConfig } from '../../types';
-import { ObjectType } from '../types';
+import { IResolveParams, ObjectType } from '../types';
 
 export interface LoginSocialGoogleComProps extends IGoogleLoginConfig {
   children?: React.ReactNode;

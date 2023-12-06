@@ -1,6 +1,6 @@
 {
   "name": "@portkey/utils",
-  "version": "1.5.1",
+  "version": "0.0.2-alpha.3",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -39,8 +39,8 @@
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
-  "dependencies": {
-    "aelf-sdk": "3.2.45-beta.0",
+  "peerDependencies": {
+    "aelf-sdk": "^3.2.45-beta.0",
     "query-string": "^7.1.1"
   },
   "devDependencies": {
