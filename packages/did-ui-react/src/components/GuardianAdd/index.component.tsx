@@ -613,7 +613,11 @@ function GuardianAdd({
           onReSend={reSendCode}
         />
       </CommonBaseModal>
-      <CommonBaseModal className="portkey-ui-modal-approval" open={approvalVisible} onClose={onCloseApproval}>
+      <CommonBaseModal
+        className="portkey-ui-modal-approval"
+        open={approvalVisible}
+        destroyOnClose
+        onClose={onCloseApproval}>
         <GuardianApproval
           header={<BackHeader onBack={onCloseApproval} />}
           originChainId={originChainId}
