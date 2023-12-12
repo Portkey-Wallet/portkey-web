@@ -67,6 +67,7 @@
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
+  text-wrap: nowrap;
 }
 
 .portkey-ui-ach-checkout-result-order-id {
@@ -75,6 +76,7 @@
   font-style: normal;
   font-weight: 500;
   line-height: 20px;
+  text-align: right;
 }
 
 .portkey-ui-ach-checkout-result-footer {
@@ -105,5 +107,28 @@
     path {
       fill: var(--portkey-ui-text-primary);
     }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .portkey-ui-ach-checkout-result-title,
+  .portkey-ui-ach-checkout-result-footer {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .portkey-ui-ach-checkout-result-title .portkey-ui-custom-svg.close2-icon {
+    align-self: auto;
+  }
+  .portkey-ui-ach-checkout-result-social {
+    align-items: flex-start;
+    border-bottom: none;
+  }
+  .portkey-ui-ach-checkout-result-order {
+    padding: 0;
+  }
+  .portkey-ui-ach-checkout-result-order-id-wrapper {
+    align-items: flex-start;
+    gap: 8px;
   }
 }

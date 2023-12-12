@@ -78,10 +78,11 @@ export default function AppleAuth() {
       <Button
         onClick={async () => {
           try {
+            await did.load('111111');
             const result = await managerApprove({
               originChainId: 'AELF',
               symbol: 'ELF',
-              caHash: 'a79c76fd18879943980b9909f46ea644f9cd02eee5069d645d7046a874f7e212',
+              caHash: did.didWallet.caInfo['AELF'].caHash,
               amount: '999',
               targetChainId: 'AELF',
             });
