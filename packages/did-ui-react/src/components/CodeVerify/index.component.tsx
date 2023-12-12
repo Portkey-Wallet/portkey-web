@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verification } from '../../utils';
 import type { ChainId } from '@portkey/types';
 import { OperationTypeEnum } from '@portkey/services';
@@ -68,7 +68,10 @@ export default function CodeVerify({
           setLoading(false);
           console.log(result, 'verifyErrorHandler==');
 
-          if (result.signature) return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
+          if (result.signature) {
+            if (typeof document !== undefined) document.body.focus();
+            return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
+          }
           setPinVal('');
         } else {
           throw Error('Please check if the PIN code is entered correctly');
@@ -150,6 +153,12 @@ export default function CodeVerify({
     reCaptchaHandler,
     verifier,
   ]);
+
+  useEffect(() => {
+    return () => {
+      setPinVal('');
+    };
+  }, []);
 
   return (
     <CodeVerifyUI

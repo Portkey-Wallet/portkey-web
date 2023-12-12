@@ -11,7 +11,7 @@ export const portkeyDidUIPrefix = '@portkey/did-ui-sdk:';
 export const PORTKEY_PREFIX_CLS = 'portkey-ant';
 export const PORTKEY_ICON_PREFIX_CLS = 'anticon';
 export const PORTKEY_ROOT_ID = 'portkey-ui-root';
-export const PORTKEY_Z_INDEX = 99999;
+export const PORTKEY_Z_INDEX = 10010;
 
 export const PIC_SMALL_SIZE = 144;
 export const PIC_MIDDLE_SIZE = 294;

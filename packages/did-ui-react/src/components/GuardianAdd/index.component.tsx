@@ -596,7 +596,7 @@ function GuardianAdd({
           {t('Confirm')}
         </Button>
       </div>
-      <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal destroyOnClose open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
           originChainId={originChainId}
           operationType={OperationTypeEnum.addGuardian}

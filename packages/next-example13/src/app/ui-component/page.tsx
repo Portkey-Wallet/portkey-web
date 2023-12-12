@@ -167,15 +167,14 @@ export default function UI() {
 
           <Button
             onClick={() => {
-              singleMessage.open({ content: 1 });
-              singleMessage.success({ content: 1 });
+              singleMessage.success({ content: 1 }, 1000);
 
               singleMessage.success('112333');
 
               singleMessage.error({
                 content: 'prefixCls: message',
                 rootPrefixCls: 'portkey-ant-message',
-                duration: 10,
+                duration: 100,
               });
             }}>
             singleMessage
