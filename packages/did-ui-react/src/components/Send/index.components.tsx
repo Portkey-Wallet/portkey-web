@@ -303,6 +303,11 @@ function SendContent({
     tokenInfo,
   ]);
 
+  const btnOutOfFocus = useCallback(() => {
+    // fixed - button focus style when mobile
+    if (typeof document !== 'undefined') document.body.focus();
+  }, []);
+
   const checkManagerSyncState = useCheckManagerSyncState();
 
   const handleCheckPreview = useCallback(async () => {
@@ -400,6 +405,7 @@ function SendContent({
               onOk: () => setStage(Stage.Amount),
             });
           }
+          btnOutOfFocus();
           setStage(Stage.Amount);
         },
         backFun: () => {
@@ -433,6 +439,7 @@ function SendContent({
           } else {
             setTipMsg(res);
           }
+          btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Address);
@@ -465,6 +472,7 @@ function SendContent({
         btnText: 'Send',
         handler: () => {
           sendHandler();
+          btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Amount);
@@ -502,6 +510,7 @@ function SendContent({
       networkType,
       onCancel,
       sendHandler,
+      btnOutOfFocus,
       tipMsg,
       toAccount,
       tokenInfo,

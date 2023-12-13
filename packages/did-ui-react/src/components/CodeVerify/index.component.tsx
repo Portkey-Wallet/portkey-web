@@ -46,7 +46,7 @@ export default function CodeVerify({
   const setInputError = useCallback(async (isError?: boolean) => {
     if (!isError) return setCodeError(isError);
     setCodeError(true);
-    await sleep(1000);
+    await sleep(2000);
     setCodeError(false);
   }, []);
 
@@ -160,6 +160,11 @@ export default function CodeVerify({
     };
   }, []);
 
+  const onCodeChange = useCallback((pin: string) => {
+    setPinVal(pin);
+    setCodeError(false);
+  }, []);
+
   return (
     <CodeVerifyUI
       ref={uiRef}
@@ -172,7 +177,7 @@ export default function CodeVerify({
       isLoginGuardian={isLoginGuardian}
       guardianIdentifier={guardianIdentifier}
       accountType={accountType}
-      onCodeChange={setPinVal}
+      onCodeChange={onCodeChange}
       onReSend={resendCode}
       onCodeFinish={onFinish}
     />

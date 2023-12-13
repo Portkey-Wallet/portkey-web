@@ -5,6 +5,7 @@ import BackHeader from '../BackHeader';
 import { PinErrorMessage } from '../../utils';
 import './index.less';
 import { AddManagerType } from '../types';
+import clsx from 'clsx';
 
 enum STEP {
   enterPin = 'enterPin',
@@ -37,7 +38,7 @@ export default function SetPinMobileBase({
   }, []);
 
   return (
-    <div className={className}>
+    <div className={clsx('portkey-ui-set-pin-mobile-wrapper', className)}>
       <BackHeader
         leftElement={step === STEP.enterPin && type === 'recovery' ? false : undefined}
         onBack={() => {
