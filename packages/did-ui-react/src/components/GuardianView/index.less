@@ -5,14 +5,17 @@
   .guardian-view-body {
     font-size: 14px;
     line-height: 20px;
-    .guardian-view-input-content {
+    .guardian-view-input-content,
+    .guardian-view-login-content {
       padding: 24px;
+    }
+    .guardian-view-input-content {
       gap: 24px;
       .guardian-view-input-item {
         .guardian-view-input-item-label {
           color: var(--portkey-ui-text-primary);
           margin-bottom: 8px;
-          .text-overflow(1)
+          .text-overflow(1);
         }
         .guardian-view-input-item-control {
           left: 40px;
@@ -24,7 +27,7 @@
           border-radius: 6px;
           background-color: var(--portkey-ui-bg-6);
           border: 1px solid var(--portkey-ui-default-border);
-  
+
           .portkey-ui-custom-svg {
             width: 32px;
             height: 32px;
@@ -39,7 +42,6 @@
     }
     .guardian-view-login-content {
       border-top: 1px solid var(--portkey-ui-default-border);
-      padding: 24px;
       .guardian-view-login-content-label {
         margin-bottom: 8px;
         line-height: 22px;
@@ -64,7 +66,7 @@
             background: var(--portkey-ui-bg-16);
           }
         }
-        .portkey-ant-switch-handle{
+        .portkey-ant-switch-handle {
           top: 1px;
         }
         .portkey-ant-switch-checked {
@@ -84,6 +86,14 @@
         }
       }
     }
+
+    @media screen and (max-width: 768px) {
+      .guardian-view-input-content,
+      .guardian-view-login-content {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
   }
   .guardian-view-footer {
     margin-top: 16px;
@@ -96,4 +106,3 @@
     }
   }
 }
-

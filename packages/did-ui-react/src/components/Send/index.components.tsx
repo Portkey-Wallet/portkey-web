@@ -4,7 +4,7 @@ import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { Button } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
+import { ReactElement, useCallback, useMemo, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
 import { ChainId } from '@portkey/types';
@@ -37,11 +37,9 @@ import { Modal } from '../CustomAnt';
 
 export interface SendProps {
   assetItem: IAssetItemType;
-  closeIcon?: ReactNode;
   className?: string;
   wrapperStyle?: React.CSSProperties;
   onCancel?: () => void;
-  onClose?: () => void;
   onSuccess?: () => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
   onModifyGuardians?: () => void;
@@ -62,11 +60,9 @@ type TypeStageObj = {
 
 function SendContent({
   assetItem,
-  closeIcon,
   className,
   wrapperStyle,
   onCancel,
-  onClose,
   onSuccess,
   onModifyLimit,
   onModifyGuardians,
@@ -527,8 +523,6 @@ function SendContent({
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}
-        rightElement={closeIcon ? closeIcon : <CustomSvg type="Close2" onClick={() => onClose?.()} />}
-        rightCallback={closeIcon ? onClose : undefined}
       />
       {stage !== Stage.Preview && (
         <div className="address-wrap">

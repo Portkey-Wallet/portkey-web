@@ -177,7 +177,8 @@ export default function useLoginWallet({
       try {
         if (!guardianIdentifier) throw 'Missing account!!!';
         did.reset();
-        const loadingText = type === 'recovery' ? 'Initiating social recovery...' : 'Creating address on the chain...';
+        const loadingText =
+          type === 'recovery' ? 'Initiating social recovery...' : 'Creating a wallet address on the blockchain';
 
         setLoading(true, loadingText);
 

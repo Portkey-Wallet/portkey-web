@@ -67,7 +67,7 @@
       gap: 16px;
       .label {
         padding: 0;
-        width: 62px;
+        width: 52px;
         line-height: 22px;
         // max-height: 22px;
         font-size: 16px;
@@ -99,7 +99,7 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          color: var(--portkey-ui-text-secondary);
+          color: var(--portkey-ui-text-primary);
         }
         .portkey-ui-custom-svg {
           display: flex;
@@ -183,7 +183,7 @@
         .symbol {
           line-height: 22px;
           font-size: 16px;
-          color: var(--portkey-ui-text-secondary);
+          color: var(--portkey-ui-text-primary);
         }
         .amount {
           line-height: 16px;
@@ -273,6 +273,10 @@
         font-size: 16px;
         color: var(--portkey-ui-text-secondary) !important;
       }
+      input {
+        color: var(--portkey-ui-text-primary) !important;
+      }
+
       &:focus-within,
       &:focus {
         input {

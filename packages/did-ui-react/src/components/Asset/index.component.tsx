@@ -330,9 +330,6 @@ function AssetMain({
           onSuccess={() => {
             setAssetStep(AssetStep.overview);
           }}
-          onClose={() => {
-            setAssetStep(AssetStep.overview);
-          }}
           onModifyLimit={async (data) => {
             const res = await getLimitFromContract(data);
             setViewPaymentSecurity({ ...data, ...res });
