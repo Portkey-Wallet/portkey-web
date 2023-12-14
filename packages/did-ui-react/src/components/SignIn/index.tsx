@@ -267,7 +267,7 @@ const SignIn = forwardRef(
     const onSignUp = useCallback(
       async (value: IGuardianIdentifierInfo) => {
         try {
-          setLoading(true, 'Assigning a verifier on-chain…');
+          setLoading(true, 'Assigning a verifier on the blockchain');
           await sleep(2000);
           const verifier = await getRecommendationVerifier(chainId);
           setLoading(false);
