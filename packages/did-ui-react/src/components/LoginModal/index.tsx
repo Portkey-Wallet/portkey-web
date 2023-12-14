@@ -22,9 +22,10 @@ export default function LoginModal({
       closable={false}
       open={open}
       width={320}
-      className="portkey-ui-login-modal"
       title={'Continue with this account?'}
-      onCancel={onCancel}>
+      type={'modal'}
+      className="portkey-ui-signup-confirm-modal"
+      onClose={onCancel}>
       <p className="modal-content">
         {type === 'Login' && 'This account has not been registered yet. Click "Confirm" to complete the registration.'}
         {type === 'SignUp' && 'This account already exists. Click "Confirm" to log in.'}

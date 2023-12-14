@@ -5,7 +5,6 @@ import { basicSendAction } from '../../../context/PortkeySendProvider/actions';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
 import { useThrottleEffect } from '../../../../hooks/throttle';
 import { usePortkeySendDispatch } from '../../../context/PortkeySendProvider/hooks';
-import { message } from 'antd';
 import { handleErrorMessage } from '../../../../utils';
 import { usePortkeySend } from '../../../context/PortkeySendProvider';
 import RecentItem from './RecentItem';
@@ -13,6 +12,7 @@ import { MAINNET } from '../../../../constants/network';
 import LoadingMore from '../../../LoadingMore';
 import { NetworkType, PaginationPage } from '../../../../types';
 import { getSkipCount } from '../../../context/utils';
+import singleMessage from '../../../CustomAnt/message';
 
 const PAGESIZE = 10;
 
@@ -58,7 +58,7 @@ export default function Recents({
             setPending(false);
           });
       } catch (error) {
-        message.error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
       } finally {
         // setLoading(false);
       }

@@ -189,7 +189,7 @@ export default function ManagerApproveInner({
             originChainId={originChainId}
             targetChainId={targetChainId}
             guardianList={guardianList}
-            onConfirm={(approvalInfo) => {
+            onConfirm={async (approvalInfo) => {
               const approved: IGuardiansApproved[] = approvalInfo.map((guardian) => ({
                 type: AccountTypeEnum[guardian.type || 'Google'],
                 identifierHash: guardian.identifierHash || '',
@@ -200,7 +200,7 @@ export default function ManagerApproveInner({
                 },
               }));
 
-              onFinish?.({
+              await onFinish?.({
                 amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
                 guardiansApproved: approved,
               });

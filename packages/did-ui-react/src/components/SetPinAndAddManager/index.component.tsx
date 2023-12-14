@@ -1,25 +1,28 @@
-import { randomId, setLoading, errorTip, did, extraDataEncode, handleErrorMessage } from '../../utils';
-import { useCallback, useRef, useEffect } from 'react';
+import { errorTip } from '../../utils';
+import { useCallback, useRef, useEffect, useMemo } from 'react';
 import SetPinBase from '../SetPinBase/index.component';
 import clsx from 'clsx';
 import { AddManagerType, CreatePendingInfo, DIDWalletInfo } from '../types';
 import { OnErrorFunc } from '../../types';
 import type { AccountType, GuardiansApproved } from '@portkey/services';
 import { ChainId } from '@portkey/types';
-import { LoginResult, RegisterResult } from '@portkey/did';
-import { RegisterStatusResult, RecoverStatusResult } from '@portkey/services';
-import { DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
+import useLoginWallet from '../../hooks/useLoginWallet';
+import SetPinMobileBase from '../SetPinMobileBase';
+import { devices } from '@portkey/utils';
+import BackHeader from '../BackHeader';
 
 export interface SetPinAndAddManagerProps {
   type: AddManagerType;
   className?: string;
-  accountType?: AccountType;
+  accountType: AccountType;
+  keyboard?: boolean;
   chainId?: ChainId;
-  guardianIdentifier?: string;
+  guardianIdentifier: string;
   onlyGetPin?: boolean;
   guardianApprovedList: GuardiansApproved[];
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
+  onBack?: () => void;
   onFinish?: (values: DIDWalletInfo | string) => void;
   onCreatePending?: (pendingInfo: CreatePendingInfo) => void;
 }
@@ -27,6 +30,7 @@ export interface SetPinAndAddManagerProps {
 export default function SetPinAndAddManager({
   type,
   chainId = 'AELF',
+  keyboard: defaultKeyboard,
   className,
   onlyGetPin,
   accountType = 'Email',
@@ -34,242 +38,66 @@ export default function SetPinAndAddManager({
   guardianApprovedList,
   isErrorTip = true,
   onError,
+  onBack,
   onFinish,
   onCreatePending,
 }: SetPinAndAddManagerProps) {
-  const onErrorRef = useRef<SetPinAndAddManagerProps['onError']>(onError);
   const onFinishRef = useRef<SetPinAndAddManagerProps['onFinish']>(onFinish);
+  const isMobile = useMemo(() => devices.isMobileDevices(), []);
+
+  const keyboard = useMemo(() => isMobile && defaultKeyboard, [defaultKeyboard, isMobile]);
 
   useEffect(() => {
-    onErrorRef.current = onError;
     onFinishRef.current = onFinish;
   });
 
-  const getRequestStatus = useCallback(
-    async ({ sessionId, chainId, type }: { sessionId: string; chainId: ChainId; type: AddManagerType }) => {
-      let status, error: Error | undefined;
-      try {
-        if (type === 'register') {
-          status = await did.didWallet.getRegisterStatus({
-            sessionId,
-            chainId,
-          });
-          const { registerStatus } = status;
-
-          if (registerStatus !== 'pass') {
-            throw new Error((status as RegisterStatusResult).registerMessage);
-          }
-        } else {
-          status = await did.didWallet.getLoginStatus({ sessionId, chainId });
-          const { recoveryStatus } = status;
-
-          if (recoveryStatus !== 'pass') {
-            throw new Error((status as RecoverStatusResult).recoveryMessage);
-          }
-        }
-      } catch (e: any) {
-        error = e;
-      }
-      return { sessionId, status, error };
-    },
-    [],
-  );
-
-  const requestRegisterWallet = useCallback(
-    async (pin: string) => {
-      if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
-      if (!guardianApprovedList?.length) throw 'Missing guardianApproved';
-      const wallet = did.didWallet.create();
-      const managerAddress = wallet.managementAccount!.address;
-      const requestId = randomId();
-
-      const clientId = managerAddress;
-
-      const registerVerifier = guardianApprovedList[0];
-      const extraData = await extraDataEncode(getDeviceInfo(DEVICE_TYPE), '');
-      const params = {
-        type: accountType,
-        loginGuardianIdentifier: guardianIdentifier.replaceAll(/\s/g, ''),
-        extraData,
-        chainId,
-        verifierId: registerVerifier.verifierId,
-        verificationDoc: registerVerifier.verificationDoc,
-        signature: registerVerifier.signature,
-        context: {
-          clientId,
-          requestId,
-        },
-      };
-
-      const { sessionId } = await did.services.register({
-        ...params,
-        manager: managerAddress,
-      });
-      onCreatePending?.({
-        sessionId,
-        requestId,
-        clientId,
-        pin,
-        walletInfo: wallet.managementAccount!.wallet,
-      });
-
-      return getRequestStatus({
-        chainId,
-        sessionId,
-        type: 'register',
-      }) as Promise<RegisterResult>;
-    },
-    [guardianIdentifier, accountType, guardianApprovedList, chainId, onCreatePending, getRequestStatus],
-  );
-
-  const requestRecoveryWallet = useCallback(
-    async (pin: string) => {
-      if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
-
-      const wallet = did.didWallet.create();
-      const managerAddress = wallet.managementAccount!.address;
-      const requestId = randomId();
-
-      const clientId = managerAddress;
-
-      const extraData = await extraDataEncode(getDeviceInfo(DEVICE_TYPE), '');
-
-      const _guardianApprovedList = guardianApprovedList.filter((item) =>
-        Boolean(item.signature && item.verificationDoc),
-      );
-
-      const params = {
-        loginGuardianIdentifier: guardianIdentifier.replaceAll(/\s/g, ''),
-        guardiansApproved: _guardianApprovedList,
-        extraData,
-        chainId,
-        context: {
-          clientId,
-          requestId,
-        },
-      };
-
-      const { sessionId } = await did.services.recovery({
-        ...params,
-        manager: managerAddress,
-      });
-
-      onCreatePending?.({
-        sessionId,
-        requestId,
-        clientId,
-        pin,
-        walletInfo: wallet.managementAccount!.wallet,
-      });
-      return getRequestStatus({
-        chainId,
-        sessionId,
-        type: 'recovery',
-      }) as Promise<LoginResult>;
-    },
-    [guardianIdentifier, accountType, guardianApprovedList, chainId, onCreatePending, getRequestStatus],
-  );
+  const createWallet = useLoginWallet({
+    isErrorTip,
+    onError,
+    onCreatePending,
+  });
 
   const onCreate = useCallback(
     async (pin: string) => {
-      try {
-        if (onlyGetPin) return onFinish?.(pin);
-        if (!guardianIdentifier) throw 'Missing account!!!';
-        did.reset();
-        const loadingText = type === 'recovery' ? 'Initiating social recovery...' : 'Creating address on the chain...';
-
-        setLoading(true, loadingText);
-
-        let walletResult: RegisterResult | LoginResult;
-        if (type === 'register') {
-          walletResult = await requestRegisterWallet(pin);
-        } else if (type === 'recovery') {
-          walletResult = await requestRecoveryWallet(pin);
-        } else {
-          throw 'Param "type" error';
-        }
-
-        if (walletResult.error) {
-          errorTip(
-            {
-              errorFields: 'SetPinAndAddManager',
-              ...walletResult,
-              error: handleErrorMessage(walletResult.error),
-            },
-            isErrorTip,
-            onErrorRef.current,
-          );
-          throw walletResult;
-        }
-
-        if (!walletResult.status?.caAddress || !walletResult.status?.caHash) {
-          errorTip(
-            {
-              errorFields: 'SetPinAndAddManager',
-              ...walletResult,
-              error: 'Missing "caAddress" or "caHash"',
-            },
-            isErrorTip,
-            onErrorRef.current,
-          );
-          throw walletResult;
-        }
-        const wallet = did.didWallet.managementAccount!.wallet;
-        setLoading(false);
-        onFinishRef?.current?.({
-          caInfo: {
-            caAddress: walletResult.status.caAddress,
-            caHash: walletResult.status.caHash,
-          },
-          accountInfo: {
-            managerUniqueId: walletResult.sessionId,
-            guardianIdentifier,
-            accountType,
-            type,
-          },
-          chainId,
-          pin,
-          walletInfo: wallet,
-        });
-      } catch (error: any) {
-        setLoading(false);
-        return errorTip(
-          {
-            errorFields: 'SetPinAndAddManager',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-          onErrorRef.current,
-        );
-      }
+      if (onlyGetPin) return onFinishRef?.current?.(pin);
+      const params = {
+        pin,
+        type,
+        chainId,
+        accountType,
+        guardianIdentifier,
+        guardianApprovedList,
+      };
+      const createResult = await createWallet(params);
+      createResult && onFinishRef?.current?.(createResult);
     },
-    [
-      onlyGetPin,
-      onFinish,
-      guardianIdentifier,
-      type,
-      accountType,
-      chainId,
-      requestRegisterWallet,
-      requestRecoveryWallet,
-      isErrorTip,
-    ],
+    [onlyGetPin, type, chainId, accountType, guardianIdentifier, guardianApprovedList, createWallet],
   );
 
-  return (
-    <SetPinBase
+  return keyboard ? (
+    <SetPinMobileBase
+      type={type}
       className={clsx('portkey-card-height', className)}
       onFinish={onCreate}
-      onFinishFailed={(err) =>
-        errorTip(
-          {
-            errorFields: 'SetPinAndAddManager Form',
-            error: `Form Error: ${err.errorFields[0].name}`,
-          },
-          isErrorTip,
-          onError,
-        )
-      }
+      onCancel={onBack}
     />
+  ) : (
+    <>
+      <BackHeader leftElement={type === 'recovery' ? false : undefined} onBack={onBack} />
+      <SetPinBase
+        className={clsx('portkey-card-height', 'portkey-ui-set-pin-pc', className)}
+        onFinish={onCreate}
+        onFinishFailed={(err) =>
+          errorTip(
+            {
+              errorFields: 'SetPinAndAddManager Form',
+              error: `Form Error: ${err.errorFields[0].name}`,
+            },
+            isErrorTip,
+            onError,
+          )
+        }
+      />
+    </>
   );
 }

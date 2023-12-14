@@ -1,13 +1,23 @@
+'use client';
+
+ConfigProvider.setGlobalConfig({
+  // test3
+  serviceUrl: 'http://192.168.66.203:5001',
+});
 import {
   handleErrorMessage,
   managerApprove,
   checkWalletSecurity,
   ConfigProvider,
+  NFTCheckout,
   did,
   PortkeyProvider,
+  PortkeyStyleProvider,
+  singleMessage,
+  PortkeyAssetProvider,
 } from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
-import { message } from 'antd';
+import { message, Button } from 'antd';
 import { useEffect, useState } from 'react';
 
 ConfigProvider.setGlobalConfig({
@@ -21,57 +31,56 @@ export default function AppleAuth() {
   return (
     <div>
       <div>--------</div>
-      <button
+      <Button
         onClick={() => {
           evokePortkey.app({
             action: 'login',
             custom: {},
             onStatusChange: status => {
-              message.error(status);
+              singleMessage.error(status);
               setStatus(status);
             },
           });
-          message.warning('evokePortkeyApp');
+          singleMessage.warning('evokePortkeyApp');
         }}>
         evokePortkeyApp
-      </button>
+      </Button>
       {status}
       <div>--------</div>
-      <button
+      <Button
         onClick={async () => {
           const result = await evokePortkey.extension();
-          // message.error(navigator.userAgent);
+          // singleMessage.error(navigator.userAgent);
           console.log(result, '=result==');
         }}>
         extension
-      </button>
+      </Button>
       <div>-----</div>
-      <button
+      <Button
         onClick={async () => {
           const result = await evokePortkey.thirdParty();
-          // message.error(navigator.userAgent);
+          // singleMessage.error(navigator.userAgent);
           console.log(result, '=result==');
         }}>
         thirdParty
-      </button>
+      </Button>
       <div>-----</div>
-
-      <button
+      <Button
         onClick={async () => {
           const VConsole = require('vconsole');
           new VConsole();
         }}>
         VConsole
-      </button>
+      </Button>
 
       <div>-----</div>
 
-      <button
+      <Button
         onClick={async () => {
           try {
             const result = await managerApprove({
               originChainId: 'AELF',
-              symbol: 'TOKEN',
+              symbol: 'ELF',
               caHash: 'a79c76fd18879943980b9909f46ea644f9cd02eee5069d645d7046a874f7e212',
               amount: '999',
               targetChainId: 'AELF',
@@ -82,11 +91,11 @@ export default function AppleAuth() {
           }
         }}>
         managerApprove
-      </button>
+      </Button>
 
       <div>-----</div>
       <PortkeyProvider sandboxId="" networkType="MAIN">
-        <button
+        <Button
           onClick={async () => {
             try {
               await did.load('111111');
@@ -101,8 +110,32 @@ export default function AppleAuth() {
             }
           }}>
           checkWalletSecurity
-        </button>
+        </Button>
       </PortkeyProvider>
+
+      <div id="nft-checkout">-----</div>
+
+      <PortkeyAssetProvider pin="111111" originChainId="AELF">
+        <Button
+          type="primary"
+          onClick={async () => {
+            try {
+              const result = await NFTCheckout({
+                orderId: '49300e1c-ecd0-2ca1-6468-a48995ada2a6',
+                originChainId: 'AELF',
+
+                appId: 't2D3213Nr78PMJ9g',
+                achWebUrl: 'https://nft-sbx.alchemytech.cc',
+                merchantName: 'Alchemy',
+              });
+              console.log(result, 'result=NFTCheckout');
+            } catch (error) {
+              console.log('NFTCheckout:', error);
+            }
+          }}>
+          nft checkout
+        </Button>
+      </PortkeyAssetProvider>
     </div>
   );
 }

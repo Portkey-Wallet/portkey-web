@@ -99,7 +99,7 @@ export default function CustomList({
   );
 
   return (
-    <div className="custom-list">
+    <div className="portkey-ui-flex-column custom-list">
       <div className="header">
         <p>{title || 'Select'}</p>
         <CustomSvg type="Close2" onClick={onClose} />

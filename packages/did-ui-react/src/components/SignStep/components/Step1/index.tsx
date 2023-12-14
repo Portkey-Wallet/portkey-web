@@ -1,12 +1,14 @@
 import CryptoDesign, { CryptoDesignProps } from '../../../CryptoDesign/index.component';
-import { useCallback, useState, memo, useRef } from 'react';
-import type { DIDWalletInfo, IGuardianIdentifierInfo, TDesign, TSize } from '../../../types';
+import { useCallback, useState, memo, useRef, useEffect } from 'react';
+import type { DIDWalletInfo, IGuardianIdentifierInfo, IPhoneCountry, TDesign, TSize } from '../../../types';
 import { Design } from '../../../types';
 import type { SignInLifeCycleType } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
 import SocialDesign from '../../../SocialDesign/index.component';
 import Web2Design from '../../../Web2Design/index.component';
+import { did } from '@portkey/did';
+import { errorTip } from '../../../../utils';
 
 export type OnSignInFinishedFun = (values: {
   isFinished: boolean;
@@ -23,7 +25,17 @@ interface Step1Props extends CryptoDesignProps {
   onStepChange?: (v: SignInLifeCycleType) => void;
 }
 
-function Step1({ size, design, onStepChange, onSignInFinished, type, ...props }: Step1Props) {
+function Step1({
+  size,
+  design,
+  onStepChange,
+  onSignInFinished,
+  type,
+  phoneCountry: defaultPhoneCountry,
+  isErrorTip,
+  onError,
+  ...props
+}: Step1Props) {
   const [createType, setCreateType] = useState<SignInLifeCycleType>(type || 'Login');
   const [open, setOpen] = useState<boolean>();
   const signInSuccessRef = useRef<IGuardianIdentifierInfo>();
@@ -49,18 +61,66 @@ function Step1({ size, design, onStepChange, onSignInFinished, type, ...props }:
     createType && onStepChange?.(createType);
   }, [createType]);
 
+  const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
+
+  const getPhoneCountry = useCallback(async () => {
+    try {
+      const countryData = await did.services.getPhoneCountryCodeWithLocal();
+      setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'getPhoneCountry',
+          error,
+        },
+        isErrorTip,
+        onError,
+      );
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    // Get phoneCountry by service, update phoneCountry
+    getPhoneCountry();
+  }, [getPhoneCountry]);
+
   return (
     <>
       {design === Design.SocialDesign && (
-        <SocialDesign {...props} type={type === 'LoginByScan' ? 'Scan' : null} onSuccess={onSuccess} />
+        <SocialDesign
+          {...props}
+          type={type === 'LoginByScan' ? 'Scan' : null}
+          phoneCountry={phoneCountry}
+          isErrorTip={isErrorTip}
+          onError={onError}
+          onSuccess={onSuccess}
+        />
       )}
 
       {design === Design.Web2Design && (
-        <Web2Design {...props} size={size} type={type} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
+        <Web2Design
+          {...props}
+          size={size}
+          type={type}
+          phoneCountry={phoneCountry}
+          isErrorTip={isErrorTip}
+          onError={onError}
+          onSignTypeChange={setCreateType}
+          onSuccess={onSuccess}
+        />
       )}
 
       {(!design || design === Design.CryptoDesign) && (
-        <CryptoDesign {...props} type={type} onSignTypeChange={setCreateType} onSuccess={onSuccess} />
+        <CryptoDesign
+          {...props}
+          type={type}
+          phoneCountry={phoneCountry}
+          isErrorTip={isErrorTip}
+          onError={onError}
+          onSignTypeChange={setCreateType}
+          onSuccess={onSuccess}
+        />
       )}
 
       <LoginModal

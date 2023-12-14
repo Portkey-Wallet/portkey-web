@@ -1,6 +1,6 @@
-import { Modal } from 'antd';
 import { ReactNode } from 'react';
 import './index.less';
+import { Modal } from '../CustomAnt';
 
 export interface ICustomModalProps {
   type?: 'info' | 'confirm';

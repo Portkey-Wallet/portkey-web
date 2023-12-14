@@ -15,14 +15,12 @@ import { MAINNET } from '../../constants/network';
 import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
-import { message } from 'antd';
 import { useUpdateEffect } from 'react-use';
 import SendMain from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
-import './index.less';
 import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
@@ -33,6 +31,8 @@ import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 import useDebounce from '../../hooks/useDebounce';
+import singleMessage from '../CustomAnt/message';
+import './index.less';
 
 export enum AssetStep {
   overview = 'overview',
@@ -172,7 +172,7 @@ function AssetMain({
 
   const onBuy = useCallback(
     async (v: any) => {
-      if (!portkeyWebSocketUrl) return message.error('Please configure socket service url in setGlobalConfig');
+      if (!portkeyWebSocketUrl) return singleMessage.error('Please configure socket service url in setGlobalConfig');
       setSelectToken({
         ...v,
         address: v.address || v.tokenContractAddress,
@@ -228,7 +228,7 @@ function AssetMain({
         return res;
       } catch (error) {
         const err = handleErrorMessage(error);
-        return message.error(err);
+        return singleMessage.error(err);
       }
     },
     [caHash, managementAccount?.privateKey, sandboxId],
@@ -297,7 +297,6 @@ function AssetMain({
           }}
           isBuySectionShow={isShowRampBuy}
           isSellSectionShow={isShowRampSell}
-          isShowSelectInModal={true}
           isMainnet={networkType === MAINNET}
           onModifyLimit={async (data) => {
             const res = await getLimitFromContract(data);
@@ -329,9 +328,6 @@ function AssetMain({
           assetItem={sendToken}
           onCancel={onBack}
           onSuccess={() => {
-            setAssetStep(AssetStep.overview);
-          }}
-          onClose={() => {
             setAssetStep(AssetStep.overview);
           }}
           onModifyLimit={async (data) => {

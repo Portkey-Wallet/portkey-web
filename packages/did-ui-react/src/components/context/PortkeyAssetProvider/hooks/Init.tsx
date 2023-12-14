@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
 import { usePortkey } from '../../index';
-import { message } from 'antd';
 import { AuthServe, did, handleErrorMessage } from '../../../../utils';
 import { getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolderInfo';
 import { basicAssetView } from '../actions';
@@ -8,6 +7,7 @@ import { usePortkeyAsset } from '..';
 import { ChainId } from '@portkey/types';
 import { useThrottleEffect } from '../../../../hooks/throttle';
 import { useTxFeeInit } from './txFee';
+import singleMessage from '../../../CustomAnt/message';
 
 export const useStateInit = () => {
   const [{ sandboxId, chainType }] = usePortkey();
@@ -85,7 +85,7 @@ export const useStateInit = () => {
       const guardian = holderInfo.guardianList.guardians.find((guardian) => guardian.isLoginGuardian);
       did
         .getHolderInfo({
-          chainId: originChainId as ChainId,
+          chainId: originChainId,
           caHash,
         })
         .then((payload) => {
@@ -106,8 +106,6 @@ export const useStateInit = () => {
   }, [managerPrivateKey]);
 
   const loadCaInfo = useCallback(async () => {
-    AuthServe.addRequestAuthCheck(originChainId);
-    AuthServe.setRefreshTokenConfig(originChainId);
     if (!pin) {
       await loadManager();
     } else {
@@ -140,9 +138,9 @@ export const useStateInit = () => {
     loadCaInfo().catch((err) => {
       console.log(err, 'loadCaInfo===error');
       if (err?.status === 500) {
-        message.error('PortkeyAssetProvider init: Server error(500)');
+        singleMessage.error('PortkeyAssetProvider init: Server error(500)');
       } else if (err?.status !== 401) {
-        message.error('PortkeyAssetProvider init: ' + handleErrorMessage(err, 'Network error'));
+        singleMessage.error('PortkeyAssetProvider init: ' + handleErrorMessage(err, 'Network error'));
       }
     });
   }, [loadCaInfo]);

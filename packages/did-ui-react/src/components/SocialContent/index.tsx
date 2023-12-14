@@ -1,4 +1,4 @@
-import { Button, message } from 'antd';
+import { Button } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useRef, useEffect, useMemo } from 'react';
 import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
@@ -8,6 +8,7 @@ import { LoginFinishWithoutPin, Theme } from '../types';
 import WakeUpPortkey from '../WakeUpPortkey';
 import { devices } from '@portkey/utils';
 import './index.less';
+import singleMessage from '../CustomAnt/message';
 
 interface SocialContentProps {
   type: RegisterType;
@@ -48,7 +49,7 @@ export default function SocialContent({
         });
       } catch (error) {
         const msg = handleErrorMessage(error);
-        message.error(msg);
+        singleMessage.error(msg);
       }
     },
     [socialLogin],

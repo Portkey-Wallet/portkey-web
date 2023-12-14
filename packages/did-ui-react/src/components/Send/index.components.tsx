@@ -2,9 +2,9 @@ import { IAssetItemType } from '@portkey/services';
 import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
-import { Button, Modal, message } from 'antd';
+import { Button } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
+import { ReactElement, useCallback, useMemo, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
 import { ChainId } from '@portkey/types';
@@ -29,17 +29,17 @@ import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
-import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import { getChain } from '../../hooks/useChainInfo';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
+import singleMessage from '../CustomAnt/message';
+import { Modal } from '../CustomAnt';
 
 export interface SendProps {
   assetItem: IAssetItemType;
-  closeIcon?: ReactNode;
   className?: string;
   wrapperStyle?: React.CSSProperties;
   onCancel?: () => void;
-  onClose?: () => void;
   onSuccess?: () => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
   onModifyGuardians?: () => void;
@@ -60,11 +60,9 @@ type TypeStageObj = {
 
 function SendContent({
   assetItem,
-  closeIcon,
   className,
   wrapperStyle,
   onCancel,
-  onClose,
   onSuccess,
   onModifyLimit,
   onModifyGuardians,
@@ -266,24 +264,24 @@ function SendContent({
           toAddress: toAccount.address,
         });
       }
-      message.success('success');
+      singleMessage.success('success');
       onSuccess?.();
     } catch (error: any) {
       console.log('sendHandler==error', error);
-      if (!error?.type) return message.error(handleErrorMessage(error));
+      if (!error?.type) return singleMessage.error(handleErrorMessage(error));
       if (error.type === 'managerTransfer') {
-        return message.error(handleErrorMessage(error));
+        return singleMessage.error(handleErrorMessage(error));
       } else if (error.type === 'crossChainTransfer') {
         // dispatch(addFailedActivity(error.data));
         // TODO
         console.log('addFailedActivity', error);
 
         showErrorModal(error.data);
-        message.error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
 
         // return;
       } else {
-        message.error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
       }
     } finally {
       setLoading(false);
@@ -302,6 +300,11 @@ function SendContent({
     toAccount.address,
     tokenInfo,
   ]);
+
+  const btnOutOfFocus = useCallback(() => {
+    // fixed - button focus style when mobile
+    if (typeof document !== 'undefined') document.body.focus();
+  }, []);
 
   const checkManagerSyncState = useCheckManagerSyncState();
 
@@ -400,6 +403,7 @@ function SendContent({
               onOk: () => setStage(Stage.Amount),
             });
           }
+          btnOutOfFocus();
           setStage(Stage.Amount);
         },
         backFun: () => {
@@ -433,6 +437,7 @@ function SendContent({
           } else {
             setTipMsg(res);
           }
+          btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Address);
@@ -465,6 +470,7 @@ function SendContent({
         btnText: 'Send',
         handler: () => {
           sendHandler();
+          btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Amount);
@@ -502,6 +508,7 @@ function SendContent({
       networkType,
       onCancel,
       sendHandler,
+      btnOutOfFocus,
       tipMsg,
       toAccount,
       tokenInfo,
@@ -518,8 +525,6 @@ function SendContent({
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}
-        rightElement={closeIcon ? closeIcon : <CustomSvg type="Close2" onClick={() => onClose?.()} />}
-        rightCallback={closeIcon ? onClose : undefined}
       />
       {stage !== Stage.Preview && (
         <div className="address-wrap">

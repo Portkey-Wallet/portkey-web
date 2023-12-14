@@ -1,3 +1,5 @@
+@import '../../assets/theme/constants.less';
+
 .login-content {
   flex: 1;
   .login-title {
@@ -39,5 +41,15 @@
     font-size: 16px;
     color: var(--portkey-ui-font-4);
     background-color: var(--portkey-ui-bg-3);
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .login-content {
+    .qrcode-icon,
+    .pc-icon {
+      width: 64px;
+      height: 64px;
+    }
   }
 }

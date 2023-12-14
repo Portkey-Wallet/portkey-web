@@ -25,6 +25,8 @@ export function useVerifyGoogleToken() {
       } catch (error) {
         isRequest = true;
       }
+    } else {
+      isRequest = true;
     }
     if (isRequest) {
       let googleInfo;

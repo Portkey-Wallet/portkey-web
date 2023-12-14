@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE, Unlock } from '@portkey/did-ui-react';
 import { Store } from '../../utils';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
@@ -33,6 +33,10 @@ export default function Sign() {
   const [defaultLifeCycle, setLifeCycle] = useState<any>();
   const [design, setDesign] = useState<TDesign>('Web2Design');
   const [uiType, setUIType] = useState<UI_TYPE>('Modal');
+
+  const [lockOpen, setLockOpen] = useState<boolean>();
+  const [password, setPassword] = useState<string>();
+
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
   }, []);
@@ -41,7 +45,9 @@ export default function Sign() {
     <div>
       <div>-----------</div>
       <SignIn
+        // pin={'23aa'}
         ref={ref}
+        keyboard={true}
         design={design}
         uiType={uiType}
         extraElement={<div style={{ height: 300, background: 'red' }}></div>}
@@ -124,12 +130,61 @@ export default function Sign() {
           const wallet = await did.load(PIN);
           console.log('wallet:', wallet);
           // Mock chainId: 'AELF'
-          did.logout({ chainId: CHAIN_ID });
+          const result = await did.logout({ chainId: CHAIN_ID }, { onMethod: 'transactionHash' });
+          console.log(result, 'logout====');
         }}>
         logout
       </button>
       <div id="wrapper"></div>
       <div>-----------</div>
+
+      <button
+        onClick={async () => {
+          // Mock pin: 111111
+          const wallet = await did.load(PIN);
+          console.log(wallet, 'wallet==load');
+        }}>
+        load
+      </button>
+
+      <div>-----------</div>
+      <button
+        onClick={async () => {
+          const isExist = await did.checkManagerIsExist({
+            chainId: 'AELF',
+            caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
+            managementAddress: did.didWallet.managementAccount.address,
+          });
+          console.log(isExist, 'isExist=AELF');
+        }}>
+        checkManagerIsExist: AELF
+      </button>
+
+      <div>-----------</div>
+      <button
+        onClick={async () => {
+          const isExist = await did.checkManagerIsExist({
+            chainId: 'tDVV',
+            caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
+            managementAddress: did.didWallet.managementAccount.address,
+          });
+          console.log(isExist, 'isExist=tDVV');
+        }}>
+        checkManagerIsExist: tDVV
+      </button>
+
+      <div>-----------</div>
+      <button
+        onClick={async () => {
+          const isExist = await did.checkManagerIsExist({
+            chainId: 'tDVW',
+            caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
+            managementAddress: did.didWallet.managementAccount.address,
+          });
+          console.log(isExist, 'isExist=tDVW');
+        }}>
+        checkManagerIsExist: tDVW
+      </button>
     </div>
   );
 }

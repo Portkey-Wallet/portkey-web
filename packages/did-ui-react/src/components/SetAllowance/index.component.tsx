@@ -5,7 +5,6 @@ import BigNumber from 'bignumber.js';
 import './index.less';
 import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
-import { divDecimals } from '../../utils/converter';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {

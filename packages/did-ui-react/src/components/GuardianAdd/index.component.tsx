@@ -596,7 +596,7 @@ function GuardianAdd({
           {t('Confirm')}
         </Button>
       </div>
-      <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal destroyOnClose open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
           originChainId={originChainId}
           operationType={OperationTypeEnum.addGuardian}
@@ -613,7 +613,11 @@ function GuardianAdd({
           onReSend={reSendCode}
         />
       </CommonBaseModal>
-      <CommonBaseModal className="portkey-ui-modal-approval" open={approvalVisible} onClose={onCloseApproval}>
+      <CommonBaseModal
+        className="portkey-ui-modal-approval"
+        open={approvalVisible}
+        destroyOnClose
+        onClose={onCloseApproval}>
         <GuardianApproval
           header={<BackHeader onBack={onCloseApproval} />}
           originChainId={originChainId}

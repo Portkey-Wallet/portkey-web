@@ -9,7 +9,6 @@ export interface IRampProps extends IUseHandleAchSellParams {
   initState?: IRampInitState;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
-  isShowSelectInModal?: boolean; // to control the selection UI of fiat currency and token
   onBack: () => void;
   onShowPreview: ({ initState, chainId }: { initState: IRampPreviewInitState; chainId: ChainId }) => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;

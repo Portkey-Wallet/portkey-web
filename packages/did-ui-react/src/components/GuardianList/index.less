@@ -7,14 +7,15 @@
     flex-direction: column;
   }
   .guardian-list-description {
+    font-size: 14px;
     margin-bottom: 42px;
     text-align: center;
-    color: var(--portkey-ui-text-primary);
+    color: var(--portkey-ui-text-secondary);
   }
   .guardian-list-title {
-    font-size: var(--portkey-ui-title-text-1);
+    font-size: 24px;
     color: var(--portkey-ui-text-primary);
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     text-align: center;
     line-height: normal;
   }
@@ -60,7 +61,7 @@
       margin-left: 12px;
       line-height: 20px;
       color: var(--portkey-ui-text-primary);
-      font-size: 14px;
+      font-size: 16px;
       flex: 1;
       width: 0;
       .detail {
@@ -148,8 +149,8 @@
 @media screen and (max-width: @screen-max-w-768) {
   .guardian-list-wrapper {
     .guardian-list-title {
-      font-size: 32px;
-      line-height: 38px;
+      font-size: var(--portkey-ui-title-text-2);
+      margin-bottom: 8px;
     }
   }
 }

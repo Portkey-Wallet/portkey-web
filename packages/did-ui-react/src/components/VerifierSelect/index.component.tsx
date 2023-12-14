@@ -52,6 +52,9 @@ export interface VerifierSelectProps {
   onConfirm?: (result: VerifierSelectConfirmResult) => void;
 }
 
+/**
+ * @deprecated use `did.services.communityRecovery.getRecommendationVerifier` get default verifier
+ */
 export default function VerifierSelect({
   chainId = 'AELF',
   className,
@@ -332,13 +335,14 @@ export default function VerifierSelect({
         </div>
       </div>
       <CommonModal
+        type="modal"
         getContainer={'#select-verifier-content'}
         className="verify-confirm-modal"
         closable={false}
         maskClosable={false}
         open={open}
         width={320}
-        onCancel={() => setOpen(false)}>
+        onClose={() => setOpen(false)}>
         <p className="modal-content">
           {`${selectItem?.name ?? ''} will send a verification code to `}
           <span className="bold">{guardianIdentifier}</span>

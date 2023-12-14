@@ -1,9 +1,9 @@
-import { BaseModalFuncProps } from '../BaseModalMethod';
 import { ChainId } from '@portkey/types';
 import { ITransferLimitItem } from '@portkey/services';
 import { checkTransferLimit } from '../../../utils/sandboxUtil/checkTransferLimit';
 import { modalMethod } from './modalMethod';
 import { IBusinessFrom, ITransferLimitItemWithRoute } from '../../TransferSettingsEdit/index.components';
+import type { ModalFuncProps } from 'antd';
 
 interface ITransferLimitCheckProps {
   wrapClassName?: string;
@@ -20,7 +20,7 @@ interface ITransferLimitCheckProps {
   onOk?: (data: ITransferLimitItemWithRoute) => void;
 }
 
-interface ITransferLimitModalProps extends BaseModalFuncProps {
+interface ITransferLimitModalProps extends ModalFuncProps {
   wrapClassName?: string;
   className?: string;
   data?: ITransferLimitItem;
