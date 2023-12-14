@@ -1,6 +1,6 @@
 {
   "name": "@portkey/utils",
-  "version": "1.4.4-alpha.7",
+  "version": "0.0.2-alpha.3",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -39,12 +39,12 @@
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
-  "dependencies": {
-    "aelf-sdk": "3.2.45-beta.0",
+  "peerDependencies": {
+    "aelf-sdk": "^3.2.45-beta.0",
     "query-string": "^7.1.1"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1"
   },
-  "gitHead": "df2d5f465b4d184997734e87625e1e686adb6822"
+  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

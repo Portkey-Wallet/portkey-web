@@ -56,7 +56,7 @@ export const useSignHandler = ({
 
   const validateEmail = useCallback(
     async (email?: string) => {
-      setLoading(true, 'Checking account on the chain...');
+      setLoading(true, 'Checking account info on the blockchain');
       await validateIdentifier(email);
       return customValidateEmail?.(email);
     },
@@ -65,7 +65,7 @@ export const useSignHandler = ({
 
   const validatePhone = useCallback(
     async (phone?: string) => {
-      setLoading(true, 'Checking account on the chain...');
+      setLoading(true, 'Checking account info on the blockchain');
       await validateIdentifier(phone?.replaceAll(/\s/g, ''));
       return customValidatePhone?.(phone);
     },
@@ -103,7 +103,7 @@ export const useSignHandler = ({
   const onSocialFinish: SocialLoginFinishHandler = useCallback(
     async ({ type, data }) => {
       try {
-        setLoading(true, 'Checking account on the chain...');
+        setLoading(true, 'Checking account info on the blockchain');
         if (!data) throw 'Action error';
         if (type === 'Google') {
           const userInfo = await getGoogleUserInfo(data?.accessToken);

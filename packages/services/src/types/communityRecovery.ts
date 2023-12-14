@@ -14,6 +14,7 @@ export interface GuardiansApproved {
   verifierId: string;
   verificationDoc: string;
   signature: string;
+  identifierHash?: string;
 }
 
 export interface RegisterParams {
@@ -58,7 +59,7 @@ export type GetCAHolderByManagerResult = Array<CaHolderWithGuardian>;
 export interface Guardian {
   guardianIdentifier: string;
   identifierHash: string;
-  isLoginGuardian: true;
+  isLoginGuardian: boolean;
   salt: string;
   type: AccountType;
   verifierId: string;
@@ -101,6 +102,8 @@ export enum OperationTypeEnum {
   removeOtherManager = 6,
   // set login account
   setLoginAccount = 7,
+  managerApprove = 8,
+  modifyTransferLimit = 9,
 }
 
 export type CheckGoogleRecaptchaParams = {

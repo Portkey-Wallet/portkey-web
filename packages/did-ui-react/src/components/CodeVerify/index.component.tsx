@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verification } from '../../utils';
 import type { ChainId } from '@portkey/types';
 import { OperationTypeEnum } from '@portkey/services';
@@ -12,7 +12,8 @@ import './index.less';
 const MAX_TIMER = 60;
 
 export interface CodeVerifyProps extends BaseCodeVerifyProps {
-  chainId: ChainId;
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
   verifierSessionId: string;
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
@@ -21,7 +22,8 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
 }
 
 export default function CodeVerify({
-  chainId,
+  originChainId = 'AELF',
+  targetChainId,
   verifier,
   className,
   tipExtra,
@@ -44,7 +46,7 @@ export default function CodeVerify({
   const setInputError = useCallback(async (isError?: boolean) => {
     if (!isError) return setCodeError(isError);
     setCodeError(true);
-    await sleep(1000);
+    await sleep(2000);
     setCodeError(false);
   }, []);
 
@@ -59,13 +61,17 @@ export default function CodeVerify({
             verificationCode: code,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
-            chainId,
+            chainId: originChainId,
+            targetChainId,
             operationType,
           });
           setLoading(false);
           console.log(result, 'verifyErrorHandler==');
 
-          if (result.signature) return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
+          if (result.signature) {
+            if (typeof document !== undefined) document.body.focus();
+            return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
+          }
           setPinVal('');
         } else {
           throw Error('Please check if the PIN code is entered correctly');
@@ -73,10 +79,9 @@ export default function CodeVerify({
       } catch (error: any) {
         setLoading(false);
         setPinVal('');
-        console.log(error, 'error==verifyErrorHandler=');
         const _error = verifyErrorHandler(error);
         console.log(error, _error, 'error==verifyErrorHandler=');
-        if (_error.indexOf('Invalid code')) return setInputError(true);
+        if (_error.includes('Invalid code')) return setInputError(true);
         errorTip(
           {
             errorFields: 'CodeVerify',
@@ -92,12 +97,13 @@ export default function CodeVerify({
       verifierSessionId,
       guardianIdentifier,
       verifier.id,
-      chainId,
+      originChainId,
       operationType,
       onSuccess,
-      setInputError,
       isErrorTip,
       onError,
+      targetChainId,
+      setInputError,
     ],
   );
 
@@ -112,7 +118,8 @@ export default function CodeVerify({
             type: accountType,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
             verifierId: verifier.id,
-            chainId,
+            chainId: originChainId,
+            targetChainId,
             operationType,
           },
         },
@@ -136,7 +143,8 @@ export default function CodeVerify({
     }
   }, [
     accountType,
-    chainId,
+    originChainId,
+    targetChainId,
     guardianIdentifier,
     isErrorTip,
     onError,
@@ -145,6 +153,17 @@ export default function CodeVerify({
     reCaptchaHandler,
     verifier,
   ]);
+
+  useEffect(() => {
+    return () => {
+      setPinVal('');
+    };
+  }, []);
+
+  const onCodeChange = useCallback((pin: string) => {
+    setPinVal(pin);
+    setCodeError(false);
+  }, []);
 
   return (
     <CodeVerifyUI
@@ -158,7 +177,7 @@ export default function CodeVerify({
       isLoginGuardian={isLoginGuardian}
       guardianIdentifier={guardianIdentifier}
       accountType={accountType}
-      onCodeChange={setPinVal}
+      onCodeChange={onCodeChange}
       onReSend={resendCode}
       onCodeFinish={onFinish}
     />

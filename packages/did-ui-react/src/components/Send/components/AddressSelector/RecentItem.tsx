@@ -25,16 +25,7 @@ export default function RecentItem({
   // ) => {
   // };
 
-  return item?.name ? (
-    <ContactCard
-      isMainnet={isMainnet}
-      user={item}
-      onChange={onClick}
-      className="portkey-ui-contact-card-in-recent"
-      // chainId={item.chainId}
-    />
-  ) : (
-    // In order to keep the format of Recents and Contacts consistent, this can use like {item.addresses[0]}
+  return (
     <div className={clsx(['flex-between-center', 'recent-item'])}>
       <div
         className="main-info"

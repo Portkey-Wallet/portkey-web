@@ -69,6 +69,8 @@ function Step3({
         'Missing `guardianIdentifierInfo`, please check params'
       )}
       <CommonModal
+        maskClosable={false}
+        closable={false}
         type="modal"
         open={returnOpen}
         className="confirm-return-modal"

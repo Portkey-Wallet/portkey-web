@@ -1,13 +1,13 @@
 import classNames from 'classnames';
-import { ConfigProvider } from 'antd';
-import ActionButton from 'antd/lib/_util/ActionButton';
-import warning from 'antd/lib/_util/warning';
+import ConfigProvider from '../../config-provider';
+import ActionButtonEle from 'antd/lib/_util/ActionButton';
 import type { ModalFuncProps } from 'antd';
 import Dialog from './Modal';
-import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../../constants';
+import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS, PORTKEY_Z_INDEX } from '../../../../constants';
 import { getTransitionName } from 'antd/lib/_util/motion';
 
-interface ConfirmDialogProps extends ModalFuncProps {
+const ActionButton = (ActionButtonEle as any).default || ActionButtonEle;
+interface ConfirmDialogProps extends Omit<ModalFuncProps, 'visible'> {
   afterClose?: () => void;
   close: (...args: any[]) => void;
   autoFocusButton?: null | 'ok' | 'cancel';
@@ -23,7 +23,6 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
     close,
     zIndex,
     afterClose,
-    visible,
     open,
     keyboard,
     centered,
@@ -43,16 +42,6 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
     modalRender,
     focusTriggerAfterClose,
   } = props;
-
-  if (process.env.NODE_ENV !== 'production') {
-    warning(
-      !(typeof icon === 'string' && icon.length > 2),
-      'Modal',
-      `\`icon\` is using ReactNode instead of string naming in v4. Please check \`${icon}\` at https://ant.design/components/icon`,
-    );
-
-    warning(visible === undefined, 'Modal', `\`visible\` is deprecated, please use \`open\` instead.`);
-  }
 
   const okType = props.okType || 'primary';
   const contentPrefixCls = `${prefixCls}-confirm`;
@@ -90,7 +79,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
         className={classString}
         wrapClassName={classNames({ [`${contentPrefixCls}-centered`]: !!props.centered }, wrapClassName)}
         onCancel={() => close?.({ triggerCancel: true })}
-        open={open || visible}
+        open={open}
         title=""
         footer=""
         transitionName={getTransitionName(rootPrefixCls, 'zoom', props.transitionName)}
@@ -101,7 +90,7 @@ const ConfirmDialog = (props: ConfirmDialogProps) => {
         style={style}
         bodyStyle={bodyStyle}
         width={width}
-        zIndex={zIndex}
+        zIndex={zIndex || PORTKEY_Z_INDEX}
         afterClose={afterClose}
         keyboard={keyboard}
         centered={centered}

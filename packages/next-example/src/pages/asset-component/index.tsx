@@ -74,9 +74,6 @@ export default function AssetComponent() {
             onSuccess={() => {
               singleMessage.success('Send success');
             }}
-            onClose={() => {
-              console.log('Send onClose');
-            }}
           />
           <ReceiveCard
             receiveInfo={{

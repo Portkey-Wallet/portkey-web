@@ -1,0 +1,36 @@
+.manager-approval-guardian-approve {
+  height: 100%;
+  .guardian-list-wrapper {
+    padding: 0 24px 24px;
+    @media screen and (max-width: 768px) {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+  .verifier-content {
+    margin-right: -15px;
+    max-height: 314px;
+    overflow: auto;
+    padding-bottom: 24px;
+    padding-right: 15px;
+  }
+}
+.portkey-ui-manager-approval-wrapper {
+  overflow: auto;
+  height: 100%;
+  .btn-wrapper {
+    padding: 15px 16px 17px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 16px;
+    line-height: 20px;
+    button {
+      border-radius: var(--portkey-ui-primary-border-radius);
+      line-height: var(--portkey-ui-default-btn-h);
+      font-size: 16px;
+      &.portkey-ant-btn-default {
+        border-color: var(--portkey-ui-border-7);
+      }
+    }
+  }
+}

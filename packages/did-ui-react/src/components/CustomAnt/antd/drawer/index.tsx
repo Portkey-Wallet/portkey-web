@@ -1,4 +1,4 @@
-import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import CloseOutlinedIcon from '@ant-design/icons/CloseOutlined';
 import classNames from 'classnames';
 import RcDrawer from 'rc-drawer';
 import type { DrawerProps as RcDrawerProps } from 'rc-drawer';
@@ -6,11 +6,12 @@ import type { CSSMotionProps } from 'rc-motion';
 import * as React from 'react';
 import { NoFormStyle } from 'antd/lib/form/context';
 import { NoCompactStyle } from 'antd/lib/space/Compact';
-import warning from 'antd/lib/_util/warning';
 import { getTransitionName } from 'antd/lib/_util/motion';
 import { tuple } from 'antd/lib/_util/type';
 import { ConfigContext } from '../../config-provider';
 import clsx from 'clsx';
+import { PORTKEY_Z_INDEX } from '../../../../constants';
+const CloseOutlined = (CloseOutlinedIcon as any).default || CloseOutlinedIcon;
 
 const SizeTypes = tuple('default', 'large');
 type sizeType = (typeof SizeTypes)[number];
@@ -20,7 +21,7 @@ export interface PushState {
 }
 
 // Drawer diff props: 'open' | 'motion' | 'maskMotion' | 'wrapperClassName'
-export interface DrawerProps extends RcDrawerProps {
+export interface DrawerProps extends Omit<RcDrawerProps, 'visible' | 'afterVisibleChange'> {
   size?: sizeType;
   closable?: boolean;
   closeIcon?: React.ReactNode;
@@ -32,21 +33,12 @@ export interface DrawerProps extends RcDrawerProps {
   footerStyle?: React.CSSProperties;
 
   title?: React.ReactNode;
-  /**
-   * @deprecated `visible` is deprecated which will be removed in next major version. Please use
-   *   `open` instead.
-   */
-  visible?: boolean;
+
   open?: boolean;
 
   footer?: React.ReactNode;
   extra?: React.ReactNode;
 
-  /**
-   * @deprecated `afterVisibleChange` is deprecated which will be removed in next major version.
-   *   Please use `afterOpenChange` instead.
-   */
-  afterVisibleChange?: (visible: boolean) => void;
   afterOpenChange?: (open: boolean) => void;
 
   /* custom props */
@@ -67,7 +59,6 @@ function Drawer(props: DrawerProps) {
     bodyStyle,
     drawerStyle,
     className,
-    visible,
     open,
     children,
     style,
@@ -79,10 +70,10 @@ function Drawer(props: DrawerProps) {
     prefixCls: customizePrefixCls,
     getContainer: customizeGetContainer,
     extra,
-    afterVisibleChange,
     afterOpenChange,
     wrapClassName,
     rootClassName,
+    zIndex = PORTKEY_Z_INDEX,
     ...rest
   } = props;
 
@@ -99,17 +90,6 @@ function Drawer(props: DrawerProps) {
       {closeIcon}
     </button>
   );
-
-  [
-    ['visible', 'open'],
-    ['afterVisibleChange', 'afterOpenChange'],
-  ].forEach(([deprecatedName, newName]) => {
-    warning(
-      !(deprecatedName in props),
-      'Drawer',
-      `\`${deprecatedName}\` is deprecated which will be removed in next major version, please use \`${newName}\` instead.`,
-    );
-  });
 
   function renderHeader() {
     if (!title && !closable) {
@@ -182,7 +162,8 @@ function Drawer(props: DrawerProps) {
           prefixCls={prefixCls}
           onClose={onClose}
           {...rest}
-          open={open ?? visible}
+          zIndex={zIndex}
+          open={open}
           mask={mask}
           push={push}
           width={mergedWidth}
@@ -191,7 +172,6 @@ function Drawer(props: DrawerProps) {
           getContainer={getContainer}
           afterOpenChange={(isOpen) => {
             afterOpenChange?.(isOpen);
-            afterVisibleChange?.(isOpen);
           }}
           maskMotion={maskMotion}
           motion={panelMotion}

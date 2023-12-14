@@ -7,22 +7,22 @@
     flex-direction: column;
   }
   .guardian-list-description {
-    font-size: 16px;
+    font-size: 14px;
     margin-bottom: 42px;
     text-align: center;
-    color: var(--portkey-ui-text-primary);
+    color: var(--portkey-ui-text-secondary);
   }
   .guardian-list-title {
-    font-size: var(--portkey-ui-title-text-1);
+    font-size: 24px;
     color: var(--portkey-ui-text-primary);
-    margin-bottom: 16px;
+    margin-bottom: 8px;
     text-align: center;
+    line-height: normal;
   }
 
   .approve-count {
     line-height: 20px;
     font-size: 14px;
-    margin-bottom: 8px;
     padding-bottom: 12px;
     color: var(--portkey-ui-text-secondary);
     border-bottom: 1px solid var(--portkey-ui-default-border);
@@ -41,7 +41,7 @@
 
   .verifier-item {
     position: relative;
-    padding: 24px 0;
+    padding: 26px 0;
     border-bottom: 1px solid var(--portkey-ui-default-border);
     &:last-of-type {
       border-bottom: none;
@@ -61,7 +61,7 @@
       margin-left: 12px;
       line-height: 20px;
       color: var(--portkey-ui-text-primary);
-      font-size: 14px;
+      font-size: 16px;
       flex: 1;
       width: 0;
       .detail {
@@ -121,13 +121,14 @@
     flex: 1;
 
     .btn-wrap {
+      border-top: 1px solid var(--portkey-ui-border-2);
       padding-top: 24px;
     }
   }
 
   .login-icon {
     position: absolute;
-    top: 0;
+    top: 4px;
     left: 0;
     border-bottom-right-radius: 9px;
     border-top-left-radius: 9px;
@@ -150,9 +151,6 @@
     .guardian-list-title {
       font-size: var(--portkey-ui-title-text-2);
       margin-bottom: 8px;
-    }
-    .guardian-list-description {
-      font-size: 14px;
     }
   }
 }

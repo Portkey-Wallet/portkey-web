@@ -1,8 +1,10 @@
 import { devices } from '@portkey/utils';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { useMedia } from 'react-use';
 import { Drawer, Modal } from '../CustomAnt';
-import { Button, type DrawerProps, type ModalProps } from 'antd';
+import { Button } from 'antd';
+import type { DrawerProps, ModalProps } from 'antd';
+
 import { getConfirmLocale } from 'antd/lib/modal/locale';
 import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import clsx from 'clsx';
@@ -19,7 +21,7 @@ export type PortkeyBaseModalProps = Omit<
 >;
 type BaseAntdModalProps = PortkeyDrawerInModalProps & PortkeyBaseModalProps;
 
-const PORTKEY_MODAL_PREFIX_CLS = 'portkey-ui-modal_drawer';
+export const PORTKEY_MODAL_PREFIX_CLS = 'portkey-ui-modal_drawer';
 
 export interface PortkeyModalProps extends BaseAntdModalProps {
   type?: 'modal' | 'drawer' | 'auto';
@@ -82,7 +84,7 @@ export default function PortkeyModal({
   const isWide = useMedia('(max-width: 768px)');
   const isMobile = useMemo(() => isWide || devices.isMobileDevices(), [isWide]);
 
-  const defaultFooter = useMemo(
+  const defaultFooter = useCallback(
     () => (
       <LocaleReceiver componentName="Modal" defaultLocale={getConfirmLocale()}>
         {(contextLocale) => {
@@ -130,7 +132,7 @@ export default function PortkeyModal({
         transitionName={transitionName}
         focusTriggerAfterClose={focusTriggerAfterClose}
         // mousePosition={mousePosition}
-        footer={footer === undefined ? defaultFooter : footer}
+        footer={footer === undefined ? defaultFooter() : footer}
         height={defaultHeight}
       />
     );
@@ -170,7 +172,7 @@ export default function PortkeyModal({
         maskMotion={maskMotion}
         wrapClassName={wrapClassName}
         size={size}
-        footer={footer === undefined ? defaultFooter : footer}
+        footer={footer === undefined ? defaultFooter() : footer}
         extra={extra}
         onClose={onClose}
         height={defaultHeight}

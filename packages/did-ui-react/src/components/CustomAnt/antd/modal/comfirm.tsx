@@ -1,17 +1,20 @@
-import CheckCircleOutlined from '@ant-design/icons/CheckCircleOutlined';
-import CloseCircleOutlined from '@ant-design/icons/CloseCircleOutlined';
-import ExclamationCircleOutlined from '@ant-design/icons/ExclamationCircleOutlined';
-import InfoCircleOutlined from '@ant-design/icons/InfoCircleOutlined';
+import CheckCircleOutlinedIcon from '@ant-design/icons/CheckCircleOutlined';
+import CloseCircleOutlinedIcon from '@ant-design/icons/CloseCircleOutlined';
+import ExclamationCircleOutlinedIcon from '@ant-design/icons/ExclamationCircleOutlined';
+import InfoCircleOutlinedIcon from '@ant-design/icons/InfoCircleOutlined';
 import { render as reactRender, unmount as reactUnmount } from 'rc-util/lib/React/render';
-import warning from 'antd/lib/_util/warning';
 import ConfirmDialog from './ConfirmDialog';
-import destroyFns from './destroyFns';
+import destroyFns from '../../utils/destroyFns';
 import { getConfirmLocale } from './locale';
 import type { ModalFuncProps } from 'antd';
 import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../../constants';
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-let defaultRootPrefixCls = '';
+const CheckCircleOutlined = (CheckCircleOutlinedIcon as any).default || CheckCircleOutlinedIcon;
+const CloseCircleOutlined = (CloseCircleOutlinedIcon as any).default || CloseCircleOutlinedIcon;
+
+const ExclamationCircleOutlined = (ExclamationCircleOutlinedIcon as any).default || ExclamationCircleOutlinedIcon;
+
+const InfoCircleOutlined = (InfoCircleOutlinedIcon as any).default || InfoCircleOutlinedIcon;
 
 type ConfigUpdate = ModalFuncProps | ((prevConfig: ModalFuncProps) => ModalFuncProps);
 
@@ -163,9 +166,4 @@ export function withConfirm(props: ModalFuncProps): ModalFuncProps {
     ...props,
     type: 'confirm',
   };
-}
-
-export function modalGlobalConfig({ rootPrefixCls }: { rootPrefixCls: string }) {
-  warning(false, 'Modal', 'Modal.config is deprecated. Please use ConfigProvider.config instead.');
-  defaultRootPrefixCls = rootPrefixCls;
 }

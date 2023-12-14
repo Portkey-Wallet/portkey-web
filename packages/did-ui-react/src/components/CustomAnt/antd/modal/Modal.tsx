@@ -1,4 +1,4 @@
-import CloseOutlined from '@ant-design/icons/CloseOutlined';
+import CloseOutlinedIcon from '@ant-design/icons/CloseOutlined';
 import classNames from 'classnames';
 import Dialog from 'rc-dialog';
 import * as React from 'react';
@@ -6,18 +6,20 @@ import * as React from 'react';
 import { Button } from 'antd';
 import type { ButtonProps } from 'antd';
 import { NoFormStyle } from 'antd/lib/form/context';
-import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
+import LocaleReceiver from '../../locale-provider/LocaleReceiver';
 import { getTransitionName } from 'antd/lib/_util/motion';
 import type { DirectionType } from 'antd/lib/config-provider';
 import { LegacyButtonType, convertLegacyProps } from 'antd/lib/button/button';
 import { NoCompactStyle } from 'antd/lib/space/Compact';
 import { canUseDocElement } from 'antd/lib/_util/styleChecker';
-import warning from 'antd/lib/_util/warning';
 import { getConfirmLocale } from 'antd/lib/modal/locale';
 import ConfigProvider from '../../config-provider';
+import { PORTKEY_Z_INDEX } from '../../../../constants';
 type MousePosition = { x: number; y: number } | null;
 
 let mousePosition: MousePosition;
+
+const CloseOutlined = (CloseOutlinedIcon as any).default || CloseOutlinedIcon;
 
 // ref: https://github.com/ant-design/ant-design/issues/15795
 const getClickPosition = (e: MouseEvent) => {
@@ -81,11 +83,6 @@ type getContainerFunc = () => HTMLElement;
 export interface ModalFuncProps {
   prefixCls?: string;
   className?: string;
-  /**
-   * @deprecated `visible` is deprecated which will be removed in next major version. Please use
-   *   `open` instead.
-   */
-  visible?: boolean;
   open?: boolean;
   title?: React.ReactNode;
   closable?: boolean;
@@ -145,12 +142,6 @@ const Modal: React.FC<ModalProps> = (props) => {
     onOk?.(e);
   };
 
-  warning(
-    !('visible' in props),
-    'Modal',
-    `\`visible\` will be removed in next major version, please use \`open\` instead.`,
-  );
-
   const {
     prefixCls: customizePrefixCls,
     footer,
@@ -161,13 +152,14 @@ const Modal: React.FC<ModalProps> = (props) => {
     closeIcon,
     focusTriggerAfterClose = true,
     width = 520,
+    zIndex = PORTKEY_Z_INDEX,
     ...restProps
   } = props;
 
   const prefixCls = getPrefixCls('modal', customizePrefixCls);
   const rootPrefixCls = getPrefixCls();
 
-  const defaultFooter = (
+  const defaultFooter = () => (
     <LocaleReceiver componentName="Modal" defaultLocale={getConfirmLocale()}>
       {(contextLocale) => {
         const { okText, okType = 'primary', cancelText, confirmLoading = false } = props;
@@ -192,7 +184,7 @@ const Modal: React.FC<ModalProps> = (props) => {
 
   const closeIconToRender = (
     <span className={`${prefixCls}-close-x`}>
-      {closeIcon || <CloseOutlined className={`${prefixCls}-close-icon`} />}
+      {closeIcon || (CloseOutlined && <CloseOutlined className={`${prefixCls}-close-icon`} />)}
     </span>
   );
 
@@ -207,11 +199,14 @@ const Modal: React.FC<ModalProps> = (props) => {
         <Dialog
           width={width}
           {...restProps}
-          getContainer={getContainer === undefined ? (getContextPopupContainer as getContainerFunc) : getContainer}
+          getContainer={
+            getContainer === undefined ? (getContextPopupContainer as getContainerFunc) || undefined : getContainer
+          }
           prefixCls={prefixCls}
           wrapClassName={wrapClassNameExtended}
-          footer={footer === undefined ? defaultFooter : footer}
+          footer={footer === undefined ? defaultFooter() : footer}
           visible={open}
+          zIndex={zIndex}
           mousePosition={restProps.mousePosition ?? mousePosition}
           onClose={handleCancel}
           closeIcon={closeIconToRender}

@@ -2,6 +2,7 @@ import '@portkey/did-ui-react/dist/assets/index.css';
 import { NetworkType, PortkeyProvider } from '@portkey/did-ui-react';
 import { useEffect, useState } from 'react';
 import './index.css';
+import { ConfigProvider } from 'antd';
 
 export default function APP({ Component, pageProps }: any) {
   const [dark, setDark] = useState<boolean>(false);

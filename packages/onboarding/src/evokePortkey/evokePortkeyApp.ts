@@ -14,7 +14,7 @@ const evokePortkeyApp: IEvokePortkeyApp['evokePortkeyApp'] = ({
   const callLib = new EvokeApp({
     scheme: {
       protocol: schemeUtils.DID_APP_SCHEMA, // 'portkey.did',
-      domain: domain || window.location.host,
+      domain: domain || window?.location.host,
     },
     timeout,
     appStore: APP_DOWNLOAD_URL.APP_STORE,

@@ -49,8 +49,6 @@ export default function ReCaptchaModal() {
     closeModal();
   }, [closeModal, modalInfo]);
 
-  const ref = useRef<HTMLIFrameElement>();
-
   const [isLoading, setModalLoading] = useState(false);
 
   const eventHandler = useCallback(
@@ -103,7 +101,6 @@ export default function ReCaptchaModal() {
       <div className="reCaptcha-modal-inner">
         <iframe
           onLoad={iframeLoad}
-          ref={ref as any}
           style={{ width: isLoading ? 0 : '100%', border: '0' }}
           src={`${ReCaptchaIframe}?siteKey=${reCaptchaInfo?.siteKey || defaultReCaptchaSiteKey}&theme=${
             reCaptchaInfo?.theme || theme || 'light'

@@ -10,7 +10,8 @@ import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
 import { OperationTypeEnum } from '@portkey/services';
 
 interface GuardianItemProps {
-  chainId: ChainId;
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
   disabled?: boolean;
   isExpired?: boolean;
   item: UserGuardianStatus;
@@ -22,7 +23,8 @@ interface GuardianItemProps {
 }
 
 function GuardianItems({
-  chainId,
+  originChainId = 'AELF',
+  targetChainId,
   disabled,
   item,
   isExpired,
@@ -71,7 +73,8 @@ function GuardianItems({
               type: item.guardianType,
               guardianIdentifier: (item.identifier || item.identifierHash || '').replaceAll(/\s/g, ''),
               verifierId: item.verifier?.id || '',
-              chainId,
+              chainId: originChainId,
+              targetChainId,
               operationType,
             },
           },
@@ -99,7 +102,7 @@ function GuardianItems({
         );
       }
     },
-    [chainId, operationType, reCaptchaHandler, onSend, isErrorTip, onError],
+    [originChainId, targetChainId, operationType, reCaptchaHandler, onSend, isErrorTip, onError],
   );
 
   const verifyingHandler = useCallback(
