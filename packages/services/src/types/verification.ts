@@ -6,6 +6,7 @@ export type SendVerificationCodeParams = {
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
+  targetChainId?: ChainId;
   operationType: OperationTypeEnum;
 };
 
@@ -27,6 +28,7 @@ export type VerifyVerificationCodeParams = {
   guardianIdentifier: string;
   verifierId: string;
   chainId: ChainId;
+  targetChainId?: ChainId;
   operationType: OperationTypeEnum;
 };
 
@@ -51,6 +53,7 @@ export type VerifyGoogleTokenParams = {
   verifierId: string;
   chainId: ChainId;
   operationType: OperationTypeEnum;
+  targetChainId?: ChainId;
 };
 
 export type VerifyAppleTokenParams = {
@@ -58,9 +61,22 @@ export type VerifyAppleTokenParams = {
   verifierId: string;
   chainId: ChainId;
   operationType: OperationTypeEnum;
+  targetChainId?: ChainId;
 };
 
 export type SendAppleUserExtraInfoResult = { userId: string };
+
+export type GetAppleUserExtraInfoParams = { userId: string };
+
+export type getAppleUserExtraInfoResult = {
+  email: string;
+  firstName: string | null;
+  fullName: string | null;
+  guardianType: string;
+  id: string;
+  isPrivate: boolean;
+  lastName: string | null;
+};
 
 export type GetRecommendationVerifierParams = {
   chainId: ChainId;
@@ -75,6 +91,7 @@ export interface IVerificationService {
   getVerificationCode(params: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult>;
   verifyVerificationCode(params: VerifyVerificationCodeParams): Promise<VerifyVerificationCodeResult>;
   sendAppleUserExtraInfo(params: SendAppleUserExtraInfoParams): Promise<SendAppleUserExtraInfoResult>;
+  getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<getAppleUserExtraInfoResult>;
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;

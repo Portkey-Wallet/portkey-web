@@ -11,7 +11,8 @@ import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
 
 export interface GuardianListProps {
-  chainId?: ChainId;
+  originChainId: ChainId;
+  targetChainId?: ChainId;
   className?: string;
   guardianList?: UserGuardianStatus[];
   expiredTime?: number;
@@ -24,7 +25,8 @@ export interface GuardianListProps {
 }
 
 function GuardianList({
-  chainId = 'AELF',
+  originChainId,
+  targetChainId,
   className,
   guardianList = [],
   expiredTime,
@@ -86,7 +88,8 @@ function GuardianList({
         <ul className="verifier-content">
           {guardianList?.map((item, index) => (
             <GuardianItems
-              chainId={chainId}
+              originChainId={originChainId}
+              targetChainId={targetChainId}
               key={item.key}
               operationType={operationType}
               disabled={alreadyApprovalLength >= approvalLength && item.status !== VerifyStatus.Verified}

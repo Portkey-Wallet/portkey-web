@@ -4,8 +4,7 @@
  *
  * First you have to configure networkList using ConfigProvider.setGlobalConfig
  */
-
-import BaseModal from '../SignStep/components/BaseModal';
+import CommonBaseModal from '../CommonBaseModal';
 import { useState, useCallback, useMemo, useRef, useEffect, forwardRef, useImperativeHandle } from 'react';
 import Step1, { OnSignInFinishedFun } from '../SignStep/components/Step1';
 import Step2OfSignUp from '../SignStep/components/Step2OfSignUp';
@@ -396,7 +395,7 @@ const SignIn = forwardRef(
         errorTip(
           {
             errorFields: 'getPhoneCountry',
-            error,
+            error: handleErrorMessage(error),
           },
           isErrorTip,
           onError,
@@ -542,14 +541,15 @@ const SignIn = forwardRef(
             <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
           </Container>
         ) : (
-          <BaseModal
+          <CommonBaseModal
             destroyOnClose
             className={className}
+            maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
             open={open}
             getContainer={getContainer ? getContainer : '#portkey-ui-root'}
             onCancel={onModalCancel}>
             {mainContent()}
-          </BaseModal>
+          </CommonBaseModal>
         )}
       </PortkeyStyleProvider>
     );

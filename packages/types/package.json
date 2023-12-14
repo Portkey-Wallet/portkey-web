@@ -1,6 +1,6 @@
 {
   "name": "@portkey/types",
-  "version": "1.4.4-alpha.5",
+  "version": "1.5.2-alpha.0",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -42,5 +42,5 @@
   "dependencies": {
     "@types/elliptic": "^6.4.14"
   },
-  "gitHead": "df2d5f465b4d184997734e87625e1e686adb6822"
+  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

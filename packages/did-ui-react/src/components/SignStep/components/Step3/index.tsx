@@ -62,6 +62,7 @@ function Step3({
         onCreatePending={onCreatePending}
       />
       <CommonModal
+        maskClosable={false}
         closable={false}
         open={returnOpen}
         className="confirm-return-modal"

@@ -1,5 +1,5 @@
 import { VerifierItem } from '@portkey/did';
-import type { AccountType, Guardian, Manager } from '@portkey/services';
+import type { AccountType, AccountTypeEnum, Guardian, Manager } from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import { TSocialLoginHandler } from './wallet';
 
@@ -9,7 +9,7 @@ export interface BaseGuardianItem {
   identifier?: string;
   guardianIdentifier?: string;
   guardianType: AccountType;
-  key: string; // `${identifier}&${verifier?.name}`,
+  key: string; // `${identifier}&${verifier?.id}`,
   identifierHash?: string;
   salt?: string;
   thirdPartyEmail?: string;
@@ -62,4 +62,20 @@ export type VerifyTokenParams = {
 export interface GuardiansInfo {
   guardianList: { guardians: Guardian[] };
   managerInfos: Manager[];
+}
+
+export interface IGuardiansApproved {
+  type: AccountTypeEnum;
+  identifierHash: string;
+  verificationInfo: {
+    id: string;
+    signature: string | number[];
+    verificationDoc: string;
+  };
+}
+
+export interface IVerification {
+  id: string;
+  signature?: number[];
+  verificationDoc?: string;
 }

@@ -13,10 +13,10 @@ export default function RampPage() {
     <div>
       <PortkeyAssetProvider originChainId="AELF" pin="111111">
         <Ramp
-          goBack={function (): void {
+          onBack={function (): void {
             router.push('/sign');
           }}
-          goPreview={function (data): void {
+          onShowPreview={function (data): void {
             router.push(`/ramp-preview/${JSON.stringify(data)}`);
           }}
           tokenInfo={{
@@ -28,6 +28,7 @@ export default function RampPage() {
           portkeyWebSocketUrl={'http://192.168.66.240:5577/ca'}
           isMainnet={true}
           isShowSelectInModal={true}
+          isBuySectionShow={false}
         />
       </PortkeyAssetProvider>
     </div>

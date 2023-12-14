@@ -26,7 +26,7 @@ import { FiatType, PartialFiatType, RampDrawerType, RampTypeEnum } from '../../t
 import { divDecimals, formatAmountShow } from '../../utils/converter';
 import BackHeaderForPage from '../BackHeaderForPage';
 import CustomSvg from '../CustomSvg';
-import { setLoading } from '../../utils';
+import { WalletError, handleErrorMessage, setLoading } from '../../utils';
 import { handleKeyDown } from '../../utils/keyDown';
 import CustomModal from '../CustomModal';
 import { IRampProps } from '.';
@@ -37,8 +37,12 @@ import { useHandleAchSell } from './hooks';
 import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
 import { usePortkey } from '../context';
 import { fetchTxFeeAsync } from '../../request/token';
+import { getChain } from '../../hooks/useChainInfo';
+import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
+import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 
 export default function RampMain({
+  className,
   initState,
   tokenInfo,
   portkeyWebSocketUrl,
@@ -46,8 +50,10 @@ export default function RampMain({
   isBuySectionShow = true,
   isSellSectionShow = true,
   isShowSelectInModal = true,
-  goBack,
-  goPreview,
+  onBack,
+  onShowPreview,
+  onModifyLimit,
+  onModifyGuardians,
 }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
@@ -68,7 +74,7 @@ export default function RampMain({
   const chainId = useMemo(() => tokenInfo?.chainId || DEFAULT_CHAIN_ID, [tokenInfo?.chainId]);
   const symbol = useMemo(() => tokenInfo?.symbol || DEFAULT_SYMBOL, [tokenInfo?.symbol]);
 
-  const [{ managementAccount, caInfo, initialized }] = usePortkeyAsset();
+  const [{ managementAccount, caInfo, initialized, caHash, originChainId }] = usePortkeyAsset();
   const isManagerSynced = useMemo(
     () => !!managementAccount?.address && managementAccount.address?.length > 0,
     [managementAccount?.address],
@@ -289,6 +295,7 @@ export default function RampMain({
         setCurFiat({ country, currency: fiat });
         setCurToken({ crypto, network });
         setPage(side);
+
         valueSaveRef.current = {
           amount,
           currency: fiat,
@@ -309,6 +316,16 @@ export default function RampMain({
           valueSaveRef.current.side = side;
           setAmount(initCrypto);
           valueSaveRef.current.amount = initCrypto;
+          // CHECK 2: security
+          walletSecurityCheck({
+            originChainId: originChainId,
+            targetChainId: tokenInfo.chainId,
+            caHash: caHash || '',
+            onOk: onModifyGuardians,
+          }).catch((error) => {
+            const msg = handleErrorMessage(error);
+            console.log('check security error: ', msg);
+          });
         }
         updateCrypto();
       }
@@ -317,7 +334,17 @@ export default function RampMain({
         updateTimerRef.current = undefined;
       };
     }
-  }, [initialized, isBuySectionShow, isSellSectionShow, initState, updateCrypto]);
+  }, [
+    initialized,
+    isBuySectionShow,
+    isSellSectionShow,
+    initState,
+    updateCrypto,
+    caHash,
+    onModifyGuardians,
+    originChainId,
+    tokenInfo.chainId,
+  ]);
 
   const handleInputChange = useCallback(
     async (v: string) => {
@@ -360,6 +387,25 @@ export default function RampMain({
         return;
       }
 
+      // check security
+      if (side === RampTypeEnum.SELL) {
+        try {
+          setLoading(true);
+          const res = await walletSecurityCheck({
+            originChainId: originChainId,
+            targetChainId: tokenInfo.chainId,
+            caHash: caHash || '',
+            onOk: onModifyGuardians,
+          });
+          if (!res) return setLoading(false);
+        } catch (error) {
+          setLoading(false);
+
+          const msg = handleErrorMessage(error);
+          message.error(msg);
+        }
+      }
+
       stopInterval();
       setPage(side);
       // BUY
@@ -388,7 +434,17 @@ export default function RampMain({
         setLoading(false);
       }
     },
-    [isBuySectionShow, isSellSectionShow, stopInterval, t, updateCrypto],
+    [
+      caHash,
+      isBuySectionShow,
+      isSellSectionShow,
+      onModifyGuardians,
+      originChainId,
+      stopInterval,
+      t,
+      tokenInfo.chainId,
+      updateCrypto,
+    ],
   );
 
   const handleSelect = useCallback(
@@ -427,17 +483,54 @@ export default function RampMain({
     valueSaveRef.current.receive = '';
   }, [stopInterval]);
 
+  const handleCheckTransferLimit = useCallback(async () => {
+    try {
+      const chainInfo = await getChain(tokenInfo.chainId);
+      const privateKey = managementAccount?.privateKey;
+      if (!privateKey) throw WalletError.invalidPrivateKey;
+      if (!caHash) throw 'Please login';
+
+      const res = await transferLimitCheck({
+        rpcUrl: chainInfo?.endPoint || '',
+        caContractAddress: chainInfo?.caContractAddress || '',
+        caHash: caHash,
+        chainId: tokenInfo.chainId,
+        symbol: tokenInfo.symbol,
+        amount: amount,
+        decimals: tokenInfo.decimals,
+        businessFrom: 'ramp-sell',
+        onOk: onModifyLimit,
+      });
+
+      return res;
+    } catch (error) {
+      setLoading(false);
+
+      const msg = handleErrorMessage(error);
+      message.error(msg);
+    }
+  }, [
+    amount,
+    caHash,
+    managementAccount?.privateKey,
+    onModifyLimit,
+    tokenInfo.chainId,
+    tokenInfo.decimals,
+    tokenInfo.symbol,
+  ]);
+
   const handleNext = useCallback(async () => {
     const { side } = valueSaveRef.current;
     if (!caInfo) return message.error('Please confirm whether to log in');
 
     setLoading(true);
 
+    // CHECK 1: is show buy\sell
     // Compatible with the situation where the function is turned off when the user is on the page.
     if ((side === RampTypeEnum.BUY && !isBuySectionShow) || (side === RampTypeEnum.SELL && !isSellSectionShow)) {
       setLoading(false);
       message.error(SERVICE_UNAVAILABLE_TEXT);
-      return goBack?.();
+      return onBack?.();
     }
 
     if (side === RampTypeEnum.SELL) {
@@ -449,8 +542,21 @@ export default function RampMain({
         setWarningMsg('');
       }
 
-      // search balance from contract
       try {
+        // CHECK 2: security
+        const securityRes = await walletSecurityCheck({
+          originChainId: originChainId,
+          targetChainId: tokenInfo.chainId,
+          caHash: caHash || '',
+          onOk: onModifyGuardians,
+        });
+        if (!securityRes) return setLoading(false);
+
+        // CHECK 3: transfer limit
+        const limitRes = await handleCheckTransferLimit();
+        if (!limitRes) return setLoading(false);
+
+        // CHECK 4: search balance from contract
         const result = await getBalanceByContract({
           sandboxId,
           chainType,
@@ -474,6 +580,9 @@ export default function RampMain({
           return;
         }
       } catch (error) {
+        const msg = handleErrorMessage(error);
+        message.error(msg);
+
         setLoading(false);
         return;
       }
@@ -482,7 +591,7 @@ export default function RampMain({
     setLoading(false);
 
     const { amount, currency, country, crypto, network } = valueSaveRef.current;
-    goPreview({
+    onShowPreview({
       initState: {
         crypto,
         network,
@@ -494,19 +603,24 @@ export default function RampMain({
       chainId: chainId,
     });
   }, [
+    caInfo,
     isBuySectionShow,
     isSellSectionShow,
-    goPreview,
+    onShowPreview,
     chainId,
-    goBack,
+    onBack,
     isManagerSynced,
+    originChainId,
+    tokenInfo.chainId,
     tokenInfo.tokenContractAddress,
     tokenInfo.decimals,
-    caInfo,
-    symbol,
-    setInsufficientFundsMsg,
+    caHash,
+    onModifyGuardians,
+    handleCheckTransferLimit,
     sandboxId,
     chainType,
+    symbol,
+    setInsufficientFundsMsg,
   ]);
 
   const renderRate = useMemo(
@@ -523,8 +637,8 @@ export default function RampMain({
   );
 
   return (
-    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column'])} id="portkey-ui-ramp">
-      <BackHeaderForPage title={t('Buy')} leftCallBack={goBack} />
+    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column', className])} id="portkey-ui-ramp">
+      <BackHeaderForPage title={t('Buy')} leftCallBack={onBack} />
       <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
         <div className="portkey-ui-ramp-radio">
           <Radio.Group defaultValue={RampTypeEnum.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>

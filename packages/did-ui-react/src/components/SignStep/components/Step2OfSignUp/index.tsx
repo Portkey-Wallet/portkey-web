@@ -66,7 +66,7 @@ function Step2WithSignUp({
       <BackHeader onBack={onCancel} />
       {sendCodeInfo ? (
         <CodeVerify
-          chainId={guardianIdentifierInfo.chainId}
+          originChainId={guardianIdentifierInfo.chainId}
           className="content-padding"
           guardianIdentifier={guardianIdentifierInfo.identifier}
           verifier={sendCodeInfo.verifier}

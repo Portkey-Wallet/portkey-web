@@ -4,6 +4,10 @@ import { BasicActions } from './utils';
 import { Theme } from '../types';
 import { ChainType } from '@portkey/types';
 import { NetworkType } from '../../types';
+import { useEffectOnce } from 'react-use';
+import { did } from '../../utils';
+import ConfigProvider from '../config-provider';
+import { initConfig } from './initConfig';
 
 const INITIAL_STATE = {
   theme: 'light',
@@ -43,6 +47,12 @@ export default function Provider({
   children: React.ReactNode;
 }) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  useEffectOnce(() => {
+    initConfig();
+    if (did.config.storageMethod) {
+      ConfigProvider.setGlobalConfig({});
+    }
+  });
 
   return (
     <PortkeyContext.Provider

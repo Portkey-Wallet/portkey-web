@@ -5,13 +5,7 @@ import TitleWrapper from '../TitleWrapper';
 import { Button, Modal, message } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
-import {
-  getAddressChainId,
-  getAelfAddress,
-  supplementAllAelfAddress,
-  isCrossChain,
-  isDIDAddress,
-} from '../../utils/aelf';
+import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
 import { ChainId } from '@portkey/types';
 import ToAccount from './components/ToAccount';
@@ -34,6 +28,10 @@ import { useCheckManagerSyncState } from '../../hooks/wallet';
 import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
+import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
+import { getChain } from '../../hooks/useChainInfo';
+import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -43,6 +41,8 @@ export interface SendProps {
   onCancel?: () => void;
   onClose?: () => void;
   onSuccess?: () => void;
+  onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
+  onModifyGuardians?: () => void;
 }
 
 enum Stage {
@@ -51,12 +51,25 @@ enum Stage {
   'Preview',
 }
 
+const ExceedLimit = 'ExceedLimit';
+const WalletIsNotSecure = 'WalletIsNotSecure';
+
 type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
 };
 
-function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, onClose, onSuccess }: SendProps) {
-  const [{ accountInfo, managementAccount, caInfo, caHash }] = usePortkeyAsset();
+function SendContent({
+  assetItem,
+  closeIcon,
+  className,
+  wrapperStyle,
+  onCancel,
+  onClose,
+  onSuccess,
+  onModifyLimit,
+  onModifyGuardians,
+}: SendProps) {
+  const [{ accountInfo, managementAccount, caInfo, caHash, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(Stage.Address);
 
@@ -187,11 +200,45 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
     [retryCrossChain],
   );
 
+  const handleCheckTransferLimit = useCallback(async () => {
+    const chainInfo = await getChain(tokenInfo.chainId);
+    const privateKey = managementAccount?.privateKey;
+    if (!privateKey) throw WalletError.invalidPrivateKey;
+    if (!caHash) throw 'Please login';
+
+    const res = await transferLimitCheck({
+      rpcUrl: chainInfo?.endPoint || '',
+      caContractAddress: chainInfo?.caContractAddress || '',
+      caHash: caHash,
+      chainId: tokenInfo.chainId,
+      symbol: tokenInfo.symbol,
+      amount: amount,
+      decimals: tokenInfo.decimals,
+      businessFrom: 'send',
+      onOk: onModifyLimit,
+    });
+
+    return res;
+  }, [
+    amount,
+    caHash,
+    managementAccount?.privateKey,
+    onModifyLimit,
+    tokenInfo.chainId,
+    tokenInfo.decimals,
+    tokenInfo.symbol,
+  ]);
+
   const sendHandler = useCallback(async () => {
     try {
       if (!managementAccount?.privateKey || !caHash) return;
       if (!tokenInfo) throw 'No Symbol info';
       setLoading(true);
+
+      // transfer limit check
+      const limitRes = await handleCheckTransferLimit();
+      if (!limitRes) return;
+
       if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
         await crossChainTransfer({
           sandboxId,
@@ -221,9 +268,9 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
       onSuccess?.();
     } catch (error: any) {
       console.log('sendHandler==error', error);
-      if (!error?.type) return message.error(error);
+      if (!error?.type) return message.error(handleErrorMessage(error));
       if (error.type === 'managerTransfer') {
-        return message.error(error);
+        return message.error(handleErrorMessage(error));
       } else if (error.type === 'crossChainTransfer') {
         // dispatch(addFailedActivity(error.data));
         // TODO
@@ -244,7 +291,9 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
     caHash,
     chainType,
     defaultFee.crossChain,
-    managementAccount,
+    handleCheckTransferLimit,
+    managementAccount?.address,
+    managementAccount?.privateKey,
     onSuccess,
     sandboxId,
     showErrorModal,
@@ -263,7 +312,22 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
       if (!_isManagerSynced) {
         return 'Synchronizing on-chain account information...';
       }
+
+      // wallet security check
+      const res = await walletSecurityCheck({
+        originChainId: originChainId,
+        targetChainId: tokenInfo.chainId,
+        caHash: caHash || '',
+        onOk: onModifyGuardians,
+      });
+      if (!res) return WalletIsNotSecure;
+
+      // transfer limit check
+      const limitRes = await handleCheckTransferLimit();
+      if (!limitRes) return ExceedLimit;
+
       if (!isNFT) {
+        // insufficient balance check
         if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
           return TransactionError.TOKEN_NOT_ENOUGH;
         }
@@ -298,13 +362,18 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
     balance,
     caHash,
     checkManagerSyncState,
-    defaultFee,
-    defaultToken,
+    defaultFee.crossChain,
+    defaultToken.symbol,
     getTranslationInfo,
+    handleCheckTransferLimit,
     isNFT,
-    managementAccount,
-    toAccount,
-    tokenInfo,
+    managementAccount?.address,
+    onModifyGuardians,
+    originChainId,
+    toAccount.address,
+    tokenInfo.chainId,
+    tokenInfo.decimals,
+    tokenInfo.symbol,
   ]);
 
   const StageObj: TypeStageObj = useMemo(
@@ -355,6 +424,7 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
         handler: async () => {
           const res = await handleCheckPreview();
           console.log('handleCheckPreview res', res);
+          if (res === ExceedLimit || res === WalletIsNotSecure) return;
           if (!res) {
             setTipMsg('');
             setStage(Stage.Preview);
@@ -403,10 +473,7 @@ function SendContent({ assetItem, closeIcon, className, wrapperStyle, onCancel, 
             caAddress={caInfo?.[tokenInfo.chainId].caAddress || ''}
             nickname={accountInfo?.nickName}
             type={!isNFT ? 'token' : 'nft'}
-            toAccount={{
-              ...toAccount,
-              address: supplementAllAelfAddress(toAccount.address, undefined, tokenInfo.chainId),
-            }}
+            toAccount={toAccount}
             amount={amount}
             balanceInUsd={tokenInfo.balanceInUsd}
             symbol={tokenInfo?.symbol || ''}

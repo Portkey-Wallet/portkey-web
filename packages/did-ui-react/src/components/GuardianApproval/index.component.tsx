@@ -18,7 +18,8 @@ const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
 export interface GuardianApprovalProps {
   header?: ReactNode;
-  chainId: ChainId;
+  originChainId: ChainId;
+  targetChainId?: ChainId;
   className?: string;
   guardianList?: BaseGuardianItem[];
   isErrorTip?: boolean;
@@ -29,11 +30,12 @@ export interface GuardianApprovalProps {
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
 }
 
-const GuardianApproval = forwardRef(
+const GuardianApprovalMain = forwardRef(
   (
     {
       header,
-      chainId,
+      originChainId,
+      targetChainId,
       className,
       guardianList: defaultGuardianList,
       isErrorTip = true,
@@ -128,7 +130,8 @@ const GuardianApproval = forwardRef(
             accessToken,
             id,
             verifierId: item.verifier?.id,
-            chainId,
+            chainId: originChainId,
+            targetChainId,
             clientId,
             redirectURI,
             operationType,
@@ -163,7 +166,7 @@ const GuardianApproval = forwardRef(
           setLoading(false);
         }
       },
-      [chainId, isErrorTip, onError, operationType, verifyToken],
+      [originChainId, targetChainId, isErrorTip, onError, operationType, verifyToken],
     );
 
     const onVerifyingHandler = useCallback(
@@ -216,6 +219,7 @@ const GuardianApproval = forwardRef(
           verifierId: item.verifier?.id || '',
           verificationDoc: item.verificationDoc || '',
           signature: item.signature || '',
+          identifierHash: item.identifierHash || '',
         }));
       onConfirmRef.current?.(verificationList);
     }, [guardianList]);
@@ -236,7 +240,8 @@ const GuardianApproval = forwardRef(
       <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
         {typeof verifyAccountIndex === 'number' ? (
           <VerifierPage
-            chainId={chainId}
+            targetChainId={targetChainId}
+            originChainId={originChainId}
             operationType={operationType}
             onBack={() => setVerifyAccountIndex(undefined)}
             guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
@@ -254,7 +259,8 @@ const GuardianApproval = forwardRef(
           <>
             {header}
             <GuardianList
-              chainId={chainId}
+              originChainId={originChainId}
+              targetChainId={targetChainId}
               expiredTime={expiredTime}
               operationType={operationType}
               guardianList={guardianList}
@@ -271,4 +277,4 @@ const GuardianApproval = forwardRef(
   },
 );
 
-export default memo(GuardianApproval);
+export default memo(GuardianApprovalMain);

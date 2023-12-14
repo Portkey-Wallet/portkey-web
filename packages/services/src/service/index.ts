@@ -7,3 +7,4 @@ export * from './ramp';
 export * from './assets';
 export * from './token';
 export * from './activity';
+export * from './security';

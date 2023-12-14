@@ -1,16 +1,19 @@
 import { ChainId } from '@portkey/types';
-import { useMemo } from 'react';
+import { useMemo, useCallback } from 'react';
 import { InitialTxFee } from '../../../../constants/assets';
 import { usePortkeyAsset } from '..';
-import { useThrottleEffect } from '../../../../hooks/throttle';
 import { basicAssetViewAsync } from '../actions';
+import useDebounce from '../../../../hooks/useDebounce';
 
 export const useTxFeeInit = () => {
   const [{ caAddressInfos }, { dispatch }] = usePortkeyAsset();
   const chainIdArray = useMemo(() => caAddressInfos?.map((info) => info.chainId as ChainId), [caAddressInfos]);
-  useThrottleEffect(() => {
+
+  const getTx = useCallback(() => {
     chainIdArray && basicAssetViewAsync.setTxFee(chainIdArray).then(dispatch);
-  }, [chainIdArray]);
+  }, [chainIdArray, dispatch]);
+
+  useDebounce(getTx, 300);
 
   return null;
 };

@@ -23,6 +23,7 @@ export interface AssetOverviewProps {
   isShowRamp?: boolean;
   backIcon?: ReactNode;
   faucet?: IFaucetConfig;
+  onAvatarClick?: () => void;
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
   onBack?: () => void;
@@ -37,6 +38,7 @@ export function AssetOverviewContent({
   isShowRamp = true,
   faucet,
   backIcon = <></>,
+  onAvatarClick,
   onBuy,
   onSend,
   onBack,
@@ -128,10 +130,13 @@ export function AssetOverviewContent({
   }, [networkType, tokenListInfo?.list]);
 
   const allTokenList = useMemo(() => allToken?.map((tokenItem) => tokenItem.token), [allToken]);
-  const supportToken = useMemo(
-    () => allTokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL),
-    [allTokenList],
-  );
+
+  const supportToken = useMemo(() => {
+    if (Array.isArray(allTokenList) && allTokenList?.length > 0) {
+      return allTokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL);
+    }
+    return tokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL);
+  }, [allTokenList, tokenList]);
 
   const [isGetNFTCollectionPending, setIsGetNFTCollection] = useState<boolean>();
 
@@ -143,6 +148,8 @@ export function AssetOverviewContent({
         networkType={networkType}
         backIcon={backIcon}
         nickName={accountInfo?.nickName}
+        walletAvatar={'master1'}
+        onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
           // TODO select Token
@@ -150,7 +157,7 @@ export function AssetOverviewContent({
 
           onBuy?.(supportToken[0]);
         }}
-        onSend={() => {
+        onSend={async () => {
           setAssetOpen(true);
         }}
         onReceive={() => setTokenOpen(true)}
