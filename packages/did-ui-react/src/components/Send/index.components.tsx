@@ -1,10 +1,10 @@
-import { IAssetItemType } from '@portkey/services';
+import { IAssetItemType, OperationTypeEnum } from '@portkey/services';
 import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { Button } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { ReactElement, useCallback, useMemo, useState } from 'react';
+import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
 import { ChainId } from '@portkey/types';
@@ -34,11 +34,14 @@ import { getChain } from '../../hooks/useChainInfo';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
 import { Modal } from '../CustomAnt';
+import GuardianApprovalModal from '../GuardianApprovalModal';
+import { GuardianItem } from '../Guardian/utils/type';
 
 export interface SendProps {
   assetItem: IAssetItemType;
   className?: string;
   wrapperStyle?: React.CSSProperties;
+  isErrorTip?: boolean;
   onCancel?: () => void;
   onSuccess?: () => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
@@ -62,6 +65,7 @@ function SendContent({
   assetItem,
   className,
   wrapperStyle,
+  isErrorTip = true,
   onCancel,
   onSuccess,
   onModifyLimit,
@@ -70,7 +74,7 @@ function SendContent({
   const [{ accountInfo, managementAccount, caInfo, caHash, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(Stage.Address);
-
+  const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
 
@@ -213,36 +217,41 @@ function SendContent({
       amount: amount,
       decimals: tokenInfo.decimals,
       businessFrom: 'send',
-      onOk: onModifyLimit,
+      balance,
+      chainType,
+      tokenContractAddress: tokenInfo?.address || '',
+      ownerCaAddress: caInfo?.[tokenInfo.chainId]?.caAddress || '',
+      onOneTimeApproval: () => {
+        () => setApprovalVisible(true);
+      },
+      onModifyTransferLimit: onModifyLimit,
     });
 
     return res;
   }, [
     amount,
+    balance,
     caHash,
+    caInfo,
+    chainType,
     managementAccount?.privateKey,
     onModifyLimit,
+    tokenInfo?.address,
     tokenInfo.chainId,
     tokenInfo.decimals,
     tokenInfo.symbol,
   ]);
 
-  const sendHandler = useCallback(async () => {
+  const sendTransfer = useCallback(async () => {
     try {
       if (!managementAccount?.privateKey || !caHash) return;
-      if (!tokenInfo) throw 'No Symbol info';
-      setLoading(true);
-
-      // transfer limit check
-      const limitRes = await handleCheckTransferLimit();
-      if (!limitRes) return;
 
       if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
         await crossChainTransfer({
           sandboxId,
           chainType,
-          privateKey: managementAccount.privateKey,
-          managerAddress: managementAccount.address,
+          privateKey: managementAccount?.privateKey,
+          managerAddress: managementAccount?.address,
           tokenInfo,
           caHash: caHash || '',
           amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
@@ -255,7 +264,7 @@ function SendContent({
           sandboxId,
           chainId: tokenInfo.chainId,
           chainType,
-          privateKey: managementAccount.privateKey,
+          privateKey: managementAccount?.privateKey,
           tokenInfo,
           caHash: caHash || '',
           amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
@@ -289,7 +298,6 @@ function SendContent({
     caHash,
     chainType,
     defaultFee.crossChain,
-    handleCheckTransferLimit,
     managementAccount?.address,
     managementAccount?.privateKey,
     onSuccess,
@@ -299,12 +307,52 @@ function SendContent({
     tokenInfo,
   ]);
 
+  const sendHandler = useCallback(async () => {
+    try {
+      if (!managementAccount?.privateKey || !caHash) return;
+      if (!tokenInfo) throw 'No Symbol info';
+      setLoading(true);
+
+      // transfer limit check
+      const limitRes = await handleCheckTransferLimit();
+      if (!limitRes) return;
+
+      await sendTransfer();
+    } catch (error: any) {
+      singleMessage.error(handleErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
+  }, [caHash, handleCheckTransferLimit, managementAccount?.privateKey, sendTransfer, tokenInfo]);
+
   const btnOutOfFocus = useCallback(() => {
     // fixed - button focus style when mobile
     if (typeof document !== 'undefined') document.body.focus();
   }, []);
 
   const checkManagerSyncState = useCheckManagerSyncState();
+
+  const oneTimeApprovalList = useRef<GuardianItem[]>([]);
+  const onApprovalSuccess = useCallback(
+    async (approveList: GuardianItem[]) => {
+      try {
+        oneTimeApprovalList.current = approveList;
+        if (Array.isArray(approveList) && approveList.length > 0) {
+          setApprovalVisible(false);
+          if (stage === Stage.Amount) {
+            setStage(Stage.Preview);
+          } else if (stage === Stage.Preview) {
+            await sendTransfer();
+          }
+        } else {
+          // TODO guardians throw error
+        }
+      } catch (error) {
+        // TODO guardians throw error
+      }
+    },
+    [sendTransfer, stage],
+  );
 
   const handleCheckPreview = useCallback(async () => {
     try {
@@ -325,10 +373,6 @@ function SendContent({
       });
       if (!res) return WalletIsNotSecure;
 
-      // transfer limit check
-      const limitRes = await handleCheckTransferLimit();
-      if (!limitRes) return ExceedLimit;
-
       if (!isNFT) {
         // insufficient balance check
         if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
@@ -346,6 +390,11 @@ function SendContent({
       } else {
         return 'input error';
       }
+
+      // transfer limit check
+      const limitRes = await handleCheckTransferLimit();
+      if (!limitRes) return ExceedLimit;
+
       const fee = await getTranslationInfo();
       console.log(fee, 'fee===getTranslationInfo');
       if (fee) {
@@ -556,6 +605,19 @@ function SendContent({
           {StageObj[stage].btnText}
         </Button>
       </div>
+
+      <GuardianApprovalModal
+        open={approvalVisible}
+        caHash={caHash || ''}
+        originChainId={originChainId}
+        targetChainId={tokenInfo.chainId}
+        operationType={OperationTypeEnum.transferApprove}
+        isErrorTip={isErrorTip}
+        sandboxId={sandboxId}
+        onClose={() => setApprovalVisible(false)}
+        onBack={() => setApprovalVisible(false)}
+        onApprovalSuccess={onApprovalSuccess}
+      />
     </div>
   );
 }
