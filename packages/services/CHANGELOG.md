@@ -3,16 +3,9 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.0.2-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v0.0.2-alpha.2...v0.0.2-alpha.3) (2023-12-06)
+## [1.5.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1...v1.5.2-alpha.0) (2023-12-06)
 
 **Note:** Version bump only for package @portkey/services
-
-## [0.0.2-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1...v0.0.2-alpha.2) (2023-12-06)
-
-### Features
-
-- 🎸 Check if manager exists ([f214928](https://github.com/Portkey-Wallet/portkey-web/commit/f21492861c599c696da37b543974b30286e9eac5))
-- 🎸 checkout by ach ([b7eddba](https://github.com/Portkey-Wallet/portkey-web/commit/b7eddba99862531607975302c08b4df8352328ce))
 
 ## [1.5.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.8...v1.5.1) (2023-11-22)
 

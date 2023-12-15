@@ -3,24 +3,9 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [0.0.2-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v0.0.2-alpha.2...v0.0.2-alpha.3) (2023-12-06)
+## [1.5.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1...v1.5.2-alpha.0) (2023-12-06)
 
 **Note:** Version bump only for package @portkey/next-example
-
-## [0.0.2-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1...v0.0.2-alpha.2) (2023-12-06)
-
-### Features
-
-- 🎸 add logout options ([fd04c50](https://github.com/Portkey-Wallet/portkey-web/commit/fd04c50ed3ba04e266dccd9d545853406374509b))
-- 🎸 add next13 ([64e97b3](https://github.com/Portkey-Wallet/portkey-web/commit/64e97b34895b07a7249e80ac7cd76b0a762c1520))
-- 🎸 change ant global message prefixcls ([a24fd17](https://github.com/Portkey-Wallet/portkey-web/commit/a24fd176390f4859f223d6057ac13d60131626df))
-- 🎸 checkout by ach ([b7eddba](https://github.com/Portkey-Wallet/portkey-web/commit/b7eddba99862531607975302c08b4df8352328ce))
-- 🎸 default pin ([a102146](https://github.com/Portkey-Wallet/portkey-web/commit/a1021468183a688c1de3f10b8a1f67d86fd299c1))
-- 🎸 format guardian approve ([3fadf93](https://github.com/Portkey-Wallet/portkey-web/commit/3fadf93892b8d42ba46c8581e51adcf9d63174ec))
-- 🎸 modal ([4342c2e](https://github.com/Portkey-Wallet/portkey-web/commit/4342c2edb95003f877f8dc1b490c898db493f82b))
-- 🎸 modal prefixcls ([982522d](https://github.com/Portkey-Wallet/portkey-web/commit/982522d16e4bc5268f13a91fff50b053515f850e))
-- 🎸 portkey keyboard ([6d7cca9](https://github.com/Portkey-Wallet/portkey-web/commit/6d7cca92fe2bf6fbb3f8d9ead1092217d94b07f8))
-- 🎸 sign use number keyboard ([edfdad1](https://github.com/Portkey-Wallet/portkey-web/commit/edfdad1aaf341d96b19fa4130458408957512b54))
 
 ## [1.5.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1-alpha.8...v1.5.1) (2023-11-22)
 

@@ -3589,14 +3589,14 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@portkey/detect-provider@^1.1.1-alpha.1 ":
-  version "1.1.1-alpha.1"
-  resolved "https://registry.npmjs.org/@portkey/detect-provider/-/detect-provider-1.1.1-alpha.1.tgz#19cd3b451047c5da956f38f64d8fe16ccf7ca4c2"
-  integrity sha512-Q89AgGO6f3fhrlKYxsRKi2QmBxx1HE+qRVxqJdiXqCmNLx1tHKOqL3ObW36wVofeQwRbhLMp+ebzgLPs8gmjuA==
+"@portkey/detect-provider@^1.0.1":
+  version "1.1.0"
+  resolved "https://registry.npmjs.org/@portkey/detect-provider/-/detect-provider-1.1.0.tgz#534a068e95b6186a55d71b9f2ed7cba6fac1c4dd"
+  integrity sha512-XphsCrQWvXaxw6j2uXaewXnG9Cma4Pr1ahe9iX1yUcmzVmJ31Wt5QTTAmIYoT0BUgLc09Foo/XvvmugMxG6TiQ==
   dependencies:
-    "@portkey/provider-types" "^1.1.1-alpha.1"
+    "@portkey/provider-types" "^1.1.0"
 
-"@portkey/provider-types@^1.0.1-alpha.0":
+"@portkey/provider-types@^1.1.0":
   version "1.1.0"
   resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-1.1.0.tgz#ab9e0f55093c84ff76c4c3a0cea37329d80ae2fb"
   integrity sha512-DLfAFVVJbZVH165PiKZYrhLktZi9QHXbSuBk8Dle/BmEVEfic/6yzzZPt1fGih2DtwKeX9MmzYuhvi9AG7HVvA==
@@ -3604,25 +3604,10 @@
     "@portkey/types" "1.0.0-alpha.4"
     "@types/readable-stream" "^2.3.15"
 
-"@portkey/provider-types@^1.1.1-alpha.1":
-  version "1.1.1-alpha.1"
-  resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-1.1.1-alpha.1.tgz#0dcfacf297129ce9692c0fcf4f4836b05877b164"
-  integrity sha512-9MMQSHU9Rq8iNJ4nkTvRgyZcZWoNZHrCQvcZY+2v9ZsZmjXC8Ua+csncKJzoApSKbhO9WIGZfkCKluF1V7TP5Q==
-  dependencies:
-    "@portkey/types" "^1.0.0-alpha.4"
-    "@types/readable-stream" "^2.3.15"
-
 "@portkey/types@1.0.0-alpha.4":
   version "1.0.0-alpha.4"
   resolved "https://registry.npmjs.org/@portkey/types/-/types-1.0.0-alpha.4.tgz#2f22a75a1af6df31db15fce1c473ca9e1f07f127"
   integrity sha512-mOSl89fN+hQ4zun6MF2uuQH5Bz8Owf6eA+N1HJ5fwKUMbQqr+7uI1HJZstoTSLFTLPjVSAIaIauXb2sfdRIm7A==
-  dependencies:
-    "@types/elliptic" "^6.4.14"
-
-"@portkey/types@^1.0.0-alpha.4":
-  version "1.5.1"
-  resolved "http://192.168.66.111:8081/repository/npm-public/@portkey/types/-/types-1.5.1.tgz#24bc1b8fb1514fd20abb5c9b2e21e0a908c82275"
-  integrity sha512-IYFe0l1Y3MH7fUJvSO/0OQ2bSZc0j1RCn2eASAoXSHWWtqESUKFn/lnDs9v7ha4S9kp/T1X7KUekNR+Ut9kYUA==
   dependencies:
     "@types/elliptic" "^6.4.14"
 
