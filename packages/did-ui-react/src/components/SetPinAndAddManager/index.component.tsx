@@ -14,10 +14,10 @@ import BackHeader from '../BackHeader';
 export interface SetPinAndAddManagerProps {
   type: AddManagerType;
   className?: string;
-  accountType: AccountType;
+  accountType?: AccountType;
   keyboard?: boolean;
   chainId?: ChainId;
-  guardianIdentifier: string;
+  guardianIdentifier?: string;
   onlyGetPin?: boolean;
   guardianApprovedList: GuardiansApproved[];
   isErrorTip?: boolean;
@@ -60,6 +60,16 @@ export default function SetPinAndAddManager({
   const onCreate = useCallback(
     async (pin: string) => {
       if (onlyGetPin) return onFinishRef?.current?.(pin);
+      if (!guardianIdentifier)
+        return errorTip(
+          {
+            errorFields: 'createWallet',
+            error: 'No guardianIdentifier',
+          },
+          isErrorTip,
+          onError,
+        );
+
       const params = {
         pin,
         type,
@@ -71,7 +81,17 @@ export default function SetPinAndAddManager({
       const createResult = await createWallet(params);
       createResult && onFinishRef?.current?.(createResult);
     },
-    [onlyGetPin, type, chainId, accountType, guardianIdentifier, guardianApprovedList, createWallet],
+    [
+      onlyGetPin,
+      guardianIdentifier,
+      isErrorTip,
+      onError,
+      type,
+      chainId,
+      accountType,
+      guardianApprovedList,
+      createWallet,
+    ],
   );
 
   return keyboard ? (
