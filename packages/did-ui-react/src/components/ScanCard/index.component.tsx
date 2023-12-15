@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import { useIntervalQueryCAInfo } from '../../hooks/useIntervalQueryCAInfo';
 import { ReactNode } from 'react';
@@ -44,6 +44,8 @@ export default function ScanCard({
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
   const [isWaitingAuth] = useState<boolean>();
+
+  const onFinishRef = useRef<LoginFinishWithoutPin | undefined>(onFinish);
 
   const [caWallet] = useIntervalQueryCAInfo({
     address: managementAccount?.address,
@@ -117,13 +119,13 @@ export default function ScanCard({
   useEffect(() => {
     caWallet &&
       managementAccount &&
-      onFinish?.({
+      onFinishRef.current?.({
         chainId: caWallet.chainId,
         caInfo: caWallet.info,
         walletInfo: managementAccount.wallet,
         accountInfo: caWallet.accountInfo,
       });
-  }, [caWallet, managementAccount, onFinish]);
+  }, [caWallet, managementAccount]);
 
   return (
     <div className={clsx('scan-base-wrapper', wrapperClassName)}>

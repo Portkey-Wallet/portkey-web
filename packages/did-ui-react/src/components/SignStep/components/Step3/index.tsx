@@ -49,25 +49,21 @@ function Step3({
 
   return (
     <div className="step-page-wrapper">
-      {guardianIdentifierInfo ? (
-        <SetPinAndAddManagerCom
-          {...props}
-          onBack={onBackHandler}
-          className="step-set-pin"
-          chainId={guardianIdentifierInfo.chainId}
-          accountType={guardianIdentifierInfo.accountType}
-          guardianIdentifier={guardianIdentifierInfo.identifier}
-          type={type}
-          guardianApprovedList={guardianApprovedList}
-          isErrorTip={isErrorTip}
-          onlyGetPin={onlyGetPin}
-          onFinish={onFinish}
-          onError={onError}
-          onCreatePending={onCreatePending}
-        />
-      ) : (
-        'Missing `guardianIdentifierInfo`, please check params'
-      )}
+      <SetPinAndAddManagerCom
+        {...props}
+        onBack={onBackHandler}
+        className="step-set-pin"
+        chainId={guardianIdentifierInfo?.chainId}
+        accountType={guardianIdentifierInfo?.accountType}
+        guardianIdentifier={guardianIdentifierInfo?.identifier}
+        type={type}
+        guardianApprovedList={guardianApprovedList}
+        isErrorTip={isErrorTip}
+        onlyGetPin={onlyGetPin}
+        onFinish={onFinish}
+        onError={onError}
+        onCreatePending={onCreatePending}
+      />
       <CommonModal
         maskClosable={false}
         closable={false}

@@ -194,13 +194,16 @@ const SignIn = forwardRef(
     });
 
     const loginDefaultByPin = useCallback(
-      async (info: { guardianIdentifierInfo: IGuardianIdentifierInfo; approvedList: GuardiansApproved[] } | null) => {
+      async (
+        info: { guardianIdentifierInfo: IGuardianIdentifierInfo; approvedList: GuardiansApproved[] } | null,
+        managerWallet?: Omit<DIDWalletInfo, 'pin'>,
+      ) => {
         try {
           if (typeof pin !== 'string') throw Error('loginDefaultByPin: Not use default pin');
           let didWallet: any;
           if (info === null) {
-            if (!walletWithoutPin) throw Error('loginDefaultByPin: Can not get `walletWithoutPin`');
-            didWallet = { ...walletWithoutPin, pin };
+            if (!managerWallet) throw Error('loginDefaultByPin: Can not get `managerWallet`');
+            didWallet = { ...managerWallet, pin };
           } else {
             const guardianIdentifierInfo = info.guardianIdentifierInfo;
             const approvedList = info.approvedList;
@@ -237,7 +240,7 @@ const SignIn = forwardRef(
           approvedList,
         });
       },
-      [approvedList, changeLifeCycle, clearStorage, createWallet, guardianIdentifierInfo, pin, walletWithoutPin],
+      [approvedList, changeLifeCycle, clearStorage, createWallet, guardianIdentifierInfo, pin],
     );
 
     const onStep2OfSignUpFinish = useCallback(
@@ -417,9 +420,9 @@ const SignIn = forwardRef(
     const onLoginFinishWithoutPin: LoginFinishWithoutPin = useCallback(
       (wallet) => {
         setWalletWithoutPin(wallet);
-        guardianIdentifierInfo && loginDefaultByPin(null);
+        loginDefaultByPin(null, wallet);
       },
-      [guardianIdentifierInfo, loginDefaultByPin],
+      [loginDefaultByPin],
     );
 
     const onSignInStepChange = useCallback(

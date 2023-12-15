@@ -13,10 +13,10 @@ module.exports = [
     { source: '/connect/:path*', destination: 'http://192.168.66.203:8001/connect/:path*' },
     { source: '/graphql/:path*', destination: 'http://192.168.66.203:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*' },
 
-    // test3
-    { source: '/api/:path*', destination: 'http://192.168.66.203:5001/api/:path*' },
-    { source: '/connect/:path*', destination: 'http://192.168.66.203:8001/connect/:path*' },
-
+    // // test4
+    // { source: '/api/:path*', destination: 'http://192.168.67.179:5001/api/:path*' },
+    // { source: '/connect/:path*', destination: 'http://192.168.67.179:8001/connect/:path*' },
+    // { source: '/graphql/:path*', destination: 'http://192.168.67.67:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*' },
 
     // mainnet
     // { source: '/api/:path*', destination: 'https://did-portkey.portkey.finance/api/:path*' },
