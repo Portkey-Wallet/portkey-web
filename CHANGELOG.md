@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.3...v1.5.4-alpha.0) (2023-12-19)
+
+### Features
+
+- 🎸 cross transfer show cross transfer fee for all crypto ([93cba99](https://github.com/Portkey-Wallet/portkey-web/commit/93cba99b039865d61cc70d6132765e02d9fa6093))
+- 🎸 no check manager address ([895849c](https://github.com/Portkey-Wallet/portkey-web/commit/895849c7d0a38bd6f871d9a45068dd4661435c75))
+- 🎸 transaction fee ([7ba0f06](https://github.com/Portkey-Wallet/portkey-web/commit/7ba0f061e87b1f8f6988cbd4741eb6a17699e637))
+
 ## [1.5.3](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.2...v1.5.3) (2023-12-15)
 
 ### Bug Fixes
