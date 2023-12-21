@@ -66,7 +66,7 @@ export default function WakeUpPortkey({
         type: 'login',
         address: managementAccount?.wallet.address as string,
         id: randomId(),
-        netWorkType: networkType,
+        networkType: networkType,
         chainType: 'aelf',
         extraData: {
           deviceInfo,

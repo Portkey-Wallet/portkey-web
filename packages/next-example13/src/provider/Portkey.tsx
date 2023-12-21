@@ -5,7 +5,7 @@ import '@portkey/did-ui-react/dist/assets/index.css';
 import { Button } from 'antd';
 export default function Portkey({ children }: { children?: ReactNode }) {
   const [dark, setDark] = useState<boolean>(false);
-  const [networkType, setNetworkType] = useState<NetworkType>('MAIN');
+  const [networkType, setNetworkType] = useState<NetworkType>('MAINNET');
 
   useEffect(() => {
     if (dark) {
@@ -26,7 +26,7 @@ export default function Portkey({ children }: { children?: ReactNode }) {
         </Button>
         <Button
           onClick={async () => {
-            setNetworkType(v => (v === 'MAIN' ? 'TESTNET' : 'MAIN'));
+            setNetworkType(v => (v === 'MAINNET' ? 'TESTNET' : 'MAINNET'));
           }}>
           Only change networkType
         </Button>

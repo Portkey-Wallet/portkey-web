@@ -40,7 +40,7 @@ export default function PaymentSecurityMain({
   onBack,
   onClickItem,
 }: IPaymentSecurityProps) {
-  const isMainnet = useMemo(() => networkType === 'MAIN', [networkType]);
+  const isMainnet = useMemo(() => networkType === 'MAINNET', [networkType]);
 
   const [securityList, setSecurityList] = useState<ITransferLimitItem[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);

@@ -2,11 +2,11 @@ import { ChainType } from '@portkey/types';
 import { ICountryItem } from './country';
 import { DeviceType, QRExtraDataType } from './device';
 
-export type NetworkType = 'MAIN' | 'TESTNET';
+export type NetworkType = 'MAINNET' | 'TESTNET';
 
 export interface QRData {
   type: 'login' | 'send';
-  netWorkType: string;
+  networkType: string;
   chainType: ChainType; // eth or nft
   address: string;
   id: string; // uuid

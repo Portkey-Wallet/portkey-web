@@ -36,7 +36,7 @@ export default function AssetCard({
   onReceive,
   onFaucet,
 }: AssetCardProps) {
-  const isMainnet = useMemo(() => networkType === 'MAIN', [networkType]);
+  const isMainnet = useMemo(() => networkType === 'MAINNET', [networkType]);
   return (
     <div className="portkey-ui-asset-card-wrapper">
       <div className="portkey-ui-header-wrap">

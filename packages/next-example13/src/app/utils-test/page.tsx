@@ -95,7 +95,7 @@ export default function AppleAuth() {
       </Button>
 
       <div>-----</div>
-      <PortkeyProvider sandboxId="" networkType="MAIN">
+      <PortkeyProvider sandboxId="" networkType="MAINNET">
         <Button
           onClick={async () => {
             try {

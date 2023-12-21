@@ -13,7 +13,7 @@ export interface ICustomTokenListProps {
   searchPlaceHolder?: string;
   fiatList: FiatType[];
   drawerType: RampDrawerType;
-  networkType: 'MAIN' | 'TESTNET';
+  networkType: 'MAINNET' | 'TESTNET';
 }
 
 const tokenList = [

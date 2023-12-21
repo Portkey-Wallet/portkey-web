@@ -86,7 +86,7 @@ export default function ScanCard({
       type: 'login',
       address: managementAccount.address,
       id: randomId(),
-      netWorkType: networkType,
+      networkType: networkType,
       chainType: chainType ?? 'aelf',
       extraData: {
         deviceInfo,

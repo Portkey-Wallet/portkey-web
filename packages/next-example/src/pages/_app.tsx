@@ -6,7 +6,7 @@ import { ConfigProvider } from 'antd';
 
 export default function APP({ Component, pageProps }: any) {
   const [dark, setDark] = useState<boolean>(false);
-  const [networkType, setNetworkType] = useState<NetworkType>('MAIN');
+  const [networkType, setNetworkType] = useState<NetworkType>('MAINNET');
 
   useEffect(() => {
     if (dark) {
@@ -27,7 +27,7 @@ export default function APP({ Component, pageProps }: any) {
         </button>
         <button
           onClick={async () => {
-            setNetworkType(v => (v === 'MAIN' ? 'TESTNET' : 'MAIN'));
+            setNetworkType(v => (v === 'MAINNET' ? 'TESTNET' : 'MAINNET'));
           }}>
           Only change networkType
         </button>

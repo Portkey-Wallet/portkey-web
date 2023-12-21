@@ -36,7 +36,7 @@ export default function CustomModal({
         searchPlaceHolder={searchPlaceHolder}
         onClose={onClose}
         onChange={onChange}
-        networkType={'MAIN'}
+        networkType={'MAINNET'}
       />
     </CommonBaseModal>
   );

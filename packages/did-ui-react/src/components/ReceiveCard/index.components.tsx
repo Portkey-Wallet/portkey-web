@@ -45,14 +45,13 @@ export default function ReceiveCardMain({
     () => ({
       type: 'send',
       sendType: 'token',
-      netWorkType: networkType,
+      networkType: networkType,
       chainType: 'aelf',
       toInfo: {
         name: receiveInfo.name,
         address: receiveAddress,
       },
       assetInfo,
-      address: receiveAddress,
     }),
     [assetInfo, networkType, receiveAddress, receiveInfo.name],
   );

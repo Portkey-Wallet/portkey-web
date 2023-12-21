@@ -14,8 +14,8 @@ export type QrCodeDataArrType = [
 ];
 
 export type QRCodeDataObjType = {
-  address: string;
-  netWorkType: NetworkType;
+  address?: string;
+  networkType: NetworkType;
   chainType: ChainType;
   type: 'login' | 'send';
   toInfo: { name: string; address: string };
@@ -29,12 +29,12 @@ export type QRCodeDataObjType = {
 };
 
 export const shrinkSendQrData = (data: QRCodeDataObjType): QrCodeDataArrType => {
-  // 1.chainType  2.netWorkType 3.data.type 4.toAddress 5. symbol 6. tokenContractAddress 7. chainId 8. decimals
+  // 1.chainType  2.networkType 3.data.type 4.toAddress 5. symbol 6. tokenContractAddress 7. chainId 8. decimals
   return [
     data.chainType,
-    data.netWorkType,
+    data.networkType,
     data.type,
-    data.address,
+    data.toInfo.address,
     data.assetInfo.symbol,
     data.assetInfo.tokenContractAddress,
     data.assetInfo.chainId,
