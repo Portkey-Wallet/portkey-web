@@ -27,6 +27,7 @@ import {
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
+  VerifyTelegramTokenParams,
 } from '../types/verification';
 import { Search } from './search';
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
@@ -130,6 +131,13 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
         ...params,
         accessToken: params.identityToken,
       },
+    });
+  }
+  verifyTelegramToken(params: VerifyTelegramTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTelegramToken',
+      params,
     });
   }
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {

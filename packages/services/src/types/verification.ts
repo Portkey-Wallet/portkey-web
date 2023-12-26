@@ -48,21 +48,24 @@ export type SendAppleUserExtraInfoParams = {
   };
 };
 
-export type VerifyGoogleTokenParams = {
-  accessToken: string;
+export type BaseVerifyTokenParams = {
   verifierId: string;
   chainId: ChainId;
   operationType: OperationTypeEnum;
   targetChainId?: ChainId;
 };
 
-export type VerifyAppleTokenParams = {
+export interface VerifyGoogleTokenParams extends BaseVerifyTokenParams {
+  accessToken: string;
+}
+
+export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
   identityToken: string;
-  verifierId: string;
-  chainId: ChainId;
-  operationType: OperationTypeEnum;
-  targetChainId?: ChainId;
-};
+}
+
+export interface VerifyTelegramTokenParams extends BaseVerifyTokenParams {
+  accessToken: string;
+}
 
 export type SendAppleUserExtraInfoResult = { userId: string };
 
@@ -94,6 +97,7 @@ export interface IVerificationService {
   getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<getAppleUserExtraInfoResult>;
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyTelegramToken(params: VerifyTelegramTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
 }

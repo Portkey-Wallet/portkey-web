@@ -19,6 +19,7 @@ export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
   targetChainId: ChainId;
   caHash: string;
+  networkType?: string;
 }
 
 export interface IManagerApproveResult {
@@ -42,6 +43,7 @@ export default function ManagerApproveInner({
   max,
   originChainId,
   targetChainId,
+  networkType = 'MAINNET',
   caHash,
   amount,
   dappInfo,
@@ -189,6 +191,7 @@ export default function ManagerApproveInner({
             originChainId={originChainId}
             targetChainId={targetChainId}
             guardianList={guardianList}
+            networkType={networkType}
             onConfirm={async (approvalInfo) => {
               const approved: IGuardiansApproved[] = approvalInfo.map((guardian) => ({
                 type: AccountTypeEnum[guardian.type || 'Google'],

@@ -49,6 +49,7 @@ export default function Sign() {
         keyboard={true}
         design={design}
         uiType={uiType}
+        defaultChainId="tDVV"
         extraElement={<div style={{ height: 300, background: 'red' }}></div>}
         getContainer="#wrapper"
         isShowScan

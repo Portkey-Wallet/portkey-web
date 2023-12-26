@@ -1,6 +1,6 @@
 import SegmentedInput from '../SegmentedInput';
 import { CreateWalletType, IBaseGetGuardianProps, TSize } from '../types';
-import { RegisterType } from '../../types';
+import { ISocialLogin, RegisterType } from '../../types';
 import DividerCenter from '../DividerCenter';
 import SocialContent from '../SocialContent';
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
@@ -16,6 +16,8 @@ import { useUpdateEffect } from 'react-use';
 import { useSignHandler } from '../../hooks/useSignHandler';
 import { devices } from '@portkey/utils';
 import useMobile from '../../hooks/useMobile';
+import { errorTip, handleErrorMessage, setLoading } from '../../utils';
+import useSocialLogin from '../../hooks/useSocialLogin';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -106,6 +108,30 @@ export default function Web2Design({
     });
   }, [onSignTypeChange]);
 
+  const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
+
+  const onSocialChange = useCallback(
+    async (type: ISocialLogin) => {
+      try {
+        setLoading(true);
+        const result = await socialLoginHandler(type);
+        setLoading(false);
+        onSocialFinish?.(result);
+      } catch (error) {
+        setLoading(false);
+        errorTip(
+          {
+            errorFields: `socialLogin ${type}`,
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onErrorRef.current,
+        );
+      }
+    },
+    [isErrorTip, onSocialFinish, socialLoginHandler],
+  );
+
   const leftWrapper = useMemo(
     () => (
       <div className="portkey-ui-flex-1 left-wrapper">
@@ -122,13 +148,11 @@ export default function Web2Design({
         <SocialContent
           theme={theme}
           className="portkey-ui-web2design-social-login"
-          isErrorTip={isErrorTip}
           networkType={networkType}
           socialLogin={socialLogin}
           type={type}
-          onFinish={onSocialFinish}
+          onSocialChange={onSocialChange}
           onLoginByPortkey={onLoginFinishWithoutPin}
-          onError={onError}
         />
         {extraElement ? extraElement : <div className="empty-element"></div>}
         <div className="portkey-ui-web2design-switch-sign">
@@ -155,12 +179,10 @@ export default function Web2Design({
       _validateEmail,
       _validatePhone,
       extraElement,
-      isErrorTip,
       networkType,
-      onError,
       onFinish,
       onLoginFinishWithoutPin,
-      onSocialFinish,
+      onSocialChange,
       onSwitch,
       phoneCountry,
       socialLogin,

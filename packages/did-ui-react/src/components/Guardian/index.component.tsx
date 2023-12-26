@@ -40,6 +40,7 @@ export interface GuardianProps {
   accelerateChainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
+  networkType: string;
   onError?: OnErrorFunc;
   onBack?: () => void;
   onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
@@ -53,6 +54,7 @@ function GuardianMain({
   chainType = 'aelf',
   isErrorTip = true,
   sandboxId,
+  networkType,
   onError,
   onBack,
   onAddGuardianFinish,
@@ -360,6 +362,7 @@ function GuardianMain({
         <GuardianAdd
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
           originChainId={originChainId}
+          networkType={networkType}
           verifierList={verifierList}
           guardianList={guardianList}
           handleAddGuardian={handleAddGuardian}

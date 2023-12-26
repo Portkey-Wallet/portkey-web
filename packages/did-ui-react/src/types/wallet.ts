@@ -28,7 +28,7 @@ export interface AuthenticationInfo {
   [userId: string]: string;
 }
 
-export type ISocialLogin = 'Google' | 'Apple';
+export type ISocialLogin = 'Google' | 'Apple' | 'Telegram';
 
 export type TSocialResponseData = {
   accessToken?: string;
@@ -51,6 +51,10 @@ export interface IAppleLoginConfig extends BaseAppleLoginConfig {
   customLoginHandler?: TSocialLoginHandler;
 }
 
+export interface ITelegramLoginConfig {
+  customLoginHandler?: TSocialLoginHandler;
+}
+
 interface IPortkeyLoginConfig {
   websiteName: string;
   websiteIcon?: string;
@@ -59,6 +63,7 @@ interface IPortkeyLoginConfig {
 export interface ISocialLoginConfig {
   Google?: IGoogleLoginConfig;
   Apple?: IAppleLoginConfig;
+  Telegram?: ITelegramLoginConfig;
   Portkey?: IPortkeyLoginConfig;
 }
 

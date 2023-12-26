@@ -1,14 +1,30 @@
-import { Button } from 'antd';
-import { useMemo, useRef, useEffect, ReactNode } from 'react';
+import { useMemo, useRef, useEffect, ReactNode, useCallback } from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
+import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
 import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
 import SocialContent from '../SocialContent';
 import TermsOfServiceItem from '../TermsOfServiceItem';
 import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
+import useSocialLogin from '../../hooks/useSocialLogin';
+import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
+
+const guardianList = [
+  {
+    icon: <CustomSvg type="Apple-Login" />,
+    type: 'Apple',
+  },
+  {
+    icon: <CustomSvg type="Phone-Login" />,
+    type: 'Phone',
+  },
+  {
+    icon: <CustomSvg type="Email-Login" />,
+    type: 'Email',
+  },
+] as const;
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -22,7 +38,7 @@ interface SocialLoginProps {
   networkType?: string;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
-  switchGuardianType?: () => void;
+  switchGuardianType?: (type: 'Email' | 'Phone') => void;
   switchType?: (type: CreateWalletType) => void;
   onLoginByPortkey?: LoginFinishWithoutPin;
 
@@ -35,22 +51,24 @@ export default function SocialLogin({
   theme,
   className,
   isShowScan,
-  isErrorTip = true,
   socialLogin,
   isMobile = false,
   networkType,
   extraElement,
   termsOfService,
+  isErrorTip,
   onBack,
-  onError,
   onFinish,
-  switchGuardianType: switchGuardianType,
+  onError,
+  switchGuardianType,
   onLoginByPortkey,
   switchType,
 }: SocialLoginProps) {
   const { t } = useTranslation();
   const onBackRef = useRef<SocialLoginProps['onBack']>(onBack);
   const onFinishRef = useRef<SocialLoginProps['onFinish']>(onFinish);
+
+  const onErrorRef = useRef<SocialLoginProps['onError']>(onError);
   const switchGuardianTypeRef = useRef<SocialLoginProps['switchGuardianType']>(switchGuardianType);
   const switchTypeRef = useRef<SocialLoginProps['switchType']>(switchType);
   useEffect(() => {
@@ -58,9 +76,33 @@ export default function SocialLogin({
     onFinishRef.current = onFinish;
     switchGuardianTypeRef.current = switchGuardianType;
     switchTypeRef.current = switchType;
+    onErrorRef.current = onError;
   });
+  const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
 
   const isLogin = useMemo(() => type === 'Login', [type]);
+
+  const onSocialChange = useCallback(
+    async (type: ISocialLogin) => {
+      try {
+        setLoading(true);
+        const result = await socialLoginHandler(type);
+        setLoading(false);
+        onFinishRef.current?.(result);
+      } catch (error) {
+        setLoading(false);
+        errorTip(
+          {
+            errorFields: `socialLogin ${type}`,
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onErrorRef.current,
+        );
+      }
+    },
+    [isErrorTip, socialLoginHandler],
+  );
 
   return (
     <>
@@ -90,18 +132,30 @@ export default function SocialLogin({
         <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
           <SocialContent
             theme={theme}
-            isErrorTip={isErrorTip}
+            showApple={false}
             networkType={networkType}
             socialLogin={socialLogin}
             type={type}
-            onFinish={onFinishRef?.current}
+            onSocialChange={onSocialChange}
             onLoginByPortkey={onLoginByPortkey}
-            onError={onError}
           />
           <DividerCenter />
-          <Button type="primary" className="login-by-input-btn" onClick={switchGuardianTypeRef?.current}>
-            {t(`${type} with Phone / Email`)}
-          </Button>
+
+          <div className="portkey-ui-flex-center portkey-ui-extra-guardian-type-content">
+            {guardianList.map((item) => (
+              <div
+                key={item.type}
+                onClick={() => {
+                  if (item.type === 'Apple') {
+                    onSocialChange('Apple');
+                    return;
+                  }
+                  switchGuardianTypeRef?.current?.(item.type);
+                }}>
+                {item.icon}
+              </div>
+            ))}
+          </div>
           {extraElement}
 
           {isLogin && (

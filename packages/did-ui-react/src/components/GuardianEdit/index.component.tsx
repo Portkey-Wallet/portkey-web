@@ -32,6 +32,7 @@ export interface GuardianEditProps {
   guardianList?: UserGuardianStatus[];
   currentGuardian?: UserGuardianStatus;
   preGuardian?: UserGuardianStatus;
+  networkType?: string;
   onError?: OnErrorFunc;
   handleEditGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
   handleRemoveGuardian?: (approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -54,6 +55,7 @@ function GuardianEdit({
   currentGuardian,
   preGuardian,
   guardianList,
+  networkType = 'MAINNET',
   onError,
   handleEditGuardian,
   handleRemoveGuardian,
@@ -241,6 +243,7 @@ function GuardianEdit({
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
           guardianList={guardianList?.filter((item) => item.key !== preGuardian?.key)}
+          networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={isRemove ? OperationTypeEnum.deleteGuardian : OperationTypeEnum.editGuardian}
