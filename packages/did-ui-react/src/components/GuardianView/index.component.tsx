@@ -1,6 +1,6 @@
 import { ChainId } from '@portkey/types';
 import { memo, useCallback, ReactNode, useState, useRef } from 'react';
-import { AccountTypeEnum, OperationTypeEnum, VerifierItem } from '@portkey/services';
+import { AccountType, AccountTypeEnum, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { useTranslation } from 'react-i18next';
 import CustomSvg from '../CustomSvg';
 import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
@@ -25,6 +25,7 @@ import { useVerifyToken } from '../../hooks';
 import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
 import './index.less';
+import { SocialLoginList } from '../../constants/guardian';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -33,16 +34,18 @@ export interface GuardianViewProps {
   isErrorTip?: boolean;
   currentGuardian: UserGuardianStatus;
   guardianList?: UserGuardianStatus[];
+  networkType?: string;
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: () => Promise<any>;
 }
 
-const guardianIconMap: any = {
+const guardianIconMap: Record<AccountType, any> = {
   Email: 'Email',
   Phone: 'GuardianPhone',
   Google: 'GuardianGoogle',
   Apple: 'GuardianApple',
+  Telegram: 'GuardianTelegram',
 };
 
 function GuardianView({
@@ -53,6 +56,7 @@ function GuardianView({
   isErrorTip = true,
   currentGuardian,
   guardianList,
+  networkType = 'MAINNET',
   handleSetLoginGuardian,
   onError,
 }: GuardianViewProps) {
@@ -60,6 +64,7 @@ function GuardianView({
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [switchDisable, setSwitchDisable] = useState<boolean>(false);
+
   const reCaptchaHandler = useReCaptchaModal();
   const verifyToken = useVerifyToken();
   const socialBasic = useCallback(
@@ -78,6 +83,9 @@ function GuardianView({
           case 'Google':
             clientId = socialLogin?.Google?.clientId;
             customLoginHandler = socialLogin?.Google?.customLoginHandler;
+            break;
+          case 'Telegram':
+            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
             break;
           default:
             throw 'accountType is not supported';
@@ -112,6 +120,7 @@ function GuardianView({
         chainId: originChainId,
         clientId,
         redirectURI,
+        networkType,
         operationType: OperationTypeEnum.addGuardian,
         customLoginHandler,
       });
@@ -120,7 +129,7 @@ function GuardianView({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, verifyToken, originChainId],
+    [socialBasic, verifyToken, originChainId, networkType],
   );
   const handleSwitch = useCallback(async () => {
     try {
@@ -190,11 +199,7 @@ function GuardianView({
     };
   }, []);
   const handleVerify = useCallback(async () => {
-    if (
-      [AccountTypeEnum[AccountTypeEnum.Google], AccountTypeEnum[AccountTypeEnum.Apple]].includes(
-        currentGuardian.guardianType,
-      )
-    ) {
+    if (SocialLoginList.includes(currentGuardian.guardianType)) {
       try {
         setLoading(true);
         await socialVerify?.(currentGuardian);

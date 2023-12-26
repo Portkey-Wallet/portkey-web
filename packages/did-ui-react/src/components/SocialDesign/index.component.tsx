@@ -13,6 +13,7 @@ import { usePortkey } from '../context';
 import { useSignHandler } from '../../hooks/useSignHandler';
 import './index.less';
 import useMobile from '../../hooks/useMobile';
+import { SocialLoginList } from '../../constants/guardian';
 
 type SocialDesignType = AccountType | 'Scan' | null;
 export interface SocialDesignProps extends IBaseGetGuardianProps {
@@ -41,12 +42,11 @@ function SocialDesign({
   const validatePhoneRef = useRef<SocialDesignProps['validatePhone']>(defaultValidatePhone);
   const onChainIdChangeRef = useRef<SocialDesignProps['onChainIdChange']>(onChainIdChange);
   const onErrorRef = useRef<SocialDesignProps['onError']>(onError);
+  const [{ networkType, chainType }] = usePortkey();
 
   const socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
 
-  const { loginByApple, loginByGoogle } = useSocialLogin({ socialLogin });
-
-  const [{ networkType, chainType }] = usePortkey();
+  const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
 
   const isMobile = useMobile();
 
@@ -66,15 +66,19 @@ function SocialDesign({
   const onAccountTypeChange = useCallback(
     async (type: AccountType | 'Scan') => {
       try {
-        if (type !== 'Apple' && type !== 'Google') return setAccountType(type);
+        if (!SocialLoginList.includes(type)) return setAccountType(type);
         let result;
+        setLoading(true);
+
         if (type === 'Google') {
-          setLoading(true);
-          result = await loginByGoogle();
+          result = await socialLoginHandler('Google');
         } else if (type === 'Apple') {
-          setLoading(true);
-          result = await loginByApple();
+          result = await socialLoginHandler('Apple');
+        } else if (type === 'Telegram') {
+          result = await socialLoginHandler('Telegram');
         } else throw Error('AccountType is not support');
+        setLoading(false);
+
         await onSocialFinish(result);
       } catch (error) {
         setLoading(false);
@@ -88,7 +92,7 @@ function SocialDesign({
         );
       }
     },
-    [isErrorTip, loginByApple, loginByGoogle, onSocialFinish],
+    [isErrorTip, onSocialFinish, socialLoginHandler],
   );
 
   return (

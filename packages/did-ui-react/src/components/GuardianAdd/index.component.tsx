@@ -13,6 +13,7 @@ import {
   handleErrorMessage,
   handleVerificationDoc,
   parseAppleIdentityToken,
+  parseTelegramToken,
   setLoading,
   socialLoginAuth,
   verification,
@@ -49,6 +50,7 @@ export interface GuardianAddProps {
   phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
   verifierList?: VerifierItem[];
+  networkType?: string;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   handleAddGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -70,6 +72,7 @@ function GuardianAdd({
   phoneCountry: customPhoneCountry,
   verifierList,
   guardianList,
+  networkType,
   onError,
   handleAddGuardian,
 }: GuardianAddProps) {
@@ -122,6 +125,12 @@ function GuardianAdd({
         label: AccountTypeEnum[AccountTypeEnum.Apple],
         icon: <CustomSvg type="GuardianApple" />,
         id: AccountTypeEnum.Apple,
+      },
+      {
+        value: AccountTypeEnum[AccountTypeEnum.Telegram],
+        label: AccountTypeEnum[AccountTypeEnum.Telegram],
+        icon: <CustomSvg type="GuardianTelegram" />,
+        id: AccountTypeEnum.Telegram,
       },
     ],
     [],
@@ -190,6 +199,9 @@ function GuardianAdd({
             clientId = socialLogin?.Google?.clientId;
             customLoginHandler = socialLogin?.Google?.customLoginHandler;
             break;
+          case 'Telegram':
+            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
+            break;
           default:
             throw 'accountType is not supported';
         }
@@ -222,8 +234,10 @@ function GuardianAdd({
     } else if (v === 'Apple') {
       const userInfo = parseAppleIdentityToken(accessToken);
       const appleUserExtraInfo = await did.services.getAppleUserExtraInfo({
-        userId: userInfo?.userId,
+        userId: userInfo?.userId || '',
       });
+      if (!appleUserExtraInfo) return;
+
       const { firstName, isPrivate } = appleUserExtraInfo;
       if (userInfo) {
         info = {
@@ -234,9 +248,23 @@ function GuardianAdd({
           isPrivate,
         };
       }
+    } else if (v === 'Telegram') {
+      const userInfo = parseTelegramToken(accessToken);
+      if (!userInfo) return;
+      const { firstName, isPrivate, userId } = userInfo;
+      if (userInfo) {
+        info = {
+          id: userId,
+          firstName,
+          thirdPartyEmail: undefined,
+          accessToken,
+          isPrivate,
+        };
+      }
     }
     return info;
   }, []);
+
   const socialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
@@ -245,6 +273,7 @@ function GuardianAdd({
           type: v,
           clientId,
           redirectURI,
+          network: networkType,
         });
         if (!response?.token) throw new Error('add guardian failed');
         const info = await socialUserInfo(v, response.token);
@@ -260,7 +289,7 @@ function GuardianAdd({
         );
       }
     },
-    [isErrorTip, onError, socialBasic, socialUserInfo],
+    [isErrorTip, networkType, onError, socialBasic, socialUserInfo],
   );
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
@@ -410,6 +439,10 @@ function GuardianAdd({
       [AccountTypeEnum[AccountTypeEnum.Apple]]: {
         element: renderSocialGuardianAccount('Apple'),
         label: t('Guardian Apple'),
+      },
+      [AccountTypeEnum[AccountTypeEnum.Telegram]]: {
+        element: renderSocialGuardianAccount('Telegram'),
+        label: t('Guardian Telegram'),
       },
     }),
     [
@@ -622,6 +655,7 @@ function GuardianAdd({
           header={<BackHeader onBack={onCloseApproval} />}
           originChainId={originChainId}
           guardianList={guardianList}
+          networkType={networkType || 'MAINNET'}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}

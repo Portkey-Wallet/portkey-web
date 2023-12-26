@@ -36,6 +36,7 @@ import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
 import useLoginWallet from '../../hooks/useLoginWallet';
 import './index.less';
+import { SocialLoginList } from '../../constants/guardian';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -102,7 +103,7 @@ const SignIn = forwardRef(
       onLifeCycleChangeRef.current = onLifeCycleChange;
     });
 
-    const [{ chainType }] = usePortkey();
+    const [{ chainType, networkType }] = usePortkey();
     const [open, setOpen] = useState<boolean>(false);
 
     const changeLifeCycle: SignInProps['onLifeCycleChange'] = useCallback((v: LifeCycleType, info: any) => {
@@ -275,14 +276,15 @@ const SignIn = forwardRef(
           const verifier = await getRecommendationVerifier(chainId);
           setLoading(false);
           const { accountType, authenticationInfo, identifier } = value;
-          if (accountType === 'Apple' || accountType === 'Google') {
+          if (SocialLoginList.includes(accountType)) {
             setLoading(true);
             const result = await verifySocialToken({
               accountType,
-              token: authenticationInfo?.appleIdToken || authenticationInfo?.googleAccessToken,
+              token: authenticationInfo?.authToken,
               guardianIdentifier: identifier,
               verifier,
               chainId,
+              networkType,
               operationType: OperationTypeEnum.register,
             });
             setLoading(false);
@@ -326,6 +328,7 @@ const SignIn = forwardRef(
         changeLifeCycle,
         getRecommendationVerifier,
         isErrorTip,
+        networkType,
         onError,
         onStep2OfSignUpFinish,
         sendCodeConfirm,

@@ -6,6 +6,7 @@ import SocialLogin from '../SocialLogin';
 import { CreateWalletType, GuardianInputInfo, LoginFinishWithoutPin, Theme } from '../types';
 import { IPhoneCountry } from '../types';
 import './index.less';
+import { AccountType } from '@portkey/services';
 
 export interface LoginBaseProps {
   theme?: Theme;
@@ -52,11 +53,14 @@ export default function LoginCard({
 
   const [step, setStep] = useState<STEP>(STEP.socialLogin);
 
+  const [defaultKey, setDefaultKey] = useState<AccountType>();
+
   return (
     <div className="portkey-ui-flex-column login-ui-card">
       {step === STEP.inputLogin ? (
         <InputLogin
           type="Login"
+          defaultAccountType={defaultKey}
           phoneCountry={phoneCountry}
           validateEmail={validateEmail}
           validatePhone={validatePhone}
@@ -75,7 +79,10 @@ export default function LoginCard({
           isErrorTip={isErrorTip}
           onFinish={onSocialLoginFinish}
           switchType={onStep}
-          switchGuardianType={() => setStep(STEP.inputLogin)}
+          switchGuardianType={(type) => {
+            setStep(STEP.inputLogin);
+            setDefaultKey(type);
+          }}
           extraElement={extraElement}
           termsOfService={termsOfService}
           onLoginByPortkey={onLoginByPortkey}

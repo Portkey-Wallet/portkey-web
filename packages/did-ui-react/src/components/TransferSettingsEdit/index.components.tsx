@@ -31,6 +31,7 @@ export interface ITransferSettingsEditProps extends FormProps {
   initData: ITransferLimitItemWithRoute;
   isErrorTip?: boolean;
   sandboxId?: string;
+  networkType?: string;
   onBack?: () => void;
   onSuccess?: (data: ITransferLimitItemWithRoute) => void;
   onGuardiansApproveError?: OnErrorFunc;
@@ -52,6 +53,7 @@ export default function TransferSettingsEditMain({
   initData,
   isErrorTip = true,
   sandboxId = '',
+  networkType = '',
   onBack,
   onSuccess,
   onGuardiansApproveError,
@@ -358,6 +360,7 @@ export default function TransferSettingsEditMain({
         <GuardianApproval
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
+          networkType={networkType}
           targetChainId={targetChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}

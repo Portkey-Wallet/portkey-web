@@ -416,6 +416,7 @@ function AssetMain({
         <Guardian
           sandboxId={sandboxId}
           caHash={caHash || ''}
+          networkType={networkType}
           originChainId={originChainId}
           accelerateChainId={accelerateChainId}
           onBack={() => setAssetStep(AssetStep.my)}

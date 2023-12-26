@@ -6,6 +6,7 @@ import SocialLogin from '../SocialLogin';
 import { GuardianInputInfo } from '../types/signIn';
 import clsx from 'clsx';
 import ConfigProvider from '../config-provider';
+import { AccountType } from '@portkey/services';
 import './index.less';
 
 enum STEP {
@@ -62,12 +63,15 @@ export default function SignUpBase({
     onBackRef?.current?.();
   }, []);
 
+  const [defaultKey, setDefaultKey] = useState<AccountType>();
+
   return (
     <div className={clsx('register-start-card sign-ui-card', wrapperClassName)}>
       {step === STEP.inputLogin ? (
         <InputLogin
           type="Sign up"
           phoneCountry={phoneCountry}
+          defaultAccountType={defaultKey}
           validateEmail={validateEmail}
           validatePhone={validatePhone}
           onFinish={onInputFinish}
@@ -84,7 +88,10 @@ export default function SignUpBase({
           networkType={networkType}
           socialLogin={_socialLogin}
           onFinish={onSocialSignFinish}
-          switchGuardianType={() => setStep(STEP.inputLogin)}
+          switchGuardianType={(type) => {
+            setStep(STEP.inputLogin);
+            setDefaultKey(type);
+          }}
           onBack={_onBack}
           onError={onError}
           onLoginByPortkey={onLoginByPortkey}
