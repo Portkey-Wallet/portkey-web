@@ -1,6 +1,6 @@
 {
   "name": "@portkey-v1/contracts",
-  "version": "1.5.4-alpha.2",
+  "version": "1.5.4-alpha.3",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
