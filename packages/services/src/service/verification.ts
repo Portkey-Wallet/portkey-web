@@ -13,7 +13,7 @@ import {
   GetAppleUserExtraInfoParams,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest } from '@portkey-v1/types';
 
 export class Verification<T extends IBaseRequest = IBaseRequest>
   extends BaseService<T>

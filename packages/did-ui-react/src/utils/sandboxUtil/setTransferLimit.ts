@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { CustomContractBasic, did } from '..';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { GuardianItem } from '../../components/Guardian/utils/type';

@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { IRampInitState, IRampPreviewInitState, IUseHandleAchSellParams } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampMain from './index.component';

@@ -1,4 +1,4 @@
-import { ChainId, ChainType, IAElfRPCMethods, IBlockchainWallet, IContract, ViewResult } from '@portkey/types';
+import { ChainId, ChainType, IAElfRPCMethods, IBlockchainWallet, IContract, ViewResult } from '@portkey-v1/types';
 import { IChain } from '@portkey/provider-types';
 
 export interface IPortkeyContract extends IContract {

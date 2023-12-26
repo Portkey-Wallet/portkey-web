@@ -1,6 +1,6 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { memo, useCallback, ReactNode, useState, useRef } from 'react';
-import { AccountTypeEnum, OperationTypeEnum, VerifierItem } from '@portkey/services';
+import { AccountTypeEnum, OperationTypeEnum, VerifierItem } from '@portkey-v1/services';
 import { useTranslation } from 'react-i18next';
 import CustomSvg from '../CustomSvg';
 import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';

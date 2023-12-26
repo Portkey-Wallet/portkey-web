@@ -1,4 +1,4 @@
-import type { AccountType } from '@portkey/services';
+import type { AccountType } from '@portkey-v1/services';
 import clsx from 'clsx';
 import BaseVerifierIcon from '../BaseVerifierIcon';
 import CustomSvg from '../CustomSvg';

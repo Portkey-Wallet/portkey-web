@@ -1,4 +1,4 @@
-import { AccountType, AccountTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum } from '@portkey-v1/services';
 import { Button, ButtonProps } from 'antd';
 import LoginSocialGoogle, { LoginSocialGoogleComProps } from '../LoginSocialGoogle';
 import LoginSocialApple from '../LoginSocialApple';

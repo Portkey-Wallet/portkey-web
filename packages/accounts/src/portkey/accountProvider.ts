@@ -1,7 +1,7 @@
 import AElf from 'aelf-sdk';
-import { IAccountProvider, IBlockchainWallet, IKeyStore } from '@portkey/types';
+import { IAccountProvider, IBlockchainWallet, IKeyStore } from '@portkey-v1/types';
 import { WalletAccount } from './walletAccount';
-import { wallet } from '@portkey/utils';
+import { wallet } from '@portkey-v1/utils';
 
 export class AccountProvider implements IAccountProvider<WalletAccount> {
   private _BIP44Path: string;

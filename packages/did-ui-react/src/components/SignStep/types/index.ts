@@ -9,9 +9,9 @@ import {
   TDesign,
   TVerifierItem,
 } from '../../types';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { ReactNode } from 'react';
-import { GuardiansApproved } from '@portkey/services';
+import { GuardiansApproved } from '@portkey-v1/services';
 export type SIGN_IN_STEP = 'SignIn' | 'Step2OfSignUp' | 'Step2OfLogin' | 'Step3';
 
 export type SignInLifeCycleType = CreateWalletType;

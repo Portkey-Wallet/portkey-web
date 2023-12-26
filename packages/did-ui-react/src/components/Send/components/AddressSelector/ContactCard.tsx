@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 import CustomSvg from '../../../CustomSvg';
 import { transNetworkText } from '../../../../utils/converter';
-import { RecentAddressItem, RecentContactItemType } from '@portkey/services';
+import { RecentAddressItem, RecentContactItemType } from '@portkey-v1/services';
 import { formatStr2EllipsisStr } from '../../../../utils';
 import { IClickAddressProps } from '../../../types/assets';
 

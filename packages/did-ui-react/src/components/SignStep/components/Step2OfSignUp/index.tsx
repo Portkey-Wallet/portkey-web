@@ -1,5 +1,5 @@
 import { useState, useCallback, memo, useEffect, useRef } from 'react';
-import { OperationTypeEnum } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey-v1/services';
 import CodeVerify from '../../../CodeVerify/index.component';
 import { IVerifier, IVerifyInfo } from '../../../types/verify';
 import BackHeader from '../../../BackHeader';

@@ -1,4 +1,4 @@
-import { ConfigProvider, Asset, PortkeyAssetProvider } from '@portkey/did-ui-react';
+import { ConfigProvider, Asset, PortkeyAssetProvider } from '@portkey-v1/did-ui-react';
 import React from 'react';
 // import { Store } from '../../utils';
 // const myStore = new Store();

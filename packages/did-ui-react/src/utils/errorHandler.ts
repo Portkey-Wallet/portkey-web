@@ -1,4 +1,4 @@
-import { handleContractError } from '@portkey/contracts';
+import { handleContractError } from '@portkey-v1/contracts';
 import { ErrorInfo, OnErrorFunc } from '../types';
 import { textProcessor } from './textProcessor';
 import { singleMessage } from '../components';

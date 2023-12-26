@@ -1,8 +1,8 @@
 'use client';
 import React, { useEffect, useRef, useState } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE, Unlock } from '@portkey/did-ui-react';
-import { ChainId } from '@portkey/types';
-import { sleep } from '@portkey/utils';
+import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE, Unlock } from '@portkey-v1/did-ui-react';
+import { ChainId } from '@portkey-v1/types';
+import { sleep } from '@portkey-v1/utils';
 import { Button } from 'antd';
 
 const PIN = '111111';

@@ -1,5 +1,5 @@
-import { ContractBasic } from '@portkey/contracts';
-import { ChainType, ICallViewMethod, ICallSendMethod } from '@portkey/types';
+import { ContractBasic } from '@portkey-v1/contracts';
+import { ChainType, ICallViewMethod, ICallSendMethod } from '@portkey-v1/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
 
 export interface IExtensionContractOption {

@@ -2,7 +2,7 @@ import { ELF_SYMBOL } from '../../../../constants/assets';
 import CustomSvg from '../../../CustomSvg';
 import { divDecimals, formatAmountShow, transNetworkText } from '../../../../utils/converter';
 import BigNumber from 'bignumber.js';
-import { IAssetItemType } from '@portkey/services';
+import { IAssetItemType } from '@portkey-v1/services';
 
 export default function AssetsTokenItem({
   isMainnet,

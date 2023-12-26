@@ -1,4 +1,4 @@
-import { FetchRequest } from '@portkey/request';
+import { FetchRequest } from '@portkey-v1/request';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE_INFO } from '../constants/device';
 import { DeviceInfoType, DeviceType, ExtraDataDecodeType, ExtraDataType, QRExtraDataType } from '../types';
 

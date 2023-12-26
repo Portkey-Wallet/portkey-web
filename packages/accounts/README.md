@@ -1,4 +1,4 @@
-# `@portkey/accounts`
+# `@portkey-v1/accounts`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -10,13 +10,13 @@
 ### Using NPM
 
 ```bash
-npm install @portkey/accounts
+npm install @portkey-v1/accounts
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/accounts
+yarn add @portkey-v1/accounts
 ```
 
 ## Prerequisites
@@ -36,5 +36,5 @@ yarn add @portkey/accounts
 
 ## Usage
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/accounts
-[npm-url]: https://npmjs.org/package/@portkey/accounts
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/accounts
+[npm-url]: https://npmjs.org/package/@portkey-v1/accounts

@@ -10,9 +10,9 @@ import {
 import { BasicActions, getUpdateList } from '../utils';
 import { Updater } from './hooks/Init';
 import { NFTCollectionItemShowType } from '../../types/assets';
-import { INftCollection } from '@portkey/services';
-import { randomId } from '@portkey/utils';
-import { ChainId } from '@portkey/types';
+import { INftCollection } from '@portkey-v1/services';
+import { randomId } from '@portkey-v1/utils';
+import { ChainId } from '@portkey-v1/types';
 import { getCurrentActivityMapKey } from '../../Activity/utils';
 
 const INITIAL_STATE = {

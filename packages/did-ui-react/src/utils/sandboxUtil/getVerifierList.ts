@@ -1,6 +1,6 @@
-import { VerifierItem } from '@portkey/did';
-import { ChainId } from '@portkey/types';
-import { ChainType } from '@portkey/types';
+import { VerifierItem } from '@portkey-v1/did';
+import { ChainId } from '@portkey-v1/types';
+import { ChainType } from '@portkey-v1/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
 import { isExtension } from '..';
 import { PortkeyUIError } from '../../constants/error';

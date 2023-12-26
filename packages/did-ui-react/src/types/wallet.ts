@@ -1,4 +1,4 @@
-import { ChainType } from '@portkey/types';
+import { ChainType } from '@portkey-v1/types';
 import { ICountryItem } from './country';
 import { DeviceType, QRExtraDataType } from './device';
 

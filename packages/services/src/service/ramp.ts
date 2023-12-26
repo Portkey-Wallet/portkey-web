@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest } from '@portkey-v1/types';
 import { BaseListResponse, BaseService } from '../types';
 import {
   AchNFTOrderInfo,

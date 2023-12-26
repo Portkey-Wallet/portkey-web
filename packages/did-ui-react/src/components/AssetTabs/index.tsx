@@ -6,7 +6,7 @@ import TokenTab from './components/TokenTab';
 import { MAINNET } from '../../constants/network';
 import { NetworkType } from '../../types';
 import Activity from '../Activity';
-import { ActivityItemType } from '@portkey/types';
+import { ActivityItemType } from '@portkey-v1/types';
 import './index.less';
 
 export interface AssetTabsProps extends NFTTabProps {

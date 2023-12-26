@@ -5,7 +5,7 @@ import {
   SendVerificationCodeResult,
   VerifyVerificationCodeResult,
 } from '../../src/types/verification';
-import { IRequestDefaults, RequestOpts } from '@portkey/types';
+import { IRequestDefaults, RequestOpts } from '@portkey-v1/types';
 
 class FetchRequestMock {
   protected _defaults: IRequestDefaults;

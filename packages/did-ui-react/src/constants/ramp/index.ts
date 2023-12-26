@@ -1,5 +1,5 @@
 import { IAchConfig, ICurToken, ICurrencyItem, PartialFiatType, RampTypeEnum } from '../../types';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { countryCodeJson } from './countryCodeJson';
 import { WEB_PAGE } from '..';
 

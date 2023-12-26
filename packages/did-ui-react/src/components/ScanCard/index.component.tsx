@@ -5,12 +5,12 @@ import { ReactNode } from 'react';
 import type { LoginQRData, OnErrorFunc } from '../../types';
 import ScanBase from '../ScanBase';
 import { GridType, LoginFinishWithoutPin } from '../types';
-import type { ChainId, ChainType } from '@portkey/types';
-import type { portkey } from '@portkey/accounts';
+import type { ChainId, ChainType } from '@portkey-v1/types';
+import type { portkey } from '@portkey-v1/accounts';
 import { did, errorTip, handleErrorMessage } from '../../utils';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
 import clsx from 'clsx';
-import { randomId } from '@portkey/utils';
+import { randomId } from '@portkey-v1/utils';
 import './index.less';
 
 export interface ScanCardProps {

@@ -6,7 +6,7 @@ import { addressFormat, formatAmountShow, transNetworkText } from '../../utils/c
 import Copy from '../Copy';
 import SettingHeader from '../SettingHeader';
 import './index.less';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { NFTItemBaseExpand } from '../types/assets';
 import { formatStr2EllipsisStr } from '../../utils';
 

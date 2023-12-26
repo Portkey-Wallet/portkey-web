@@ -1,4 +1,4 @@
-import { RequestOpts } from '@portkey/types';
+import { RequestOpts } from '@portkey-v1/types';
 import { stringify } from 'query-string';
 import { IAbortSignal } from '../types';
 

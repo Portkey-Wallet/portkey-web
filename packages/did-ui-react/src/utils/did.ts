@@ -1,6 +1,6 @@
-import { did as _did } from '@portkey/did';
-import { RefreshTokenConfig } from '@portkey/services';
-import { ChainId } from '@portkey/types';
+import { did as _did } from '@portkey-v1/did';
+import { RefreshTokenConfig } from '@portkey-v1/services';
+import { ChainId } from '@portkey-v1/types';
 
 export const did = _did;
 

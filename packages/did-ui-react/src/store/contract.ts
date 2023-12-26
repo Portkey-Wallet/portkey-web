@@ -1,5 +1,5 @@
-import { aelf } from '@portkey/utils';
-import type { ContractBasic } from '@portkey/contracts';
+import { aelf } from '@portkey-v1/utils';
+import type { ContractBasic } from '@portkey-v1/contracts';
 import { COMMON_PRIVATE } from '../constants';
 
 type RpcUrl = string;

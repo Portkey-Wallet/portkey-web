@@ -1,5 +1,9 @@
-import { OperationTypeEnum, SendVerificationCodeRequestParams, VerifyVerificationCodeParams } from '@portkey/services';
-import { IStorageSuite } from '@portkey/types';
+import {
+  OperationTypeEnum,
+  SendVerificationCodeRequestParams,
+  VerifyVerificationCodeParams,
+} from '@portkey-v1/services';
+import { IStorageSuite } from '@portkey-v1/types';
 import { did } from './did';
 import { BaseAsyncStorage } from './BaseAsyncStorage';
 import { portkeyDidUIPrefix } from '../constants';

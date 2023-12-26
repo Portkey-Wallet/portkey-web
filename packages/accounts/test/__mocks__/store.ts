@@ -1,4 +1,4 @@
-import { IStorageSuite } from '@portkey/types';
+import { IStorageSuite } from '@portkey-v1/types';
 
 export class Store implements IStorageSuite {
   private _localStorage = {};

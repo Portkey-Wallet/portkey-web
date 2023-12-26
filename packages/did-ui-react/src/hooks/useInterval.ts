@@ -2,7 +2,7 @@ import { DependencyList, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useDeepCompareEffect } from 'react-use';
 
 const useInterval = (callback: () => void, delay?: number | null, deps?: DependencyList) => {
-  const intervalRef = useRef<NodeJS.Timer>();
+  const intervalRef = useRef<NodeJS.Timeout>();
   const savedCallback = useRef<() => void>();
   useEffect(() => {
     savedCallback.current = callback;

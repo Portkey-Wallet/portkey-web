@@ -1,5 +1,5 @@
-import type { ChainId, ChainType } from '@portkey/types';
-import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
+import type { ChainId, ChainType } from '@portkey-v1/types';
+import { GuardiansApproved, OperationTypeEnum } from '@portkey-v1/services';
 import { memo, useState, useCallback } from 'react';
 import { errorTip, handleErrorMessage, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';

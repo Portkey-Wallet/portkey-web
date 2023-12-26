@@ -1,5 +1,5 @@
-import { INftCollectionItem } from '@portkey/services';
-import { ChainId, ChainType } from '@portkey/types';
+import { INftCollectionItem } from '@portkey-v1/services';
+import { ChainId, ChainType } from '@portkey-v1/types';
 
 export enum BalanceTab {
   TOKEN = 'token',

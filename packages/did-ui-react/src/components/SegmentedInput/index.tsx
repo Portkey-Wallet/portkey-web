@@ -2,7 +2,7 @@ import { Segmented } from 'antd';
 import { useState } from 'react';
 import PhoneTab from '../PhoneTab';
 import { GuardianInputInfo, IPhoneCountry } from '../types';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum } from '@portkey-v1/services';
 import { ValidatorHandler } from '../../types';
 import EmailTab from '../EmailTab';
 import './index.less';

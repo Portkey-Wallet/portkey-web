@@ -1,5 +1,5 @@
-import { VerifierItem } from '@portkey/did';
-import { AccountType } from '@portkey/services';
+import { VerifierItem } from '@portkey-v1/did';
+import { AccountType } from '@portkey-v1/services';
 import { OnErrorFunc, PartialOption } from '../../types';
 import { ReactNode } from 'react';
 

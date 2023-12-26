@@ -1,6 +1,6 @@
 import { DispatchParam, SandboxDispatchData, SandboxEventTypes } from './types';
 import { randomId } from '../lib';
-import { sleep } from '@portkey/utils';
+import { sleep } from '@portkey-v1/utils';
 
 export class SandboxEventService {
   static async dispatch(event: SandboxEventTypes, data?: any, eleId = 'sandbox') {

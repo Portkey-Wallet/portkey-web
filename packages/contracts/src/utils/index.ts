@@ -1,7 +1,7 @@
 import AElf from 'aelf-sdk';
-import { sleep } from '@portkey/utils';
-import { aelf } from '@portkey/utils';
-import { AElfWallet, TransactionResult } from '@portkey/types';
+import { sleep } from '@portkey-v1/utils';
+import { aelf } from '@portkey-v1/utils';
+import { AElfWallet, TransactionResult } from '@portkey-v1/types';
 
 import {
   IGetContract,

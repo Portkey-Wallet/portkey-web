@@ -3,7 +3,7 @@ import { ZERO, isEffectiveNumber } from '../constants/misc';
 import { MAIN_CHAIN, MAIN_CHAIN_ID, SIDE_CHAIN, TEST_NET } from '../constants/network';
 import { DEFAULT_AMOUNT, DEFAULT_DIGITS } from '../constants';
 import { AmountSign } from '../types/activity';
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey-v1/types';
 import moment from 'moment';
 
 export const formatAmountShow = (

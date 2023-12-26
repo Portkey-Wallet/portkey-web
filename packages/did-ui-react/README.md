@@ -5,7 +5,7 @@
   </a>
 </p>
 
-<h1 align="center">@portkey/did-ui-react</h1>
+<h1 align="center">@portkey-v1/did-ui-react</h1>
 
 <div align="center">
 With Portkey DID SDK, developers can swiftly embed Web3 DID wallet functions while
@@ -20,19 +20,19 @@ keeping their original UI.
 <h2>📦 Installation</h2>
 
 ```bash
-npm install "@portkey/did-ui-react"
+npm install "@portkey-v1/did-ui-react"
 ```
 
 ```bash
-yarn add "@portkey/did-ui-react"
+yarn add "@portkey-v1/did-ui-react"
 ```
 
 ## 🔨 Usage
 
 ```tsx
-import { SignIn , DIDWalletInfo} from '@portkey/did-ui-react';
+import { SignIn , DIDWalletInfo} from '@portkey-v1/did-ui-react';
 import { useState, useEffect, useCallback } from 'react';
-import "@portkey/did-ui-react/dist/assets/index.css";
+import "@portkey-v1/did-ui-react/dist/assets/index.css";
 
 const App = () => {
   const ref = useRef<ISignIn>();
@@ -63,7 +63,7 @@ please configure your provider address using ```ConfigProvider.setGlobalConfig``
 
 ```tsx
 
-import { ConfigProvider } from '@portkey/did-ui-react';
+import { ConfigProvider } from '@portkey-v1/did-ui-react';
 
 ConfigProvider.setGlobalConfig({
   requestDefaults: {
@@ -114,7 +114,7 @@ You can also use the ```example``` in the current project. [example](../example/
 
 ### TypeScript
 
-`@portkey/did-ui-react` is written in TypeScript with complete definitions.
+`@portkey-v1/did-ui-react` is written in TypeScript with complete definitions.
 
 ## 🤝 Contributing [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](http://makeapullrequest.com)
 

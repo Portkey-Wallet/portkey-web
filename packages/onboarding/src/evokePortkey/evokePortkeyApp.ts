@@ -1,4 +1,4 @@
-import { scheme as schemeUtils } from '@portkey/utils';
+import { scheme as schemeUtils } from '@portkey-v1/utils';
 import { EvokeApp } from '../evokeApp';
 import { APP_DOWNLOAD_URL } from '../constants';
 import { IEvokePortkeyApp } from './types';

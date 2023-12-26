@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest } from '@portkey-v1/types';
 import { BaseService } from '../types';
 import { stringify } from 'query-string';
 import { IConnectService, IConnectToken, RefreshTokenConfig } from '../types/connect';

@@ -1,8 +1,8 @@
 import { AccountType } from '.';
 import { ISearchService } from './search';
 import { IVerificationService } from './verification';
-import { ChainId } from '@portkey/types';
-import { CaHolderWithGuardian } from '@portkey/graphql';
+import { ChainId } from '@portkey-v1/types';
+import { CaHolderWithGuardian } from '@portkey-v1/graphql';
 export interface Context {
   clientId: string;
   requestId: string;

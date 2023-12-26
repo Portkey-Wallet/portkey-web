@@ -5,7 +5,7 @@ import CommonBaseModal from '../CommonBaseModal';
 import CustomPassword from '../CustomPassword';
 import CustomSvg from '../CustomSvg';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
-import { devices } from '@portkey/utils';
+import { devices } from '@portkey-v1/utils';
 import { PASSWORD_LENGTH } from '../../constants/misc';
 import './index.less';
 import PortkeyPasswordInput from '../PortkeyPasswordInput';

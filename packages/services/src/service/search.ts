@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest } from '@portkey-v1/types';
 import { BaseService } from '../types';
 import {
   CAHolderInfo,
@@ -8,7 +8,7 @@ import {
   RecoverStatusResult,
   RegisterStatusResult,
 } from '../types/search';
-import { sleep } from '@portkey/utils';
+import { sleep } from '@portkey-v1/utils';
 
 const DefaultQueryOptions: QueryOptions = {
   interval: 5000,

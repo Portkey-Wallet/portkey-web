@@ -1,6 +1,6 @@
 import { BaseListResponse } from './index';
 import { CaAddressInfosType } from './assets';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 
 export interface AddressItem {
   chainId: ChainId;

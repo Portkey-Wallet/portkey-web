@@ -4,10 +4,10 @@ import { useCallback, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { setLoading, verification, errorTip, handleErrorMessage } from '../../../../utils';
 import clsx from 'clsx';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
-import { OperationTypeEnum } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey-v1/services';
 
 interface GuardianItemProps {
   originChainId?: ChainId;

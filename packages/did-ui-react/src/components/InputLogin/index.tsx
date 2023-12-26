@@ -4,7 +4,7 @@ import CustomSvg from '../CustomSvg';
 import InputInfo, { InputInfoProps } from '../InputInfo';
 import type { IPhoneCountry } from '../types';
 import './index.less';
-import { AccountType } from '@portkey/services';
+import { AccountType } from '@portkey-v1/services';
 import clsx from 'clsx';
 
 export default function InputLogin({

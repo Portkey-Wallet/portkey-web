@@ -7,7 +7,7 @@ import CustomSvg from '../CustomSvg';
 import AssetDropdown from '../AssetDropdown';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { CaAddressInfosType, IAssetItemType } from '@portkey/services';
+import { CaAddressInfosType, IAssetItemType } from '@portkey-v1/services';
 import { MAINNET } from '../../constants/network';
 import AssetsTokenItem from './components/AssetsTokenItem';
 import AssetsNFTItem from './components/AssetsNFTItem';

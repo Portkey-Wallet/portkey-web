@@ -1,4 +1,4 @@
-import { SendResult, ViewResult } from '@portkey/types';
+import { SendResult, ViewResult } from '@portkey-v1/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
 import { ICustomEncodeTxOptions, ICustomSendOptions, ICustomViewOptions } from './types';
 

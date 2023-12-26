@@ -2,7 +2,7 @@ import { Tabs } from 'antd';
 import Recents from './Recents';
 import MyAddress from './MyAddress';
 import { IClickAddressProps } from '../../../types/assets';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { NetworkType } from '../../../../types';
 import './index.less';
 

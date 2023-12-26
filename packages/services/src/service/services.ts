@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest } from '@portkey-v1/types';
 import { IServices } from '../types/services';
 import {
   ICommunityRecoveryService,
@@ -9,7 +9,7 @@ import {
   IActivityService,
   ISecurityService,
 } from '../types';
-import { IDIDGraphQL } from '@portkey/graphql';
+import { IDIDGraphQL } from '@portkey-v1/graphql';
 import { CommunityRecovery } from './communityRecovery';
 import { Ramp } from './ramp';
 import { Assets } from './assets';

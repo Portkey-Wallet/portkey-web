@@ -1,4 +1,4 @@
-import { IPortkeyContract, getContractBasic } from '@portkey/contracts';
+import { IPortkeyContract, getContractBasic } from '@portkey-v1/contracts';
 import {
   CAHolderInfo,
   ChainInfo,
@@ -9,7 +9,7 @@ import {
   RecoverStatusResult,
   RegisterParams,
   RegisterStatusResult,
-} from '@portkey/services';
+} from '@portkey-v1/services';
 import {
   IBaseWalletAccount,
   IKeyStore,
@@ -18,8 +18,8 @@ import {
   IStorageSuite,
   ChainId,
   SendOptions,
-} from '@portkey/types';
-import { aes } from '@portkey/utils';
+} from '@portkey-v1/types';
+import { aes } from '@portkey-v1/utils';
 import {
   AccountLoginParams,
   BaseDIDWallet,

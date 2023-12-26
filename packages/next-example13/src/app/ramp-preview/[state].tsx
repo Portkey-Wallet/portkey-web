@@ -1,7 +1,7 @@
-import { IRampPreviewInitState, PortkeyAssetProvider, RampPreview } from '@portkey/did-ui-react';
+import { IRampPreviewInitState, PortkeyAssetProvider, RampPreview } from '@portkey-v1/did-ui-react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 
 export default function RampPreviewPage() {
   const router = useRouter();

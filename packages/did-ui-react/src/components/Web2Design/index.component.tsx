@@ -14,7 +14,7 @@ import { usePortkey } from '../context';
 import './index.less';
 import { useUpdateEffect } from 'react-use';
 import { useSignHandler } from '../../hooks/useSignHandler';
-import { devices } from '@portkey/utils';
+import { devices } from '@portkey-v1/utils';
 import useMobile from '../../hooks/useMobile';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {

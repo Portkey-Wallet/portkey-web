@@ -1,4 +1,4 @@
-# `@portkey/validator`
+# `@portkey-v1/validator`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -9,13 +9,13 @@
 ### Using NPM
 
 ```bash
-npm install @portkey/validator
+npm install @portkey-v1/validator
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/validator
+yarn add @portkey-v1/validator
 ```
 
 ## Prerequisites
@@ -35,5 +35,5 @@ yarn add @portkey/validator
 
 ## Usage
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/validator
-[npm-url]: https://npmjs.org/package/@portkey/validator
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/validator
+[npm-url]: https://npmjs.org/package/@portkey-v1/validator

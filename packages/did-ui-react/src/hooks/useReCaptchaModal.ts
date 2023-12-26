@@ -4,7 +4,7 @@ import { handleErrorMessage } from '../utils';
 import { setReCaptchaModal } from '../utils/reCaptcha';
 import useReCaptcha from './useReCaptcha';
 import { ReCaptchaResponseType } from '../components';
-import { OperationTypeEnum } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey-v1/services';
 
 export default function useReCaptchaModal() {
   const reCaptchaInfo = useReCaptcha();

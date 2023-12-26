@@ -1,11 +1,11 @@
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey-v1/types';
 import { isCrossChain } from '../../../utils/aelf';
 import { BaseToken } from '../../types/assets';
 import { DEFAULT_TOKEN } from '../../../constants/assets';
 import { getChain } from '../../../hooks/useChainInfo';
 import { getTransactionFee } from '../../../utils/sandboxUtil/getTransactionFee';
 import { divDecimalsStr } from '../../../utils/converter';
-import { wallet } from '@portkey/utils';
+import { wallet } from '@portkey-v1/utils';
 import { ZERO } from '../../../constants/misc';
 
 const getTransferFee = async ({

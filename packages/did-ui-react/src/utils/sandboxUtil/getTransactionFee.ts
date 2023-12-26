@@ -1,8 +1,8 @@
-import { ChainType } from '@portkey/types';
+import { ChainType } from '@portkey-v1/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
-import { getContractBasic } from '@portkey/contracts';
-import { aelf } from '@portkey/utils';
-import { FetchRequest } from '@portkey/request';
+import { getContractBasic } from '@portkey-v1/contracts';
+import { aelf } from '@portkey-v1/utils';
+import { FetchRequest } from '@portkey-v1/request';
 
 interface GetTransitionFeeParams {
   rpcUrl: string;

@@ -1,4 +1,4 @@
-import { AccountType, AccountTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum } from '@portkey-v1/services';
 import { Tabs, TabsProps } from 'antd';
 import { useMemo } from 'react';
 import { ValidatorHandler } from '../../types';

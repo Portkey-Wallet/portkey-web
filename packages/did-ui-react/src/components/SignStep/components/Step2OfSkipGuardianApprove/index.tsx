@@ -1,4 +1,4 @@
-import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum } from '@portkey-v1/services';
 import { memo, useRef } from 'react';
 import BackHeader from '../../../BackHeader';
 import GuardianApproval, { IGuardianApprovalInstance } from '../../../GuardianApproval/index.component';

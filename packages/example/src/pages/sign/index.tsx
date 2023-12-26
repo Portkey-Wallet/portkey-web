@@ -1,8 +1,8 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE } from '@portkey/did-ui-react';
+import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE } from '@portkey-v1/did-ui-react';
 import { Store } from '../../utils';
-import { ChainId } from '@portkey/types';
-import { sleep } from '@portkey/utils';
+import { ChainId } from '@portkey-v1/types';
+import { sleep } from '@portkey-v1/utils';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';

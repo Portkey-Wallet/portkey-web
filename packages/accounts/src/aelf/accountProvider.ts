@@ -1,6 +1,6 @@
 import AElf from 'aelf-sdk';
-import { IAccountProvider, IBlockchainWallet, IKeyStore } from '@portkey/types';
-import { wallet } from '@portkey/utils';
+import { IAccountProvider, IBlockchainWallet, IKeyStore } from '@portkey-v1/types';
+import { wallet } from '@portkey-v1/utils';
 import { WalletAccount } from './walletAccount';
 
 export class AccountProvider implements IAccountProvider<WalletAccount> {

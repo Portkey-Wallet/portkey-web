@@ -1,4 +1,4 @@
-# `@portkey/services`
+# `@portkey-v1/services`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -10,13 +10,13 @@
 ### Using NPM
 
 ```bash
-npm install @portkey/services
+npm install @portkey-v1/services
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/services
+yarn add @portkey-v1/services
 ```
 
 ## Prerequisites
@@ -36,5 +36,5 @@ yarn add @portkey/services
 
 ## Usage
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/services
-[npm-url]: https://npmjs.org/package/@portkey/services
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/services
+[npm-url]: https://npmjs.org/package/@portkey-v1/services

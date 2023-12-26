@@ -15,8 +15,8 @@ import {
   PortkeyStyleProvider,
   singleMessage,
   PortkeyAssetProvider,
-} from '@portkey/did-ui-react';
-import { evokePortkey } from '@portkey/onboarding';
+} from '@portkey-v1/did-ui-react';
+import { evokePortkey } from '@portkey-v1/onboarding';
 import { message, Button } from 'antd';
 import { useEffect, useState } from 'react';
 

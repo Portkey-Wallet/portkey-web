@@ -17,9 +17,9 @@ import {
   Unlock,
   SetPinMobileBase,
   PortkeyBaseNumberKeyboard,
-} from '@portkey/did-ui-react';
+} from '@portkey-v1/did-ui-react';
 import { useRef, useState } from 'react';
-import { OperationTypeEnum } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey-v1/services';
 import { Button } from 'antd';
 
 ConfigProvider.setGlobalConfig({

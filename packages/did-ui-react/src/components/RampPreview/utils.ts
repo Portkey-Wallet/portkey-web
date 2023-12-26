@@ -1,6 +1,6 @@
 import { TransDirectEnum } from '../../constants/ramp';
 import { did } from '../../utils';
-import { AchTokenInfoType } from '@portkey/services';
+import { AchTokenInfoType } from '@portkey-v1/services';
 
 export const getAchToken = async (params: { email: string }) => {
   const rst = await did.services.ramp.getAchToken(params);

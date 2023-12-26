@@ -1,5 +1,5 @@
-import { CallOptions, SendOptions, SendResult, ViewResult } from '@portkey/types';
-import { aelf, sleep } from '@portkey/utils';
+import { CallOptions, SendOptions, SendResult, ViewResult } from '@portkey-v1/types';
+import { aelf, sleep } from '@portkey-v1/utils';
 
 import { AElfContract } from './aelfContract';
 import { CAContractProps, IPortkeyContract } from './types';

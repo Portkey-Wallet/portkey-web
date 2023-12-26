@@ -19,8 +19,8 @@ import type {
   LoginFinishWithoutPin,
   TVerifierItem,
 } from '../types';
-import type { ChainId } from '@portkey/types';
-import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import type { ChainId } from '@portkey-v1/types';
+import { OperationTypeEnum, GuardiansApproved } from '@portkey-v1/services';
 import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, SignInProps, TVerifyCodeInfo } from '../SignStep/types';
 import clsx from 'clsx';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
@@ -29,7 +29,7 @@ import { UserGuardianStatus } from '../../types';
 import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
-import { sleep } from '@portkey/utils';
+import { sleep } from '@portkey-v1/utils';
 import CommonBaseModal from '../CommonBaseModal';
 import { PORTKEY_ROOT_ID } from '../../constants';
 import useSignInHandler, { NextStepType } from './hooks/onSignIn';

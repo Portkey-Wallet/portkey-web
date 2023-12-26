@@ -1,4 +1,4 @@
-# `@portkey/contracts`
+# `@portkey-v1/contracts`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -10,13 +10,13 @@
 ### Using NPM
 
 ```bash
-npm install @portkey/contracts
+npm install @portkey-v1/contracts
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/contracts
+yarn add @portkey-v1/contracts
 ```
 
 ## Prerequisites
@@ -37,7 +37,7 @@ yarn add @portkey/contracts
 # Basic Usage
 
 ```typescript
-import { getContractBasic } from '@portkey/contracts'
+import { getContractBasic } from '@portkey-v1/contracts'
 
 // use ca contract 
 const contract = await getContractBasic({
@@ -81,5 +81,5 @@ contract.callSendMethod('your method', 'your address', paramsOption);
 
 
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/contracts
-[npm-url]: https://npmjs.org/package/@portkey/contracts
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/contracts
+[npm-url]: https://npmjs.org/package/@portkey-v1/contracts

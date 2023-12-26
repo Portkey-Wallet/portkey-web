@@ -1,4 +1,4 @@
-# `@portkey/onboarding`
+# `@portkey-v1/onboarding`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -9,13 +9,13 @@
 ### Using NPM
 
 ```bash
-npm install @portkey/onboarding
+npm install @portkey-v1/onboarding
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/onboarding
+yarn add @portkey-v1/onboarding
 ```
 
 ## Prerequisites
@@ -35,5 +35,5 @@ yarn add @portkey/onboarding
 
 ## Usage
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/onboarding
-[npm-url]: https://npmjs.org/package/@portkey/onboarding
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/onboarding
+[npm-url]: https://npmjs.org/package/@portkey-v1/onboarding

@@ -2,16 +2,16 @@ import 'isomorphic-fetch';
 import { describe, expect, test, jest } from '@jest/globals';
 
 import AElf from 'aelf-sdk';
-import { portkey } from '@portkey/accounts';
-import { CommunityRecovery, Connect } from '@portkey/services';
-import { IBlockchainWallet } from '@portkey/types';
+import { portkey } from '@portkey-v1/accounts';
+import { CommunityRecovery, Connect } from '@portkey-v1/services';
+import { IBlockchainWallet } from '@portkey-v1/types';
 
-import FetchRequestMock from '@portkey/services/test/__mocks__/request';
+import FetchRequestMock from '@portkey-v1/services/test/__mocks__/request';
 import ContractBasicMock from './__mocks__/contractBasic';
-import DIDGraphQLMock from '@portkey/services/test/__mocks__/didGraphQL';
+import DIDGraphQLMock from '@portkey-v1/services/test/__mocks__/didGraphQL';
 import { StorageMock } from './__mocks__/storageMock';
 
-jest.mock('@portkey/contracts', () => {
+jest.mock('@portkey-v1/contracts', () => {
   return {
     ContractBasic: ContractBasicMock,
     getContractBasic: ({

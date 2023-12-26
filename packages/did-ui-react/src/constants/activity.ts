@@ -1,4 +1,4 @@
-import { TransactionTypes, TransactionEnum } from '@portkey/types';
+import { TransactionTypes, TransactionEnum } from '@portkey-v1/types';
 
 export const SHOW_FROM_TRANSACTION_TYPES: TransactionTypes[] = [
   TransactionEnum.TRANSFER,

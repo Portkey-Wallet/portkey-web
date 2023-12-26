@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react';
 import { usePortkeyAsset } from '../components';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { getChain } from './useChainInfo';
 import { useThrottleEffect } from './throttle';
-import { ChainInfo } from '@portkey/services';
+import { ChainInfo } from '@portkey-v1/services';
 import { DEFAULT_TOKEN } from '../constants/assets';
 
 const emptyArray: string[] = [];

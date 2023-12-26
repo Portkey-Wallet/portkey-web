@@ -17,10 +17,10 @@ import {
   Unlock,
   SetPinMobileBase,
   PortkeyBaseNumberKeyboard,
-} from '@portkey/did-ui-react';
+} from '@portkey-v1/did-ui-react';
 import { useRef, useState } from 'react';
 import { Store } from '../../utils';
-import { OperationTypeEnum } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey-v1/services';
 
 const myStore = new Store();
 ConfigProvider.setGlobalConfig({

@@ -1,6 +1,6 @@
 import { stringify } from 'query-string';
 import { WEB_PAGE } from '../constants';
-import { scheme } from '@portkey/utils';
+import { scheme } from '@portkey-v1/utils';
 
 type IBaseOption = {
   timeout?: number;

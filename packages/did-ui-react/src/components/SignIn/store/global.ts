@@ -1,4 +1,4 @@
-import { AccountTypeEnum } from '@portkey/services';
+import { AccountTypeEnum } from '@portkey-v1/services';
 
 const initState = {
   network: 'TESTNET',

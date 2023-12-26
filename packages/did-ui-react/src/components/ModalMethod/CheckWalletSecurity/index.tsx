@@ -1,7 +1,7 @@
 import BaseModalFunc from '../BaseModalMethod';
 import CheckWalletSecurityInner, { BaseCheckWalletSecurityInnerProps } from '../../CheckWalletSecurityInner';
 import { CheckSecurityResult, checkAccelerate, did, handleErrorMessage, setLoading } from '../../../utils';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import SecurityCheckAndAccelerate from '../../SecurityCheckAndAccelerate';
 interface BaseCheckWalletSecurityProps {
   wrapClassName?: string;

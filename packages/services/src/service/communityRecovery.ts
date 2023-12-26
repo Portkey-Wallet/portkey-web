@@ -1,5 +1,5 @@
-import { IDIDGraphQL } from '@portkey/graphql';
-import { IBaseRequest } from '@portkey/types';
+import { IDIDGraphQL } from '@portkey-v1/graphql';
+import { IBaseRequest } from '@portkey-v1/types';
 import {
   GetCAHolderByManagerParams,
   GetCAHolderByManagerResult,

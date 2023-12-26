@@ -1,7 +1,7 @@
 'use client';
-import { NetworkType, PortkeyProvider } from '@portkey/did-ui-react';
+import { NetworkType, PortkeyProvider } from '@portkey-v1/did-ui-react';
 import { ReactNode, useEffect, useState } from 'react';
-import '@portkey/did-ui-react/dist/assets/index.css';
+import '@portkey-v1/did-ui-react/dist/assets/index.css';
 import { Button } from 'antd';
 export default function Portkey({ children }: { children?: ReactNode }) {
   const [dark, setDark] = useState<boolean>(false);

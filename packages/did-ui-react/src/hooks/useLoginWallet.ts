@@ -1,10 +1,10 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { AddManagerType, CreatePendingInfo } from '../components/types';
 import { did, errorTip, extraDataEncode, randomId, setLoading } from '../utils';
-import { LoginResult, RegisterResult } from '@portkey/did';
+import { LoginResult, RegisterResult } from '@portkey-v1/did';
 import { OnErrorFunc } from '../types';
-import { ChainId } from '@portkey/types';
-import { AccountType, GuardiansApproved, RecoverStatusResult, RegisterStatusResult } from '@portkey/services';
+import { ChainId } from '@portkey-v1/types';
+import { AccountType, GuardiansApproved, RecoverStatusResult, RegisterStatusResult } from '@portkey-v1/services';
 import { DEVICE_TYPE, getDeviceInfo } from '../constants/device';
 
 type onCreatePendingType = (pendingInfo: CreatePendingInfo) => void;

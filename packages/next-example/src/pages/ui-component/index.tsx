@@ -8,7 +8,7 @@ import {
   Drawer,
   PortkeyModal,
   PhoneNumberInput,
-} from '@portkey/did-ui-react';
+} from '@portkey-v1/did-ui-react';
 import { message, ConfigProvider, Modal, notification } from 'antd';
 import { useState } from 'react';
 

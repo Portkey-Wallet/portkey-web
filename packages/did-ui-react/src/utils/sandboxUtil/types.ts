@@ -1,5 +1,5 @@
-import { ICAInstanceOptions, IEOAInstanceOptions, IProviderOptions } from '@portkey/contracts';
-import { CallOptions, ChainType, SendOptions } from '@portkey/types';
+import { ICAInstanceOptions, IEOAInstanceOptions, IProviderOptions } from '@portkey-v1/contracts';
+import { CallOptions, ChainType, SendOptions } from '@portkey-v1/types';
 
 export interface BaseSendOption {
   rpcUrl: string;

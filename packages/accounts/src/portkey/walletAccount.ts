@@ -1,5 +1,5 @@
 import AElf from 'aelf-sdk';
-import { IBaseWalletAccount, IBlockchainWallet, IKeyStore, ISignature } from '@portkey/types';
+import { IBaseWalletAccount, IBlockchainWallet, IKeyStore, ISignature } from '@portkey-v1/types';
 
 export class WalletAccount implements IBaseWalletAccount {
   [key: string]: unknown;

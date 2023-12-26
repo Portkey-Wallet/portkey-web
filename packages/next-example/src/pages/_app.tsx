@@ -1,5 +1,5 @@
-import '@portkey/did-ui-react/dist/assets/index.css';
-import { NetworkType, PortkeyProvider } from '@portkey/did-ui-react';
+import '@portkey-v1/did-ui-react/dist/assets/index.css';
+import { NetworkType, PortkeyProvider } from '@portkey-v1/did-ui-react';
 import { useEffect, useState } from 'react';
 import './index.css';
 import { ConfigProvider } from 'antd';

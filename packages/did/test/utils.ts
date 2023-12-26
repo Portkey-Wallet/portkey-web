@@ -1,4 +1,4 @@
-import { IHolderInfo } from '@portkey/services';
+import { IHolderInfo } from '@portkey-v1/services';
 import { VerifierItem, GuardianType } from '../src/types';
 
 export function handleUserGuardiansList(

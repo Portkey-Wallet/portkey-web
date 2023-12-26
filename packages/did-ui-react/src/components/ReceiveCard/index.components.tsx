@@ -4,7 +4,7 @@ import { ReactNode, useMemo } from 'react';
 import clsx from 'clsx';
 import { transNetworkText } from '../../utils/converter';
 import PortkeyQRCode from '../PortkeyQRCode';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { QRCodeDataObjType, shrinkSendQrData } from '../../utils/qrCode';
 import { NetworkType } from '../../types';
 import { MAINNET } from '../../constants/network';

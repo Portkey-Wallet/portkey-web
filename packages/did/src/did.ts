@@ -1,4 +1,4 @@
-import { portkey } from '@portkey/accounts';
+import { portkey } from '@portkey-v1/accounts';
 import {
   AccountLoginParams,
   CheckManagerParams,
@@ -24,10 +24,10 @@ import {
   IConnectService,
   CAHolderInfo,
   IServices,
-} from '@portkey/services';
-import { FetchRequest } from '@portkey/request';
-import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
-import { ISignature, IKeyStore, IDIDBaseWallet, IConfig, IBaseRequest, ChainId, SendOptions } from '@portkey/types';
+} from '@portkey-v1/services';
+import { FetchRequest } from '@portkey-v1/request';
+import { DIDGraphQL, IDIDGraphQL } from '@portkey-v1/graphql';
+import { ISignature, IKeyStore, IDIDBaseWallet, IConfig, IBaseRequest, ChainId, SendOptions } from '@portkey-v1/types';
 import { DIDConfig } from './config';
 export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public didWallet: DIDWallet<portkey.WalletAccount>;

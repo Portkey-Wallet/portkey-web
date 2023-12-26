@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { formatAmountShow } from '../../../../utils/converter';
 import { supplementAllAelfAddress, isAelfAddress } from '../../../../utils/aelf';
 import { amountInUsdShow, chainShowText } from '../../../../utils/assets';

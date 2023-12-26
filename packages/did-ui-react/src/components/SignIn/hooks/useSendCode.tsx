@@ -1,4 +1,4 @@
-import { AccountType, OperationTypeEnum } from '@portkey/services';
+import { AccountType, OperationTypeEnum } from '@portkey-v1/services';
 import { modalMethod, setLoading } from '../../../utils';
 import { useCallback } from 'react';
 import { IGuardianIdentifierInfo, IVerifier } from '../../types';

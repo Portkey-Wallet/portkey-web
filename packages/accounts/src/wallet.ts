@@ -1,6 +1,6 @@
-import { IAccountProvider, BaseWallet, IBaseWalletAccount, IKeyStore, IStorageSuite } from '@portkey/types';
+import { IAccountProvider, BaseWallet, IBaseWalletAccount, IKeyStore, IStorageSuite } from '@portkey-v1/types';
 
-import { isNullish } from '@portkey/validator';
+import { isNullish } from '@portkey-v1/validator';
 
 export class Wallet<T extends IBaseWalletAccount = IBaseWalletAccount> extends BaseWallet<T> {
   private readonly _addressMap = new Map<string, number>();

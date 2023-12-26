@@ -1,4 +1,4 @@
-# `@portkey/socket`
+# `@portkey-v1/socket`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -13,13 +13,13 @@ It is already possible to follow [the standard abp tutorial](https://docs.abp.io
 ### Using NPM
 
 ```bash
-npm install @portkey/socket
+npm install @portkey-v1/socket
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/socket
+yarn add @portkey-v1/socket
 ```
 
 ## Prerequisites
@@ -40,7 +40,7 @@ yarn add @portkey/socket
 # Basic Usage
 
 ```typescript
-import { DIDSignalr } from '@portkey/socket'
+import { DIDSignalr } from '@portkey-v1/socket'
 
 // new signalr instance
 const didSignalr = new DIDSignalr();
@@ -50,5 +50,5 @@ didSignalr.doOpen({ url: 'your did signalr url', clientId: 'your clientId' });
 didSignalr.onScanLogin(({ body }) => console.log(body));
 ```
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/socket
-[npm-url]: https://npmjs.org/package/@portkey/socket
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/socket
+[npm-url]: https://npmjs.org/package/@portkey-v1/socket

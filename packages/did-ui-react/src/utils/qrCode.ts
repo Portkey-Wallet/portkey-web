@@ -1,4 +1,4 @@
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey-v1/types';
 import { NetworkType } from '../types';
 
 export type QrCodeDataArrType = [

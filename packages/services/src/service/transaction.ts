@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest } from '@portkey-v1/types';
 import { BaseService, RecentTransactionResponse, ITransactionService, GetRecentTransactionParams } from '../types';
 
 export class Transaction<T extends IBaseRequest = IBaseRequest> extends BaseService<T> implements ITransactionService {

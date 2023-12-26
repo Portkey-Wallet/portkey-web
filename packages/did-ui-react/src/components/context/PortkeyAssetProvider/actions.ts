@@ -1,13 +1,13 @@
-import { ActivityItemType, ChainId, IBaseWalletAccount } from '@portkey/types';
+import { ActivityItemType, ChainId, IBaseWalletAccount } from '@portkey-v1/types';
 import { basicActions } from '../utils';
-import { DIDWallet } from '@portkey/did';
+import { DIDWallet } from '@portkey-v1/did';
 import {
   Guardian,
   GetAccountAssetsByKeywordsParams,
   IAssetItemType,
   CaAddressInfosType,
   IActivitiesApiParams,
-} from '@portkey/services';
+} from '@portkey-v1/services';
 import { did } from '../../../utils';
 import { NEW_CLIENT_DEFAULT_ELF_LIST, NFT_SMALL_SIZE } from '../../../constants/assets';
 import { NFTCollectionItemShowType, TokenItemShowType } from '../../types/assets';

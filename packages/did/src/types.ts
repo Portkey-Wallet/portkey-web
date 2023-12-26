@@ -1,4 +1,4 @@
-import { IGraphQLClient } from '@portkey/graphql';
+import { IGraphQLClient } from '@portkey-v1/graphql';
 import {
   GetCAHolderByManagerResult,
   RecoverStatusResult,
@@ -7,7 +7,7 @@ import {
   RegisterStatusResult,
   IHolderInfo,
   CAHolderInfo,
-} from '@portkey/services';
+} from '@portkey-v1/services';
 import {
   IAccountMethods,
   IBaseWalletAccount,
@@ -17,7 +17,7 @@ import {
   IConfig,
   SendOptions,
   TransactionStatus,
-} from '@portkey/types';
+} from '@portkey-v1/types';
 
 export type LoginType = 'scan' | 'account';
 

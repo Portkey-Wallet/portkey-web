@@ -1,4 +1,4 @@
-import { TransactionTypes, ActivityItemType } from '@portkey/types';
+import { TransactionTypes, ActivityItemType } from '@portkey-v1/types';
 import { CaAddressInfosType } from './assets';
 
 export interface IActivitiesApiParams {

@@ -1,4 +1,4 @@
-import { ChainType } from '@portkey/types';
+import { ChainType } from '@portkey-v1/types';
 import { Theme } from '../types';
 import { basicActions } from './utils';
 import { NetworkType } from '../../types';

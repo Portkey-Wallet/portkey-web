@@ -1,10 +1,10 @@
 import { useState, useMemo } from 'react';
-import { CAInfo } from '@portkey/did';
-import { ChainId } from '@portkey/types';
+import { CAInfo } from '@portkey-v1/did';
+import { ChainId } from '@portkey-v1/types';
 import { did } from '../utils';
 import useInterval from './useInterval';
 import { ManagerInfoType } from '../components';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum } from '@portkey-v1/services';
 
 export function useIntervalQueryCAInfo({ address }: { address?: string; chainId?: ChainId }) {
   const [info, setInfo] = useState<{ info: CAInfo; chainId: ChainId; accountInfo: ManagerInfoType }>();

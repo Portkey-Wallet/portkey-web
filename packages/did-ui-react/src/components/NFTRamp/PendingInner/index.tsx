@@ -1,4 +1,4 @@
-import { AchNFTOrderInfo } from '@portkey/services';
+import { AchNFTOrderInfo } from '@portkey-v1/services';
 import CustomSvg from '../../CustomSvg';
 import './index.less';
 import { showMax15Chars } from '../utils';

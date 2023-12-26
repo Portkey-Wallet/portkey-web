@@ -1,6 +1,6 @@
 import { ISocialMedia, SocialMediaItemType } from '../../types/social';
 import { Button } from 'antd';
-import { AchNFTOrderInfo } from '@portkey/services';
+import { AchNFTOrderInfo } from '@portkey-v1/services';
 import './index.less';
 import CustomSvg from '../../CustomSvg';
 import { showMax15Chars } from '../utils';

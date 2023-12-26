@@ -1,4 +1,4 @@
-import { aelf } from '@portkey/utils';
+import { aelf } from '@portkey-v1/utils';
 export const COMMON_PRIVATE = 'f6e512a3c259e5f9af981d7f99d245aa5bc52fe448495e0b0dd56e8406be6f71';
 
 export const SECOND = 1000;
@@ -7,7 +7,7 @@ export const HOUR = MINUTE * 60;
 export const DAY = HOUR * 24;
 
 export const commonAccount = aelf.getWallet(COMMON_PRIVATE);
-export const portkeyDidUIPrefix = '@portkey/did-ui-sdk:';
+export const portkeyDidUIPrefix = '@portkey-v1/did-ui-sdk:';
 export const PORTKEY_PREFIX_CLS = 'portkey-ant';
 export const PORTKEY_ICON_PREFIX_CLS = 'anticon';
 export const PORTKEY_ROOT_ID = 'portkey-ui-root';

@@ -1,7 +1,7 @@
 import { basicActions } from '../utils';
 import { did } from '../../../utils';
 import { BaseListInfo } from '../../../types';
-import { CaAddressInfosType, RecentContactItemType } from '@portkey/services';
+import { CaAddressInfosType, RecentContactItemType } from '@portkey-v1/services';
 
 export const PortkeySendActions = {
   initialized: 'INITIALIZED',

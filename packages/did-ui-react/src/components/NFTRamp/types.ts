@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { NFTCheckoutByACH, NFTTransDirectEnum } from '../../constants/ramp';
 import { ISocialMedia } from '../types/social';
 

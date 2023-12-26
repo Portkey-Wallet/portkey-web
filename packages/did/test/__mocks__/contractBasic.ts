@@ -1,4 +1,4 @@
-import { ContractProps, IPortkeyContract } from '@portkey/contracts';
+import { ContractProps, IPortkeyContract } from '@portkey-v1/contracts';
 
 export class ContractBasicMock {
   public address?: string;

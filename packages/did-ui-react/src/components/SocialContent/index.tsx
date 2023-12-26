@@ -6,7 +6,7 @@ import { errorTip, handleErrorMessage, setLoading, socialLoginAuth } from '../..
 import CustomSvg from '../CustomSvg';
 import { LoginFinishWithoutPin, Theme } from '../types';
 import WakeUpPortkey from '../WakeUpPortkey';
-import { devices } from '@portkey/utils';
+import { devices } from '@portkey-v1/utils';
 import './index.less';
 import singleMessage from '../CustomAnt/message';
 

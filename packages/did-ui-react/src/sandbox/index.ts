@@ -1,10 +1,10 @@
 import { SandboxEventTypes, SandboxEventService, SandboxErrorCode } from '../utils/sandboxService';
-import { aelf } from '@portkey/utils';
-import { FetchRequest } from '@portkey/request';
-import { IEOAInstanceOptions, IPortkeyContract, getContractBasic } from '@portkey/contracts';
+import { aelf } from '@portkey-v1/utils';
+import { FetchRequest } from '@portkey-v1/request';
+import { IEOAInstanceOptions, IPortkeyContract, getContractBasic } from '@portkey-v1/contracts';
 import { getMissParams, handleErrorMessage } from '../utils/errorHandler';
 import { COMMON_PRIVATE } from '../constants';
-import { IContract } from '@portkey/types';
+import { IContract } from '@portkey-v1/types';
 import { ICustomViewOptions, IWalletCustomSendOptions } from '../utils/sandboxUtil/types';
 
 type SendBack = (

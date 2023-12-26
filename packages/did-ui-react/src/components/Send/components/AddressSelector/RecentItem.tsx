@@ -1,4 +1,4 @@
-import { RecentContactItemType } from '@portkey/services';
+import { RecentContactItemType } from '@portkey-v1/services';
 import { IClickAddressProps } from '../../../types/assets';
 import ContactCard from './ContactCard';
 import clsx from 'clsx';

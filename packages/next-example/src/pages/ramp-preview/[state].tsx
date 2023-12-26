@@ -1,8 +1,8 @@
-import { ConfigProvider, IRampPreviewInitState, PortkeyAssetProvider, RampPreview } from '@portkey/did-ui-react';
+import { ConfigProvider, IRampPreviewInitState, PortkeyAssetProvider, RampPreview } from '@portkey-v1/did-ui-react';
 import { useRouter } from 'next/router';
 import { Store } from '../../utils';
 import { useEffect, useState } from 'react';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 
 const myStore = new Store();
 

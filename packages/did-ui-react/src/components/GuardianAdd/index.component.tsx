@@ -1,9 +1,9 @@
 import { Button, Input, message } from 'antd';
-import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } from '@portkey-v1/services';
 import { useState, useMemo, useCallback, useEffect, memo, ReactNode, useRef } from 'react';
 import CommonSelect from '../CommonSelect';
-import { VerifierItem } from '@portkey/did';
-import { ChainId } from '@portkey/types';
+import { VerifierItem } from '@portkey-v1/did';
+import { ChainId } from '@portkey-v1/types';
 import {
   EmailError,
   EmailReg,

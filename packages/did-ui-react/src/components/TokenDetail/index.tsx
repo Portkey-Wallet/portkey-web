@@ -8,7 +8,7 @@ import { MAINNET } from '../../constants/network';
 import { divDecimals, formatAmountShow, transNetworkText } from '../../utils/converter';
 import BalanceCard from '../BalanceCard';
 import Activity from '../Activity';
-import { ActivityItemType, ChainId } from '@portkey/types';
+import { ActivityItemType, ChainId } from '@portkey-v1/types';
 import { useFaucet } from '../../hooks/useFaucet';
 import SettingHeader from '../SettingHeader';
 

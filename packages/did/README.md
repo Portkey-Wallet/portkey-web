@@ -4,7 +4,7 @@
   </a>
 </p>
 
-<h1 align="center">@portkey/did</h1>
+<h1 align="center">@portkey-v1/did</h1>
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -16,7 +16,7 @@
   - [Installation](#installation)
     - [Using NPM](#using-npm)
     - [Using Yarn](#using-yarn)
-- [`@portkey/did` API Reference](#portkeydid-api-reference)
+- [`@portkey-v1/did` API Reference](#portkeydid-api-reference)
   - [did.setConfig](#didsetconfig)
   - [did.login](#didlogin)
     - [type: loginAccount](#type-loginaccount)
@@ -51,29 +51,29 @@
 
 ## Getting Started
 
-The `@portkey/did` library is a collection of modules that contain functionality for the did ecosystem.
+The `@portkey-v1/did` library is a collection of modules that contain functionality for the did ecosystem.
 
-- `@portkey/accounts` is for the portkey account.
-- `@portkey/utils` is for the portkey utils.
-- `@portkey/contracts` is for the portkey contracts.
-- `@portkey/graphql` is for the portkey graphql.
-- `@portkey/request` is for the portkey request.
-- `@portkey/types` is for the portkey types.
-- `@portkey/utils` is for the portkey utils.
-- `@portkey/validator` is for the portkey validator.
+- `@portkey-v1/accounts` is for the portkey account.
+- `@portkey-v1/utils` is for the portkey utils.
+- `@portkey-v1/contracts` is for the portkey contracts.
+- `@portkey-v1/graphql` is for the portkey graphql.
+- `@portkey-v1/request` is for the portkey request.
+- `@portkey-v1/types` is for the portkey types.
+- `@portkey-v1/utils` is for the portkey utils.
+- `@portkey-v1/validator` is for the portkey validator.
 
 ### Installation
 
 #### Using NPM
 
 ```bash
-npm install @portkey/did
+npm install @portkey-v1/did
 ```
 
 #### Using Yarn
 
 ```bash
-yarn add @portkey/did
+yarn add @portkey-v1/did
 ```
 
 After that you need configure did server node、graphQL node、storage suite.
@@ -102,7 +102,7 @@ did.setConfig({
 
 That’s it! now you can use the `did` object.
 
-## `@portkey/did` API Reference
+## `@portkey-v1/did` API Reference
 
 ### did.setConfig
 
@@ -417,5 +417,5 @@ did.services.sendAppleUserExtraInfo({
 });
 ```
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/did
-[npm-url]: https://npmjs.org/package/@portkey/did
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/did
+[npm-url]: https://npmjs.org/package/@portkey-v1/did

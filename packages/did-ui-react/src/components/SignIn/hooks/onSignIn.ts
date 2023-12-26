@@ -5,7 +5,7 @@ import { usePortkey } from '../../context';
 import { getGuardianList } from '../../SignStep/utils/getGuardians';
 import { BaseGuardianItem, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../../types';
 import useVerifier from '../../../hooks/useVerifier';
-import { GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey-v1/services';
 import useSendCode from './useSendCode';
 
 interface Props {

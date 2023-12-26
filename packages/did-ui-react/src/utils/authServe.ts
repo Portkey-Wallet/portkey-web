@@ -1,7 +1,7 @@
-import { RefreshTokenConfig } from '@portkey/services';
+import { RefreshTokenConfig } from '@portkey-v1/services';
 import { did, isValidRefreshTokenConfig, queryAuthorization } from './did';
-import { ChainId, RequestOpts } from '@portkey/types';
-import { fetchFormat, timeoutPromise } from '@portkey/request';
+import { ChainId, RequestOpts } from '@portkey-v1/types';
+import { fetchFormat, timeoutPromise } from '@portkey-v1/request';
 const DEFAULT_FETCH_TIMEOUT = 8000;
 
 interface IAuthTokenServe {

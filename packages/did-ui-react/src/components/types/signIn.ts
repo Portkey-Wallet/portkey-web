@@ -1,5 +1,5 @@
-import { AccountType } from '@portkey/services';
-import { ChainId } from '@portkey/types';
+import { AccountType } from '@portkey-v1/services';
+import { ChainId } from '@portkey-v1/types';
 import { ICountryItem } from '../../types';
 import { SignInProps } from '../SignStep/types';
 

@@ -1,9 +1,9 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { getChain } from '../../hooks/useChainInfo';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
 import { BaseSendOption } from './types';
-import { aelf } from '@portkey/utils';
-import { getContractBasic } from '@portkey/contracts';
+import { aelf } from '@portkey-v1/utils';
+import { getContractBasic } from '@portkey-v1/contracts';
 
 interface CrossChainTransferToCaProps extends Omit<BaseSendOption, 'rpcUrl' | 'address'> {
   chainId: ChainId;

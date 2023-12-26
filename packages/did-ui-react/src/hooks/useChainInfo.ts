@@ -1,5 +1,5 @@
-import type { ChainInfo } from '@portkey/services';
-import { ChainId } from '@portkey/types';
+import type { ChainInfo } from '@portkey-v1/services';
+import { ChainId } from '@portkey-v1/types';
 import { did } from '../utils';
 
 type ChainMapType = { [key in ChainId]: ChainInfo };

@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 
 export interface RegisterStatusResult extends ICAInfo {
   registerStatus: Status;

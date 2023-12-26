@@ -4,7 +4,7 @@ import PortkeyProvider from '../context';
 import type { Theme } from '../types';
 import { ReactNode } from 'react';
 import clsx from 'clsx';
-import { ChainType } from '@portkey/types';
+import { ChainType } from '@portkey-v1/types';
 import { NetworkType } from '../../types';
 import { PORTKEY_ROOT_ID } from '../../constants';
 

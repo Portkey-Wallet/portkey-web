@@ -1,6 +1,6 @@
 import { memo, useMemo, useState, useCallback, useRef } from 'react';
 import { IBaseGetGuardianProps } from '../types';
-import { AccountType } from '@portkey/services';
+import { AccountType } from '@portkey-v1/services';
 import Overview from './components/Overview';
 import ScanCard from '../ScanCard/index.component';
 import CustomSvg from '../CustomSvg';

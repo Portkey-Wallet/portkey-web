@@ -21,10 +21,10 @@ import {
   handleVerificationDoc,
   setLoading,
 } from '../../utils';
-import type { ChainId } from '@portkey/types';
+import type { ChainId } from '@portkey-v1/types';
 import { HOUR, MINUTE } from '../../constants';
 import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
-import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import { OperationTypeEnum, GuardiansApproved } from '@portkey-v1/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';

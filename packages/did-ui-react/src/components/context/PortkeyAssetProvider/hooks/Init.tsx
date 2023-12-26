@@ -4,7 +4,7 @@ import { AuthServe, did, handleErrorMessage } from '../../../../utils';
 import { getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolderInfo';
 import { basicAssetView } from '../actions';
 import { usePortkeyAsset } from '..';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { useThrottleEffect } from '../../../../hooks/throttle';
 import { useTxFeeInit } from './txFee';
 import singleMessage from '../../../CustomAnt/message';

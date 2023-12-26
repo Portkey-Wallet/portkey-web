@@ -1,13 +1,13 @@
 import GuardianApprovalMain from '../GuardianApproval/index.component';
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import SetAllowanceMain, { BaseSetAllowanceProps, IAllowance } from '../SetAllowance/index.component';
 import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } from '../../utils';
 import { getChain } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
-import { VerifierItem } from '@portkey/did';
+import { VerifierItem } from '@portkey-v1/did';
 import { BaseGuardianItem, IGuardiansApproved } from '../../types';
-import { OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
+import { OperationTypeEnum, AccountTypeEnum } from '@portkey-v1/services';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import BackHeader from '../BackHeader';
 import { divDecimals, timesDecimals } from '../../utils/converter';

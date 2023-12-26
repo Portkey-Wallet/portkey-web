@@ -1,5 +1,5 @@
 import { UserGuardianItem } from '../../types';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum } from '@portkey-v1/services';
 import './index.less';
 
 export default function AccountShow({ guardian }: { guardian: UserGuardianItem | undefined }) {

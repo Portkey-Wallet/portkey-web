@@ -1,5 +1,5 @@
-import { CallOptions, SendOptions, SendResult, ViewResult } from '@portkey/types';
-import { getContractBasic } from '@portkey/contracts';
+import { CallOptions, SendOptions, SendResult, ViewResult } from '@portkey-v1/types';
+import { getContractBasic } from '@portkey-v1/contracts';
 import { ICustomEncodeTxOptions, ICustomSendOptions, ICustomViewOptions } from './types';
 
 const handlerResult = (result: any) => {

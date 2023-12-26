@@ -1,6 +1,6 @@
-import { VerifierItem } from '@portkey/did';
-import type { AccountType, AccountTypeEnum, Guardian, Manager } from '@portkey/services';
-import { ChainId } from '@portkey/types';
+import { VerifierItem } from '@portkey-v1/did';
+import type { AccountType, AccountTypeEnum, Guardian, Manager } from '@portkey-v1/services';
+import { ChainId } from '@portkey-v1/types';
 import { TSocialLoginHandler } from './wallet';
 
 export interface BaseGuardianItem {

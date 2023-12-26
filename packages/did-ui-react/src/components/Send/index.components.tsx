@@ -1,5 +1,5 @@
-import { IAssetItemType } from '@portkey/services';
-import { wallet } from '@portkey/utils';
+import { IAssetItemType } from '@portkey-v1/services';
+import { wallet } from '@portkey-v1/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { Button } from 'antd';
@@ -7,7 +7,7 @@ import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, useCallback, useMemo, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
 import AddressSelector from './components/AddressSelector';

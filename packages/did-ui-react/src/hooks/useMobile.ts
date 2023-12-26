@@ -1,4 +1,4 @@
-import { devices } from '@portkey/utils';
+import { devices } from '@portkey-v1/utils';
 import { useMemo } from 'react';
 import { useMedia } from 'react-use';
 

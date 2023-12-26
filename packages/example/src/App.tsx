@@ -1,14 +1,14 @@
 import React, { useRef, useState } from 'react';
-import { did } from '@portkey/did';
-import { IStorageSuite } from '@portkey/types';
-import { ConfigProvider, SignIn, ISignIn, TDesign } from '@portkey/did-ui-react';
-import '@portkey/did-ui-react/dist/assets/index.css';
+import { did } from '@portkey-v1/did';
+import { IStorageSuite } from '@portkey-v1/types';
+import { ConfigProvider, SignIn, ISignIn, TDesign } from '@portkey-v1/did-ui-react';
+import '@portkey-v1/did-ui-react/dist/assets/index.css';
 import './index.css';
 
-import { getContractBasic } from '@portkey/contracts';
+import { getContractBasic } from '@portkey-v1/contracts';
 import AElf from 'aelf-sdk';
-import { sleep } from '@portkey/utils';
-import { ChainId } from '@portkey/types';
+import { sleep } from '@portkey-v1/utils';
+import { ChainId } from '@portkey-v1/types';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
@@ -101,7 +101,7 @@ export default function App() {
         managerAccount
       </button>
       <div>
-        <h3>Use @portkey/did-ui-react:</h3>
+        <h3>Use @portkey-v1/did-ui-react:</h3>
         <SignIn
           ref={ref}
           design={design}

@@ -1,4 +1,4 @@
-import { portkey } from '@portkey/accounts';
+import { portkey } from '@portkey-v1/accounts';
 import { Button } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useState, useEffect, useMemo } from 'react';
@@ -8,8 +8,8 @@ import { LoginQRData, RegisterType } from '../../types';
 import { did, handleErrorMessage, setLoading } from '../../utils';
 import CustomSvg from '../CustomSvg';
 import { DIDWalletInfo } from '../types';
-import { randomId } from '@portkey/utils';
-import { evokePortkey } from '@portkey/onboarding';
+import { randomId } from '@portkey-v1/utils';
+import { evokePortkey } from '@portkey-v1/onboarding';
 import './index.less';
 import singleMessage from '../CustomAnt/message';
 

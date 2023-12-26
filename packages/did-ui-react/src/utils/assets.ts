@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { divDecimals, formatAmountShow } from './converter';
 import BigNumber from 'bignumber.js';
 

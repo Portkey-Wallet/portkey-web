@@ -1,4 +1,4 @@
-import { ActivityItemType, IBaseRequest } from '@portkey/types';
+import { ActivityItemType, IBaseRequest } from '@portkey-v1/types';
 import {
   BaseService,
   IActivityService,

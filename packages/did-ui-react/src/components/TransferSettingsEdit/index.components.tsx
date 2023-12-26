@@ -3,7 +3,13 @@ import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
 import { useMemo, useState, useCallback, useRef } from 'react';
 import { divDecimals, timesDecimals } from '../../utils/converter';
-import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
+import {
+  AccountType,
+  GuardiansApproved,
+  ITransferLimitItem,
+  OperationTypeEnum,
+  VerifierItem,
+} from '@portkey-v1/services';
 import { ITransferSettingsFormInit } from '../TransferSettings/index.components';
 import { Button, Form, FormProps, Input } from 'antd';
 import SwitchComponent from '../SwitchComponent';
@@ -18,8 +24,8 @@ import { ELF_SYMBOL } from '../../constants/assets';
 import { getChainInfo } from '../../hooks';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
-import { ChainId } from '@portkey/types';
-import { sleep } from '@portkey/utils';
+import { ChainId } from '@portkey-v1/types';
+import { sleep } from '@portkey-v1/utils';
 import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
 

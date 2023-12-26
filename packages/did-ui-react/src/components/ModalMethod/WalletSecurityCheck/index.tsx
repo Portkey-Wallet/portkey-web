@@ -2,8 +2,8 @@ import BaseModalFunc from '../BaseModalMethod';
 import { did, setLoading, checkAccelerate } from '../../../utils';
 import SecurityCheck from '../../SecurityCheck';
 import SecurityCheckAndAccelerate from '../../SecurityCheckAndAccelerate';
-import { ChainId } from '@portkey/types';
-import { IWalletBalanceCheckResponse, IAccelerateGuardian } from '@portkey/services';
+import { ChainId } from '@portkey-v1/types';
+import { IWalletBalanceCheckResponse, IAccelerateGuardian } from '@portkey-v1/services';
 
 interface WalletSecurityCheckModalProps extends AddGuardiansModalProps {
   caHash: string;

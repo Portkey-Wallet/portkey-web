@@ -4,9 +4,9 @@ import { useState, useEffect, memo, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
 import CommonTooltip from '../CommonTooltip/index.component';
 import GuardianItems from './components/GuardianItems';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
-import { OperationTypeEnum } from '@portkey/services';
+import { OperationTypeEnum } from '@portkey-v1/services';
 import './index.less';
 
 export interface GuardianListProps {

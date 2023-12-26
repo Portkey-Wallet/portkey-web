@@ -10,7 +10,7 @@ const nextConfig = {
 
 const withTM = require("next-transpile-modules")([
   "antd-mobile",
-  "@portkey/did-ui-react",
+  "@portkey-v1/did-ui-react",
 ]);
 
 

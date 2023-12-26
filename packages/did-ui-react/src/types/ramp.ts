@@ -1,6 +1,6 @@
-import { ChainId, IBaseWalletAccount } from '@portkey/types';
-import { AchTxAddressReceivedType } from '@portkey/socket';
-import { CAInfo } from '@portkey/did';
+import { ChainId, IBaseWalletAccount } from '@portkey-v1/types';
+import { AchTxAddressReceivedType } from '@portkey-v1/socket';
+import { CAInfo } from '@portkey-v1/did';
 
 export enum RampTypeEnum {
   BUY = 'BUY',

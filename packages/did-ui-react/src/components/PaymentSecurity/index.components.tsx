@@ -10,7 +10,7 @@ import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import LoadingMore from '../LoadingMore';
 import { did, handleErrorMessage, setLoading } from '../../utils';
 import { message } from 'antd';
-import { ITransferLimitItem } from '@portkey/services';
+import { ITransferLimitItem } from '@portkey-v1/services';
 import { NetworkType } from '../../types';
 
 export interface IPaymentSecurityProps {

@@ -1,5 +1,5 @@
-import { getGraphQLClientProvider, IGraphQLClient } from '@portkey/graphql';
-import { HTTPHeaders, HTTPMethod, IConfig, IRequestDefaults, IStorageSuite } from '@portkey/types';
+import { getGraphQLClientProvider, IGraphQLClient } from '@portkey-v1/graphql';
+import { HTTPHeaders, HTTPMethod, IConfig, IRequestDefaults, IStorageSuite } from '@portkey-v1/types';
 import { IDIDConfig } from './types';
 
 export class StorageConfig implements IStorageSuite {

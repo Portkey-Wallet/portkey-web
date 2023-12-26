@@ -1,4 +1,4 @@
-import { SendOptions, SendResult, ViewResult, CallOptions } from '@portkey/types';
+import { SendOptions, SendResult, ViewResult, CallOptions } from '@portkey-v1/types';
 import { ContractProps, IPortkeyContract } from './types';
 import { BaseContract } from './baseContract';
 import { Web3Contract } from './web3Contract';

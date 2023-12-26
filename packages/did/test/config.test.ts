@@ -2,7 +2,7 @@ import 'isomorphic-fetch';
 import { describe, expect, test } from '@jest/globals';
 import { DIDConfig, RequestDefaultsConfig } from '../src/config';
 import { StorageMock } from './__mocks__/storageMock';
-import { IConfig } from '@portkey/types';
+import { IConfig } from '@portkey-v1/types';
 
 const config = new DIDConfig();
 

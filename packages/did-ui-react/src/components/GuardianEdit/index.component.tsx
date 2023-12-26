@@ -1,9 +1,9 @@
 import { Button, message } from 'antd';
-import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum } from '@portkey-v1/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
-import { VerifierItem } from '@portkey/did';
-import { ChainId } from '@portkey/types';
+import { VerifierItem } from '@portkey-v1/did';
+import { ChainId } from '@portkey-v1/types';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { OnErrorFunc, UserGuardianStatus } from '../../types';
 import CustomSvg from '../CustomSvg';

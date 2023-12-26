@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import { useState } from 'react';
 import SecurityCheckMain from '../SecurityCheck/index.component';

@@ -1,4 +1,4 @@
-import { IAssetItemType } from '@portkey/services';
+import { IAssetItemType } from '@portkey-v1/services';
 import React from 'react';
 import { transNetworkText } from '../../../../utils/converter';
 

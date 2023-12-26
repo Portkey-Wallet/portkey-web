@@ -2,7 +2,7 @@ import React, { createContext, useContext, useMemo, useReducer } from 'react';
 import { basicPortkeyView, PortkeyState } from './actions';
 import { BasicActions } from './utils';
 import { Theme } from '../types';
-import { ChainType } from '@portkey/types';
+import { ChainType } from '@portkey-v1/types';
 import { NetworkType } from '../../types';
 import { useEffectOnce } from 'react-use';
 import { did } from '../../utils';

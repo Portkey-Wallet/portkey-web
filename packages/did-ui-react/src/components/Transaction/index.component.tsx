@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
-import { ActivityItemType, ChainId } from '@portkey/types';
+import { ActivityItemType, ChainId } from '@portkey-v1/types';
 import { useDefaultToken } from '../../hooks/assets';
 import { AmountSign, TransactionStatus } from '../../types/activity';
 import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
@@ -19,7 +19,7 @@ import Copy from '../Copy';
 import CustomSvg from '../CustomSvg';
 import { getChain } from '../../hooks/useChainInfo';
 import { useThrottleEffect } from '../../hooks/throttle';
-import { CaAddressInfosType } from '@portkey/services';
+import { CaAddressInfosType } from '@portkey-v1/services';
 import './index.less';
 
 export interface TransactionProps {

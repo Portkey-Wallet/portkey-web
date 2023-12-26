@@ -1,4 +1,4 @@
-import { AccountType } from '@portkey/services';
+import { AccountType } from '@portkey-v1/services';
 import DividerCenter from '../../../DividerCenter';
 import CustomSvg from '../../../CustomSvg';
 import TermsOfServiceItem from '../../../TermsOfServiceItem';

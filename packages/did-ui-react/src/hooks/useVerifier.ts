@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from 'react';
 import { did, verification } from '../utils';
-import { ChainId } from '@portkey/types';
-import { AccountType, OperationTypeEnum } from '@portkey/services';
+import { ChainId } from '@portkey-v1/types';
+import { AccountType, OperationTypeEnum } from '@portkey-v1/services';
 import { useVerifyToken } from './authentication';
 import { ISocialLoginConfig } from '../types';
 import ConfigProvider from '../components/config-provider';

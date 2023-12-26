@@ -1,8 +1,8 @@
 import AElf from 'aelf-sdk';
 import { isValidBase58 } from './valid';
-import { ChainId, ChainType } from '@portkey/types';
-import { getTxResult } from '@portkey/contracts';
-import { aelf } from '@portkey/utils';
+import { ChainId, ChainType } from '@portkey-v1/types';
+import { getTxResult } from '@portkey-v1/contracts';
+import { aelf } from '@portkey-v1/utils';
 
 export function isAelfAddress(value?: string) {
   if (!value || !isValidBase58(value)) return false;

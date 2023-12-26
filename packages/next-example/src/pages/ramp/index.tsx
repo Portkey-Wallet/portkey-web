@@ -1,4 +1,4 @@
-import { ConfigProvider, PortkeyAssetProvider, Ramp } from '@portkey/did-ui-react';
+import { ConfigProvider, PortkeyAssetProvider, Ramp } from '@portkey-v1/did-ui-react';
 import router from 'next/router';
 import { Store } from '../../utils';
 

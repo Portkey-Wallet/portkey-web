@@ -1,6 +1,6 @@
 import { List } from 'antd-mobile';
 import { useCallback, useMemo } from 'react';
-import { ActivityItemType, ChainId, ChainType, TransactionTypes } from '@portkey/types';
+import { ActivityItemType, ChainId, ChainType, TransactionTypes } from '@portkey-v1/types';
 import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
 import { AmountSign } from '../../types/activity';
 import {

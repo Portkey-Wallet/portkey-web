@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest } from '@portkey-v1/types';
 import { BaseService } from '../types';
 
 import { FetchTxFeeParams, FetchTxFeeResult, ITokenService } from '../types';

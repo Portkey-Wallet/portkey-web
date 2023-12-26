@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { useCallback, useRef } from 'react';
 import { getHolderInfoByContract } from '../utils/sandboxUtil/getHolderInfo';
 import { usePortkey } from '../components/context';

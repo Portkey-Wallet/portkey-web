@@ -10,7 +10,7 @@ export default function Index() {
       {
         type: 'PortkeyAchNFTCheckoutOnSuccess',
         data: params,
-        target: '@portkey/ui-did-react:ACH_NFT_CHECKOUT',
+        target: '@portkey-v1/ui-did-react:ACH_NFT_CHECKOUT',
       },
       '*',
     );

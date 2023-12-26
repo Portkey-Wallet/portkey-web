@@ -1,12 +1,12 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verification } from '../../utils';
-import type { ChainId } from '@portkey/types';
-import { OperationTypeEnum } from '@portkey/services';
+import type { ChainId } from '@portkey-v1/types';
+import { OperationTypeEnum } from '@portkey-v1/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
-import { sleep } from '@portkey/utils';
+import { sleep } from '@portkey-v1/utils';
 import './index.less';
 
 const MAX_TIMER = 60;

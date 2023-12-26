@@ -1,4 +1,4 @@
-import { PortkeyProvider, NetworkType } from '@portkey/did-ui-react';
+import { PortkeyProvider, NetworkType } from '@portkey-v1/did-ui-react';
 import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';

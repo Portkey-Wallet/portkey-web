@@ -1,6 +1,6 @@
-import { PartialOption } from '@portkey/types';
+import { PartialOption } from '@portkey-v1/types';
 import { EvokeAppOptions } from '../evokeApp/types';
-import { scheme as schemeUtils } from '@portkey/utils';
+import { scheme as schemeUtils } from '@portkey-v1/utils';
 
 export interface IBaseEvokeAppOption {
   timeout?: number;

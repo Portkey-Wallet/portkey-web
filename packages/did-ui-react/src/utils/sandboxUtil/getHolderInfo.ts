@@ -1,8 +1,8 @@
-import type { ChainType } from '@portkey/types';
+import type { ChainType } from '@portkey-v1/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
 import { did } from '../did';
-import type { ChainId } from '@portkey/types';
-import { IHolderInfo } from '@portkey/services';
+import type { ChainId } from '@portkey-v1/types';
+import { IHolderInfo } from '@portkey-v1/services';
 import { isExtension } from '../lib';
 import { PortkeyUIError } from '../../constants/error';
 import { getChain } from '../../hooks/useChainInfo';

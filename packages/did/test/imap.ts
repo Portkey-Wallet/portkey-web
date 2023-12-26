@@ -1,4 +1,4 @@
-import { sleep } from '@portkey/utils';
+import { sleep } from '@portkey-v1/utils';
 import Imap from 'imap';
 type CodeItem = {
   code: string;

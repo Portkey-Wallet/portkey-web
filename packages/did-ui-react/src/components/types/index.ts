@@ -1,6 +1,6 @@
-import { CAInfo } from '@portkey/did';
-import { AccountType } from '@portkey/services';
-import { ChainId, IBlockchainWallet } from '@portkey/types';
+import { CAInfo } from '@portkey-v1/did';
+import { AccountType } from '@portkey-v1/services';
+import { ChainId, IBlockchainWallet } from '@portkey-v1/types';
 import { CSSProperties, ReactNode } from 'react';
 import { IGuardianIdentifierInfo, IPhoneCountry } from './signIn';
 import { OnErrorFunc, ValidatorHandler } from '../../types';

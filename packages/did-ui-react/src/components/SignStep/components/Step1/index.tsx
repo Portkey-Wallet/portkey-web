@@ -7,7 +7,7 @@ import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
 import SocialDesign from '../../../SocialDesign/index.component';
 import Web2Design from '../../../Web2Design/index.component';
-import { did } from '@portkey/did';
+import { did } from '@portkey-v1/did';
 import { errorTip } from '../../../../utils';
 
 export type OnSignInFinishedFun = (values: {

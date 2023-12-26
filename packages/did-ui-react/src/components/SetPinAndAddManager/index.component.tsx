@@ -4,11 +4,11 @@ import SetPinBase from '../SetPinBase/index.component';
 import clsx from 'clsx';
 import { AddManagerType, CreatePendingInfo, DIDWalletInfo } from '../types';
 import { OnErrorFunc } from '../../types';
-import type { AccountType, GuardiansApproved } from '@portkey/services';
-import { ChainId } from '@portkey/types';
+import type { AccountType, GuardiansApproved } from '@portkey-v1/services';
+import { ChainId } from '@portkey-v1/types';
 import useLoginWallet from '../../hooks/useLoginWallet';
 import SetPinMobileBase from '../SetPinMobileBase';
-import { devices } from '@portkey/utils';
+import { devices } from '@portkey-v1/utils';
 import BackHeader from '../BackHeader';
 
 export interface SetPinAndAddManagerProps {

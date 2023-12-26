@@ -1,4 +1,4 @@
-# `@portkey/types`
+# `@portkey-v1/types`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -10,13 +10,13 @@
 ### Using NPM
 
 ```bash
-npm install @portkey/types
+npm install @portkey-v1/types
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/types
+yarn add @portkey-v1/types
 ```
 
 ## Prerequisites
@@ -36,5 +36,5 @@ yarn add @portkey/types
 
 ## Usage
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/types
-[npm-url]: https://npmjs.org/package/@portkey/types
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/types
+[npm-url]: https://npmjs.org/package/@portkey-v1/types

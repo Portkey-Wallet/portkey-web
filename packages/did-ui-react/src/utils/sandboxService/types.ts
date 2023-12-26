@@ -1,22 +1,22 @@
-import { ChainType } from '@portkey/types';
+import { ChainType } from '@portkey-v1/types';
 // import { portkeyDidUIPrefix } from '../../constants';
 
 export enum SandboxEventTypes {
-  getBalances = '@portkey/did-ui-sdk:getBalances',
+  getBalances = '@portkey-v1/did-ui-sdk:getBalances',
   // View
-  callViewMethod = '@portkey/did-ui-sdk:callViewMethod',
+  callViewMethod = '@portkey-v1/did-ui-sdk:callViewMethod',
   // Send
-  callSendMethod = '@portkey/did-ui-sdk:callSendMethod',
+  callSendMethod = '@portkey-v1/did-ui-sdk:callSendMethod',
   // getEncodedTx
-  getTransactionFee = '@portkey/did-ui-sdk:getTransactionFee',
+  getTransactionFee = '@portkey-v1/did-ui-sdk:getTransactionFee',
   // getTransactionRaw
   getTransactionRaw = 'getTransactionRaw',
 
-  callCASendMethod = '@portkey/did-ui-sdk:callCASendMethod',
+  callCASendMethod = '@portkey-v1/did-ui-sdk:callCASendMethod',
 
-  callSendMethodFormat = '@portkey/did-ui-sdk:callSendMethodFormat',
-  callViewMethodFormat = '@portkey/did-ui-sdk:callViewMethodFormat',
-  encodedTx = '@portkey/did-ui-sdk:encodedTx',
+  callSendMethodFormat = '@portkey-v1/did-ui-sdk:callSendMethodFormat',
+  callViewMethodFormat = '@portkey-v1/did-ui-sdk:callViewMethodFormat',
+  encodedTx = '@portkey-v1/did-ui-sdk:encodedTx',
 }
 
 export enum SandboxErrorCode {

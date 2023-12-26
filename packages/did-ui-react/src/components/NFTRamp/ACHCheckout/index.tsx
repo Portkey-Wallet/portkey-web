@@ -2,12 +2,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { did, handleErrorMessage, isValidEmail, randomId } from '../../../utils';
 import { message } from 'antd';
 import { ErrorInfo } from '../../../types';
-import { AccountTypeEnum, AchNFTOrderInfo, GetAchNFTSignatureParams } from '@portkey/services';
+import { AccountTypeEnum, AchNFTOrderInfo, GetAchNFTSignatureParams } from '@portkey-v1/services';
 import { stringifyUrl } from 'query-string';
-import { signalrSell, OrderStatusEnum } from '@portkey/socket';
+import { signalrSell, OrderStatusEnum } from '@portkey-v1/socket';
 import { getServiceUrl, getSocketUrl } from '../../config-provider/utils';
 import { DAY, WEB_PAGE } from '../../../constants';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import LoadingIndicator from '../../Loading';
 import { NFTCheckoutByACH, NFTTransDirectEnum, OUR_PRODUCT_NAME } from '../../../constants/ramp';
 import ResultInner from '../ResultInner';
@@ -287,7 +287,7 @@ export default function ACHCheckout({
     }) => {
       console.log(event, 'eventHandler');
       const detail = event.data;
-      if (detail.target === '@portkey/ui-did-react:ACH_NFT_CHECKOUT') {
+      if (detail.target === '@portkey-v1/ui-did-react:ACH_NFT_CHECKOUT') {
         switch (detail.type) {
           case 'PortkeyAchNFTCheckoutOnSuccess':
             console.log(detail, 'PortkeyAchNFTCheckoutOnSuccess');

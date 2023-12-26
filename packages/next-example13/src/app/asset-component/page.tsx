@@ -7,9 +7,9 @@ import {
   Send,
   Transaction,
   singleMessage,
-} from '@portkey/did-ui-react';
+} from '@portkey-v1/did-ui-react';
 import React, { useMemo } from 'react';
-import { ActivityItemType } from '@portkey/types';
+import { ActivityItemType } from '@portkey-v1/types';
 
 ConfigProvider.setGlobalConfig({
   requestDefaults: {

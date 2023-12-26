@@ -53,7 +53,7 @@ export default function ReCaptchaModal() {
 
   const eventHandler = useCallback(
     (event: MessageEvent<any>) => {
-      if (event.data.target === '@portkey/ui-did-react:ReCaptcha') {
+      if (event.data.target === '@portkey-v1/ui-did-react:ReCaptcha') {
         switch (event.data.type) {
           case 'PortkeyReCaptchaOnSuccess':
             modalInfo?.onSuccess?.(event.data.data);

@@ -1,4 +1,4 @@
-import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey/services';
+import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey-v1/services';
 import { UserGuardianStatus } from '../../../types';
 import { GuardianItem } from './type';
 import { formatGuardianValue } from './formatGuardianValue';

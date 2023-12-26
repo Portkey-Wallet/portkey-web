@@ -1,5 +1,5 @@
-import { ChainId } from '@portkey/types';
-import { ITransferLimitItem } from '@portkey/services';
+import { ChainId } from '@portkey-v1/types';
+import { ITransferLimitItem } from '@portkey-v1/services';
 import { checkTransferLimit } from '../../../utils/sandboxUtil/checkTransferLimit';
 import { modalMethod } from './modalMethod';
 import { IBusinessFrom, ITransferLimitItemWithRoute } from '../../TransferSettingsEdit/index.components';

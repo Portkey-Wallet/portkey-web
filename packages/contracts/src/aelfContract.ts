@@ -1,6 +1,6 @@
-import { aelf, sleep } from '@portkey/utils';
-import { CallOptions, SendOptions, SendResult, ViewResult } from '@portkey/types';
-import { ChainId } from '@portkey/types';
+import { aelf, sleep } from '@portkey-v1/utils';
+import { CallOptions, SendOptions, SendResult, ViewResult } from '@portkey-v1/types';
+import { ChainId } from '@portkey-v1/types';
 
 import { ContractProps, IPortkeyContract } from './types';
 import { getTxResult, handleContractError, handleContractParams, handleFunctionName } from './utils';

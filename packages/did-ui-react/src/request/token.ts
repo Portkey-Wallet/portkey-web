@@ -1,6 +1,6 @@
-import { did } from '@portkey/did';
-import { FetchTxFeeResultItemTransactionFee } from '@portkey/services';
-import { ChainId } from '@portkey/types';
+import { did } from '@portkey-v1/did';
+import { FetchTxFeeResultItemTransactionFee } from '@portkey-v1/services';
+import { ChainId } from '@portkey-v1/types';
 
 export const fetchTxFeeAsync = async (
   chainIds: ChainId[],

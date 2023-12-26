@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { Modal } from '../../CustomAnt';
 import { PORTKEY_MODAL_PREFIX_CLS, type PortkeyModalProps } from '../../PortkeyModal';
-import { devices } from '@portkey/utils';
+import { devices } from '@portkey-v1/utils';
 import confirm from '../../CustomAnt/antd/drawer/confirm';
 import { ReactNode } from 'react';
 import './index.less';

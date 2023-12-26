@@ -1,4 +1,4 @@
-import { IConfig } from '@portkey/types';
+import { IConfig } from '@portkey-v1/types';
 import { ISocialLoginConfig } from '../../types';
 import { BaseReCaptcha } from '../types';
 

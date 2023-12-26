@@ -1,4 +1,4 @@
-# `@portkey/graphql`
+# `@portkey-v1/graphql`
 
 ![ES Version](https://img.shields.io/badge/ES-2020-yellow)
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
@@ -10,13 +10,13 @@ It is already possible to follow [the standard apollo tutorial](https://www.apol
 ### Using NPM
 
 ```bash
-npm install @portkey/graphql
+npm install @portkey-v1/graphql
 ```
 
 ### Using Yarn
 
 ```bash
-yarn add @portkey/graphql
+yarn add @portkey-v1/graphql
 ```
 
 ## Prerequisites
@@ -59,5 +59,5 @@ You can do this online through a web page
 
 [the-guild.dev/graphql/codegen](https://the-guild.dev/graphql/codegen)
 
-[npm-image-version]: https://img.shields.io/npm/v/@portkey/graphql
-[npm-url]: https://npmjs.org/package/@portkey/graphql
+[npm-image-version]: https://img.shields.io/npm/v/@portkey-v1/graphql
+[npm-url]: https://npmjs.org/package/@portkey-v1/graphql

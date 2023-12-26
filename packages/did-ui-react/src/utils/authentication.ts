@@ -1,4 +1,4 @@
-import { FetchRequest } from '@portkey/request';
+import { FetchRequest } from '@portkey-v1/request';
 
 export type AppleUserInfo = {
   isExpired: boolean;

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { IClickAddressProps } from '../../../types/assets';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { NetworkType } from '../../../../types';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
 import { formatStr2EllipsisStr } from '../../../../utils';

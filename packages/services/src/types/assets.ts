@@ -1,4 +1,4 @@
-import { ChainId, INftInfoType, ITokenInfoType } from '@portkey/types';
+import { ChainId, INftInfoType, ITokenInfoType } from '@portkey-v1/types';
 
 export type ITokenItemResponse = {
   decimals: number;

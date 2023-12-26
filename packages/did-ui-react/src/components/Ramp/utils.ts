@@ -2,7 +2,7 @@ import { MAIN_CHAIN_ID, MAIN_CHAIN, SIDE_CHAIN, TESTNET, TEST_NET } from '../../
 import { countryCodeMap } from '../../constants/ramp';
 import { FiatType, GetFiatType, NetworkType, RampTypeEnum } from '../../types';
 import { did } from '../../utils';
-import { GetOrderQuoteParams } from '@portkey/services';
+import { GetOrderQuoteParams } from '@portkey-v1/services';
 
 export function transNetworkText(chainId: string, networkType: NetworkType): string {
   return `${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN} ${chainId}${

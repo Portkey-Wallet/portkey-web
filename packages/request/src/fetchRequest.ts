@@ -1,4 +1,4 @@
-import { IBaseRequest, RequestOpts, IRequestDefaults } from '@portkey/types';
+import { IBaseRequest, RequestOpts, IRequestDefaults } from '@portkey-v1/types';
 import { fetchFormat, timeoutPromise } from './utils';
 
 const DEFAULT_FETCH_TIMEOUT = 8000;

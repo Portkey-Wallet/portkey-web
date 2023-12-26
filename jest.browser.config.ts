@@ -11,7 +11,7 @@ const packages = readdirSync(basePath).filter(name => lstatSync(path.join(basePa
 
 const moduleNameMapper: any = {};
 packages.forEach(key => {
-  moduleNameMapper[`@portkey/${key}`] = `<rootDir>/packages/${key}/src`;
+  moduleNameMapper[`@portkey-v1/${key}`] = `<rootDir>/packages/${key}/src`;
 });
 
 export default {

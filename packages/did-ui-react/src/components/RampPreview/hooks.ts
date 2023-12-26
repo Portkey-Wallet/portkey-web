@@ -1,6 +1,6 @@
 import { useCallback } from 'react';
 import { AchTokenInfoType } from '../../types';
-import { AccountTypeEnum, Guardian } from '@portkey/services';
+import { AccountTypeEnum, Guardian } from '@portkey-v1/services';
 import { getAchToken } from './utils';
 
 export const useGetAchTokenInfo = () => {

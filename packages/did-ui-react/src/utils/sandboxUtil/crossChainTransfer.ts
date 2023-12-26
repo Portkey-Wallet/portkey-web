@@ -1,12 +1,12 @@
-import { ChainType } from '@portkey/types';
+import { ChainType } from '@portkey-v1/types';
 import { getChainIdByAddress, getChainNumber } from '../aelf';
 import { BaseToken, the2ThFailedActivityItemType } from '../../components/types/assets';
 import { DEFAULT_TOKEN } from '../../constants/assets';
 import { ZERO } from '../../constants/misc';
 import { timesDecimals } from '../converter';
 import { getChain } from '../../hooks/useChainInfo';
-import { getContractBasic } from '@portkey/contracts';
-import { aelf } from '@portkey/utils';
+import { getContractBasic } from '@portkey-v1/contracts';
+import { aelf } from '@portkey-v1/utils';
 import { crossChainTransferToCa } from './crossChainTransferToCa';
 
 interface CrossChainTransferParams {

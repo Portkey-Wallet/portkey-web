@@ -1,8 +1,8 @@
 import { useCallback } from 'react';
 import { ISocialLogin, VerifyTokenParams } from '../types';
 import { did, getGoogleUserInfo, parseAppleIdentityToken, socialLoginAuth } from '../utils';
-import { OperationTypeEnum } from '@portkey/services';
-import type { ChainId } from '@portkey/types';
+import { OperationTypeEnum } from '@portkey-v1/services';
+import type { ChainId } from '@portkey-v1/types';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;

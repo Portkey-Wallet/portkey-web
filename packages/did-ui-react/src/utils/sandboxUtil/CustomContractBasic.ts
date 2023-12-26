@@ -3,10 +3,10 @@ import { ContractByWeb } from './ContractByWeb';
 import { ICustomEncodeTxOptions, ICustomSendOptions, ICustomViewOptions } from './types';
 import { PortkeyUIError } from '../../constants/error';
 import { ContractBySandbox } from './ContractBySandbox';
-import { aelf } from '@portkey/utils';
-import { IEOAInstanceOptions, IProviderOptions } from '@portkey/contracts';
+import { aelf } from '@portkey-v1/utils';
+import { IEOAInstanceOptions, IProviderOptions } from '@portkey-v1/contracts';
 import { COMMON_PRIVATE } from '../../constants';
-import { FetchRequest } from '@portkey/request';
+import { FetchRequest } from '@portkey-v1/request';
 
 export class CustomContractBasic {
   static callSendMethod<P = any, R = any>(params: ICustomSendOptions<P>) {

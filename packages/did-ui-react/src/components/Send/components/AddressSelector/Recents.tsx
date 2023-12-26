@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { IClickAddressProps } from '../../../types/assets';
 import { basicSendAction } from '../../../context/PortkeySendProvider/actions';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';

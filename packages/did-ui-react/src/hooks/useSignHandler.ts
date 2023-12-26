@@ -1,6 +1,6 @@
-import { ChainId } from '@portkey/types';
+import { ChainId } from '@portkey-v1/types';
 import { useRef, useCallback, useMemo } from 'react';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum } from '@portkey-v1/services';
 import { GuardianInputInfo, IBaseGetGuardianProps } from '../components';
 import {
   did,

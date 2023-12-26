@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
 export default function usePortkeyUIReact() {
-  const [portkeyUI, setPortkeyUI] = useState<typeof import('@portkey/did-ui-react')>();
+  const [portkeyUI, setPortkeyUI] = useState<typeof import('@portkey-v1/did-ui-react')>();
 
   useEffect(() => {
-    import('@portkey/did-ui-react').then(setPortkeyUI);
+    import('@portkey-v1/did-ui-react').then(setPortkeyUI);
   }, []);
   return portkeyUI;
 }

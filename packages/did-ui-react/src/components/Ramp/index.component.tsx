@@ -57,7 +57,7 @@ export default function RampMain({
 }: IRampProps) {
   const { t } = useTranslation();
   const updateTimeRef = useRef(MAX_UPDATE_TIME);
-  const updateTimerRef = useRef<NodeJS.Timer | number>();
+  const updateTimerRef = useRef<NodeJS.Timeout | number>();
   const valueSaveRef = useRef({ ...initValueSave });
   const [errMsg, setErrMsg] = useState<string>('');
   const [warningMsg, setWarningMsg] = useState<string>('');

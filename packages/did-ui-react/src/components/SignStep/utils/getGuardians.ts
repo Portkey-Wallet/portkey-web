@@ -1,9 +1,9 @@
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey-v1/types';
 import { getChainInfo } from '../../../hooks/useChainInfo';
 import { getVerifierList } from '../../../utils/sandboxUtil/getVerifierList';
 import { did } from '../../../utils';
-import { VerifierItem } from '@portkey/did';
-import { AccountType, Guardian } from '@portkey/services';
+import { VerifierItem } from '@portkey-v1/did';
+import { AccountType, Guardian } from '@portkey-v1/services';
 
 interface FetchVerifierProps {
   originChainId: ChainId;

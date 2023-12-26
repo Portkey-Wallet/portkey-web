@@ -1,4 +1,4 @@
-import { ActivityItemType, ChainId } from '@portkey/types';
+import { ActivityItemType, ChainId } from '@portkey-v1/types';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getCurrentActivityMapKey } from './utils';

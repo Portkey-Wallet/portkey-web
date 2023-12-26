@@ -1,5 +1,5 @@
 import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
-import { randomId } from '@portkey/utils';
+import { randomId } from '@portkey-v1/utils';
 import { IListen, IMessageMap, ISignalr, ISignalrOptions, Receive, SocketError } from './types';
 
 export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {

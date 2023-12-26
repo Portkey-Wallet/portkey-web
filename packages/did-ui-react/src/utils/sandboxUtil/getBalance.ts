@@ -1,8 +1,8 @@
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey-v1/types';
 import { SandboxErrorCode, SandboxEventService, SandboxEventTypes } from '../sandboxService';
 import { getChain } from '../../hooks/useChainInfo';
-import { getContractBasic } from '@portkey/contracts';
-import { aelf } from '@portkey/utils';
+import { getContractBasic } from '@portkey-v1/contracts';
+import { aelf } from '@portkey-v1/utils';
 import { COMMON_PRIVATE } from '../../constants';
 import { isExtension } from '../lib';
 import { PortkeyUIError } from '../../constants/error';
