@@ -103,7 +103,7 @@ export default function SetPinAndAddManager({
     />
   ) : (
     <>
-      <BackHeader leftElement={type === 'recovery' ? false : undefined} onBack={onBack} />
+      {onBack && <BackHeader leftElement={type === 'recovery' ? false : undefined} onBack={onBack} />}
       <SetPinBase
         className={clsx('portkey-card-height', 'portkey-ui-set-pin-pc', className)}
         onFinish={onCreate}
