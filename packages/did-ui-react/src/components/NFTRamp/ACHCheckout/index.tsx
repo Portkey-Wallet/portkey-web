@@ -287,7 +287,7 @@ export default function ACHCheckout({
     }) => {
       console.log(event, 'eventHandler');
       const detail = event.data;
-      if (detail.target === '@portkey-v1/ui-did-react:ACH_NFT_CHECKOUT') {
+      if (detail.target === '@portkey/ui-did-react:ACH_NFT_CHECKOUT') {
         switch (detail.type) {
           case 'PortkeyAchNFTCheckoutOnSuccess':
             console.log(detail, 'PortkeyAchNFTCheckoutOnSuccess');
