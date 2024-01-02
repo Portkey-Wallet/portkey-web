@@ -4,7 +4,7 @@ import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } fr
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
 import { ChainId } from '@portkey/types';
-import { errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { OnErrorFunc, UserGuardianStatus } from '../../types';
 import CustomSvg from '../CustomSvg';
 import { useTranslation } from 'react-i18next';
@@ -14,6 +14,8 @@ import CommonBaseModal from '../CommonBaseModal';
 import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
+import { verifierExistTip, verifierUsedTip } from '../../constants/guardian';
+import { AccountType } from '@portkey/services';
 import './index.less';
 
 const guardianIconMap: any = {
@@ -27,6 +29,7 @@ export interface GuardianEditProps {
   header?: ReactNode;
   className?: string;
   originChainId: ChainId;
+  caHash: string;
   verifierList?: VerifierItem[];
   isErrorTip?: boolean;
   guardianList?: UserGuardianStatus[];
@@ -50,6 +53,7 @@ function GuardianEdit({
   header,
   className,
   originChainId,
+  caHash,
   isErrorTip = true,
   verifierList,
   currentGuardian,
@@ -72,6 +76,54 @@ function GuardianEdit({
     () => isExist || selectVerifierId === preGuardian?.verifier?.id,
     [isExist, preGuardian?.verifier?.id, selectVerifierId],
   );
+  const getGuardianList = useCallback(async () => {
+    try {
+      const payload = await did.getHolderInfo({
+        caHash,
+        chainId: originChainId,
+      });
+      const { guardians } = payload?.guardianList ?? { guardians: [] };
+      const guardianAccounts = [...guardians];
+      const _guardianList: UserGuardianStatus[] = guardianAccounts.map((item) => {
+        const key = `${item.guardianIdentifier}&${item.verifierId}`;
+        const _guardian = {
+          ...item,
+          identifier: item.guardianIdentifier,
+          key,
+          guardianType: item.type as AccountType,
+          verifier: verifierMap.current?.[item.verifierId],
+        };
+        return _guardian;
+      });
+      return _guardianList;
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'GetGuardianList',
+          error: handleErrorMessage(error),
+        },
+        isErrorTip,
+        onError,
+      );
+    }
+  }, [caHash, isErrorTip, onError, originChainId]);
+
+  const customSelectOption = useMemo(
+    () => [
+      {
+        value: 'tip',
+        disabled: true,
+        className: 'portkey-option-tip',
+        label: (
+          <div className="portkey-ui-flex label-item">
+            <CustomSvg type="Warning" />
+            <div className="tip">{verifierUsedTip}</div>
+          </div>
+        ),
+      },
+    ],
+    [],
+  );
   const verifierSelectItems = useMemo(
     () =>
       verifierList?.map((item) => ({
@@ -80,8 +132,11 @@ function GuardianEdit({
         label: item?.name,
         icon: <img src={item?.imageUrl} />,
         id: item?.id,
+        disabled: !!guardianList
+          ?.filter((temp) => temp.key !== preGuardian?.key)
+          .find((_guardian) => _guardian.verifierId === item.id),
       })),
-    [verifierList],
+    [guardianList, preGuardian?.key, verifierList],
   );
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
@@ -94,18 +149,24 @@ function GuardianEdit({
     setSelectVerifierId(id);
     setIsExist(false);
   }, []);
-  const checkValid = useCallback(() => {
-    const _key = `${currentGuardian?.guardianIdentifier}&${selectVerifierId}`;
-    const _isExist = guardianList?.some((item) => item.key === _key);
-    if (_isExist) {
-      setIsExist(true);
-      return false;
-    }
+  const checkValid = useCallback(async () => {
+    // 1. check verifier valid
     const verifier = verifierMap.current?.[selectVerifierId!];
     if (!verifier) {
       message.error('Can not get the current verifier message');
       return false;
     }
+
+    // fetch latest guardianList
+    const _guardianList = await getGuardianList();
+    // 2. check verifier exist
+    const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
+    if (_verifierExist) {
+      setIsExist(true);
+      return false;
+    }
+
+    const _key = `${currentGuardian?.guardianIdentifier}&${selectVerifierId}`;
     const _guardian: UserGuardianStatus = {
       ...currentGuardian!,
       key: _key,
@@ -114,7 +175,7 @@ function GuardianEdit({
     };
     curGuardian.current = _guardian;
     return true;
-  }, [currentGuardian, guardianList, selectVerifierId]);
+  }, [currentGuardian, getGuardianList, selectVerifierId]);
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
@@ -140,7 +201,8 @@ function GuardianEdit({
     [handleEditGuardian, handleRemoveGuardian, isErrorTip, isRemove, onError],
   );
   const onConfirm = useCallback(async () => {
-    if (checkValid()) {
+    const valid = await checkValid();
+    if (valid) {
       setApprovalVisible(true);
     }
   }, [checkValid]);
@@ -217,12 +279,13 @@ function GuardianEdit({
           <p className="guardian-edit-input-item-label">{t('Verifier')}</p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
-            className="verifier-select"
+            className="verifier-select, portkey-select-verifier-option-tip"
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
+            customOptions={customSelectOption}
           />
-          {isExist && <div className="guardian-edit-error-tip">{t('This guardian already exists')}</div>}
+          {isExist && <div className="guardian-edit-error-tip">{verifierExistTip}</div>}
         </div>
       </div>
       <div className="guardian-edit-footer">

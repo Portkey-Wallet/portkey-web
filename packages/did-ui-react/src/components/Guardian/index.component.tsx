@@ -4,7 +4,7 @@ import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
 import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
-import { AuthServe, did, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { AuthServe, did, errorTip, getVerifierStatusMap, handleErrorMessage, setLoading } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
 import { OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
@@ -19,6 +19,7 @@ import { GuardianMth, handleGuardianByContract } from '../../utils/sandboxUtil/h
 import BackHeaderForPage from '../BackHeaderForPage';
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
+import { MaxVerifierNumber, guardiansExceedTip } from '../../constants/guardian';
 import './index.less';
 
 export enum GuardianStep {
@@ -65,6 +66,7 @@ function GuardianMain({
   const [preGuardian, setPreGuardian] = useState<UserGuardianStatus>();
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>();
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
+  const [verifierEnableNum, setVerifierEnableNum] = useState(MaxVerifierNumber);
   useThrottleEffect(() => {
     AuthServe.addRequestAuthCheck(originChainId);
   }, []);
@@ -135,12 +137,22 @@ function GuardianMain({
     }
   }, [caHash, isErrorTip, onError, originChainId, verifierMap]);
 
+  const getVerifierEnableNum = useCallback(
+    (verifierMap: { [x: string]: VerifierItem }, guardianList: UserGuardianStatus[]) => {
+      const verifierStatusMap = getVerifierStatusMap(verifierMap, guardianList);
+      const len = Object.values(verifierStatusMap).filter((verifier) => !verifier.isUsed).length;
+      setVerifierEnableNum(len);
+    },
+    [],
+  );
+
   const getData = useCallback(async () => {
     setLoading(true);
     await getVerifierInfo();
-    await getGuardianList();
+    const guardianList = await getGuardianList();
+    getVerifierEnableNum(verifierMap.current as { [x: string]: VerifierItem }, guardianList as UserGuardianStatus[]);
     setLoading(false);
-  }, [getGuardianList, getVerifierInfo]);
+  }, [getVerifierEnableNum, getGuardianList, getVerifierInfo]);
 
   useEffect(() => {
     getData();
@@ -194,7 +206,11 @@ function GuardianMain({
             );
           }
         }
-        await getGuardianList();
+        const guardianList = await getGuardianList();
+        getVerifierEnableNum(
+          verifierMap.current as { [x: string]: VerifierItem },
+          guardianList as UserGuardianStatus[],
+        );
         setStep(GuardianStep.guardianList);
         onAddGuardianFinish?.({ syncStatus });
       } catch (e) {
@@ -210,7 +226,17 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [sandboxId, originChainId, caHash, getGuardianList, onAddGuardianFinish, isErrorTip, onError, accelerateChainId],
+    [
+      sandboxId,
+      originChainId,
+      caHash,
+      accelerateChainId,
+      getGuardianList,
+      getVerifierEnableNum,
+      onAddGuardianFinish,
+      onError,
+      isErrorTip,
+    ],
   );
   const handleEditGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
@@ -227,7 +253,11 @@ function GuardianMain({
           chainId: originChainId,
           caHash,
         });
-        await getGuardianList();
+        const guardianList = await getGuardianList();
+        getVerifierEnableNum(
+          verifierMap.current as { [x: string]: VerifierItem },
+          guardianList as UserGuardianStatus[],
+        );
         setStep(GuardianStep.guardianList);
       } catch (e) {
         return errorTip(
@@ -242,7 +272,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [caHash, originChainId, getGuardianList, isErrorTip, onError, preGuardian, sandboxId],
+    [preGuardian, sandboxId, originChainId, caHash, getGuardianList, getVerifierEnableNum, isErrorTip, onError],
   );
   const handleRemoveGuardian = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
@@ -258,7 +288,11 @@ function GuardianMain({
           chainId: originChainId,
           caHash,
         });
-        await getGuardianList();
+        const guardianList = await getGuardianList();
+        getVerifierEnableNum(
+          verifierMap.current as { [x: string]: VerifierItem },
+          guardianList as UserGuardianStatus[],
+        );
         setStep(GuardianStep.guardianList);
       } catch (e) {
         return errorTip(
@@ -273,7 +307,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [caHash, originChainId, currentGuardian, getGuardianList, isErrorTip, onError, sandboxId],
+    [currentGuardian, sandboxId, originChainId, caHash, getGuardianList, getVerifierEnableNum, isErrorTip, onError],
   );
   const handleSetLoginGuardian = useCallback(async () => {
     const guardian = {
@@ -292,6 +326,7 @@ function GuardianMain({
         caHash,
       });
       const _guardianList = await getGuardianList();
+      getVerifierEnableNum(verifierMap.current as { [x: string]: VerifierItem }, guardianList as UserGuardianStatus[]);
       const _guardian = _guardianList?.filter(
         (item) => item.guardianIdentifier === currentGuardian?.guardianIdentifier,
       );
@@ -307,17 +342,19 @@ function GuardianMain({
       );
     }
   }, [
-    caHash,
-    originChainId,
-    currentGuardian?.guardianIdentifier,
     currentGuardian?.guardianType,
+    currentGuardian?.verifier?.id,
     currentGuardian?.identifierHash,
     currentGuardian?.isLoginGuardian,
-    currentGuardian?.verifier?.id,
+    currentGuardian?.guardianIdentifier,
+    sandboxId,
+    originChainId,
+    caHash,
     getGuardianList,
+    getVerifierEnableNum,
+    guardianList,
     isErrorTip,
     onError,
-    sandboxId,
   ]);
 
   const renderBackHeaderLeftEle = useCallback(
@@ -330,6 +367,17 @@ function GuardianMain({
     [],
   );
 
+  const renderGuardianExceedTip = useMemo(() => {
+    return verifierEnableNum === 0 ? (
+      <div className="content-guardian-tip">
+        <div className="guardian-exceed-tip portkey-ui-flex">
+          <CustomSvg type="Warning" />
+          <span className="exceed-tip-content">{guardiansExceedTip}</span>
+        </div>
+      </div>
+    ) : null;
+  }, [verifierEnableNum]);
+
   return (
     <div className={clsx('portkey-ui-guardian-page', className)}>
       {step === GuardianStep.guardianList && (
@@ -338,14 +386,17 @@ function GuardianMain({
             <BackHeaderForPage
               leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
-                <Button onClick={onAddGuardian} className="title-add-guardian-btn">
-                  Add Guardians
-                </Button>
+                verifierEnableNum > 0 ? (
+                  <Button onClick={onAddGuardian} className="title-add-guardian-btn">
+                    Add Guardians
+                  </Button>
+                ) : null
               }
             />
           }
           guardianList={guardianList}
           onViewGuardian={onViewGuardian}
+          tipContainer={renderGuardianExceedTip}
         />
       )}
       {step === GuardianStep.guardianView && (
@@ -361,6 +412,7 @@ function GuardianMain({
       {step === GuardianStep.guardianAdd && (
         <GuardianAdd
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          caHash={caHash}
           originChainId={originChainId}
           networkType={networkType}
           verifierList={verifierList}
@@ -372,6 +424,7 @@ function GuardianMain({
         <GuardianEdit
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
           originChainId={originChainId}
+          caHash={caHash}
           verifierList={verifierList}
           currentGuardian={currentGuardian}
           guardianList={guardianList}

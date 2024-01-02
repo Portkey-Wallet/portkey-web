@@ -1,6 +1,11 @@
 @import '../../assets/theme/constants.less';
 
 .guardian-list-wrapper.guardian-page-list-wrapper {
+  height: 100%;
+  .guardian-list-container {
+    height: 100%;
+    flex: 1;
+  }
   .verifier-item {
     margin-top: 4px;
     padding: 24px;
@@ -13,6 +18,18 @@
     }
     .leftarrow-icon {
       rotate: 180deg;
+    }
+  }
+  .content-guardian-tip {
+    padding: 8px 24px 16px;
+    .guardian-exceed-tip {
+      gap: 8px;
+      font-size: 12px;
+      line-height: 16px;
+      color: var(--portkey-ui-text-secondary);
+      .warning-icon {
+        flex-shrink: 0;
+      }
     }
   }
   @media screen and (max-width: 768px) {

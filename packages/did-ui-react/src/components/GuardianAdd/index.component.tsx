@@ -41,11 +41,13 @@ import { useVerifyToken } from '../../hooks';
 import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
+import { guardianAccountExistTip, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
 import './index.less';
 
 export interface GuardianAddProps {
   header?: ReactNode;
   className?: string;
+  caHash: string;
   originChainId: ChainId;
   phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
@@ -68,6 +70,7 @@ function GuardianAdd({
   header,
   className,
   originChainId,
+  caHash,
   isErrorTip = true,
   phoneCountry: customPhoneCountry,
   verifierList,
@@ -84,8 +87,8 @@ function GuardianAdd({
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [socialValue, setSocialValue] = useState<ISocialInput | undefined>();
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
-  const [isExist, setIsExist] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>('');
+  const [accountErr, setAccountErr] = useState<string>();
+  const [verifierExist, setVerifierExist] = useState<boolean>(false);
   const reCaptchaHandler = useReCaptchaModal();
   const curGuardian = useRef<UserGuardianStatus | undefined>();
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
@@ -97,9 +100,41 @@ function GuardianAdd({
     [countryCode, emailValue, phoneNumber, socialValue?.id],
   );
   const addBtnDisable = useMemo(
-    () => isExist || error || !selectVerifierId || !guardianAccount,
-    [error, guardianAccount, isExist, selectVerifierId],
+    () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
+    [accountErr, guardianAccount, selectVerifierId, verifierExist],
   );
+  const getGuardianList = useCallback(async () => {
+    try {
+      const payload = await did.getHolderInfo({
+        caHash,
+        chainId: originChainId,
+      });
+      const { guardians } = payload?.guardianList ?? { guardians: [] };
+      const guardianAccounts = [...guardians];
+      const _guardianList: UserGuardianStatus[] = guardianAccounts.map((item) => {
+        const key = `${item.guardianIdentifier}&${item.verifierId}`;
+        const _guardian = {
+          ...item,
+          identifier: item.guardianIdentifier,
+          key,
+          guardianType: item.type as AccountType,
+          verifier: verifierMap.current?.[item.verifierId],
+        };
+        return _guardian;
+      });
+      return _guardianList;
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'GetGuardianList',
+          error: handleErrorMessage(error),
+        },
+        isErrorTip,
+        onError,
+      );
+    }
+  }, [caHash, isErrorTip, onError, originChainId]);
+
   const guardianTypeSelectItems = useMemo(
     () => [
       {
@@ -135,6 +170,22 @@ function GuardianAdd({
     ],
     [],
   );
+  const customSelectOption = useMemo(
+    () => [
+      {
+        value: 'tip',
+        disabled: true,
+        className: 'portkey-option-tip',
+        label: (
+          <div className="portkey-ui-flex label-item">
+            <CustomSvg type="Warning" />
+            <div className="tip">{verifierUsedTip}</div>
+          </div>
+        ),
+      },
+    ],
+    [],
+  );
   const verifierSelectItems = useMemo(
     () =>
       verifierList?.map((item) => ({
@@ -143,8 +194,9 @@ function GuardianAdd({
         label: item?.name,
         icon: <img src={item?.imageUrl} />,
         id: item?.id,
+        disabled: !!guardianList?.find((_guardian) => _guardian.verifierId === item.id),
       })),
-    [verifierList],
+    [guardianList, verifierList],
   );
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
@@ -159,12 +211,12 @@ function GuardianAdd({
     setCountryCode(undefined);
     setPhoneNumber('');
     setSocialValue(undefined);
-    setIsExist(false);
-    setError('');
+    setVerifierExist(false);
+    setAccountErr('');
   }, []);
   const handleVerifierChange = useCallback((id: string) => {
     setSelectVerifierId(id);
-    setIsExist(false);
+    setVerifierExist(false);
   }, []);
   const getPhoneCountry = useCallback(async () => {
     try {
@@ -326,24 +378,38 @@ function GuardianAdd({
     },
     [socialBasic, socialUserInfo, verifyToken, originChainId, isErrorTip, onError],
   );
-  const checkValid = useCallback(() => {
+
+  const checkValid = useCallback(async () => {
+    // 1. check email valid
     if (selectGuardianType === AccountTypeEnum[AccountTypeEnum.Email]) {
       if (!EmailReg.test(emailValue as string)) {
-        setError(EmailError.invalidEmail);
+        setAccountErr(EmailError.invalidEmail);
         return false;
       }
     }
+    // fetch latest guardianList
+    const _guardianList = await getGuardianList();
+
+    // 2. check guardian account exist
+    const _guardianExist = _guardianList?.some((temp) => temp.guardianIdentifier === guardianAccount);
+    if (_guardianExist) {
+      setAccountErr(guardianAccountExistTip);
+      return false;
+    }
+    // 3. check verifier valid
     const verifier = verifierMap.current?.[selectVerifierId!];
     if (!verifier) {
       message.error('Can not get the current verifier message');
       return false;
     }
-    const _key = `${guardianAccount}&${verifier.id}`;
-    const _isExist = guardianList?.some((item) => item.key === _key);
-    if (_isExist) {
-      setIsExist(true);
+    // 4. check verifier exist
+    const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
+    if (_verifierExist) {
+      setVerifierExist(true);
       return false;
     }
+
+    const _key = `${guardianAccount}&${verifier.id}`;
     const _guardian: UserGuardianStatus = {
       isLoginGuardian: false,
       key: _key,
@@ -356,7 +422,7 @@ function GuardianAdd({
     };
     curGuardian.current = _guardian;
     return true;
-  }, [emailValue, guardianAccount, guardianList, selectGuardianType, selectVerifierId, socialValue]);
+  }, [emailValue, getGuardianList, guardianAccount, selectGuardianType, selectVerifierId, socialValue]);
   const handleSocialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
@@ -405,8 +471,8 @@ function GuardianAdd({
             placeholder={t('Enter email')}
             onChange={(e) => {
               setEmailValue(e.target.value);
-              setError('');
-              setIsExist(false);
+              setAccountErr('');
+              setVerifierExist(false);
             }}
           />
         ),
@@ -420,13 +486,13 @@ function GuardianAdd({
             phoneNumber={phoneNumber}
             onAreaChange={(v) => {
               setCountryCode(v);
-              setError('');
-              setIsExist(false);
+              setAccountErr('');
+              setVerifierExist(false);
             }}
             onPhoneNumberChange={(v) => {
               setPhoneNumber(v);
-              setError('');
-              setIsExist(false);
+              setAccountErr('');
+              setVerifierExist(false);
             }}
           />
         ),
@@ -538,7 +604,8 @@ function GuardianAdd({
     [handleAddGuardian, isErrorTip, onError],
   );
   const onConfirm = useCallback(async () => {
-    if (checkValid()) {
+    const valid = await checkValid();
+    if (valid) {
       if (socialValue?.id) {
         try {
           setLoading(true);
@@ -609,19 +676,20 @@ function GuardianAdd({
           <div className="input-item">
             <p className="guardian-add-input-item-label">{guardianAccountInput[selectGuardianType].label}</p>
             {guardianAccountInput[selectGuardianType].element}
-            {error && <div className="guardian-error-tip">{error}</div>}
+            {accountErr && <span className="guardian-error-tip">{accountErr}</span>}
           </div>
         )}
         <div className="input-item">
           <p className="guardian-add-input-item-label">{t('Verifier')}</p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
-            className="verifier-select"
+            className="verifier-select, portkey-select-verifier-option-tip"
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
+            customOptions={customSelectOption}
           />
-          {isExist && <div className="guardian-error-tip">{t('This guardian already exists')}</div>}
+          {verifierExist && <div className="guardian-error-tip">{verifierExistTip}</div>}
         </div>
       </div>
       <div className="guardian-edit-footer">

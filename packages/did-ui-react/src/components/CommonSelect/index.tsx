@@ -1,13 +1,15 @@
 import { Select, SelectProps } from 'antd';
 import clsx from 'clsx';
 import { ReactNode, useMemo } from 'react';
+import { DefaultOptionType } from 'antd/lib/select';
 import './index.less';
 
 export interface CommonSelectProps extends SelectProps {
   items?: { value: string; label: ReactNode; icon?: ReactNode; disabled?: boolean }[];
+  customOptions?: DefaultOptionType[];
 }
 
-export default function CommonSelect({ items, className, ...props }: CommonSelectProps) {
+export default function CommonSelect({ items, className, customOptions, ...props }: CommonSelectProps) {
   const selectOptions = useMemo(
     () =>
       items?.map((item) => ({
@@ -29,7 +31,7 @@ export default function CommonSelect({ items, className, ...props }: CommonSelec
       showArrow={false}
       getPopupContainer={(triggerNode) => triggerNode.parentElement}
       style={{ width: '100%' }}
-      options={selectOptions}
+      options={[...(selectOptions || []), ...(customOptions || [])]}
       {...props}
     />
   );
