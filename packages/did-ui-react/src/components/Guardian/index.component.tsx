@@ -2,7 +2,7 @@ import { useState, useCallback, useEffect, useMemo, useRef } from 'react';
 import GuardianList from '../GuardianPageList';
 import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
-import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey/services';
+import { AccountType, GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
 import { AuthServe, did, errorTip, getVerifierStatusMap, handleErrorMessage, setLoading } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
@@ -20,6 +20,7 @@ import BackHeaderForPage from '../BackHeaderForPage';
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
 import { MaxVerifierNumber, guardiansExceedTip } from '../../constants/guardian';
+import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGuardianValue';
 import './index.less';
 
 export enum GuardianStep {
@@ -173,6 +174,11 @@ function GuardianMain({
     setStep(GuardianStep.guardianList);
     setCurrentGuardian(undefined);
   }, []);
+  const onGoView = useCallback(() => {
+    setPreGuardian(currentGuardian);
+    setCurrentGuardian(currentGuardian);
+    setStep(GuardianStep.guardianView);
+  }, [currentGuardian]);
   const handleAddGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
       const params = formatAddGuardianValue({ currentGuardian, approvalInfo });
@@ -309,53 +315,45 @@ function GuardianMain({
     },
     [currentGuardian, sandboxId, originChainId, caHash, getGuardianList, getVerifierEnableNum, isErrorTip, onError],
   );
-  const handleSetLoginGuardian = useCallback(async () => {
-    const guardian = {
-      type: AccountTypeEnum[currentGuardian?.guardianType as AccountType],
-      verifierId: currentGuardian?.verifier?.id,
-      identifierHash: currentGuardian?.identifierHash,
-    };
-    try {
-      await handleGuardianByContract({
-        type: currentGuardian?.isLoginGuardian
-          ? GuardianMth.UnsetGuardianTypeForLogin
-          : GuardianMth.SetGuardianTypeForLogin,
-        params: { guardian },
-        sandboxId,
-        chainId: originChainId,
-        caHash,
+  const handleSetLoginGuardian = useCallback(
+    async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
+      const params = formatSetUnsetLoginGuardianValue({
+        currentGuardian,
+        approvalInfo,
       });
-      const _guardianList = await getGuardianList();
-      getVerifierEnableNum(verifierMap.current as { [x: string]: VerifierItem }, guardianList as UserGuardianStatus[]);
-      const _guardian = _guardianList?.filter(
-        (item) => item.guardianIdentifier === currentGuardian?.guardianIdentifier,
-      );
-      setCurrentGuardian(_guardian?.[0]);
-    } catch (e) {
-      errorTip(
-        {
-          errorFields: 'SetLoginGuardian',
-          error: handleErrorMessage(e),
-        },
-        isErrorTip,
-        onError,
-      );
-    }
-  }, [
-    currentGuardian?.guardianType,
-    currentGuardian?.verifier?.id,
-    currentGuardian?.identifierHash,
-    currentGuardian?.isLoginGuardian,
-    currentGuardian?.guardianIdentifier,
-    sandboxId,
-    originChainId,
-    caHash,
-    getGuardianList,
-    getVerifierEnableNum,
-    guardianList,
-    isErrorTip,
-    onError,
-  ]);
+      try {
+        await handleGuardianByContract({
+          type: currentGuardian?.isLoginGuardian
+            ? GuardianMth.UnsetGuardianTypeForLogin
+            : GuardianMth.SetGuardianTypeForLogin,
+          params,
+          sandboxId,
+          chainId: originChainId,
+          caHash,
+        });
+        const _guardianList = await getGuardianList();
+        getVerifierEnableNum(
+          verifierMap.current as { [x: string]: VerifierItem },
+          guardianList as UserGuardianStatus[],
+        );
+        const _guardian = _guardianList?.find(
+          (item) => item.guardianIdentifier === currentGuardian?.guardianIdentifier,
+        );
+        setCurrentGuardian(_guardian);
+        setPreGuardian(_guardian);
+      } catch (e) {
+        errorTip(
+          {
+            errorFields: 'SetLoginGuardian',
+            error: handleErrorMessage(e),
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+    },
+    [sandboxId, originChainId, caHash, getGuardianList, getVerifierEnableNum, guardianList, isErrorTip, onError],
+  );
 
   const renderBackHeaderLeftEle = useCallback(
     (goBack?: () => void) => (
@@ -422,7 +420,7 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianEdit && (
         <GuardianEdit
-          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoView)} />}
           originChainId={originChainId}
           caHash={caHash}
           verifierList={verifierList}
