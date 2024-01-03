@@ -3,7 +3,7 @@ import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } fr
 import { useState, useMemo, useCallback, useEffect, memo, ReactNode, useRef } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
-import { ChainId } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey/types';
 import {
   EmailError,
   EmailReg,
@@ -42,6 +42,7 @@ import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
 import { guardianAccountExistTip, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
+import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 
 export interface GuardianAddProps {
@@ -49,10 +50,12 @@ export interface GuardianAddProps {
   className?: string;
   caHash: string;
   originChainId: ChainId;
+  chainType?: ChainType;
   phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
   verifierList?: VerifierItem[];
   networkType?: string;
+  sandboxId?: string;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   handleAddGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -71,11 +74,13 @@ function GuardianAdd({
   className,
   originChainId,
   caHash,
+  chainType = 'aelf',
   isErrorTip = true,
   phoneCountry: customPhoneCountry,
   verifierList,
   guardianList,
   networkType,
+  sandboxId,
   onError,
   handleAddGuardian,
 }: GuardianAddProps) {
@@ -103,38 +108,6 @@ function GuardianAdd({
     () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
     [accountErr, guardianAccount, selectVerifierId, verifierExist],
   );
-  const getGuardianList = useCallback(async () => {
-    try {
-      const payload = await did.getHolderInfo({
-        caHash,
-        chainId: originChainId,
-      });
-      const { guardians } = payload?.guardianList ?? { guardians: [] };
-      const guardianAccounts = [...guardians];
-      const _guardianList: UserGuardianStatus[] = guardianAccounts.map((item) => {
-        const key = `${item.guardianIdentifier}&${item.verifierId}`;
-        const _guardian = {
-          ...item,
-          identifier: item.guardianIdentifier,
-          key,
-          guardianType: item.type as AccountType,
-          verifier: verifierMap.current?.[item.verifierId],
-        };
-        return _guardian;
-      });
-      return _guardianList;
-    } catch (error) {
-      errorTip(
-        {
-          errorFields: 'GetGuardianList',
-          error: handleErrorMessage(error),
-        },
-        isErrorTip,
-        onError,
-      );
-    }
-  }, [caHash, isErrorTip, onError, originChainId]);
-
   const guardianTypeSelectItems = useMemo(
     () => [
       {
@@ -388,7 +361,12 @@ function GuardianAdd({
       }
     }
     // fetch latest guardianList
-    const _guardianList = await getGuardianList();
+    const _guardianList = await getGuardianList({
+      caHash,
+      originChainId,
+      chainType,
+      sandboxId,
+    });
 
     // 2. check guardian account exist
     const _guardianExist = _guardianList?.some((temp) => temp.guardianIdentifier === guardianAccount);
@@ -422,7 +400,17 @@ function GuardianAdd({
     };
     curGuardian.current = _guardian;
     return true;
-  }, [emailValue, getGuardianList, guardianAccount, selectGuardianType, selectVerifierId, socialValue]);
+  }, [
+    caHash,
+    chainType,
+    emailValue,
+    guardianAccount,
+    originChainId,
+    sandboxId,
+    selectGuardianType,
+    selectVerifierId,
+    socialValue,
+  ]);
   const handleSocialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {

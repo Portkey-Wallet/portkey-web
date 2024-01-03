@@ -25,13 +25,18 @@ export default function CommonSelect({ items, className, customOptions, ...props
     [items],
   );
 
+  const combineOptions = useMemo(
+    () => [...(selectOptions || []), ...(customOptions || [])],
+    [customOptions, selectOptions],
+  );
+
   return (
     <Select
       className={clsx('portkey-ui-common-select', className)}
       showArrow={false}
       getPopupContainer={(triggerNode) => triggerNode.parentElement}
       style={{ width: '100%' }}
-      options={[...(selectOptions || []), ...(customOptions || [])]}
+      options={combineOptions}
       {...props}
     />
   );

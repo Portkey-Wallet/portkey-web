@@ -1,11 +1,10 @@
 import { Button, message } from 'antd';
-import { GuardiansApproved, OperationTypeEnum, AccountType, AccountTypeEnum } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
-import { ChainId } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey/types';
 import {
-  did,
   errorTip,
   handleErrorMessage,
   handleVerificationDoc,
@@ -28,6 +27,7 @@ import VerifierPage from '../GuardianApproval/components/VerifierPage';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks';
+import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 
 const guardianIconMap: any = {
@@ -54,6 +54,8 @@ export interface GuardianEditProps {
   currentGuardian?: UserGuardianStatus;
   preGuardian?: UserGuardianStatus;
   networkType?: string;
+  chainType?: ChainType;
+  sandboxId?: string;
   onError?: OnErrorFunc;
   handleEditGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
   handleRemoveGuardian?: (approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -78,6 +80,8 @@ function GuardianEdit({
   preGuardian,
   guardianList,
   networkType = 'MAINNET',
+  chainType = 'aelf',
+  sandboxId,
   onError,
   handleEditGuardian,
   handleRemoveGuardian,
@@ -109,37 +113,6 @@ function GuardianEdit({
     () => isExist || selectVerifierId === preGuardian?.verifier?.id,
     [isExist, preGuardian?.verifier?.id, selectVerifierId],
   );
-  const getGuardianList = useCallback(async () => {
-    try {
-      const payload = await did.getHolderInfo({
-        caHash,
-        chainId: originChainId,
-      });
-      const { guardians } = payload?.guardianList ?? { guardians: [] };
-      const guardianAccounts = [...guardians];
-      const _guardianList: UserGuardianStatus[] = guardianAccounts.map((item) => {
-        const key = `${item.guardianIdentifier}&${item.verifierId}`;
-        const _guardian = {
-          ...item,
-          identifier: item.guardianIdentifier,
-          key,
-          guardianType: item.type as AccountType,
-          verifier: verifierMap.current?.[item.verifierId],
-        };
-        return _guardian;
-      });
-      return _guardianList;
-    } catch (error) {
-      errorTip(
-        {
-          errorFields: 'GetGuardianList',
-          error: handleErrorMessage(error),
-        },
-        isErrorTip,
-        onError,
-      );
-    }
-  }, [caHash, isErrorTip, onError, originChainId]);
   const reCaptchaHandler = useReCaptchaModal();
   const customSelectOption = useMemo(
     () => [
@@ -192,7 +165,12 @@ function GuardianEdit({
     }
 
     // fetch latest guardianList
-    const _guardianList = await getGuardianList();
+    const _guardianList = await getGuardianList({
+      caHash,
+      originChainId,
+      sandboxId,
+      chainType,
+    });
     // 2. check verifier exist
     const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
     if (_verifierExist) {
@@ -209,7 +187,7 @@ function GuardianEdit({
     };
     curGuardian.current = _guardian;
     return true;
-  }, [currentGuardian, getGuardianList, selectVerifierId]);
+  }, [caHash, chainType, currentGuardian, originChainId, sandboxId, selectVerifierId]);
   const socialBasic = useCallback(
     (v: ISocialLogin) => {
       try {
