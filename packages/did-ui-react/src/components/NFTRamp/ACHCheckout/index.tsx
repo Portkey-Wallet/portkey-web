@@ -138,9 +138,9 @@ export default function ACHCheckout({
             case OrderStatusEnum.Created:
             case OrderStatusEnum.Pending:
             case OrderStatusEnum.StartTransfer:
-            case OrderStatusEnum.Transferring:
               setOrderStatus(NFTCheckoutStatus.Start);
               break;
+            case OrderStatusEnum.Transferring:
             case OrderStatusEnum.Transferred: //
             case OrderStatusEnum.TransferFailed: // retry
               setOrderStatus(NFTCheckoutStatus.Transferred);
