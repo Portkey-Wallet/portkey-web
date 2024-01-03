@@ -3,14 +3,21 @@ import { UserGuardianStatus } from '../../../types';
 import { GuardianApprovedItem } from './type';
 import { formatGuardianValue } from './formatGuardianValue';
 
-export const formatAddGuardianValue = ({
+export const formatSetUnsetLoginGuardianValue = ({
   approvalInfo,
   currentGuardian,
 }: {
   approvalInfo?: GuardiansApproved[];
   currentGuardian?: UserGuardianStatus;
 }) => {
-  const guardianToAdd: GuardianApprovedItem = {
+  const guardian = {
+    type: currentGuardian?.guardianType,
+    identifierHash: currentGuardian?.identifierHash,
+    verifierId: currentGuardian?.verifier?.id,
+    salt: currentGuardian?.salt,
+    isLoginGuardian: currentGuardian?.isLoginGuardian,
+  };
+  const guardianSet: GuardianApprovedItem = {
     type: AccountTypeEnum[currentGuardian?.guardianType as AccountType],
     identifierHash: currentGuardian?.identifierHash,
     verificationInfo: {
@@ -20,5 +27,9 @@ export const formatAddGuardianValue = ({
     },
   };
   const guardiansApproved: GuardianApprovedItem[] = formatGuardianValue(approvalInfo);
-  return { guardianToAdd, guardiansApproved };
+  return {
+    [currentGuardian?.isLoginGuardian ? 'guardianToUnsetLogin' : 'guardianToSetLogin']: guardianSet,
+    guardian,
+    guardiansApproved,
+  };
 };

@@ -5,7 +5,7 @@ export interface verificationInfo {
   signature?: number[];
   verificationDoc?: string;
 }
-export interface GuardianItem {
+export interface GuardianApprovedItem {
   value?: string;
   type: AccountTypeEnum;
   identifierHash?: string;
