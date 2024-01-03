@@ -1,5 +1,5 @@
 import { Button, message } from 'antd';
-import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum, AccountType } from '@portkey/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
@@ -30,11 +30,12 @@ import { useVerifyToken } from '../../hooks';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 
-const guardianIconMap: any = {
+const guardianIconMap: Record<AccountType, any> = {
   Email: 'Email',
   Phone: 'GuardianPhone',
   Google: 'GuardianGoogle',
   Apple: 'GuardianApple',
+  Telegram: 'GuardianTelegram',
 };
 
 enum GuardianEditStatus {
