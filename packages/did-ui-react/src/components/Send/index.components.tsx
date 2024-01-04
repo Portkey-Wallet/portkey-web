@@ -222,7 +222,7 @@ function SendContent({
       tokenContractAddress: tokenInfo?.address || '',
       ownerCaAddress: caInfo?.[tokenInfo.chainId]?.caAddress || '',
       onOneTimeApproval: () => {
-        () => setApprovalVisible(true);
+        setApprovalVisible(true);
       },
       onModifyTransferLimit: onModifyLimit,
     });
