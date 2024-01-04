@@ -43,7 +43,7 @@ import singleMessage from '../CustomAnt/message';
 import './index.less';
 import { OperationTypeEnum } from '@portkey/services';
 import GuardianApprovalModal from '../GuardianApprovalModal';
-import { GuardianItem } from '../Guardian/utils/type';
+import { GuardianApprovedItem } from '../Guardian/utils/type';
 
 export default function RampMain({
   className,
@@ -68,7 +68,7 @@ export default function RampMain({
   const [page, setPage] = useState<RampTypeEnum>(RampTypeEnum.BUY);
   const [rate, setRate] = useState('');
   const [amount, setAmount] = useState(initCurrency);
-  const [{ sandboxId, chainType }] = usePortkey();
+  const [{ sandboxId, chainType, networkType }] = usePortkey();
   const [receive, setReceive] = useState('');
   const [curToken, setCurToken] = useState(initToken);
   const [curFiat, setCurFiat] = useState<PartialFiatType>(initFiat);
@@ -554,7 +554,7 @@ export default function RampMain({
   }, [chainId, onShowPreview]);
 
   const onApprovalSuccess = useCallback(
-    (approveList: GuardianItem[]) => {
+    (approveList: GuardianApprovedItem[]) => {
       try {
         if (Array.isArray(approveList) && approveList.length > 0) {
           console.log('approveList', approveList);
@@ -729,6 +729,7 @@ export default function RampMain({
 
       <GuardianApprovalModal
         open={approvalVisible}
+        networkType={networkType}
         caHash={caHash || ''}
         originChainId={originChainId}
         targetChainId={tokenInfo.chainId}

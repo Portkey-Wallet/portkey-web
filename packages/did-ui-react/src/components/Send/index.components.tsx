@@ -35,7 +35,7 @@ import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
 import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
-import { GuardianItem } from '../Guardian/utils/type';
+import { GuardianApprovedItem } from '../Guardian/utils/type';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -334,9 +334,9 @@ function SendContent({
 
   const checkManagerSyncState = useCheckManagerSyncState();
 
-  const oneTimeApprovalList = useRef<GuardianItem[]>([]);
+  const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
   const onApprovalSuccess = useCallback(
-    async (approveList: GuardianItem[]) => {
+    async (approveList: GuardianApprovedItem[]) => {
       try {
         oneTimeApprovalList.current = approveList;
         if (Array.isArray(approveList) && approveList.length > 0) {
@@ -616,6 +616,7 @@ function SendContent({
         operationType={OperationTypeEnum.transferApprove}
         isErrorTip={isErrorTip}
         sandboxId={sandboxId}
+        networkType={networkType}
         onClose={() => setApprovalVisible(false)}
         onBack={() => setApprovalVisible(false)}
         onApprovalSuccess={onApprovalSuccess}

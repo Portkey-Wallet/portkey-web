@@ -18,6 +18,7 @@ const GuardianApprovalModalMain = forwardRef(
     caHash,
     originChainId,
     targetChainId,
+    networkType,
     sandboxId,
     isErrorTip = true,
     onClose,
@@ -118,6 +119,7 @@ const GuardianApprovalModalMain = forwardRef(
             await onApprovalSuccess(guardiansApproved);
           }}
           onError={onApprovalError}
+          networkType={networkType}
           operationType={operationType}
         />
       </CommonBaseModal>

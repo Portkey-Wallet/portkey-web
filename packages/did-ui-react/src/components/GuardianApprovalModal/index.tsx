@@ -2,7 +2,7 @@ import { ChainId } from '@portkey/types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import GuardianApprovalModalCom from './index.component';
 import { OperationTypeEnum } from '@portkey/services';
-import { GuardianItem } from '../Guardian/utils/type';
+import { GuardianApprovedItem } from '../Guardian/utils/type';
 
 export interface GuardianApprovalModalProps {
   className?: string;
@@ -10,12 +10,13 @@ export interface GuardianApprovalModalProps {
   caHash: string;
   originChainId: ChainId;
   targetChainId: ChainId;
+  networkType: string;
   operationType: OperationTypeEnum;
   isErrorTip?: boolean;
   sandboxId?: string;
   onClose: () => void;
   onBack: () => void;
-  onApprovalSuccess: (approveList: GuardianItem[]) => void | Promise<void>;
+  onApprovalSuccess: (approveList: GuardianApprovedItem[]) => void | Promise<void>;
   onApprovalError?: () => void;
 }
 
