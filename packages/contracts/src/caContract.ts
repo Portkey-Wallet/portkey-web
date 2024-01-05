@@ -37,6 +37,7 @@ export class AElfCAContract extends AElfContract implements IPortkeyContract {
             caHash: this.caHash,
             methodName,
             contractAddress: this.address,
+            ...sendOptions?.appendParams,
           },
           functionName: _functionName,
         });
