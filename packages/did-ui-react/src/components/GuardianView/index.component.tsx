@@ -156,7 +156,7 @@ function GuardianView({
     async (approvalInfo: GuardiansApproved[]) => {
       try {
         setLoading(true);
-        await handleSetLoginGuardian?.(curGuardian.current!, approvalInfo);
+        await handleSetLoginGuardian?.({ ...curGuardian.current, ...currentGuardian }, approvalInfo);
         setApprovalVisible(false);
       } catch (e) {
         errorTip(
@@ -171,7 +171,7 @@ function GuardianView({
         setLoading(false);
       }
     },
-    [handleSetLoginGuardian, isErrorTip, onError],
+    [currentGuardian, handleSetLoginGuardian, isErrorTip, onError],
   );
 
   const sendCode = useCallback(async () => {
