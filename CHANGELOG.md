@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.2-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.2-alpha.0...v1.5.2-alpha.1) (2024-01-05)
+
+### Bug Fixes
+
+- 🐛 nft detial transNetworkText ([0dea26f](https://github.com/Portkey-Wallet/portkey-web/commit/0dea26f2c81a0787dd26dd8503f01b1d42949f09))
+
 ## [1.5.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.1...v1.5.2-alpha.0) (2023-12-06)
 
 **Note:** Version bump only for package root
