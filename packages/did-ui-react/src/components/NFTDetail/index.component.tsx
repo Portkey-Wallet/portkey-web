@@ -36,7 +36,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
         </div>
         <div className="chain info-item flex-between">
           <div className="label">Blockchain</div>
-          <div>{transNetworkText(chainId, !isMainnet)}</div>
+          <div>{transNetworkText(chainId, isMainnet)}</div>
         </div>
         <div className="alias info-item flex-between">
           <div className="label">Token</div>
