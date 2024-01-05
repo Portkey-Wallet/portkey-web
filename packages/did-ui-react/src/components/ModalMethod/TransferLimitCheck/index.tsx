@@ -5,7 +5,14 @@ import { modalMethod } from './modalMethod';
 import { IBusinessFrom, ITransferLimitItemWithRoute } from '../../TransferSettingsEdit/index.components';
 import type { ModalFuncProps } from 'antd';
 import { ZERO } from '../../../constants/misc';
-import { ExceedDailyLimit, ExceedSingleLimit, LimitType, MAX_TRANSACTION_FEE } from '../../../constants/security';
+import {
+  ApproveExceedDailyLimit,
+  ApproveExceedSingleLimit,
+  ExceedDailyLimit,
+  ExceedSingleLimit,
+  LimitType,
+  MAX_TRANSACTION_FEE,
+} from '../../../constants/security';
 import { divDecimals } from '../../../utils/converter';
 import CustomSvg from '../../CustomSvg';
 import { getBalanceByContract } from '../../../utils/sandboxUtil/getBalance';
@@ -22,7 +29,10 @@ interface ITransferLimitCheckProps {
   decimals: number | string;
   amount: string;
   sandboxId?: string;
-  businessFrom?: IBusinessFrom;
+  businessFrom?: {
+    module: IBusinessFrom;
+    extraConfig?: any;
+  };
   balance?: string;
   chainType?: ChainType;
   tokenContractAddress?: string;
@@ -140,7 +150,7 @@ export function TransferLimitModal({
   ...props
 }: ITransferLimitModalProps) {
   return new Promise((resolve) => {
-    modalMethod({
+    const modal = modalMethod({
       ...props,
       wrapClassName: 'portkey-ui-common-modals portkey-ui-transfer-limit-wrapper ' + wrapClassName,
       className: 'portkey-ui-transfer-limit-modal ' + className,
@@ -154,9 +164,11 @@ export function TransferLimitModal({
       onOk: () => {
         resolve(true);
         onOk?.(data);
+        modal.destroy();
       },
       onCancel: () => {
         resolve(false);
+        modal.destroy();
       },
     });
   });
@@ -172,17 +184,22 @@ export function TransferLimitApprovalModal({
   ...props
 }: ITransferLimitApprovalModalProps) {
   return new Promise((resolve) => {
-    modalMethod({
+    const modal = modalMethod({
       ...props,
       wrapClassName: 'portkey-ui-common-modals portkey-ui-transfer-limit-approval-wrapper ' + wrapClassName,
       className: 'portkey-ui-transfer-limit-approval-modal ' + className,
       content: (
         <div>
-          <div className="flex-center close-icon" onClick={() => resolve(false)}>
+          <div
+            className="flex-center close-icon"
+            onClick={() => {
+              resolve(false);
+              modal.destroy();
+            }}>
             <CustomSvg type="Close2" />
           </div>
 
-          <span>{limitType === LimitType.Daily ? ExceedDailyLimit : ExceedSingleLimit}</span>
+          <span>{limitType === LimitType.Daily ? ApproveExceedDailyLimit : ApproveExceedSingleLimit}</span>
         </div>
       ),
       okText: 'Request One-Time Approval',
@@ -190,10 +207,12 @@ export function TransferLimitApprovalModal({
       onOk: () => {
         resolve(true);
         onOneTimeApproval?.(data);
+        modal.destroy();
       },
       onCancel: () => {
         resolve(true);
         onModifyTransferLimit?.(data);
+        modal.destroy();
       },
     });
   });

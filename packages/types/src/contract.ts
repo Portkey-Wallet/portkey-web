@@ -16,16 +16,19 @@ export type SendOptions = {
    * transactionHash: The transaction is committed without confirmation
    * receipt: The transaction has been confirmed and returns receipt
    */
-  onMethod: 'transactionHash' | 'receipt' | 'confirmation';
+  onMethod?: 'transactionHash' | 'receipt' | 'confirmation';
 
   // append params;
   appendParams?: any;
 };
 
 export type CallOptions = {
-  defaultBlock: number | string;
+  defaultBlock?: number | string;
   options?: any;
   callback?: any;
+
+  // append params;
+  appendParams?: any;
 };
 export interface ViewResult<T = any> {
   data?: T;

@@ -39,6 +39,7 @@ import { GuardianApprovedItem } from '../Guardian/utils/type';
 
 export interface SendProps {
   assetItem: IAssetItemType;
+  extraConfig?: SendExtraConfig;
   className?: string;
   wrapperStyle?: React.CSSProperties;
   isErrorTip?: boolean;
@@ -47,6 +48,15 @@ export interface SendProps {
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
   onModifyGuardians?: () => void;
 }
+
+export type SendExtraConfig = {
+  toAccount?: ToAccount;
+  amount?: string;
+  balance?: string;
+  stage?: Stage;
+};
+
+type ToAccount = { name?: string; address: string };
 
 enum Stage {
   'Address',
@@ -66,6 +76,7 @@ function SendContent({
   className,
   wrapperStyle,
   isErrorTip = true,
+  extraConfig,
   onCancel,
   onSuccess,
   onModifyLimit,
@@ -73,7 +84,7 @@ function SendContent({
 }: SendProps) {
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
-  const [stage, setStage] = useState<Stage>(Stage.Address);
+  const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
@@ -96,12 +107,12 @@ function SendContent({
 
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
 
-  const [toAccount, setToAccount] = useState<{ name?: string; address: string }>({ address: '' });
+  const [toAccount, setToAccount] = useState<ToAccount>(extraConfig?.toAccount || { address: '' });
   const [errorMsg, setErrorMsg] = useState('');
   const [tipMsg, setTipMsg] = useState('');
 
-  const [amount, setAmount] = useState('');
-  const [balance, setBalance] = useState('');
+  const [amount, setAmount] = useState(extraConfig?.amount || '');
+  const [balance, setBalance] = useState(extraConfig?.balance || '');
 
   const defaultToken = useDefaultToken(tokenInfo.chainId);
 
@@ -218,7 +229,15 @@ function SendContent({
       symbol: tokenInfo.symbol,
       amount: amount,
       decimals: tokenInfo.decimals,
-      businessFrom: 'send',
+      businessFrom: {
+        module: 'send',
+        extraConfig: {
+          toAccount,
+          amount,
+          balance,
+          stage,
+        },
+      },
       balance,
       chainType,
       tokenContractAddress: tokenInfo?.address || '',
@@ -238,6 +257,8 @@ function SendContent({
     chainType,
     managementAccount?.privateKey,
     onModifyLimit,
+    stage,
+    toAccount,
     tokenInfo?.address,
     tokenInfo.chainId,
     tokenInfo.decimals,
@@ -247,6 +268,8 @@ function SendContent({
   const sendTransfer = useCallback(async () => {
     try {
       if (!managementAccount?.privateKey || !caHash) return;
+
+      setLoading(true);
 
       if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
         await crossChainTransfer({
@@ -259,6 +282,7 @@ function SendContent({
           amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
           toAddress: toAccount.address,
           crossChainFee: defaultFee.crossChain,
+          guardiansApproved: oneTimeApprovalList.current,
         });
       } else {
         console.log('sameChainTransfers==sendHandler');
@@ -271,6 +295,7 @@ function SendContent({
           caHash: caHash || '',
           amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
           toAddress: toAccount.address,
+          guardiansApproved: oneTimeApprovalList.current,
         });
       }
       singleMessage.success('success');
@@ -310,21 +335,21 @@ function SendContent({
   ]);
 
   const sendHandler = useCallback(async () => {
-    try {
-      if (!managementAccount?.privateKey || !caHash) return;
-      if (!tokenInfo) throw 'No Symbol info';
-      setLoading(true);
+    if (!oneTimeApprovalList.current || oneTimeApprovalList.current.length === 0) {
+      try {
+        if (!managementAccount?.privateKey || !caHash) return;
+        if (!tokenInfo) throw 'No Symbol info';
+        setLoading(true);
 
-      // transfer limit check
-      const limitRes = await handleCheckTransferLimit();
-      if (!limitRes) return;
-
-      await sendTransfer();
-    } catch (error: any) {
-      singleMessage.error(handleErrorMessage(error));
-    } finally {
-      setLoading(false);
+        // transfer limit check
+        const limitRes = await handleCheckTransferLimit();
+        if (!limitRes) return setLoading(false);
+      } catch (error: any) {
+        setLoading(false);
+        singleMessage.error(handleErrorMessage(error));
+      }
     }
+    await sendTransfer();
   }, [caHash, handleCheckTransferLimit, managementAccount?.privateKey, sendTransfer, tokenInfo]);
 
   const btnOutOfFocus = useCallback(() => {
@@ -347,10 +372,10 @@ function SendContent({
             await sendTransfer();
           }
         } else {
-          // TODO guardians throw error
+          throw Error('approve failed, please try again');
         }
       } catch (error) {
-        // TODO guardians throw error
+        throw Error('approve failed, please try again');
       }
     },
     [sendTransfer, stage],
@@ -361,12 +386,14 @@ function SendContent({
       setLoading(true);
       if (!ZERO.plus(amount).toNumber()) return 'Please input amount';
       if (!caHash || !managementAccount?.address) return 'Please Login';
+
+      // CHECK 1: manager sync
       const _isManagerSynced = await checkManagerSyncState(tokenInfo.chainId, caHash, managementAccount?.address);
       if (!_isManagerSynced) {
         return 'Synchronizing on-chain account information...';
       }
 
-      // wallet security check
+      // CHECK 2: wallet security
       const res = await walletSecurityCheck({
         originChainId: originChainId,
         targetChainId: tokenInfo.chainId,
@@ -375,8 +402,8 @@ function SendContent({
       });
       if (!res) return WalletIsNotSecure;
 
+      // CHECK 3: insufficient balance
       if (!isNFT) {
-        // insufficient balance check
         if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
           return TransactionError.TOKEN_NOT_ENOUGH;
         }
@@ -393,10 +420,11 @@ function SendContent({
         return 'input error';
       }
 
-      // transfer limit check
+      // CHECK 4: transfer limit
       const limitRes = await handleCheckTransferLimit();
       if (!limitRes) return ExceedLimit;
 
+      // CHECK 5: tx fee
       const fee = await getTranslationInfo();
       console.log(fee, 'fee===getTranslationInfo');
       if (fee) {
@@ -492,6 +520,7 @@ function SendContent({
           setStage(Stage.Address);
           setAmount('');
           setTipMsg('');
+          oneTimeApprovalList.current = [];
         },
         element: (
           <AmountInput

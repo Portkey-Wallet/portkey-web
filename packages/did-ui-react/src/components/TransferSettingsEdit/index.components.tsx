@@ -32,13 +32,16 @@ export interface ITransferSettingsEditProps extends FormProps {
   isErrorTip?: boolean;
   sandboxId?: string;
   networkType?: string;
-  onBack?: () => void;
+  onBack?: (data: ITransferLimitItemWithRoute) => void;
   onSuccess?: (data: ITransferLimitItemWithRoute) => void;
   onGuardiansApproveError?: OnErrorFunc;
 }
 
 export interface ITransferLimitItemWithRoute extends ITransferLimitItem {
-  businessFrom?: IBusinessFrom;
+  businessFrom?: {
+    module: IBusinessFrom;
+    extraConfig?: any;
+  };
 }
 
 export type IBusinessFrom = 'ramp-sell' | 'send';
@@ -295,7 +298,7 @@ export default function TransferSettingsEditMain({
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
-      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={onBack} />
+      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={() => onBack?.(initData)} />
       <Form
         form={form}
         autoComplete="off"
