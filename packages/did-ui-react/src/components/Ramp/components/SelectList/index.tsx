@@ -3,8 +3,9 @@ import { useTranslation } from 'react-i18next';
 import { FiatType, PartialFiatType, RampDrawerType } from '../../../../types';
 import CustomSvg from '../../../CustomSvg';
 import DropdownSearch from '../../../DropdownSearch';
+import { transNetworkText } from '../../../../utils/converter';
+import { MAINNET } from '../../../../constants/network';
 import './index.less';
-import { transNetworkText } from '../../utils';
 
 export interface ICustomTokenListProps {
   onChange?: (v: PartialFiatType) => void;
@@ -89,7 +90,7 @@ export default function CustomList({
             <CustomSvg type="ELF" />
             <div className="portkey-ui-flex-column text">
               <div>{token.symbol}</div>
-              <div className="chain">{transNetworkText(token.chainId, networkType)}</div>
+              <div className="chain">{transNetworkText(token.chainId, networkType === MAINNET)}</div>
             </div>
           </div>
         ))}
