@@ -30,6 +30,8 @@ function SocialDesign({
   phoneCountry,
   extraElement,
   termsOfService,
+  privacyPolicy,
+  loginMethodsOrder,
   onError,
   onSuccess,
   validateEmail: defaultValidateEmail,
@@ -129,6 +131,8 @@ function SocialDesign({
           extraElement={extraElement}
           onAccountTypeChange={onAccountTypeChange}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
+          loginMethodsOrder={loginMethodsOrder}
         />
       )}
     </div>

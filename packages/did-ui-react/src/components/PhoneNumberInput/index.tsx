@@ -44,7 +44,7 @@ export default function PhoneNumberInput({
               setOpen((v) => !v);
             }}>
             <div>{currentArea?.code ? `+ ${currentArea.code}` : '--'}</div>
-            <CustomSvg className={clsx('input-arrow', open && 'open-input-arrow')} type="BackLeft" />
+            <CustomSvg className={clsx('input-arrow', open && 'open-input-arrow')} type="ArrowDown" />
           </div>
         </div>
 

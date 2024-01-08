@@ -1,5 +1,11 @@
 import { useState, useMemo, ReactNode } from 'react';
-import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
+import {
+  ISocialLoginConfig,
+  OnErrorFunc,
+  SocialLoginFinishHandler,
+  TotalAccountType,
+  ValidatorHandler,
+} from '../../types';
 import ConfigProvider from '../config-provider';
 import InputLogin from '../InputLogin';
 import SocialLogin from '../SocialLogin';
@@ -13,11 +19,14 @@ export interface LoginBaseProps {
   isShowScan?: boolean;
   isMobile?: boolean;
   termsOfService?: ReactNode;
+  privacyPolicy?: string;
   extraElement?: ReactNode; // extra element
   phoneCountry?: IPhoneCountry;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
   networkType?: string;
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
   onLoginByPortkey?: LoginFinishWithoutPin;
   onInputFinish?: (data: GuardianInputInfo) => void;
   validateEmail?: ValidatorHandler;
@@ -41,6 +50,9 @@ export default function LoginCard({
   networkType,
   extraElement,
   termsOfService,
+  privacyPolicy,
+  loginMethodsOrder,
+  recommendIndexes,
   onStep,
   onError,
   onInputFinish,
@@ -85,6 +97,9 @@ export default function LoginCard({
           }}
           extraElement={extraElement}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
+          loginMethodsOrder={loginMethodsOrder}
+          recommendIndexes={recommendIndexes}
           onLoginByPortkey={onLoginByPortkey}
           onError={onError}
         />

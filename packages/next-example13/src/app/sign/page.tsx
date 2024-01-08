@@ -55,6 +55,7 @@ export default function Sign() {
         isShowScan
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
+        privacyPolicy={'https://portkey.finance/privacy-policy'}
         onFinish={async res => {
           console.log(res, 'onFinish====');
           CHAIN_ID = res.chainId;

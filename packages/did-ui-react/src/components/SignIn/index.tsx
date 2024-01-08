@@ -60,6 +60,9 @@ const SignIn = forwardRef(
       phoneCountry,
       extraElement,
       termsOfService,
+      privacyPolicy,
+      loginMethodsOrder,
+      recommendIndexes,
       design = 'CryptoDesign',
       validateEmail,
       validatePhone,
@@ -562,6 +565,9 @@ const SignIn = forwardRef(
             onChainIdChange={onOriginChainIdChange}
             onLoginFinishWithoutPin={onLoginFinishWithoutPin}
             termsOfService={termsOfService}
+            privacyPolicy={privacyPolicy}
+            loginMethodsOrder={loginMethodsOrder}
+            recommendIndexes={recommendIndexes}
           />
         );
       if (LifeCycleMap['Step2OfSignUp'].includes(lifeCycle)) {
@@ -614,6 +620,9 @@ const SignIn = forwardRef(
       onOriginChainIdChange,
       onLoginFinishWithoutPin,
       termsOfService,
+      privacyPolicy,
+      loginMethodsOrder,
+      recommendIndexes,
       keyboard,
       guardianIdentifierInfo,
       walletWithoutPin,

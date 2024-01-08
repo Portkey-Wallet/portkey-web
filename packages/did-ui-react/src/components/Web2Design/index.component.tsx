@@ -2,7 +2,6 @@ import SegmentedInput from '../SegmentedInput';
 import { CreateWalletType, IBaseGetGuardianProps, TSize } from '../types';
 import { ISocialLogin, RegisterType } from '../../types';
 import DividerCenter from '../DividerCenter';
-import SocialContent from '../SocialContent';
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
@@ -18,10 +17,13 @@ import { devices } from '@portkey/utils';
 import useMobile from '../../hooks/useMobile';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import useSocialLogin from '../../hooks/useSocialLogin';
+import AccountIconGroup from '../AccountIconGroup';
+import { SocialLoginList } from '../../constants/guardian';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
   size?: TSize;
+  loginMethodsOrder?: ISocialLogin[];
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
@@ -36,6 +38,8 @@ export default function Web2Design({
   phoneCountry,
   extraElement,
   termsOfService,
+  privacyPolicy,
+  loginMethodsOrder = SocialLoginList as ISocialLogin[],
   onError,
   onSuccess,
   validateEmail,
@@ -52,7 +56,6 @@ export default function Web2Design({
   }, [signType]);
 
   const [{ networkType, chainType }] = usePortkey();
-  const [{ theme }] = usePortkey();
   const validateEmailRef = useRef<Web2DesignProps['validateEmail']>(validateEmail);
   const validatePhoneRef = useRef<Web2DesignProps['validatePhone']>(validatePhone);
   const onChainIdChangeRef = useRef<Web2DesignProps['onChainIdChange']>(onChainIdChange);
@@ -113,8 +116,10 @@ export default function Web2Design({
   const onSocialChange = useCallback(
     async (type: ISocialLogin) => {
       try {
+        if (SocialLoginList.includes(type)) throw Error('Please try social account');
+
         setLoading(true);
-        const result = await socialLoginHandler(type);
+        const result = await socialLoginHandler(type as ISocialLogin);
         setLoading(false);
         onSocialFinish?.(result);
       } catch (error) {
@@ -134,60 +139,52 @@ export default function Web2Design({
 
   const leftWrapper = useMemo(
     () => (
-      <div className="portkey-ui-flex-1 left-wrapper">
-        <h1 className="web2design-title">{type}</h1>
-        <SegmentedInput
-          phoneCountry={phoneCountry}
-          defaultActiveKey={'Phone'}
-          validatePhone={_validatePhone}
-          validateEmail={_validateEmail}
-          confirmText={type}
-          onFinish={onFinish}
-        />
-        <DividerCenter />
-        <SocialContent
-          theme={theme}
-          className="portkey-ui-web2design-social-login"
-          networkType={networkType}
-          socialLogin={socialLogin}
-          type={type}
-          onSocialChange={onSocialChange}
-          onLoginByPortkey={onLoginFinishWithoutPin}
-        />
-        {extraElement ? extraElement : <div className="empty-element"></div>}
-        <div className="portkey-ui-web2design-switch-sign">
-          {type === 'Login' ? (
-            <>
-              No Account?&nbsp;
-              <span className="btn-text" onClick={onSwitch}>
-                Sign up now
-              </span>
-            </>
-          ) : (
-            <>
-              Already have an account?&nbsp;
-              <span className="btn-text" onClick={onSwitch}>
-                Log in
-              </span>
-            </>
-          )}
+      <div className="portkey-ui-flex-1 portkey-ui-flex-column left-wrapper">
+        <div className="portkey-ui-flex-1">
+          <h1 className="web2design-title">{type}</h1>
+          <SegmentedInput
+            phoneCountry={phoneCountry}
+            defaultActiveKey={'Phone'}
+            validatePhone={_validatePhone}
+            validateEmail={_validateEmail}
+            confirmText={type}
+            onFinish={onFinish}
+          />
+          <DividerCenter />
+          <AccountIconGroup supportAccounts={loginMethodsOrder} onAccountTypeChange={onSocialChange} />
+          {extraElement ? extraElement : <div className="empty-element"></div>}
+          <div className="portkey-ui-web2design-switch-sign">
+            {type === 'Login' ? (
+              <>
+                No Account?&nbsp;
+                <span className="btn-text" onClick={onSwitch}>
+                  Sign up now
+                </span>
+              </>
+            ) : (
+              <>
+                Already have an account?&nbsp;
+                <span className="btn-text" onClick={onSwitch}>
+                  Log in
+                </span>
+              </>
+            )}
+          </div>
         </div>
-        {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} />}
+        {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}
       </div>
     ),
     [
       _validateEmail,
       _validatePhone,
       extraElement,
-      networkType,
+      loginMethodsOrder,
       onFinish,
-      onLoginFinishWithoutPin,
       onSocialChange,
       onSwitch,
       phoneCountry,
-      socialLogin,
+      privacyPolicy,
       termsOfService,
-      theme,
       type,
     ],
   );

@@ -1,5 +1,11 @@
 import { useState, useCallback, useRef, useEffect, useMemo, ReactNode } from 'react';
-import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
+import {
+  ISocialLoginConfig,
+  OnErrorFunc,
+  SocialLoginFinishHandler,
+  TotalAccountType,
+  ValidatorHandler,
+} from '../../types';
 import InputLogin from '../InputLogin';
 import { IPhoneCountry, LoginFinishWithoutPin } from '../types';
 import SocialLogin from '../SocialLogin';
@@ -22,7 +28,10 @@ export interface SignUpBaseProps {
   wrapperClassName?: string;
   extraElement?: ReactNode; // extra element
   termsOfService?: ReactNode;
+  privacyPolicy?: string;
   networkType?: string;
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
   onLoginByPortkey?: LoginFinishWithoutPin;
   onBack?: () => void;
   onError?: OnErrorFunc;
@@ -41,6 +50,9 @@ export default function SignUpBase({
   wrapperClassName,
   extraElement,
   termsOfService,
+  privacyPolicy,
+  loginMethodsOrder,
+  recommendIndexes,
   onBack,
   onError,
   onInputFinish,
@@ -84,9 +96,12 @@ export default function SignUpBase({
           isMobile={isMobile}
           extraElement={extraElement}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
           isErrorTip={isErrorTip}
           networkType={networkType}
           socialLogin={_socialLogin}
+          loginMethodsOrder={loginMethodsOrder}
+          recommendIndexes={recommendIndexes}
           onFinish={onSocialSignFinish}
           switchGuardianType={(type) => {
             setStep(STEP.inputLogin);

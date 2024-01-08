@@ -1,5 +1,5 @@
 import { ModalProps } from 'antd';
-import { OnErrorFunc, UserGuardianStatus, ValidatorHandler, VerifyStatus } from '../../../types';
+import { OnErrorFunc, TotalAccountType, UserGuardianStatus, ValidatorHandler, VerifyStatus } from '../../../types';
 import {
   CreatePendingInfo,
   CreateWalletType,
@@ -79,6 +79,9 @@ export interface SignInProps {
   phoneCountry?: IPhoneCountry;
   extraElement?: ReactNode; // extra element
   termsOfService?: ReactNode;
+  privacyPolicy?: string;
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
   design?: TDesign;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;

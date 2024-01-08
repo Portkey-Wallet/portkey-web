@@ -1,7 +1,15 @@
 import { useMemo, useRef, useEffect, ReactNode, useCallback } from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
-import { ISocialLogin, ISocialLoginConfig, OnErrorFunc, RegisterType, SocialLoginFinishHandler } from '../../types';
+import {
+  ISocialLogin,
+  ISocialLoginConfig,
+  IWeb2LoginList,
+  OnErrorFunc,
+  RegisterType,
+  SocialLoginFinishHandler,
+  TotalAccountType,
+} from '../../types';
 import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
 import SocialContent from '../SocialContent';
@@ -10,21 +18,8 @@ import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
-
-const guardianList = [
-  {
-    icon: <CustomSvg type="Apple-Login" />,
-    type: 'Apple',
-  },
-  {
-    icon: <CustomSvg type="Phone-Login" />,
-    type: 'Phone',
-  },
-  {
-    icon: <CustomSvg type="Email-Login" />,
-    type: 'Email',
-  },
-] as const;
+import { TotalAccountsInfo } from '../../constants/socialLogin';
+import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -34,11 +29,14 @@ interface SocialLoginProps {
   isShowScan?: boolean;
   socialLogin?: ISocialLoginConfig;
   termsOfService?: ReactNode;
+  privacyPolicy?: string;
   extraElement?: ReactNode; // extra element
   networkType?: string;
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
-  switchGuardianType?: (type: 'Email' | 'Phone') => void;
+  switchGuardianType?: (type: IWeb2LoginList) => void;
   switchType?: (type: CreateWalletType) => void;
   onLoginByPortkey?: LoginFinishWithoutPin;
 
@@ -56,7 +54,10 @@ export default function SocialLogin({
   networkType,
   extraElement,
   termsOfService,
+  privacyPolicy,
   isErrorTip,
+  loginMethodsOrder,
+  recommendIndexes,
   onBack,
   onFinish,
   onError,
@@ -104,6 +105,16 @@ export default function SocialLogin({
     [isErrorTip, socialLoginHandler],
   );
 
+  const recommendList = useMemo(
+    () => recommendIndexes?.map((item) => loginMethodsOrder?.[item]),
+    [loginMethodsOrder, recommendIndexes],
+  );
+  const notRecommendList = useMemo(() => {
+    return (loginMethodsOrder || Web2LoginList)?.filter((_item, index) => {
+      return !recommendIndexes?.includes(index);
+    });
+  }, [loginMethodsOrder, recommendIndexes]);
+
   return (
     <>
       <div
@@ -132,7 +143,7 @@ export default function SocialLogin({
         <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
           <SocialContent
             theme={theme}
-            showApple={false}
+            accountTypeList={recommendList as TotalAccountType[] | undefined}
             networkType={networkType}
             socialLogin={socialLogin}
             type={type}
@@ -142,17 +153,18 @@ export default function SocialLogin({
           <DividerCenter />
 
           <div className="portkey-ui-flex-center portkey-ui-extra-guardian-type-content">
-            {guardianList.map((item) => (
+            {notRecommendList?.map((item) => (
               <div
-                key={item.type}
+                className="icon-wrapper portkey-ui-flex-center"
+                key={item}
                 onClick={() => {
-                  if (item.type === 'Apple') {
+                  if (SocialLoginList.includes(item)) {
                     onSocialChange('Apple');
                     return;
                   }
-                  switchGuardianTypeRef?.current?.(item.type);
+                  switchGuardianTypeRef?.current?.(item as IWeb2LoginList);
                 }}>
-                {item.icon}
+                <CustomSvg type={TotalAccountsInfo[item as IWeb2LoginList].icon as any} />
               </div>
             ))}
           </div>
@@ -173,7 +185,7 @@ export default function SocialLogin({
         </div>
       </div>
 
-      <TermsOfServiceItem termsOfService={termsOfService} />
+      <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />
     </>
   );
 }

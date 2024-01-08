@@ -1,7 +1,9 @@
 import { AccountType } from '@portkey/services';
 export type TAccountType = AccountType;
 
-export const SocialLoginList = ['Google', 'Apple', 'Telegram'];
+export const SocialLoginList: string[] = ['Google', 'Apple', 'Telegram'];
+
+export const Web2LoginList: string[] = ['Email', 'Phone'];
 
 export const guardiansExceedTip =
   'The number of guardians has reached the maximum limit. Please delete some before trying to add new ones.';
