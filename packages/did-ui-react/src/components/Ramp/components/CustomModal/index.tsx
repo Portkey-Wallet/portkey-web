@@ -2,6 +2,7 @@ import { DrawerProps, ModalProps } from 'antd';
 import SelectList from '../SelectList';
 import { FiatType, RampDrawerType } from '../../../../types';
 import CommonBaseModal from '../../../CommonBaseModal';
+import { MAINNET } from '../../../../constants/network';
 import './index.less';
 
 interface CustomSelectProps extends DrawerProps {
@@ -36,7 +37,7 @@ export default function CustomModal({
         searchPlaceHolder={searchPlaceHolder}
         onClose={onClose}
         onChange={onChange}
-        networkType={'MAIN'}
+        networkType={MAINNET}
       />
     </CommonBaseModal>
   );
