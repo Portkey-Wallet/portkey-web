@@ -41,6 +41,10 @@ import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
 import './index.less';
+import { OperationTypeEnum } from '@portkey/services';
+import GuardianApprovalModal from '../GuardianApprovalModal';
+import { GuardianApprovedItem } from '../Guardian/utils/type';
+import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../constants/storage';
 
 export default function RampMain({
   className,
@@ -50,6 +54,7 @@ export default function RampMain({
   isMainnet,
   isBuySectionShow = true,
   isSellSectionShow = true,
+  isErrorTip = true,
   onBack,
   onShowPreview,
   onModifyLimit,
@@ -64,7 +69,7 @@ export default function RampMain({
   const [page, setPage] = useState<RampTypeEnum>(RampTypeEnum.BUY);
   const [rate, setRate] = useState('');
   const [amount, setAmount] = useState(initCurrency);
-  const [{ sandboxId, chainType }] = usePortkey();
+  const [{ sandboxId, chainType, networkType }] = usePortkey();
   const [receive, setReceive] = useState('');
   const [curToken, setCurToken] = useState(initToken);
   const [curFiat, setCurFiat] = useState<PartialFiatType>(initFiat);
@@ -73,7 +78,7 @@ export default function RampMain({
   const [sellFiatList, setSellFiatList] = useState<FiatType[]>([]);
   const chainId = useMemo(() => tokenInfo?.chainId || DEFAULT_CHAIN_ID, [tokenInfo?.chainId]);
   const symbol = useMemo(() => tokenInfo?.symbol || DEFAULT_SYMBOL, [tokenInfo?.symbol]);
-
+  const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const [{ managementAccount, caInfo, initialized, caHash, originChainId }] = usePortkeyAsset();
   const isManagerSynced = useMemo(
     () => !!managementAccount?.address && managementAccount.address?.length > 0,
@@ -309,14 +314,22 @@ export default function RampMain({
           isShowErrMsg: false,
         };
         updateCrypto();
+      } else if (initState && initState.side === RampTypeEnum.SELL) {
+        // from sell entry
+        setPage(RampTypeEnum.SELL);
+        valueSaveRef.current.side = RampTypeEnum.SELL;
+        setAmount(initCrypto);
+        valueSaveRef.current.amount = initCrypto;
       } else {
+        // default and from token detail
         if (!isBuySectionShow && isSellSectionShow) {
           const side = RampTypeEnum.SELL;
           setPage(side);
           valueSaveRef.current.side = side;
           setAmount(initCrypto);
           valueSaveRef.current.amount = initCrypto;
-          // CHECK 2: security
+
+          // check security
           walletSecurityCheck({
             originChainId: originChainId,
             targetChainId: tokenInfo.chainId,
@@ -327,8 +340,10 @@ export default function RampMain({
             console.log('check security error: ', msg);
           });
         }
-        updateCrypto();
       }
+
+      updateCrypto();
+
       return () => {
         clearInterval(updateTimerRef.current);
         updateTimerRef.current = undefined;
@@ -483,41 +498,99 @@ export default function RampMain({
     valueSaveRef.current.receive = '';
   }, [stopInterval]);
 
-  const handleCheckTransferLimit = useCallback(async () => {
-    try {
-      const chainInfo = await getChain(tokenInfo.chainId);
-      const privateKey = managementAccount?.privateKey;
-      if (!privateKey) throw WalletError.invalidPrivateKey;
-      if (!caHash) throw 'Please login';
+  const handleCheckTransferLimit = useCallback(
+    async (balance: string) => {
+      try {
+        if (!caInfo) return singleMessage.error('Please confirm whether to log in');
+        const chainInfo = await getChain(tokenInfo.chainId);
+        const privateKey = managementAccount?.privateKey;
+        if (!privateKey) throw WalletError.invalidPrivateKey;
+        if (!caHash) throw 'Please login';
 
-      const res = await transferLimitCheck({
-        rpcUrl: chainInfo?.endPoint || '',
-        caContractAddress: chainInfo?.caContractAddress || '',
-        caHash: caHash,
-        chainId: tokenInfo.chainId,
-        symbol: tokenInfo.symbol,
-        amount: amount,
-        decimals: tokenInfo.decimals,
-        businessFrom: 'ramp-sell',
-        onOk: onModifyLimit,
-      });
+        const { side, amount, currency, country, crypto, network } = valueSaveRef.current;
+        const res = await transferLimitCheck({
+          rpcUrl: chainInfo?.endPoint || '',
+          caContractAddress: chainInfo?.caContractAddress || '',
+          caHash: caHash,
+          chainId: tokenInfo.chainId,
+          symbol: tokenInfo.symbol,
+          amount: amount,
+          decimals: tokenInfo.decimals,
+          businessFrom: {
+            module: 'ramp-sell',
+            extraConfig: {
+              crypto,
+              network,
+              fiat: currency,
+              country,
+              amount,
+              side,
+            },
+          },
+          balance,
+          chainType,
+          tokenContractAddress: tokenInfo.tokenContractAddress || '',
+          ownerCaAddress: caInfo[chainId]?.caAddress || '',
+          onOneTimeApproval: async () => {
+            setApprovalVisible(true);
+          },
+          onModifyTransferLimit: onModifyLimit,
+        });
 
-      return res;
-    } catch (error) {
-      setLoading(false);
+        return res;
+      } catch (error) {
+        setLoading(false);
 
-      const msg = handleErrorMessage(error);
-      singleMessage.error(msg);
-    }
-  }, [
-    amount,
-    caHash,
-    managementAccount?.privateKey,
-    onModifyLimit,
-    tokenInfo.chainId,
-    tokenInfo.decimals,
-    tokenInfo.symbol,
-  ]);
+        const msg = handleErrorMessage(error);
+        singleMessage.error(msg);
+      }
+    },
+    [
+      caHash,
+      caInfo,
+      chainId,
+      chainType,
+      managementAccount?.privateKey,
+      onModifyLimit,
+      tokenInfo.chainId,
+      tokenInfo.decimals,
+      tokenInfo.symbol,
+      tokenInfo.tokenContractAddress,
+    ],
+  );
+
+  const showPreview = useCallback(() => {
+    const { side, amount, currency, country, crypto, network } = valueSaveRef.current;
+    onShowPreview({
+      initState: {
+        crypto,
+        network,
+        fiat: currency,
+        country,
+        amount,
+        side,
+      },
+      chainId: chainId,
+    });
+  }, [chainId, onShowPreview]);
+
+  const onApprovalSuccess = useCallback(
+    (approveList: GuardianApprovedItem[]) => {
+      try {
+        if (Array.isArray(approveList) && approveList.length > 0) {
+          console.log('approveList', approveList);
+          localStorage.setItem(PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST, JSON.stringify(approveList));
+          setApprovalVisible(false);
+          showPreview();
+        } else {
+          // TODO sell throw error
+        }
+      } catch (error) {
+        // TODO sell throw error
+      }
+    },
+    [showPreview],
+  );
 
   const handleNext = useCallback(async () => {
     const { side } = valueSaveRef.current;
@@ -552,11 +625,7 @@ export default function RampMain({
         });
         if (!securityRes) return setLoading(false);
 
-        // CHECK 3: transfer limit
-        const limitRes = await handleCheckTransferLimit();
-        if (!limitRes) return setLoading(false);
-
-        // CHECK 4: search balance from contract
+        // CHECK 4: balance, search balance from contract
         const result = await getBalanceByContract({
           sandboxId,
           chainType,
@@ -579,6 +648,10 @@ export default function RampMain({
           setInsufficientFundsMsg();
           return;
         }
+
+        // CHECK 3: transfer limit
+        const limitRes = await handleCheckTransferLimit(balance);
+        if (!limitRes) return setLoading(false);
       } catch (error) {
         const msg = handleErrorMessage(error);
         singleMessage.error(msg);
@@ -590,24 +663,12 @@ export default function RampMain({
 
     setLoading(false);
 
-    const { amount, currency, country, crypto, network } = valueSaveRef.current;
-    onShowPreview({
-      initState: {
-        crypto,
-        network,
-        fiat: currency,
-        country,
-        amount,
-        side,
-      },
-      chainId: chainId,
-    });
+    showPreview();
   }, [
     caInfo,
     isBuySectionShow,
     isSellSectionShow,
-    onShowPreview,
-    chainId,
+    showPreview,
     onBack,
     isManagerSynced,
     originChainId,
@@ -616,10 +677,11 @@ export default function RampMain({
     tokenInfo.decimals,
     caHash,
     onModifyGuardians,
-    handleCheckTransferLimit,
     sandboxId,
     chainType,
+    chainId,
     symbol,
+    handleCheckTransferLimit,
     setInsufficientFundsMsg,
   ]);
 
@@ -686,6 +748,20 @@ export default function RampMain({
           {t('Next')}
         </Button>
       </div>
+
+      <GuardianApprovalModal
+        open={approvalVisible}
+        networkType={networkType}
+        caHash={caHash || ''}
+        originChainId={originChainId}
+        targetChainId={tokenInfo.chainId}
+        operationType={OperationTypeEnum.transferApprove}
+        isErrorTip={isErrorTip}
+        sandboxId={sandboxId}
+        onClose={() => setApprovalVisible(false)}
+        onBack={() => setApprovalVisible(false)}
+        onApprovalSuccess={onApprovalSuccess}
+      />
     </div>
   );
 }

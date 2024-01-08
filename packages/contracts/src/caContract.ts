@@ -76,7 +76,7 @@ export class AElfCAContract extends AElfContract implements IPortkeyContract {
   public async encodedTx<T = any>(
     functionName: string,
     paramsOption?: any,
-    _callOptions?: CallOptions,
+    callOptions?: CallOptions,
   ): Promise<ViewResult<T>> {
     if (!this.aelfContract) return { error: { code: 401, message: 'Contract init error' } };
     if (!this.aelfInstance) return { error: { code: 401, message: 'instance init error' } };
@@ -92,6 +92,7 @@ export class AElfCAContract extends AElfContract implements IPortkeyContract {
             caHash: this.caHash,
             methodName,
             contractAddress: this.address,
+            ...callOptions?.appendParams,
           },
           functionName: _functionName,
         });
