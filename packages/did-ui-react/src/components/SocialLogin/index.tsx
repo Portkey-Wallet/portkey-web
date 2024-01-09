@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import {
   ISocialLogin,
   ISocialLoginConfig,
-  IWeb2LoginList,
+  IWeb2Login,
   OnErrorFunc,
   RegisterType,
   SocialLoginFinishHandler,
@@ -12,7 +12,7 @@ import {
 } from '../../types';
 import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
-import SocialContent from '../SocialContent';
+import AccountRecommendGroup from '../AccountRecommendGroup';
 import TermsOfServiceItem from '../TermsOfServiceItem';
 import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import useSocialLogin from '../../hooks/useSocialLogin';
@@ -20,6 +20,7 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
 import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
+import { AccountType } from '@portkey/services';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -36,7 +37,7 @@ interface SocialLoginProps {
   recommendIndexes?: number[];
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
-  switchGuardianType?: (type: IWeb2LoginList) => void;
+  switchGuardianType?: (type: IWeb2Login) => void;
   switchType?: (type: CreateWalletType) => void;
   onLoginByPortkey?: LoginFinishWithoutPin;
 
@@ -46,7 +47,6 @@ interface SocialLoginProps {
 
 export default function SocialLogin({
   type,
-  theme,
   className,
   isShowScan,
   socialLogin,
@@ -105,14 +105,22 @@ export default function SocialLogin({
     [isErrorTip, socialLoginHandler],
   );
 
-  const recommendList = useMemo(
-    () => recommendIndexes?.map((item) => loginMethodsOrder?.[item]),
-    [loginMethodsOrder, recommendIndexes],
-  );
+  const recommendList = useMemo(() => {
+    if (Array.isArray(recommendIndexes)) {
+      return recommendIndexes?.map((item) => loginMethodsOrder?.[item]);
+    } else {
+      return SocialLoginList;
+    }
+  }, [loginMethodsOrder, recommendIndexes]);
+
   const notRecommendList = useMemo(() => {
-    return (loginMethodsOrder || Web2LoginList)?.filter((_item, index) => {
-      return !recommendIndexes?.includes(index);
-    });
+    if (Array.isArray(recommendIndexes)) {
+      return loginMethodsOrder?.filter((_item, index) => {
+        return !recommendIndexes?.includes(index);
+      });
+    } else {
+      return Web2LoginList;
+    }
   }, [loginMethodsOrder, recommendIndexes]);
 
   return (
@@ -141,32 +149,37 @@ export default function SocialLogin({
           {!isLogin && !isMobile && <span className="empty"></span>}
         </h1>
         <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
-          <SocialContent
-            theme={theme}
-            accountTypeList={recommendList as TotalAccountType[] | undefined}
+          <AccountRecommendGroup
+            accountTypeList={recommendList as AccountType[] | undefined}
             networkType={networkType}
             socialLogin={socialLogin}
             type={type}
             onSocialChange={onSocialChange}
+            onWeb2Change={(type) => {
+              switchGuardianTypeRef?.current?.(type);
+            }}
             onLoginByPortkey={onLoginByPortkey}
           />
           <DividerCenter />
 
           <div className="portkey-ui-flex-center portkey-ui-extra-guardian-type-content">
-            {notRecommendList?.map((item) => (
-              <div
-                className="icon-wrapper portkey-ui-flex-center"
-                key={item}
-                onClick={() => {
-                  if (SocialLoginList.includes(item)) {
-                    onSocialChange('Apple');
-                    return;
-                  }
-                  switchGuardianTypeRef?.current?.(item as IWeb2LoginList);
-                }}>
-                <CustomSvg type={TotalAccountsInfo[item as IWeb2LoginList].icon as any} />
-              </div>
-            ))}
+            {notRecommendList?.map(
+              (item) =>
+                item !== 'Scan' && (
+                  <div
+                    className="icon-wrapper portkey-ui-flex-center"
+                    key={item}
+                    onClick={() => {
+                      if (SocialLoginList.includes(item)) {
+                        onSocialChange(item as ISocialLogin);
+                        return;
+                      }
+                      switchGuardianTypeRef?.current?.(item as IWeb2Login);
+                    }}>
+                    <CustomSvg type={TotalAccountsInfo[item as IWeb2Login].icon} />
+                  </div>
+                ),
+            )}
           </div>
           {extraElement}
 

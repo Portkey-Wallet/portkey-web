@@ -30,7 +30,7 @@ export interface AuthenticationInfo {
 }
 
 export type ISocialLogin = 'Google' | 'Apple' | 'Telegram';
-export type IWeb2LoginList = 'Email' | 'Phone';
+export type IWeb2Login = 'Email' | 'Phone';
 
 export type TSocialResponseData = {
   accessToken?: string;

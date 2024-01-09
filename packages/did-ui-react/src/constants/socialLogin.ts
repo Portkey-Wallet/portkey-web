@@ -1,11 +1,13 @@
-import { ISocialLogin, TotalAccountType, IWeb2LoginList } from '../types';
+import { ISocialLogin, TotalAccountType, IWeb2Login } from '../types';
+import svgsList from '../assets/svgs';
+import { AccountType } from '@portkey/services';
 
 export const PORTKEY_SOCIAL_LOGIN_URL = 'portkey.did://';
 
 type IAccountItem = {
   type: TotalAccountType;
   name: string;
-  icon: string;
+  icon: keyof typeof svgsList;
 };
 
 export const SocialAccountsInfo: Record<ISocialLogin, IAccountItem> = {
@@ -14,9 +16,14 @@ export const SocialAccountsInfo: Record<ISocialLogin, IAccountItem> = {
   Telegram: { type: 'Telegram', name: 'Telegram', icon: 'TelegramIcon' },
 };
 
-export const Web2AccountsInfo: Record<IWeb2LoginList, IAccountItem> = {
+export const Web2AccountsInfo: Record<IWeb2Login, IAccountItem> = {
   Email: { type: 'Email', name: 'Email', icon: 'EmailIcon' },
   Phone: { type: 'Phone', name: 'Phone', icon: 'PhoneIcon' },
+};
+
+export const AccountsInfo: Record<AccountType, IAccountItem> = {
+  ...SocialAccountsInfo,
+  ...Web2AccountsInfo,
 };
 
 export const TotalAccountsInfo: Record<TotalAccountType, IAccountItem> = {

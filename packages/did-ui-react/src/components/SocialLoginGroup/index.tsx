@@ -1,23 +1,24 @@
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
-import { ISocialLogin, TotalAccountType } from '../../types';
+import { ISocialLogin } from '../../types';
 import { useMemo, useState } from 'react';
 import './index.less';
-import { TotalAccountsInfo, TotalAccountTypeList } from '../../constants/socialLogin';
+import { TotalAccountsInfo } from '../../constants/socialLogin';
+import { SocialLoginList } from '../../constants/guardian';
 
-interface AccountIconGroupProps {
-  supportAccounts?: Array<TotalAccountType>;
+interface SocialLoginGroupProps {
+  supportAccounts?: Array<ISocialLogin>;
   isShowScan?: boolean;
   className?: string;
   onAccountTypeChange?: (type: ISocialLogin) => void;
 }
 
-export default function AccountIconGroup({
-  supportAccounts = TotalAccountTypeList,
+export default function SocialLoginGroup({
+  supportAccounts = SocialLoginList as ISocialLogin[],
   isShowScan = true,
   className,
   onAccountTypeChange,
-}: AccountIconGroupProps) {
+}: SocialLoginGroupProps) {
   const isNeedFold = useMemo(() => supportAccounts?.length > 5, [supportAccounts?.length]);
   const [isFold, setIsFold] = useState(true);
   const defaultDisplayList = useMemo(
@@ -35,11 +36,11 @@ export default function AccountIconGroup({
       <div className="portkey-ui-flex-start-center account-type-list">
         {defaultDisplayList.map(
           (item) =>
-            (TotalAccountsInfo[item].type !== 'Scan' || (TotalAccountsInfo[item].type === 'Scan' && isShowScan)) && (
+            SocialLoginList.includes(item) && (
               <CustomSvg
                 className="portkey-ui-flex-center"
                 key={TotalAccountsInfo[item].type}
-                type={TotalAccountsInfo[item].icon as any}
+                type={TotalAccountsInfo[item].icon}
                 onClick={() => onAccountTypeChange?.(TotalAccountsInfo[item].type as ISocialLogin)}
               />
             ),
@@ -58,7 +59,7 @@ export default function AccountIconGroup({
                 <CustomSvg
                   className="portkey-ui-flex-center"
                   key={TotalAccountsInfo[item].type}
-                  type={TotalAccountsInfo[item].icon as any}
+                  type={TotalAccountsInfo[item].icon}
                   onClick={() => onAccountTypeChange?.(TotalAccountsInfo[item].type as ISocialLogin)}
                 />
               ),

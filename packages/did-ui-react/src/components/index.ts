@@ -25,7 +25,7 @@ export { default as VerifierPair } from './VerifierPair';
 export { default as PhoneNumberInput } from './PhoneNumberInput';
 export { default as AreaCode } from './AreaCode';
 export { default as ImgLoading } from './ImgLoading';
-export { default as SocialContent } from './SocialContent';
+export { default as AccountRecommendGroup } from './AccountRecommendGroup';
 export { default as ScanBase } from './ScanBase';
 export { default as LoginBase } from './LoginBase';
 export { default as BaseVerifierIcon } from './BaseVerifierIcon';

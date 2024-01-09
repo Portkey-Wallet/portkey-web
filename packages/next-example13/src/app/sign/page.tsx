@@ -45,6 +45,8 @@ export default function Sign() {
       <div>-----------</div>
       <SignIn
         // pin={'23aa'}
+        loginMethodsOrder={['Email', 'Google', 'Phone', 'Apple', 'Scan']}
+        recommendIndexes={[0, 1]}
         ref={ref}
         keyboard={true}
         design={design}

@@ -5,6 +5,8 @@ export const SocialLoginList: string[] = ['Google', 'Apple', 'Telegram'];
 
 export const Web2LoginList: string[] = ['Email', 'Phone'];
 
+export const AccountLoginList = [...SocialLoginList, ...Web2LoginList];
+
 export const guardiansExceedTip =
   'The number of guardians has reached the maximum limit. Please delete some before trying to add new ones.';
 

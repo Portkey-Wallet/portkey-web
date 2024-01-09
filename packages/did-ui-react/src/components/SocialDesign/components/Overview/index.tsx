@@ -45,7 +45,7 @@ export default function Overview({
                   <CustomSvg
                     className="portkey-ui-flex-center"
                     key={item}
-                    type={TotalAccountsInfo[item].icon as any}
+                    type={TotalAccountsInfo[item].icon}
                     onClick={() => onAccountTypeChange?.(item)}
                   />
                 ),

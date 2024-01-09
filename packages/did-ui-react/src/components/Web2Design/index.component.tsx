@@ -17,7 +17,7 @@ import { devices } from '@portkey/utils';
 import useMobile from '../../hooks/useMobile';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import useSocialLogin from '../../hooks/useSocialLogin';
-import AccountIconGroup from '../AccountIconGroup';
+import SocialLoginGroup from '../SocialLoginGroup';
 import { SocialLoginList } from '../../constants/guardian';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
@@ -151,7 +151,7 @@ export default function Web2Design({
             onFinish={onFinish}
           />
           <DividerCenter />
-          <AccountIconGroup supportAccounts={loginMethodsOrder} onAccountTypeChange={onSocialChange} />
+          <SocialLoginGroup supportAccounts={loginMethodsOrder} onAccountTypeChange={onSocialChange} />
           {extraElement ? extraElement : <div className="empty-element"></div>}
           <div className="portkey-ui-web2design-switch-sign">
             {type === 'Login' ? (
