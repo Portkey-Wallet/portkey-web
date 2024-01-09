@@ -3,30 +3,27 @@ import DividerCenter from '../../../DividerCenter';
 import CustomSvg from '../../../CustomSvg';
 import TermsOfServiceItem from '../../../TermsOfServiceItem';
 import './index.less';
+import { TotalAccountType } from '../../../../types';
+import { TotalAccountsInfo, TotalAccountTypeList } from '../../../../constants/socialLogin';
 
 export interface OverviewProps {
   extraElement?: React.ReactNode;
   isShowScan?: boolean;
   termsOfService?: React.ReactNode;
-
+  privacyPolicy?: string;
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
   onAccountTypeChange?: (type: AccountType | 'Scan') => void;
 }
 
-type IAccountItem = {
-  type: AccountType | 'Scan';
-  name: string;
-  icon: string;
-};
-
-const accountTypeList: IAccountItem[] = [
-  { type: 'Google', name: 'Google', icon: 'GoogleIcon' },
-  { type: 'Apple', name: 'Apple', icon: 'AppleIcon' },
-  { type: 'Email', name: 'Email', icon: 'EmailIcon' },
-  { type: 'Phone', name: 'Phone', icon: 'PhoneIcon' },
-  { type: 'Scan', name: 'Scan', icon: 'QRCodeIcon' },
-];
-
-export default function Overview({ isShowScan, extraElement, termsOfService, onAccountTypeChange }: OverviewProps) {
+export default function Overview({
+  isShowScan,
+  extraElement,
+  termsOfService,
+  privacyPolicy,
+  loginMethodsOrder = TotalAccountTypeList,
+  onAccountTypeChange,
+}: OverviewProps) {
   return (
     <div className="portkey-ui-flex-column portkey-ui-user-input-overview">
       <div className="portkey-ui-flex-1 portkey-ui-flex-column">
@@ -42,14 +39,14 @@ export default function Overview({ isShowScan, extraElement, termsOfService, onA
         <DividerCenter />
         <div className="portkey-ui-flex-center portkey-ui-account-type-wrapper">
           <div className="portkey-ui-flex-center account-type-list">
-            {accountTypeList.map(
+            {loginMethodsOrder?.map(
               (item) =>
-                (item.type !== 'Scan' || (item.type === 'Scan' && isShowScan)) && (
+                (item !== 'Scan' || (item === 'Scan' && isShowScan)) && (
                   <CustomSvg
                     className="portkey-ui-flex-center"
-                    key={item.type}
-                    type={item.icon as any}
-                    onClick={() => onAccountTypeChange?.(item.type)}
+                    key={item}
+                    type={TotalAccountsInfo[item].icon}
+                    onClick={() => onAccountTypeChange?.(item)}
                   />
                 ),
             )}
@@ -57,7 +54,7 @@ export default function Overview({ isShowScan, extraElement, termsOfService, onA
         </div>
       </div>
 
-      {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} />}
+      {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}
     </div>
   );
 }

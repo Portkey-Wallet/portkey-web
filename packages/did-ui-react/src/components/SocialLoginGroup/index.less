@@ -1,0 +1,24 @@
+.social-icon-group-wrapper {
+  .account-type-list {
+    margin-bottom: 78px;
+    flex-wrap: wrap;
+    gap: 12px;
+    .portkey-ui-custom-svg {
+      flex: 1;
+      cursor: pointer;
+      min-width: 74px;
+      height: 48px;
+      margin: 0;
+      border: none;
+      border-radius: var(--portkey-ui-border-radius-4);
+      background-color: var(--portkey-ui-btn-bg);
+      & > svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+    .expand-account {
+      transform: rotate(180deg);
+    }
+  }
+}

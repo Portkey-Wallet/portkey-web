@@ -9,6 +9,7 @@ import SocialDesign from '../../../SocialDesign/index.component';
 import Web2Design from '../../../Web2Design/index.component';
 import { did } from '@portkey/did';
 import { errorTip } from '../../../../utils';
+import { ISocialLogin } from '../../../../types';
 
 export type OnSignInFinishedFun = (values: {
   isFinished: boolean;
@@ -32,6 +33,7 @@ function Step1({
   onSignInFinished,
   type,
   phoneCountry: defaultPhoneCountry,
+  loginMethodsOrder,
   isErrorTip,
   onError,
   ...props
@@ -92,6 +94,7 @@ function Step1({
           {...props}
           type={type === 'LoginByScan' ? 'Scan' : null}
           phoneCountry={phoneCountry}
+          loginMethodsOrder={loginMethodsOrder}
           isErrorTip={isErrorTip}
           onError={onError}
           onSuccess={onSuccess}
@@ -103,6 +106,7 @@ function Step1({
           {...props}
           size={size}
           type={type}
+          loginMethodsOrder={loginMethodsOrder as ISocialLogin[]}
           phoneCountry={phoneCountry}
           isErrorTip={isErrorTip}
           onError={onError}
@@ -116,6 +120,7 @@ function Step1({
           {...props}
           type={type}
           phoneCountry={phoneCountry}
+          loginMethodsOrder={loginMethodsOrder}
           isErrorTip={isErrorTip}
           onError={onError}
           onSignTypeChange={setCreateType}

@@ -45,6 +45,8 @@ export default function Sign() {
       <div>-----------</div>
       <SignIn
         // pin={'23aa'}
+        loginMethodsOrder={['Email', 'Google', 'Phone', 'Apple', 'Scan']}
+        recommendIndexes={[0, 1]}
         ref={ref}
         keyboard={true}
         design={design}
@@ -55,6 +57,7 @@ export default function Sign() {
         isShowScan
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
+        privacyPolicy={'https://portkey.finance/privacy-policy'}
         onFinish={async res => {
           console.log(res, 'onFinish====');
           CHAIN_ID = res.chainId;
