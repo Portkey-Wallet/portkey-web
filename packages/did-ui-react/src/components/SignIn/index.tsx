@@ -25,7 +25,7 @@ import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, SignInProps, TVerifyC
 import clsx from 'clsx';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
-import { UserGuardianStatus } from '../../types';
+import { TotalAccountType, UserGuardianStatus } from '../../types';
 import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
@@ -37,6 +37,8 @@ import useSendCode from './hooks/useSendCode';
 import useLoginWallet from '../../hooks/useLoginWallet';
 import './index.less';
 import { SocialLoginList } from '../../constants/guardian';
+import ConfigProvider from '../config-provider';
+import { TotalAccountsInfo } from '../../constants/socialLogin';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -61,8 +63,6 @@ const SignIn = forwardRef(
       extraElement,
       termsOfService,
       privacyPolicy,
-      loginMethodsOrder,
-      recommendIndexes,
       design = 'CryptoDesign',
       validateEmail,
       validatePhone,
@@ -544,6 +544,12 @@ const SignIn = forwardRef(
         onStep2LoginFinish,
       ],
     );
+
+    const loginMethodsOrder = useMemo(
+      () => (ConfigProvider.getConfig('loginMethodsOrder') as TotalAccountType[]) || TotalAccountsInfo,
+      [],
+    );
+    const recommendIndexes = useMemo(() => (ConfigProvider.getConfig('recommendIndexes') as number[]) || [], []);
 
     const mainContent = useCallback(() => {
       if (LifeCycleMap['SignIn'].includes(lifeCycle))

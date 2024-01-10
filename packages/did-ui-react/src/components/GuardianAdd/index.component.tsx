@@ -41,9 +41,16 @@ import { useVerifyToken } from '../../hooks';
 import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
-import { guardianAccountExistTip, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
+import {
+  AccountLoginList,
+  AddGuardiansType,
+  guardianAccountExistTip,
+  verifierExistTip,
+  verifierUsedTip,
+} from '../../constants/guardian';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
+import { AccountsInfo } from '../../constants/socialLogin';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -108,41 +115,24 @@ function GuardianAdd({
     () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
     [accountErr, guardianAccount, selectVerifierId, verifierExist],
   );
-  const guardianTypeSelectItems = useMemo(
-    () => [
-      {
-        value: AccountTypeEnum[AccountTypeEnum.Email],
-        label: AccountTypeEnum[AccountTypeEnum.Email],
-        icon: <CustomSvg type="Email" />,
-        id: AccountTypeEnum.Email,
-      },
-      {
-        value: AccountTypeEnum[AccountTypeEnum.Phone],
-        label: AccountTypeEnum[AccountTypeEnum.Phone],
-        icon: <CustomSvg type="GuardianPhone" />,
-        id: AccountTypeEnum.Phone,
-      },
-      {
-        value: AccountTypeEnum[AccountTypeEnum.Google],
-        label: AccountTypeEnum[AccountTypeEnum.Google],
-        icon: <CustomSvg type="GuardianGoogle" />,
-        id: AccountTypeEnum.Google,
-      },
-      {
-        value: AccountTypeEnum[AccountTypeEnum.Apple],
-        label: AccountTypeEnum[AccountTypeEnum.Apple],
-        icon: <CustomSvg type="GuardianApple" />,
-        id: AccountTypeEnum.Apple,
-      },
-      {
-        value: AccountTypeEnum[AccountTypeEnum.Telegram],
-        label: AccountTypeEnum[AccountTypeEnum.Telegram],
-        icon: <CustomSvg type="GuardianTelegram" />,
-        id: AccountTypeEnum.Telegram,
-      },
-    ],
-    [],
-  );
+  const loginMethodsOrder = useMemo(() => ConfigProvider.getConfig('loginMethodsOrder') || AccountsInfo, []);
+  const guardianTypeSelectItems = useMemo(() => {
+    if (Array.isArray(loginMethodsOrder)) {
+      const filterLoginMethodsOrder = loginMethodsOrder?.filter((item) =>
+        AccountLoginList.includes(item as AccountType),
+      );
+      return filterLoginMethodsOrder.map((item) => {
+        return {
+          value: AddGuardiansType[item as AccountType]?.value,
+          label: AddGuardiansType[item as AccountType]?.label,
+          icon: <CustomSvg type={AddGuardiansType[item as AccountType]?.icon} />,
+          id: AddGuardiansType[item as AccountType]?.id,
+        };
+      });
+    }
+    return [];
+  }, [loginMethodsOrder]);
+
   const customSelectOption = useMemo(
     () => [
       {

@@ -1,5 +1,5 @@
 import { IConfig } from '@portkey/types';
-import { ISocialLoginConfig } from '../../types';
+import { ISocialLoginConfig, TotalAccountType } from '../../types';
 import { BaseReCaptcha } from '../types';
 
 export interface ConfigProviderProps {
@@ -12,4 +12,6 @@ export interface GlobalConfigProps extends IConfig {
   socketUrl?: string;
   apiUrl?: string;
   serviceUrl?: string;
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
 }
