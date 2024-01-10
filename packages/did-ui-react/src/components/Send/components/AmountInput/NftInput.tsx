@@ -3,7 +3,7 @@ import { useCallback, useState } from 'react';
 import { AssetTokenExpand } from '../../../types/assets';
 import { divDecimals, formatAmountShow } from '../../../../utils/converter';
 import { handleKeyDownInt } from '../../utils/handlerKey';
-import { useThrottleEffect } from '../../../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import { getBalanceByContract } from '../../../../utils/sandboxUtil/getBalance';
 import { usePortkey } from '../../../context';
 
@@ -45,7 +45,7 @@ export default function NftInput({
     console.log(result, 'balances==getTokenBalance=');
   }, [chainType, fromAccount.address, sandboxId, token]);
 
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     getTokenBalance();
   }, [getTokenBalance]);
   return (

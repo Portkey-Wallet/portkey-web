@@ -18,7 +18,7 @@ import { did, formatStr2EllipsisStr, getExploreLink, handleErrorMessage } from '
 import Copy from '../Copy';
 import CustomSvg from '../CustomSvg';
 import { getChain } from '../../hooks/useChainInfo';
-import { useThrottleEffect } from '../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { CaAddressInfosType } from '@portkey/services';
 import './index.less';
 
@@ -46,7 +46,7 @@ export default function TransactionMain({
 
   // Obtain data through api to ensure data integrity.
   // Because some data is not returned in the Activities API. Such as from, to.
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     let caAddresses;
     if (chainId) {
       caAddresses = caAddressInfos?.filter((info) => info.chainId === chainId, []).map((info) => info.caAddress);

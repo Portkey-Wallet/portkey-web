@@ -3,7 +3,7 @@ import { ChainId } from '@portkey/types';
 import { IClickAddressProps } from '../../../types/assets';
 import { basicSendAction } from '../../../context/PortkeySendProvider/actions';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
-import { useThrottleEffect } from '../../../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import { usePortkeySendDispatch } from '../../../context/PortkeySendProvider/hooks';
 import { handleErrorMessage } from '../../../../utils';
 import { usePortkeySend } from '../../../context/PortkeySendProvider';
@@ -70,7 +70,7 @@ export default function Recents({
   const isOnce = useRef<boolean>();
 
   // init State
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     if (!userAddressInfo || isOnce.current) return;
     getList();
     isOnce.current = true;

@@ -30,7 +30,7 @@ import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
-import useDebounce from '../../hooks/useDebounce';
+import { useDebounce } from '../../hooks/debounce';
 import singleMessage from '../CustomAnt/message';
 import './index.less';
 
