@@ -50,7 +50,6 @@ import {
 } from '../../constants/guardian';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
-import { AccountsInfo } from '../../constants/socialLogin';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -115,18 +114,19 @@ function GuardianAdd({
     () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
     [accountErr, guardianAccount, selectVerifierId, verifierExist],
   );
-  const loginMethodsOrder = useMemo(() => ConfigProvider.getConfig('loginMethodsOrder') || AccountsInfo, []);
+  const loginMethodsOrder = useMemo(
+    () => (ConfigProvider.getConfig('loginMethodsOrder') as AccountType[]) || AccountLoginList,
+    [],
+  );
   const guardianTypeSelectItems = useMemo(() => {
     if (Array.isArray(loginMethodsOrder)) {
-      const filterLoginMethodsOrder = loginMethodsOrder?.filter((item) =>
-        AccountLoginList.includes(item as AccountType),
-      );
-      return filterLoginMethodsOrder.map((item) => {
+      const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) => AccountLoginList.includes(item));
+      return filterLoginMethodsOrder?.map((item: AccountType) => {
         return {
-          value: AddGuardiansType[item as AccountType]?.value,
-          label: AddGuardiansType[item as AccountType]?.label,
-          icon: <CustomSvg type={AddGuardiansType[item as AccountType]?.icon} />,
-          id: AddGuardiansType[item as AccountType]?.id,
+          value: AddGuardiansType[item]?.value,
+          label: AddGuardiansType[item]?.label,
+          icon: <CustomSvg type={AddGuardiansType[item]?.icon} />,
+          id: AddGuardiansType[item]?.id,
         };
       });
     }
