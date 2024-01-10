@@ -1,4 +1,4 @@
-import { useMemo, useRef, useEffect, ReactNode, useCallback } from 'react';
+import { useMemo, useRef, useEffect, ReactNode, useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import {
@@ -21,6 +21,7 @@ import './index.less';
 import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
+import { useComputeIconCountPreRow } from '../../hooks/login';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -123,6 +124,86 @@ export default function SocialLogin({
     }
   }, [loginMethodsOrder, recommendIndexes]);
 
+  const notRecommendGroupRef = useRef<HTMLDivElement>(null);
+  const [isFold, setIsFold] = useState(true);
+
+  const {
+    isNeedFold,
+    iconRealGap,
+    expendDisplayList: notRecommendExpendDisplayList,
+    defaultDisplayList: notRecommendDefaultDisplayList,
+  } = useComputeIconCountPreRow<TotalAccountType>({
+    ref: notRecommendGroupRef,
+    accountList: notRecommendList as TotalAccountType[],
+    minLoginAccountIconWidth: 48,
+    minIconGap: 24,
+  });
+
+  const handleNotRecommendChange = useCallback(
+    (item: string) => {
+      if (SocialLoginList.includes(item)) {
+        onSocialChange(item as ISocialLogin);
+        return;
+      }
+      switchGuardianTypeRef?.current?.(item as IWeb2Login);
+    },
+    [onSocialChange],
+  );
+
+  const notRecommendUI = useMemo(() => {
+    return (
+      <div
+        ref={notRecommendGroupRef}
+        className="portkey-ui-flex-center portkey-ui-extra-guardian-type-content"
+        style={{
+          gap: iconRealGap,
+          justifyContent: isNeedFold && !isFold ? 'flex-start' : 'center',
+        }}>
+        {notRecommendDefaultDisplayList?.map(
+          (item) =>
+            item !== 'Scan' && (
+              <div
+                className="icon-wrapper portkey-ui-flex-center"
+                key={item}
+                onClick={() => handleNotRecommendChange(item)}>
+                <CustomSvg type={TotalAccountsInfo[item as IWeb2Login].icon} />
+              </div>
+            ),
+        )}
+
+        {!isFold &&
+          notRecommendExpendDisplayList?.map(
+            (item) =>
+              item !== 'Scan' && (
+                <div
+                  className="icon-wrapper portkey-ui-flex-center"
+                  key={item}
+                  onClick={() => handleNotRecommendChange(item)}>
+                  <CustomSvg type={TotalAccountsInfo[item as IWeb2Login].icon} />
+                </div>
+              ),
+          )}
+
+        {isNeedFold && (
+          <div className="icon-wrapper portkey-ui-flex-center">
+            <CustomSvg
+              className={clsx('portkey-ui-flex-center', !isFold && 'expand-account')}
+              type={'ArrowDown'}
+              onClick={() => setIsFold(!isFold)}
+            />
+          </div>
+        )}
+      </div>
+    );
+  }, [
+    handleNotRecommendChange,
+    iconRealGap,
+    isFold,
+    isNeedFold,
+    notRecommendDefaultDisplayList,
+    notRecommendExpendDisplayList,
+  ]);
+
   return (
     <>
       <div
@@ -162,25 +243,8 @@ export default function SocialLogin({
           />
           <DividerCenter />
 
-          <div className="portkey-ui-flex-center portkey-ui-extra-guardian-type-content">
-            {notRecommendList?.map(
-              (item) =>
-                item !== 'Scan' && (
-                  <div
-                    className="icon-wrapper portkey-ui-flex-center"
-                    key={item}
-                    onClick={() => {
-                      if (SocialLoginList.includes(item)) {
-                        onSocialChange(item as ISocialLogin);
-                        return;
-                      }
-                      switchGuardianTypeRef?.current?.(item as IWeb2Login);
-                    }}>
-                    <CustomSvg type={TotalAccountsInfo[item as IWeb2Login].icon} />
-                  </div>
-                ),
-            )}
-          </div>
+          {notRecommendUI}
+
           {extraElement}
 
           {isLogin && (

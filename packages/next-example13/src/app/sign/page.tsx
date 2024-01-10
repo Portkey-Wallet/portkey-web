@@ -25,6 +25,8 @@ ConfigProvider.setGlobalConfig({
   //   siteKey: '',
   // },
   graphQLUrl: '/graphql',
+  loginMethodsOrder: ['Email', 'Google', 'Telegram', 'Phone', 'Apple', 'Scan'],
+  recommendIndexes: [0, 1],
 });
 
 export default function Sign() {
@@ -45,8 +47,6 @@ export default function Sign() {
       <div>-----------</div>
       <SignIn
         // pin={'23aa'}
-        loginMethodsOrder={['Email', 'Google', 'Phone', 'Apple', 'Scan']}
-        recommendIndexes={[0, 1]}
         ref={ref}
         keyboard={true}
         design={design}

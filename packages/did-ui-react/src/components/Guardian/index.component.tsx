@@ -10,7 +10,7 @@ import { OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
-import { useThrottleEffect } from '../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { Button } from 'antd';
 import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
@@ -69,7 +69,7 @@ function GuardianMain({
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>();
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
   const [verifierEnableNum, setVerifierEnableNum] = useState(MaxVerifierNumber);
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     AuthServe.addRequestAuthCheck(originChainId);
   }, []);
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);

@@ -5,7 +5,7 @@ import { getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolder
 import { basicAssetView } from '../actions';
 import { usePortkeyAsset } from '..';
 import { ChainId } from '@portkey/types';
-import { useThrottleEffect } from '../../../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import { useTxFeeInit } from './txFee';
 import singleMessage from '../../../CustomAnt/message';
 
@@ -134,7 +134,7 @@ export const useStateInit = () => {
     dispatch(basicAssetView.initialized.actions(true));
   }, [caHash, didStorageKeyName, dispatch, getHolderInfo, loadManager, originChainId, pin]);
 
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     loadCaInfo().catch((err) => {
       console.log(err, 'loadCaInfo===error');
       if (err?.status === 500) {
