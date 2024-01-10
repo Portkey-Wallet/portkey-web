@@ -44,7 +44,7 @@ export default function AccountRecommendGroup({
     (type: AccountType) => {
       return (
         <Button
-          className={clsx('social-login-btn')}
+          className={clsx('recommend-login-btn')}
           onClick={() => {
             if (Web2LoginList.includes(type)) {
               onWeb2Change?.(type as IWeb2Login);

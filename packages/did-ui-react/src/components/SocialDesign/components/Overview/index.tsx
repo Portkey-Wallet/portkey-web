@@ -5,6 +5,9 @@ import TermsOfServiceItem from '../../../TermsOfServiceItem';
 import './index.less';
 import { TotalAccountType } from '../../../../types';
 import { TotalAccountsInfo, TotalAccountTypeList } from '../../../../constants/socialLogin';
+import { useRef, useState } from 'react';
+import { useComputeIconCountPreRow } from '../../../../hooks/login';
+import clsx from 'clsx';
 
 export interface OverviewProps {
   extraElement?: React.ReactNode;
@@ -24,6 +27,16 @@ export default function Overview({
   loginMethodsOrder = TotalAccountTypeList,
   onAccountTypeChange,
 }: OverviewProps) {
+  const guardiansGroupRef = useRef<HTMLDivElement>(null);
+  const [isFold, setIsFold] = useState(true);
+
+  const { isNeedFold, iconRealGap, expendDisplayList, defaultDisplayList } =
+    useComputeIconCountPreRow<TotalAccountType>({
+      ref: guardiansGroupRef,
+      accountList: loginMethodsOrder,
+      minLoginAccountIconWidth: 40,
+    });
+
   return (
     <div className="portkey-ui-flex-column portkey-ui-user-input-overview">
       <div className="portkey-ui-flex-1 portkey-ui-flex-column">
@@ -37,9 +50,11 @@ export default function Overview({
           )}
         </div>
         <DividerCenter />
-        <div className="portkey-ui-flex-center portkey-ui-account-type-wrapper">
-          <div className="portkey-ui-flex-center account-type-list">
-            {loginMethodsOrder?.map(
+        <div ref={guardiansGroupRef} className="portkey-ui-flex-center portkey-ui-account-type-wrapper">
+          <div
+            className="portkey-ui-flex-center account-type-list"
+            style={{ gap: iconRealGap, justifyContent: isNeedFold && !isFold ? 'flex-start' : 'center' }}>
+            {defaultDisplayList?.map(
               (item) =>
                 (item !== 'Scan' || (item === 'Scan' && isShowScan)) && (
                   <CustomSvg
@@ -49,6 +64,27 @@ export default function Overview({
                     onClick={() => onAccountTypeChange?.(item)}
                   />
                 ),
+            )}
+
+            {!isFold &&
+              expendDisplayList?.map(
+                (item) =>
+                  (item !== 'Scan' || (item === 'Scan' && isShowScan)) && (
+                    <CustomSvg
+                      className="portkey-ui-flex-center"
+                      key={item}
+                      type={TotalAccountsInfo[item].icon}
+                      onClick={() => onAccountTypeChange?.(item)}
+                    />
+                  ),
+              )}
+
+            {isNeedFold && (
+              <CustomSvg
+                className={clsx('portkey-ui-flex-center', !isFold && 'expand-account')}
+                type={'ArrowDown'}
+                onClick={() => setIsFold(!isFold)}
+              />
             )}
           </div>
         </div>
