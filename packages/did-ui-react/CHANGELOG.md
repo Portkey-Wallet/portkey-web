@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.2...v1.5.5-alpha.0) (2024-01-10)
+
+### Features
+
+- 🎸 add tg-oauth ([a3f9722](https://github.com/Portkey-Wallet/portkey-web/commit/a3f9722ff964ea1e5f40c5b26d728da93d017d61))
+- 🎸 add transfer approval ([fb62a68](https://github.com/Portkey-Wallet/portkey-web/commit/fb62a683ddb291969a1b427b328958244bd9e496))
+- 🎸 dev login ui ([7ab0dae](https://github.com/Portkey-Wallet/portkey-web/commit/7ab0dae4d31db01c8d4cc4e240ba8697df43ebf4))
+- 🎸 dev transfer approve ([d23b24d](https://github.com/Portkey-Wallet/portkey-web/commit/d23b24dfc9ca1e11fb43754d38876bce49dd58e9))
+- 🎸 dev transfer limit ([e4fe2f7](https://github.com/Portkey-Wallet/portkey-web/commit/e4fe2f7c41a6f99e9c0e684dcb226040b7daec82))
+- 🎸 guardian type limit ([fc74afc](https://github.com/Portkey-Wallet/portkey-web/commit/fc74afcbca114fe41ea00c30222e17eaecc595a8))
+- 🎸 modify login ui ([3365a3c](https://github.com/Portkey-Wallet/portkey-web/commit/3365a3cacc66d5695627aed30ca3a829b46f6c12))
+- 🎸 set or unset login guardian ([a4872ba](https://github.com/Portkey-Wallet/portkey-web/commit/a4872ba20cb5d87197c875bcf1e9c5b921923bd3))
+- 🎸 update ts ([cca9340](https://github.com/Portkey-Wallet/portkey-web/commit/cca9340afaf511beb76178e7bc83bbe8d21553d6))
+- 🎸 use common utils ([ebcc0ee](https://github.com/Portkey-Wallet/portkey-web/commit/ebcc0ee93d5d14b87e1d526e78f24c70539f7799))
+
+### Bug Fixes
+
+- 🐛 unset login guardian ([e47cdc7](https://github.com/Portkey-Wallet/portkey-web/commit/e47cdc7b44f8e73ebbdc9c2d82e0749dd5d8211e))
+- 🐛 update tg icon ([40f0e70](https://github.com/Portkey-Wallet/portkey-web/commit/40f0e7091945f0ea32e7a159fba24f4ee6900a9d))
+
 ## [1.5.4-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.1...v1.5.4-alpha.2) (2024-01-05)
 
 **Note:** Version bump only for package @portkey/did-ui-react
