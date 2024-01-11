@@ -41,24 +41,24 @@ export default function AccountRecommendGroup({
   }, []);
 
   const renderLoginElement = useCallback(
-    (type: AccountType) => {
+    (accountType: AccountType) => {
       return (
         <Button
           className={clsx('recommend-login-btn')}
           onClick={() => {
-            if (Web2LoginList.includes(type)) {
-              onWeb2Change?.(type as IWeb2Login);
-            } else if (SocialLoginList.includes(type)) {
-              onSocialChange?.(type as ISocialLogin);
+            if (Web2LoginList.includes(accountType)) {
+              onWeb2Change?.(accountType as IWeb2Login);
+            } else if (SocialLoginList.includes(accountType)) {
+              onSocialChange?.(accountType as ISocialLogin);
             }
           }}>
-          <CustomSvg type={AccountsInfo[type].icon} />
-          <span>{`${type} with ${AccountsInfo[type].name}`}</span>
+          <CustomSvg type={AccountsInfo[accountType].icon} />
+          <span>{`${type} with ${AccountsInfo[accountType].name}`}</span>
           <span className="empty"></span>
         </Button>
       );
     },
-    [onSocialChange, onWeb2Change],
+    [onSocialChange, onWeb2Change, type],
   );
 
   return (

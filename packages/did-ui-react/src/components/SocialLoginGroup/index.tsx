@@ -7,6 +7,8 @@ import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { SocialLoginList } from '../../constants/guardian';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 
+const MinIconGap = 18;
+
 interface SocialLoginGroupProps {
   supportAccounts?: Array<ISocialLogin>;
   isShowScan?: boolean;
@@ -22,16 +24,19 @@ export default function SocialLoginGroup({
   const ref = useRef<HTMLDivElement>(null);
   const [isFold, setIsFold] = useState(true);
 
-  const { isNeedFold, iconWidthPerRow, expendDisplayList, defaultDisplayList } =
+  const { isNeedFold, iconRealGap, iconWidthPerRow, expendDisplayList, defaultDisplayList } =
     useComputeIconCountPreRow<ISocialLogin>({
       ref,
       accountList: supportAccounts,
       supportList: SocialLoginList as ISocialLogin[],
+      minIconGap: MinIconGap,
     });
 
   return (
     <div className={clsx('social-icon-group-wrapper', className)} ref={ref}>
-      <div className="portkey-ui-flex-start-center account-type-list">
+      <div
+        className="portkey-ui-flex-start-center account-type-list"
+        style={{ columnGap: isNeedFold ? iconRealGap : MinIconGap, rowGap: MinIconGap }}>
         {defaultDisplayList.map((item) => (
           <CustomSvg
             className="portkey-ui-flex-center"

@@ -13,7 +13,7 @@ type IAccountItem = {
 export const SocialAccountsInfo: Record<ISocialLogin, IAccountItem> = {
   Google: { type: 'Google', name: 'Google', icon: 'GoogleIcon' },
   Apple: { type: 'Apple', name: 'Apple', icon: 'AppleIcon' },
-  Telegram: { type: 'Telegram', name: 'Telegram', icon: 'TelegramIcon' },
+  Telegram: { type: 'Telegram', name: 'Telegram', icon: 'TelegramLogin' },
 };
 
 export const Web2AccountsInfo: Record<IWeb2Login, IAccountItem> = {
