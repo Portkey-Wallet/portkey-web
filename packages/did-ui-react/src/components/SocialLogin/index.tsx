@@ -46,6 +46,8 @@ interface SocialLoginProps {
   onError?: OnErrorFunc;
 }
 
+const MinIconGap = 16;
+
 export default function SocialLogin({
   type,
   className,
@@ -136,7 +138,7 @@ export default function SocialLogin({
     ref: notRecommendGroupRef,
     accountList: notRecommendList as TotalAccountType[],
     minLoginAccountIconWidth: 48,
-    minIconGap: 24,
+    minIconGap: MinIconGap,
   });
 
   const handleNotRecommendChange = useCallback(
@@ -156,7 +158,8 @@ export default function SocialLogin({
         ref={notRecommendGroupRef}
         className="portkey-ui-flex-center portkey-ui-extra-guardian-type-content"
         style={{
-          gap: iconRealGap,
+          columnGap: isNeedFold ? iconRealGap : MinIconGap,
+          rowGap: MinIconGap,
           justifyContent: isNeedFold && !isFold ? 'flex-start' : 'center',
         }}>
         {notRecommendDefaultDisplayList?.map(

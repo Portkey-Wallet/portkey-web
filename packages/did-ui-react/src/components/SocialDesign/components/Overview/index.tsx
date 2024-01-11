@@ -19,6 +19,8 @@ export interface OverviewProps {
   onAccountTypeChange?: (type: AccountType | 'Scan') => void;
 }
 
+const MinIconGap = 12;
+
 export default function Overview({
   isShowScan,
   extraElement,
@@ -35,6 +37,7 @@ export default function Overview({
       ref: guardiansGroupRef,
       accountList: loginMethodsOrder,
       minLoginAccountIconWidth: 40,
+      minIconGap: MinIconGap,
     });
 
   return (
@@ -53,7 +56,10 @@ export default function Overview({
         <div ref={guardiansGroupRef} className="portkey-ui-flex-center portkey-ui-account-type-wrapper">
           <div
             className="portkey-ui-flex-center account-type-list"
-            style={{ gap: iconRealGap, justifyContent: isNeedFold && !isFold ? 'flex-start' : 'center' }}>
+            style={{
+              gap: isNeedFold ? iconRealGap : MinIconGap,
+              justifyContent: isNeedFold && !isFold ? 'flex-start' : 'center',
+            }}>
             {defaultDisplayList?.map(
               (item) =>
                 (item !== 'Scan' || (item === 'Scan' && isShowScan)) && (

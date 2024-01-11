@@ -1,6 +1,5 @@
-import { RefObject, useEffect, useMemo, useState } from 'react';
+import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
 import { AccountLoginList } from '../constants/guardian';
-import { useThrottleLatestCallback } from './throttle';
 
 export interface useComputeIconCountPreRow<T> {
   ref: RefObject<HTMLDivElement>;
@@ -39,7 +38,7 @@ export function useComputeIconCountPreRow<T>({
     [realCountPerRow, isNeedFold, filterSupportAccounts],
   );
 
-  const compute = useThrottleLatestCallback(() => {
+  const compute = useCallback(() => {
     const containerWidth = ref.current?.clientWidth;
     if (!containerWidth) return;
 
@@ -65,7 +64,15 @@ export function useComputeIconCountPreRow<T>({
       expendDisplayList,
       defaultDisplayList,
     };
-  }, [filterSupportAccounts]);
+  }, [
+    defaultDisplayList,
+    expendDisplayList,
+    filterSupportAccounts,
+    isNeedFold,
+    minIconGap,
+    minLoginAccountIconWidth,
+    ref,
+  ]);
 
   useEffect(() => {
     window.addEventListener('resize', compute);
