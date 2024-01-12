@@ -20,12 +20,12 @@ import type {
   TVerifierItem,
 } from '../types';
 import type { ChainId } from '@portkey/types';
-import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import { OperationTypeEnum, GuardiansApproved, AccountType } from '@portkey/services';
 import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, SignInProps, TVerifyCodeInfo } from '../SignStep/types';
 import clsx from 'clsx';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
-import { TotalAccountType, UserGuardianStatus } from '../../types';
+import { UserGuardianStatus } from '../../types';
 import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
@@ -37,8 +37,9 @@ import useSendCode from './hooks/useSendCode';
 import useLoginWallet from '../../hooks/useLoginWallet';
 import './index.less';
 import { SocialLoginList } from '../../constants/guardian';
+import { TotalAccountTypeList } from '../../constants/socialLogin';
 import ConfigProvider from '../config-provider';
-import { TotalAccountsInfo } from '../../constants/socialLogin';
+import { ILoginConfig } from '../config-provider/types';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -545,11 +546,16 @@ const SignIn = forwardRef(
       ],
     );
 
+    const loginConfig = ConfigProvider.getConfig('loginConfig') as ILoginConfig;
+
     const loginMethodsOrder = useMemo(
-      () => (ConfigProvider.getConfig('loginMethodsOrder') as TotalAccountType[]) || TotalAccountsInfo,
-      [],
+      () => (loginConfig?.loginMethodsOrder as AccountType[]) || TotalAccountTypeList,
+      [loginConfig?.loginMethodsOrder],
     );
-    const recommendIndexes = useMemo(() => (ConfigProvider.getConfig('recommendIndexes') as number[]) || [], []);
+    const recommendIndexes = useMemo(
+      () => (loginConfig?.recommendIndexes as number[]) || [0, 1],
+      [loginConfig?.recommendIndexes],
+    );
 
     const mainContent = useCallback(() => {
       if (LifeCycleMap['SignIn'].includes(lifeCycle))

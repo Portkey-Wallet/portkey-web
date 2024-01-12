@@ -50,6 +50,7 @@ import {
 } from '../../constants/guardian';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
+import { ILoginConfig } from '../config-provider/types';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -114,10 +115,14 @@ function GuardianAdd({
     () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
     [accountErr, guardianAccount, selectVerifierId, verifierExist],
   );
+
+  const loginConfig = ConfigProvider.getConfig('loginConfig') as ILoginConfig;
   const loginMethodsOrder = useMemo(
-    () => (ConfigProvider.getConfig('loginMethodsOrder') as AccountType[]) || AccountLoginList,
-    [],
+    () => (loginConfig?.loginMethodsOrder as AccountType[]) || AccountLoginList,
+    [loginConfig?.loginMethodsOrder],
   );
+  console.log('🌈 🌈 🌈 🌈 🌈 🌈 loginMethodsOrder', loginMethodsOrder);
+
   const guardianTypeSelectItems = useMemo(() => {
     if (Array.isArray(loginMethodsOrder)) {
       const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) => AccountLoginList.includes(item));

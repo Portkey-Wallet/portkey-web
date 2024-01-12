@@ -16,6 +16,10 @@ ConfigProvider.setGlobalConfig({
       websiteIcon: '',
     },
   },
+  loginConfig: {
+    loginMethodsOrder: ['Email', 'Google', 'Telegram', 'Phone', 'Apple', 'Scan'],
+    recommendIndexes: [0, 1],
+  },
   requestDefaults: {
     timeout: 30000,
   },
@@ -25,8 +29,6 @@ ConfigProvider.setGlobalConfig({
   //   siteKey: '',
   // },
   graphQLUrl: '/graphql',
-  loginMethodsOrder: ['Email', 'Google', 'Telegram', 'Phone', 'Apple', 'Scan'],
-  recommendIndexes: [0, 1],
 });
 
 export default function Sign() {
