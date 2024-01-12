@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.5-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.5-alpha.1...v1.5.5-alpha.2) (2024-01-12)
+
+### Features
+
+- 🎸 delete Telegram type ([ce9c229](https://github.com/Portkey-Wallet/portkey-web/commit/ce9c229367a030669ada6e772f60842800ec385f))
+- 🎸 dev loginConfig and ui ([327871f](https://github.com/Portkey-Wallet/portkey-web/commit/327871f8b6a69e74d515dd896b7a6e208342f3b4))
+
 ## [1.5.5-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.5-alpha.0...v1.5.5-alpha.1) (2024-01-12)
 
 ### Features
