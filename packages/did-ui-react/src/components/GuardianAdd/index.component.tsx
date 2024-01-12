@@ -422,6 +422,12 @@ function GuardianAdd({
     },
     [isErrorTip, onError, socialAuth],
   );
+
+  const handleClearSocialAccount = useCallback(() => {
+    setSocialValue(undefined);
+    setAccountErr('');
+  }, []);
+
   const renderSocialGuardianAccount = useCallback(
     (v: ISocialLogin) => (
       <div className="social input">
@@ -429,6 +435,7 @@ function GuardianAdd({
           <div className="portkey-ui-flex-column social-input detail">
             <span className="social-name">{socialValue?.firstName}</span>
             <span className="social-email">{socialValue?.isPrivate ? '******' : socialValue?.thirdPartyEmail}</span>
+            <CustomSvg type="Close2" onClick={handleClearSocialAccount} />
           </div>
         ) : (
           <div className="portkey-ui-flex social-input click" onClick={() => handleSocialAuth(v)}>
@@ -437,7 +444,7 @@ function GuardianAdd({
         )}
       </div>
     ),
-    [handleSocialAuth, socialValue?.firstName, socialValue?.id, socialValue?.isPrivate, socialValue?.thirdPartyEmail],
+    [handleClearSocialAccount, handleSocialAuth, socialValue],
   );
   const guardianAccountInput = useMemo(
     () => ({
