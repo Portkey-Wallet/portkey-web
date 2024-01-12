@@ -17,7 +17,7 @@ ConfigProvider.setGlobalConfig({
     },
   },
   loginConfig: {
-    loginMethodsOrder: ['Email', 'Google', 'Telegram', 'Phone', 'Apple', 'Scan'],
+    loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
     recommendIndexes: [0, 1],
   },
   requestDefaults: {

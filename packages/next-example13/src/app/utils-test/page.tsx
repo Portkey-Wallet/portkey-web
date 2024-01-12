@@ -25,7 +25,7 @@ ConfigProvider.setGlobalConfig({
     timeout: 30000,
   },
   loginConfig: {
-    loginMethodsOrder: ['Email', 'Google', 'Telegram', 'Phone', 'Apple', 'Scan'],
+    loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
     recommendIndexes: [0, 1],
   },
 });
