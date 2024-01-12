@@ -4,6 +4,7 @@ import TitleWrapper from '../TitleWrapper';
 import './index.less';
 import CustomSvg from '../CustomSvg';
 import { SvgType } from '../../types';
+import { MAINNET } from '../../constants/network';
 
 interface AssetCardProps {
   backIcon?: ReactNode;
@@ -36,7 +37,7 @@ export default function AssetCard({
   onReceive,
   onFaucet,
 }: AssetCardProps) {
-  const isMainnet = useMemo(() => networkType === 'MAINNET', [networkType]);
+  const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   return (
     <div className="portkey-ui-asset-card-wrapper">
       <div className="portkey-ui-header-wrap">
