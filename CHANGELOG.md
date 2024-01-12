@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.5-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.5-alpha.0...v1.5.5-alpha.1) (2024-01-12)
+
+### Features
+
+- 🎸 clear social account ([ef9ae54](https://github.com/Portkey-Wallet/portkey-web/commit/ef9ae542ba2f4d6e3ec17f848dd72cfd0eebdc91))
+- 🎸 dev dynamic icon layout ([897a171](https://github.com/Portkey-Wallet/portkey-web/commit/897a1718259af2db467a11a3bbe831900b7736cc))
+- 🎸 dev guardians type range ([7c9047b](https://github.com/Portkey-Wallet/portkey-web/commit/7c9047b2989d52e0094e8f06ff4908f53af61d72))
+- 🎸 dev throttle ([e99c6e5](https://github.com/Portkey-Wallet/portkey-web/commit/e99c6e502048158ef46081a06d45ba59bc42e60c))
+- 🎸 dev throttle and debounce hooks ([6b9db1f](https://github.com/Portkey-Wallet/portkey-web/commit/6b9db1fa79f615de548be2fe0e92116419fb0345))
+- 🎸 modify ui ([fac2539](https://github.com/Portkey-Wallet/portkey-web/commit/fac2539a321ca7c76d887e4b2b34ce183fbc65c0))
+
+### Bug Fixes
+
+- 🐛 ts lint ([e3e009c](https://github.com/Portkey-Wallet/portkey-web/commit/e3e009c8373066640a099bb7610fd4f94d03f5b8))
+
 ## [1.5.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.2...v1.5.5-alpha.0) (2024-01-10)
 
 ### Features
