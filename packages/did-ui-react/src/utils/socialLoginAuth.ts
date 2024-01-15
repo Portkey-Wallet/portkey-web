@@ -1,4 +1,4 @@
-import { WEB_PAGE } from '../constants';
+import { PORTKEY_VERSION, WEB_PAGE } from '../constants';
 import { ISocialLogin } from '../types';
 import { stringify } from 'query-string';
 
@@ -34,8 +34,11 @@ export const socialLoginAuth = ({
       }
       window.removeEventListener('message', onMessage);
     };
+
     window.addEventListener('message', onMessage);
-    const windowOpener = window.open(`${WEB_PAGE}/social-login/${type}?${stringify({ clientId, redirectURI })}`);
+    const windowOpener = window.open(
+      `${WEB_PAGE}/social-login/${type}?${stringify({ clientId, redirectURI, version: PORTKEY_VERSION })}`,
+    );
 
     timer = setInterval(() => {
       if (windowOpener?.closed) {
