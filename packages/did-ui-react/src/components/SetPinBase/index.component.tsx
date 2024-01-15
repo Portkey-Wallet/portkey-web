@@ -3,18 +3,20 @@ import ConfirmPassword from '../ConfirmPassword';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import './index.less';
+import { useRef } from 'react';
 
 const { Item: FormItem } = Form;
 
 export interface SetPinBaseProps {
   className?: string;
-  onFinish?: (val: string) => void;
+  onFinish?: (val: string) => Promise<void>;
   onFinishFailed?: FormProps['onFinishFailed'];
 }
 
 export default function SetPinBase({ className, onFinish, onFinishFailed }: SetPinBaseProps) {
   const [form] = Form.useForm();
   const { t } = useTranslation();
+  const isFinishRef = useRef<boolean>(false);
 
   return (
     <div className={clsx('set-pin-wrapper', className)} id="set-pin-wrapper">
@@ -26,7 +28,16 @@ export default function SetPinBase({ className, onFinish, onFinishFailed }: SetP
           name="CreateWalletForm"
           form={form}
           requiredMark={false}
-          onFinish={({ pin }) => onFinish?.(pin)}
+          onFinish={async ({ pin }) => {
+            try {
+              if (isFinishRef.current) return;
+              isFinishRef.current = true;
+              await onFinish?.(pin);
+              isFinishRef.current = false;
+            } finally {
+              isFinishRef.current = false;
+            }
+          }}
           onFinishFailed={onFinishFailed}
           autoComplete="off">
           <FormItem name="pin" style={{ marginBottom: 16 }}>

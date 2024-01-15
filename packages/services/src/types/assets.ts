@@ -16,9 +16,9 @@ export type CaAddressInfosType = { chainId: ChainId; caAddress: string }[];
 export type FetchAccountTokenListParams = {
   skipCount?: number;
   maxResultCount?: number;
-  caAddresses: string[];
   caAddressInfos: CaAddressInfosType;
 };
+
 export type FetchAccountTokenListResult = {
   data: ITokenItemResponse[];
   totalRecordCount: number;

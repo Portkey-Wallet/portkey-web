@@ -47,18 +47,17 @@ export default function TransactionMain({
   // Obtain data through api to ensure data integrity.
   // Because some data is not returned in the Activities API. Such as from, to.
   useThrottleFirstEffect(() => {
-    let caAddresses;
+    let _caAddressInfos = caAddressInfos;
     if (chainId) {
-      caAddresses = caAddressInfos?.filter((info) => info.chainId === chainId, []).map((info) => info.caAddress);
-    } else {
-      caAddresses = caAddressInfos?.map((info) => info.caAddress, []);
+      _caAddressInfos = caAddressInfos?.filter((info) => info.chainId === chainId, []);
     }
 
     const params = {
-      caAddresses: caAddresses,
+      caAddressInfos: _caAddressInfos,
       transactionId: activityItem.transactionId,
       blockHash: activityItem.blockHash,
     };
+
     did.services.activity
       .getActivityDetail(params)
       .then((res) => {
