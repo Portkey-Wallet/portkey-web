@@ -10,24 +10,16 @@ export function modalMethod({
   onCancel,
   ...props
 }: ModalFuncProps) {
-  return new Promise((resolve) => {
-    Modal[type]({
-      width: 320,
-      icon: null,
-      centered: true,
-      okText: 'Confirm',
-      ...props,
-      wrapClassName: 'portkey-ui-wrapper portkey-ui-modal-method-wrapper ' + wrapClassName,
-      className: 'portkey-ui-modal-method ' + className,
-      prefixCls: `${PORTKEY_PREFIX_CLS}-modal`,
-      onOk: () => {
-        onOk?.();
-        resolve(true);
-      },
-      onCancel: () => {
-        onCancel?.();
-        resolve(false);
-      },
-    });
+  return Modal[type]({
+    width: 320,
+    icon: null,
+    centered: true,
+    okText: 'Confirm',
+    ...props,
+    wrapClassName: 'portkey-ui-wrapper portkey-ui-modal-method-wrapper ' + wrapClassName,
+    className: 'portkey-ui-modal-method ' + className,
+    prefixCls: `${PORTKEY_PREFIX_CLS}-modal`,
+    onOk: onOk,
+    onCancel: onCancel,
   });
 }

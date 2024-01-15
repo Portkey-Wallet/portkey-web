@@ -1,8 +1,16 @@
-import { ChainId, ChainType, IAElfRPCMethods, IBlockchainWallet, IContract, ViewResult } from '@portkey/types';
+import {
+  CallOptions,
+  ChainId,
+  ChainType,
+  IAElfRPCMethods,
+  IBlockchainWallet,
+  IContract,
+  ViewResult,
+} from '@portkey/types';
 import { IChain } from '@portkey/provider-types';
 
 export interface IPortkeyContract extends IContract {
-  encodedTx<T = any>(functionName: string, paramsOption?: any): Promise<ViewResult<T>>;
+  encodedTx<T = any>(functionName: string, paramsOption?: any, callOptions?: CallOptions): Promise<ViewResult<T>>;
 }
 
 export interface BaseContractOptions {

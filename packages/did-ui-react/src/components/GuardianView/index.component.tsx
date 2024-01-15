@@ -1,6 +1,6 @@
 import { ChainId } from '@portkey/types';
-import { memo, useCallback, ReactNode, useState, useRef } from 'react';
-import { AccountTypeEnum, OperationTypeEnum, VerifierItem } from '@portkey/services';
+import { memo, useCallback, ReactNode, useState, useRef, useMemo } from 'react';
+import { AccountType, AccountTypeEnum, OperationTypeEnum, VerifierItem, GuardiansApproved } from '@portkey/services';
 import { useTranslation } from 'react-i18next';
 import CustomSvg from '../CustomSvg';
 import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
@@ -25,6 +25,9 @@ import { useVerifyToken } from '../../hooks';
 import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
 import './index.less';
+import { SocialLoginList } from '../../constants/guardian';
+import GuardianApproval from '../GuardianApproval';
+import BackHeader from '../BackHeader';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -33,16 +36,18 @@ export interface GuardianViewProps {
   isErrorTip?: boolean;
   currentGuardian: UserGuardianStatus;
   guardianList?: UserGuardianStatus[];
+  networkType?: string;
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
-  handleSetLoginGuardian: () => Promise<any>;
+  handleSetLoginGuardian: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
 }
 
-const guardianIconMap: any = {
+const guardianIconMap: Record<AccountType, any> = {
   Email: 'Email',
   Phone: 'GuardianPhone',
   Google: 'GuardianGoogle',
   Apple: 'GuardianApple',
+  Telegram: 'GuardianTelegram',
 };
 
 function GuardianView({
@@ -53,6 +58,7 @@ function GuardianView({
   isErrorTip = true,
   currentGuardian,
   guardianList,
+  networkType = 'MAINNET',
   handleSetLoginGuardian,
   onError,
 }: GuardianViewProps) {
@@ -60,6 +66,11 @@ function GuardianView({
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [switchDisable, setSwitchDisable] = useState<boolean>(false);
+  const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
+  const operationType = useMemo(
+    () => (currentGuardian.isLoginGuardian ? OperationTypeEnum.unsetLoginAccount : OperationTypeEnum.setLoginAccount),
+    [currentGuardian.isLoginGuardian],
+  );
   const reCaptchaHandler = useReCaptchaModal();
   const verifyToken = useVerifyToken();
   const socialBasic = useCallback(
@@ -78,6 +89,9 @@ function GuardianView({
           case 'Google':
             clientId = socialLogin?.Google?.clientId;
             customLoginHandler = socialLogin?.Google?.customLoginHandler;
+            break;
+          case 'Telegram':
+            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
             break;
           default:
             throw 'accountType is not supported';
@@ -112,7 +126,8 @@ function GuardianView({
         chainId: originChainId,
         clientId,
         redirectURI,
-        operationType: OperationTypeEnum.addGuardian,
+        networkType,
+        operationType,
         customLoginHandler,
       });
       if (!rst) return;
@@ -120,38 +135,56 @@ function GuardianView({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, verifyToken, originChainId],
+    [socialBasic, verifyToken, originChainId, networkType, operationType],
   );
-  const handleSwitch = useCallback(async () => {
-    try {
-      setLoading(true);
-      await handleSetLoginGuardian();
-      setVerifierVisible(false);
-    } catch (e) {
-      errorTip(
-        {
-          errorFields: 'Set Login Guardian',
-          error: handleErrorMessage(e),
-        },
-        isErrorTip,
-        onError,
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [handleSetLoginGuardian, isErrorTip, onError]);
+
+  const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
+    const { guardianIdentifier } = handleVerificationDoc(res.verificationDoc);
+
+    curGuardian.current = {
+      ...(curGuardian?.current as UserGuardianStatus),
+      status: VerifyStatus.Verified,
+      verificationDoc: res.verificationDoc,
+      signature: res.signature,
+      identifierHash: guardianIdentifier,
+    };
+    setVerifierVisible(false);
+    setApprovalVisible(true);
+  }, []);
+
+  const approvalSuccess = useCallback(
+    async (approvalInfo: GuardiansApproved[]) => {
+      try {
+        setLoading(true);
+        await handleSetLoginGuardian?.({ ...curGuardian.current, ...currentGuardian }, approvalInfo);
+        setApprovalVisible(false);
+      } catch (e) {
+        errorTip(
+          {
+            errorFields: 'Set Login Guardian',
+            error: handleErrorMessage(e),
+          },
+          isErrorTip,
+          onError,
+        );
+      } finally {
+        setLoading(false);
+      }
+    },
+    [currentGuardian, handleSetLoginGuardian, isErrorTip, onError],
+  );
+
   const sendCode = useCallback(async () => {
     try {
       setLoading(true);
-      const _guardian = curGuardian.current;
       const result = await verification.sendVerificationCode(
         {
           params: {
-            type: _guardian?.guardianType || 'Email',
-            guardianIdentifier: _guardian?.guardianIdentifier || '',
-            verifierId: _guardian?.verifier?.id || '',
+            type: currentGuardian?.guardianType || 'Email',
+            guardianIdentifier: currentGuardian?.guardianIdentifier || '',
+            verifierId: currentGuardian?.verifier?.id || '',
             chainId: originChainId,
-            operationType: OperationTypeEnum.setLoginAccount,
+            operationType,
           },
         },
         reCaptchaHandler,
@@ -180,7 +213,7 @@ function GuardianView({
     } finally {
       setLoading(false);
     }
-  }, [originChainId, reCaptchaHandler, isErrorTip, onError]);
+  }, [currentGuardian, originChainId, operationType, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
     curGuardian.current = {
       ...(curGuardian.current as UserGuardianStatus),
@@ -189,105 +222,134 @@ function GuardianView({
       },
     };
   }, []);
-  const handleVerify = useCallback(async () => {
-    if (
-      [AccountTypeEnum[AccountTypeEnum.Google], AccountTypeEnum[AccountTypeEnum.Apple]].includes(
-        currentGuardian.guardianType,
-      )
-    ) {
-      try {
-        setLoading(true);
-        await socialVerify?.(currentGuardian);
-        await handleSwitch();
-      } catch (error) {
+
+  const handleCommonVerify = useCallback(() => {
+    CustomModal({
+      type: 'confirm',
+      okText: 'Confirm',
+      content: (
+        <p>
+          {`${currentGuardian?.verifier?.name ?? ''} will send a verification code to `}
+          <strong>{currentGuardian?.guardianIdentifier}</strong>
+          {` to verify your ${
+            currentGuardian.guardianType === AccountTypeEnum[AccountTypeEnum.Phone] ? 'phone number' : 'email address'
+          }.`}
+        </p>
+      ),
+      onOk: sendCode,
+    });
+  }, [currentGuardian?.guardianIdentifier, currentGuardian.guardianType, currentGuardian?.verifier?.name, sendCode]);
+  const handleSocialVerify = useCallback(async () => {
+    try {
+      setLoading(true);
+      const res = await socialVerify?.(currentGuardian);
+
+      curGuardian.current = {
+        ...(curGuardian?.current as UserGuardianStatus),
+        status: VerifyStatus.Verified,
+        verificationDoc: res?.verifierInfo.verificationDoc,
+        signature: res?.verifierInfo.signature,
+        identifierHash: res?.guardianIdentifier,
+      };
+      setApprovalVisible(true);
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'Social Verify',
+          error: handleErrorMessage(error),
+        },
+        isErrorTip,
+        onError,
+      );
+    } finally {
+      setLoading(false);
+    }
+  }, [currentGuardian, isErrorTip, onError, socialVerify]);
+
+  const handleSwitch = useCallback(() => {
+    if (SocialLoginList.includes(currentGuardian.guardianType)) {
+      handleSocialVerify();
+    } else {
+      handleCommonVerify();
+    }
+  }, [currentGuardian.guardianType, handleCommonVerify, handleSocialVerify]);
+
+  const checkSetLoginGuardian = useCallback(async () => {
+    setSwitchDisable(true);
+    // step1
+    const isLogin = Object.values(guardianList ?? {}).some(
+      (item: UserGuardianStatus) =>
+        item.isLoginGuardian && item.guardianIdentifier === currentGuardian?.guardianIdentifier,
+    );
+    if (isLogin) {
+      setSwitchDisable(false);
+      handleSwitch();
+      return;
+    }
+    // step2
+    try {
+      await did.getHolderInfo({
+        chainId: originChainId,
+        loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
+      });
+      CustomModal({
+        type: 'info',
+        okText: 'Close',
+        content: <>{t('This account address is already a login account and cannot be used')}</>,
+      });
+    } catch (error: any) {
+      setSwitchDisable(false);
+      if (error?.error?.code?.toString() === '3002') {
+        handleSwitch();
+      } else {
         errorTip(
           {
-            errorFields: 'Social Verify',
+            errorFields: 'GetHolderInfo',
             error: handleErrorMessage(error),
           },
           isErrorTip,
           onError,
         );
-      } finally {
-        setLoading(false);
       }
+    }
+  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, isErrorTip, onError, originChainId, t]);
+
+  const checkUnsetLoginGuardian = useCallback(async () => {
+    setSwitchDisable(true);
+    let loginAccountNum = 0;
+    guardianList?.forEach((item) => {
+      if (item.isLoginGuardian) loginAccountNum++;
+    });
+    if (loginAccountNum > 1) {
+      handleSwitch();
     } else {
       CustomModal({
-        type: 'confirm',
-        okText: 'Confirm',
-        content: (
-          <p>
-            {`${currentGuardian?.verifier?.name ?? ''} will send a verification code to `}
-            <strong>{currentGuardian?.guardianIdentifier}</strong>
-            {` to verify your ${
-              currentGuardian.guardianType === AccountTypeEnum[AccountTypeEnum.Phone] ? 'phone number' : 'email address'
-            }.`}
-          </p>
-        ),
-        onOk: sendCode,
+        type: 'info',
+        okText: 'Close',
+        content: <>{t('This guardian is the only login account and cannot be turned off')}</>,
       });
     }
-  }, [currentGuardian, socialVerify, handleSwitch, isErrorTip, onError, sendCode]);
+    setSwitchDisable(false);
+  }, [guardianList, handleSwitch, t]);
 
   const checkSwitch = useCallback(
     async (status: boolean) => {
       if (status) {
-        const isLogin = Object.values(guardianList ?? {}).some(
-          (item: UserGuardianStatus) =>
-            item.isLoginGuardian && item.guardianIdentifier === currentGuardian?.guardianIdentifier,
-        );
-        if (isLogin) {
-          await handleVerify();
-          return;
-        }
-        try {
-          setSwitchDisable(true);
-          await did.getHolderInfo({
-            chainId: originChainId,
-            loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
-          });
-          CustomModal({
-            type: 'info',
-            okText: 'Close',
-            content: <>{t('This account address is already a login account and cannot be used')}</>,
-          });
-        } catch (error: any) {
-          if (error?.error?.code?.toString() === '3002') {
-            await handleVerify();
-          } else {
-            errorTip(
-              {
-                errorFields: 'GetHolderInfo',
-                error: handleErrorMessage(error),
-              },
-              isErrorTip,
-              onError,
-            );
-          }
-        } finally {
-          setSwitchDisable(false);
-        }
+        checkSetLoginGuardian();
       } else {
-        let loginAccountNum = 0;
-        guardianList?.forEach((item) => {
-          if (item.isLoginGuardian) loginAccountNum++;
-        });
-        if (loginAccountNum > 1) {
-          await handleSwitch();
-        } else {
-          CustomModal({
-            type: 'info',
-            okText: 'Close',
-            content: <>{t('This guardian is the only login account and cannot be turned off')}</>,
-          });
-        }
+        checkUnsetLoginGuardian();
       }
     },
-    [originChainId, currentGuardian, guardianList, handleSwitch, handleVerify, isErrorTip, onError, t],
+    [checkSetLoginGuardian, checkUnsetLoginGuardian],
   );
+  const onCloseApproval = useCallback(() => {
+    setVerifierVisible(false);
+    setApprovalVisible(false);
+  }, []);
   const handleBackView = useCallback(() => {
     curGuardian.current = currentGuardian;
     setVerifierVisible(false);
+    setApprovalVisible(false);
   }, [currentGuardian]);
   return (
     <div className={clsx('portkey-ui-guardian-view', 'portkey-ui-flex-column', className)}>
@@ -337,21 +399,36 @@ function GuardianView({
           </div>
         )}
       </>
-      <CommonBaseModal open={verifierVisible} onClose={handleBackView}>
+      <CommonBaseModal open={verifierVisible} onClose={handleBackView} destroyOnClose>
         <VerifierPage
           originChainId={originChainId}
-          operationType={OperationTypeEnum.setLoginAccount}
+          operationType={operationType}
           onBack={handleBackView}
-          guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
-          verifierSessionId={curGuardian?.current?.verifierInfo?.sessionId || ''}
-          isLoginGuardian={curGuardian?.current?.isLoginGuardian}
-          isCountdownNow={curGuardian?.current?.isInitStatus}
-          accountType={curGuardian?.current?.guardianType}
+          guardianIdentifier={currentGuardian.guardianIdentifier || ''}
+          verifierSessionId={curGuardian.current?.verifierInfo?.sessionId || ''}
+          isLoginGuardian={currentGuardian.isLoginGuardian}
+          isCountdownNow={curGuardian.current?.isInitStatus}
+          accountType={currentGuardian.guardianType}
           isErrorTip={isErrorTip}
-          verifier={curGuardian?.current?.verifier as VerifierItem}
-          onSuccess={handleSwitch}
+          verifier={currentGuardian.verifier as VerifierItem}
+          onSuccess={verifySuccess}
           onError={onError}
           onReSend={reSendCode}
+        />
+      </CommonBaseModal>
+      <CommonBaseModal
+        className="portkey-ui-modal-approval"
+        open={approvalVisible}
+        destroyOnClose
+        onClose={onCloseApproval}>
+        <GuardianApproval
+          header={<BackHeader onBack={onCloseApproval} />}
+          originChainId={originChainId}
+          guardianList={guardianList?.filter((item) => item.key !== currentGuardian.key)}
+          networkType={networkType || 'MAINNET'}
+          onConfirm={approvalSuccess}
+          onError={onError}
+          operationType={operationType}
         />
       </CommonBaseModal>
     </div>

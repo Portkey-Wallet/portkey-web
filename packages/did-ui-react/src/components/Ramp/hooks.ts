@@ -13,6 +13,7 @@ import { CAInfo } from '@portkey/did';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { usePortkey } from '../context';
 import singleMessage from '../CustomAnt/message';
+import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../constants/storage';
 
 interface TransferParams {
   symbol: string;
@@ -137,6 +138,7 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
 
       if (!keyPair) throw new Error('Sell Transfer: No keyPair');
 
+      const guardiansApprovedStr = localStorage.getItem(PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST);
       const rawResult = await getCATransactionRaw<TransferParams>({
         chainId: chainId.current,
         contractAddress: tokenInfo.tokenContractAddress || '',
@@ -149,6 +151,7 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
           to: `ELF_${params.address}_AELF`,
           amount: timesDecimals(params.cryptoAmount, tokenInfo.decimals).toNumber(),
         },
+        callOptions: { appendParams: { guardiansApproved: guardiansApprovedStr } },
       });
       if (!rawResult) {
         throw new Error('Failed to get raw transaction.');

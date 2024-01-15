@@ -27,6 +27,9 @@ export default function CryptoDesignBaseCom({
   phoneCountry,
   extraElement,
   termsOfService,
+  privacyPolicy,
+  loginMethodsOrder,
+  recommendIndexes,
   onError,
   onSuccess,
   validateEmail,
@@ -99,7 +102,10 @@ export default function CryptoDesignBaseCom({
           socialLogin={_socialLogin}
           extraElement={extraElement}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
           networkType={networkType}
+          loginMethodsOrder={loginMethodsOrder}
+          recommendIndexes={recommendIndexes}
           onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
@@ -132,7 +138,10 @@ export default function CryptoDesignBaseCom({
           isShowScan={isShowScan}
           extraElement={extraElement}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
           networkType={networkType}
+          loginMethodsOrder={loginMethodsOrder}
+          recommendIndexes={recommendIndexes}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={onFinish}
           validatePhone={_validatePhone}

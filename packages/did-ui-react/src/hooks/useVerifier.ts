@@ -30,12 +30,14 @@ const useVerifier = () => {
       verifier,
       chainId,
       operationType,
+      networkType,
     }: {
       guardianIdentifier: string;
       accountType: AccountType;
       token?: string;
       verifier: IVerifier;
       chainId: ChainId;
+      networkType?: string;
       operationType: OperationTypeEnum;
     }) => {
       let accessToken;
@@ -54,6 +56,10 @@ const useVerifier = () => {
           clientId = socialLogin?.Google?.clientId;
           customLoginHandler = socialLogin?.Google?.customLoginHandler;
           break;
+        case 'Telegram':
+          accessToken = token;
+          customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
+          break;
         default:
           throw 'accountType is not supported';
       }
@@ -66,6 +72,7 @@ const useVerifier = () => {
         clientId: clientId ?? '',
         redirectURI,
         operationType,
+        networkType,
         customLoginHandler,
       });
     },

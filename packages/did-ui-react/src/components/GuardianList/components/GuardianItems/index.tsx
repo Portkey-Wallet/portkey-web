@@ -8,6 +8,7 @@ import { ChainId } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
 import { OperationTypeEnum } from '@portkey/services';
+import { SocialLoginList } from '../../../../constants/guardian';
 
 interface GuardianItemProps {
   originChainId?: ChainId;
@@ -35,10 +36,7 @@ function GuardianItems({
   onVerifying,
 }: GuardianItemProps) {
   const { t } = useTranslation();
-  const isSocialLogin = useMemo(
-    () => item.guardianType === 'Google' || item.guardianType === 'Apple',
-    [item.guardianType],
-  );
+  const isSocialLogin = useMemo(() => SocialLoginList.includes(item.guardianType), [item.guardianType]);
 
   const accountShow = useCallback((guardian: UserGuardianItem) => {
     switch (guardian.guardianType) {
@@ -53,10 +51,11 @@ function GuardianItems({
           </div>
         );
       case 'Apple':
+      case 'Telegram':
         return (
           <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
-            <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail}</div>
+            <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail || '******'}</div>
           </div>
         );
     }

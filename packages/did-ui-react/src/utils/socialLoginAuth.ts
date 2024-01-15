@@ -6,10 +6,12 @@ export const socialLoginAuth = ({
   type,
   clientId,
   redirectURI,
+  network,
 }: {
   type: ISocialLogin;
   clientId?: string;
   redirectURI?: string;
+  network?: string;
 }): Promise<{
   token: string;
   provider: ISocialLogin;
@@ -36,9 +38,15 @@ export const socialLoginAuth = ({
     };
 
     window.addEventListener('message', onMessage);
-    const windowOpener = window.open(
-      `${WEB_PAGE}/social-login/${type}?${stringify({ clientId, redirectURI, version: PORTKEY_VERSION })}`,
-    );
+    const baseUrl = `${WEB_PAGE}/social-login/${type}`;
+    const queryParams =
+      type === 'Telegram'
+        ? {
+            network,
+            from: 'openlogin',
+          }
+        : { clientId, redirectURI, version: PORTKEY_VERSION };
+    const windowOpener = window.open(`${baseUrl}?${stringify(queryParams)}`);
 
     timer = setInterval(() => {
       if (windowOpener?.closed) {

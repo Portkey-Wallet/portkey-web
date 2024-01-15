@@ -4,6 +4,7 @@ import { getChain } from '../../hooks/useChainInfo';
 import { getContractBasic } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
 import { PortkeyUIError } from '../../constants/error';
+import { CallOptions } from '@portkey/types';
 
 interface CATransactionRawParams<T = any> {
   sandboxId?: string;
@@ -14,6 +15,7 @@ interface CATransactionRawParams<T = any> {
   privateKey: string;
   caHash: string;
   methodName: string;
+  callOptions?: CallOptions;
 }
 
 export const getCATransactionRawOnSandbox = async (params: CATransactionRawParams) => {
@@ -40,7 +42,7 @@ export const getCATransactionRawOnSandbox = async (params: CATransactionRawParam
 };
 
 export const getCATransactionRawOnWeb = async (params: Omit<CATransactionRawParams, 'chainType'>) => {
-  const { chainId, privateKey, caHash, contractAddress, methodName, paramsOption } = params;
+  const { chainId, privateKey, caHash, contractAddress, methodName, paramsOption, callOptions } = params;
   const chainInfo = await getChain(chainId);
   if (!chainInfo) throw 'Please check network connection and chainId';
 
@@ -63,7 +65,7 @@ export const getCATransactionRawOnWeb = async (params: Omit<CATransactionRawPara
 
   options.args = paramsOption;
 
-  const rawResult = await contract.encodedTx('ManagerForwardCall', options);
+  const rawResult = await contract.encodedTx('ManagerForwardCall', options, callOptions);
   if (!rawResult || !rawResult.data) {
     throw new Error('Failed to get raw transaction.');
   }

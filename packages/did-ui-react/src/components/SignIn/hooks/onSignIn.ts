@@ -7,13 +7,12 @@ import { BaseGuardianItem, OnErrorFunc, UserGuardianStatus, VerifyStatus } from 
 import useVerifier from '../../../hooks/useVerifier';
 import { GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import useSendCode from './useSendCode';
+import { SocialLoginList } from '../../../constants/guardian';
 
 interface Props {
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
 }
-
-const socialTypeList = ['Apple', 'Google'];
 
 export enum NextStepType {
   Step2OfSkipGuardianApprove = 'Step2OfSkipGuardianApprove',
@@ -21,7 +20,7 @@ export enum NextStepType {
 }
 
 const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
-  const [{ sandboxId, chainType }] = usePortkey();
+  const [{ sandboxId, chainType, networkType }] = usePortkey();
   const { verifySocialToken } = useVerifier();
   const sendCodeConfirm = useSendCode();
 
@@ -41,9 +40,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
             guardianIdentifierInfo.identifier === baseGuardian.identifier &&
             guardianIdentifierInfo.accountType === baseGuardian.guardianType
           )
-            baseGuardian.accessToken =
-              guardianIdentifierInfo.authenticationInfo?.googleAccessToken ||
-              guardianIdentifierInfo.authenticationInfo?.appleIdToken;
+            baseGuardian.accessToken = guardianIdentifierInfo.authenticationInfo?.authToken;
 
           return Object.assign({}, baseGuardian);
         });
@@ -62,7 +59,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
     [chainType, isErrorTip, onError, sandboxId],
   );
 
-  const approveAppleAndGoogle = useCallback(
+  const approveSocialLogin = useCallback(
     async (guardianIdentifierInfo: IGuardianIdentifierInfo, guardian: BaseGuardianItem) => {
       const verifier = guardian.verifier as VerifierItem;
       const result = await verifySocialToken({
@@ -70,6 +67,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         token: guardian.accessToken,
         guardianIdentifier: guardian.identifier || '',
         verifier,
+        networkType,
         chainId: guardianIdentifierInfo.chainId,
         operationType: OperationTypeEnum.communityRecovery,
       });
@@ -84,7 +82,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
 
       return approvedItem;
     },
-    [verifySocialToken],
+    [networkType, verifySocialToken],
   );
 
   const toGuardianApprove = useCallback(
@@ -136,9 +134,9 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
 
                 if (!guardian) throw 'No match';
                 const accountType = guardian.guardianType;
-                if (!socialTypeList.includes(accountType)) throw 'No match for Apple or Google';
+                if (!SocialLoginList.includes(accountType)) throw 'No match for Apple、 Google or Telegram';
                 try {
-                  const approvedItem = await approveAppleAndGoogle(guardianIdentifierInfo, guardian);
+                  const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);
                   approvedList.push(approvedItem);
                   guardianList[index] = {
                     ...guardian,
@@ -171,9 +169,9 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       console.log(guardian, 'guardian=getGuardians');
       const accountType = guardian.guardianType;
       // Apple and Google approve;
-      if (socialTypeList.includes(accountType)) {
+      if (SocialLoginList.includes(accountType)) {
         try {
-          const approvedItem = await approveAppleAndGoogle(guardianIdentifierInfo, guardian);
+          const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);
           return {
             nextStep: NextStepType.SetPinAndAddManager,
             value: {
@@ -215,7 +213,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         ]);
       }
     },
-    [approveAppleAndGoogle, getGuardians, sendCodeConfirm, toGuardianApprove],
+    [approveSocialLogin, getGuardians, sendCodeConfirm, toGuardianApprove],
   );
   return signInHandler;
 };

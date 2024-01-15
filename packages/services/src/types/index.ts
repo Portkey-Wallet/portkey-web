@@ -5,7 +5,16 @@ export enum AccountTypeEnum {
   Phone,
   Google,
   Apple,
+  Telegram,
 }
+
+export const AccountTypeKeyEnum = {
+  Email: 'Email',
+  Phone: 'Phone',
+  Google: 'Google',
+  Apple: 'Apple',
+  Telegram: 'Telegram',
+};
 
 export type AccountType = keyof typeof AccountTypeEnum;
 

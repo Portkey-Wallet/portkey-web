@@ -31,13 +31,17 @@ export interface ITransferSettingsEditProps extends FormProps {
   initData: ITransferLimitItemWithRoute;
   isErrorTip?: boolean;
   sandboxId?: string;
-  onBack?: () => void;
+  networkType?: string;
+  onBack?: (data: ITransferLimitItemWithRoute) => void;
   onSuccess?: (data: ITransferLimitItemWithRoute) => void;
   onGuardiansApproveError?: OnErrorFunc;
 }
 
 export interface ITransferLimitItemWithRoute extends ITransferLimitItem {
-  businessFrom?: IBusinessFrom;
+  businessFrom?: {
+    module: IBusinessFrom;
+    extraConfig?: any;
+  };
 }
 
 export type IBusinessFrom = 'ramp-sell' | 'send';
@@ -52,6 +56,7 @@ export default function TransferSettingsEditMain({
   initData,
   isErrorTip = true,
   sandboxId = '',
+  networkType = '',
   onBack,
   onSuccess,
   onGuardiansApproveError,
@@ -293,7 +298,7 @@ export default function TransferSettingsEditMain({
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
-      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={onBack} />
+      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={() => onBack?.(initData)} />
       <Form
         form={form}
         autoComplete="off"
@@ -358,6 +363,7 @@ export default function TransferSettingsEditMain({
         <GuardianApproval
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
+          networkType={networkType}
           targetChainId={targetChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}

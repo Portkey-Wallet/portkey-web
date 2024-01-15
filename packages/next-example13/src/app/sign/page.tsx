@@ -16,6 +16,10 @@ ConfigProvider.setGlobalConfig({
       websiteIcon: '',
     },
   },
+  loginConfig: {
+    loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
+    recommendIndexes: [0, 1],
+  },
   requestDefaults: {
     timeout: 30000,
   },
@@ -49,11 +53,13 @@ export default function Sign() {
         keyboard={true}
         design={design}
         uiType={uiType}
+        defaultChainId="tDVV"
         extraElement={<div style={{ height: 300, background: 'red' }}></div>}
         getContainer="#wrapper"
         isShowScan
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
+        privacyPolicy={'https://portkey.finance/privacy-policy'}
         onFinish={async res => {
           console.log(res, 'onFinish====');
           CHAIN_ID = res.chainId;
