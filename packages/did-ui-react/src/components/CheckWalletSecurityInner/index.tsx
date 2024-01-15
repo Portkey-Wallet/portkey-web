@@ -12,6 +12,7 @@ export interface BaseCheckWalletSecurityInnerProps {
   caHash: string;
   originChainId: ChainId;
   targetChainId: ChainId;
+  networkType?: string;
 }
 
 export interface ICheckWalletSecurityParams {
@@ -33,6 +34,7 @@ export default function CheckWalletSecurityInner({
   caHash,
   originChainId,
   targetChainId,
+  networkType,
   onCancel,
   onFinish,
 }: CheckWalletSecurityInnerProps) {
@@ -56,6 +58,7 @@ export default function CheckWalletSecurityInner({
             caHash={caHash || ''}
             originChainId={originChainId}
             accelerateChainId={targetChainId}
+            networkType={networkType || ''}
             onAddGuardianFinish={onFinish}
             onBack={() => setStep(Step.confirmModal)}
           />

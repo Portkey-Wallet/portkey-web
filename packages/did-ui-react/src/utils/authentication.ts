@@ -8,7 +8,7 @@ export type AppleUserInfo = {
   isPrivate: boolean;
 };
 
-export function parseAppleIdentityToken(identityToken?: string | null) {
+export function parseAppleIdentityToken(identityToken?: string | null): AppleUserInfo | undefined {
   if (!identityToken) return;
   const parts = identityToken.split('.');
   const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
@@ -52,4 +52,29 @@ export async function getGoogleUserInfo(accessToken = ''): Promise<GoogleUserInf
     firstName: TmpUserInfo[accessToken].given_name,
     lastName: TmpUserInfo[accessToken].family_name,
   };
+}
+
+interface TelegramUserInfo {
+  isExpired: boolean;
+  userId: string;
+  id: string;
+  expirationTime: number;
+  firstName: string;
+  lastName?: string;
+  picture?: string;
+  email?: undefined;
+  isPrivate: boolean;
+}
+
+export function parseTelegramToken(token?: string | null): TelegramUserInfo | undefined {
+  if (!token) return;
+  const parts = token.split('.');
+  const payload = JSON.parse(Buffer.from(parts[1], 'base64').toString());
+  const expirationTime = payload.exp * 1000;
+  const isExpired = new Date(expirationTime) < new Date();
+  const userId = payload.userId;
+  const firstName = payload.firstName;
+  const picture = payload.protoUrl;
+  const lastName = payload.lastName;
+  return { isExpired, userId, expirationTime, isPrivate: true, firstName, picture, lastName, id: userId };
 }

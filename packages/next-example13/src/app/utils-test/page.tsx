@@ -24,6 +24,10 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
+  loginConfig: {
+    loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
+    recommendIndexes: [0, 1],
+  },
 });
 
 export default function AppleAuth() {

@@ -27,8 +27,10 @@ export const getVerifierListHandler = async ({ originChainId, sandboxId, chainTy
 export const getGuardianList = async ({
   identifier,
   originChainId,
+  caHash,
   ...props
-}: { identifier: string } & FetchVerifierProps) => {
+}: { identifier?: string; caHash?: string } & FetchVerifierProps) => {
+  if (!(caHash || identifier)) throw 'Param is not valid';
   const verifierList = await getVerifierListHandler({ originChainId, ...props });
   if (!verifierList) throw 'Fetch verifier list error';
   const verifierMap: { [x: string]: VerifierItem } = {};
@@ -36,10 +38,15 @@ export const getGuardianList = async ({
     verifierMap[item.id] = item;
   });
 
-  const payload = await did.getHolderInfo({
-    loginGuardianIdentifier: identifier.replaceAll(/\s/g, ''),
-    chainId: originChainId,
-  });
+  const params = identifier
+    ? {
+        loginGuardianIdentifier: identifier.replaceAll(/\s/g, ''),
+      }
+    : {
+        caHash,
+      };
+
+  const payload = await did.getHolderInfo(Object.assign(params, { chainId: originChainId }));
 
   const { guardians } = payload?.guardianList ?? { guardians: [] };
 

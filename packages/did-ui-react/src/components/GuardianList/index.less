@@ -141,8 +141,23 @@
   }
 
   .confirm-approve-btn {
+    box-shadow: none;
+    height: auto;
+    padding: 0;
+    text-shadow: none;
+    width: 100%;
+    background-color: var(--portkey-ui-primary-btn-bg);
+    border-color: var(--portkey-ui-primary-border);
     line-height: var(--portkey-ui-default-btn-h);
     border-radius: var(--portkey-ui-primary-border-radius);
+  }
+
+  .confirm-approve-btn:disabled {
+    background-color: var(--portkey-ui-primary-btn-bg);
+    border-color: var(--portkey-ui-primary-border);
+    box-shadow: none !important;
+    color: var(--portkey-ui-font-12);
+    opacity: 0.3;
   }
 }
 

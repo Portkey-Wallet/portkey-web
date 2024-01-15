@@ -1,6 +1,7 @@
 import { ChainType } from '@portkey-v1/types';
 import { ICountryItem } from './country';
 import { DeviceType, QRExtraDataType } from './device';
+import { AccountType } from '@portkey-v1/services';
 
 export type NetworkType = 'MAIN' | 'TESTNET';
 
@@ -28,7 +29,8 @@ export interface AuthenticationInfo {
   [userId: string]: string;
 }
 
-export type ISocialLogin = 'Google' | 'Apple';
+export type ISocialLogin = 'Google' | 'Apple' | 'Telegram';
+export type IWeb2Login = 'Email' | 'Phone';
 
 export type TSocialResponseData = {
   accessToken?: string;
@@ -51,6 +53,10 @@ export interface IAppleLoginConfig extends BaseAppleLoginConfig {
   customLoginHandler?: TSocialLoginHandler;
 }
 
+export interface ITelegramLoginConfig {
+  customLoginHandler?: TSocialLoginHandler;
+}
+
 interface IPortkeyLoginConfig {
   websiteName: string;
   websiteIcon?: string;
@@ -59,6 +65,7 @@ interface IPortkeyLoginConfig {
 export interface ISocialLoginConfig {
   Google?: IGoogleLoginConfig;
   Apple?: IAppleLoginConfig;
+  Telegram?: ITelegramLoginConfig;
   Portkey?: IPortkeyLoginConfig;
 }
 
@@ -77,3 +84,5 @@ interface SocialResponseInfo {
 export type TSocialLoginHandler = () => Promise<SocialResponseInfo>;
 
 export type SocialLoginFinishHandler = (value: { type: ISocialLogin; data?: TSocialResponseData }) => void;
+
+export type TotalAccountType = AccountType | 'Scan';

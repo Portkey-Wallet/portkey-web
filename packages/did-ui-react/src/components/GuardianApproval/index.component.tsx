@@ -31,6 +31,7 @@ import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
 import './index.less';
+import { SocialLoginList } from '../../constants/guardian';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -43,6 +44,7 @@ export interface GuardianApprovalProps {
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
   operationType?: OperationTypeEnum;
+  networkType: string;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -60,6 +62,7 @@ const GuardianApprovalMain = forwardRef(
       targetChainId,
       className,
       guardianList: defaultGuardianList,
+      networkType,
       isErrorTip = true,
       wrapperStyle,
       operationType = OperationTypeEnum.communityRecovery,
@@ -141,6 +144,9 @@ const GuardianApprovalMain = forwardRef(
               clientId = socialLogin?.Google?.clientId;
               customLoginHandler = socialLogin?.Google?.customLoginHandler;
               break;
+            case 'Telegram':
+              customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
+              break;
             default:
               throw 'accountType is not supported';
           }
@@ -156,9 +162,10 @@ const GuardianApprovalMain = forwardRef(
             clientId,
             redirectURI,
             operationType,
+            networkType,
             customLoginHandler,
           });
-          if (!rst && item.guardianType === 'Apple') return;
+          if (!rst || !rst.verificationDoc) return;
 
           const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
           const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
@@ -187,12 +194,12 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [originChainId, targetChainId, isErrorTip, onError, operationType, verifyToken],
+      [verifyToken, originChainId, targetChainId, operationType, networkType, isErrorTip, onError],
     );
 
     const onVerifyingHandler = useCallback(
       async (_item: UserGuardianStatus, index: number) => {
-        const isSocialLogin = _item.guardianType === 'Google' || _item.guardianType === 'Apple';
+        const isSocialLogin = SocialLoginList.includes(_item.guardianType);
         if (isSocialLogin) return socialVerifyHandler(_item, index);
 
         try {

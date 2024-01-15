@@ -1,8 +1,8 @@
 import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey-v1/services';
-import { GuardianItem } from './type';
+import { GuardianApprovedItem } from './type';
 
 export const formatGuardianValue = (approvalInfo?: GuardiansApproved[]) => {
-  const guardiansApproved: GuardianItem[] =
+  const guardiansApproved: GuardianApprovedItem[] =
     approvalInfo?.map((item) => ({
       type: AccountTypeEnum[item.type as AccountType],
       identifierHash: item?.identifierHash,

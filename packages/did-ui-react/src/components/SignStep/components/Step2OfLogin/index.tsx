@@ -18,6 +18,7 @@ interface Step2OfLoginProps {
   guardianList?: UserGuardianStatus[];
   approvedList?: GuardiansApproved[];
   guardianIdentifierInfo: IGuardianIdentifierInfo;
+  networkType?: string;
   onFinish?(guardianList: GuardiansApproved[]): Promise<void>;
   onCancel?(): void;
   onError?: OnErrorFunc;
@@ -29,6 +30,7 @@ function Step2OfLogin({
   isErrorTip = true,
   approvedList,
   guardianList: defaultGuardianList,
+  networkType = '',
   guardianIdentifierInfo,
   onFinish,
   onCancel,
@@ -71,9 +73,7 @@ function Step2OfLogin({
           guardianIdentifierInfo.identifier === baseGuardian.identifier &&
           guardianIdentifierInfo.accountType === baseGuardian.guardianType
         )
-          baseGuardian.accessToken =
-            guardianIdentifierInfo.authenticationInfo?.googleAccessToken ||
-            guardianIdentifierInfo.authenticationInfo?.appleIdToken;
+          baseGuardian.accessToken = guardianIdentifierInfo.authenticationInfo?.authToken;
         const temGuardian = (guardianMap[key] ? guardianMap[key] : {}) as UserGuardianStatus;
         if (approvedMap[key] && temGuardian) {
           const approvedItem = approvedMap[key];
@@ -110,6 +110,7 @@ function Step2OfLogin({
         originChainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}
+        networkType={networkType}
         isErrorTip={isErrorTip}
         onConfirm={onFinish}
         onError={onError}

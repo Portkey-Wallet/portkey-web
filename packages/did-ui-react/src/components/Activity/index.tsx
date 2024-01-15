@@ -7,7 +7,7 @@ import ActivityList from '../ActivityList';
 import { PAGESIZE_10 } from '../../constants';
 import { getSkipCount } from '../context/utils';
 import { PaginationPage } from '../../types';
-import { useThrottleEffect } from '../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { usePortkey } from '../context';
 import { ActivityStateMapAttributes, basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import { usePortkeyAssetDispatch } from '../context/PortkeyAssetProvider/hooks';
@@ -77,7 +77,7 @@ export default function Activity({ chainId, symbol, onViewActivityItem }: Activi
   const isOnce = useRef<boolean>();
 
   // init State
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     if (!caAddressInfos || isOnce.current) return;
     getList();
     isOnce.current = true;

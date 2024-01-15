@@ -10,6 +10,7 @@ interface Step2OfSkipGuardianApproveProps {
   isErrorTip?: boolean;
   guardianList?: UserGuardianStatus[];
   guardianIdentifierInfo: IGuardianIdentifierInfo;
+  networkType?: string;
   onFinish?(guardianList: GuardiansApproved[]): Promise<void>;
   onCancel?(): void;
   onError?: OnErrorFunc;
@@ -20,6 +21,7 @@ function Step2OfSkipGuardianApprove({
   isErrorTip = true,
   guardianList,
   guardianIdentifierInfo,
+  networkType = '',
   onFinish,
   onCancel,
   onError,
@@ -45,6 +47,7 @@ function Step2OfSkipGuardianApprove({
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}
         isErrorTip={isErrorTip}
+        networkType={networkType}
         onConfirm={onFinish}
         onError={onError}
         onGuardianListChange={onGuardianListChange}

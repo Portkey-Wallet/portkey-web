@@ -78,6 +78,7 @@ function Example() {
         isShowScan
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
+        privacyPolicy={'https://portkey.finance/privacy-policy'}
         onFinish={async res => {
           console.log(res, 'onFinish====');
         }}
@@ -130,6 +131,7 @@ function Example() {
           {/* <CryptoDesign
             style={{ height: 600, border: '1px solid gray' }}
             termsOfService={'https://portkey.finance/terms-of-service'}
+            privacyPolicy={'https://portkey.finance/privacy-policy'}
             onError={(error: any) => {
               console.log('onError', error);
             }}
@@ -140,6 +142,7 @@ function Example() {
           <SocialDesign
             style={{ height: 600, border: '1px solid gray' }}
             termsOfService={'https://portkey.finance/terms-of-service'}
+            privacyPolicy={'https://portkey.finance/privacy-policy'}
             onError={(error: any) => {
               console.log('onError', error);
             }}
@@ -264,6 +267,7 @@ function Example() {
               ],
             }}
             termsOfService={'https://portkey.finance/terms-of-service'}
+            privacyPolicy={'https://portkey.finance/privacy-policy'}
             onError={(error: any) => {
               console.log('onError', error);
             }}

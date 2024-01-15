@@ -16,7 +16,7 @@ import { amountInUsdShow } from '../../../../utils/assets';
 import { useCheckManagerSyncState } from '../../../../hooks/wallet';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
 import { useFeeByChainId } from '../../../context/PortkeyAssetProvider/hooks/txFee';
-import { useThrottleEffect } from '../../../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 
 export default function TokenInput({
   fromAccount,
@@ -116,7 +116,7 @@ export default function TokenInput({
     token.symbol,
   ]);
 
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     getTokenBalance();
     getMaxAmount();
   }, [getMaxAmount, getTokenBalance]);

@@ -1,7 +1,7 @@
 import { ChainId } from '@portkey-v1/types';
 import { CustomContractBasic, did } from '..';
 import { getChainInfo } from '../../hooks/useChainInfo';
-import { GuardianItem } from '../../components/Guardian/utils/type';
+import { GuardianApprovedItem } from '../../components/Guardian/utils/type';
 
 export const setTransferLimit = async ({
   params,
@@ -9,7 +9,7 @@ export const setTransferLimit = async ({
   sandboxId = '',
   caHash,
 }: {
-  params: { guardiansApproved: GuardianItem[]; symbol: string; singleLimit: string; dailyLimit: string };
+  params: { guardiansApproved: GuardianApprovedItem[]; symbol: string; singleLimit: string; dailyLimit: string };
   targetChainId?: ChainId;
   sandboxId?: string;
   caHash: string;

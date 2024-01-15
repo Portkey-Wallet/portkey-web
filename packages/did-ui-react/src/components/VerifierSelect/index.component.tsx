@@ -26,9 +26,9 @@ type SelectVerifierStorageInfo = {
 const SelectVerifierInfoStr = `${portkeyDidUIPrefix}SelectVerifierInfo`;
 export interface VerifierSelectConfirmResult {
   verifier: VerifierItem;
-  // accountType === 'Email' || accountType === 'Phone' is required;
+  // accountType === 'Email' 'Phone' 'Telegram'  is required;
   verifierSessionId?: string;
-  // accountType === 'Google' || accountType === 'Apple' is required;
+  // accountType === 'Google' 'Apple' 'Telegram' is required;
   verificationDoc?: string;
   signature?: string;
   //
@@ -44,9 +44,8 @@ export interface VerifierSelectProps {
   isErrorTip?: boolean;
   operationType?: OperationTypeEnum;
   chainType?: ChainType;
-  // socialLogin porps
-  appleIdToken?: string; // apple authorized
-  googleAccessToken?: string; // google authorized
+  // socialLogin props
+  authToken?: string; // apple、google、telegram authorized token
   //
   onError?: OnErrorFunc;
   onConfirm?: (result: VerifierSelectConfirmResult) => void;
@@ -64,8 +63,7 @@ export default function VerifierSelect({
   chainType = 'aelf',
   accountType = 'Email',
   defaultVerifier,
-  appleIdToken,
-  googleAccessToken,
+  authToken,
   operationType = OperationTypeEnum.register,
   onError,
   onConfirm,
@@ -81,7 +79,7 @@ export default function VerifierSelect({
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>(defaultVerifierList);
 
   const socialLogin = useMemo<ISocialLoginConfig | undefined>(() => ConfigProvider.getSocialLoginConfig(), []);
-  const [{ sandboxId }] = usePortkey();
+  const [{ sandboxId, networkType }] = usePortkey();
 
   const getVerifierInfo = useCallback(async () => {
     try {
@@ -196,13 +194,17 @@ export default function VerifierSelect({
       let customLoginHandler;
       switch (accountType) {
         case 'Apple':
-          accessToken = appleIdToken;
+          accessToken = authToken;
           clientId = socialLogin?.Apple?.clientId;
           redirectURI = socialLogin?.Apple?.redirectURI;
           customLoginHandler = socialLogin?.Apple?.customLoginHandler;
           break;
+        case 'Telegram':
+          accessToken = authToken;
+          customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
+          break;
         case 'Google':
-          accessToken = googleAccessToken;
+          accessToken = authToken;
           clientId = socialLogin?.Google?.clientId;
           customLoginHandler = socialLogin?.Google?.customLoginHandler;
           break;
@@ -218,6 +220,7 @@ export default function VerifierSelect({
         clientId: clientId ?? '',
         redirectURI,
         operationType: OperationTypeEnum.register,
+        networkType,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);
@@ -239,14 +242,19 @@ export default function VerifierSelect({
     }
   }, [
     accountType,
-    appleIdToken,
+    authToken,
     chainId,
-    googleAccessToken,
     guardianIdentifier,
     isErrorTip,
+    networkType,
     onError,
     selectItem,
-    socialLogin,
+    socialLogin?.Apple?.clientId,
+    socialLogin?.Apple?.customLoginHandler,
+    socialLogin?.Apple?.redirectURI,
+    socialLogin?.Google?.clientId,
+    socialLogin?.Google?.customLoginHandler,
+    socialLogin?.Telegram?.customLoginHandler,
     verifyToken,
   ]);
 
@@ -269,6 +277,7 @@ export default function VerifierSelect({
       switch (accountType) {
         case 'Apple':
         case 'Google':
+        case 'Telegram':
           info = {
             verifier: selectItem,
           };

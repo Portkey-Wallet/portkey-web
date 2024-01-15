@@ -1,9 +1,5 @@
 @import '../../assets/theme/constants.less';
 
-.social-login-content {
-  padding-top: 16px;
-}
-
 .login-by-input-btn {
   line-height: var(--portkey-ui-default-btn-h);
   font-size: 16px;
@@ -65,7 +61,7 @@
 .social-login-mobile-wrapper {
   .social-login-title {
     padding-top: 64px;
-    padding-bottom: 48px;
+    padding-bottom: 40px;
     .backleft-icon {
       position: absolute;
       top: 18px;
@@ -75,6 +71,27 @@
     .portkey-icon {
       margin: 0 auto 12px;
     }
+  }
+}
+
+.portkey-ui-extra-guardian-type-content {
+  gap: 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+  .icon-wrapper {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    border: 1px solid var(--portkey-ui-default-border);
+    cursor: pointer;
+  }
+  .portkey-ui-custom-svg,
+  .portkey-ui-custom-svg svg {
+    width: 20px;
+    height: 20px;
+  }
+  .expand-account {
+    transform: rotate(180deg);
   }
 }
 

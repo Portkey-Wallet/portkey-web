@@ -17,6 +17,7 @@ const GuardianTypeIcon: Record<AccountType, any> = {
   Phone: 'GuardianPhone',
   Google: 'GuardianGoogle',
   Apple: 'GuardianApple',
+  Telegram: 'GuardianTelegram',
 };
 
 export default function VerifierPair({

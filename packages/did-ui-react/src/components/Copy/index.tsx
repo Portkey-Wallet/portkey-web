@@ -2,7 +2,7 @@ import { useCopyToClipboard } from 'react-use';
 import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 import CustomSvg from '../CustomSvg';
-import { useThrottleCallback } from '../../hooks/throttle';
+import { useThrottleFirstCallback } from '../../hooks/throttle';
 import { useRef } from 'react';
 import singleMessage from '../CustomAnt/message';
 
@@ -24,7 +24,7 @@ export default function Copy({
 
   const isClose = useRef<boolean>();
 
-  const copyHandler = useThrottleCallback(
+  const copyHandler = useThrottleFirstCallback(
     () => {
       setCopied(toCopy);
       if (isClose.current) return;

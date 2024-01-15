@@ -79,6 +79,7 @@ export interface SignInProps {
   phoneCountry?: IPhoneCountry;
   extraElement?: ReactNode; // extra element
   termsOfService?: ReactNode;
+  privacyPolicy?: string;
   design?: TDesign;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;

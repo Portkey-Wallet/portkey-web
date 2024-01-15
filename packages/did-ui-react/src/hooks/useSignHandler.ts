@@ -1,6 +1,5 @@
 import { ChainId } from '@portkey-v1/types';
 import { useRef, useCallback, useMemo } from 'react';
-import { AccountType, AccountTypeEnum } from '@portkey-v1/services';
 import { GuardianInputInfo, IBaseGetGuardianProps } from '../components';
 import {
   did,
@@ -8,6 +7,7 @@ import {
   handleErrorCode,
   handleErrorMessage,
   parseAppleIdentityToken,
+  parseTelegramToken,
   setLoading,
 } from '../utils';
 import { SocialLoginFinishHandler } from '../types';
@@ -105,30 +105,30 @@ export const useSignHandler = ({
       try {
         setLoading(true, 'Checking account info on the blockchain');
         if (!data) throw 'Action error';
+
+        let userId = undefined;
         if (type === 'Google') {
           const userInfo = await getGoogleUserInfo(data?.accessToken);
-          if (!userInfo?.id) throw userInfo;
-          await validateIdentifier(userInfo.id);
-          onFinish({
-            identifier: userInfo.id,
-            accountType: AccountTypeEnum[AccountTypeEnum.Google] as AccountType,
-            authenticationInfo: { googleAccessToken: data?.accessToken },
-          });
+          userId = userInfo?.id;
+          if (!userId) throw 'Authorization failed';
         } else if (type === 'Apple') {
           const userInfo = parseAppleIdentityToken(data?.accessToken);
-          if (userInfo) {
-            await validateIdentifier(userInfo.userId);
-            onFinish({
-              identifier: userInfo.userId,
-              accountType: AccountTypeEnum[AccountTypeEnum.Apple] as AccountType,
-              authenticationInfo: { appleIdToken: data?.accessToken },
-            });
-          } else {
-            throw 'Authorization failed';
-          }
+          userId = userInfo?.userId;
+          if (!userId) throw 'Authorization failed';
+        } else if (type === 'Telegram') {
+          const userInfo = parseTelegramToken(data?.accessToken);
+          userId = userInfo?.userId;
+          if (!userId) throw 'Authorization failed';
         } else {
           throw Error(`AccountType:${type} is not support`);
         }
+
+        await validateIdentifier(userId);
+        onFinish({
+          identifier: userId,
+          accountType: type,
+          authenticationInfo: { authToken: data?.accessToken },
+        });
       } catch (error) {
         setLoading(false);
 

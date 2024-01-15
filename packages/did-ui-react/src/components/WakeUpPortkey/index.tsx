@@ -95,7 +95,7 @@ export default function WakeUpPortkey({
   }, [deviceInfo, generateKeystore, intervalHandler, networkType, websiteInfo]);
 
   return (
-    <Button className={clsx('social-login-btn')} onClick={onPortkeySuccess}>
+    <Button className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
       <CustomSvg type="Portkey-login" />
       {`${type} with Portkey`}
     </Button>

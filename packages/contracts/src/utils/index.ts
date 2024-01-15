@@ -183,11 +183,7 @@ export const handleManagerForwardCall = async ({ paramsOption, instance }: Handl
   const methods = await getContractMethods(instance, paramsOption.contractAddress);
   const inputType = methods[paramsOption.methodName];
   if (!inputType) throw new Error(`Contract ${contractAddress} does not exist ${methodName}`);
-  const params: any = {
-    caHash,
-    contractAddress,
-    methodName,
-  };
+  const params = { ...paramsOption };
   if (args) params.args = await encodedParams(inputType, args);
   return params;
 };

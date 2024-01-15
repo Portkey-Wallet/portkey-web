@@ -9,6 +9,7 @@ export interface IRampProps extends IUseHandleAchSellParams {
   initState?: IRampInitState;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
+  isErrorTip?: boolean;
   onBack: () => void;
   onShowPreview: ({ initState, chainId }: { initState: IRampPreviewInitState; chainId: ChainId }) => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;

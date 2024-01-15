@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import BackHeaderForPage from '../BackHeaderForPage';
-import './index.less';
 import MenuItem from '../MenuItem';
 import { List } from 'antd-mobile';
 import CustomSvg from '../CustomSvg';
@@ -12,6 +11,8 @@ import { did, handleErrorMessage, setLoading } from '../../utils';
 import { message } from 'antd';
 import { ITransferLimitItem } from '@portkey-v1/services';
 import { NetworkType } from '../../types';
+import { MAINNET } from '../../constants/network';
+import './index.less';
 
 export interface IPaymentSecurityProps {
   className?: string;
@@ -40,7 +41,7 @@ export default function PaymentSecurityMain({
   onBack,
   onClickItem,
 }: IPaymentSecurityProps) {
-  const isMainnet = useMemo(() => networkType === 'MAIN', [networkType]);
+  const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
 
   const [securityList, setSecurityList] = useState<ITransferLimitItem[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);

@@ -3,7 +3,7 @@ import { AccountType } from '@portkey-v1/services';
 import { ChainId, IBlockchainWallet } from '@portkey-v1/types';
 import { CSSProperties, ReactNode } from 'react';
 import { IGuardianIdentifierInfo, IPhoneCountry } from './signIn';
-import { OnErrorFunc, ValidatorHandler } from '../../types';
+import { OnErrorFunc, TotalAccountType, ValidatorHandler } from '../../types';
 export * from './verify';
 export * from './signIn';
 export * from './reCaptcha';
@@ -69,8 +69,11 @@ export interface IBaseGetGuardianProps {
   isErrorTip?: boolean;
   isShowScan?: boolean; // show scan button
   termsOfService?: ReactNode;
+  privacyPolicy?: string;
   phoneCountry?: IPhoneCountry; // phone country code info
   extraElement?: ReactNode; // extra element
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
   onError?: OnErrorFunc;
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone
