@@ -11,7 +11,7 @@ import {
 } from '../../types';
 import { ChainId } from '@portkey/types';
 import { ReactNode } from 'react';
-import { GuardiansApproved } from '@portkey/services';
+import { AccountType, GuardiansApproved } from '@portkey/services';
 export type SIGN_IN_STEP = 'SignIn' | 'Step2OfSignUp' | 'Step2OfLogin' | 'Step3';
 
 export type SignInLifeCycleType = CreateWalletType;
@@ -62,6 +62,12 @@ export type TStep3LifeCycle = {
   };
 };
 
+export type TSignUpContinueHandler = (identifierInfo: {
+  identifier: string;
+  accountType: AccountType;
+  authToken?: string;
+}) => Promise<boolean>;
+
 export interface SignInProps {
   defaultChainId?: ChainId;
   /**
@@ -84,6 +90,11 @@ export interface SignInProps {
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
   onChainIdChange?(chainId?: ChainId): void;
+  /**
+   * Fired when it is detected that the user is not registered.
+   * You can control whether to continue the subsequent process to complete user registration by returning a Boolean value.
+   */
+  onSignUp?: TSignUpContinueHandler;
   onFinish?(didWallet: DIDWalletInfo): void;
   onCreatePending?(createPendingInfo: CreatePendingInfo): void;
 

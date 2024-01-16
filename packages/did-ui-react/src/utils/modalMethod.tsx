@@ -9,7 +9,7 @@ export function modalMethod({
   onOk,
   onCancel,
   ...props
-}: ModalFuncProps) {
+}: ModalFuncProps): Promise<boolean> {
   return new Promise((resolve) => {
     Modal[type]({
       width: 320,

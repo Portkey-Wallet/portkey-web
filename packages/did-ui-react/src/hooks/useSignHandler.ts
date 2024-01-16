@@ -44,7 +44,8 @@ export const useSignHandler = ({
         isLoginGuardian = true;
       }
     } catch (error: any) {
-      if (handleErrorCode(error) === '3002') {
+      const errorCode = handleErrorCode(error);
+      if (errorCode === '3002') {
         isLoginGuardian = false;
       } else {
         throw handleErrorMessage(error || 'GetHolderInfo error');

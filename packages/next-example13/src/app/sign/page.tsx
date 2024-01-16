@@ -1,9 +1,21 @@
 'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import { ConfigProvider, SignIn, ISignIn, did, TDesign, UI_TYPE, Unlock } from '@portkey/did-ui-react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import {
+  ConfigProvider,
+  SignIn,
+  ISignIn,
+  did,
+  TDesign,
+  UI_TYPE,
+  modalMethod,
+  BaseModalMethod,
+  TSignUpContinueHandler,
+  handleErrorCode,
+} from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { Button } from 'antd';
+import { FetchRequest } from '@portkey/request';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
@@ -41,7 +53,46 @@ export default function Sign() {
   const [password, setPassword] = useState<string>();
 
   useEffect(() => {
-    typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
+    typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') ?? '{}'));
+  }, []);
+
+  const onSignUpHandler: TSignUpContinueHandler = useCallback(async identifierInfo => {
+    //
+    let isLoginGuardian = false;
+    try {
+      const customFetch = new FetchRequest({});
+      const result: any = await customFetch.send({
+        url: `${'https://did-portkey-test.portkey.finance'}/api/app/account/registerInfo`,
+        method: 'GET',
+        params: {
+          loginGuardianIdentifier: identifierInfo.identifier,
+        },
+      });
+      isLoginGuardian = true;
+      console.log(result, 'result==');
+    } catch (error) {
+      isLoginGuardian = false;
+    }
+    if (isLoginGuardian) {
+      const isOk = await modalMethod({
+        wrapClassName: 'portkey-switch-version-modal-wrapper',
+        type: 'confirm',
+        okText: 'Signup',
+        cancelText: 'Switch to V1',
+        content: (
+          <div className="modal-content">
+            <h2>Continue with this account?</h2>
+            <div className="inner">
+              The account you are currently logged in with does not exist, and the account has been detected to exist in
+              V1. You can switch to V1 for login, or register in the current version.
+            </div>
+          </div>
+        ),
+      });
+      if (isOk) return isOk;
+      ref.current?.setOpen(false);
+    }
+    return true;
   }, []);
 
   return (
@@ -53,7 +104,7 @@ export default function Sign() {
         keyboard={true}
         design={design}
         uiType={uiType}
-        defaultChainId="tDVV"
+        defaultChainId={CHAIN_ID}
         extraElement={<div style={{ height: 300, background: 'red' }}></div>}
         getContainer="#wrapper"
         isShowScan
@@ -69,12 +120,13 @@ export default function Sign() {
           console.log(error, 'onError====error');
         }}
         onCancel={() => {
-          ref?.current.setOpen(false);
+          ref.current?.setOpen(false);
           setLifeCycle(undefined);
         }}
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
         }}
+        onSignUp={onSignUpHandler}
         // defaultLifeCycle={{ LoginByScan: null }}
         onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
           console.log(
