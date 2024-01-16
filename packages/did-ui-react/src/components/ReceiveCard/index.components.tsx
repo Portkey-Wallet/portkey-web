@@ -9,8 +9,8 @@ import { QRCodeDataObjType, shrinkSendQrData } from '../../utils/qrCode';
 import { NetworkType } from '../../types';
 import { MAINNET } from '../../constants/network';
 import Copy from '../Copy';
-import { ELF_SYMBOL } from '../../constants/assets';
 import { supplementAllAelfAddress } from '../../utils/aelf';
+import TokenImageDisplay from '../TokenImageDisplay';
 import './index.less';
 
 export interface ReceiveCardProps {
@@ -19,6 +19,7 @@ export interface ReceiveCardProps {
   networkType: NetworkType;
   title?: ReactNode;
   closeIcon?: ReactNode;
+  symbolIcon?: string;
   backIcon?: ReactNode;
   className?: string;
   chainId: ChainId;
@@ -27,6 +28,7 @@ export interface ReceiveCardProps {
 export default function ReceiveCardMain({
   receiveInfo,
   assetInfo,
+  symbolIcon,
   networkType,
   chainId,
   backIcon,
@@ -68,11 +70,7 @@ export default function ReceiveCardMain({
         <div className="portkey-ui-flex-column-center portkey-ui-receive-inner">
           <h2 className="portkey-ui-receive-title">My Wallet Address to Receive</h2>
           <div className="portkey-ui-flex-column-center token-info">
-            {assetInfo.symbol === ELF_SYMBOL ? (
-              <CustomSvg type={'ELF'} />
-            ) : (
-              <div className="icon">{assetInfo?.symbol?.[0]}</div>
-            )}
+            <TokenImageDisplay width={24} symbol={assetInfo?.symbol?.[0]} src={symbolIcon} />
             <p className="symbol">{assetInfo.symbol}</p>
             <p className="network">{transNetworkText(chainId, isMainnet)}</p>
           </div>

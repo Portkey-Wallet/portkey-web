@@ -1,8 +1,7 @@
-import { ELF_SYMBOL } from '../../../../constants/assets';
-import CustomSvg from '../../../CustomSvg';
 import { divDecimals, formatAmountShow, transNetworkText } from '../../../../utils/converter';
 import BigNumber from 'bignumber.js';
 import { IAssetItemType } from '@portkey-v1/services';
+import TokenImageDisplay from '../../../TokenImageDisplay';
 
 export default function AssetsTokenItem({
   isMainnet,
@@ -16,9 +15,7 @@ export default function AssetsTokenItem({
   return (
     <div className="item" key={`${token.symbol}_${token.chainId}`} onClick={onSelect?.bind(undefined, token, 'TOKEN')}>
       <div className="icon">
-        <div className="custom">
-          {token.symbol === ELF_SYMBOL ? <CustomSvg className="token-logo" type="ELF" /> : token?.symbol?.slice(0, 1)}
-        </div>
+        <TokenImageDisplay src={token.tokenInfo?.imageUrl} symbol={token.symbol} />
       </div>
       <div className="info">
         <p className="symbol">{`${token.symbol}`}</p>
