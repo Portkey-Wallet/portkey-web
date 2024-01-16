@@ -75,6 +75,7 @@ const SignIn = forwardRef(
       onCancel,
       onFinish,
       onError,
+      onSignUp: onSignUpHandler,
     }: SignInProps,
     ref,
   ) => {
@@ -84,6 +85,8 @@ const SignIn = forwardRef(
     const onFinishRef = useRef<SignInProps['onFinish']>(onFinish);
     const onChainIdChangeRef = useRef<SignInProps['onChainIdChange']>(onChainIdChange);
     const onLifeCycleChangeRef = useRef<SignInProps['onLifeCycleChange']>(onLifeCycleChange);
+    const onSignUpHandlerRef = useRef<SignInProps['onSignUp']>(onSignUpHandler);
+
     const defaultLifeCycleRef = useRef<LifeCycleType>();
     const defaultLiftCyclePropsRef = useRef<any>();
 
@@ -104,6 +107,7 @@ const SignIn = forwardRef(
       onFinishRef.current = onFinish;
       onChainIdChangeRef.current = onChainIdChange;
       onLifeCycleChangeRef.current = onLifeCycleChange;
+      onSignUpHandlerRef.current = onSignUpHandler;
     });
 
     const [{ chainType, networkType }] = usePortkey();
@@ -571,6 +575,7 @@ const SignIn = forwardRef(
             extraElement={extraElement}
             validateEmail={validateEmail}
             validatePhone={validatePhone}
+            onSignUpHandler={onSignUpHandlerRef.current}
             onSignInFinished={onSignInFinished}
             onStepChange={onSignInStepChange}
             onChainIdChange={onOriginChainIdChange}

@@ -2,7 +2,7 @@ import CryptoDesign, { CryptoDesignProps } from '../../../CryptoDesign/index.com
 import { useCallback, useState, memo, useRef, useEffect } from 'react';
 import type { DIDWalletInfo, IGuardianIdentifierInfo, IPhoneCountry, TDesign, TSize } from '../../../types';
 import { Design } from '../../../types';
-import type { SignInLifeCycleType } from '../../../SignStep/types';
+import type { SignInLifeCycleType, TSignUpContinueHandler } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
 import SocialDesign from '../../../SocialDesign/index.component';
@@ -23,6 +23,7 @@ interface Step1Props extends CryptoDesignProps {
   size?: TSize;
   design?: TDesign;
   onSignInFinished: OnSignInFinishedFun;
+  onSignUpHandler?: TSignUpContinueHandler;
   onStepChange?: (v: SignInLifeCycleType) => void;
 }
 
@@ -31,6 +32,7 @@ function Step1({
   design,
   onStepChange,
   onSignInFinished,
+  onSignUpHandler,
   type,
   phoneCountry: defaultPhoneCountry,
   loginMethodsOrder,
@@ -41,12 +43,45 @@ function Step1({
   const [createType, setCreateType] = useState<SignInLifeCycleType>(type || 'Login');
   const [open, setOpen] = useState<boolean>();
   const signInSuccessRef = useRef<IGuardianIdentifierInfo>();
+  const onSignUpHandlerRef = useRef<Step1Props['onSignUpHandler']>(onSignUpHandler);
+
+  useEffect(() => {
+    onSignUpHandlerRef.current = onSignUpHandler;
+  });
+
+  const onConfirm = useCallback(() => {
+    if (!signInSuccessRef.current) return setOpen(false);
+    const createType = signInSuccessRef.current.isLoginGuardian ? 'Login' : 'SignUp';
+    setCreateType(createType);
+    onSignInFinished?.({
+      isFinished: false,
+      result: {
+        type: createType,
+        value: signInSuccessRef.current,
+      },
+    });
+    setOpen(false);
+  }, [onSignInFinished]);
 
   const onSuccess = useCallback(
-    (value: IGuardianIdentifierInfo) => {
+    async (value: IGuardianIdentifierInfo) => {
       signInSuccessRef.current = value;
+      if (!value.isLoginGuardian) {
+        const isContinue = await onSignUpHandlerRef.current?.({
+          identifier: value.identifier,
+          accountType: value.accountType,
+          authToken: value.authenticationInfo?.authToken,
+        });
+        if (typeof isContinue !== 'undefined') {
+          if (!isContinue) return;
+          return onConfirm();
+        }
+
+        if (createType !== 'SignUp') return setOpen(true);
+      }
+
       if (value.isLoginGuardian && createType !== 'Login') return setOpen(true);
-      if (!value.isLoginGuardian && createType !== 'SignUp') return setOpen(true);
+
       onSignInFinished?.({
         isFinished: false,
         result: {
@@ -56,7 +91,7 @@ function Step1({
       });
       setOpen(false);
     },
-    [createType, onSignInFinished],
+    [createType, onConfirm, onSignInFinished],
   );
 
   useUpdateEffect(() => {
@@ -128,24 +163,7 @@ function Step1({
         />
       )}
 
-      <LoginModal
-        open={open}
-        type={createType}
-        onCancel={() => setOpen(false)}
-        onConfirm={() => {
-          if (!signInSuccessRef.current) return setOpen(false);
-          const createType = signInSuccessRef.current.isLoginGuardian ? 'Login' : 'SignUp';
-          setCreateType(createType);
-          onSignInFinished?.({
-            isFinished: false,
-            result: {
-              type: createType,
-              value: signInSuccessRef.current,
-            },
-          });
-          setOpen(false);
-        }}
-      />
+      <LoginModal open={open} type={createType} onCancel={() => setOpen(false)} onConfirm={onConfirm} />
     </>
   );
 }
