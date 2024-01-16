@@ -293,6 +293,7 @@ function AssetMain({
             address: caInfo[selectToken.chainId]?.caAddress,
             name: '',
           }}
+          symbolIcon={selectToken.imageUrl}
           assetInfo={{
             symbol: selectToken.symbol,
             tokenContractAddress: selectToken.address,
@@ -400,6 +401,7 @@ function AssetMain({
                 balance: token.balance || '0',
                 decimals: token.decimals.toString(),
                 balanceInUsd: token.balanceInUsd || '',
+                imageUrl: token.imageUrl || '',
                 tokenContractAddress: token.tokenContractAddress || '',
               },
             };

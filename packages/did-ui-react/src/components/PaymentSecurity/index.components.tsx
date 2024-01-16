@@ -2,8 +2,6 @@ import clsx from 'clsx';
 import BackHeaderForPage from '../BackHeaderForPage';
 import MenuItem from '../MenuItem';
 import { List } from 'antd-mobile';
-import CustomSvg from '../CustomSvg';
-import { ELF_SYMBOL } from '../../constants/assets';
 import { transNetworkText } from '../../utils/converter';
 import { useMemo, useState, useRef, useCallback, useEffect } from 'react';
 import LoadingMore from '../LoadingMore';
@@ -12,6 +10,7 @@ import { message } from 'antd';
 import { ITransferLimitItem } from '@portkey/services';
 import { NetworkType } from '../../types';
 import { MAINNET } from '../../constants/network';
+import TokenImageDisplay from '../TokenImageDisplay';
 import './index.less';
 
 export interface IPaymentSecurityProps {
@@ -111,15 +110,7 @@ export default function PaymentSecurityMain({
                 className="portkey-ui-payment-security-item-wrap">
                 <MenuItem
                   key={item.chainId + index}
-                  icon={
-                    <>
-                      {item.symbol === ELF_SYMBOL ? (
-                        <CustomSvg className="token-logo" type="AelfTestnet" />
-                      ) : (
-                        <div className="token-logo custom-word-logo">{item.symbol?.slice(0, 1)}</div>
-                      )}
-                    </>
-                  }
+                  icon={<TokenImageDisplay src={item.imageUrl} symbol={item.symbol} />}
                   height={92}
                   onClick={() => onClickItem?.(item)}>
                   <div className="token-info">

@@ -27,6 +27,6 @@ export const DEFAULT_DIGITS = 4;
 
 export const ALLOWANCE_MAX_LIMIT = '9223372036854774784';
 
-// export const WEB_PAGE = 'https://openlogin.portkey.finance';
+export const WEB_PAGE = 'https://openlogin.portkey.finance';
 // export const WEB_PAGE = 'https://openlogin-test.portkey.finance';
-export const WEB_PAGE = 'http://localhost:3000';
+// export const WEB_PAGE = 'http://localhost:3000';
