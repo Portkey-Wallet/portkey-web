@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import PortkeyPasswordInput from '../PortkeyPasswordInput';
 import { PASSWORD_LENGTH } from '../../constants/misc';
 import BackHeader from '../BackHeader';
@@ -21,12 +21,13 @@ export default function SetPinMobileBase({
   type: AddManagerType;
   className?: string;
   onCancel?: () => void;
-  onFinish?: (pin: string) => void;
+  onFinish?: (pin: string) => Promise<void>;
 }) {
   const [step, setStep] = useState<STEP>(STEP.enterPin);
   const [pin, setPin] = useState<string>();
   const [confirmPin, setConfirmPin] = useState<string>();
   const [error, setError] = useState<string>();
+  const isFinishRef = useRef<boolean>(false);
 
   useEffect(() => {
     return () => {
@@ -76,13 +77,20 @@ export default function SetPinMobileBase({
               if (error) setError('');
               setConfirmPin(v);
             }}
-            onFill={(val) => {
-              if (pin !== val) {
-                setConfirmPin('');
-                return setError('Pins do not match');
+            onFill={async (val) => {
+              try {
+                if (isFinishRef.current) return;
+                isFinishRef.current = true;
+                if (pin !== val) {
+                  setConfirmPin('');
+                  return setError('Pins do not match');
+                }
+                if (!pin) return setError(PinErrorMessage.invalidPin);
+                await onFinish?.(pin);
+                isFinishRef.current = false;
+              } finally {
+                isFinishRef.current = false;
               }
-              if (!pin) return setError(PinErrorMessage.invalidPin);
-              onFinish?.(pin);
             }}
           />
         )}
