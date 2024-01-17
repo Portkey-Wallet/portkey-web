@@ -1,6 +1,6 @@
 {
   "name": "@portkey-v1/did",
-  "version": "1.5.4-alpha.6",
+  "version": "1.5.4-alpha.7",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,7 +41,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey-v1/services": "^1.5.4-alpha.6"
+    "@portkey-v1/services": "^1.5.4-alpha.7"
   },
   "peerDependencies": {
     "@portkey-v1/accounts": "^1.5.2-alpha.0",
