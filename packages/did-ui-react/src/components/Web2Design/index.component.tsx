@@ -24,6 +24,7 @@ export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
   size?: TSize;
   loginMethodsOrder?: ISocialLogin[];
+  /** @deprecated delete sign up */
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
@@ -44,7 +45,6 @@ export default function Web2Design({
   onSuccess,
   validateEmail,
   validatePhone,
-  onSignTypeChange,
   onChainIdChange,
   onLoginFinishWithoutPin,
 }: Web2DesignProps) {
@@ -102,15 +102,6 @@ export default function Web2Design({
     onSocialFinish,
   } = useSignHandler(handlerParam);
 
-  const onSwitch = useCallback(() => {
-    setType((v) => {
-      const nextType = v === 'Login' ? 'Sign up' : 'Login';
-      onSignTypeChange?.(nextType === 'Sign up' ? 'SignUp' : 'Login');
-
-      return nextType;
-    });
-  }, [onSignTypeChange]);
-
   const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
 
   const onSocialChange = useCallback(
@@ -153,23 +144,6 @@ export default function Web2Design({
           <DividerCenter />
           <SocialLoginGroup supportAccounts={loginMethodsOrder} onAccountTypeChange={onSocialChange} />
           {extraElement ? extraElement : <div className="empty-element"></div>}
-          <div className="portkey-ui-web2design-switch-sign">
-            {type === 'Login' ? (
-              <>
-                No Account?&nbsp;
-                <span className="btn-text" onClick={onSwitch}>
-                  Sign up now
-                </span>
-              </>
-            ) : (
-              <>
-                Already have an account?&nbsp;
-                <span className="btn-text" onClick={onSwitch}>
-                  Log in
-                </span>
-              </>
-            )}
-          </div>
         </div>
         {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}
       </div>
@@ -181,7 +155,6 @@ export default function Web2Design({
       loginMethodsOrder,
       onFinish,
       onSocialChange,
-      onSwitch,
       phoneCountry,
       privacyPolicy,
       termsOfService,

@@ -249,19 +249,6 @@ export default function SocialLogin({
           {notRecommendUI}
 
           {extraElement}
-
-          {isLogin && (
-            <div className="go-sign-up">
-              <span>{t('No account?')}</span>
-              <span
-                className="sign-text"
-                onClick={() => {
-                  switchTypeRef?.current?.('SignUp');
-                }}>
-                {t('Sign up')}
-              </span>
-            </div>
-          )}
         </div>
       </div>
 

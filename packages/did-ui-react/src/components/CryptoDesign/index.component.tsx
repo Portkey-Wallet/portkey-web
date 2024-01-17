@@ -1,6 +1,5 @@
 import LoginCard from '../LoginBase/index.component';
 import ScanCard from '../ScanCard/index.component';
-import SignUpBase from '../SignUpBase/index.component';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
 import type { CreateWalletType, IBaseGetGuardianProps } from '../types';
 import CustomSvg from '../CustomSvg';
@@ -58,7 +57,7 @@ export default function CryptoDesignBaseCom({
   const [_type, setType] = useState<CreateWalletType>(type ?? 'Login');
 
   useUpdateEffect(() => {
-    type && setType(type);
+    type && type !== 'SignUp' && setType(type);
   }, [type]);
 
   const [{ networkType, chainType }] = usePortkey();
@@ -71,6 +70,7 @@ export default function CryptoDesignBaseCom({
   );
 
   useUpdateEffect(() => {
+    if (_type === 'SignUp') return;
     onSignTypeChange?.(_type);
   }, [_type, onSignTypeChange]);
 
@@ -94,7 +94,7 @@ export default function CryptoDesignBaseCom({
 
   return (
     <div className={clsx('signup-login-content', className)} style={style}>
-      {_type === 'SignUp' && (
+      {/* {_type === 'SignUp' && (
         <SignUpBase
           isErrorTip={isErrorTip}
           isMobile={isMobile}
@@ -114,7 +114,7 @@ export default function CryptoDesignBaseCom({
           onError={onError}
           onSocialSignFinish={onSocialFinish}
         />
-      )}
+      )} */}
       {_type === 'LoginByScan' && (
         <ScanCard
           chainId={defaultChainId}

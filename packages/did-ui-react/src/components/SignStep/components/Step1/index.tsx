@@ -10,6 +10,7 @@ import Web2Design from '../../../Web2Design/index.component';
 import { did } from '@portkey-v1/did';
 import { errorTip } from '../../../../utils';
 import { ISocialLogin } from '../../../../types';
+import message from '../../../CustomAnt/message';
 
 export type OnSignInFinishedFun = (values: {
   isFinished: boolean;
@@ -72,12 +73,15 @@ function Step1({
           accountType: value.accountType,
           authToken: value.authenticationInfo?.authToken,
         });
+
         if (typeof isContinue !== 'undefined') {
           if (!isContinue) return;
-          return onConfirm();
         }
 
-        if (createType !== 'SignUp') return setOpen(true);
+        message.error(
+          'This account is not registered yet.If you wish to create a Portkey account, we recommond using the fully upgraded Portkey for an enhanced experience.',
+        );
+        return;
       }
 
       if (value.isLoginGuardian && createType !== 'Login') return setOpen(true);
@@ -91,7 +95,7 @@ function Step1({
       });
       setOpen(false);
     },
-    [createType, onConfirm, onSignInFinished],
+    [createType, onSignInFinished],
   );
 
   useUpdateEffect(() => {

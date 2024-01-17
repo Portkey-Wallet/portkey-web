@@ -8,9 +8,7 @@ import {
   TDesign,
   UI_TYPE,
   modalMethod,
-  BaseModalMethod,
   TSignUpContinueHandler,
-  handleErrorCode,
 } from '@portkey-v1/did-ui-react';
 import { ChainId } from '@portkey-v1/types';
 import { sleep } from '@portkey-v1/utils';
@@ -62,7 +60,7 @@ export default function Sign() {
     try {
       const customFetch = new FetchRequest({});
       const result: any = await customFetch.send({
-        url: `${'https://did-portkey-test.portkey.finance'}/api/app/account/registerInfo`,
+        url: `${'https://aa-portkey-test.portkey.finance'}/api/app/account/registerInfo`,
         method: 'GET',
         params: {
           loginGuardianIdentifier: identifierInfo.identifier,
@@ -77,20 +75,20 @@ export default function Sign() {
       const isOk = await modalMethod({
         wrapClassName: 'portkey-switch-version-modal-wrapper',
         type: 'confirm',
-        okText: 'Signup',
-        cancelText: 'Switch to V1',
+        okText: 'Switch to V2',
+        // cancelText: '',
         content: (
           <div className="modal-content">
             <h2>Continue with this account?</h2>
             <div className="inner">
-              The account you are currently logged in with does not exist, and the account has been detected to exist in
-              V1. You can switch to V1 for login, or register in the current version.
+              This account is not registered yet. If you wish to create a Portkey account, we recommend using the fully
+              upgraded Portkey for an enhanced experience.
             </div>
           </div>
         ),
       });
-      if (isOk) return isOk;
-      ref.current?.setOpen(false);
+      if (isOk) return ref.current?.setOpen(false);
+      return true;
     }
     return true;
   }, []);
