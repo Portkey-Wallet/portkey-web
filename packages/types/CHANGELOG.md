@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.5-alpha.2...v2.0.0-alpha.2) (2024-01-17)
+
+### Features
+
+- 🎸 change icon url ([65282b4](https://github.com/Portkey-Wallet/portkey-web/commit/65282b4523bb3fc4cc8d2ba8607213ad47700d2d))
+
+## [2.0.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.5-alpha.0...v2.0.0-alpha.1) (2024-01-12)
+
+## [2.0.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.0...v2.0.0-alpha.0) (2023-12-21)
+
 ## [2.0.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.2...v2.0.0-alpha.1) (2024-01-12)
 
 ## [2.0.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.0...v2.0.0-alpha.0) (2023-12-21)
