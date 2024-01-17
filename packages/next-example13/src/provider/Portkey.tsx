@@ -5,7 +5,7 @@ import '@portkey/did-ui-react/dist/assets/index.css';
 import { Button } from 'antd';
 export default function Portkey({ children }: { children?: ReactNode }) {
   const [dark, setDark] = useState<boolean>(false);
-  const [networkType, setNetworkType] = useState<NetworkType>('MAINNET');
+  const [networkType, setNetworkType] = useState<NetworkType>('TESTNET');
 
   useEffect(() => {
     if (dark) {

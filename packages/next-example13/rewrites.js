@@ -9,9 +9,9 @@ module.exports = [
     // { source: '/graphql/:path*', destination: 'http://192.168.67.51:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*' },
 
     // test3
-    // { source: '/api/:path*', destination: 'http://192.168.66.203:5001/api/:path*' },
-    // { source: '/connect/:path*', destination: 'http://192.168.66.203:8001/connect/:path*' },
-    // { source: '/graphql/:path*', destination: 'http://192.168.66.203:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*' },
+    { source: '/api/:path*', destination: 'http://192.168.64.201:5001/api/:path*' },
+    { source: '/connect/:path*', destination: 'http://192.168.64.201:8080/connect/:path*' },
+    { source: '/graphql/:path*', destination: 'http://192.168.64.202:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*' },
 
     // // test4
     // { source: '/api/:path*', destination: 'http://192.168.67.179:5001/api/:path*' },
@@ -23,7 +23,7 @@ module.exports = [
     // { source: '/connect/:path*', destination: 'https://auth-portkey.portkey.finance/connect/:path*' },
 
     // testnet
-    { source: '/api/:path*', destination: 'https://aa-portkey-test.portkey.finance/api/:path*' },
-    { source: '/connect/:path*', destination: 'https://aa-auth-portkey-test.portkey.finance/connect/:path*' },
+    // { source: '/api/:path*', destination: 'https://aa-portkey-test.portkey.finance/api/:path*' },
+    // { source: '/connect/:path*', destination: 'https://aa-auth-portkey-test.portkey.finance/connect/:path*' },
 
 ];
