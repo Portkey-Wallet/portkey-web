@@ -42,7 +42,7 @@ const request = new FetchRequestMock({});
 const didGraphQL = new DIDGraphQLMock({
   client: {} as any,
 });
-const service = new CommunityRecovery(request, didGraphQL);
+const service = new CommunityRecovery(request, didGraphQL, {} as any);
 const connectService = new Connect(request);
 
 const privateKey = '03bd0cea9730bcfc8045248fd7f4841ea19315995c44801a3dfede0ca872f808';

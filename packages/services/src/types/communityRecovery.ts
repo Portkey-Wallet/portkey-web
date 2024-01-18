@@ -1,7 +1,7 @@
 import { AccountType } from '.';
 import { ISearchService } from './search';
 import { IVerificationService } from './verification';
-import { ChainId } from '@portkey/types';
+import { ChainId, IReferralInfo } from '@portkey/types';
 import { CaHolderWithGuardian } from '@portkey/graphql';
 export interface Context {
   clientId: string;
@@ -27,6 +27,7 @@ export interface RegisterParams {
   verificationDoc: string;
   signature: string;
   context: Context;
+  referralInfo?: IReferralInfo;
 }
 
 export type RegisterResult = {
@@ -40,6 +41,7 @@ export type RecoveryParams = {
   extraData: string;
   chainId: ChainId;
   context: Context;
+  referralInfo?: IReferralInfo;
 };
 
 export type RecoveryResult = {
