@@ -1,7 +1,7 @@
 import { detectBrowserName } from '../utils';
 import { EXTENSION_DOWNLOAD_URL } from '../constants';
 import { IEvokeExtensionProps } from './types';
-import detectProvider from '@portkey/detect-provider';
+import detectProvider from '@portkey-v1/detect-provider';
 
 /**
  * This method is used to check if the provided object is a Portkey provider.

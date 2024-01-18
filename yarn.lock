@@ -3504,27 +3504,25 @@
   resolved "https://registry.npmjs.org/@polka/url/-/url-1.0.0-next.24.tgz#58601079e11784d20f82d0585865bb42305c4df3"
   integrity sha512-2LuNTFBIO0m7kKIQvvPHN6UE63VjpmL9rnEEaOOaiSPbZK+zUOYIzBAWcED+3XYzhYsd/0mD57VdxAEqqV52CQ==
 
-"@portkey/detect-provider@^1.0.1":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@portkey/detect-provider/-/detect-provider-1.1.0.tgz#534a068e95b6186a55d71b9f2ed7cba6fac1c4dd"
-  integrity sha512-XphsCrQWvXaxw6j2uXaewXnG9Cma4Pr1ahe9iX1yUcmzVmJ31Wt5QTTAmIYoT0BUgLc09Foo/XvvmugMxG6TiQ==
+"@portkey-v1/detect-provider@^1.0.1":
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/@portkey-v1/detect-provider/-/detect-provider-1.1.1.tgz#e779d7bc68c1d25298913d770485df77fd7e340a"
+  integrity sha512-U1F2Qbqtc9WjVeHR5tGn5cBzKqbkpqj0w8cGmb6pZ6nXXUb5xGp5DAP/fk1Z5QuMGFvCcuhgZz7y9D+bUc1S5w==
   dependencies:
-    "@portkey/provider-types" "^1.1.0"
+    "@portkey/provider-types" "^1.1.1"
 
-"@portkey/provider-types@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-1.1.0.tgz#ab9e0f55093c84ff76c4c3a0cea37329d80ae2fb"
-  integrity sha512-DLfAFVVJbZVH165PiKZYrhLktZi9QHXbSuBk8Dle/BmEVEfic/6yzzZPt1fGih2DtwKeX9MmzYuhvi9AG7HVvA==
+"@portkey/provider-types@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-1.1.1.tgz#54782454e77eb2c417969703925c3a1c4ae6598d"
+  integrity sha512-eyUiLH1RK5Ml60i7kMKQ+u/K6F75ozKI0VO6JfBhnElh33UI172j0FR0vcKCjw2UNEtGCBJroBqDmMQe++JW8g==
   dependencies:
-    "@portkey/types" "1.0.0-alpha.4"
+    "@portkey/types" "^1.0.0-alpha.4"
     "@types/readable-stream" "^2.3.15"
 
-"@portkey/types@1.0.0-alpha.4":
-  version "1.0.0-alpha.4"
-  resolved "https://registry.npmjs.org/@portkey/types/-/types-1.0.0-alpha.4.tgz#2f22a75a1af6df31db15fce1c473ca9e1f07f127"
-  integrity sha512-mOSl89fN+hQ4zun6MF2uuQH5Bz8Owf6eA+N1HJ5fwKUMbQqr+7uI1HJZstoTSLFTLPjVSAIaIauXb2sfdRIm7A==
-  dependencies:
-    "@types/elliptic" "^6.4.14"
+"@portkey/types@^1.0.0-alpha.4":
+  version "1.5.3"
+  resolved "https://registry.npmjs.org/@portkey/types/-/types-1.5.3.tgz#6a20d091efd5d9297d7cb6bb41f6ce5d445835c2"
+  integrity sha512-JiodJHJEykQCmvPzn0R+8A9AGoHWJF0ya4mcbMjE4A+AN2nwRotouJq3iKIL9Orf/pt7kU8kG925lrBFs5dToQ==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"

@@ -42,7 +42,7 @@
   "dependencies": {
     "@portkey-v1/types": "^1.5.4-alpha.7",
     "@portkey-v1/utils": "^1.5.4-alpha.7",
-    "@portkey/detect-provider": "^1.0.1",
+    "@portkey-v1/detect-provider": "^1.0.1",
     "bowser": "^2.11.0",
     "query-string": "^7.1.1"
   },
