@@ -40,7 +40,7 @@
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@portkey/detect-provider": "^1.0.1",
+    "@portkey/detect-provider": "^2.0.0-alpha.2",
     "@portkey/types": "^2.0.0-alpha.4",
     "@portkey/utils": "^2.0.0-alpha.4",
     "bowser": "^2.11.0",

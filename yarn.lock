@@ -3589,27 +3589,20 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@portkey/detect-provider@^1.0.1":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@portkey/detect-provider/-/detect-provider-1.1.0.tgz#534a068e95b6186a55d71b9f2ed7cba6fac1c4dd"
-  integrity sha512-XphsCrQWvXaxw6j2uXaewXnG9Cma4Pr1ahe9iX1yUcmzVmJ31Wt5QTTAmIYoT0BUgLc09Foo/XvvmugMxG6TiQ==
+"@portkey/detect-provider@^2.0.0-alpha.2":
+  version "2.0.0-alpha.2"
+  resolved "https://registry.npmjs.org/@portkey/detect-provider/-/detect-provider-2.0.0-alpha.2.tgz#68c95eaace4d6dd54fa62ad5fdeb3a5e927e5996"
+  integrity sha512-8i4/Kug+E6SZS/vGWV7ESkNOQKSNEEyyG0wUF/HBQ8jtY6afgJkT+DTQ2B7uC6N4kyfhd8WGKgmbuROhqxUBGA==
   dependencies:
-    "@portkey/provider-types" "^1.1.0"
+    "@portkey/provider-types" "^2.0.0-alpha.2"
 
-"@portkey/provider-types@^1.1.0":
-  version "1.1.0"
-  resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-1.1.0.tgz#ab9e0f55093c84ff76c4c3a0cea37329d80ae2fb"
-  integrity sha512-DLfAFVVJbZVH165PiKZYrhLktZi9QHXbSuBk8Dle/BmEVEfic/6yzzZPt1fGih2DtwKeX9MmzYuhvi9AG7HVvA==
+"@portkey/provider-types@^2.0.0-alpha.2":
+  version "2.0.0-alpha.2"
+  resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-2.0.0-alpha.2.tgz#77dda91b85537c10384594807779605963b5aa77"
+  integrity sha512-KFLBqi9a/2CykEDuWBVG68zDJXRBNVUMrh+GhMMs9BCvEhdMI1ym5dKelpb+J/aQvHlGRaXqEDoFna5YQiOO/A==
   dependencies:
-    "@portkey/types" "1.0.0-alpha.4"
+    "@portkey/types" "^2.0.0-alpha.0"
     "@types/readable-stream" "^2.3.15"
-
-"@portkey/types@1.0.0-alpha.4":
-  version "1.0.0-alpha.4"
-  resolved "https://registry.npmjs.org/@portkey/types/-/types-1.0.0-alpha.4.tgz#2f22a75a1af6df31db15fce1c473ca9e1f07f127"
-  integrity sha512-mOSl89fN+hQ4zun6MF2uuQH5Bz8Owf6eA+N1HJ5fwKUMbQqr+7uI1HJZstoTSLFTLPjVSAIaIauXb2sfdRIm7A==
-  dependencies:
-    "@types/elliptic" "^6.4.14"
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"

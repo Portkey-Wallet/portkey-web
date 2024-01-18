@@ -128,7 +128,7 @@ export default function Sign() {
         }}
         onSignUp={onSignUpHandler}
         // defaultLifeCycle={{ LoginByScan: null }}
-        onLifeCycleChange={(lifeCycle, nextLifeCycleProps) => {
+        onLifeCycleChange={(lifeCycle: any, nextLifeCycleProps: any) => {
           console.log(
             'onLifeCycleChange:',
             lifeCycle,
@@ -174,7 +174,7 @@ export default function Sign() {
 
       <Button
         onClick={async () => {
-          ref.current.setCurrentLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle')));
+          ref.current?.setCurrentLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') || '{}'));
         }}>
         setCurrentLifeCycle
       </Button>
@@ -210,7 +210,7 @@ export default function Sign() {
           const isExist = await did.checkManagerIsExist({
             chainId: 'AELF',
             caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
-            managementAddress: did.didWallet.managementAccount.address,
+            managementAddress: did.didWallet.managementAccount?.address || '',
           });
           console.log(isExist, 'isExist=AELF');
         }}>
@@ -223,7 +223,7 @@ export default function Sign() {
           const isExist = await did.checkManagerIsExist({
             chainId: 'tDVV',
             caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
-            managementAddress: did.didWallet.managementAccount.address,
+            managementAddress: did.didWallet.managementAccount?.address ?? '',
           });
           console.log(isExist, 'isExist=tDVV');
         }}>
@@ -236,7 +236,7 @@ export default function Sign() {
           const isExist = await did.checkManagerIsExist({
             chainId: 'tDVW',
             caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
-            managementAddress: did.didWallet.managementAccount.address,
+            managementAddress: did.didWallet.managementAccount?.address ?? '',
           });
           console.log(isExist, 'isExist=tDVW');
         }}>
