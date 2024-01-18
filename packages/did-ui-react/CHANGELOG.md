@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2024-01-18)
+
+### Features
+
+- 🎸 modify ui ([403056b](https://github.com/Portkey-Wallet/portkey-web/commit/403056bc75657ff194cca79b1961615d00b90381))
+
+### Bug Fixes
+
+- 🐛 limit type and example params ([6dd2fe1](https://github.com/Portkey-Wallet/portkey-web/commit/6dd2fe12987b608e7743c612b7148b17ae6e456f))
+
 ## [2.0.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2024-01-18)
 
 ### Features
