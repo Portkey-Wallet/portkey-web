@@ -131,7 +131,7 @@ const transferLimitCheck = async ({
         wrapClassName,
         className,
         data: settingParams,
-        limitType: LimitType.Single,
+        limitType: limitRes?.isSingleLimited ? LimitType.Single : LimitType.Daily,
         onOneTimeApproval,
         onModifyTransferLimit,
         ...props,
