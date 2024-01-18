@@ -1,3 +1,5 @@
+@import '../../assets/theme/constants.less';
+
 .portkey-ui-web2design-wrapper {
   height: 100%;
   position: relative;
@@ -82,7 +84,7 @@
   .web2design-title {
     font-size: 32px;
     font-weight: 700;
-    line-height: 48px;
+    line-height: 40px;
     color: var(--portkey-ui-text-primary);
   }
   .portkey-ui-segmented-input {
@@ -129,5 +131,12 @@
     .description {
       margin-bottom: 0;
     }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .portkey-ui-web2design-login-wrapper .web2design-title {
+    font-size: 24px;
+    line-height: 32px;
   }
 }

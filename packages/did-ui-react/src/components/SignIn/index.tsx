@@ -662,7 +662,7 @@ const SignIn = forwardRef(
         ) : (
           <CommonBaseModal
             destroyOnClose
-            className={className}
+            className={clsx('portkey-ui-sign-modal', `portkey-ui-sign-modal-${design}`, className)}
             maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
             open={open}
             getContainer={getContainer ? getContainer : `#${PORTKEY_ROOT_ID}`}
