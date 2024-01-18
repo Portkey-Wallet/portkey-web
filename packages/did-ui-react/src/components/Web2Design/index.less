@@ -11,6 +11,21 @@
   }
 
   .portkey-ui-segmented-input {
+    .portkey-ui-segmented-email {
+      .email-input-wrapper {
+        .input-wrapper {
+          .login-input {
+            border: 1px solid var(--portkey-ui-segmented-bg);
+            border-radius: var(--portkey-ui-border-radius-4);
+            background: var(--portkey-ui-segmented-bg);
+          }
+        }
+      }
+      & > .login-primary-btn {
+        border-radius: var(--portkey-ui-border-radius-4);
+      }
+    }
+
     .portkey-ui-segmented-phone {
       .phone-number-input-wrapper {
         border-radius: var(--portkey-ui-border-radius-4);
@@ -29,6 +44,7 @@
           }
         }
       }
+
       & > .login-btn {
         border-radius: var(--portkey-ui-border-radius-4);
       }
