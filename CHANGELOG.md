@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2024-01-18)
+
+### Features
+
+- 🎸 referralInfo ([e32e12b](https://github.com/Portkey-Wallet/portkey-web/commit/e32e12bc15eef894496f2093ad58c7dc192a1529))
+
 ## [2.0.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.2...v2.0.0-alpha.3) (2024-01-17)
 
 **Note:** Version bump only for package root
