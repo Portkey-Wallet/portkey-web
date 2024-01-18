@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.4-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.7...v1.5.4-alpha.8) (2024-01-18)
+
+**Note:** Version bump only for package @portkey-v1/socket
+
 ## [1.5.4-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.6...v1.5.4-alpha.7) (2024-01-17)
 
 **Note:** Version bump only for package @portkey-v1/socket
