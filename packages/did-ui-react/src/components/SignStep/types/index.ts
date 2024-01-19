@@ -83,7 +83,9 @@ export interface SignInProps {
   // Login
   isShowScan?: boolean;
   phoneCountry?: IPhoneCountry;
+  /** @deprecated Please use `extraElementList` */
   extraElement?: ReactNode; // extra element
+  extraElementList?: ReactNode[]; // extra element
   termsOfService?: ReactNode;
   privacyPolicy?: string;
   design?: TDesign;

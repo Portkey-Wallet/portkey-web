@@ -71,7 +71,7 @@ export interface IBaseGetGuardianProps {
   termsOfService?: ReactNode;
   privacyPolicy?: string;
   phoneCountry?: IPhoneCountry; // phone country code info
-  extraElement?: ReactNode; // extra element
+  extraElementList?: ReactNode[]; // extra element
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
   onError?: OnErrorFunc;

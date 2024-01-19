@@ -28,7 +28,7 @@ function SocialDesign({
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
-  extraElement,
+  extraElementList,
   termsOfService,
   privacyPolicy,
   loginMethodsOrder,
@@ -128,7 +128,7 @@ function SocialDesign({
       {!accountType && (
         <Overview
           isShowScan={showScan}
-          extraElement={extraElement}
+          extraElementList={extraElementList}
           onAccountTypeChange={onAccountTypeChange}
           termsOfService={termsOfService}
           privacyPolicy={privacyPolicy}

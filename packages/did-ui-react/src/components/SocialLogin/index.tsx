@@ -22,6 +22,7 @@ import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
+import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -216,6 +217,7 @@ export default function SocialLogin({
           isMobile && 'social-login-mobile-wrapper',
           className,
         )}>
+        {isLogin && <UpgradedPortkeyTip className="social-login-upgraded-portkey" />}
         <h1 className="portkey-ui-flex-between-center font-medium social-login-title">
           {!isLogin && <CustomSvg type="BackLeft" onClick={onBackRef?.current} />}
           {isLogin && <span></span>}

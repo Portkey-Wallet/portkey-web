@@ -9,8 +9,8 @@ import { useUpdateEffect } from 'react-use';
 import ConfigProvider from '../config-provider';
 import { usePortkey } from '../context';
 import { useSignHandler } from '../../hooks/useSignHandler';
-import './index.less';
 import useMobile from '../../hooks/useMobile';
+import './index.less';
 
 export interface CryptoDesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -25,7 +25,7 @@ export default function CryptoDesignBaseCom({
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
-  extraElement,
+  extraElementList,
   termsOfService,
   privacyPolicy,
   loginMethodsOrder,
@@ -92,6 +92,8 @@ export default function CryptoDesignBaseCom({
     onSocialFinish,
   } = useSignHandler(handlerParam);
 
+  const extra = useMemo(() => <>{extraElementList?.map((item) => item) ?? null}</>, [extraElementList]);
+
   return (
     <div className={clsx('signup-login-content', className)} style={style}>
       {_type === 'SignUp' && (
@@ -100,7 +102,7 @@ export default function CryptoDesignBaseCom({
           isMobile={isMobile}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
-          extraElement={extraElement}
+          extraElement={extra}
           termsOfService={termsOfService}
           privacyPolicy={privacyPolicy}
           networkType={networkType}
@@ -136,7 +138,7 @@ export default function CryptoDesignBaseCom({
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           isShowScan={isShowScan}
-          extraElement={extraElement}
+          extraElement={extra}
           termsOfService={termsOfService}
           privacyPolicy={privacyPolicy}
           networkType={networkType}

@@ -62,6 +62,7 @@ const SignIn = forwardRef(
       defaultLifeCycle: defaultLifeCycleInfo,
       phoneCountry,
       extraElement,
+      extraElementList,
       termsOfService,
       privacyPolicy,
       design = 'CryptoDesign',
@@ -561,6 +562,8 @@ const SignIn = forwardRef(
       [loginConfig?.recommendIndexes],
     );
 
+    const extra = useMemo(() => [extraElement, ...(extraElementList ?? [])], [extraElement, extraElementList]);
+
     const mainContent = useCallback(() => {
       if (LifeCycleMap['SignIn'].includes(lifeCycle))
         return (
@@ -573,7 +576,7 @@ const SignIn = forwardRef(
             isErrorTip={isErrorTip}
             onError={onErrorRef?.current}
             phoneCountry={phoneCountry}
-            extraElement={extraElement}
+            extraElementList={extra}
             validateEmail={validateEmail}
             validatePhone={validatePhone}
             onSignUpHandler={onSignUpHandlerRef.current}
@@ -629,7 +632,7 @@ const SignIn = forwardRef(
       defaultChainId,
       isErrorTip,
       phoneCountry,
-      extraElement,
+      extra,
       validateEmail,
       validatePhone,
       onSignInFinished,

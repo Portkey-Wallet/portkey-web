@@ -21,3 +21,17 @@ body {
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
+
+.switch-old-portkey-wrapper {
+  color: #515a62;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  margin-bottom: 32px;
+  margin-top: 16px;
+}
+
+.switch-old-portkey-wrapper .switch-btn {
+  color: #5b8ef4;
+  cursor: pointer;
+}

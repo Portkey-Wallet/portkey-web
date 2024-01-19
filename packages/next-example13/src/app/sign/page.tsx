@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   ConfigProvider,
   SignIn,
@@ -56,25 +56,9 @@ export default function Sign() {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') ?? '{}'));
   }, []);
 
-  const onSignUpHandler: TSignUpContinueHandler = useCallback(async identifierInfo => {
-    //
-    let isLoginGuardian = false;
-    try {
-      const customFetch = new FetchRequest({});
-      const result: any = await customFetch.send({
-        url: `${'https://did-portkey-test.portkey.finance'}/api/app/account/registerInfo`,
-        method: 'GET',
-        params: {
-          loginGuardianIdentifier: identifierInfo.identifier,
-        },
-      });
-      isLoginGuardian = true;
-      console.log(result, 'result==');
-    } catch (error) {
-      isLoginGuardian = false;
-    }
-    if (isLoginGuardian) {
-      const isOk = await modalMethod({
+  const switchToV1 = useCallback(
+    () =>
+      modalMethod({
         wrapClassName: 'portkey-switch-version-modal-wrapper',
         type: 'confirm',
         okText: 'Signup',
@@ -88,12 +72,37 @@ export default function Sign() {
             </div>
           </div>
         ),
-      });
-      if (isOk) return isOk;
-      ref.current?.setOpen(false);
-    }
-    return true;
-  }, []);
+      }),
+    [],
+  );
+
+  const onSignUpHandler: TSignUpContinueHandler = useCallback(
+    async identifierInfo => {
+      //
+      let isLoginGuardian = false;
+      try {
+        const customFetch = new FetchRequest({});
+        const result: any = await customFetch.send({
+          url: `${'https://did-portkey-test.portkey.finance'}/api/app/account/registerInfo`,
+          method: 'GET',
+          params: {
+            loginGuardianIdentifier: identifierInfo.identifier,
+          },
+        });
+        isLoginGuardian = true;
+        console.log(result, 'result==');
+      } catch (error) {
+        isLoginGuardian = false;
+      }
+      if (isLoginGuardian) {
+        const isOk = await switchToV1();
+        if (isOk) return isOk;
+        ref.current?.setOpen(false);
+      }
+      return true;
+    },
+    [switchToV1],
+  );
 
   return (
     <div>
@@ -105,7 +114,16 @@ export default function Sign() {
         design={design}
         uiType={uiType}
         defaultChainId={CHAIN_ID}
-        extraElement={<div style={{ height: 300, background: 'red' }}></div>}
+        // extraElement={}
+        extraElementList={[
+          <div key="1" style={{ height: 300, background: 'red' }}></div>,
+          <div key="2" className="switch-old-portkey-wrapper">
+            Account registered in old Portkey? Log in&nbsp;
+            <span className="switch-btn" onClick={switchToV1}>
+              here
+            </span>
+          </div>,
+        ]}
         getContainer="#wrapper"
         isShowScan
         className="sign-in-wrapper"

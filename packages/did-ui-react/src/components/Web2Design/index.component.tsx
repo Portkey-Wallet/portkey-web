@@ -19,6 +19,7 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import SocialLoginGroup from '../SocialLoginGroup';
 import { SocialLoginList } from '../../constants/guardian';
+import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -36,7 +37,7 @@ export default function Web2Design({
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
-  extraElement,
+  extraElementList,
   termsOfService,
   privacyPolicy,
   loginMethodsOrder = SocialLoginList as ISocialLogin[],
@@ -137,11 +138,16 @@ export default function Web2Design({
     [isErrorTip, onSocialFinish, socialLoginHandler],
   );
 
+  const extraElement = useMemo(() => <>{extraElementList?.map((item) => item)}</>, [extraElementList]);
+
   const leftWrapper = useMemo(
     () => (
       <div className="portkey-ui-flex-1 portkey-ui-flex-column left-wrapper">
         <div className="portkey-ui-flex-1">
-          <h1 className="web2design-title">{type}</h1>
+          <h1 className="web2design-title">
+            {type}
+            {type === 'Login' && <UpgradedPortkeyTip className="web2-design-upgraded-portkey" />}
+          </h1>
           <SegmentedInput
             phoneCountry={phoneCountry}
             defaultActiveKey={'Phone'}
