@@ -18,7 +18,7 @@ import useMobile from '../../hooks/useMobile';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import SocialLoginGroup from '../SocialLoginGroup';
-import { SocialLoginList } from '../../constants/guardian';
+import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
@@ -117,7 +117,7 @@ export default function Web2Design({
   const onSocialChange = useCallback(
     async (type: ISocialLogin) => {
       try {
-        if (SocialLoginList.includes(type)) throw Error('Please try social account');
+        if (Web2LoginList.includes(type)) throw Error('Please try social account');
 
         setLoading(true);
         const result = await socialLoginHandler(type as ISocialLogin);
