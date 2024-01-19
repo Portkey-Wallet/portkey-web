@@ -8,6 +8,7 @@ import { TotalAccountsInfo, TotalAccountTypeList } from '../../../../constants/s
 import { useRef, useState } from 'react';
 import { useComputeIconCountPreRow } from '../../../../hooks/login';
 import clsx from 'clsx';
+import SwitchUpgradedPortkey from '../../../SwitchUpgradedPortkey';
 
 export interface OverviewProps {
   extraElement?: React.ReactNode;
@@ -16,6 +17,7 @@ export interface OverviewProps {
   privacyPolicy?: string;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
+  upgradedPortkey?: () => void;
   onAccountTypeChange?: (type: AccountType | 'Scan') => void;
 }
 
@@ -27,6 +29,7 @@ export default function Overview({
   termsOfService,
   privacyPolicy,
   loginMethodsOrder = TotalAccountTypeList,
+  upgradedPortkey,
   onAccountTypeChange,
 }: OverviewProps) {
   const guardiansGroupRef = useRef<HTMLDivElement>(null);
@@ -97,6 +100,7 @@ export default function Overview({
       </div>
 
       {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}
+      <SwitchUpgradedPortkey onClick={upgradedPortkey} />
     </div>
   );
 }

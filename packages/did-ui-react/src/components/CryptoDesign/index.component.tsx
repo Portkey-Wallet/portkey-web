@@ -13,6 +13,7 @@ import useMobile from '../../hooks/useMobile';
 
 export interface CryptoDesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
+  upgradedPortkey?: () => void;
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
@@ -35,6 +36,7 @@ export default function CryptoDesignBaseCom({
   validatePhone,
   onSignTypeChange,
   onChainIdChange,
+  upgradedPortkey,
   onLoginFinishWithoutPin,
 }: CryptoDesignProps) {
   const validateEmailRef = useRef<CryptoDesignProps['validateEmail']>(validateEmail);
@@ -144,6 +146,7 @@ export default function CryptoDesignBaseCom({
           recommendIndexes={recommendIndexes}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={onFinish}
+          upgradedPortkey={upgradedPortkey}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
           onStep={LoginCardOnStep}

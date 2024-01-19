@@ -19,6 +19,7 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import SocialLoginGroup from '../SocialLoginGroup';
 import { SocialLoginList } from '../../constants/guardian';
+import SwitchUpgradedPortkey from '../SwitchUpgradedPortkey';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -26,6 +27,7 @@ export interface Web2DesignProps extends IBaseGetGuardianProps {
   loginMethodsOrder?: ISocialLogin[];
   /** @deprecated delete sign up */
   onSignTypeChange?: (type: CreateWalletType) => void;
+  upgradedPortkey?: () => void;
 }
 
 export default function Web2Design({
@@ -46,6 +48,7 @@ export default function Web2Design({
   validateEmail,
   validatePhone,
   onChainIdChange,
+  upgradedPortkey,
   onLoginFinishWithoutPin,
 }: Web2DesignProps) {
   const signType = useMemo(() => (mode === 'SignUp' ? 'Sign up' : 'Login'), [mode]);
@@ -146,6 +149,7 @@ export default function Web2Design({
           {extraElement ? extraElement : <div className="empty-element"></div>}
         </div>
         {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}
+        <SwitchUpgradedPortkey className="web2-design-upgraded-portkey" onClick={upgradedPortkey} />
       </div>
     ),
     [
@@ -159,6 +163,7 @@ export default function Web2Design({
       privacyPolicy,
       termsOfService,
       type,
+      upgradedPortkey,
     ],
   );
 

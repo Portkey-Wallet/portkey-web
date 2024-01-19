@@ -1,0 +1,45 @@
+@import '../../assets/theme/constants.less';
+
+.portkey-ui-switch-upgraded-wrapper {
+  // position: relative;
+  min-height: 64px;
+  margin-left: -32px;
+  margin-right: -32px;
+  margin-bottom: -24px;
+  margin-top: 16px;
+  border-top: 1px solid rgba(91, 142, 244, 0.2);
+  background: linear-gradient(0deg, rgba(91, 142, 244, 0.1) 0%, rgba(91, 142, 244, 0.1) 100%), #fff;
+  .portkey-ui-switch-upgraded-inner {
+    display: flex;
+    padding: 12px 32px 12px 24px;
+    width: 100%;
+    img {
+      width: 40px;
+      height: 40px;
+    }
+    .text {
+      color: var(--portkey-ui-text-primary);
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 20px;
+      margin-left: 12px;
+    }
+    .portkey-ui-custom-svg.arrow-icon {
+      cursor: pointer;
+    }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .portkey-ui-switch-upgraded-wrapper {
+    min-height: 52px;
+    margin-left: -20px;
+    margin-right: -20px;
+    margin-bottom: -16px;
+    margin-top: 16px;
+  }
+  .portkey-ui-switch-upgraded-wrapper .portkey-ui-switch-upgraded-inner {
+    display: flex;
+    padding: 4px 20px;
+  }
+}

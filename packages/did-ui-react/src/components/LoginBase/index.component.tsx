@@ -32,6 +32,7 @@ export interface LoginBaseProps {
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
   onSocialLoginFinish?: SocialLoginFinishHandler;
+  upgradedPortkey?: () => void;
   onStep?: (value: CreateWalletType) => void;
   onError?: OnErrorFunc;
 }
@@ -60,6 +61,7 @@ export default function LoginCard({
   validatePhone,
   onLoginByPortkey,
   onSocialLoginFinish,
+  upgradedPortkey,
 }: LoginBaseProps) {
   const socialLogin = useMemo(() => defaultSocialLogin || ConfigProvider.getSocialLoginConfig(), [defaultSocialLogin]);
 
@@ -90,6 +92,7 @@ export default function LoginCard({
           isShowScan={isShowScan}
           isErrorTip={isErrorTip}
           onFinish={onSocialLoginFinish}
+          upgradedPortkey={upgradedPortkey}
           switchType={onStep}
           switchGuardianType={(type) => {
             setStep(STEP.inputLogin);

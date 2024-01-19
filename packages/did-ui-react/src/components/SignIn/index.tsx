@@ -75,6 +75,7 @@ const SignIn = forwardRef(
       onCancel,
       onFinish,
       onError,
+      upgradedPortkey,
       onSignUp: onSignUpHandler,
     }: SignInProps,
     ref,
@@ -580,6 +581,7 @@ const SignIn = forwardRef(
             onStepChange={onSignInStepChange}
             onChainIdChange={onOriginChainIdChange}
             onLoginFinishWithoutPin={onLoginFinishWithoutPin}
+            upgradedPortkey={upgradedPortkey}
             termsOfService={termsOfService}
             privacyPolicy={privacyPolicy}
             loginMethodsOrder={loginMethodsOrder}
@@ -635,6 +637,7 @@ const SignIn = forwardRef(
       onSignInStepChange,
       onOriginChainIdChange,
       onLoginFinishWithoutPin,
+      upgradedPortkey,
       termsOfService,
       privacyPolicy,
       loginMethodsOrder,
