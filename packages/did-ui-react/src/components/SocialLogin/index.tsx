@@ -22,6 +22,7 @@ import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey-v1/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
+import SwitchUpgradedPortkey from '../SwitchUpgradedPortkey';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -41,7 +42,7 @@ interface SocialLoginProps {
   switchGuardianType?: (type: IWeb2Login) => void;
   switchType?: (type: CreateWalletType) => void;
   onLoginByPortkey?: LoginFinishWithoutPin;
-
+  upgradedPortkey?: () => void;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
 }
@@ -67,6 +68,7 @@ export default function SocialLogin({
   switchGuardianType,
   onLoginByPortkey,
   switchType,
+  upgradedPortkey,
 }: SocialLoginProps) {
   const { t } = useTranslation();
   const onBackRef = useRef<SocialLoginProps['onBack']>(onBack);
@@ -253,6 +255,8 @@ export default function SocialLogin({
       </div>
 
       <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />
+
+      <SwitchUpgradedPortkey onClick={upgradedPortkey} />
     </>
   );
 }

@@ -87,10 +87,33 @@ export default function Sign() {
           </div>
         ),
       });
-      if (isOk) return ref.current?.setOpen(false);
+      if (isOk) {
+        return false;
+      }
       return true;
     }
     return true;
+  }, []);
+
+  const upgradedPortkey = useCallback(async () => {
+    console.log('upgradedPortkey');
+    const isOk = await modalMethod({
+      wrapClassName: 'portkey-switch-version-modal-wrapper',
+      type: 'confirm',
+      okText: 'Switch to V2',
+      // cancelText: '',
+      content: (
+        <div className="modal-content">
+          <h2>Continue with this account?</h2>
+          <div className="inner">
+            This account is not registered yet. If you wish to create a Portkey account, we recommend using the fully
+            upgraded Portkey for an enhanced experience.
+          </div>
+        </div>
+      ),
+    });
+
+    console.log(isOk, 'isOk==');
   }, []);
 
   return (
@@ -136,6 +159,7 @@ export default function Sign() {
           );
           localStorage.setItem('portkeyLifeCycle', JSON.stringify({ [lifeCycle]: nextLifeCycleProps }));
         }}
+        upgradedPortkey={upgradedPortkey}
       />
 
       <Button

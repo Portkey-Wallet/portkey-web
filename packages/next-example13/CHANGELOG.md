@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.4-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.8...v1.5.4-alpha.9) (2024-01-19)
+
+### Features
+
+- 🎸 add upgraded portkey ([846791b](https://github.com/Portkey-Wallet/portkey-web/commit/846791b5140e251ca1327c3c2a4d823a3b93c713))
+
 ## [1.5.4-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.7...v1.5.4-alpha.8) (2024-01-18)
 
 ### Bug Fixes

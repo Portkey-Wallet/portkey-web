@@ -18,6 +18,7 @@ import { SocialLoginList } from '../../constants/guardian';
 type SocialDesignType = AccountType | 'Scan' | null;
 export interface SocialDesignProps extends IBaseGetGuardianProps {
   type?: SocialDesignType;
+  upgradedPortkey?: () => void;
 }
 
 function SocialDesign({
@@ -36,6 +37,7 @@ function SocialDesign({
   onSuccess,
   validateEmail: defaultValidateEmail,
   validatePhone: defaultValidatePhone,
+  upgradedPortkey,
   onChainIdChange,
   onLoginFinishWithoutPin,
 }: SocialDesignProps) {
@@ -132,6 +134,7 @@ function SocialDesign({
           onAccountTypeChange={onAccountTypeChange}
           termsOfService={termsOfService}
           privacyPolicy={privacyPolicy}
+          upgradedPortkey={upgradedPortkey}
           loginMethodsOrder={loginMethodsOrder}
         />
       )}

@@ -121,4 +121,5 @@ export interface SignInProps {
   getContainer?: ModalProps['getContainer'];
   onCancel?: () => void;
   onError?: OnErrorFunc;
+  upgradedPortkey?: () => void;
 }
