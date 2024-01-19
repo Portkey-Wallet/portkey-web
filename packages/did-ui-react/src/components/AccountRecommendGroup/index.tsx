@@ -51,7 +51,8 @@ export default function AccountRecommendGroup({
             } else if (SocialLoginList.includes(accountType)) {
               onSocialChange?.(accountType as ISocialLogin);
             }
-          }}>
+          }}
+          key={'Portkey_ui_renderLoginElement' + accountType}>
           <CustomSvg type={AccountsInfo[accountType].icon} />
           <span>{`${type} with ${AccountsInfo[accountType].name}`}</span>
           <span className="empty"></span>
