@@ -27,6 +27,7 @@ import { getOrderQuote } from '../Ramp/utils';
 import { getAchSignature, getRampOrderNo } from './utils';
 import { useGetAchTokenInfo } from './hooks';
 import singleMessage from '../CustomAnt/message';
+import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../constants/storage';
 
 export default function RampPreviewMain({
   className,
@@ -145,6 +146,13 @@ export default function RampPreviewMain({
         const signature = await getAchSignature({ address });
         openUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
       } else {
+        if (initState?.approveList) {
+          localStorage.setItem(
+            `${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${orderNo}`,
+            JSON.stringify(initState.approveList),
+          );
+        }
+
         const withdrawUrl = encodeURIComponent(
           RAMP_WITH_DRAW_URL + `&payload=${encodeURIComponent(JSON.stringify({ orderNo: orderNo }))}`,
         );
@@ -166,6 +174,7 @@ export default function RampPreviewMain({
     }
   }, [
     data,
+    caInfo,
     isBuySectionShow,
     isSellSectionShow,
     appId,
@@ -175,8 +184,8 @@ export default function RampPreviewMain({
     updateAchOrder,
     getAchTokenInfo,
     guardianList,
-    caInfo,
     chainId,
+    initState.approveList,
   ]);
 
   const showDisclaimerTipModal = useCallback(() => {
