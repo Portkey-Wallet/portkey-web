@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.5...v2.0.0-alpha.6) (2024-01-19)
+
+### Features
+
+- 🎸 add switch old version ([7b07f7a](https://github.com/Portkey-Wallet/portkey-web/commit/7b07f7aafaf56d0890e4a3a320b6b15df68bebea))
+- 🎸 add version v2 for ramp ([4a3a6f0](https://github.com/Portkey-Wallet/portkey-web/commit/4a3a6f053fa472ea28ff4d71d1bc6232b48a38c1))
+
 ## [2.0.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2024-01-18)
 
 ### Features
