@@ -562,7 +562,10 @@ const SignIn = forwardRef(
       [loginConfig?.recommendIndexes],
     );
 
-    const extra = useMemo(() => [extraElement, ...(extraElementList ?? [])], [extraElement, extraElementList]);
+    const extra = useMemo(
+      () => (extraElement ? [extraElement, ...(extraElementList ?? [])] : extraElementList),
+      [extraElement, extraElementList],
+    );
 
     const mainContent = useCallback(() => {
       if (LifeCycleMap['SignIn'].includes(lifeCycle))
