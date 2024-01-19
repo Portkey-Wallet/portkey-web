@@ -1,7 +1,7 @@
 {
   "private": true,
   "name": "@portkey-v1/next-example",
-  "version": "1.5.4-alpha.8",
+  "version": "1.5.4-alpha.9",
   "scripts": {
     "dev": "PORT=3000 next dev",
     "start": "next start",
@@ -9,8 +9,8 @@
     "dev:analyze": "PORT=4000 ANALYZE=true next dev"
   },
   "dependencies": {
-    "@portkey-v1/did-ui-react": "^1.5.4-alpha.8",
-    "@portkey-v1/onboarding": "^1.5.4-alpha.8",
+    "@portkey-v1/did-ui-react": "^1.5.4-alpha.9",
+    "@portkey-v1/onboarding": "^1.5.4-alpha.9",
     "aelf-sdk": "^3.2.45-beta.0",
     "next": "12.2.0",
     "next-transpile-modules": "^10.0.0",
