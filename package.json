@@ -18,7 +18,6 @@
     "did": "yarn workspace @portkey-v1/did run",
     "example": "yarn workspace @portkey-v1/example run",
     "next-example": "yarn workspace @portkey-v1/next-example run",
-    "next-example13": "yarn workspace @portkey-v1/next-example13 run",
     "graphql": "yarn workspace @portkey-v1/graphql run",
     "request": "yarn workspace @portkey-v1/request run",
     "services": "yarn workspace @portkey-v1/services run",
