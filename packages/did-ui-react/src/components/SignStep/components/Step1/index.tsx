@@ -100,6 +100,7 @@ function Step1({
 
   useUpdateEffect(() => {
     createType && onStepChange?.(createType);
+    props.onSignTypeChange?.(createType);
   }, [createType]);
 
   const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
