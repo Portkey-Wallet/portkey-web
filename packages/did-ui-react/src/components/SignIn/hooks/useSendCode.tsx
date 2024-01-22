@@ -14,10 +14,12 @@ const useSendCode = () => {
       identifierInfo,
       accountType,
       verifier,
+      operationType = OperationTypeEnum.register,
     }: {
       identifierInfo: IGuardianIdentifierInfo;
       accountType: AccountType;
       verifier: IVerifier;
+      operationType?: OperationTypeEnum;
     }) => {
       const identifier = identifierInfo.identifier;
       const isOk = await modalMethod({
@@ -38,7 +40,7 @@ const useSendCode = () => {
           guardianIdentifier: identifier,
           verifier,
           chainId: identifierInfo.chainId,
-          operationType: OperationTypeEnum.register,
+          operationType,
         });
         setLoading(false);
 
