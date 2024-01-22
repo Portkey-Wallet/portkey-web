@@ -11,6 +11,8 @@ import {
   BaseModalMethod,
   TSignUpContinueHandler,
   handleErrorCode,
+  SignUpValue,
+  TModalMethodRef,
 } from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
@@ -56,25 +58,36 @@ export default function Sign() {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') ?? '{}'));
   }, []);
 
-  const switchToV1 = useCallback(
-    () =>
-      modalMethod({
-        wrapClassName: 'portkey-switch-version-modal-wrapper',
-        type: 'confirm',
-        okText: 'Signup',
-        cancelText: 'Switch to V1',
-        content: (
-          <div className="modal-content">
-            <h2>Continue with this account?</h2>
-            <div className="inner">
-              The account you are currently logged in with does not exist, and the account has been detected to exist in
-              V1. You can switch to V1 for login, or register in the current version.
-            </div>
+  const switchToV1Modal = useCallback(async () => {
+    // modalInstance
+    const modalRef: TModalMethodRef = { current: undefined };
+    return modalMethod({
+      wrapClassName: 'portkey-switch-version-modal-wrapper',
+      type: 'confirm',
+      okText: 'Signup',
+      ref: modalRef,
+      cancelText: 'Switch to V1',
+      content: (
+        <div className="modal-content">
+          <h2>
+            Continue with this account? |||{' '}
+            <span
+              onClick={() => {
+                console.log(modalRef.current);
+                // modalRef.current?.destroy();
+                modalRef.current?.close();
+              }}>
+              close
+            </span>
+          </h2>
+          <div className="inner">
+            The account you are currently logged in with does not exist, and the account has been detected to exist in
+            V1. You can switch to V1 for login, or register in the current version.
           </div>
-        ),
-      }),
-    [],
-  );
+        </div>
+      ),
+    });
+  }, []);
 
   const onSignUpHandler: TSignUpContinueHandler = useCallback(
     async identifierInfo => {
@@ -95,13 +108,16 @@ export default function Sign() {
         isLoginGuardian = false;
       }
       if (isLoginGuardian) {
-        const isOk = await switchToV1();
-        if (isOk) return isOk;
+        const isOk = await switchToV1Modal();
+        console.log(isOk, 'isOk===');
+        if (isOk) return SignUpValue.otherSeverRegisterButContinue;
+        if (isOk === 0) return SignUpValue.cancelRegister;
         ref.current?.setOpen(false);
+        return SignUpValue.otherSeverRegisterButContinue;
       }
-      return true;
+      return SignUpValue.continue;
     },
-    [switchToV1],
+    [switchToV1Modal],
   );
 
   return (
@@ -119,7 +135,12 @@ export default function Sign() {
           <div key="1" style={{ height: 300, background: 'red' }}></div>,
           <div key="2" className="switch-old-portkey-wrapper">
             Account registered in old Portkey? Log in&nbsp;
-            <span className="switch-btn" onClick={switchToV1}>
+            <span
+              className="switch-btn"
+              onClick={async () => {
+                const isOK = await switchToV1Modal();
+                console.log(isOK, 'isOK==');
+              }}>
               here
             </span>
           </div>,
