@@ -57,10 +57,6 @@ export default function CryptoDesignBaseCom({
 
   const [_type, setType] = useState<CreateWalletType>(type ?? 'Login');
 
-  useUpdateEffect(() => {
-    type && setType(type);
-  }, [type]);
-
   const [{ networkType, chainType }] = usePortkey();
 
   const LoginCardOnStep = useCallback((step: Omit<CreateWalletType, 'Login'>) => setType(step as CreateWalletType), []);
