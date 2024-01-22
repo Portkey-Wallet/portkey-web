@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.8...v2.0.0-alpha.9) (2024-01-22)
+
+### Features
+
+- 🎸 change default storage key name ([32c6410](https://github.com/Portkey-Wallet/portkey-web/commit/32c6410de768d18a95228808708366a999dc698a))
+
 ## [2.0.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.7...v2.0.0-alpha.8) (2024-01-19)
 
 **Note:** Version bump only for package @portkey/did
