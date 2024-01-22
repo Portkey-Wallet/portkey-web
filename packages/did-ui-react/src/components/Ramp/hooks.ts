@@ -39,7 +39,7 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
           clientId,
         });
       } catch (error) {
-        console.log('🌈 🌈 🌈 🌈 🌈 🌈 1', error);
+        console.log('useSellTransfer 1', error);
         throw new Error('Transaction failed.');
       }
 
@@ -53,7 +53,7 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
         // Step1
         const { remove: removeAchTx } = signalrSell.onAchTxAddressReceived({ clientId, orderId }, async (data) => {
           if (data === null) {
-            console.log('🌈 🌈 🌈 🌈 🌈 🌈 2', data);
+            console.log('useSellTransfer 2', data);
             throw new Error('Transaction failed.');
           }
           // Step2
@@ -89,17 +89,17 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
       });
 
       const signalrSellResult = await Promise.race([timerPromise, signalrSellPromise]);
-      console.log('🌈 🌈 🌈 🌈 🌈 🌈 3', signalrSellResult);
+      console.log('useSellTransfer 3', signalrSellResult);
       if (signalrSellResult === null) throw new Error('Transaction failed.');
       if (signalrSellResult === 'timeout') {
-        console.log('🌈 🌈 🌈 🌈 🌈 🌈 4 timeout', signalrSellResult);
+        console.log('useSellTransfer 4 timeout', signalrSellResult);
         if (status.current === STAGE.ACHTXADS) throw new Error('Transaction failed.');
         throw {
           code: 'TIMEOUT',
           message: 'The waiting time is too long, it will be put on hold in the background.',
         };
       }
-      console.log('🌈 5', signalrSellResult);
+      console.log('useSellTransfer 5', signalrSellResult);
       if (signalrSellResult.status !== 'Transferred') throw new Error('Transaction failed.');
 
       signalrAchTxRemove?.();
