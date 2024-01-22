@@ -62,11 +62,17 @@ export type TStep3LifeCycle = {
   };
 };
 
+export enum SignUpValue {
+  cancelRegister,
+  otherSeverRegisterButContinue,
+  continue,
+}
+
 export type TSignUpContinueHandler = (identifierInfo: {
   identifier: string;
   accountType: AccountType;
   authToken?: string;
-}) => Promise<boolean>;
+}) => Promise<SignUpValue>;
 
 export interface SignInProps {
   defaultChainId?: ChainId;

@@ -2,7 +2,7 @@ import CryptoDesign, { CryptoDesignProps } from '../../../CryptoDesign/index.com
 import { useCallback, useState, memo, useRef, useEffect } from 'react';
 import type { DIDWalletInfo, IGuardianIdentifierInfo, IPhoneCountry, TDesign, TSize } from '../../../types';
 import { Design } from '../../../types';
-import type { SignInLifeCycleType, TSignUpContinueHandler } from '../../../SignStep/types';
+import { SignUpValue, SignInLifeCycleType, TSignUpContinueHandler } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
 import SocialDesign from '../../../SocialDesign/index.component';
@@ -74,9 +74,7 @@ function Step1({
           authToken: value.authenticationInfo?.authToken,
         });
 
-        if (typeof isContinue !== 'undefined') {
-          if (!isContinue) return;
-        }
+        if (isContinue === SignUpValue.cancelRegister) return;
 
         message.error(
           'This account is not registered yet.If you wish to create a Portkey account, we recommond using the fully upgraded Portkey for an enhanced experience.',

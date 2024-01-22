@@ -9,6 +9,8 @@ import {
   UI_TYPE,
   modalMethod,
   TSignUpContinueHandler,
+  TModalMethodRef,
+  SignUpValue,
 } from '@portkey-v1/did-ui-react';
 import { ChainId } from '@portkey-v1/types';
 import { sleep } from '@portkey-v1/utils';
@@ -72,6 +74,7 @@ export default function Sign() {
       isLoginGuardian = false;
     }
     if (isLoginGuardian) {
+      let modalRef: TModalMethodRef;
       const isOk = await modalMethod({
         wrapClassName: 'portkey-switch-version-modal-wrapper',
         type: 'confirm',
@@ -79,7 +82,15 @@ export default function Sign() {
         // cancelText: '',
         content: (
           <div className="modal-content">
-            <h2>Continue with this account?</h2>
+            <h2>
+              Continue with this account? |||{' '}
+              <span
+                onClick={() => {
+                  modalRef.current?.close();
+                }}>
+                close
+              </span>
+            </h2>
             <div className="inner">
               This account is not registered yet. If you wish to create a Portkey account, we recommend using the fully
               upgraded Portkey for an enhanced experience.
@@ -88,11 +99,11 @@ export default function Sign() {
         ),
       });
       if (isOk) {
-        return false;
+        return SignUpValue.cancelRegister;
       }
-      return true;
+      return SignUpValue.cancelRegister;
     }
-    return true;
+    return SignUpValue.cancelRegister;
   }, []);
 
   const upgradedPortkey = useCallback(async () => {
