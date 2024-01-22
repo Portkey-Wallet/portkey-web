@@ -1,6 +1,6 @@
 {
   "name": "@portkey-v1/graphql",
-  "version": "1.5.4-alpha.11",
+  "version": "1.5.4-alpha.12",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -38,7 +38,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
-    "@portkey-v1/types": "^1.5.4-alpha.11",
+    "@portkey-v1/types": "^1.5.4-alpha.12",
     "graphql": "^16.6.0",
     "subscriptions-transport-ws": "^0.11.0"
   },
