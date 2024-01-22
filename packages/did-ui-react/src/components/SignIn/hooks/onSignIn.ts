@@ -199,6 +199,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
           verifier: guardian.verifier,
           accountType,
           identifierInfo: guardianIdentifierInfo,
+          operationType: OperationTypeEnum.communityRecovery,
         });
         if (!verifyCodeInfo) return;
 
