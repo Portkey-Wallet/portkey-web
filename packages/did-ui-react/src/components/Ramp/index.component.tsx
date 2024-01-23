@@ -44,7 +44,6 @@ import './index.less';
 import { OperationTypeEnum } from '@portkey-v1/services';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import { GuardianApprovedItem } from '../Guardian/utils/type';
-import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../constants/storage';
 
 export default function RampMain({
   className,
@@ -559,29 +558,32 @@ export default function RampMain({
     ],
   );
 
-  const showPreview = useCallback(() => {
-    const { side, amount, currency, country, crypto, network } = valueSaveRef.current;
-    onShowPreview({
-      initState: {
-        crypto,
-        network,
-        fiat: currency,
-        country,
-        amount,
-        side,
-      },
-      chainId: chainId,
-    });
-  }, [chainId, onShowPreview]);
+  const showPreview = useCallback(
+    (approveList?: GuardianApprovedItem[]) => {
+      const { side, amount, currency, country, crypto, network } = valueSaveRef.current;
+      onShowPreview({
+        initState: {
+          crypto,
+          network,
+          fiat: currency,
+          country,
+          amount,
+          side,
+          approveList,
+        },
+        chainId: chainId,
+      });
+    },
+    [chainId, onShowPreview],
+  );
 
   const onApprovalSuccess = useCallback(
     (approveList: GuardianApprovedItem[]) => {
       try {
         if (Array.isArray(approveList) && approveList.length > 0) {
           console.log('approveList', approveList);
-          localStorage.setItem(PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST, JSON.stringify(approveList));
           setApprovalVisible(false);
-          showPreview();
+          showPreview(approveList);
         } else {
           // TODO sell throw error
         }
