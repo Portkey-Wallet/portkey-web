@@ -4,11 +4,12 @@ import CustomSvg from '../../../CustomSvg';
 import TermsOfServiceItem from '../../../TermsOfServiceItem';
 import './index.less';
 import { TotalAccountType } from '../../../../types';
-import { TotalAccountsInfo, TotalAccountTypeList } from '../../../../constants/socialLogin';
+import { TotalAccountsInfo } from '../../../../constants/socialLogin';
 import { useMemo, useRef, useState } from 'react';
 import { useComputeIconCountPreRow } from '../../../../hooks/login';
 import clsx from 'clsx';
 import UpgradedPortkeyTip from '../../../UpgradedPortkeyTip';
+import { TotalAccountTypeList } from '../../../../constants/guardian';
 
 export interface OverviewProps {
   extraElementList?: React.ReactNode[];

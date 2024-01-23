@@ -1,13 +1,16 @@
 import { AccountType, AccountTypeEnum, AccountTypeKeyEnum } from '@portkey/services';
 import svgsList from '../assets/svgs';
+import { TotalAccountType } from '../types';
 
 export type TAccountType = AccountType;
 
-export const SocialLoginList: string[] = ['Google', 'Apple', 'Telegram'];
+export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple'];
 
-export const Web2LoginList: string[] = ['Email', 'Phone'];
+export const Web2LoginList: string[] = ['Phone', 'Email'];
 
-export const AccountLoginList = [...SocialLoginList, ...Web2LoginList];
+export const AccountLoginList = [...SocialLoginList, ...Web2LoginList] as TotalAccountType[];
+
+export const TotalAccountTypeList: Array<TotalAccountType> = [...AccountLoginList, 'Scan'];
 
 export const guardiansExceedTip =
   'The number of guardians has reached the maximum limit. Please delete some before trying to add new ones.';

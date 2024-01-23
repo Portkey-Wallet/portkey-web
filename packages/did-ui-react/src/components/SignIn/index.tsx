@@ -36,8 +36,7 @@ import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
 import useLoginWallet from '../../hooks/useLoginWallet';
 import './index.less';
-import { SocialLoginList } from '../../constants/guardian';
-import { TotalAccountTypeList } from '../../constants/socialLogin';
+import { SocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
 import ConfigProvider from '../config-provider';
 import { ILoginConfig } from '../config-provider/types';
 
