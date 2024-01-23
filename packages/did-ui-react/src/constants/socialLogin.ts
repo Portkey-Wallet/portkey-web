@@ -31,5 +31,3 @@ export const TotalAccountsInfo: Record<TotalAccountType, IAccountItem> = {
   ...Web2AccountsInfo,
   Scan: { type: 'Scan', name: 'Scan', icon: 'QRCodeIcon' },
 };
-
-export const TotalAccountTypeList: Array<TotalAccountType> = ['Google', 'Apple', 'Telegram', 'Email', 'Phone', 'Scan'];
