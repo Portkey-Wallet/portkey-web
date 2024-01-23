@@ -121,7 +121,6 @@ function GuardianAdd({
     () => (loginConfig?.loginMethodsOrder as AccountType[]) || AccountLoginList,
     [loginConfig?.loginMethodsOrder],
   );
-  console.log('loginMethodsOrder', loginMethodsOrder);
 
   const guardianTypeSelectItems = useMemo(() => {
     if (Array.isArray(loginMethodsOrder)) {

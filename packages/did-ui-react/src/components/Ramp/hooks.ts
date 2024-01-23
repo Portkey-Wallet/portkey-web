@@ -39,7 +39,6 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
           clientId,
         });
       } catch (error) {
-        console.log('useSellTransfer 1', error);
         throw new Error('Transaction failed.');
       }
 
@@ -53,7 +52,6 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
         // Step1
         const { remove: removeAchTx } = signalrSell.onAchTxAddressReceived({ clientId, orderId }, async (data) => {
           if (data === null) {
-            console.log('useSellTransfer 2', data);
             throw new Error('Transaction failed.');
           }
           // Step2
@@ -89,7 +87,6 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
       });
 
       const signalrSellResult = await Promise.race([timerPromise, signalrSellPromise]);
-      console.log('useSellTransfer 3', signalrSellResult);
       if (signalrSellResult === null) throw new Error('Transaction failed.');
       if (signalrSellResult === 'timeout') {
         console.log('useSellTransfer 4 timeout', signalrSellResult);
@@ -99,7 +96,6 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
           message: 'The waiting time is too long, it will be put on hold in the background.',
         };
       }
-      console.log('useSellTransfer 5', signalrSellResult);
       if (signalrSellResult.status !== 'Transferred') throw new Error('Transaction failed.');
 
       signalrAchTxRemove?.();
@@ -143,7 +139,9 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
 
       if (!keyPair) throw new Error('Sell Transfer: No keyPair');
 
-      const guardiansApprovedStr = localStorage.getItem(`${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${params.orderId}`);
+      const guardiansApprovedStr = await did.config.storageMethod.getItem(
+        `${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${params.orderId}`,
+      );
       let guardiansApprovedParse;
       try {
         guardiansApprovedParse =
@@ -172,7 +170,7 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
       if (!rawResult) {
         throw new Error('Failed to get raw transaction.');
       }
-      localStorage.removeItem(`${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${params.orderId}`);
+      await did.config.storageMethod.removeItem(`${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${params.orderId}`);
       const publicKey = keyPair.getPublic('hex');
       const message = SparkMD5.hash(`${params.orderId}${rawResult}`);
       const signature = AElf.wallet.sign(Buffer.from(message).toString('hex'), keyPair).toString('hex');

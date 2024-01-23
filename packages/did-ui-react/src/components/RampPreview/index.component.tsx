@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from 'antd';
-import { setLoading } from '../../utils';
+import { did, setLoading } from '../../utils';
 import clsx from 'clsx';
 import { RampTypeEnum } from '../../types';
 import './index.less';
@@ -147,7 +147,7 @@ export default function RampPreviewMain({
         openUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
       } else {
         if (initState?.approveList) {
-          localStorage.setItem(
+          await did.config.storageMethod.setItem(
             `${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${orderNo}`,
             JSON.stringify(initState.approveList),
           );
