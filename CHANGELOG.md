@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.11...v2.0.0-alpha.12) (2024-01-23)
+
+### Features
+
+- 🎸 change email input ui ([55db844](https://github.com/Portkey-Wallet/portkey-web/commit/55db84451792a4e2a05a5ef56ce3dcbf75f8feea))
+
+### Bug Fixes
+
+- 🐛 set accounttype order ([95083f7](https://github.com/Portkey-Wallet/portkey-web/commit/95083f703195ab382d7714e33849f85c20347cf6))
+
 ## [2.0.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-22)
 
 ### Bug Fixes
