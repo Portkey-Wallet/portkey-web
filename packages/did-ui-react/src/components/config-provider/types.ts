@@ -7,7 +7,7 @@ export interface ConfigProviderProps {
 }
 
 export interface ILoginConfig {
-  loginMethodsOrder?: TotalAccountType[];
+  loginMethodsOrder?: Exclude<TotalAccountType, 'Telegram'>[];
   recommendIndexes?: number[];
 }
 

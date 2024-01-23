@@ -3,7 +3,7 @@ import svgsList from '../assets/svgs';
 
 export type TAccountType = AccountType;
 
-export const SocialLoginList: string[] = ['Google', 'Apple', 'Telegram'];
+export const SocialLoginList: string[] = ['Google', 'Apple'];
 
 export const Web2LoginList: string[] = ['Email', 'Phone'];
 
