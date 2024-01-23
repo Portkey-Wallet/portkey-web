@@ -1,6 +1,7 @@
 import { ChainId, IBaseWalletAccount } from '@portkey/types';
 import { AchTxAddressReceivedType } from '@portkey/socket';
 import { CAInfo } from '@portkey/did';
+import { GuardianApprovedItem } from '../components/Guardian/utils/type';
 
 export enum RampTypeEnum {
   BUY = 'BUY',
@@ -84,6 +85,7 @@ export type IRampPreviewInitState = {
   country: string;
   amount: string;
   side: RampTypeEnum;
+  approveList?: GuardianApprovedItem[];
 };
 
 export type ITokenInfo = {
