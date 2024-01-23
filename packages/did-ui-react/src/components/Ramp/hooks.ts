@@ -89,6 +89,7 @@ export const useSellTransfer = ({ isMainnet, portkeyWebSocketUrl }: ISellTransfe
       const signalrSellResult = await Promise.race([timerPromise, signalrSellPromise]);
       if (signalrSellResult === null) throw new Error('Transaction failed.');
       if (signalrSellResult === 'timeout') {
+        console.log('useSellTransfer 4 timeout', signalrSellResult);
         if (status.current === STAGE.ACHTXADS) throw new Error('Transaction failed.');
         throw {
           code: 'TIMEOUT',
@@ -138,7 +139,20 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
 
       if (!keyPair) throw new Error('Sell Transfer: No keyPair');
 
-      const guardiansApprovedStr = localStorage.getItem(PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST);
+      const guardiansApprovedStr = await did.config.storageMethod.getItem(
+        `${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${params.orderId}`,
+      );
+      let guardiansApprovedParse;
+      try {
+        guardiansApprovedParse =
+          typeof guardiansApprovedStr === 'string' && guardiansApprovedStr.length > 0
+            ? JSON.parse(guardiansApprovedStr)
+            : undefined;
+      } catch (error) {
+        console.log('json parse error');
+        guardiansApprovedParse = undefined;
+      }
+
       const rawResult = await getCATransactionRaw<TransferParams>({
         chainId: chainId.current,
         contractAddress: tokenInfo.tokenContractAddress || '',
@@ -151,11 +165,12 @@ export const useHandleAchSell = ({ isMainnet, tokenInfo, portkeyWebSocketUrl }: 
           to: `ELF_${params.address}_AELF`,
           amount: timesDecimals(params.cryptoAmount, tokenInfo.decimals).toNumber(),
         },
-        callOptions: { appendParams: { guardiansApproved: guardiansApprovedStr } },
+        callOptions: { appendParams: { guardiansApproved: guardiansApprovedParse } },
       });
       if (!rawResult) {
         throw new Error('Failed to get raw transaction.');
       }
+      await did.config.storageMethod.removeItem(`${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${params.orderId}`);
       const publicKey = keyPair.getPublic('hex');
       const message = SparkMD5.hash(`${params.orderId}${rawResult}`);
       const signature = AElf.wallet.sign(Buffer.from(message).toString('hex'), keyPair).toString('hex');
