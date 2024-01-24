@@ -514,6 +514,7 @@ const SignIn = forwardRef(
         if (_lifeCycle === 'Step2OfSkipGuardianApprove')
           return (
             <Step2OfSkipGuardianApprove
+              networkType={networkType}
               guardianList={defaultLiftCyclePropsRef.current?.guardianList}
               guardianIdentifierInfo={guardianIdentifierInfo}
               isErrorTip={isErrorTip}
@@ -527,6 +528,7 @@ const SignIn = forwardRef(
           <Step2OfLogin
             guardianList={defaultLiftCyclePropsRef.current?.guardianList}
             approvedList={approvedList}
+            networkType={networkType}
             chainType={chainType}
             chainId={chainId}
             guardianIdentifierInfo={guardianIdentifierInfo}
@@ -547,6 +549,7 @@ const SignIn = forwardRef(
         onGuardianListChange,
         onStep2Cancel,
         onStep2LoginFinish,
+        networkType,
       ],
     );
 

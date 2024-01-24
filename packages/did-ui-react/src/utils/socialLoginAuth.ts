@@ -1,5 +1,5 @@
 import { PORTKEY_VERSION, WEB_PAGE } from '../constants';
-import { ISocialLogin } from '../types';
+import { ISocialLogin, NetworkType } from '../types';
 import { stringify } from 'query-string';
 
 export const socialLoginAuth = ({
@@ -11,7 +11,7 @@ export const socialLoginAuth = ({
   type: ISocialLogin;
   clientId?: string;
   redirectURI?: string;
-  network?: string;
+  network?: NetworkType;
 }): Promise<{
   token: string;
   provider: ISocialLogin;

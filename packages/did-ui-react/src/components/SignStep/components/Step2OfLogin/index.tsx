@@ -4,7 +4,7 @@ import { memo, useState, useCallback } from 'react';
 import { errorTip, handleErrorMessage, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';
 import GuardianApproval from '../../../GuardianApproval/index.component';
-import { BaseGuardianItem, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../../../types';
+import { BaseGuardianItem, NetworkType, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../../../types';
 import { IGuardianIdentifierInfo } from '../../../types';
 import './index.less';
 import { useEffectOnce } from 'react-use';
@@ -18,7 +18,7 @@ interface Step2OfLoginProps {
   guardianList?: UserGuardianStatus[];
   approvedList?: GuardiansApproved[];
   guardianIdentifierInfo: IGuardianIdentifierInfo;
-  networkType?: string;
+  networkType: NetworkType;
   onFinish?(guardianList: GuardiansApproved[]): Promise<void>;
   onCancel?(): void;
   onError?: OnErrorFunc;
@@ -30,7 +30,7 @@ function Step2OfLogin({
   isErrorTip = true,
   approvedList,
   guardianList: defaultGuardianList,
-  networkType = '',
+  networkType,
   guardianIdentifierInfo,
   onFinish,
   onCancel,

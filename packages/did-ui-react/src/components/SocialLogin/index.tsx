@@ -5,6 +5,7 @@ import {
   ISocialLogin,
   ISocialLoginConfig,
   IWeb2Login,
+  NetworkType,
   OnErrorFunc,
   RegisterType,
   SocialLoginFinishHandler,
@@ -34,7 +35,7 @@ interface SocialLoginProps {
   termsOfService?: ReactNode;
   privacyPolicy?: string;
   extraElement?: ReactNode; // extra element
-  networkType?: string;
+  networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
   onBack?: () => void;

@@ -3,7 +3,7 @@ import { did, verification } from '../utils';
 import { ChainId } from '@portkey/types';
 import { AccountType, OperationTypeEnum } from '@portkey/services';
 import { useVerifyToken } from './authentication';
-import { ISocialLoginConfig } from '../types';
+import { ISocialLoginConfig, NetworkType } from '../types';
 import ConfigProvider from '../components/config-provider';
 import { IVerifier } from '../components';
 import useReCaptchaModal from './useReCaptchaModal';
@@ -37,7 +37,7 @@ const useVerifier = () => {
       token?: string;
       verifier: IVerifier;
       chainId: ChainId;
-      networkType?: string;
+      networkType?: NetworkType;
       operationType: OperationTypeEnum;
     }) => {
       let accessToken;

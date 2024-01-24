@@ -3,7 +3,14 @@ import { memo, useCallback, ReactNode, useState, useRef, useMemo } from 'react';
 import { AccountType, AccountTypeEnum, OperationTypeEnum, VerifierItem, GuardiansApproved } from '@portkey/services';
 import { useTranslation } from 'react-i18next';
 import CustomSvg from '../CustomSvg';
-import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
+import {
+  ISocialLogin,
+  IVerificationInfo,
+  NetworkType,
+  OnErrorFunc,
+  UserGuardianStatus,
+  VerifyStatus,
+} from '../../types';
 import GuardianAccountShow from '../GuardianAccountShow';
 import BaseVerifierIcon from '../BaseVerifierIcon';
 import { Button, Switch } from 'antd';
@@ -36,7 +43,7 @@ export interface GuardianViewProps {
   isErrorTip?: boolean;
   currentGuardian: UserGuardianStatus;
   guardianList?: UserGuardianStatus[];
-  networkType?: string;
+  networkType: NetworkType;
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -58,7 +65,7 @@ function GuardianView({
   isErrorTip = true,
   currentGuardian,
   guardianList,
-  networkType = 'MAINNET',
+  networkType,
   handleSetLoginGuardian,
   onError,
 }: GuardianViewProps) {
@@ -425,7 +432,7 @@ function GuardianView({
           header={<BackHeader onBack={onCloseApproval} />}
           originChainId={originChainId}
           guardianList={guardianList?.filter((item) => item.key !== currentGuardian.key)}
-          networkType={networkType || 'MAINNET'}
+          networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}

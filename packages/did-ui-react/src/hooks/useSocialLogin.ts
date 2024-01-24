@@ -1,4 +1,4 @@
-import { ISocialLogin, ISocialLoginConfig } from '../types';
+import { ISocialLogin, ISocialLoginConfig, NetworkType } from '../types';
 import { useCallback } from 'react';
 import { socialLoginAuth } from '../utils';
 
@@ -6,7 +6,7 @@ export default function useSocialLogin({
   socialLogin,
   network,
 }: {
-  network?: string;
+  network?: NetworkType;
   socialLogin?: ISocialLoginConfig;
 }) {
   const login = useCallback(

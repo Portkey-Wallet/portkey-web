@@ -23,7 +23,14 @@ import {
 } from '../../utils';
 import type { ChainId } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
-import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
+import {
+  BaseGuardianItem,
+  UserGuardianStatus,
+  VerifyStatus,
+  OnErrorFunc,
+  IVerificationInfo,
+  NetworkType,
+} from '../../types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
@@ -44,7 +51,7 @@ export interface GuardianApprovalProps {
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
   operationType?: OperationTypeEnum;
-  networkType: string;
+  networkType: NetworkType;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;

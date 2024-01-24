@@ -12,7 +12,14 @@ import {
   socialLoginAuth,
   verification,
 } from '../../utils';
-import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
+import {
+  ISocialLogin,
+  IVerificationInfo,
+  NetworkType,
+  OnErrorFunc,
+  UserGuardianStatus,
+  VerifyStatus,
+} from '../../types';
 import CustomSvg from '../CustomSvg';
 import { useTranslation } from 'react-i18next';
 import GuardianApproval from '../GuardianApproval';
@@ -54,7 +61,7 @@ export interface GuardianEditProps {
   guardianList?: UserGuardianStatus[];
   currentGuardian?: UserGuardianStatus;
   preGuardian?: UserGuardianStatus;
-  networkType?: string;
+  networkType: NetworkType;
   chainType?: ChainType;
   sandboxId?: string;
   onError?: OnErrorFunc;
@@ -80,7 +87,7 @@ function GuardianEdit({
   currentGuardian,
   preGuardian,
   guardianList,
-  networkType = 'MAINNET',
+  networkType,
   chainType = 'aelf',
   sandboxId,
   onError,

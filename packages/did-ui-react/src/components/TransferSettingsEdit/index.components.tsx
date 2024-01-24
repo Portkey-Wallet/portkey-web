@@ -9,7 +9,7 @@ import { Button, Form, FormProps, Input } from 'antd';
 import SwitchComponent from '../SwitchComponent';
 import { LimitFormatTip, NoLimit, SetLimitExplain, SingleExceedDaily } from '../../constants/security';
 import { isValidInteger } from '../../utils/reg';
-import { OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
+import { NetworkType, OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
 import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
@@ -31,7 +31,7 @@ export interface ITransferSettingsEditProps extends FormProps {
   initData: ITransferLimitItemWithRoute;
   isErrorTip?: boolean;
   sandboxId?: string;
-  networkType?: string;
+  networkType: NetworkType;
   onBack?: (data: ITransferLimitItemWithRoute) => void;
   onSuccess?: (data: ITransferLimitItemWithRoute) => void;
   onGuardiansApproveError?: OnErrorFunc;
@@ -56,7 +56,7 @@ export default function TransferSettingsEditMain({
   initData,
   isErrorTip = true,
   sandboxId = '',
-  networkType = '',
+  networkType,
   onBack,
   onSuccess,
   onGuardiansApproveError,

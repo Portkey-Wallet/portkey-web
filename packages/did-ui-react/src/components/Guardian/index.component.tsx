@@ -6,7 +6,7 @@ import { GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
 import { AuthServe, errorTip, getVerifierStatusMap, handleErrorMessage, setLoading } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
-import { OnErrorFunc, UserGuardianStatus } from '../../types';
+import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
@@ -43,7 +43,7 @@ export interface GuardianProps {
   accelerateChainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
-  networkType: string;
+  networkType: NetworkType;
   onError?: OnErrorFunc;
   onBack?: () => void;
   onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
@@ -395,6 +395,7 @@ function GuardianMain({
           onEditGuardian={editable ? onEditGuardian : undefined}
           handleSetLoginGuardian={handleSetLoginGuardian}
           guardianList={guardianList}
+          networkType={networkType}
         />
       )}
       {step === GuardianStep.guardianAdd && (
@@ -415,6 +416,7 @@ function GuardianMain({
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoView)} />}
           originChainId={originChainId}
           caHash={caHash}
+          networkType={networkType}
           verifierList={verifierList}
           currentGuardian={currentGuardian}
           guardianList={guardianList}

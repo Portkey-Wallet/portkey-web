@@ -6,7 +6,7 @@ import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } f
 import { getChain } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
-import { BaseGuardianItem, IGuardiansApproved } from '../../types';
+import { BaseGuardianItem, IGuardiansApproved, NetworkType } from '../../types';
 import { OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import BackHeader from '../BackHeader';
@@ -19,7 +19,7 @@ export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
   targetChainId: ChainId;
   caHash: string;
-  networkType?: string;
+  networkType: NetworkType;
 }
 
 export interface IManagerApproveResult {
@@ -43,7 +43,7 @@ export default function ManagerApproveInner({
   max,
   originChainId,
   targetChainId,
-  networkType = 'MAINNET',
+  networkType,
   caHash,
   amount,
   dappInfo,

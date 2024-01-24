@@ -22,6 +22,7 @@ import {
   ICountryItem,
   ISocialLogin,
   IVerificationInfo,
+  NetworkType,
   OnErrorFunc,
   UserGuardianStatus,
   VerifyStatus,
@@ -61,7 +62,7 @@ export interface GuardianAddProps {
   phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
   verifierList?: VerifierItem[];
-  networkType?: string;
+  networkType: NetworkType;
   sandboxId?: string;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
@@ -712,7 +713,7 @@ function GuardianAdd({
           header={<BackHeader onBack={onCloseApproval} />}
           originChainId={originChainId}
           guardianList={guardianList}
-          networkType={networkType || 'MAINNET'}
+          networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}
