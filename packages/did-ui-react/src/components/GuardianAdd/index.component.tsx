@@ -325,6 +325,7 @@ function GuardianAdd({
           chainId: originChainId,
           clientId,
           redirectURI,
+          networkType,
           operationType: OperationTypeEnum.addGuardian,
           customLoginHandler,
         });
@@ -345,7 +346,7 @@ function GuardianAdd({
         setLoading(false);
       }
     },
-    [socialBasic, socialUserInfo, verifyToken, originChainId, isErrorTip, onError],
+    [socialBasic, socialUserInfo, verifyToken, originChainId, networkType, isErrorTip, onError],
   );
 
   const checkValid = useCallback(async () => {

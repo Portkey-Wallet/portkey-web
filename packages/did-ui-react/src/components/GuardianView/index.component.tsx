@@ -125,6 +125,7 @@ function GuardianView({
         type: _guardian?.guardianType as ISocialLogin,
         clientId,
         redirectURI,
+        network: networkType,
       });
       if (!response?.token) throw new Error('auth failed');
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {

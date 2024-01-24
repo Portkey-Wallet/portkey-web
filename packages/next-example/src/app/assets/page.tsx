@@ -10,15 +10,15 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
-  loginConfig: {
-    loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
-    recommendIndexes: [0, 1],
-  },
+  // loginConfig: {
+  //   loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
+  //   recommendIndexes: [0, 1],
+  // },
 });
 
 export default function Assets() {
   return (
-    <PortkeyAssetProvider pin="111111" originChainId="AELF">
+    <PortkeyAssetProvider pin="111111" originChainId="tDVW">
       <Asset
         faucet={{
           faucetContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',
