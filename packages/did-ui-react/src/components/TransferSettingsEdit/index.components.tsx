@@ -5,7 +5,7 @@ import { useMemo, useState, useCallback, useRef } from 'react';
 import { divDecimals, timesDecimals } from '../../utils/converter';
 import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { ITransferSettingsFormInit } from '../TransferSettings/index.components';
-import { Button, Form, FormProps, Input } from 'antd';
+import { Form, FormProps, Input } from 'antd';
 import SwitchComponent from '../SwitchComponent';
 import { LimitFormatTip, NoLimit, SetLimitExplain, SingleExceedDaily } from '../../constants/security';
 import { isValidInteger } from '../../utils/reg';
@@ -22,6 +22,7 @@ import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
+import ThrottleButton from '../ThrottleButton';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -351,9 +352,9 @@ export default function TransferSettingsEditMain({
         </div>
 
         <FormItem className="portkey-ui-footer-btn-wrap">
-          <Button className="portkey-ui-footer-btn" type="primary" htmlType="submit" disabled={disable}>
+          <ThrottleButton className="portkey-ui-footer-btn" type="primary" htmlType="submit" disabled={disable}>
             {'Send Request'}
-          </Button>
+          </ThrottleButton>
         </FormItem>
       </Form>
       <CommonBaseModal

@@ -1,5 +1,4 @@
 import { portkey } from '@portkey/accounts';
-import { Button } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
@@ -12,6 +11,7 @@ import { randomId } from '@portkey/utils';
 import { evokePortkey } from '@portkey/onboarding';
 import './index.less';
 import singleMessage from '../CustomAnt/message';
+import ThrottleButton from '../ThrottleButton';
 
 export default function WakeUpPortkey({
   type,
@@ -95,9 +95,9 @@ export default function WakeUpPortkey({
   }, [deviceInfo, generateKeystore, intervalHandler, networkType, websiteInfo]);
 
   return (
-    <Button className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
+    <ThrottleButton className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
       <CustomSvg type="Portkey-login" />
       {`${type} with Portkey`}
-    </Button>
+    </ThrottleButton>
   );
 }

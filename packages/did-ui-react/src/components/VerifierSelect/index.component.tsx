@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import CommonModal from '../CommonModal';
 import { useCallback, useMemo, useState, useEffect, MouseEventHandler, useRef } from 'react';
 import BaseVerifierIcon from '../BaseVerifierIcon';
@@ -19,6 +18,7 @@ import { getChainInfo } from '../../hooks/useChainInfo';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { usePortkey } from '../context';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 type SelectVerifierStorageInfo = {
   verifier: VerifierItem;
@@ -323,7 +323,7 @@ export default function VerifierSelect({
                 </li>
               ))}
             </ul>
-            <Button
+            <ThrottleButton
               className="confirm-btn"
               type="primary"
               onClick={() => {
@@ -339,7 +339,7 @@ export default function VerifierSelect({
                 onButtonConfirm?.();
               }}>
               {t('Confirm')}
-            </Button>
+            </ThrottleButton>
           </div>
         </div>
       </div>
@@ -358,10 +358,10 @@ export default function VerifierSelect({
           {` to verify your ${accountType} address.`}
         </p>
         <div className="btn-wrapper">
-          <Button onClick={() => setOpen(false)}>{t('Cancel')}</Button>
-          <Button type="primary" onClick={verifyHandler}>
+          <ThrottleButton onClick={() => setOpen(false)}>{t('Cancel')}</ThrottleButton>
+          <ThrottleButton type="primary" onClick={verifyHandler}>
             {t('Confirm')}
-          </Button>
+          </ThrottleButton>
         </div>
       </CommonModal>
     </div>

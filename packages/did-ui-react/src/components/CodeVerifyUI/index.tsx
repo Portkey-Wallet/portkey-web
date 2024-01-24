@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import { useEffect, useRef, useState, forwardRef, useImperativeHandle, useMemo } from 'react';
 import { PasscodeInput } from 'antd-mobile';
 import { DIGIT_CODE } from '../../constants/misc';
@@ -8,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffectOnce } from 'react-use';
 import { BaseCodeVerifyProps } from '../types';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 const MAX_TIMER = 60;
 
@@ -95,13 +95,13 @@ const CodeVerifyUI = forwardRef(
             onChange={onCodeChange}
             onFill={onCodeFinish}
           />
-          <Button
+          <ThrottleButton
             type="text"
             disabled={!!timer}
             onClick={onReSend}
             className={clsx('portkey-ui-text-center resend-btn', timer && 'resend-after-btn')}>
             {btnText}
-          </Button>
+          </ThrottleButton>
         </div>
       </div>
     );

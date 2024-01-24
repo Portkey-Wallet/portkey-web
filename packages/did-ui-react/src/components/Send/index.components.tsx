@@ -2,7 +2,6 @@ import { IAssetItemType, OperationTypeEnum } from '@portkey/services';
 import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
-import { Button } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
@@ -36,6 +35,7 @@ import singleMessage from '../CustomAnt/message';
 import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import { GuardianApprovedItem } from '../Guardian/utils/type';
+import ThrottleButton from '../ThrottleButton';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -632,9 +632,9 @@ function SendContent({
       )}
       <div className="stage-ele">{StageObj[stage].element}</div>
       <div className="btn-wrap">
-        <Button disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
+        <ThrottleButton disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
           {StageObj[stage].btnText}
-        </Button>
+        </ThrottleButton>
       </div>
 
       <GuardianApprovalModal

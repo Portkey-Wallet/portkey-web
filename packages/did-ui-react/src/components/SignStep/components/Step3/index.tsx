@@ -1,10 +1,10 @@
-import { Button } from 'antd';
 import CommonModal from '../../../CommonModal';
 import { memo, useCallback, useMemo, useState } from 'react';
 import { OnErrorFunc } from '../../../../types';
 import SetPinAndAddManagerCom, { SetPinAndAddManagerProps } from '../../../SetPinAndAddManager/index.component';
 import { AddManagerType, IGuardianIdentifierInfo } from '../../../types';
 import './index.less';
+import ThrottleButton from '../../../ThrottleButton';
 
 interface Step3Props extends Omit<SetPinAndAddManagerProps, 'type' | 'accountType' | 'chainId' | 'guardianIdentifier'> {
   guardianIdentifierInfo?: IGuardianIdentifierInfo;
@@ -75,10 +75,10 @@ function Step3({
         getContainer={'#set-pin-wrapper'}>
         <p className="modal-content">Are you sure you want to leave this page? All changes will not be saved.</p>
         <div className="btn-wrapper">
-          <Button onClick={() => setReturnOpen(false)}>No</Button>
-          <Button type="primary" onClick={() => onCancel?.('register')}>
+          <ThrottleButton onClick={() => setReturnOpen(false)}>No</ThrottleButton>
+          <ThrottleButton type="primary" onClick={() => onCancel?.('register')}>
             Yes
-          </Button>
+          </ThrottleButton>
         </div>
       </CommonModal>
     </div>

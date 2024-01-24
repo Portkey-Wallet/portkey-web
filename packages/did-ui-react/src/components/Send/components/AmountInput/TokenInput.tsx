@@ -1,4 +1,4 @@
-import { Button, Input } from 'antd';
+import { Input } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 import { AssetTokenExpand } from '../../../types/assets';
@@ -16,6 +16,7 @@ import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
 import { useFeeByChainId } from '../../../context/PortkeyAssetProvider/hooks/txFee';
 import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import TokenImageDisplay from '../../../TokenImageDisplay';
+import ThrottleButton from '../../../ThrottleButton';
 
 export default function TokenInput({
   fromAccount,
@@ -160,7 +161,7 @@ export default function TokenInput({
       <div className="item amount">
         <div className="label">
           <div>Amount:</div>
-          <Button onClick={handleMax}>Max</Button>
+          <ThrottleButton onClick={handleMax}>Max</ThrottleButton>
         </div>
         <div className="control">
           <div className="amount-input">

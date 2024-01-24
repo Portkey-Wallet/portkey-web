@@ -2,7 +2,6 @@ import { devices } from '@portkey/utils';
 import { useCallback, useMemo } from 'react';
 import { useMedia } from 'react-use';
 import { Drawer, Modal } from '../CustomAnt';
-import { Button } from 'antd';
 import type { DrawerProps, ModalProps } from 'antd';
 
 import { getConfirmLocale } from 'antd/lib/modal/locale';
@@ -10,6 +9,7 @@ import LocaleReceiver from 'antd/lib/locale-provider/LocaleReceiver';
 import clsx from 'clsx';
 import { convertLegacyProps } from 'antd/lib/button/button';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 export type PortkeyDrawerInModalProps = Omit<
   DrawerProps,
@@ -90,12 +90,16 @@ export default function PortkeyModal({
         {(contextLocale) => {
           return (
             <>
-              <Button onClick={onClose} {...cancelButtonProps}>
+              <ThrottleButton onClick={onClose} {...cancelButtonProps}>
                 {cancelText || contextLocale.cancelText}
-              </Button>
-              <Button {...convertLegacyProps(okType)} loading={confirmLoading} onClick={onOk} {...okButtonProps}>
+              </ThrottleButton>
+              <ThrottleButton
+                {...convertLegacyProps(okType)}
+                loading={confirmLoading}
+                onClick={onOk}
+                {...okButtonProps}>
                 {okText ?? contextLocale.okText}
-              </Button>
+              </ThrottleButton>
             </>
           );
         }}

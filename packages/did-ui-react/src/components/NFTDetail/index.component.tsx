@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import { useMemo } from 'react';
 import { usePortkey } from '../context';
 import { MAINNET } from '../../constants/network';
@@ -9,6 +8,7 @@ import './index.less';
 import { ChainId } from '@portkey/types';
 import { NFTItemBaseExpand } from '../types/assets';
 import { formatStr2EllipsisStr } from '../../utils';
+import ThrottleButton from '../ThrottleButton';
 
 export interface NFTDetailProps {
   NFTDetail: NFTItemBaseExpand;
@@ -79,9 +79,9 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
       <div>
         <div className="btn-wrap portkey-ui-flex-column-center">
           <div className="balance">{`You have: ${formatAmountShow(balance, 0)}`}</div>
-          <Button type="primary" onClick={() => onSend?.(NFTDetail)}>
+          <ThrottleButton type="primary" onClick={() => onSend?.(NFTDetail)}>
             Send
-          </Button>
+          </ThrottleButton>
         </div>
       </div>
     </div>
