@@ -2,7 +2,7 @@ import { AchNFTOrderInfo } from '@portkey-v1/services';
 import CustomSvg from '../../CustomSvg';
 import './index.less';
 import { showMax15Chars } from '../utils';
-import { Button } from 'antd';
+import ThrottleButton from '../../ThrottleButton';
 
 const preFixCls = 'portkey-ui-checkout-pending-inner';
 
@@ -40,9 +40,9 @@ export default function PendingInner({ orderInfo, onClose }: PendingInnerProps) 
       </div>
 
       <div className="portkey-ui-btn-wrapper">
-        <Button type="primary" onClick={onClose}>
+        <ThrottleButton type="primary" onClick={onClose}>
           Close
-        </Button>
+        </ThrottleButton>
       </div>
     </div>
   );

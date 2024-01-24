@@ -8,7 +8,7 @@ import {
   modalMethod,
   Drawer,
   PortkeyModal,
-  PhoneNumberInput,
+  ThrottleButton,
 } from '@portkey-v1/did-ui-react';
 import { message, ConfigProvider, Modal, notification } from 'antd';
 import { useState } from 'react';
@@ -210,6 +210,14 @@ export default function UI() {
             }}>
             modalMethod
           </Button>
+          <div>---</div>
+
+          <ThrottleButton
+            onClick={() => {
+              console.log('ThrottleButton====');
+            }}>
+            ThrottleButton
+          </ThrottleButton>
         </PortkeyStyleProvider>
       </ConfigProvider>
     </div>

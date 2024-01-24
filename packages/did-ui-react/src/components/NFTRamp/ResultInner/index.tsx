@@ -1,9 +1,9 @@
 import { ISocialMedia, SocialMediaItemType } from '../../types/social';
-import { Button } from 'antd';
 import { AchNFTOrderInfo } from '@portkey-v1/services';
 import './index.less';
 import CustomSvg from '../../CustomSvg';
 import { showMax15Chars } from '../utils';
+import ThrottleButton from '../../ThrottleButton';
 
 const preFixCls = 'portkey-ui-ach-checkout-result';
 
@@ -58,9 +58,9 @@ export default function ResultInner({ socialMedia, orderInfo, onClose }: ResultI
         )}
       </div>
       <div className={`portkey-ui-btn-wrapper ${preFixCls}-footer`}>
-        <Button type="primary" onClick={onClose}>
+        <ThrottleButton type="primary" onClick={onClose}>
           Close
-        </Button>
+        </ThrottleButton>
       </div>
     </div>
   );

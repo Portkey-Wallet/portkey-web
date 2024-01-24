@@ -1,9 +1,10 @@
-import { Button, Form, FormProps } from 'antd';
+import { Form, FormProps } from 'antd';
 import ConfirmPassword from '../ConfirmPassword';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import './index.less';
 import { useRef } from 'react';
+import ThrottleButton from '../ThrottleButton';
 
 const { Item: FormItem } = Form;
 
@@ -46,7 +47,7 @@ export default function SetPinBase({ className, onFinish, onFinishFailed }: SetP
 
           <FormItem className="submit-btn-form-item" shouldUpdate>
             {() => (
-              <Button
+              <ThrottleButton
                 className="submit-btn"
                 type="primary"
                 htmlType="submit"
@@ -54,7 +55,7 @@ export default function SetPinBase({ className, onFinish, onFinishFailed }: SetP
                   !form.isFieldsTouched(true) || !!form.getFieldsError().filter(({ errors }) => errors.length).length
                 }>
                 {t('Confirm')}
-              </Button>
+              </ThrottleButton>
             )}
           </FormItem>
         </Form>

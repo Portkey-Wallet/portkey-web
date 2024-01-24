@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'antd';
 import { did, setLoading } from '../../utils';
 import clsx from 'clsx';
 import { RampTypeEnum } from '../../types';
@@ -28,6 +27,7 @@ import { getAchSignature, getRampOrderNo } from './utils';
 import { useGetAchTokenInfo } from './hooks';
 import singleMessage from '../CustomAnt/message';
 import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../constants/storage';
+import ThrottleButton from '../ThrottleButton';
 
 export default function RampPreviewMain({
   className,
@@ -236,9 +236,9 @@ export default function RampPreviewMain({
         </span>
       </div>
       <div className="portkey-ui-ramp-preview-footer">
-        <Button type="primary" htmlType="submit" onClick={goPayPage}>
+        <ThrottleButton type="primary" htmlType="submit" onClick={goPayPage}>
           {t('Go to AlchemyPay')}
-        </Button>
+        </ThrottleButton>
       </div>
     </div>
   );

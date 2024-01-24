@@ -1,4 +1,4 @@
-import { Button, Input, message } from 'antd';
+import { Input, message } from 'antd';
 import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } from '@portkey-v1/services';
 import { useState, useMemo, useCallback, useEffect, memo, ReactNode, useRef } from 'react';
 import CommonSelect from '../CommonSelect';
@@ -51,6 +51,7 @@ import {
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import { ILoginConfig } from '../config-provider/types';
+import ThrottleButton from '../ThrottleButton';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -682,9 +683,9 @@ function GuardianAdd({
         </div>
       </div>
       <div className="guardian-edit-footer">
-        <Button type="primary" className="guardian-btn" onClick={onConfirm} disabled={!!addBtnDisable}>
+        <ThrottleButton type="primary" className="guardian-btn" onClick={onConfirm} disabled={!!addBtnDisable}>
           {t('Confirm')}
-        </Button>
+        </ThrottleButton>
       </div>
       <CommonBaseModal destroyOnClose open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage

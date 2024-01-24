@@ -1,10 +1,11 @@
-import { Button, Input } from 'antd';
+import { Input } from 'antd';
 import { useCallback, useMemo, useState } from 'react';
 import { parseInputNumberChange } from '../../utils/input';
 import BigNumber from 'bignumber.js';
 import './index.less';
 import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
+import ThrottleButton from '../ThrottleButton';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
@@ -105,8 +106,8 @@ export default function SetAllowanceMain({
       </div>
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
         <div className="btn-wrapper">
-          <Button onClick={onCancel}>Reject</Button>
-          <Button
+          <ThrottleButton onClick={onCancel}>Reject</ThrottleButton>
+          <ThrottleButton
             type="primary"
             disabled={BigNumber(allowance).isNaN()}
             onClick={() => {
@@ -115,7 +116,7 @@ export default function SetAllowanceMain({
               onConfirm?.({ allowance });
             }}>
             Authorize
-          </Button>
+          </ThrottleButton>
         </div>
       </div>
     </div>

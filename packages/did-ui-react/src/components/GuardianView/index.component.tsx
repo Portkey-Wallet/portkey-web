@@ -6,7 +6,7 @@ import CustomSvg from '../CustomSvg';
 import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
 import GuardianAccountShow from '../GuardianAccountShow';
 import BaseVerifierIcon from '../BaseVerifierIcon';
-import { Button, Switch } from 'antd';
+import { Switch } from 'antd';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
 import {
   did,
@@ -28,6 +28,7 @@ import './index.less';
 import { SocialLoginList } from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
+import ThrottleButton from '../ThrottleButton';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -393,9 +394,9 @@ function GuardianView({
         </div>
         {onEditGuardian && (
           <div className="guardian-view-footer">
-            <Button type="primary" className="guardian-btn" onClick={onEditGuardian}>
+            <ThrottleButton type="primary" className="guardian-btn" onClick={onEditGuardian}>
               {t('Edit')}
-            </Button>
+            </ThrottleButton>
           </div>
         )}
       </>

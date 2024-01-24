@@ -2,8 +2,6 @@ import CloseOutlinedIcon from '@ant-design/icons/CloseOutlined';
 import classNames from 'classnames';
 import Dialog from 'rc-dialog';
 import * as React from 'react';
-
-import { Button } from 'antd';
 import type { ButtonProps } from 'antd';
 import { NoFormStyle } from 'antd/lib/form/context';
 import LocaleReceiver from '../../locale-provider/LocaleReceiver';
@@ -15,6 +13,7 @@ import { canUseDocElement } from 'antd/lib/_util/styleChecker';
 import { getConfirmLocale } from 'antd/lib/modal/locale';
 import ConfigProvider from '../../config-provider';
 import { PORTKEY_Z_INDEX } from '../../../../constants';
+import ThrottleButton from '../../../ThrottleButton';
 type MousePosition = { x: number; y: number } | null;
 
 let mousePosition: MousePosition;
@@ -166,16 +165,16 @@ const Modal: React.FC<ModalProps> = (props) => {
 
         return (
           <>
-            <Button onClick={handleCancel} {...props.cancelButtonProps}>
+            <ThrottleButton onClick={handleCancel} {...props.cancelButtonProps}>
               {cancelText || contextLocale.cancelText}
-            </Button>
-            <Button
+            </ThrottleButton>
+            <ThrottleButton
               {...convertLegacyProps(okType)}
               loading={confirmLoading}
               onClick={handleOk}
               {...props.okButtonProps}>
               {okText ?? contextLocale.okText}
-            </Button>
+            </ThrottleButton>
           </>
         );
       }}

@@ -1,4 +1,4 @@
-import { Button, message } from 'antd';
+import { message } from 'antd';
 import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum, AccountType } from '@portkey-v1/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
@@ -29,6 +29,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 const guardianIconMap: Record<AccountType, any> = {
   Email: 'Email',
@@ -474,12 +475,12 @@ function GuardianEdit({
       </div>
       <div className="guardian-edit-footer">
         <div className="portkey-ui-flex-between guardian-add-btn-wrap">
-          <Button className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
+          <ThrottleButton className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
             {t('Remove')}
-          </Button>
-          <Button type="primary" className="guardian-btn " onClick={onConfirm} disabled={editBtnDisable}>
+          </ThrottleButton>
+          <ThrottleButton type="primary" className="guardian-btn " onClick={onConfirm} disabled={editBtnDisable}>
             {t('Send Request')}
-          </Button>
+          </ThrottleButton>
         </div>
       </div>
       <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)} destroyOnClose>

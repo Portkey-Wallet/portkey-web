@@ -1,5 +1,4 @@
-import { Button } from 'antd';
-import { forwardRef, useCallback, useImperativeHandle, useState, useRef, useEffect, useMemo } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useState, useRef, useEffect } from 'react';
 import { ICountryItem, ValidatorHandler } from '../../types';
 import { handleErrorMessage, setLoading } from '../../utils';
 import PhoneNumberInput from '../PhoneNumberInput';
@@ -7,6 +6,7 @@ import { IPhoneCountry } from '../types';
 import './index.less';
 import clsx from 'clsx';
 import useMobile from '../../hooks/useMobile';
+import ThrottleButton from '../ThrottleButton';
 
 interface PhoneTabProps {
   className?: string;
@@ -52,7 +52,7 @@ const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, o
       />
       {error && <span className="error-text">{error}</span>}
 
-      <Button
+      <ThrottleButton
         disabled={!phoneNumber}
         className="login-btn"
         type="primary"
@@ -73,7 +73,7 @@ const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, o
           }
         }}>
         {confirmText}
-      </Button>
+      </ThrottleButton>
     </div>
   );
 });

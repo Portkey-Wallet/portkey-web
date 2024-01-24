@@ -1,6 +1,5 @@
 import { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'antd';
 import CommonBaseModal from '../CommonBaseModal';
 import CustomPassword from '../CustomPassword';
 import CustomSvg from '../CustomSvg';
@@ -9,6 +8,7 @@ import { devices } from '@portkey-v1/utils';
 import { PASSWORD_LENGTH } from '../../constants/misc';
 import './index.less';
 import PortkeyPasswordInput from '../PortkeyPasswordInput';
+import ThrottleButton from '../ThrottleButton';
 
 type UI_TYPE = 'Modal' | 'Full';
 
@@ -82,9 +82,9 @@ export default function UnLock({
           )}
         </div>
         {!keyboard && (
-          <Button disabled={disabled} className="submit-btn" type="primary" onClick={() => onUnlock?.(value)}>
+          <ThrottleButton disabled={disabled} className="submit-btn" type="primary" onClick={() => onUnlock?.(value)}>
             Unlock
-          </Button>
+          </ThrottleButton>
         )}
       </div>
     );

@@ -11,7 +11,6 @@ import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey-v1/did';
 import { useThrottleFirstEffect } from '../../hooks/throttle';
-import { Button } from 'antd';
 import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
 import { formatDelGuardianValue } from './utils/formatDelGuardianValue';
@@ -23,6 +22,7 @@ import { MaxVerifierNumber, guardiansExceedTip } from '../../constants/guardian'
 import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGuardianValue';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -375,9 +375,9 @@ function GuardianMain({
               leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
                 verifierEnableNum > 0 ? (
-                  <Button onClick={onAddGuardian} className="title-add-guardian-btn">
+                  <ThrottleButton onClick={onAddGuardian} className="title-add-guardian-btn">
                     Add Guardians
-                  </Button>
+                  </ThrottleButton>
                 ) : null
               }
             />
