@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.12...v2.0.0-alpha.13) (2024-01-25)
+
+### Features
+
+- 🎸 add portkey v2 download url ([1c15501](https://github.com/Portkey-Wallet/portkey-web/commit/1c15501c633f193f90060f4730bb88f41c31d528))
+
 ## [2.0.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.11...v2.0.0-alpha.12) (2024-01-23)
 
 **Note:** Version bump only for package @portkey/onboarding
