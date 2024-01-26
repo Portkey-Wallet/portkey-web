@@ -11,6 +11,7 @@ import {
   setLoading,
 } from '../utils';
 import { SocialLoginFinishHandler } from '../types';
+import { useThrottleFirstCallback } from './throttle';
 
 export const useSignHandler = ({
   defaultChainId,
@@ -90,7 +91,7 @@ export const useSignHandler = ({
     [defaultChainId],
   );
 
-  const onFinish = useCallback(
+  const onFinish = useThrottleFirstCallback(
     async (value: GuardianInputInfo) => {
       setLoading(true);
       const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
