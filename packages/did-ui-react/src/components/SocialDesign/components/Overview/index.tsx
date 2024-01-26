@@ -49,7 +49,7 @@ export default function Overview({
       <UpgradedPortkeyTip className="social-design-upgraded-portkey" />
 
       <div className="portkey-ui-flex-1 portkey-ui-flex-column">
-        <div className="portkey-ui-flex-1 user-input-extra-ele">
+        <div className="user-input-extra-ele">
           {extraElementList?.[0] ? (
             extraElementList?.[0]
           ) : (
@@ -100,7 +100,7 @@ export default function Overview({
             )}
           </div>
         </div>
-        <div className="user-input-bottom-extra-ele">{bottomExtraEle}</div>
+        <div className="portkey-ui-flex-1  user-input-bottom-extra-ele">{bottomExtraEle}</div>
       </div>
 
       {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}
