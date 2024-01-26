@@ -1,23 +1,30 @@
+import { getServiceUrl } from '../components/config-provider/utils';
 import { PORTKEY_VERSION, WEB_PAGE } from '../constants';
 import { ISocialLogin, NetworkType } from '../types';
 import { stringify } from 'query-string';
+import { dealURLLastChar } from './lib';
 
 export const socialLoginAuth = ({
   type,
   clientId,
   redirectURI,
   network,
+  serviceUrl,
 }: {
   type: ISocialLogin;
   clientId?: string;
   redirectURI?: string;
   network?: NetworkType;
+  serviceUrl?: string;
 }): Promise<{
   token: string;
   provider: ISocialLogin;
 }> =>
   new Promise((resolve, reject) => {
     let timer: any = null;
+    let serviceURI = dealURLLastChar(serviceUrl);
+
+    if (type === 'Telegram' && !serviceURI) serviceURI = getServiceUrl();
 
     const onMessage = (event: MessageEvent) => {
       const type = event.data.type;
@@ -44,6 +51,7 @@ export const socialLoginAuth = ({
         ? {
             network,
             from: 'openlogin',
+            serviceURI,
           }
         : { clientId, redirectURI, version: PORTKEY_VERSION };
     const windowOpener = window.open(`${baseUrl}?${stringify(queryParams)}`);
