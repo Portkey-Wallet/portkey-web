@@ -138,7 +138,10 @@ export default function Web2Design({
     [isErrorTip, onSocialFinish, socialLoginHandler],
   );
 
-  const extraElement = useMemo(() => <>{extraElementList?.map((item) => item)}</>, [extraElementList]);
+  const extraElement = useMemo(
+    () => (type == 'Sign up' ? <>{extraElementList?.[0] ?? null}</> : <>{extraElementList?.map((item) => item)}</>),
+    [extraElementList, type],
+  );
 
   const leftWrapper = useMemo(
     () => (
@@ -159,7 +162,11 @@ export default function Web2Design({
           <DividerCenter />
           <SocialLoginGroup supportAccounts={loginMethodsOrder} onAccountTypeChange={onSocialChange} />
           {extraElement ? extraElement : <div className="empty-element"></div>}
-          <div className="portkey-ui-web2design-switch-sign">
+          <div
+            className={clsx(
+              'portkey-ui-web2design-switch-sign',
+              type === 'Sign up' && 'portkey-ui-web2design-switch-sign-sign-up',
+            )}>
             {type === 'Login' ? (
               <>
                 No Account?&nbsp;

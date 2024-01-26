@@ -89,7 +89,7 @@ export default function CryptoDesignBaseCom({
   } = useSignHandler(handlerParam);
 
   const extra = useMemo(() => <>{extraElementList?.map((item) => item) ?? null}</>, [extraElementList]);
-
+  const extraFirst = useMemo(() => <>{extraElementList?.[0] ?? null}</>, [extraElementList]);
   return (
     <div className={clsx('signup-login-content', className)} style={style}>
       {_type === 'SignUp' && (
@@ -98,7 +98,7 @@ export default function CryptoDesignBaseCom({
           isMobile={isMobile}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
-          extraElement={extra}
+          extraElement={extraFirst}
           termsOfService={termsOfService}
           privacyPolicy={privacyPolicy}
           networkType={networkType}

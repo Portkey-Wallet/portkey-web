@@ -11,6 +11,8 @@ export interface ILoginConfig {
   recommendIndexes?: number[];
 }
 
+export type TCustomNetworkType = 'Offline' | 'onLine';
+
 export interface GlobalConfigProps extends IConfig {
   socialLogin?: ISocialLoginConfig;
   reCaptchaConfig?: BaseReCaptcha;
@@ -18,4 +20,5 @@ export interface GlobalConfigProps extends IConfig {
   apiUrl?: string;
   serviceUrl?: string;
   loginConfig?: ILoginConfig;
+  customNetworkType?: TCustomNetworkType;
 }
