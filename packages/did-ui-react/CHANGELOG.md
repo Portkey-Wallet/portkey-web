@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.15...v2.0.0-alpha.16) (2024-01-26)
+
+### Bug Fixes
+
+- 🐛 Throttle callback ([4e1c18a](https://github.com/Portkey-Wallet/portkey-web/commit/4e1c18a39d7e95abb681b45c79fed93b1d0853a8))
+
 ## [2.0.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.14...v2.0.0-alpha.15) (2024-01-26)
 
 ### Bug Fixes
