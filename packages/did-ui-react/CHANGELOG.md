@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.13...v2.0.0-alpha.14) (2024-01-26)
+
+### Features
+
+- 🎸 add tg service url ([afaadc9](https://github.com/Portkey-Wallet/portkey-web/commit/afaadc9185d71e86f306b16f1def4e96496602c7))
+
 ## [2.0.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.12...v2.0.0-alpha.13) (2024-01-25)
 
 ### Features
