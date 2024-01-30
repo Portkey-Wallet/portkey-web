@@ -5,11 +5,11 @@ import { useMemo, useState, useCallback, useRef } from 'react';
 import { divDecimals, timesDecimals } from '../../utils/converter';
 import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { ITransferSettingsFormInit } from '../TransferSettings/index.components';
-import { Button, Form, FormProps, Input } from 'antd';
+import { Form, FormProps, Input } from 'antd';
 import SwitchComponent from '../SwitchComponent';
 import { LimitFormatTip, NoLimit, SetLimitExplain, SingleExceedDaily } from '../../constants/security';
 import { isValidInteger } from '../../utils/reg';
-import { OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
+import { NetworkType, OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
 import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
@@ -22,6 +22,7 @@ import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
+import ThrottleButton from '../ThrottleButton';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -31,7 +32,7 @@ export interface ITransferSettingsEditProps extends FormProps {
   initData: ITransferLimitItemWithRoute;
   isErrorTip?: boolean;
   sandboxId?: string;
-  networkType?: string;
+  networkType: NetworkType;
   onBack?: (data: ITransferLimitItemWithRoute) => void;
   onSuccess?: (data: ITransferLimitItemWithRoute) => void;
   onGuardiansApproveError?: OnErrorFunc;
@@ -56,7 +57,7 @@ export default function TransferSettingsEditMain({
   initData,
   isErrorTip = true,
   sandboxId = '',
-  networkType = '',
+  networkType,
   onBack,
   onSuccess,
   onGuardiansApproveError,
@@ -351,9 +352,9 @@ export default function TransferSettingsEditMain({
         </div>
 
         <FormItem className="portkey-ui-footer-btn-wrap">
-          <Button className="portkey-ui-footer-btn" type="primary" htmlType="submit" disabled={disable}>
+          <ThrottleButton className="portkey-ui-footer-btn" type="primary" htmlType="submit" disabled={disable}>
             {'Send Request'}
-          </Button>
+          </ThrottleButton>
         </FormItem>
       </Form>
       <CommonBaseModal

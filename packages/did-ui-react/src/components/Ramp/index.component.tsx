@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Radio, RadioChangeEvent } from 'antd';
+import { Radio, RadioChangeEvent } from 'antd';
 import { useEffectOnce } from 'react-use';
 import BigNumber from 'bignumber.js';
 import clsx from 'clsx';
@@ -44,7 +44,7 @@ import './index.less';
 import { OperationTypeEnum } from '@portkey/services';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import { GuardianApprovedItem } from '../Guardian/utils/type';
-import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../constants/storage';
+import ThrottleButton from '../ThrottleButton';
 
 export default function RampMain({
   className,
@@ -559,29 +559,32 @@ export default function RampMain({
     ],
   );
 
-  const showPreview = useCallback(() => {
-    const { side, amount, currency, country, crypto, network } = valueSaveRef.current;
-    onShowPreview({
-      initState: {
-        crypto,
-        network,
-        fiat: currency,
-        country,
-        amount,
-        side,
-      },
-      chainId: chainId,
-    });
-  }, [chainId, onShowPreview]);
+  const showPreview = useCallback(
+    (approveList?: GuardianApprovedItem[]) => {
+      const { side, amount, currency, country, crypto, network } = valueSaveRef.current;
+      onShowPreview({
+        initState: {
+          crypto,
+          network,
+          fiat: currency,
+          country,
+          amount,
+          side,
+          approveList,
+        },
+        chainId: chainId,
+      });
+    },
+    [chainId, onShowPreview],
+  );
 
   const onApprovalSuccess = useCallback(
     (approveList: GuardianApprovedItem[]) => {
       try {
         if (Array.isArray(approveList) && approveList.length > 0) {
           console.log('approveList', approveList);
-          localStorage.setItem(PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST, JSON.stringify(approveList));
           setApprovalVisible(false);
-          showPreview();
+          showPreview(approveList);
         } else {
           // TODO sell throw error
         }
@@ -744,9 +747,9 @@ export default function RampMain({
         {rate !== '' && renderRate}
       </div>
       <div className="portkey-ui-ramp-footer">
-        <Button type="primary" htmlType="submit" disabled={disabled} onClick={handleNext}>
+        <ThrottleButton type="primary" htmlType="submit" disabled={disabled} onClick={handleNext}>
           {t('Next')}
-        </Button>
+        </ThrottleButton>
       </div>
 
       <GuardianApprovalModal

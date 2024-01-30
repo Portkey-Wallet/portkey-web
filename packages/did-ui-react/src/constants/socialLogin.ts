@@ -13,12 +13,12 @@ type IAccountItem = {
 export const SocialAccountsInfo: Record<ISocialLogin, IAccountItem> = {
   Google: { type: 'Google', name: 'Google', icon: 'GoogleIcon' },
   Apple: { type: 'Apple', name: 'Apple', icon: 'AppleIcon' },
-  Telegram: { type: 'Telegram', name: 'Telegram', icon: 'TelegramLogin' },
+  Telegram: { type: 'Telegram', name: 'Telegram', icon: 'TelegramIcon' },
 };
 
 export const Web2AccountsInfo: Record<IWeb2Login, IAccountItem> = {
-  Email: { type: 'Email', name: 'Email', icon: 'EmailIcon' },
-  Phone: { type: 'Phone', name: 'Phone', icon: 'PhoneIcon' },
+  Email: { type: 'Email', name: 'Email', icon: 'EmailIcon2' },
+  Phone: { type: 'Phone', name: 'Phone', icon: 'PhoneIcon2' },
 };
 
 export const AccountsInfo: Record<AccountType, IAccountItem> = {
@@ -31,5 +31,3 @@ export const TotalAccountsInfo: Record<TotalAccountType, IAccountItem> = {
   ...Web2AccountsInfo,
   Scan: { type: 'Scan', name: 'Scan', icon: 'QRCodeIcon' },
 };
-
-export const TotalAccountTypeList: Array<TotalAccountType> = ['Google', 'Apple', 'Telegram', 'Email', 'Phone', 'Scan'];

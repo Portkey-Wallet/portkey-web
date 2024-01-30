@@ -62,11 +62,17 @@ export type TStep3LifeCycle = {
   };
 };
 
+export enum SignUpValue {
+  cancelRegister,
+  otherSeverRegisterButContinue,
+  continue,
+}
+
 export type TSignUpContinueHandler = (identifierInfo: {
   identifier: string;
   accountType: AccountType;
   authToken?: string;
-}) => Promise<boolean>;
+}) => Promise<SignUpValue>;
 
 export interface SignInProps {
   defaultChainId?: ChainId;
@@ -83,7 +89,9 @@ export interface SignInProps {
   // Login
   isShowScan?: boolean;
   phoneCountry?: IPhoneCountry;
+  /** @deprecated Please use `extraElementList` */
   extraElement?: ReactNode; // extra element
+  extraElementList?: ReactNode[]; // extra element
   termsOfService?: ReactNode;
   privacyPolicy?: string;
   design?: TDesign;

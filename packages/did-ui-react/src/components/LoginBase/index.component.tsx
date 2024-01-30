@@ -1,6 +1,7 @@
 import { useState, useMemo, ReactNode } from 'react';
 import {
   ISocialLoginConfig,
+  NetworkType,
   OnErrorFunc,
   SocialLoginFinishHandler,
   TotalAccountType,
@@ -24,7 +25,7 @@ export interface LoginBaseProps {
   phoneCountry?: IPhoneCountry;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
-  networkType?: string;
+  networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
   onLoginByPortkey?: LoginFinishWithoutPin;

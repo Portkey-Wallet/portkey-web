@@ -18,7 +18,8 @@ import useMobile from '../../hooks/useMobile';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import SocialLoginGroup from '../SocialLoginGroup';
-import { SocialLoginList } from '../../constants/guardian';
+import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
+import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -36,7 +37,7 @@ export default function Web2Design({
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
-  extraElement,
+  extraElementList,
   termsOfService,
   privacyPolicy,
   loginMethodsOrder = SocialLoginList as ISocialLogin[],
@@ -116,7 +117,7 @@ export default function Web2Design({
   const onSocialChange = useCallback(
     async (type: ISocialLogin) => {
       try {
-        if (SocialLoginList.includes(type)) throw Error('Please try social account');
+        if (Web2LoginList.includes(type)) throw Error('Please try social account');
 
         setLoading(true);
         const result = await socialLoginHandler(type as ISocialLogin);
@@ -137,11 +138,19 @@ export default function Web2Design({
     [isErrorTip, onSocialFinish, socialLoginHandler],
   );
 
+  const extraElement = useMemo(
+    () => (type == 'Sign up' ? <>{extraElementList?.[0] ?? null}</> : <>{extraElementList?.map((item) => item)}</>),
+    [extraElementList, type],
+  );
+
   const leftWrapper = useMemo(
     () => (
       <div className="portkey-ui-flex-1 portkey-ui-flex-column left-wrapper">
         <div className="portkey-ui-flex-1">
-          <h1 className="web2design-title">{type}</h1>
+          <h1 className="web2design-title">
+            {type}
+            {type === 'Login' && <UpgradedPortkeyTip className="web2-design-upgraded-portkey" />}
+          </h1>
           <SegmentedInput
             phoneCountry={phoneCountry}
             defaultActiveKey={'Phone'}
@@ -153,7 +162,11 @@ export default function Web2Design({
           <DividerCenter />
           <SocialLoginGroup supportAccounts={loginMethodsOrder} onAccountTypeChange={onSocialChange} />
           {extraElement ? extraElement : <div className="empty-element"></div>}
-          <div className="portkey-ui-web2design-switch-sign">
+          <div
+            className={clsx(
+              'portkey-ui-web2design-switch-sign',
+              type === 'Sign up' && 'portkey-ui-web2design-switch-sign-sign-up',
+            )}>
             {type === 'Login' ? (
               <>
                 No Account?&nbsp;

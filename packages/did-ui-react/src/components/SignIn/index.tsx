@@ -36,8 +36,7 @@ import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
 import useLoginWallet from '../../hooks/useLoginWallet';
 import './index.less';
-import { SocialLoginList } from '../../constants/guardian';
-import { TotalAccountTypeList } from '../../constants/socialLogin';
+import { SocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
 import ConfigProvider from '../config-provider';
 import { ILoginConfig } from '../config-provider/types';
 
@@ -62,6 +61,7 @@ const SignIn = forwardRef(
       defaultLifeCycle: defaultLifeCycleInfo,
       phoneCountry,
       extraElement,
+      extraElementList,
       termsOfService,
       privacyPolicy,
       design = 'CryptoDesign',
@@ -514,6 +514,7 @@ const SignIn = forwardRef(
         if (_lifeCycle === 'Step2OfSkipGuardianApprove')
           return (
             <Step2OfSkipGuardianApprove
+              networkType={networkType}
               guardianList={defaultLiftCyclePropsRef.current?.guardianList}
               guardianIdentifierInfo={guardianIdentifierInfo}
               isErrorTip={isErrorTip}
@@ -527,6 +528,7 @@ const SignIn = forwardRef(
           <Step2OfLogin
             guardianList={defaultLiftCyclePropsRef.current?.guardianList}
             approvedList={approvedList}
+            networkType={networkType}
             chainType={chainType}
             chainId={chainId}
             guardianIdentifierInfo={guardianIdentifierInfo}
@@ -547,6 +549,7 @@ const SignIn = forwardRef(
         onGuardianListChange,
         onStep2Cancel,
         onStep2LoginFinish,
+        networkType,
       ],
     );
 
@@ -561,6 +564,11 @@ const SignIn = forwardRef(
       [loginConfig?.recommendIndexes],
     );
 
+    const extra = useMemo(
+      () => (extraElement ? [extraElement, ...(extraElementList ?? [])] : extraElementList),
+      [extraElement, extraElementList],
+    );
+
     const mainContent = useCallback(() => {
       if (LifeCycleMap['SignIn'].includes(lifeCycle))
         return (
@@ -573,7 +581,7 @@ const SignIn = forwardRef(
             isErrorTip={isErrorTip}
             onError={onErrorRef?.current}
             phoneCountry={phoneCountry}
-            extraElement={extraElement}
+            extraElementList={extra}
             validateEmail={validateEmail}
             validatePhone={validatePhone}
             onSignUpHandler={onSignUpHandlerRef.current}
@@ -629,7 +637,7 @@ const SignIn = forwardRef(
       defaultChainId,
       isErrorTip,
       phoneCountry,
-      extraElement,
+      extra,
       validateEmail,
       validatePhone,
       onSignInFinished,
@@ -663,7 +671,7 @@ const SignIn = forwardRef(
         ) : (
           <CommonBaseModal
             destroyOnClose
-            className={className}
+            className={clsx('portkey-ui-sign-modal', `portkey-ui-sign-modal-${design}`, className)}
             maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
             open={open}
             getContainer={getContainer ? getContainer : `#${PORTKEY_ROOT_ID}`}

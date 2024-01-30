@@ -69,7 +69,7 @@ export const DEFAULT_SYMBOL = 'ELF';
 
 export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge/';
 
-export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK';
+export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK&version=v2';
 
 export const ACH_MERCHANT_NAME = 'Alchemy';
 

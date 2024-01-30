@@ -3,8 +3,9 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import { useState } from 'react';
 import SecurityCheckMain from '../SecurityCheck/index.component';
 import GuardianMain from '../Guardian/index.component';
-import './index.less';
 import clsx from 'clsx';
+import { NetworkType } from '../../types';
+import './index.less';
 
 const preFixCls = 'portkey-ui-check-wallet-security';
 
@@ -12,7 +13,7 @@ export interface BaseCheckWalletSecurityInnerProps {
   caHash: string;
   originChainId: ChainId;
   targetChainId: ChainId;
-  networkType?: string;
+  networkType: NetworkType;
 }
 
 export interface ICheckWalletSecurityParams {
@@ -58,7 +59,7 @@ export default function CheckWalletSecurityInner({
             caHash={caHash || ''}
             originChainId={originChainId}
             accelerateChainId={targetChainId}
-            networkType={networkType || ''}
+            networkType={networkType}
             onAddGuardianFinish={onFinish}
             onBack={() => setStep(Step.confirmModal)}
           />

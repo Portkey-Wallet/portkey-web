@@ -492,6 +492,7 @@ function AssetMain({
           caHash={caHash || ''}
           originChainId={originChainId}
           sandboxId={sandboxId}
+          networkType={networkType}
           onBack={transferSettingsEditBack}
           onSuccess={transferSettingsEditBack}
         />

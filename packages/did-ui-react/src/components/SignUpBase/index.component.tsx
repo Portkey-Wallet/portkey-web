@@ -1,6 +1,7 @@
 import { useState, useCallback, useRef, useEffect, useMemo, ReactNode } from 'react';
 import {
   ISocialLoginConfig,
+  NetworkType,
   OnErrorFunc,
   SocialLoginFinishHandler,
   TotalAccountType,
@@ -29,7 +30,7 @@ export interface SignUpBaseProps {
   extraElement?: ReactNode; // extra element
   termsOfService?: ReactNode;
   privacyPolicy?: string;
-  networkType?: string;
+  networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
   onLoginByPortkey?: LoginFinishWithoutPin;

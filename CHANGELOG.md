@@ -3,6 +3,107 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.16...v2.0.0-alpha.17) (2024-01-29)
+
+### Features
+
+- 🎸 add finish resutl create type ([b5ab726](https://github.com/Portkey-Wallet/portkey-web/commit/b5ab726364d70ee363a9c80d8560574570cdeb7d))
+
+## [2.0.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.15...v2.0.0-alpha.16) (2024-01-26)
+
+### Bug Fixes
+
+- 🐛 Throttle callback ([4e1c18a](https://github.com/Portkey-Wallet/portkey-web/commit/4e1c18a39d7e95abb681b45c79fed93b1d0853a8))
+
+## [2.0.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.14...v2.0.0-alpha.15) (2024-01-26)
+
+### Bug Fixes
+
+- 🐛 tg auth ([45b9762](https://github.com/Portkey-Wallet/portkey-web/commit/45b976272568c6682269e7d5c4e0c194ae46a302))
+
+## [2.0.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.13...v2.0.0-alpha.14) (2024-01-26)
+
+### Features
+
+- 🎸 add tg service url ([afaadc9](https://github.com/Portkey-Wallet/portkey-web/commit/afaadc9185d71e86f306b16f1def4e96496602c7))
+
+## [2.0.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.12...v2.0.0-alpha.13) (2024-01-25)
+
+### Features
+
+- 🎸 add portkey v2 download url ([1c15501](https://github.com/Portkey-Wallet/portkey-web/commit/1c15501c633f193f90060f4730bb88f41c31d528))
+- 🎸 add ThrottleButton ([72b676e](https://github.com/Portkey-Wallet/portkey-web/commit/72b676e1280ba64c67276e199b07c9e29980847d))
+
+### Bug Fixes
+
+- 🐛 change networktype ([53d74cb](https://github.com/Portkey-Wallet/portkey-web/commit/53d74cbcab4ca3ad6ef3a970584e275e7df6d034))
+- 🐛 telegram auth ([3eca704](https://github.com/Portkey-Wallet/portkey-web/commit/3eca704e2e99216be20a358dfbfec2afd1927faf))
+
+## [2.0.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.11...v2.0.0-alpha.12) (2024-01-23)
+
+### Features
+
+- 🎸 change email input ui ([55db844](https://github.com/Portkey-Wallet/portkey-web/commit/55db84451792a4e2a05a5ef56ce3dcbf75f8feea))
+
+### Bug Fixes
+
+- 🐛 set accounttype order ([95083f7](https://github.com/Portkey-Wallet/portkey-web/commit/95083f703195ab382d7714e33849f85c20347cf6))
+
+## [2.0.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.10...v2.0.0-alpha.11) (2024-01-22)
+
+### Bug Fixes
+
+- 🐛 check Recaptcha when communityRecovery ([bb8fe57](https://github.com/Portkey-Wallet/portkey-web/commit/bb8fe571b7b58c28340f3b42a10719593f11f08b))
+
+## [2.0.0-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.9...v2.0.0-alpha.10) (2024-01-22)
+
+### Bug Fixes
+
+- 🐛 continue register ([f9f5593](https://github.com/Portkey-Wallet/portkey-web/commit/f9f5593ace6ea8931335c6a71115fd5277cf0093))
+
+## [2.0.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.8...v2.0.0-alpha.9) (2024-01-22)
+
+### Features
+
+- 🎸 change default storage key name ([32c6410](https://github.com/Portkey-Wallet/portkey-web/commit/32c6410de768d18a95228808708366a999dc698a))
+
+### Performance Improvements
+
+- ⚡️ format email style ([9294805](https://github.com/Portkey-Wallet/portkey-web/commit/929480532b945429ea7a1f2f08823e9cda8f309e))
+
+## [2.0.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.7...v2.0.0-alpha.8) (2024-01-19)
+
+**Note:** Version bump only for package root
+
+## [2.0.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.6...v2.0.0-alpha.7) (2024-01-19)
+
+### Features
+
+- 🎸 dev ui ([743d9de](https://github.com/Portkey-Wallet/portkey-web/commit/743d9de04f7011bc084bfeae542abe27e9e6921f))
+- 🎸 modify ui ([610b9aa](https://github.com/Portkey-Wallet/portkey-web/commit/610b9aa4a0181423f399e6dfd3d30ac661ff2871))
+
+### Bug Fixes
+
+- 🐛 extra element ([db285fe](https://github.com/Portkey-Wallet/portkey-web/commit/db285fe7ad8d39b8de6f6e8c8a988d8faad4bb2b))
+
+## [2.0.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.5...v2.0.0-alpha.6) (2024-01-19)
+
+### Features
+
+- 🎸 add switch old version ([7b07f7a](https://github.com/Portkey-Wallet/portkey-web/commit/7b07f7aafaf56d0890e4a3a320b6b15df68bebea))
+- 🎸 add version v2 for ramp ([4a3a6f0](https://github.com/Portkey-Wallet/portkey-web/commit/4a3a6f053fa472ea28ff4d71d1bc6232b48a38c1))
+
+## [2.0.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.4...v2.0.0-alpha.5) (2024-01-18)
+
+### Features
+
+- 🎸 modify ui ([403056b](https://github.com/Portkey-Wallet/portkey-web/commit/403056bc75657ff194cca79b1961615d00b90381))
+- 🎸 update detect-provider ([215d911](https://github.com/Portkey-Wallet/portkey-web/commit/215d911bda6f0071f315ac5d8594c6b7d3f9044c))
+
+### Bug Fixes
+
+- 🐛 limit type and example params ([6dd2fe1](https://github.com/Portkey-Wallet/portkey-web/commit/6dd2fe12987b608e7743c612b7148b17ae6e456f))
+
 ## [2.0.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.3...v2.0.0-alpha.4) (2024-01-18)
 
 ### Features

@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from 'antd';
-import { setLoading } from '../../utils';
+import { did, setLoading } from '../../utils';
 import clsx from 'clsx';
 import { RampTypeEnum } from '../../types';
 import './index.less';
@@ -27,6 +26,8 @@ import { getOrderQuote } from '../Ramp/utils';
 import { getAchSignature, getRampOrderNo } from './utils';
 import { useGetAchTokenInfo } from './hooks';
 import singleMessage from '../CustomAnt/message';
+import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../constants/storage';
+import ThrottleButton from '../ThrottleButton';
 
 export default function RampPreviewMain({
   className,
@@ -145,6 +146,13 @@ export default function RampPreviewMain({
         const signature = await getAchSignature({ address });
         openUrl += `&address=${address}&sign=${encodeURIComponent(signature)}`;
       } else {
+        if (initState?.approveList) {
+          await did.config.storageMethod.setItem(
+            `${PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST}_${orderNo}`,
+            JSON.stringify(initState.approveList),
+          );
+        }
+
         const withdrawUrl = encodeURIComponent(
           RAMP_WITH_DRAW_URL + `&payload=${encodeURIComponent(JSON.stringify({ orderNo: orderNo }))}`,
         );
@@ -166,6 +174,7 @@ export default function RampPreviewMain({
     }
   }, [
     data,
+    caInfo,
     isBuySectionShow,
     isSellSectionShow,
     appId,
@@ -175,8 +184,8 @@ export default function RampPreviewMain({
     updateAchOrder,
     getAchTokenInfo,
     guardianList,
-    caInfo,
     chainId,
+    initState.approveList,
   ]);
 
   const showDisclaimerTipModal = useCallback(() => {
@@ -227,9 +236,9 @@ export default function RampPreviewMain({
         </span>
       </div>
       <div className="portkey-ui-ramp-preview-footer">
-        <Button type="primary" htmlType="submit" onClick={goPayPage}>
+        <ThrottleButton type="primary" htmlType="submit" onClick={goPayPage}>
           {t('Go to AlchemyPay')}
-        </Button>
+        </ThrottleButton>
       </div>
     </div>
   );

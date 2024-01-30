@@ -74,7 +74,7 @@ export class AElfContract extends BaseContract implements IPortkeyContract {
   public async encodedTx<T = any>(
     functionName: string,
     paramsOption?: any,
-    _callOptions?: CallOptions,
+    callOptions?: CallOptions,
   ): Promise<ViewResult<T>> {
     if (!this.aelfContract) return { error: { code: 401, message: 'Contract init error' } };
     if (!this.aelfInstance) return { error: { code: 401, message: 'instance init error' } };
@@ -82,7 +82,10 @@ export class AElfContract extends BaseContract implements IPortkeyContract {
       const _functionName = handleFunctionName(functionName);
       const _params = await handleContractParams({
         instance: this.aelfInstance,
-        paramsOption,
+        paramsOption: {
+          ...paramsOption,
+          ...callOptions?.appendParams,
+        },
         functionName: _functionName,
       });
       const data = await aelf.encodedTx({

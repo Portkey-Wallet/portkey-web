@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useMemo } from 'react';
 import { ISocialLogin, ISocialLoginConfig, IWeb2Login, RegisterType } from '../../types';
@@ -10,6 +9,7 @@ import './index.less';
 import { AccountsInfo } from '../../constants/socialLogin';
 import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
+import ThrottleButton from '../ThrottleButton';
 
 interface AccountRecommendGroupProps {
   type: RegisterType;
@@ -43,7 +43,7 @@ export default function AccountRecommendGroup({
   const renderLoginElement = useCallback(
     (accountType: AccountType) => {
       return (
-        <Button
+        <ThrottleButton
           className={clsx('recommend-login-btn')}
           onClick={() => {
             if (Web2LoginList.includes(accountType)) {
@@ -51,11 +51,12 @@ export default function AccountRecommendGroup({
             } else if (SocialLoginList.includes(accountType)) {
               onSocialChange?.(accountType as ISocialLogin);
             }
-          }}>
+          }}
+          key={'Portkey_ui_renderLoginElement' + accountType}>
           <CustomSvg type={AccountsInfo[accountType].icon} />
           <span>{`${type} with ${AccountsInfo[accountType].name}`}</span>
           <span className="empty"></span>
-        </Button>
+        </ThrottleButton>
       );
     },
     [onSocialChange, onWeb2Change, type],

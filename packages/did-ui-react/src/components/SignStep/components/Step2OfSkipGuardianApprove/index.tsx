@@ -2,7 +2,7 @@ import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { memo, useRef } from 'react';
 import BackHeader from '../../../BackHeader';
 import GuardianApproval, { IGuardianApprovalInstance } from '../../../GuardianApproval/index.component';
-import { OnErrorFunc, UserGuardianStatus } from '../../../../types';
+import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../../../types';
 import { IGuardianIdentifierInfo } from '../../../types';
 import { useEffectOnce } from 'react-use';
 
@@ -10,7 +10,7 @@ interface Step2OfSkipGuardianApproveProps {
   isErrorTip?: boolean;
   guardianList?: UserGuardianStatus[];
   guardianIdentifierInfo: IGuardianIdentifierInfo;
-  networkType?: string;
+  networkType: NetworkType;
   onFinish?(guardianList: GuardiansApproved[]): Promise<void>;
   onCancel?(): void;
   onError?: OnErrorFunc;
@@ -21,7 +21,7 @@ function Step2OfSkipGuardianApprove({
   isErrorTip = true,
   guardianList,
   guardianIdentifierInfo,
-  networkType = '',
+  networkType,
   onFinish,
   onCancel,
   onError,

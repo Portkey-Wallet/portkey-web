@@ -2,7 +2,7 @@
 
 .portkey-ui-user-input-overview {
   height: 100%;
-  padding: 0 32px 20px;
+  padding: 0 32px;
   overflow-y: auto;
   .default-extra-ele {
     width: 100%;
@@ -12,11 +12,15 @@
       height: 100px;
     }
   }
+  .social-design-upgraded-portkey {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }
 
 .portkey-ui-account-type-wrapper {
   .account-type-list {
-    margin-bottom: 66px;
     gap: 18px;
     flex-wrap: wrap;
     .portkey-ui-custom-svg {
@@ -34,12 +38,12 @@
       transform: rotate(180deg);
     }
   }
+  .user-input-bottom-extra-ele {
+    min-height: 66px;
+  }
 }
 
 @media screen and (max-width: @screen-max-w-768) {
-  .portkey-ui-user-input-overview {
-    padding: 0 16px 16px;
-  }
   .default-extra-ele .portkey-icon {
     width: 50px;
     height: 50px;

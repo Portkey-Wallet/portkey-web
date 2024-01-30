@@ -33,4 +33,6 @@ p {
   --portkey-ui-text-error: #ff496a;
   --portkey-ui-title-text-1: 24px;
   --portkey-ui-scan-border: 8px solid #fff;
+
+  --portkey-ui-default-btn-bg: #343948;
 }

@@ -1,10 +1,10 @@
 /**
  * LoginSocialGoogle
  */
-import { Button } from 'antd';
 import React, { memo } from 'react';
 import { IGoogleLoginConfig } from '../../types';
 import { IResolveParams, ObjectType } from '../types';
+import ThrottleButton from '../ThrottleButton';
 
 export interface LoginSocialGoogleComProps extends IGoogleLoginConfig {
   children?: React.ReactNode;
@@ -14,7 +14,7 @@ export interface LoginSocialGoogleComProps extends IGoogleLoginConfig {
 
 const LoginSocialGoogleCom = (props: LoginSocialGoogleComProps) => {
   return (
-    <Button
+    <ThrottleButton
       onClick={async () => {
         try {
           throw 'Not support';
@@ -25,7 +25,7 @@ const LoginSocialGoogleCom = (props: LoginSocialGoogleComProps) => {
         }
       }}>
       {props.children}
-    </Button>
+    </ThrottleButton>
   );
 };
 

@@ -6,12 +6,11 @@ import { GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
 import { AuthServe, errorTip, getVerifierStatusMap, handleErrorMessage, setLoading } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
-import { OnErrorFunc, UserGuardianStatus } from '../../types';
+import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
 import { useThrottleFirstEffect } from '../../hooks/throttle';
-import { Button } from 'antd';
 import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
 import { formatDelGuardianValue } from './utils/formatDelGuardianValue';
@@ -23,6 +22,7 @@ import { MaxVerifierNumber, guardiansExceedTip } from '../../constants/guardian'
 import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGuardianValue';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -43,7 +43,7 @@ export interface GuardianProps {
   accelerateChainId?: ChainId;
   chainType?: ChainType;
   isErrorTip?: boolean;
-  networkType: string;
+  networkType: NetworkType;
   onError?: OnErrorFunc;
   onBack?: () => void;
   onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
@@ -375,9 +375,9 @@ function GuardianMain({
               leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
                 verifierEnableNum > 0 ? (
-                  <Button onClick={onAddGuardian} className="title-add-guardian-btn">
+                  <ThrottleButton onClick={onAddGuardian} className="title-add-guardian-btn">
                     Add Guardians
-                  </Button>
+                  </ThrottleButton>
                 ) : null
               }
             />
@@ -395,6 +395,7 @@ function GuardianMain({
           onEditGuardian={editable ? onEditGuardian : undefined}
           handleSetLoginGuardian={handleSetLoginGuardian}
           guardianList={guardianList}
+          networkType={networkType}
         />
       )}
       {step === GuardianStep.guardianAdd && (
@@ -415,6 +416,7 @@ function GuardianMain({
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoView)} />}
           originChainId={originChainId}
           caHash={caHash}
+          networkType={networkType}
           verifierList={verifierList}
           currentGuardian={currentGuardian}
           guardianList={guardianList}

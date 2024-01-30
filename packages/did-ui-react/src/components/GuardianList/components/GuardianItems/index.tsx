@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import VerifierPair from '../../../VerifierPair';
 import { useCallback, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -9,6 +8,7 @@ import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from 
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
 import { OperationTypeEnum } from '@portkey/services';
 import { SocialLoginList } from '../../../../constants/guardian';
+import ThrottleButton from '../../../ThrottleButton';
 
 interface GuardianItemProps {
   originChainId?: ChainId;
@@ -123,25 +123,25 @@ function GuardianItems({
         {accountShow(item)}
       </div>
       {isExpired && item.status !== VerifyStatus.Verified ? (
-        <Button className="expired" type="text" disabled>
+        <ThrottleButton className="expired" type="text" disabled>
           {t('Expired')}
-        </Button>
+        </ThrottleButton>
       ) : (
         <>
           {(!item.status || item.status === VerifyStatus.NotVerified) && !isSocialLogin && (
-            <Button className="not-verified" type="primary" onClick={() => SendCode(item)}>
+            <ThrottleButton className="not-verified" type="primary" onClick={() => SendCode(item)}>
               {t('Send')}
-            </Button>
+            </ThrottleButton>
           )}
           {(item.status === VerifyStatus.Verifying || (!item.status && isSocialLogin)) && (
-            <Button type="primary" className="verifying" onClick={() => verifyingHandler(item)}>
+            <ThrottleButton type="primary" className="verifying" onClick={() => verifyingHandler(item)}>
               {t('Verify')}
-            </Button>
+            </ThrottleButton>
           )}
           {item.status === VerifyStatus.Verified && (
-            <Button className="verified" type="text" disabled>
+            <ThrottleButton className="verified" type="text" disabled>
               {t('Confirmed')}
-            </Button>
+            </ThrottleButton>
           )}
         </>
       )}

@@ -23,6 +23,7 @@ export interface DIDWalletInfo {
   caInfo: CAInfo;
   pin: string;
   chainId: ChainId;
+  createType: AddManagerType;
   walletInfo: IBlockchainWallet;
   accountInfo: ManagerInfoType;
 }
@@ -40,6 +41,7 @@ export interface CreatePendingInfo {
   sessionId: string;
   requestId: string;
   clientId: string;
+  createType: AddManagerType;
   pin: string;
   walletInfo: IBlockchainWallet;
 }
@@ -71,7 +73,7 @@ export interface IBaseGetGuardianProps {
   termsOfService?: ReactNode;
   privacyPolicy?: string;
   phoneCountry?: IPhoneCountry; // phone country code info
-  extraElement?: ReactNode; // extra element
+  extraElementList?: ReactNode[]; // extra element
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
   onError?: OnErrorFunc;

@@ -9,3 +9,7 @@ export const getServiceUrl = () => {
 export const getSocketUrl = () => {
   return ConfigProvider.config.socketUrl || `${getServiceUrl()}/ca`;
 };
+
+export const getCustomNetworkType = () => {
+  return ConfigProvider.config.customNetworkType || 'onLine';
+};

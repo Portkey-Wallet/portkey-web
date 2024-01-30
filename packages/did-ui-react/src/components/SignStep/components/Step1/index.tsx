@@ -2,7 +2,7 @@ import CryptoDesign, { CryptoDesignProps } from '../../../CryptoDesign/index.com
 import { useCallback, useState, memo, useRef, useEffect } from 'react';
 import type { DIDWalletInfo, IGuardianIdentifierInfo, IPhoneCountry, TDesign, TSize } from '../../../types';
 import { Design } from '../../../types';
-import type { SignInLifeCycleType, TSignUpContinueHandler } from '../../../SignStep/types';
+import { SignUpValue, SignInLifeCycleType, TSignUpContinueHandler } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
 import SocialDesign from '../../../SocialDesign/index.component';
@@ -72,11 +72,8 @@ function Step1({
           accountType: value.accountType,
           authToken: value.authenticationInfo?.authToken,
         });
-        if (typeof isContinue !== 'undefined') {
-          if (!isContinue) return;
-          return onConfirm();
-        }
-
+        if (isContinue === SignUpValue.otherSeverRegisterButContinue) return onConfirm();
+        if (isContinue === SignUpValue.cancelRegister) return;
         if (createType !== 'SignUp') return setOpen(true);
       }
 
@@ -96,6 +93,7 @@ function Step1({
 
   useUpdateEffect(() => {
     createType && onStepChange?.(createType);
+    props.onSignTypeChange?.(createType);
   }, [createType]);
 
   const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);

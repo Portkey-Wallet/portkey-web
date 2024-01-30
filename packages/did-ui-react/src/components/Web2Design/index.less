@@ -1,3 +1,5 @@
+@import '../../assets/theme/constants.less';
+
 .portkey-ui-web2design-wrapper {
   height: 100%;
   position: relative;
@@ -11,6 +13,22 @@
   }
 
   .portkey-ui-segmented-input {
+    .portkey-ui-segmented-email {
+      .email-input-wrapper {
+        .input-wrapper {
+          .login-input {
+            height: 48px;
+            border: none;
+            border-radius: var(--portkey-ui-border-radius-4);
+            background: var(--portkey-ui-segmented-bg);
+          }
+        }
+      }
+      & > .login-primary-btn {
+        border-radius: var(--portkey-ui-border-radius-4);
+      }
+    }
+
     .portkey-ui-segmented-phone {
       .phone-number-input-wrapper {
         border-radius: var(--portkey-ui-border-radius-4);
@@ -29,6 +47,7 @@
           }
         }
       }
+
       & > .login-btn {
         border-radius: var(--portkey-ui-border-radius-4);
       }
@@ -48,16 +67,13 @@
   &:not(.portkey-ui-web2design-login) {
     width: 548px;
     margin: auto;
-    .left-wrapper {
-      padding-bottom: 24px;
-    }
   }
   .right-wrapper {
     width: 412px;
     background-color: var(--portkey-ui-scan-bg);
   }
   .left-wrapper {
-    padding: 64px 64px 16px;
+    padding: 64px 64px 0;
   }
   .scan-base-wrapper {
     height: auto;
@@ -65,9 +81,16 @@
 
   .web2design-title {
     font-size: 32px;
-    font-weight: 700;
-    line-height: 48px;
+    font-weight: 600;
+    line-height: 40px;
     color: var(--portkey-ui-text-primary);
+    display: flex;
+  }
+  .web2-design-upgraded-portkey {
+    height: 24px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-left: 8px;
   }
   .portkey-ui-segmented-input {
     padding-top: 40px;
@@ -96,11 +119,14 @@
     color: var(--portkey-ui-text-primary1);
     cursor: pointer;
   }
+  &.portkey-ui-web2design-switch-sign-sign-up {
+    margin-top: 32px;
+  }
 }
 
 .portkey-ui-web2design-login-little-screen {
   .left-wrapper {
-    padding: 24px 16px;
+    padding: 24px 16px 0;
   }
   .right-wrapper {
     width: 100%;
@@ -113,5 +139,12 @@
     .description {
       margin-bottom: 0;
     }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .portkey-ui-web2design-login-wrapper .web2design-title {
+    font-size: 24px;
+    line-height: 32px;
   }
 }

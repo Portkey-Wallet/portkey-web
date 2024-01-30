@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect, memo, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
@@ -8,6 +7,7 @@ import { ChainId } from '@portkey/types';
 import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
 import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 export interface GuardianListProps {
   originChainId: ChainId;
@@ -109,7 +109,7 @@ function GuardianList({
           ))}
           {!isExpired && (
             <div className="btn-wrap">
-              <Button
+              <ThrottleButton
                 type="primary"
                 className="confirm-approve-btn"
                 loading={isFetching}
@@ -117,7 +117,7 @@ function GuardianList({
                 onClick={onFinish}>
                 {t('Confirm')}
                 {isFetching}
-              </Button>
+              </ThrottleButton>
             </div>
           )}
         </ul>

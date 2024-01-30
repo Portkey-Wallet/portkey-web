@@ -1,7 +1,7 @@
-import { Button } from 'antd';
 import { CreateWalletType } from '../types';
 import CommonModal from '../CommonModal';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 export default function LoginModal({
   open,
@@ -31,10 +31,10 @@ export default function LoginModal({
         {type === 'SignUp' && 'This account already exists. Click "Confirm" to log in.'}
       </p>
       <div className="btn-wrapper">
-        <Button onClick={onCancel}>Cancel</Button>
-        <Button type="primary" onClick={onConfirm}>
+        <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton>
+        <ThrottleButton type="primary" onClick={onConfirm}>
           Confirm
-        </Button>
+        </ThrottleButton>
       </div>
     </CommonModal>
   );

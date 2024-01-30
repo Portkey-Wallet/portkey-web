@@ -5,6 +5,7 @@ import {
   ISocialLogin,
   ISocialLoginConfig,
   IWeb2Login,
+  NetworkType,
   OnErrorFunc,
   RegisterType,
   SocialLoginFinishHandler,
@@ -22,6 +23,7 @@ import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
+import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -33,7 +35,7 @@ interface SocialLoginProps {
   termsOfService?: ReactNode;
   privacyPolicy?: string;
   extraElement?: ReactNode; // extra element
-  networkType?: string;
+  networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
   onBack?: () => void;
@@ -216,6 +218,7 @@ export default function SocialLogin({
           isMobile && 'social-login-mobile-wrapper',
           className,
         )}>
+        {isLogin && <UpgradedPortkeyTip className="social-login-upgraded-portkey" />}
         <h1 className="portkey-ui-flex-between-center font-medium social-login-title">
           {!isLogin && <CustomSvg type="BackLeft" onClick={onBackRef?.current} />}
           {isLogin && <span></span>}

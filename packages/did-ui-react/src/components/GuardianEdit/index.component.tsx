@@ -1,4 +1,4 @@
-import { Button, message } from 'antd';
+import { message } from 'antd';
 import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum, AccountType } from '@portkey/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
@@ -12,7 +12,14 @@ import {
   socialLoginAuth,
   verification,
 } from '../../utils';
-import { ISocialLogin, IVerificationInfo, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../types';
+import {
+  ISocialLogin,
+  IVerificationInfo,
+  NetworkType,
+  OnErrorFunc,
+  UserGuardianStatus,
+  VerifyStatus,
+} from '../../types';
 import CustomSvg from '../CustomSvg';
 import { useTranslation } from 'react-i18next';
 import GuardianApproval from '../GuardianApproval';
@@ -29,6 +36,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 const guardianIconMap: Record<AccountType, any> = {
   Email: 'Email',
@@ -54,7 +62,7 @@ export interface GuardianEditProps {
   guardianList?: UserGuardianStatus[];
   currentGuardian?: UserGuardianStatus;
   preGuardian?: UserGuardianStatus;
-  networkType?: string;
+  networkType: NetworkType;
   chainType?: ChainType;
   sandboxId?: string;
   onError?: OnErrorFunc;
@@ -80,7 +88,7 @@ function GuardianEdit({
   currentGuardian,
   preGuardian,
   guardianList,
-  networkType = 'MAINNET',
+  networkType,
   chainType = 'aelf',
   sandboxId,
   onError,
@@ -233,6 +241,7 @@ function GuardianEdit({
         type: _guardian?.guardianType as ISocialLogin,
         clientId,
         redirectURI,
+        network: networkType,
       });
       if (!response?.token) throw new Error('auth failed');
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
@@ -474,12 +483,12 @@ function GuardianEdit({
       </div>
       <div className="guardian-edit-footer">
         <div className="portkey-ui-flex-between guardian-add-btn-wrap">
-          <Button className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
+          <ThrottleButton className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
             {t('Remove')}
-          </Button>
-          <Button type="primary" className="guardian-btn " onClick={onConfirm} disabled={editBtnDisable}>
+          </ThrottleButton>
+          <ThrottleButton type="primary" className="guardian-btn " onClick={onConfirm} disabled={editBtnDisable}>
             {t('Send Request')}
-          </Button>
+          </ThrottleButton>
         </div>
       </div>
       <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)} destroyOnClose>

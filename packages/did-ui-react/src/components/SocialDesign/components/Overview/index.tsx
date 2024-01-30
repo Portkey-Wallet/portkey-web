@@ -4,13 +4,15 @@ import CustomSvg from '../../../CustomSvg';
 import TermsOfServiceItem from '../../../TermsOfServiceItem';
 import './index.less';
 import { TotalAccountType } from '../../../../types';
-import { TotalAccountsInfo, TotalAccountTypeList } from '../../../../constants/socialLogin';
-import { useRef, useState } from 'react';
+import { TotalAccountsInfo } from '../../../../constants/socialLogin';
+import { useMemo, useRef, useState } from 'react';
 import { useComputeIconCountPreRow } from '../../../../hooks/login';
 import clsx from 'clsx';
+import UpgradedPortkeyTip from '../../../UpgradedPortkeyTip';
+import { TotalAccountTypeList } from '../../../../constants/guardian';
 
 export interface OverviewProps {
-  extraElement?: React.ReactNode;
+  extraElementList?: React.ReactNode[];
   isShowScan?: boolean;
   termsOfService?: React.ReactNode;
   privacyPolicy?: string;
@@ -23,7 +25,7 @@ const MinIconGap = 12;
 
 export default function Overview({
   isShowScan,
-  extraElement,
+  extraElementList,
   termsOfService,
   privacyPolicy,
   loginMethodsOrder = TotalAccountTypeList,
@@ -40,12 +42,16 @@ export default function Overview({
       minIconGap: MinIconGap,
     });
 
+  const bottomExtraEle = useMemo(() => extraElementList?.slice(1).map((item) => <>{item}</>), [extraElementList]);
+
   return (
     <div className="portkey-ui-flex-column portkey-ui-user-input-overview">
+      <UpgradedPortkeyTip className="social-design-upgraded-portkey" />
+
       <div className="portkey-ui-flex-1 portkey-ui-flex-column">
-        <div className="portkey-ui-flex-1 user-input-extra-ele">
-          {extraElement ? (
-            extraElement
+        <div className="user-input-extra-ele">
+          {extraElementList?.[0] ? (
+            extraElementList?.[0]
           ) : (
             <div className="portkey-ui-flex-center default-extra-ele">
               <CustomSvg type="Portkey" />
@@ -94,6 +100,7 @@ export default function Overview({
             )}
           </div>
         </div>
+        <div className="portkey-ui-flex-1  user-input-bottom-extra-ele">{bottomExtraEle}</div>
       </div>
 
       {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}

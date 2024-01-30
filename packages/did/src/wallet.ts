@@ -38,7 +38,7 @@ import {
 import AElf from 'aelf-sdk';
 
 export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> implements IDIDWallet {
-  private readonly _defaultKeyName = 'portkey_sdk_did_wallet';
+  private readonly _defaultKeyName = 'portkey_sdk_did_wallet_v2';
   public managementAccount?: T;
   public services: ICommunityRecoveryService;
   public connectServices?: IConnectService;
