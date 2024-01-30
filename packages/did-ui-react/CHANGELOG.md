@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.17...v2.0.0-alpha.18) (2024-01-30)
+
+### Bug Fixes
+
+- 🐛 qr data ([f4f333b](https://github.com/Portkey-Wallet/portkey-web/commit/f4f333b5666da60a07313b98f02b9ae81e1f2ada))
+
 ## [2.0.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.16...v2.0.0-alpha.17) (2024-01-29)
 
 ### Features
