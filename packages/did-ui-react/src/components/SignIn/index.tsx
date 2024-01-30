@@ -229,7 +229,7 @@ const SignIn = forwardRef(
           }
 
           if (didWallet) {
-            onFinishRef.current?.(didWallet);
+            await onFinishRef.current?.(didWallet);
             setOpen(false);
             // TODO
             changeLifeCycle('Login', null);
@@ -391,7 +391,7 @@ const SignIn = forwardRef(
         const { type, value } = result.result;
         if (result.isFinished) {
           // Sign in by scan
-          onFinishRef?.current?.(value as DIDWalletInfo);
+          await onFinishRef.current?.(value as DIDWalletInfo);
         } else {
           const identifier = value as IGuardianIdentifierInfo;
           setGuardianIdentifierInfo(identifier);
@@ -449,7 +449,7 @@ const SignIn = forwardRef(
     }, []);
 
     const onStep3Finish = useCallback(
-      (v: DIDWalletInfo | string) => {
+      async (v: DIDWalletInfo | string) => {
         if (typeof v === 'string') {
           if (!walletWithoutPin)
             return errorTip(
@@ -460,9 +460,9 @@ const SignIn = forwardRef(
               isErrorTip,
               onError,
             );
-          onFinishRef?.current?.({ ...walletWithoutPin, pin: v });
+          await onFinishRef.current?.({ ...walletWithoutPin, pin: v });
         } else {
-          onFinishRef?.current?.(v);
+          await onFinishRef.current?.(v);
         }
         setOpen(false);
         // TODO
