@@ -36,6 +36,7 @@ import { useVerifyToken } from '../../hooks';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import ThrottleButton from '../ThrottleButton';
 import { getSocialConfig } from '../utils/social.utils';
+import GuardianTypeIcon from '../GuardianTypeIcon';
 import './index.less';
 
 enum GuardianEditStatus {
@@ -436,7 +437,7 @@ function GuardianEdit({
         <div className="input-item">
           <div className="guardian-edit-input-item-label">{`Guardian ${currentGuardian?.guardianType}`}</div>
           <div className="guardian-account guardian-edit-input-item-value portkey-ui-flex">
-            <CustomSvg type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
+            <GuardianTypeIcon type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
             <GuardianAccountShow guardian={currentGuardian} />
           </div>
         </div>
