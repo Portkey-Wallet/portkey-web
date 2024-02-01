@@ -10,6 +10,8 @@ export const Web2LoginList: string[] = ['Phone', 'Email'];
 
 export const AccountLoginList = [...SocialLoginList, ...Web2LoginList] as TotalAccountType[];
 
+export const AccountGuardianList = [...Web2LoginList, ...SocialLoginList] as TotalAccountType[];
+
 export const TotalAccountTypeList: Array<TotalAccountType> = [...AccountLoginList, 'Scan'];
 
 export const guardiansExceedTip =
@@ -40,25 +42,25 @@ export const AddGuardiansType: Record<AccountType, AddGuardiansType> = {
   Phone: {
     value: AccountTypeKeyEnum.Phone,
     label: AccountTypeKeyEnum.Phone,
-    icon: 'GuardianPhone',
+    icon: 'Phone',
     id: AccountTypeEnum.Phone,
   },
   Google: {
     value: AccountTypeKeyEnum.Google,
     label: AccountTypeKeyEnum.Google,
-    icon: 'GuardianGoogle',
+    icon: 'Google',
     id: AccountTypeEnum.Google,
   },
   Apple: {
     value: AccountTypeKeyEnum.Apple,
     label: AccountTypeKeyEnum.Apple,
-    icon: 'GuardianApple',
+    icon: 'Apple',
     id: AccountTypeEnum.Apple,
   },
   Telegram: {
     value: AccountTypeKeyEnum.Telegram,
     label: AccountTypeKeyEnum.Telegram,
-    icon: 'GuardianTelegram',
+    icon: 'Telegram',
     id: AccountTypeEnum.Telegram,
   },
   Facebook: {
@@ -77,10 +79,10 @@ export const AddGuardiansType: Record<AccountType, AddGuardiansType> = {
 
 export const guardianIconMap: Record<AccountType, any> = {
   Email: 'Email',
-  Phone: 'GuardianPhone',
-  Google: 'GuardianGoogle',
-  Apple: 'GuardianApple',
-  Telegram: 'GuardianTelegram',
+  Phone: 'Phone',
+  Google: 'Google',
+  Apple: 'Apple',
+  Telegram: 'Telegram',
   Facebook: 'Facebook',
-  Twitter: 'GuardianTwitter',
+  Twitter: 'Twitter',
 };

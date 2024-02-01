@@ -2,7 +2,6 @@ import { ChainId } from '@portkey/types';
 import { memo, useCallback, ReactNode, useState, useRef, useMemo } from 'react';
 import { AccountTypeEnum, OperationTypeEnum, VerifierItem, GuardiansApproved } from '@portkey/services';
 import { useTranslation } from 'react-i18next';
-import CustomSvg from '../CustomSvg';
 import {
   ISocialLogin,
   IVerificationInfo,
@@ -36,6 +35,7 @@ import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
 import { getSocialConfig } from '../utils/social.utils';
+import GuardianTypeIcon from '../GuardianTypeIcon';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -341,7 +341,7 @@ function GuardianView({
             <div className="guardian-view-input-item">
               <div className="guardian-view-input-item-label">{`Guardian ${currentGuardian.guardianType}`}</div>
               <div className="guardian-view-input-item-control portkey-ui-flex">
-                <CustomSvg type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
+                <GuardianTypeIcon type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
                 <GuardianAccountShow guardian={currentGuardian} />
               </div>
             </div>
