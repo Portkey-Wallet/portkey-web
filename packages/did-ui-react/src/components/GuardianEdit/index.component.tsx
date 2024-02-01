@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum, AccountType } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
@@ -28,23 +28,15 @@ import CommonBaseModal from '../CommonBaseModal';
 import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
-import { SocialLoginList, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
-import ConfigProvider from '../config-provider';
+import { SocialLoginList, guardianIconMap, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
-import './index.less';
 import ThrottleButton from '../ThrottleButton';
-
-const guardianIconMap: Record<AccountType, any> = {
-  Email: 'Email',
-  Phone: 'GuardianPhone',
-  Google: 'GuardianGoogle',
-  Apple: 'GuardianApple',
-  Telegram: 'GuardianTelegram',
-};
+import { getSocialConfig } from '../utils/social.utils';
+import './index.less';
 
 enum GuardianEditStatus {
   UnsetLoginGuardian = 'UnsetLoginGuardian',
@@ -200,27 +192,7 @@ function GuardianEdit({
   const socialBasic = useCallback(
     (v: ISocialLogin) => {
       try {
-        const socialLogin = ConfigProvider.config.socialLogin;
-        let clientId;
-        let redirectURI;
-        let customLoginHandler;
-        switch (v) {
-          case 'Apple':
-            clientId = socialLogin?.Apple?.clientId;
-            redirectURI = socialLogin?.Apple?.redirectURI;
-            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-            break;
-          case 'Google':
-            clientId = socialLogin?.Google?.clientId;
-            customLoginHandler = socialLogin?.Google?.customLoginHandler;
-            break;
-          case 'Telegram':
-            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-            break;
-          default:
-            throw 'accountType is not supported';
-        }
-        return { clientId, redirectURI, customLoginHandler };
+        return getSocialConfig(v);
       } catch (error) {
         errorTip(
           {

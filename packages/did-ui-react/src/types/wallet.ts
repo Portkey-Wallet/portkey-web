@@ -29,7 +29,8 @@ export interface AuthenticationInfo {
   [userId: string]: string;
 }
 
-export type ISocialLogin = 'Google' | 'Apple' | 'Telegram';
+export type ISocialLogin = 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter';
+
 export type IWeb2Login = 'Email' | 'Phone';
 
 export type TSocialResponseData = {
@@ -48,7 +49,7 @@ interface BaseAppleLoginConfig {
   clientId?: string;
   redirectURI?: string;
 }
-export interface IAppleLoginConfig extends BaseAppleLoginConfig {
+interface ICustomLoginConfigHandler extends BaseAppleLoginConfig {
   // custom social login callback
   customLoginHandler?: TSocialLoginHandler;
 }
@@ -64,9 +65,11 @@ interface IPortkeyLoginConfig {
 
 export interface ISocialLoginConfig {
   Google?: IGoogleLoginConfig;
-  Apple?: IAppleLoginConfig;
+  Apple?: ICustomLoginConfigHandler;
   Telegram?: ITelegramLoginConfig;
   Portkey?: IPortkeyLoginConfig;
+  Twitter?: ICustomLoginConfigHandler;
+  Facebook?: ICustomLoginConfigHandler;
 }
 
 export interface AppleAuthorized {

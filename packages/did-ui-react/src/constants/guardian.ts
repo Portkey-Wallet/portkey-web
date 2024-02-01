@@ -4,7 +4,7 @@ import { TotalAccountType } from '../types';
 
 export type TAccountType = AccountType;
 
-export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple'];
+export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple', 'Twitter', 'Facebook'];
 
 export const Web2LoginList: string[] = ['Phone', 'Email'];
 
@@ -61,4 +61,26 @@ export const AddGuardiansType: Record<AccountType, AddGuardiansType> = {
     icon: 'GuardianTelegram',
     id: AccountTypeEnum.Telegram,
   },
+  Facebook: {
+    value: AccountTypeKeyEnum.Facebook,
+    label: AccountTypeKeyEnum.Facebook,
+    icon: 'Facebook',
+    id: AccountTypeEnum.Facebook,
+  },
+  Twitter: {
+    value: AccountTypeKeyEnum.Twitter,
+    label: AccountTypeKeyEnum.Twitter,
+    icon: 'Twitter',
+    id: AccountTypeEnum.Twitter,
+  },
+};
+
+export const guardianIconMap: Record<AccountType, any> = {
+  Email: 'Email',
+  Phone: 'GuardianPhone',
+  Google: 'GuardianGoogle',
+  Apple: 'GuardianApple',
+  Telegram: 'GuardianTelegram',
+  Facebook: 'Facebook',
+  Twitter: 'GuardianTwitter',
 };

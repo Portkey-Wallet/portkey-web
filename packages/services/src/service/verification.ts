@@ -12,6 +12,8 @@ import {
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
   VerifyTelegramTokenParams,
+  VerifyFacebookTokenParams,
+  VerifyTwitterTokenParams,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
@@ -75,6 +77,20 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTelegramToken',
+      params,
+    });
+  }
+  verifyTwitterToken(params: VerifyTwitterTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTwitterToken',
+      params,
+    });
+  }
+  verifyFacebookToken(params: VerifyFacebookTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyFacebookToken',
       params,
     });
   }

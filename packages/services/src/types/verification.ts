@@ -67,6 +67,14 @@ export interface VerifyTelegramTokenParams extends BaseVerifyTokenParams {
   accessToken: string;
 }
 
+export interface VerifyTwitterTokenParams extends BaseVerifyTokenParams {
+  accessToken: string;
+}
+
+export interface VerifyFacebookTokenParams extends BaseVerifyTokenParams {
+  accessToken: string;
+}
+
 export type SendAppleUserExtraInfoResult = { userId: string };
 
 export type GetAppleUserExtraInfoParams = { userId: string };
@@ -98,6 +106,8 @@ export interface IVerificationService {
   verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyTelegramToken(params: VerifyTelegramTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyTwitterToken(params: VerifyTwitterTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyFacebookToken(params: VerifyFacebookTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
 }
