@@ -271,26 +271,26 @@ function GuardianAdd({
     } else if (v === 'Facebook') {
       const userInfo = await parseFacebookToken(accessToken);
       if (!userInfo) return;
-      const { firstName, isPrivate, userId, accessToken: token } = userInfo;
+      const { firstName, isPrivate, userId } = userInfo;
       if (userInfo) {
         info = {
           id: userId,
           firstName,
           thirdPartyEmail: undefined,
-          accessToken: token,
+          accessToken,
           isPrivate,
         };
       }
     } else if (v === 'Twitter') {
       const userInfo = parseTwitterToken(accessToken);
       if (!userInfo) return;
-      const { firstName, isPrivate, userId, accessToken: token } = userInfo;
+      const { firstName, isPrivate, userId } = userInfo;
       if (userInfo) {
         info = {
           id: userId,
           firstName,
           thirdPartyEmail: undefined,
-          accessToken: token,
+          accessToken,
           isPrivate,
         };
       }
