@@ -98,9 +98,9 @@ const fbUserInfo: { [key: string]: FacebookUserInfo } = {};
 export async function parseFacebookToken(tokenStr?: string | null): Promise<FacebookUserInfo | undefined> {
   if (!tokenStr) return;
   try {
-    const { userId, token: accessToken, expiredTime } = JSON.parse(tokenStr);
+    const { userId, token: accessToken, expiresTime } = JSON.parse(tokenStr);
 
-    const expirationTime = Number(expiredTime) * 1000;
+    const expirationTime = Number(expiresTime) * 1000;
     const isExpired = new Date(expirationTime) < new Date();
 
     const customFetch = new FetchRequest({});
