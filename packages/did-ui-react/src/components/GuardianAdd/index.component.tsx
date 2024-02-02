@@ -45,7 +45,7 @@ import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
 import {
-  AccountLoginList,
+  AccountGuardianList,
   AddGuardiansType,
   guardianAccountExistTip,
   verifierExistTip,
@@ -56,6 +56,7 @@ import './index.less';
 import { ILoginConfig } from '../config-provider/types';
 import ThrottleButton from '../ThrottleButton';
 import { getSocialConfig } from '../utils/social.utils';
+import GuardianTypeIcon from '../GuardianTypeIcon';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -123,18 +124,20 @@ function GuardianAdd({
 
   const loginConfig = ConfigProvider.getConfig('loginConfig') as ILoginConfig;
   const loginMethodsOrder = useMemo(
-    () => (loginConfig?.loginMethodsOrder as AccountType[]) || AccountLoginList,
+    () => (loginConfig?.loginMethodsOrder as AccountType[]) || AccountGuardianList,
     [loginConfig?.loginMethodsOrder],
   );
 
   const guardianTypeSelectItems = useMemo(() => {
     if (Array.isArray(loginMethodsOrder)) {
-      const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) => AccountLoginList.includes(item));
+      const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) =>
+        AccountGuardianList.includes(item),
+      );
       return filterLoginMethodsOrder?.map((item: AccountType) => {
         return {
           value: AddGuardiansType[item]?.value,
           label: AddGuardiansType[item]?.label,
-          icon: <CustomSvg type={AddGuardiansType[item]?.icon} />,
+          icon: <GuardianTypeIcon type={AddGuardiansType[item]?.icon} />,
           id: AddGuardiansType[item]?.id,
         };
       });
@@ -268,26 +271,26 @@ function GuardianAdd({
     } else if (v === 'Facebook') {
       const userInfo = await parseFacebookToken(accessToken);
       if (!userInfo) return;
-      const { firstName, isPrivate, userId, accessToken: token } = userInfo;
+      const { firstName, isPrivate, userId } = userInfo;
       if (userInfo) {
         info = {
           id: userId,
           firstName,
           thirdPartyEmail: undefined,
-          accessToken: token,
+          accessToken,
           isPrivate,
         };
       }
     } else if (v === 'Twitter') {
       const userInfo = parseTwitterToken(accessToken);
       if (!userInfo) return;
-      const { firstName, isPrivate, userId, accessToken: token } = userInfo;
+      const { firstName, isPrivate, userId } = userInfo;
       if (userInfo) {
         info = {
           id: userId,
           firstName,
           thirdPartyEmail: undefined,
-          accessToken: token,
+          accessToken,
           isPrivate,
         };
       }
