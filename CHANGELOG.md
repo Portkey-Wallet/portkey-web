@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.5.4-alpha.19](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.18...v1.5.4-alpha.19) (2024-02-02)
+
+### Bug Fixes
+
+- 🐛 drawer height ([fdaeab6](https://github.com/Portkey-Wallet/portkey-web/commit/fdaeab6ffc8cbafee4e58bb3d5c487de431e777b))
+
 ## [1.5.4-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v1.5.4-alpha.17...v1.5.4-alpha.18) (2024-01-30)
 
 **Note:** Version bump only for package root
