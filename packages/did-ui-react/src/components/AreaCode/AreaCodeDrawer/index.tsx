@@ -43,7 +43,7 @@ export default function AreaCodeDrawer({ open, value, areaList, onChange, onCanc
   return (
     <CommonModal
       width={'100%'}
-      height={'calc(100vh - 56px)'}
+      height={'80vh'}
       placement="right"
       type="drawer"
       className="portkey-ui-area-code-wrapper"
