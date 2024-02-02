@@ -26,7 +26,7 @@ export default function BaseModalFunc({
   const isWide = window.matchMedia('(max-width: 768px)').matches;
   const isMobile = isWide || devices.isMobileDevices();
   const isModal = !isMobile;
-  const defaultHeight = height ? height : isModal ? height : 'calc(100vh - 56px)';
+  const defaultHeight = height ? height : isModal ? height : '80vh';
 
   const mergeRootClassName = `${PORTKEY_MODAL_PREFIX_CLS}-root portkey-ui-wrapper portkey-ui-common-modals portkey-ui-modal-func-wrapper`;
   const mergeClassName = clsx(
