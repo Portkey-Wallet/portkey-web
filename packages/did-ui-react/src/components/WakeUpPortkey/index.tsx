@@ -38,6 +38,7 @@ export default function WakeUpPortkey({
         caInfo: caWallet.info,
         accountInfo: caWallet.accountInfo,
         walletInfo: managementAccount.wallet,
+        createType: 'addManager',
       });
       setLoading(false);
     }

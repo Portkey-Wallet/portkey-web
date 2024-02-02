@@ -124,6 +124,7 @@ export default function ScanCard({
         caInfo: caWallet.info,
         walletInfo: managementAccount.wallet,
         accountInfo: caWallet.accountInfo,
+        createType: 'addManager',
       });
   }, [caWallet, managementAccount]);
 

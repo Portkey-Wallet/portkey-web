@@ -66,13 +66,7 @@ export default function useLoginWallet({
   );
 
   const requestRegisterWallet = useCallback(
-    async ({
-      pin,
-      chainId,
-      accountType,
-      guardianIdentifier,
-      guardianApprovedList,
-    }: Omit<CreateWalletParams, 'type'>) => {
+    async ({ pin, type, chainId, accountType, guardianIdentifier, guardianApprovedList }: CreateWalletParams) => {
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
       if (!guardianApprovedList?.length) throw 'Missing guardianApproved';
       const wallet = did.didWallet.create();
@@ -106,6 +100,7 @@ export default function useLoginWallet({
         requestId,
         clientId,
         pin,
+        createType: type,
         walletInfo: wallet.managementAccount!.wallet,
       });
 
@@ -119,13 +114,7 @@ export default function useLoginWallet({
   );
 
   const requestRecoveryWallet = useCallback(
-    async ({
-      pin,
-      chainId,
-      accountType,
-      guardianIdentifier,
-      guardianApprovedList,
-    }: Omit<CreateWalletParams, 'type'>) => {
+    async ({ pin, chainId, accountType, guardianIdentifier, guardianApprovedList, type }: CreateWalletParams) => {
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
 
       const wallet = did.didWallet.create();
@@ -161,6 +150,7 @@ export default function useLoginWallet({
         requestId,
         clientId,
         pin,
+        createType: type,
         walletInfo: wallet.managementAccount!.wallet,
       });
       return getRequestStatus({
@@ -185,6 +175,7 @@ export default function useLoginWallet({
         let walletResult: RegisterResult | LoginResult;
         const walletParams = {
           pin,
+          type,
           chainId,
           accountType,
           guardianIdentifier,
@@ -236,6 +227,7 @@ export default function useLoginWallet({
             accountType,
             type,
           },
+          createType: type,
           chainId,
           pin,
           walletInfo: wallet,
