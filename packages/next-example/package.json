@@ -1,6 +1,6 @@
 {
   "name": "@portkey/next-example",
-  "version": "2.0.0-alpha.17",
+  "version": "2.0.0-alpha.20",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,8 +8,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@portkey/did-ui-react": "^2.0.0-alpha.17",
-    "@portkey/onboarding": "^2.0.0-alpha.17",
+    "@portkey/did-ui-react": "^2.0.0-alpha.20",
+    "@portkey/onboarding": "^2.0.0-alpha.20",
     "aelf-sdk": "^3.2.45-beta.1",
     "next": "14.0.3",
     "next-transpile-modules": "^10.0.0",
