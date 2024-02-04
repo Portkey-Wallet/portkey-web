@@ -34,10 +34,11 @@ export default function Overview({
   const guardiansGroupRef = useRef<HTMLDivElement>(null);
   const [isFold, setIsFold] = useState(true);
 
-  const { isNeedFold, iconRealGap, expendDisplayList, defaultDisplayList } =
+  const { isNeedFold, iconMinWidthRealGap, expendDisplayList, defaultDisplayList } =
     useComputeIconCountPreRow<TotalAccountType>({
       ref: guardiansGroupRef,
       accountList: loginMethodsOrder,
+      supportList: TotalAccountTypeList,
       minLoginAccountIconWidth: 40,
       minIconGap: MinIconGap,
     });
@@ -63,7 +64,8 @@ export default function Overview({
           <div
             className="portkey-ui-flex-center account-type-list"
             style={{
-              gap: isNeedFold ? iconRealGap : MinIconGap,
+              columnGap: isNeedFold ? iconMinWidthRealGap : MinIconGap,
+              rowGap: MinIconGap,
               justifyContent: isNeedFold && !isFold ? 'flex-start' : 'center',
             }}>
             {defaultDisplayList?.map(

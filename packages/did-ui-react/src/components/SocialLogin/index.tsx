@@ -20,7 +20,7 @@ import useSocialLogin from '../../hooks/useSocialLogin';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
 import { TotalAccountsInfo } from '../../constants/socialLogin';
-import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
+import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
@@ -133,12 +133,13 @@ export default function SocialLogin({
 
   const {
     isNeedFold,
-    iconRealGap,
+    iconMinWidthRealGap,
     expendDisplayList: notRecommendExpendDisplayList,
     defaultDisplayList: notRecommendDefaultDisplayList,
   } = useComputeIconCountPreRow<TotalAccountType>({
     ref: notRecommendGroupRef,
     accountList: notRecommendList as TotalAccountType[],
+    supportList: AccountLoginList,
     minLoginAccountIconWidth: 48,
     minIconGap: MinIconGap,
   });
@@ -160,7 +161,7 @@ export default function SocialLogin({
         ref={notRecommendGroupRef}
         className="portkey-ui-flex-center portkey-ui-extra-guardian-type-content"
         style={{
-          columnGap: isNeedFold ? iconRealGap : MinIconGap,
+          columnGap: isNeedFold ? iconMinWidthRealGap : MinIconGap,
           rowGap: MinIconGap,
           justifyContent: isNeedFold && !isFold ? 'flex-start' : 'center',
         }}>
@@ -202,7 +203,7 @@ export default function SocialLogin({
     );
   }, [
     handleNotRecommendChange,
-    iconRealGap,
+    iconMinWidthRealGap,
     isFold,
     isNeedFold,
     notRecommendDefaultDisplayList,
