@@ -20,7 +20,7 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
 import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constants/guardian';
-import { AccountType } from '@portkey/services';
+import { AccountType } from '@portkey-v1/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import SwitchUpgradedPortkey from '../SwitchUpgradedPortkey';
 
