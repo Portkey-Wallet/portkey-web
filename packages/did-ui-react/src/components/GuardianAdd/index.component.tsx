@@ -559,7 +559,7 @@ function GuardianAdd({
     !customPhoneCountry && getPhoneCountry();
   });
   return (
-    <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
+    <div className={clsx('portkey-ui-guardian-add', 'portkey-ui-flex-column', className)}>
       {header}
       <div className="guardian-add-body portkey-ui-flex-column portkey-ui-flex-1">
         <div className="input-item">
@@ -591,7 +591,7 @@ function GuardianAdd({
           {isExist && <div className="guardian-error-tip">{t('This guardian already exists')}</div>}
         </div>
       </div>
-      <div className="guardian-edit-footer">
+      <div className="guardian-add-footer">
         <Button type="primary" className="guardian-btn" onClick={onConfirm} disabled={!!addBtnDisable}>
           {t('Confirm')}
         </Button>

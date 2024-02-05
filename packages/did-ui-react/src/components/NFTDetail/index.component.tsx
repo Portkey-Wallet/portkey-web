@@ -27,22 +27,22 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
     return (
       <div className="info">
         <div className="title">Basic info</div>
-        <div className="contract info-item flex-between">
+        <div className="contract info-item portkey-ui-flex-between">
           <div className="label">Contract address</div>
-          <div className="contract-title flex">
+          <div className="contract-title portkey-ui-flex">
             {formatStr2EllipsisStr(formatTokenContractAds)}
             <Copy toCopy={formatTokenContractAds} />
           </div>
         </div>
-        <div className="chain info-item flex-between">
+        <div className="chain info-item portkey-ui-flex-between">
           <div className="label">Blockchain</div>
           <div>{transNetworkText(chainId, !isMainnet)}</div>
         </div>
-        <div className="alias info-item flex-between">
+        <div className="alias info-item portkey-ui-flex-between">
           <div className="label">Token</div>
           <div className="alias-name">{alias}</div>
         </div>
-        <div className="total-supply info-item flex-between">
+        <div className="total-supply info-item portkey-ui-flex-between">
           <div className="label">Total supply</div>
           <div>{formatAmountShow(totalSupply, 0)}</div>
         </div>

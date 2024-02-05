@@ -1,3 +1,155 @@
+@import '../../assets/theme/constants.less';
+
 .portkey-ui-asset-wrapper {
-  height: 100vh;
+  overflow: auto;
+  width: 100%;
+  height: 100%;
+  background-color: var(--portkey-ui-default-base-bg);
+  .portkey-ui-logo {
+    .portkeylogo-icon {
+      width: 108px;
+      height: 24px;
+      margin: 18px 0;
+    }
+  }
+  .portkey-ui-asset-container {
+    position: relative;
+    height: 100%;
+    min-height: calc(100vh - 60px - 28px);
+    margin-bottom: 28px;
+    background-color: var(--portkey-ui-default-bg);
+    .portkey-ui-token-list,
+    .portkey-ui-nft-tab,
+    .portkey-ui-send-wrapper,
+    .portkey-ui-ramp-frame,
+    .portkey-ui-guardian-page,
+    .portkey-ui-menu-list-wrapper,
+    .portkey-ui-transfer-settings-wrapper,
+    .portkey-ui-transfer-settings-edit-wrapper,
+    .portkey-ui-ramp-preview-frame {
+      margin-bottom: 28px;
+    }
+    .portkey-ui-guardian-page,
+    .portkey-ui-guardian-add,
+    .portkey-ui-guardian-view,
+    .portkey-ui-guardian-edit,
+    .portkey-ui-transfer-settings-wrapper,
+    .portkey-ui-menu-list-wrapper,
+    .portkey-ui-transfer-settings-edit-wrapper {
+      height: 100%;
+      min-height: calc(100vh - 104px);
+    }
+    .portkey-ui-transfer-settings-wrapper .portkey-ui-transfer-settings-form,
+    .portkey-ui-transfer-settings-edit-wrapper .portkey-ui-transfer-settings-edit-form {
+      min-height: calc(100vh - 176px);
+    }
+    &.small-screen {
+      width: 440px;
+      min-width: 440px;
+      max-width: 440px;
+      .portkey-ui-send-wrapper,
+      .portkey-ui-ramp-frame,
+      .portkey-ui-ramp-preview-frame {
+        height: 100%;
+        min-height: calc(100vh - 104px);
+      }
+    }
+    .portkey-ui-powered-wrapper {
+      position: absolute;
+      bottom: 8px;
+      width: 100%;
+      .portkey-ui-powered {
+        height: 20px;
+        color: var(--portkey-ui-font-7);
+        .powered-by {
+          font-size: 12px;
+          line-height: 16px;
+        }
+        .brand-name {
+          font-size: 12px;
+          line-height: 20px;
+          font-weight: 500;
+        }
+        .portkey-icon {
+          margin: 0 4px 0 8px;
+          svg {
+            path {
+              fill: var(--portkey-ui-icon-fill-2);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media screen and (min-width: 1820px) {
+  .portkey-ui-asset-wrapper {
+    .portkey-ui-logo,
+    .portkey-ui-asset-container {
+      width: 1440px;
+      max-width: 1440px;
+    }
+  }
+}
+
+@media screen and (min-width: 1281px) and (max-width: 1819px) {
+  .portkey-ui-asset-wrapper {
+    .portkey-ui-logo,
+    .portkey-ui-asset-container {
+      width: calc(100vw - 380px);
+      max-width: 1440px;
+      min-width: 900px;
+    }
+  }
+}
+
+@media screen and (max-width: 1280px) and (min-width: 769px) {
+  .portkey-ui-asset-wrapper {
+    .portkey-ui-logo,
+    .portkey-ui-asset-container {
+      width: calc(100vw - 88px);
+      min-width: 680px;
+      max-width: 900px;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .portkey-ui-asset-wrapper {
+    .portkey-ui-asset-container {
+      width: 100%;
+      min-width: 360px;
+      margin-bottom: 0;
+      min-height: 100vh;
+      .portkey-ui-guardian-page,
+      .portkey-ui-guardian-add,
+      .portkey-ui-guardian-view,
+      .portkey-ui-guardian-edit,
+      .portkey-ui-transfer-settings-wrapper,
+      .portkey-ui-menu-list-wrapper,
+      .portkey-ui-transfer-settings-edit-wrapper {
+        height: 100%;
+        min-height: calc(100vh - 28px);
+      }
+      .portkey-ui-transfer-settings-wrapper .portkey-ui-transfer-settings-form,
+      .portkey-ui-transfer-settings-edit-wrapper .portkey-ui-transfer-settings-edit-form {
+        min-height: calc(100vh - 100px);
+      }
+      &.small-screen {
+        width: 100%;
+        max-width: 100%;
+        min-width: 360px;
+        .portkey-ui-send-wrapper,
+        .portkey-ui-ramp-frame,
+        .portkey-ui-ramp-preview-frame {
+          height: 100%;
+          min-height: calc(100vh - 28px);
+        }
+      }
+    }
+    .portkey-ui-logo {
+      display: none;
+    }
+  }
 }
