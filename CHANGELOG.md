@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.22...v2.0.0-alpha.23) (2024-02-05)
+
+### Bug Fixes
+
+- 🐛 edit guardian ([50c5790](https://github.com/Portkey-Wallet/portkey-web/commit/50c57904b977cef263862393df9c5f54511cff0e))
+
 ## [2.0.0-alpha.22](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.21...v2.0.0-alpha.22) (2024-02-05)
 
 **Note:** Version bump only for package root
