@@ -1,5 +1,6 @@
 import { stringifyUrl } from 'query-string';
-export const DID_APP_SCHEMA = 'portkey.did';
+export const DID_APP_SCHEMA = 'portkey.finance';
+export const V1_DID_APP_SCHEMA = 'portkey.did';
 
 export enum SCHEME_ACTION {
   login = 'login',
@@ -13,6 +14,7 @@ export interface IBaseHandleSchemeParams {
   domain: string;
   action: string;
   custom: any;
+  version?: 'v1';
 }
 
 export type LinkDappData = {
@@ -46,10 +48,12 @@ export interface IScheme {
   formatScheme(params: IAddGroupHandleSchemeParams): string;
 }
 
-export const formatScheme: IScheme['formatScheme'] = ({ scheme = DID_APP_SCHEMA, domain, action, custom }) => {
+export const formatScheme: IScheme['formatScheme'] = ({ scheme, domain, action, custom, version }) => {
+  let _scheme = scheme || DID_APP_SCHEMA;
+  if (version === 'v1' && !scheme) _scheme = V1_DID_APP_SCHEMA;
   return stringifyUrl(
     {
-      url: `${scheme}://${domain}/${action}`,
+      url: `${_scheme}://${domain}/${action}`,
       query: custom,
     },
     { encode: true },

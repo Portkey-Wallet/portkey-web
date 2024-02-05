@@ -13,10 +13,10 @@ const evokePortkeyApp: IEvokePortkeyApp['evokePortkeyApp'] = ({
   version,
 }) => {
   const downloadUrl = version !== 'v1' ? PORTKEY_V2_DOWNLOAD_URL : APP_DOWNLOAD_URL;
-
+  const scheme = version !== 'v1' ? schemeUtils.DID_APP_SCHEMA : schemeUtils.V1_DID_APP_SCHEMA;
   const callLib = new EvokeApp({
     scheme: {
-      protocol: schemeUtils.DID_APP_SCHEMA, // 'portkey.did',
+      protocol: scheme,
       domain: domain || window?.location.host,
     },
     timeout,
@@ -25,7 +25,7 @@ const evokePortkeyApp: IEvokePortkeyApp['evokePortkeyApp'] = ({
     logFunc: onStatusChange,
     buildScheme: (config, options) => {
       return schemeUtils.formatScheme({
-        scheme: schemeUtils.DID_APP_SCHEMA,
+        scheme,
         action: action,
         domain: options.scheme.domain,
         custom: config.param,
