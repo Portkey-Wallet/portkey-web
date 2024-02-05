@@ -108,6 +108,7 @@ function GuardianAdd({
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(customPhoneCountry);
   const verifyToken = useVerifyToken();
+  const [addBtnLoading, setAddBtnLoading] = useState<boolean>(false);
   const guardianAccount = useMemo(
     () => emailValue || socialValue?.id || (countryCode && phoneNumber ? `+${countryCode.code}${phoneNumber}` : ''),
     [countryCode, emailValue, phoneNumber, socialValue?.id],
@@ -594,8 +595,16 @@ function GuardianAdd({
     [handleAddGuardian, isErrorTip, onError],
   );
   const onConfirm = useCallback(async () => {
-    const valid = await checkValid();
-    if (valid) {
+    let _valid = true;
+    try {
+      setAddBtnLoading(true);
+      _valid = await checkValid();
+      setAddBtnLoading(false);
+    } catch (error) {
+      _valid = false;
+      setAddBtnLoading(false);
+    }
+    if (_valid) {
       if (socialValue?.id) {
         try {
           setLoading(true);
@@ -683,7 +692,12 @@ function GuardianAdd({
         </div>
       </div>
       <div className="guardian-edit-footer">
-        <ThrottleButton type="primary" className="guardian-btn" onClick={onConfirm} disabled={!!addBtnDisable}>
+        <ThrottleButton
+          type="primary"
+          className="guardian-btn"
+          onClick={onConfirm}
+          disabled={!!addBtnDisable}
+          loading={addBtnLoading}>
           {t('Confirm')}
         </ThrottleButton>
       </div>
