@@ -30,7 +30,7 @@ export class RampConfig implements IRampConfig {
   }
 
   setConfig(options: IRampConfigOptions) {
-    Object.entries(options).forEach(([key, value]) => {
+    Object.entries(options).forEach(([_key, value]) => {
       if (!value) return;
       this.requestConfig.setConfig(value);
     });
