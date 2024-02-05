@@ -20,7 +20,7 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/did-ui-react"
   },
-  "version": "1.5.2-alpha.0",
+  "version": "2.0.0-alpha.23",
   "main": "dist/index.js",
   "types": "dist/_types/index.d.ts",
   "type": "module",
@@ -41,13 +41,20 @@
   },
   "dependencies": {
     "@matt-block/react-recaptcha-v2": "^2.0.0",
-    "@portkey/did": "^1.5.2-alpha.0",
-    "@portkey/onboarding": "^1.5.2-alpha.0",
-    "@portkey/socket": "^1.5.2-alpha.0",
+    "@portkey/accounts": "^2.0.0-alpha.23",
+    "@portkey/contracts": "^2.0.0-alpha.23",
+    "@portkey/did": "^2.0.0-alpha.23",
+    "@portkey/graphql": "^2.0.0-alpha.23",
+    "@portkey/onboarding": "^2.0.0-alpha.23",
+    "@portkey/request": "^2.0.0-alpha.23",
+    "@portkey/services": "^2.0.0-alpha.23",
+    "@portkey/socket": "^2.0.0-alpha.23",
+    "@portkey/types": "^2.0.0-alpha.23",
+    "@portkey/utils": "^2.0.0-alpha.23",
+    "@portkey/validator": "^2.0.0-alpha.23",
     "@rc-component/portal": "1.0.2",
-    "aelf-sdk": "3.2.45-beta.0",
-    "antd": "4.24.4",
-    "antd-mobile": "5.26.0",
+    "antd": "4.24.14",
+    "antd-mobile": "5.33.0",
     "bignumber.js": "^9.1.0",
     "clsx": "^1.2.1",
     "lottie-web": "5.9.6",
@@ -56,7 +63,6 @@
     "react-i18next": "^11.18.6",
     "react-qrcode-logo": "2.9.0",
     "react-use": "^17.4.0",
-    "reactjs-social-login": "^2.6.2",
     "spark-md5": "^3.0.2",
     "uuid": "^8.3.2"
   },
@@ -69,7 +75,9 @@
     "postcss": "^8.4.21"
   },
   "peerDependencies": {
-    "rc-tabs": "12.5.1"
+    "aelf-sdk": "^3.2.45-beta.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

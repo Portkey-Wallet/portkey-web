@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import VerifierPair from '../../../VerifierPair';
 import { useCallback, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -8,6 +7,8 @@ import { ChainId } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
 import { OperationTypeEnum } from '@portkey/services';
+import { SocialLoginList } from '../../../../constants/guardian';
+import ThrottleButton from '../../../ThrottleButton';
 
 interface GuardianItemProps {
   originChainId?: ChainId;
@@ -35,10 +36,7 @@ function GuardianItems({
   onVerifying,
 }: GuardianItemProps) {
   const { t } = useTranslation();
-  const isSocialLogin = useMemo(
-    () => item.guardianType === 'Google' || item.guardianType === 'Apple',
-    [item.guardianType],
-  );
+  const isSocialLogin = useMemo(() => SocialLoginList.includes(item.guardianType), [item.guardianType]);
 
   const accountShow = useCallback((guardian: UserGuardianItem) => {
     switch (guardian.guardianType) {
@@ -53,10 +51,11 @@ function GuardianItems({
           </div>
         );
       case 'Apple':
+      case 'Telegram':
         return (
           <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
-            <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail}</div>
+            <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail || '******'}</div>
           </div>
         );
     }
@@ -124,25 +123,25 @@ function GuardianItems({
         {accountShow(item)}
       </div>
       {isExpired && item.status !== VerifyStatus.Verified ? (
-        <Button className="expired" type="text" disabled>
+        <ThrottleButton className="expired" type="text" disabled>
           {t('Expired')}
-        </Button>
+        </ThrottleButton>
       ) : (
         <>
           {(!item.status || item.status === VerifyStatus.NotVerified) && !isSocialLogin && (
-            <Button className="not-verified" type="primary" onClick={() => SendCode(item)}>
+            <ThrottleButton className="not-verified" type="primary" onClick={() => SendCode(item)}>
               {t('Send')}
-            </Button>
+            </ThrottleButton>
           )}
           {(item.status === VerifyStatus.Verifying || (!item.status && isSocialLogin)) && (
-            <Button type="primary" className="verifying" onClick={() => verifyingHandler(item)}>
+            <ThrottleButton type="primary" className="verifying" onClick={() => verifyingHandler(item)}>
               {t('Verify')}
-            </Button>
+            </ThrottleButton>
           )}
           {item.status === VerifyStatus.Verified && (
-            <Button className="verified" type="text" disabled>
+            <ThrottleButton className="verified" type="text" disabled>
               {t('Confirmed')}
-            </Button>
+            </ThrottleButton>
           )}
         </>
       )}

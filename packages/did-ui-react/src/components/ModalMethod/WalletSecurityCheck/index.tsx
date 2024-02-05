@@ -103,7 +103,7 @@ export const addGuardiansModal = ({ wrapClassName = '', className = '', onOk, ..
       ),
     };
     if (AddGuardiansModalInstance) {
-      AddGuardiansModalInstance.update((prevConfig) => {
+      AddGuardiansModalInstance.update((prevConfig: any) => {
         return {
           ...prevConfig,
           ...modalConfig,
@@ -170,7 +170,7 @@ export const syncAccelerateModal = async ({
       ),
     };
     if (SyncAccelerateModalInstance) {
-      SyncAccelerateModalInstance.update((prevConfig) => {
+      SyncAccelerateModalInstance.update((prevConfig: any) => {
         return {
           ...prevConfig,
           ...modalConfig,

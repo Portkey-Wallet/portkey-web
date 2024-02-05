@@ -8,6 +8,8 @@ import { getChain } from '../../hooks/useChainInfo';
 import { getContractBasic } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
 import { crossChainTransferToCa } from './crossChainTransferToCa';
+import { GuardianApprovedItem } from '../../components/Guardian/utils/type';
+import sameChainTransfer from './sameChainTransfer';
 
 interface CrossChainTransferParams {
   sandboxId?: string;
@@ -20,6 +22,7 @@ interface CrossChainTransferParams {
   toAddress: string;
   memo?: string;
   crossChainFee: number;
+  guardiansApproved?: GuardianApprovedItem[];
 }
 
 export type CrossChainTransferIntervalParams = Omit<CrossChainTransferParams, 'caHash' | 'crossChainFee'> & {
@@ -65,6 +68,7 @@ const crossChainTransfer = async ({
   memo,
   toAddress,
   crossChainFee,
+  guardiansApproved,
 }: CrossChainTransferParams) => {
   const chainId = tokenInfo.chainId;
   const chainInfo = await getChain(chainId);
@@ -78,20 +82,20 @@ const crossChainTransfer = async ({
     chainType,
   });
   try {
-    const contract = await getContractBasic({
-      rpcUrl: chainInfo.endPoint,
-      account,
-      contractAddress: chainInfo.caContractAddress,
+    managerTransferResult = await sameChainTransfer({
+      sandboxId,
+      chainId,
       chainType,
-    });
-    managerTransferResult = await contract.callSendMethod('ManagerTransfer', account.address, {
+      privateKey,
+      tokenInfo,
       caHash,
-      symbol: tokenInfo.symbol,
-      to: managerAddress,
+      toAddress: managerAddress,
       amount,
       memo,
+      guardiansApproved,
     });
-    if (!managerTransferResult.transactionId) throw 'ManagerTransfer missing transactionId';
+    console.log('crossChainTransfer managerTransferResult: ', managerTransferResult);
+    if (!managerTransferResult.TransactionId) throw 'ManagerTransfer missing transactionId';
   } catch (error) {
     throw {
       type: 'managerTransfer',
@@ -125,7 +129,7 @@ const crossChainTransfer = async ({
     await intervalCrossChainTransfer(crossChainTransferParams);
   } catch (error) {
     const returnData: the2ThFailedActivityItemType = {
-      transactionId: managerTransferResult.transactionId,
+      transactionId: managerTransferResult.TransactionId,
       params: {
         tokenInfo,
         chainType,
@@ -141,7 +145,7 @@ const crossChainTransfer = async ({
     throw {
       type: 'crossChainTransfer',
       error: error,
-      managerTransferTxId: managerTransferResult.transactionId,
+      managerTransferTxId: managerTransferResult.TransactionId,
       data: returnData,
     };
   }

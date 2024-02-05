@@ -34,7 +34,21 @@
   margin-bottom: 24px;
 }
 .portkey-ui-security-check-accelerate-footer {
+  width: 100%;
   .portkey-ui-btn-wrapper {
     display: block;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .portkey-ui-security-check-accelerate-wrapper,
+  .portkey-ui-security-check-accelerate-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+  .portkey-ui-security-check-accelerate-body {
+    flex: 1;
   }
 }

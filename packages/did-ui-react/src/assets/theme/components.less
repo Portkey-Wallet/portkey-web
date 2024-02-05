@@ -24,6 +24,8 @@
     width: 100%;
     height: auto;
     padding: 0;
+    box-shadow: none;
+    text-shadow: none;
   }
 
   .portkey-ant-btn-default {
@@ -44,8 +46,9 @@
     &:hover,
     &:focus {
       color: var(--portkey-ui-font-12);
-      background-color: var(--portkey-ui-bg-9);
+      background-color: var(--portkey-ui-primary-btn-bg);
       border-color: var(--portkey-ui-primary-border);
+      box-shadow: none !important;
     }
 
     &:disabled,
@@ -216,7 +219,7 @@
 }
 
 .portkey-ui-btn-wrapper {
-  padding: 15px 16px 17px;
+  padding: 15px 16px 16px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 16px;
@@ -261,4 +264,8 @@
       margin-left: 16px;
     }
   }
+}
+
+.portkey-ant-message {
+  z-index: var(--portkey-ui-message-zIndex);
 }

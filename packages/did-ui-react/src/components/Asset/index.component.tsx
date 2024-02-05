@@ -15,14 +15,12 @@ import { MAINNET } from '../../constants/network';
 import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
-import { message } from 'antd';
 import { useUpdateEffect } from 'react-use';
-import SendMain from '../Send/index.components';
+import SendMain, { SendExtraConfig } from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
-import './index.less';
 import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
@@ -32,8 +30,10 @@ import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
-import useDebounce from '../../hooks/useDebounce';
+import { useDebounce } from '../../hooks/debounce';
+import singleMessage from '../CustomAnt/message';
 import CustomSvg from '../CustomSvg';
+import './index.less';
 
 export enum AssetStep {
   overview = 'overview',
@@ -148,7 +148,8 @@ function AssetMain({
   const [selectToken, setSelectToken] = useState<BaseToken>();
 
   const [sendToken, setSendToken] = useState<IAssetItemType>();
-
+  const [sendExtraConfig, setSendExtraConfig] = useState<SendExtraConfig>();
+  const [rampExtraConfig, setRampExtraConfig] = useState<IRampInitState | undefined>(rampState);
   const [rampPreview, setRampPreview] = useState<IRampPreviewInitState>();
 
   const [transactionDetail, setTransactionDetail] = useState<ActivityItemType & { chainId?: ChainId }>();
@@ -173,7 +174,7 @@ function AssetMain({
 
   const onBuy = useCallback(
     async (v: any) => {
-      if (!portkeyWebSocketUrl) return message.error('Please configure socket service url in setGlobalConfig');
+      if (!portkeyWebSocketUrl) return singleMessage.error('Please configure socket service url in setGlobalConfig');
       setSelectToken({
         ...v,
         address: v.address || v.tokenContractAddress,
@@ -229,10 +230,31 @@ function AssetMain({
         return res;
       } catch (error) {
         const err = handleErrorMessage(error);
-        return message.error(err);
+        return singleMessage.error(err);
       }
     },
     [caHash, managementAccount?.privateKey, sandboxId],
+  );
+
+  const transferSettingsEditBack = useCallback(
+    async (data: ITransferLimitItemWithRoute) => {
+      const res = await getLimitFromContract(data);
+      setViewPaymentSecurity({ ...data, ...res });
+      if (data?.businessFrom?.module === 'ramp-sell') {
+        setRampExtraConfig({ ...data.businessFrom.extraConfig });
+        setAssetStep(AssetStep.ramp);
+        return;
+      }
+      if (data?.businessFrom?.module === 'send') {
+        setSendExtraConfig({
+          ...data.businessFrom.extraConfig,
+        });
+        setAssetStep(AssetStep.send);
+        return;
+      }
+      return setAssetStep(AssetStep.transferSettings);
+    },
+    [getLimitFromContract],
   );
 
   const smallScreen = useMemo(
@@ -285,6 +307,7 @@ function AssetMain({
               address: caInfo[selectToken.chainId]?.caAddress,
               name: '',
             }}
+            symbolIcon={selectToken.imageUrl}
             assetInfo={{
               symbol: selectToken.symbol,
               tokenContractAddress: selectToken.address,
@@ -298,20 +321,22 @@ function AssetMain({
         )}
         {assetStep === AssetStep.ramp && selectToken && (
           <RampMain
-            initState={rampState}
+            initState={rampExtraConfig}
             portkeyWebSocketUrl={portkeyWebSocketUrl}
             tokenInfo={{
               ...selectToken,
               tokenContractAddress: selectToken.address,
             }}
-            onBack={onBack}
+            onBack={() => {
+              setRampExtraConfig(undefined);
+              onBack();
+            }}
             onShowPreview={({ initState }) => {
               setRampPreview(initState);
               setAssetStep(AssetStep.rampPreview);
             }}
             isBuySectionShow={isShowRampBuy}
             isSellSectionShow={isShowRampSell}
-            isShowSelectInModal={true}
             isMainnet={networkType === MAINNET}
             onModifyLimit={async (data) => {
               const res = await getLimitFromContract(data);
@@ -341,11 +366,12 @@ function AssetMain({
         {assetStep === AssetStep.send && sendToken && (
           <SendMain
             assetItem={sendToken}
-            onCancel={onBack}
-            onSuccess={() => {
-              setAssetStep(AssetStep.overview);
+            extraConfig={sendExtraConfig}
+            onCancel={() => {
+              setSendExtraConfig(undefined);
+              onBack();
             }}
-            onClose={() => {
+            onSuccess={() => {
               setAssetStep(AssetStep.overview);
             }}
             onModifyLimit={async (data) => {
@@ -389,6 +415,7 @@ function AssetMain({
                   balance: token.balance || '0',
                   decimals: token.decimals.toString(),
                   balanceInUsd: token.balanceInUsd || '',
+                  imageUrl: token.imageUrl || '',
                   tokenContractAddress: token.tokenContractAddress || '',
                 },
               };
@@ -434,6 +461,7 @@ function AssetMain({
           <Guardian
             sandboxId={sandboxId}
             caHash={caHash || ''}
+            networkType={networkType}
             originChainId={originChainId}
             accelerateChainId={accelerateChainId}
             onBack={() => setAssetStep(AssetStep.my)}
@@ -478,14 +506,9 @@ function AssetMain({
             caHash={caHash || ''}
             originChainId={originChainId}
             sandboxId={sandboxId}
-            onBack={() => setAssetStep(AssetStep.transferSettings)}
-            onSuccess={async (data) => {
-              const res = await getLimitFromContract(data);
-              setViewPaymentSecurity({ ...data, ...res });
-              if (data?.businessFrom === 'ramp-sell') return setAssetStep(AssetStep.ramp);
-              if (data?.businessFrom === 'send') return setAssetStep(AssetStep.send);
-              return setAssetStep(AssetStep.transferSettings);
-            }}
+            networkType={networkType}
+            onBack={transferSettingsEditBack}
+            onSuccess={transferSettingsEditBack}
           />
         )}
 

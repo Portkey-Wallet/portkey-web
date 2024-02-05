@@ -6,14 +6,14 @@ import { handleErrorMessage, setLoading } from '../../utils';
 import ActivityList from '../ActivityList';
 import { PAGESIZE_10 } from '../../constants';
 import { getSkipCount } from '../context/utils';
-import { message } from 'antd';
 import { PaginationPage } from '../../types';
-import { useThrottleEffect } from '../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { usePortkey } from '../context';
 import { ActivityStateMapAttributes, basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import { usePortkeyAssetDispatch } from '../context/PortkeyAssetProvider/hooks';
 import CheckFetchLoading from '../CheckFetchLoading';
 import './index.less';
+import singleMessage from '../CustomAnt/message';
 
 export interface ActivityProps {
   chainId?: ChainId;
@@ -65,7 +65,7 @@ export default function Activity({ chainId, symbol, onViewActivityItem }: Activi
             setPending(false);
           });
       } catch (error) {
-        message.error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
       } finally {
         setLoading(false);
       }
@@ -77,7 +77,7 @@ export default function Activity({ chainId, symbol, onViewActivityItem }: Activi
   const isOnce = useRef<boolean>();
 
   // init State
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     if (!caAddressInfos || isOnce.current) return;
     getList();
     isOnce.current = true;

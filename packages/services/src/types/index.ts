@@ -5,7 +5,16 @@ export enum AccountTypeEnum {
   Phone,
   Google,
   Apple,
+  Telegram,
 }
+
+export const AccountTypeKeyEnum = {
+  Email: 'Email',
+  Phone: 'Phone',
+  Google: 'Google',
+  Apple: 'Apple',
+  Telegram: 'Telegram',
+};
 
 export type AccountType = keyof typeof AccountTypeEnum;
 
@@ -20,6 +29,12 @@ export abstract class BaseService<T = IBaseRequest> {
 export type BaseListResponse<T = any> = {
   data: T[];
   totalRecordCount: number;
+};
+
+export type BaseApiResponse<T = any> = {
+  code: string;
+  message?: string;
+  data: BaseListResponse<T>;
 };
 
 export * from './services';

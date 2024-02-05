@@ -27,7 +27,11 @@ export class ContractBasic extends BaseContract implements IPortkeyContract {
     return this.callContract.callSendMethod(functionName, account, paramsOption, sendOptions);
   }
 
-  public encodedTx<T = any>(functionName: string, paramsOption?: any): Promise<ViewResult<T>> {
-    return this.callContract.encodedTx(functionName, paramsOption);
+  public encodedTx<T = any>(
+    functionName: string,
+    paramsOption?: any,
+    callOptions?: CallOptions,
+  ): Promise<ViewResult<T>> {
+    return this.callContract.encodedTx(functionName, paramsOption, callOptions);
   }
 }

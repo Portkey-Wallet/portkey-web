@@ -3,6 +3,6 @@
   "include": ["./src", "../../index.d.ts"],
   "compilerOptions": {
     "outDir": "./dist/commonjs",
-    "esModuleInterop": true,
+    "esModuleInterop": true
   }
 }
