@@ -105,6 +105,7 @@ function GuardianEdit({
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const verifyToken = useVerifyToken();
   const [step, setStep] = useState<GuardianEditStatus>(GuardianEditStatus.EditGuardian);
+  const [editBtnLoading, setEditBtnLoading] = useState<boolean>(false);
   const operationType: OperationTypeEnum = useMemo(() => {
     if (step === GuardianEditStatus.EditGuardian) {
       return OperationTypeEnum.editGuardian;
@@ -152,6 +153,10 @@ function GuardianEdit({
           .find((_guardian) => _guardian.verifierId === item.id),
       })),
     [guardianList, preGuardian?.key, verifierList],
+  );
+  const approvalGuardianList = useMemo(
+    () => guardianList?.filter((item) => item.key !== preGuardian?.key),
+    [guardianList, preGuardian?.key],
   );
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
@@ -409,8 +414,16 @@ function GuardianEdit({
   }, [handleCommonVerify, handleSocialVerify, preGuardian?.guardianType]);
 
   const onConfirm = useCallback(async () => {
-    const valid = await checkValid();
-    if (valid) {
+    let _valid = true;
+    try {
+      setEditBtnLoading(true);
+      _valid = await checkValid();
+      setEditBtnLoading(false);
+    } catch (error) {
+      _valid = false;
+      setEditBtnLoading(false);
+    }
+    if (_valid) {
       setStep(GuardianEditStatus.EditGuardian);
       setApprovalVisible(true);
     }
@@ -486,7 +499,12 @@ function GuardianEdit({
           <ThrottleButton className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
             {t('Remove')}
           </ThrottleButton>
-          <ThrottleButton type="primary" className="guardian-btn " onClick={onConfirm} disabled={editBtnDisable}>
+          <ThrottleButton
+            type="primary"
+            className="guardian-btn "
+            onClick={onConfirm}
+            disabled={editBtnDisable}
+            loading={editBtnLoading}>
             {t('Send Request')}
           </ThrottleButton>
         </div>
@@ -516,7 +534,7 @@ function GuardianEdit({
         <GuardianApproval
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
-          guardianList={guardianList?.filter((item) => item.key !== preGuardian?.key)}
+          guardianList={approvalGuardianList}
           networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}
