@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { AddManagerType, CreatePendingInfo } from '../components/types';
-import { did, errorTip, extraDataEncode, randomId, setLoading } from '../utils';
+import { did, errorTip, extraDataEncode, handlerErrorTipLevel, randomId, setLoading } from '../utils';
 import { LoginResult, RegisterResult } from '@portkey/did';
 import { OnErrorFunc } from '../types';
 import { ChainId } from '@portkey/types';
@@ -174,7 +174,9 @@ export default function useLoginWallet({
 
         const loadingText =
           type === 'recovery' ? 'Initiating social recovery...' : 'Creating a wallet address on the blockchain';
-
+        if (!did.didWallet.managementAccount) {
+          handlerErrorTipLevel(`Management information not detected, please "did.create" before`, 'throwError');
+        }
         setLoading(true, loadingText);
 
         let walletResult: RegisterResult | LoginResult;
