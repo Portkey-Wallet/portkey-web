@@ -1,5 +1,5 @@
 import { IConfig } from '@portkey/types';
-import { ISocialLoginConfig, TotalAccountType } from '../../types';
+import { ISocialLoginConfig, TSupportAccountType } from '../../types';
 import { BaseReCaptcha } from '../types';
 
 export interface ConfigProviderProps {
@@ -7,7 +7,7 @@ export interface ConfigProviderProps {
 }
 
 export interface ILoginConfig {
-  loginMethodsOrder?: TotalAccountType[];
+  loginMethodsOrder?: TSupportAccountType[];
   recommendIndexes?: number[];
 }
 

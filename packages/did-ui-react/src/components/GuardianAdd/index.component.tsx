@@ -24,6 +24,7 @@ import {
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
+  TSupportAccountType,
   UserGuardianStatus,
   VerifyStatus,
 } from '../../types';
@@ -127,7 +128,9 @@ function GuardianAdd({
 
   const guardianTypeSelectItems = useMemo(() => {
     if (Array.isArray(loginMethodsOrder)) {
-      const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) => AccountLoginList.includes(item));
+      const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) =>
+        AccountLoginList.includes(item as TSupportAccountType),
+      );
       return filterLoginMethodsOrder?.map((item: AccountType) => {
         return {
           value: AddGuardiansType[item]?.value,
