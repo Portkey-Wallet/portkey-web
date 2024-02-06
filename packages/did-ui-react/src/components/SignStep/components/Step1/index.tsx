@@ -1,14 +1,12 @@
 import CryptoDesign, { CryptoDesignProps } from '../../../CryptoDesign/index.component';
 import { useCallback, useState, memo, useRef, useEffect } from 'react';
-import type { DIDWalletInfo, IGuardianIdentifierInfo, IPhoneCountry, TDesign, TSize } from '../../../types';
+import type { DIDWalletInfo, IGuardianIdentifierInfo, TDesign, TSize } from '../../../types';
 import { Design } from '../../../types';
 import { SignUpValue, SignInLifeCycleType, TSignUpContinueHandler } from '../../../SignStep/types';
 import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
 import SocialDesign from '../../../SocialDesign/index.component';
 import Web2Design from '../../../Web2Design/index.component';
-import { did } from '@portkey/did';
-import { errorTip } from '../../../../utils';
 import { ISocialLogin } from '../../../../types';
 
 export type OnSignInFinishedFun = (values: {
@@ -34,7 +32,7 @@ function Step1({
   onSignInFinished,
   onSignUpHandler,
   type,
-  phoneCountry: defaultPhoneCountry,
+  phoneCountry,
   loginMethodsOrder,
   isErrorTip,
   onError,
@@ -96,29 +94,29 @@ function Step1({
     props.onSignTypeChange?.(createType);
   }, [createType]);
 
-  const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
+  // const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(defaultPhoneCountry);
 
-  const getPhoneCountry = useCallback(async () => {
-    try {
-      const countryData = await did.services.getPhoneCountryCodeWithLocal();
-      setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
-    } catch (error) {
-      errorTip(
-        {
-          errorFields: 'getPhoneCountry',
-          error,
-        },
-        isErrorTip,
-        onError,
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // const getPhoneCountry = useCallback(async () => {
+  //   try {
+  //     const countryData = await did.services.getPhoneCountryCodeWithLocal();
+  //     setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
+  //   } catch (error) {
+  //     errorTip(
+  //       {
+  //         errorFields: 'getPhoneCountry',
+  //         error,
+  //       },
+  //       isErrorTip,
+  //       onError,
+  //     );
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, []);
 
-  useEffect(() => {
-    // Get phoneCountry by service, update phoneCountry
-    getPhoneCountry();
-  }, [getPhoneCountry]);
+  // useEffect(() => {
+  //   // Get phoneCountry by service, update phoneCountry
+  //   getPhoneCountry();
+  // }, [getPhoneCountry]);
 
   return (
     <>

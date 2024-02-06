@@ -20,12 +20,12 @@ import type {
   TVerifierItem,
 } from '../types';
 import type { ChainId } from '@portkey/types';
-import { OperationTypeEnum, GuardiansApproved, AccountType } from '@portkey/services';
+import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { LifeCycleType, SignInLifeCycleType, SIGN_IN_STEP, SignInProps, TVerifyCodeInfo } from '../SignStep/types';
 import clsx from 'clsx';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
-import { UserGuardianStatus } from '../../types';
+import { TSupportAccountType, UserGuardianStatus } from '../../types';
 import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
@@ -59,14 +59,12 @@ const SignIn = forwardRef(
       // If you set isShowScan to true, make sure you configure `network`
       isShowScan = true,
       defaultLifeCycle: defaultLifeCycleInfo,
-      phoneCountry,
       extraElement,
       extraElementList,
       termsOfService,
       privacyPolicy,
       design = 'CryptoDesign',
       validateEmail,
-      validatePhone,
       uiType = 'Modal',
       className,
       getContainer,
@@ -556,7 +554,7 @@ const SignIn = forwardRef(
     const loginConfig = ConfigProvider.getConfig('loginConfig') as ILoginConfig;
 
     const loginMethodsOrder = useMemo(
-      () => (loginConfig?.loginMethodsOrder as AccountType[]) || TotalAccountTypeList,
+      () => (loginConfig?.loginMethodsOrder as TSupportAccountType[]) || TotalAccountTypeList,
       [loginConfig?.loginMethodsOrder],
     );
     const recommendIndexes = useMemo(
@@ -580,10 +578,8 @@ const SignIn = forwardRef(
             defaultChainId={defaultChainId}
             isErrorTip={isErrorTip}
             onError={onErrorRef?.current}
-            phoneCountry={phoneCountry}
             extraElementList={extra}
             validateEmail={validateEmail}
-            validatePhone={validatePhone}
             onSignUpHandler={onSignUpHandlerRef.current}
             onSignInFinished={onSignInFinished}
             onStepChange={onSignInStepChange}
@@ -636,10 +632,8 @@ const SignIn = forwardRef(
       design,
       defaultChainId,
       isErrorTip,
-      phoneCountry,
       extra,
       validateEmail,
-      validatePhone,
       onSignInFinished,
       onSignInStepChange,
       onOriginChainIdChange,
