@@ -140,8 +140,8 @@ describe('communityRecovery describe', () => {
 
   test('test getAppleUserExtraInfo', async () => {
     const result = await communityRecovery.getAppleUserExtraInfo({ userId: 'string' });
-
-    expect(result).toReturn();
+    expect(result).toHaveProperty('userId');
+    expect(result.userId).toEqual('userId_mock');
   });
 
   test('test verifyTelegramToken', async () => {
