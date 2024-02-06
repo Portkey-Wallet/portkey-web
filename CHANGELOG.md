@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.25](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.24...v2.0.0-alpha.25) (2024-02-06)
+
+### Performance Improvements
+
+- ⚡️ rm defined but never used ([b94d567](https://github.com/Portkey-Wallet/portkey-web/commit/b94d56741ce886c712ad292a379fc3290cb79bfe))
+
 ## [2.0.0-alpha.24](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.23...v2.0.0-alpha.24) (2024-02-06)
 
 ### Features
