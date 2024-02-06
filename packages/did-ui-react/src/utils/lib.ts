@@ -53,3 +53,13 @@ export function getExploreLink(
     }
   }
 }
+
+export function isEmptyObject(obj: object) {
+  if (!obj) return true;
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}
+
+export function isEmpty(o: any) {
+  if (!o) return true;
+  return isEmptyObject(o);
+}

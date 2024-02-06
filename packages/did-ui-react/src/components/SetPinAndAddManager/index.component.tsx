@@ -10,6 +10,7 @@ import useLoginWallet from '../../hooks/useLoginWallet';
 import SetPinMobileBase from '../SetPinMobileBase';
 import { devices } from '@portkey/utils';
 import BackHeader from '../BackHeader';
+import { checkManagerCreate } from '../checkManagerCreate';
 
 export interface SetPinAndAddManagerProps {
   type: AddManagerType;
@@ -27,7 +28,7 @@ export interface SetPinAndAddManagerProps {
   onCreatePending?: (pendingInfo: CreatePendingInfo) => void;
 }
 
-export default function SetPinAndAddManager({
+function SetPinAndAddManager({
   type,
   chainId = 'AELF',
   keyboard: defaultKeyboard,
@@ -121,3 +122,5 @@ export default function SetPinAndAddManager({
     </>
   );
 }
+
+export default checkManagerCreate(SetPinAndAddManager);

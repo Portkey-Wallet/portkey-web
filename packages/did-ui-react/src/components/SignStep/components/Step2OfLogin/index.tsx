@@ -1,15 +1,16 @@
 import type { ChainId, ChainType } from '@portkey/types';
 import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
-import { memo, useState, useCallback } from 'react';
+import { memo, useState, useCallback, useMemo } from 'react';
 import { errorTip, handleErrorMessage, setLoading } from '../../../../utils';
 import BackHeader from '../../../BackHeader';
 import GuardianApproval from '../../../GuardianApproval/index.component';
 import { BaseGuardianItem, NetworkType, OnErrorFunc, UserGuardianStatus, VerifyStatus } from '../../../../types';
 import { IGuardianIdentifierInfo } from '../../../types';
-import './index.less';
 import { useEffectOnce } from 'react-use';
 import { usePortkey } from '../../../context';
 import { getGuardianList } from '../../utils/getGuardians';
+import { getOperationDetails } from '../../../utils/operation.util';
+import './index.less';
 
 interface Step2OfLoginProps {
   chainId?: ChainId;
@@ -103,10 +104,13 @@ function Step2OfLogin({
     _getGuardianList();
   });
 
+  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.communityRecovery), []);
+
   return (
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
         operationType={OperationTypeEnum.communityRecovery}
+        operationDetails={operationDetails}
         originChainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}

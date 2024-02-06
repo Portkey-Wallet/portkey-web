@@ -69,7 +69,10 @@ export default function useLoginWallet({
     async ({ pin, type, chainId, accountType, guardianIdentifier, guardianApprovedList }: CreateWalletParams) => {
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
       if (!guardianApprovedList?.length) throw 'Missing guardianApproved';
-      const wallet = did.didWallet.create();
+      const wallet = did.didWallet;
+
+      if (!wallet || !wallet.managementAccount?.address)
+        throw 'ManagementAccount information is not detected, please initialize management information `did.create`';
       const managerAddress = wallet.managementAccount!.address;
       const requestId = randomId();
 
@@ -117,7 +120,9 @@ export default function useLoginWallet({
     async ({ pin, chainId, accountType, guardianIdentifier, guardianApprovedList, type }: CreateWalletParams) => {
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
 
-      const wallet = did.didWallet.create();
+      const wallet = did.didWallet;
+      if (!wallet || !wallet.managementAccount?.address)
+        throw 'ManagementAccount information is not detected, please initialize management information `did.create`';
       const managerAddress = wallet.managementAccount!.address;
       const requestId = randomId();
 
@@ -166,7 +171,7 @@ export default function useLoginWallet({
     async ({ pin, type, chainId, accountType, guardianIdentifier, guardianApprovedList }: CreateWalletParams) => {
       try {
         if (!guardianIdentifier) throw 'Missing account!!!';
-        did.reset();
+
         const loadingText =
           type === 'recovery' ? 'Initiating social recovery...' : 'Creating a wallet address on the blockchain';
 
