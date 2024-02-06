@@ -52,6 +52,13 @@ describe('verification describe', () => {
     expect(result).toHaveProperty('userId');
   });
 
+  test('test getAppleUserExtraInfo', async () => {
+    const result = await verification.getAppleUserExtraInfo({
+      userId: 'string',
+    });
+    expect(result).toHaveProperty('userId');
+  });
+
   test('test verifyGoogleToken', async () => {
     const result = await verification.verifyGoogleToken({
       accessToken: 'accessToken_mock',
@@ -67,6 +74,18 @@ describe('verification describe', () => {
   test('test verifyAppleToken', async () => {
     const result = await verification.verifyAppleToken({
       identityToken: 'identityToken_mock',
+      verifierId: 'verifierId_mock',
+      chainId: 'AELF',
+      operationType: 0,
+      operationDetails: '{}',
+    });
+    expect(result).toHaveProperty('verificationDoc');
+    expect(result).toHaveProperty('signature');
+  });
+
+  test('test verifyTelegramToken', async () => {
+    const result = await verification.verifyTelegramToken({
+      accessToken: 'accessToken_mock',
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
