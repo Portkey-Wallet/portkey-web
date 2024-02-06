@@ -10,7 +10,6 @@ import useLoginWallet from '../../hooks/useLoginWallet';
 import SetPinMobileBase from '../SetPinMobileBase';
 import { devices } from '@portkey/utils';
 import BackHeader from '../BackHeader';
-import { checkManagerCreate } from '../checkManagerCreate';
 
 export interface SetPinAndAddManagerProps {
   type: AddManagerType;
@@ -123,4 +122,4 @@ function SetPinAndAddManager({
   );
 }
 
-export default checkManagerCreate(SetPinAndAddManager);
+export default SetPinAndAddManager;
