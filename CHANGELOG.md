@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.24](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.23...v2.0.0-alpha.24) (2024-02-06)
+
+### Features
+
+- 🎸 export signin handler ([2ca3c25](https://github.com/Portkey-Wallet/portkey-web/commit/2ca3c250be4a104c4c8c9ae0990b46b659fafcd9))
+- 🎸 rm phone guardian ([e4130e8](https://github.com/Portkey-Wallet/portkey-web/commit/e4130e8caf2f2c61838f60222fcd0c3c260f3b0d))
+
 ## [2.0.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.22...v2.0.0-alpha.23) (2024-02-05)
 
 ### Bug Fixes
