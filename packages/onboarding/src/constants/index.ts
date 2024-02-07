@@ -4,19 +4,19 @@ export const APP_DOWNLOAD_URL = {
 };
 
 export const PORTKEY_V2_DOWNLOAD_URL = {
-  APP_STORE: 'https://apps.apple.com/us/app/wallet-lite/id6473827308',
+  APP_STORE: 'https://apps.apple.com/us/app/id6473827308',
   CHROME_STORE: 'https://play.google.com/store/apps/details?id=com.portkey.finance',
 };
 
 export const EXTENSION_DOWNLOAD_URL = {
-  CHROME: 'https://chrome.google.com/webstore/detail/portkey-did-crypto-nft/hpjiiechbbhefmpggegmahejiiphbmij',
-  EDGE: 'https://chrome.google.com/webstore/detail/portkey-did-crypto-nft/hpjiiechbbhefmpggegmahejiiphbmij',
+  CHROME: 'https://chromewebstore.google.com/detail/hpjiiechbbhefmpggegmahejiiphbmij',
+  EDGE: 'https://chromewebstore.google.com/detail/hpjiiechbbhefmpggegmahejiiphbmij',
   DEFAULT: 'https://portkey.finance/download',
 };
 
 export const EXTENSION_V2_DOWNLOAD_URL = {
-  CHROME: 'https://chrome.google.com/webstore/detail/portkey-did-crypto-nft/hpjiiechbbhefmpggegmahejiiphbmij',
-  EDGE: 'https://chrome.google.com/webstore/detail/portkey-did-crypto-nft/hpjiiechbbhefmpggegmahejiiphbmij',
+  CHROME: 'https://chromewebstore.google.com/detail/iglbgmakmggfkoidiagnhknlndljlolb',
+  EDGE: 'https://chromewebstore.google.com/detail/iglbgmakmggfkoidiagnhknlndljlolb',
   DEFAULT: 'https://portkey.finance/download',
 };
 
