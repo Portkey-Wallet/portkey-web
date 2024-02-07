@@ -198,7 +198,10 @@ const ramp = new Ramp();
 export default ramp;
 
 export * from './api';
+export * from './config';
 export * from './constants';
-export * from './service';
 export * from './provider';
+export * from './service';
+export * from './signalr';
 export * from './types';
+export * from './utils';

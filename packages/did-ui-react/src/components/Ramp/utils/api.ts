@@ -12,8 +12,8 @@ import ramp, {
   ISellProviderPrice,
   IBuyProviderPrice,
   IRampProviderType,
+  validateError,
 } from '@portkey/ramp';
-import { validateError } from '@portkey/ramp/src/utils';
 import BigNumber from 'bignumber.js';
 import { IRampLimit } from '../../../types';
 
