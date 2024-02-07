@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.0-alpha.27](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.26...v2.0.0-alpha.27) (2024-02-07)
+
+### Features
+
+- 🎸 change download app url ([47ea2d9](https://github.com/Portkey-Wallet/portkey-web/commit/47ea2d9da731d55e191f5d967c0a6622a5d45343))
+
 ## [2.0.0-alpha.26](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.25...v2.0.0-alpha.26) (2024-02-07)
 
 **Note:** Version bump only for package root
