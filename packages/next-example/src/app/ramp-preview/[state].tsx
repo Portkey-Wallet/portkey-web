@@ -1,5 +1,5 @@
 'use client';
-import { IRampPreviewInitState, PortkeyAssetProvider, RampPreview } from '@portkey/did-ui-react';
+import { TRampPreviewInitState, PortkeyAssetProvider, RampPreview } from '@portkey/did-ui-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { ChainId } from '@portkey/types';
@@ -8,7 +8,7 @@ export default function RampPreviewPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
-  const [initState, setInitState] = useState<IRampPreviewInitState>();
+  const [initState, setInitState] = useState<TRampPreviewInitState>();
   const [chainId, setChainId] = useState<ChainId>();
 
   useEffect(() => {

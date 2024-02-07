@@ -10,8 +10,8 @@ import { ChainId } from '@portkey/types';
 import { useEffectOnce } from 'react-use';
 import { IRampCryptoDefault, IRampCryptoItem, IRampFiatDefault, IRampFiatItem, RampType } from '@portkey/ramp';
 import { ZERO } from '../../../../constants/misc';
-import { DEFAULT_CHAIN_ID, SERVICE_UNAVAILABLE_TEXT, initCrypto, initFiat } from '../../../../constants/ramp';
-import { TRampLocationState, TRampPreviewLocationState } from '../../../../types';
+import { SERVICE_UNAVAILABLE_TEXT, initCrypto, initFiat } from '../../../../constants/ramp';
+import { TRampInitState, TRampPreviewInitState } from '../../../../types';
 import { divDecimals } from '../../../../utils/converter';
 import { singleMessage } from '../../../CustomAnt';
 import { getSellFiat } from '../../utils/api';
@@ -29,13 +29,14 @@ import { ITransferLimitItemWithRoute } from '../../../TransferSettingsEdit/index
 import { getChain } from '../../../../hooks/useChainInfo';
 import transferLimitCheck from '../../../ModalMethod/TransferLimitCheck';
 import { getSellData } from '../../utils/sell';
+import { MAIN_CHAIN_ID } from '../../../../constants/network';
 
-interface ISellFormProps extends TRampLocationState {
+interface ISellFormProps extends TRampInitState {
   isMainnet: boolean;
   isSellSectionShow: boolean;
   isErrorTip?: boolean;
   onBack: () => void;
-  onShowPreview: ({ initState, chainId }: { initState: TRampPreviewLocationState; chainId: ChainId }) => void;
+  onShowPreview: ({ initState, chainId }: { initState: TRampPreviewInitState; chainId: ChainId }) => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
   onModifyGuardians?: () => void;
 }
@@ -56,7 +57,7 @@ export default function SellFrom({
   onModifyGuardians,
 }: ISellFormProps) {
   const { t } = useTranslation();
-  const chainId = useMemo(() => tokenInfo?.chainId || DEFAULT_CHAIN_ID, [tokenInfo?.chainId]);
+  const chainId = useMemo(() => tokenInfo?.chainId || MAIN_CHAIN_ID, [tokenInfo?.chainId]);
   const [{ sandboxId, networkType, chainType }] = usePortkey();
   const [{ managementAccount, caInfo, initialized, caHash, originChainId }] = usePortkeyAsset();
 

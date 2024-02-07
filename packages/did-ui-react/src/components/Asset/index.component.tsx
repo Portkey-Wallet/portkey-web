@@ -12,7 +12,7 @@ import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
-import { IRampInitState, IRampPreviewInitState } from '../../types';
+import { TRampInitState, TRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
@@ -55,7 +55,7 @@ export enum AssetStep {
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
   onOverviewBack?: () => void;
-  rampState?: IRampInitState;
+  rampState?: TRampInitState;
   className?: string;
   isShowRampBuy?: boolean;
   isShowRampSell?: boolean;
@@ -167,8 +167,8 @@ function AssetMain({
 
   const [sendToken, setSendToken] = useState<IAssetItemType>();
   const [sendExtraConfig, setSendExtraConfig] = useState<SendExtraConfig>();
-  const [rampExtraConfig, setRampExtraConfig] = useState<IRampInitState | undefined>(rampState);
-  const [rampPreview, setRampPreview] = useState<IRampPreviewInitState>();
+  const [rampExtraConfig, setRampExtraConfig] = useState<TRampInitState | undefined>(rampState);
+  const [rampPreview, setRampPreview] = useState<TRampPreviewInitState>();
 
   const [transactionDetail, setTransactionDetail] = useState<ActivityItemType & { chainId?: ChainId }>();
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();

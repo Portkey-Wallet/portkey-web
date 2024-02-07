@@ -1,11 +1,11 @@
 import { ChainId } from '@portkey/types';
-import { IRampPreviewInitState } from '../../types';
+import { TRampPreviewInitState } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampPreviewMain from './index.component';
 
 export interface IRampPreviewProps {
   className?: string;
-  initState: IRampPreviewInitState;
+  initState: TRampPreviewInitState;
   portkeyServiceUrl: string;
   chainId?: ChainId;
   isMainnet: boolean;

@@ -1,6 +1,5 @@
 import { useCallback, useRef } from 'react';
 import { did, handleErrorMessage, setLoading } from '../../../utils';
-import { DEFAULT_CHAIN_ID } from '../../../constants/ramp';
 import SparkMD5 from 'spark-md5';
 import AElf from 'aelf-sdk';
 import { IUseHandleAchSellParams } from '../../../types';
@@ -14,6 +13,7 @@ import { usePortkey } from '../../context';
 import singleMessage from '../../CustomAnt/message';
 import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../../constants/storage';
 import ramp, { IOrderInfo } from '@portkey/ramp';
+import { MAIN_CHAIN_ID } from '../../../constants/network';
 
 interface TransferParams {
   symbol: string;
@@ -22,7 +22,7 @@ interface TransferParams {
 }
 
 const useHandleAchSell = ({ tokenInfo, portkeyWebSocketUrl }: IUseHandleAchSellParams) => {
-  const chainId = useRef(tokenInfo?.chainId || DEFAULT_CHAIN_ID);
+  const chainId = useRef(tokenInfo?.chainId || MAIN_CHAIN_ID);
   const [{ chainType }] = usePortkey();
   const [{ managementAccount, caInfo, initialized }] = usePortkeyAsset();
   const managementAccountRef = useRef<IBaseWalletAccount | undefined>(managementAccount);

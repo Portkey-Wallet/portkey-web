@@ -5,7 +5,6 @@ import clsx from 'clsx';
 import ramp, { IRampProviderType, RampType } from '@portkey/ramp';
 import './index.less';
 import {
-  DEFAULT_CHAIN_ID,
   DISCLAIMER_TEXT,
   InitProviderSelected,
   MAX_UPDATE_TIME,
@@ -26,11 +25,12 @@ import { IGetBuyDetail, IGetSellDetail, getBuyDetail, getSellDetail } from '../R
 import { generateRateText, generateReceiveText, mixRampShow } from '../Ramp/utils';
 import { AccountTypeKeyEnum } from '@portkey/services';
 import { sleep } from '@portkey/utils';
+import { MAIN_CHAIN_ID } from '../../constants/network';
 
 export default function RampPreviewMain({
   className,
   initState,
-  chainId = DEFAULT_CHAIN_ID,
+  chainId = MAIN_CHAIN_ID,
   isMainnet,
   isBuySectionShow = true,
   isSellSectionShow = true,

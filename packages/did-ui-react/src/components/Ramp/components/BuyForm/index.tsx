@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useEffectOnce } from 'react-use';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { singleMessage } from '../../../CustomAnt';
-import { DEFAULT_CHAIN_ID, SERVICE_UNAVAILABLE_TEXT, initCrypto, initFiat } from '../../../../constants/ramp';
+import { SERVICE_UNAVAILABLE_TEXT, initCrypto, initFiat } from '../../../../constants/ramp';
 import { IRampCryptoDefault, IRampCryptoItem, IRampFiatDefault, IRampFiatItem, RampType } from '@portkey/ramp';
 import { Button } from 'antd';
 import { handleKeyDown } from '../../../../utils/keyDown';
@@ -12,18 +12,19 @@ import { generateRateText, mixRampBuyShow } from '../../utils';
 import { useUpdateReceiveAndInterval } from '../../hooks/index';
 import { setLoading } from '../../../../utils';
 import ExchangeRate from '../ExchangeRate';
-import { TRampLocationState, TRampPreviewLocationState } from '../../../../types';
+import { TRampInitState, TRampPreviewInitState } from '../../../../types';
 import { ChainId } from '@portkey/types';
 import { getBuyData, getSpecifiedBuyFiat } from '../../utils/buy';
 import { getBuyCrypto } from '../../utils/api';
 import { usePortkey } from '../../../context';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
+import { MAIN_CHAIN_ID } from '../../../../constants/network';
 
-interface IBuyFormProps extends TRampLocationState {
+interface IBuyFormProps extends TRampInitState {
   isMainnet: boolean;
   isBuySectionShow: boolean;
   onBack: () => void;
-  onShowPreview: ({ initState, chainId }: { initState: TRampPreviewLocationState; chainId: ChainId }) => void;
+  onShowPreview: ({ initState, chainId }: { initState: TRampPreviewInitState; chainId: ChainId }) => void;
 }
 
 export default function BuyFrom({
@@ -39,7 +40,7 @@ export default function BuyFrom({
   onShowPreview,
 }: IBuyFormProps) {
   const { t } = useTranslation();
-  const chainId = useMemo(() => tokenInfo?.chainId || DEFAULT_CHAIN_ID, [tokenInfo?.chainId]);
+  const chainId = useMemo(() => tokenInfo?.chainId || MAIN_CHAIN_ID, [tokenInfo?.chainId]);
   const [{ networkType }] = usePortkey();
   const [{ initialized }] = usePortkeyAsset();
 

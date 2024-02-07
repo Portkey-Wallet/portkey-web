@@ -1,5 +1,5 @@
 import { ChainId } from '@portkey/types';
-import { IRampInitState, IRampPreviewInitState, IUseHandleAchSellParams } from '../../types';
+import { TRampInitState, TRampPreviewInitState, IUseHandleAchSellParams } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampMain from './index.component';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
@@ -7,12 +7,12 @@ import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.compo
 export interface IRampProps extends IUseHandleAchSellParams {
   isMainnet: boolean;
   className?: string;
-  initState?: IRampInitState;
+  initState?: TRampInitState;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
   isErrorTip?: boolean;
   onBack: () => void;
-  onShowPreview: ({ initState, chainId }: { initState: IRampPreviewInitState; chainId: ChainId }) => void;
+  onShowPreview: ({ initState, chainId }: { initState: TRampPreviewInitState; chainId: ChainId }) => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
   onModifyGuardians?: () => void;
 }
