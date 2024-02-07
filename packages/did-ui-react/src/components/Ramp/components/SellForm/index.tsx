@@ -8,7 +8,7 @@ import { useCallback, useMemo, useRef, useState } from 'react';
 import { generateRateText, mixRampSellShow } from '../../utils';
 import { ChainId } from '@portkey/types';
 import { useEffectOnce } from 'react-use';
-import { IRampCryptoDefault, IRampCryptoItem, IRampFiatDefault, IRampFiatItem, RampType } from '@portkey/ramp';
+import { IRampCryptoDefault, IRampCryptoItem, IRampFiatItem, RampType } from '@portkey/ramp';
 import { ZERO } from '../../../../constants/misc';
 import { SERVICE_UNAVAILABLE_TEXT, initCrypto, initFiat } from '../../../../constants/ramp';
 import { TRampInitState, TRampPreviewInitState } from '../../../../types';
@@ -63,34 +63,18 @@ export default function SellFrom({
 
   // currency data
   const [defaultCrypto, setDefaultCrypto] = useState<IRampCryptoDefault>(initCrypto);
-  const [defaultFiat, setDefaultFiat] = useState<IRampFiatDefault>(initFiat);
   const [cryptoList, setCryptoList] = useState<IRampCryptoItem[]>([]);
   const [defaultFiatList, setDefaultFiatList] = useState<IRampFiatItem[]>([]);
-  const filterCryptoSelected = useMemo(
-    () =>
-      cryptoList.filter(
-        (item) =>
-          item.symbol === (crypto || defaultCrypto.symbol) && item.network === (network || defaultCrypto.network),
-      ),
-    [cryptoList, defaultCrypto, crypto, network],
-  );
-  const filterFiatSelected = useMemo(
-    () =>
-      defaultFiatList.filter(
-        (item) => item.symbol === (fiat || defaultFiat.symbol) && item.country === (country || defaultFiat.country),
-      ),
-    [defaultFiat, defaultFiatList, country, fiat],
-  );
 
   // pay
   const [cryptoAmount, setCryptoAmount] = useState<string>(amount || defaultCrypto.amount);
   const cryptoAmountRef = useRef<string>(amount || defaultCrypto.amount);
-  const [cryptoSelected, setCryptoSelected] = useState<IRampCryptoItem>({ ...filterCryptoSelected[0] });
-  const cryptoSelectedRef = useRef<IRampCryptoItem>({ ...filterCryptoSelected[0] });
+  const [cryptoSelected, setCryptoSelected] = useState<IRampCryptoItem>(initCrypto as IRampCryptoItem);
+  const cryptoSelectedRef = useRef<IRampCryptoItem>(initCrypto as IRampCryptoItem);
 
   // receive
-  const [fiatSelected, setFiatSelected] = useState<IRampFiatItem>({ ...filterFiatSelected[0] });
-  const fiatSelectedRef = useRef<IRampFiatItem>({ ...filterFiatSelected[0] });
+  const [fiatSelected, setFiatSelected] = useState<IRampFiatItem>(initFiat);
+  const fiatSelectedRef = useRef<IRampFiatItem>(initFiat);
 
   // 15s interval
   const {
@@ -349,14 +333,26 @@ export default function SellFrom({
   const fetchSellData = useCallback(async () => {
     const { sellCryptoList, sellDefaultCrypto, sellDefaultFiatList, sellDefaultFiat } = await getSellData();
 
+    const filterCryptoSelected = sellCryptoList.filter(
+      (item) =>
+        item.symbol === (crypto || sellDefaultCrypto.symbol) && item.network === (network || sellDefaultCrypto.network),
+    );
     setDefaultCrypto(sellDefaultCrypto);
-    setDefaultFiat(sellDefaultFiat);
     setCryptoList(sellCryptoList);
+    setCryptoSelected({ ...filterCryptoSelected[0] });
+    cryptoSelectedRef.current = { ...filterCryptoSelected[0] };
+
+    const filterFiatSelected = sellDefaultFiatList.filter(
+      (item) =>
+        item.symbol === (fiat || sellDefaultFiat.symbol) && item.country === (country || sellDefaultFiat.country),
+    );
     setDefaultFiatList(sellDefaultFiatList);
+    setFiatSelected({ ...filterFiatSelected[0] });
+    fiatSelectedRef.current = { ...filterFiatSelected[0] };
 
     // compute receive
     updateSellReceive();
-  }, [updateSellReceive]);
+  }, [country, crypto, fiat, network, updateSellReceive]);
 
   useEffectOnce(() => {
     // TODO ramp onBack?.()

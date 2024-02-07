@@ -1,5 +1,5 @@
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import AssetOverviewMain, { AssetOverviewProps } from '../AssetOverview/index.components';
 import ReceiveCard from '../ReceiveCard/index.components';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
@@ -34,6 +34,8 @@ import { useDebounce } from '../../hooks/debounce';
 import singleMessage from '../CustomAnt/message';
 import './index.less';
 import ramp from '@portkey/ramp';
+import { mixRampShow } from '../Ramp/utils';
+import { SHOW_RAMP_CHAIN_ID_LIST, SHOW_RAMP_SYMBOL_LIST } from '../../constants/ramp';
 
 export enum AssetStep {
   overview = 'overview',
@@ -94,25 +96,26 @@ function AssetMain({
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
   const preStepRef = useRef<AssetStep>(AssetStep.overview);
 
-  const test = useCallback(async () => {
-    console.log('🌈 🌈 🌈 🌈 🌈 🌈 ramp.headers', ramp.config.requestConfig.headers);
-    const { data } = await ramp.service.getBuyFiatData();
-    console.log('🌈 🌈 🌈 🌈 🌈 🌈 data ', data);
-  }, []);
+  const [isMixShowRamp, setIsMixShowRamp] = useState<boolean>(isShowRamp);
+  const [isMixShowBuy, setIsMixShowBuy] = useState<boolean>(isShowRampBuy);
+  const [isMixShowSell, setIsMixShowSell] = useState<boolean>(isShowRampSell);
+  const getRampEntry = useCallback(async () => {
+    try {
+      const { isRampShow, isBuyShow, isSellShow } = await mixRampShow({
+        isMainnet: networkType === MAINNET,
+        isBuySectionShow: isShowRampBuy,
+        isSellSectionShow: isShowRampSell,
+        isFetch: true,
+      });
+      setIsMixShowRamp(isRampShow);
+      setIsMixShowBuy(isBuyShow);
+      setIsMixShowSell(isSellShow);
 
-  useEffectOnce(() => {
-    ramp.init({
-      requestConfig: {
-        headers: {
-          Version: 'v1.4.15',
-          'Client-Type': 'ThirdParty',
-          Authorization:
-            'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkRCM0E2QTlFOUFGQjgwRkI3QzNCNTNBQTA4NjAzNzUxNTVFMTNBQTgiLCJ4NXQiOiIyenBxbnByN2dQdDhPMU9xQ0dBM1VWWGhPcWciLCJ0eXAiOiJhdCtqd3QifQ.eyJzdWIiOiIwNTM1NWY1Mi0yZDE3LTQxY2MtYWFmYS02MzM5M2QxNjcyYTIiLCJvaV9wcnN0IjoiQ0FTZXJ2ZXJfQXBwIiwiY2xpZW50X2lkIjoiQ0FTZXJ2ZXJfQXBwIiwib2lfdGtuX2lkIjoiYmYyOTJkZDItYzA3ZC1hZTdhLTI3ZTItM2ExMDZmZjQyN2Q0IiwiYXVkIjoiQ0FTZXJ2ZXIiLCJzY29wZSI6IkNBU2VydmVyIiwianRpIjoiMGI5ODk3YzMtMjI4ZC00ODEyLWE3ZmEtY2ZjMzRkYzljOTdhIiwiZXhwIjoxNzA2ODQ4MTU4LCJpc3MiOiJodHRwOi8vMTkyLjE2OC42Ni4xMTc6ODA4MC8iLCJpYXQiOjE3MDY2NzUzNTl9.X06OfVsrt3HbhRUKROatwBQbseS5ICxTT3w-lB5altoRikpjYbTBCIVxBUsjXHoY8cS04FHt9a1GywkceYbkdlO_xFvc4V1UVdxrm5pV2RISnITRP9v_vQeHG_PFA7tGX_i-j7wDjIYrcOMLF-nLjFZQYY14lyGkGdQIAikt4-DugFhTfBGyP0Yzu_WbB_g3p1ED57MkGlzCzqVKYU6Q9Co8HsR3wq7kKtIgG9LMuiDA7dKRtJwx4ZiJm_ROcAR80GtGrutUVdhNoXmOA0XYkR-CVV_vc--ic9j9ew6N7LKIgab_Tpw89-OQk5ExYxMdadGeY60Aewbw70aYpZpptw',
-        },
-      },
-    });
-    test();
-  });
+      console.log('🌈 🌈 🌈 🌈 🌈 🌈 isBuyShow ', isBuyShow, isSellShow);
+    } catch (error) {
+      throw handleErrorMessage(error);
+    }
+  }, [isShowRampBuy, isShowRampSell, networkType]);
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);
@@ -158,8 +161,9 @@ function AssetMain({
         .then(dispatch);
 
       getAllTokenList();
+      getRampEntry();
     }
-  }, [caAddressInfos, dispatch, getAllTokenList, initialized, maxNftNum]);
+  }, [caAddressInfos, dispatch, getAllTokenList, getRampEntry, initialized, maxNftNum]);
 
   useDebounce(getAssetInfo, 300);
 
@@ -174,7 +178,13 @@ function AssetMain({
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
-
+  const isShowTokenDetailRamp = useMemo(
+    () =>
+      SHOW_RAMP_SYMBOL_LIST.includes(tokenDetail?.symbol || '') &&
+      SHOW_RAMP_CHAIN_ID_LIST.includes(tokenDetail?.chainId || '') &&
+      isMixShowRamp,
+    [isMixShowRamp, tokenDetail?.chainId, tokenDetail?.symbol],
+  );
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
 
   const onAvatarClick = useCallback(async () => {
@@ -280,7 +290,7 @@ function AssetMain({
       {(!assetStep || assetStep === AssetStep.overview) && (
         <AssetOverviewMain
           allToken={allToken}
-          isShowRamp={isShowRamp}
+          isShowRamp={isMixShowRamp}
           faucet={faucet}
           backIcon={backIcon}
           onAvatarClick={onAvatarClick}
@@ -340,8 +350,8 @@ function AssetMain({
             setRampPreview(initState);
             setAssetStep(AssetStep.rampPreview);
           }}
-          isBuySectionShow={isShowRampBuy}
-          isSellSectionShow={isShowRampSell}
+          isBuySectionShow={isMixShowBuy}
+          isSellSectionShow={isMixShowSell}
           isMainnet={networkType === MAINNET}
           onModifyLimit={async (data) => {
             const res = await getLimitFromContract(data);
@@ -363,8 +373,8 @@ function AssetMain({
           onBack={() => {
             setAssetStep(AssetStep.ramp);
           }}
-          isBuySectionShow={true}
-          isSellSectionShow={true}
+          isBuySectionShow={isMixShowBuy}
+          isSellSectionShow={isMixShowSell}
         />
       )}
 
@@ -403,7 +413,7 @@ function AssetMain({
       {assetStep === AssetStep.tokenDetail && tokenDetail && (
         <TokenDetailMain
           faucet={faucet}
-          isShowRamp={isShowRamp}
+          isShowRamp={isShowTokenDetailRamp}
           tokenInfo={tokenDetail}
           onBack={() => {
             setAssetStep(AssetStep.overview);

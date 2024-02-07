@@ -50,26 +50,16 @@ export default function BuyFrom({
   const [fiatList, setFiatList] = useState<IRampFiatItem[]>([]);
   const [defaultCryptoList, setDefaultCryptoList] = useState<IRampCryptoItem[]>([]);
   const [supportCryptoList, setSupportCryptoList] = useState<IRampCryptoItem[]>(defaultCryptoList);
-  const filterFiatSelected = useMemo(() => {
-    return fiatList.filter(
-      (item) => item.symbol === (fiat || defaultFiat.symbol) && item.country === (country || defaultFiat.country),
-    );
-  }, [fiatList, fiat, defaultFiat.symbol, defaultFiat.country, country]);
-  const filterCryptoSelected = useMemo(() => {
-    return defaultCryptoList.filter(
-      (item) => item.symbol === (crypto || defaultCrypto.symbol) && item.network === (network || defaultCrypto.network),
-    );
-  }, [defaultCryptoList, crypto, defaultCrypto.symbol, defaultCrypto.network, network]);
 
   // pay
   const [fiatAmount, setFiatAmount] = useState<string>(amount || defaultFiat.amount);
   const fiatAmountRef = useRef<string>(amount || defaultFiat.amount);
-  const [fiatSelected, setFiatSelected] = useState<IRampFiatItem>({ ...filterFiatSelected[0] });
-  const fiatSelectedRef = useRef<IRampFiatItem>({ ...filterFiatSelected[0] });
+  const [fiatSelected, setFiatSelected] = useState<IRampFiatItem>(initFiat);
+  const fiatSelectedRef = useRef<IRampFiatItem>(initFiat);
 
   // receive
-  const [cryptoSelected, setCryptoSelected] = useState<IRampCryptoItem>({ ...filterCryptoSelected[0] });
-  const cryptoSelectedRef = useRef<IRampCryptoItem>({ ...filterCryptoSelected[0] });
+  const [cryptoSelected, setCryptoSelected] = useState<IRampCryptoItem>(initCrypto as IRampCryptoItem);
+  const cryptoSelectedRef = useRef<IRampCryptoItem>(initCrypto as IRampCryptoItem);
 
   // 15s interval
   const { receive, exchange, updateTime, errMsg, updateBuyReceive } = useUpdateReceiveAndInterval(RampType.BUY, {
@@ -144,16 +134,28 @@ export default function BuyFrom({
 
   const fetchDefaultBuyData = useCallback(async () => {
     const { buyFiatList, buyDefaultFiat, buyDefaultCryptoList, buyDefaultCrypto } = await getBuyData();
-
+    // fiat
+    const filterFiatSelected = buyFiatList.filter(
+      (item) => item.symbol === (fiat || buyDefaultFiat.symbol) && item.country === (country || buyDefaultFiat.country),
+    );
+    setFiatSelected({ ...filterFiatSelected[0] });
+    fiatSelectedRef.current = { ...filterFiatSelected[0] };
     setDefaultFiat(buyDefaultFiat);
     setFiatList(buyFiatList);
+    // crypto
+    const filterCryptoSelected = buyDefaultCryptoList.filter(
+      (item) =>
+        item.symbol === (crypto || buyDefaultCrypto.symbol) && item.network === (network || buyDefaultCrypto.network),
+    );
+    setCryptoSelected({ ...filterCryptoSelected[0] });
+    cryptoSelectedRef.current = { ...filterCryptoSelected[0] };
     setDefaultCrypto(buyDefaultCrypto);
     setDefaultCryptoList(buyDefaultCryptoList);
     setSupportCryptoList(buyDefaultCryptoList);
 
     // compute receive
     updateBuyReceive();
-  }, [updateBuyReceive]);
+  }, [country, crypto, fiat, network, updateBuyReceive]);
 
   const fetchSpecifiedFiat = useCallback(async () => {
     if (crypto && tokenInfo?.symbol) return;
@@ -212,6 +214,11 @@ export default function BuyFrom({
     }
   }, [chainId, isBuySectionShow, isMainnet, onBack, onShowPreview, tokenInfo]);
 
+  const renderExchangeRate = useMemo(
+    () => exchange !== '' && !errMsg && <ExchangeRate showRateText={showRateText} rateUpdateTime={updateTime} />,
+    [errMsg, exchange, showRateText, updateTime],
+  );
+
   return (
     <>
       <div className="portkey-ui-ramp-buy-form portkey-ui-flex-column-center">
@@ -241,7 +248,7 @@ export default function BuyFrom({
             onKeyDown={handleKeyDown}
           />
         </div>
-        {exchange !== '' && !errMsg && <ExchangeRate showRateText={showRateText} rateUpdateTime={updateTime} />}
+        {renderExchangeRate}
       </div>
       <div className="portkey-ui-ramp-footer">
         <Button type="primary" htmlType="submit" disabled={disabled} onClick={handleNext}>

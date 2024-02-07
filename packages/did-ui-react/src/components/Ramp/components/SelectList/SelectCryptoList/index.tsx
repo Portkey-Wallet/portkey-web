@@ -44,21 +44,14 @@ export default function SelectCryptoList({
         {showCryptoList.map((crypto) => (
           <div
             key={crypto.symbol}
-            className="item token-item flex"
+            className="item token-item portkey-ui-flex"
             onClick={() => {
               onChange?.(crypto);
               onClose?.();
             }}>
-            {!!crypto.icon && (
-              <div
-                className="token-item-image"
-                style={{
-                  backgroundImage: `url(${crypto.icon})`,
-                }}
-              />
-            )}
+            {!!crypto.icon && <img className="token-item-image" src={crypto.icon} alt="" />}
             {!crypto.icon && <CustomSvg type="AelfTestnet" />}
-            <div className="flex-column text">
+            <div className="portkey-ui-flex-column text">
               <div>{crypto.symbol}</div>
               <div className="chain">{transNetworkText(crypto.chainId, !isMainnet)}</div>
             </div>

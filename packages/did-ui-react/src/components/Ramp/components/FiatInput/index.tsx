@@ -1,5 +1,5 @@
 import { Input } from 'antd';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import SelectFiatListWrap from '../SelectList/SelectFiatListWrap';
 import { IKeyDownParams } from '../../../../types';
 import CustomSvg from '../../../CustomSvg';
@@ -30,6 +30,9 @@ export default function FiatInput({
 }: IFiatInputProps) {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
 
+  useEffect(() => {
+    console.log('🌈 🌈 🌈 🌈 🌈 🌈  curFiat', curFiat);
+  }, [curFiat]);
   return (
     <>
       <Input

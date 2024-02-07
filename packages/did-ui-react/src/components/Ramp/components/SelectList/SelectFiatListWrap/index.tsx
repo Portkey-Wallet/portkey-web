@@ -1,11 +1,11 @@
-import { DrawerProps, ModalProps } from 'antd';
+import { ModalProps } from 'antd';
 import './index.less';
 import SelectFiatList, { ISelectFiatListProps } from '../SelectFiatList';
 import CommonModal from '../../../../CommonModal';
 
-type TSelectFiatDrawerProps = ISelectFiatListProps & DrawerProps;
+// type TSelectFiatDrawerProps = ISelectFiatListProps & DrawerProps;
 type TSelectFiatModalProps = ISelectFiatListProps & ModalProps;
-type TSelectFiatListWrapProps = TSelectFiatDrawerProps | TSelectFiatModalProps;
+type TSelectFiatListWrapProps = TSelectFiatModalProps;
 
 export default function SelectFiatListWrap({
   supportList,
@@ -14,9 +14,10 @@ export default function SelectFiatListWrap({
   defaultCrypto,
   onClose,
   onChange,
+  ...props
 }: TSelectFiatListWrapProps) {
   return (
-    <CommonModal onClose={onClose} destroyOnClose className="ramp-fiat-modal">
+    <CommonModal {...props} onClose={onClose} destroyOnClose className="ramp-fiat-modal">
       <SelectFiatList
         supportList={supportList}
         title={title}

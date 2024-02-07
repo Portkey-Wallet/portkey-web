@@ -60,8 +60,10 @@ export const initCrypto: IRampCryptoDefault = {
   symbol: DEFAULT_SYMBOL,
   chainId: MAIN_CHAIN_ID,
   network: '',
-  icon: '',
+  icon: 'https://explorer-test.aelf.io/favicon.test.ico', // TODO ramp
   amount: initFiatAmount,
+  decimals: 8,
+  address: '',
 };
 
 export const initFiat: IRampFiatDefault = {

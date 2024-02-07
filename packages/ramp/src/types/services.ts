@@ -34,6 +34,8 @@ export type IRampCryptoDefault = {
   network: string;
   chainId: ChainId;
   icon: string;
+  decimals?: number;
+  address?: string;
 };
 
 export type IRampFiatItem = {

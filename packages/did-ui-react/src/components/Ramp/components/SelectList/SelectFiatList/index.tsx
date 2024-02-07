@@ -25,32 +25,26 @@ export default function SelectFiatList({
   const { t } = useTranslation();
   const [openDrop, setOpenDrop] = useState<boolean>(false);
   const [filterWord, setFilterWord] = useState<string>('');
-  const [filterFiatList, setFilterFiatList] = useState<IRampFiatItem[]>([]);
 
-  const getFilterFiatList = useCallback(async () => {
-    const { sellFiatList } = await getSellFiat({ crypto: defaultCrypto.symbol, network: defaultCrypto.network });
-    setFilterFiatList(sellFiatList);
-  }, [defaultCrypto.network, defaultCrypto.symbol]);
+  // const getFilterFiatList = useCallback(async () => {
+  //   const { sellFiatList } = await getSellFiat({ crypto: defaultCrypto.symbol, network: defaultCrypto.network });
+  // }, [defaultCrypto.network, defaultCrypto.symbol]);
 
-  useEffect(() => {
-    if (defaultCrypto.symbol && defaultCrypto.network) {
-      getFilterFiatList();
-    }
-  }, [defaultCrypto.network, defaultCrypto.symbol, getFilterFiatList]);
-
-  const fiatList: IRampFiatItem[] = useMemo(() => {
-    return defaultCrypto ? filterFiatList : supportList;
-  }, [defaultCrypto, filterFiatList, supportList]);
+  // useEffect(() => {
+  //   if (defaultCrypto.symbol && defaultCrypto.network) {
+  //     getFilterFiatList();
+  //   }
+  // }, [defaultCrypto.network, defaultCrypto.symbol, getFilterFiatList]);
 
   const showFiatList = useMemo(() => {
     return filterWord === ''
-      ? fiatList
-      : fiatList.filter(
+      ? supportList
+      : supportList.filter(
           (item) =>
             item.symbol.toLowerCase().includes(filterWord.toLowerCase()) ||
             item.countryName?.toLowerCase().includes(filterWord.toLowerCase()),
         );
-  }, [fiatList, filterWord]);
+  }, [filterWord, supportList]);
 
   useEffect(() => {
     setOpenDrop(!!filterWord && !showFiatList.length);
@@ -62,7 +56,7 @@ export default function SelectFiatList({
         {showFiatList.map((fiat) => (
           <div
             key={`${fiat.country}_${fiat.symbol}`}
-            className="item fiat-item flex"
+            className="item fiat-item portkey-ui-flex"
             onClick={() => {
               onChange?.(fiat);
               onClose?.();
