@@ -5,6 +5,7 @@ import RampMain from './index.component';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 
 export interface IRampProps extends IUseHandleAchSellParams {
+  isMainnet: boolean;
   className?: string;
   initState?: IRampInitState;
   isBuySectionShow?: boolean;

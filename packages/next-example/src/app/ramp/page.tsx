@@ -1,7 +1,10 @@
+'use client';
 import { PortkeyAssetProvider, Ramp } from '@portkey/did-ui-react';
-import router from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function RampPage() {
+  const router = useRouter();
+
   return (
     <div>
       <PortkeyAssetProvider originChainId="AELF" pin="111111">
@@ -18,7 +21,7 @@ export default function RampPage() {
             symbol: 'ELF',
             tokenContractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
           }}
-          portkeyWebSocketUrl={'http://192.168.66.240:5577/ca'}
+          portkeyWebSocketUrl={'http://192.168.66.117:5577/ca'}
           isMainnet={true}
           isBuySectionShow={false}
         />

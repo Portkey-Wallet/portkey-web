@@ -12,10 +12,10 @@ import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
-import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
+import { IRampInitState, IRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
-import { useUpdateEffect } from 'react-use';
+import { useEffectOnce, useUpdateEffect } from 'react-use';
 import SendMain, { SendExtraConfig } from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
@@ -33,6 +33,7 @@ import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.compo
 import { useDebounce } from '../../hooks/debounce';
 import singleMessage from '../CustomAnt/message';
 import './index.less';
+import ramp from '@portkey/ramp';
 
 export enum AssetStep {
   overview = 'overview',
@@ -56,7 +57,6 @@ export interface AssetMainProps
   onOverviewBack?: () => void;
   rampState?: IRampInitState;
   className?: string;
-  overrideAchConfig?: IAchConfig;
   isShowRampBuy?: boolean;
   isShowRampSell?: boolean;
   onLifeCycleChange?(liftCycle: `${AssetStep}`): void;
@@ -77,7 +77,6 @@ function AssetMain({
   faucet,
   backIcon,
   className,
-  overrideAchConfig,
   isShowRampBuy = true,
   isShowRampSell = true,
   onOverviewBack,
@@ -94,6 +93,26 @@ function AssetMain({
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
   const preStepRef = useRef<AssetStep>(AssetStep.overview);
+
+  const test = useCallback(async () => {
+    console.log('🌈 🌈 🌈 🌈 🌈 🌈 ramp.headers', ramp.config.requestConfig.headers);
+    const { data } = await ramp.service.getBuyFiatData();
+    console.log('🌈 🌈 🌈 🌈 🌈 🌈 data ', data);
+  }, []);
+
+  useEffectOnce(() => {
+    ramp.init({
+      requestConfig: {
+        headers: {
+          Version: 'v1.4.15',
+          'Client-Type': 'ThirdParty',
+          Authorization:
+            'Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6IkRCM0E2QTlFOUFGQjgwRkI3QzNCNTNBQTA4NjAzNzUxNTVFMTNBQTgiLCJ4NXQiOiIyenBxbnByN2dQdDhPMU9xQ0dBM1VWWGhPcWciLCJ0eXAiOiJhdCtqd3QifQ.eyJzdWIiOiIwNTM1NWY1Mi0yZDE3LTQxY2MtYWFmYS02MzM5M2QxNjcyYTIiLCJvaV9wcnN0IjoiQ0FTZXJ2ZXJfQXBwIiwiY2xpZW50X2lkIjoiQ0FTZXJ2ZXJfQXBwIiwib2lfdGtuX2lkIjoiYmYyOTJkZDItYzA3ZC1hZTdhLTI3ZTItM2ExMDZmZjQyN2Q0IiwiYXVkIjoiQ0FTZXJ2ZXIiLCJzY29wZSI6IkNBU2VydmVyIiwianRpIjoiMGI5ODk3YzMtMjI4ZC00ODEyLWE3ZmEtY2ZjMzRkYzljOTdhIiwiZXhwIjoxNzA2ODQ4MTU4LCJpc3MiOiJodHRwOi8vMTkyLjE2OC42Ni4xMTc6ODA4MC8iLCJpYXQiOjE3MDY2NzUzNTl9.X06OfVsrt3HbhRUKROatwBQbseS5ICxTT3w-lB5altoRikpjYbTBCIVxBUsjXHoY8cS04FHt9a1GywkceYbkdlO_xFvc4V1UVdxrm5pV2RISnITRP9v_vQeHG_PFA7tGX_i-j7wDjIYrcOMLF-nLjFZQYY14lyGkGdQIAikt4-DugFhTfBGyP0Yzu_WbB_g3p1ED57MkGlzCzqVKYU6Q9Co8HsR3wq7kKtIgG9LMuiDA7dKRtJwx4ZiJm_ROcAR80GtGrutUVdhNoXmOA0XYkR-CVV_vc--ic9j9ew6N7LKIgab_Tpw89-OQk5ExYxMdadGeY60Aewbw70aYpZpptw',
+        },
+      },
+    });
+    test();
+  });
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);
@@ -337,6 +356,7 @@ function AssetMain({
       )}
       {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
         <RampPreviewMain
+          isMainnet={networkType === MAINNET}
           initState={rampPreview}
           portkeyServiceUrl={portkeyServiceUrl || 'https://did-portkey.portkey.finance'}
           chainId={selectToken.chainId}
@@ -345,7 +365,6 @@ function AssetMain({
           }}
           isBuySectionShow={true}
           isSellSectionShow={true}
-          overrideAchConfig={overrideAchConfig}
         />
       )}
 

@@ -23,7 +23,7 @@ const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
 
 ConfigProvider.setGlobalConfig({
-  connectUrl: 'https://auth-portkey-test.portkey.finance',
+  connectUrl: 'http://192.168.66.117:8080',
   socialLogin: {
     Portkey: {
       websiteName: 'website demo',
@@ -31,13 +31,13 @@ ConfigProvider.setGlobalConfig({
     },
   },
   loginConfig: {
-    loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Phone', 'Apple', 'Scan'],
+    loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Phone', 'Apple', 'Scan', 'Google', 'Phone', 'Apple', 'Scan'],
     recommendIndexes: [0, 1],
   },
   requestDefaults: {
     timeout: 30000,
   },
-  serviceUrl: 'https://localtest-applesign2.portkey.finance',
+  serviceUrl: 'http://192.168.66.117:5577',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
@@ -146,7 +146,7 @@ export default function Sign() {
           </div>,
         ]}
         getContainer="#wrapper"
-        isShowScan
+        isShowScan={true}
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
         privacyPolicy={'https://portkey.finance/privacy-policy'}

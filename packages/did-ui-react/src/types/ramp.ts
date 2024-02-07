@@ -2,11 +2,8 @@ import { ChainId, IBaseWalletAccount } from '@portkey/types';
 import { AchTxAddressReceivedType } from '@portkey/socket';
 import { CAInfo } from '@portkey/did';
 import { GuardianApprovedItem } from '../components/Guardian/utils/type';
-
-export enum RampTypeEnum {
-  BUY = 'BUY',
-  SELL = 'SELL',
-}
+import { RampType } from '@portkey/ramp';
+import { TokenItemShowType } from '../components/types/assets';
 
 export enum RampDrawerType {
   TOKEN = 'TOKEN',
@@ -17,12 +14,6 @@ export interface IRampConfig {
   isBuySectionShow: boolean;
   isSellSectionShow: boolean;
   isManagerSynced: boolean;
-}
-
-export interface IAchConfig {
-  appId: string;
-  baseUrl: string;
-  updateAchOrder: string;
 }
 
 export interface GetFiatType {
@@ -75,7 +66,7 @@ export type IRampInitState = {
   fiat: string;
   country: string;
   amount: string;
-  side: RampTypeEnum;
+  side: RampType;
 };
 
 export type IRampPreviewInitState = {
@@ -84,7 +75,7 @@ export type IRampPreviewInitState = {
   fiat: string;
   country: string;
   amount: string;
-  side: RampTypeEnum;
+  side: RampType;
   approveList?: GuardianApprovedItem[];
 };
 
@@ -128,9 +119,43 @@ export interface ISellTransferParams {
 }
 
 export interface IUseHandleAchSellParams {
-  isMainnet: boolean;
   tokenInfo: ITokenInfo;
   portkeyWebSocketUrl: string; // ip
 }
 
 export type NFTCheckoutType = 'MARKET' | 'MINT';
+
+export type IRampLimit = {
+  symbol: string;
+  minLimit: number;
+  maxLimit: number;
+};
+
+export type TRampLocationState = Partial<TRampPreviewLocationState>;
+
+export type TRampPreviewLocationState = {
+  crypto: string;
+  network: string;
+  fiat: string;
+  country: string;
+  amount: string;
+  side: RampType;
+  tokenInfo?: TokenItemShowType;
+  openGuardiansApprove?: boolean;
+  approveList?: GuardianApprovedItem[];
+};
+
+export interface ILimitTextParams {
+  min: string | number;
+  max: string | number;
+  symbol: string;
+}
+export interface IErrMsgHandlerParams extends ILimitTextParams {
+  amount: string;
+}
+
+export interface IValidValueCheckParams {
+  amount: string;
+  min: string | number;
+  max: string | number;
+}
