@@ -1,9 +1,9 @@
-import { ReactNode, useState, useCallback, useEffect, useMemo } from 'react';
+import { ReactNode, useState, useEffect, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IRampCryptoDefault, IRampFiatItem } from '@portkey/ramp';
 import CustomSvg from '../../../../CustomSvg';
 import DropdownSearch from '../../../../DropdownSearch';
-import { getSellFiat } from '../../../utils/api';
+import '../index.less';
 
 export interface ISelectFiatListProps {
   supportList: IRampFiatItem[];
@@ -18,23 +18,12 @@ export default function SelectFiatList({
   supportList,
   title,
   searchPlaceHolder,
-  defaultCrypto,
   onClose,
   onChange,
 }: ISelectFiatListProps) {
   const { t } = useTranslation();
   const [openDrop, setOpenDrop] = useState<boolean>(false);
   const [filterWord, setFilterWord] = useState<string>('');
-
-  // const getFilterFiatList = useCallback(async () => {
-  //   const { sellFiatList } = await getSellFiat({ crypto: defaultCrypto.symbol, network: defaultCrypto.network });
-  // }, [defaultCrypto.network, defaultCrypto.symbol]);
-
-  // useEffect(() => {
-  //   if (defaultCrypto.symbol && defaultCrypto.network) {
-  //     getFilterFiatList();
-  //   }
-  // }, [defaultCrypto.network, defaultCrypto.symbol, getFilterFiatList]);
 
   const showFiatList = useMemo(() => {
     return filterWord === ''

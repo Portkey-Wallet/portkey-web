@@ -1,4 +1,5 @@
 import CustomSvg from '../../../CustomSvg';
+import './index.less';
 
 interface IExchangeRateProps {
   showRateText: string;
