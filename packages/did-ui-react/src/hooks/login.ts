@@ -1,5 +1,5 @@
 import { RefObject, useCallback, useEffect, useMemo, useState } from 'react';
-import { AccountLoginList } from '../constants/guardian';
+import { TotalAccountTypeList } from '../constants/guardian';
 
 export interface useComputeIconCountPreRow<T> {
   ref: RefObject<HTMLDivElement>;
@@ -12,14 +12,17 @@ export interface useComputeIconCountPreRow<T> {
 export function useComputeIconCountPreRow<T>({
   ref,
   accountList,
-  supportList = AccountLoginList as T[],
+  supportList = TotalAccountTypeList as T[],
   minLoginAccountIconWidth = 74,
   minIconGap = 12,
 }: useComputeIconCountPreRow<T>) {
   const [maxCountPerRow, setMaxCountPerRow] = useState<number>(5);
   const [realCountPerRow, setRealCountPerRow] = useState<number>(5);
   const [iconWidthPerRow, setIconWidthPerRow] = useState<number>(minLoginAccountIconWidth);
+  // gap size: for icon width can be changed
   const [iconRealGap, setIconRealGap] = useState<number>(minIconGap);
+  // gap size: for icon width fixed
+  const [iconMinWidthRealGap, setIconMinWidthRealGap] = useState<number>(minIconGap);
 
   const filterSupportAccounts = useMemo(
     () => accountList?.filter((item) => supportList.includes(item)),
@@ -45,22 +48,29 @@ export function useComputeIconCountPreRow<T>({
     const maxCountPerRpw = Math.floor((containerWidth + minIconGap) / (minLoginAccountIconWidth + minIconGap));
     setMaxCountPerRow(maxCountPerRpw);
 
-    const realCountPerRpw =
+    const realCountPerRow =
       Array.isArray(filterSupportAccounts) && filterSupportAccounts?.length < maxCountPerRpw
         ? filterSupportAccounts?.length
         : maxCountPerRpw;
-    setRealCountPerRow(realCountPerRpw);
+    setRealCountPerRow(realCountPerRow);
 
-    const iconWidthPerRow = Math.floor((containerWidth + minIconGap) / realCountPerRpw - minIconGap);
+    const iconWidthPerRow = Math.floor((containerWidth + minIconGap) / realCountPerRow - minIconGap);
     setIconWidthPerRow(iconWidthPerRow);
 
-    const iconRealGap = Math.floor((containerWidth - maxCountPerRpw * minLoginAccountIconWidth) / (maxCountPerRpw - 1));
+    const iconRealGap = Math.floor((containerWidth - realCountPerRow * iconWidthPerRow) / (realCountPerRow - 1));
     setIconRealGap(iconRealGap);
+
+    const iconMinWidthRealGap = Math.floor(
+      (containerWidth - realCountPerRow * minLoginAccountIconWidth) / (realCountPerRow - 1),
+    );
+    setIconMinWidthRealGap(iconMinWidthRealGap);
     return {
       isNeedFold,
       maxCountPerRpw,
-      realCountPerRpw,
+      realCountPerRow,
       iconWidthPerRow,
+      iconRealGap,
+      iconMinWidthRealGap,
       expendDisplayList,
       defaultDisplayList,
     };
@@ -75,6 +85,22 @@ export function useComputeIconCountPreRow<T>({
   ]);
 
   useEffect(() => {
+    // listener div resize, can't change smoothly
+    // the window size does not change, but the div size changed. eg: Web2Design size="L", right hidden
+    const div = ref.current;
+    const resizeObserver = new ResizeObserver((entries) => {
+      if (!Array.isArray(entries) || !entries.length) return;
+      compute();
+    });
+    resizeObserver.observe(div as HTMLDivElement);
+
+    return (): void => {
+      resizeObserver.unobserve(div as HTMLDivElement);
+    };
+  }, [compute, ref]);
+
+  useEffect(() => {
+    // listener window resize, can change smoothly
     window.addEventListener('resize', compute);
     compute();
 
@@ -90,6 +116,7 @@ export function useComputeIconCountPreRow<T>({
     realCountPerRow,
     iconWidthPerRow,
     iconRealGap,
+    iconMinWidthRealGap,
     expendDisplayList,
     defaultDisplayList,
   };
