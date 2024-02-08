@@ -132,6 +132,24 @@ export default function BuyFrom({
     [updateBuyReceive],
   );
 
+  const fetchSpecifiedFiat = useCallback(
+    async (cryptoItem: IRampCryptoItem) => {
+      try {
+        setLoading(true);
+        const fiatResult = await getSpecifiedBuyFiat({ crypto: cryptoItem?.symbol, network: cryptoItem?.network });
+        if (fiatResult?.defaultFiat) {
+          await handleFiatSelect(fiatResult?.defaultFiat);
+          await handleCryptoSelect(cryptoItem);
+        }
+      } catch (error) {
+        console.log('fetchSpecifiedFiat error', error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [handleCryptoSelect, handleFiatSelect],
+  );
+
   const fetchDefaultBuyData = useCallback(async () => {
     const { buyFiatList, buyDefaultFiat, buyDefaultCryptoList, buyDefaultCrypto } = await getBuyData();
     // fiat
@@ -153,31 +171,20 @@ export default function BuyFrom({
     setDefaultCryptoList(buyDefaultCryptoList);
     setSupportCryptoList(buyDefaultCryptoList);
 
+    const paramsCrypto = crypto || tokenInfo?.symbol;
+    if (paramsCrypto && paramsCrypto !== buyDefaultCrypto.symbol) {
+      // to support more network
+      const filterCrypto = buyDefaultCryptoList.filter((item) => item.symbol === paramsCrypto);
+      if (filterCrypto.length > 0) {
+        await fetchSpecifiedFiat(filterCrypto[0]);
+      }
+    }
+
     // compute receive
     updateBuyReceive();
-  }, [country, crypto, fiat, network, updateBuyReceive]);
-
-  const fetchSpecifiedFiat = useCallback(async () => {
-    if (crypto && tokenInfo?.symbol) return;
-    try {
-      setLoading(true);
-      const fiatResult = await getSpecifiedBuyFiat({ crypto: crypto || tokenInfo?.symbol });
-      if (fiatResult?.defaultFiat) {
-        await handleFiatSelect(fiatResult?.defaultFiat);
-        if (fiatResult?.defaultCrypto) {
-          await handleCryptoSelect(fiatResult?.defaultCrypto);
-        }
-      }
-    } catch (error) {
-      console.log('fetchSpecifiedFiat error', error);
-    } finally {
-      setLoading(false);
-    }
-  }, [handleCryptoSelect, handleFiatSelect, crypto, tokenInfo?.symbol]);
+  }, [country, crypto, fetchSpecifiedFiat, fiat, network, tokenInfo?.symbol, updateBuyReceive]);
 
   useEffectOnce(() => {
-    // TODO ramp
-    // fetchSpecifiedFiat();
     if (initialized) {
       fetchDefaultBuyData();
     }

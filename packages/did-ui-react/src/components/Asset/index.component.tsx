@@ -1,5 +1,5 @@
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import AssetOverviewMain, { AssetOverviewProps } from '../AssetOverview/index.components';
 import ReceiveCard from '../ReceiveCard/index.components';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
@@ -15,7 +15,7 @@ import { MAINNET } from '../../constants/network';
 import { TRampInitState, TRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import ConfigProvider from '../config-provider';
-import { useEffectOnce, useUpdateEffect } from 'react-use';
+import { useUpdateEffect } from 'react-use';
 import SendMain, { SendExtraConfig } from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
@@ -33,9 +33,7 @@ import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.compo
 import { useDebounce } from '../../hooks/debounce';
 import singleMessage from '../CustomAnt/message';
 import './index.less';
-import ramp from '@portkey/ramp';
 import { mixRampShow } from '../Ramp/utils';
-import { SHOW_RAMP_CHAIN_ID_LIST, SHOW_RAMP_SYMBOL_LIST } from '../../constants/ramp';
 
 export enum AssetStep {
   overview = 'overview',
@@ -110,8 +108,6 @@ function AssetMain({
       setIsMixShowRamp(isRampShow);
       setIsMixShowBuy(isBuyShow);
       setIsMixShowSell(isSellShow);
-
-      console.log('🌈 🌈 🌈 🌈 🌈 🌈 isBuyShow ', isBuyShow, isSellShow);
     } catch (error) {
       throw handleErrorMessage(error);
     }
@@ -178,13 +174,6 @@ function AssetMain({
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
-  const isShowTokenDetailRamp = useMemo(
-    () =>
-      SHOW_RAMP_SYMBOL_LIST.includes(tokenDetail?.symbol || '') &&
-      SHOW_RAMP_CHAIN_ID_LIST.includes(tokenDetail?.chainId || '') &&
-      isMixShowRamp,
-    [isMixShowRamp, tokenDetail?.chainId, tokenDetail?.symbol],
-  );
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
 
   const onAvatarClick = useCallback(async () => {
@@ -413,7 +402,7 @@ function AssetMain({
       {assetStep === AssetStep.tokenDetail && tokenDetail && (
         <TokenDetailMain
           faucet={faucet}
-          isShowRamp={isShowTokenDetailRamp}
+          isShowRamp={isMixShowRamp}
           tokenInfo={tokenDetail}
           onBack={() => {
             setAssetStep(AssetStep.overview);
