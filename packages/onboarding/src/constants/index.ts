@@ -4,7 +4,7 @@ export const APP_DOWNLOAD_URL = {
 };
 
 export const PORTKEY_V2_DOWNLOAD_URL = {
-  APP_STORE: 'https://apps.apple.com/us/app/portkey-early-access/id6473827308',
+  APP_STORE: 'https://apps.apple.com/us/app/portkey-wallet/id6473827308',
   CHROME_STORE: 'https://play.google.com/store/apps/details?id=com.portkey.finance',
 };
 
