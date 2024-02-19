@@ -51,6 +51,16 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Bug Fixes
 
 - 🐛 drawer height ([d855069](https://github.com/Portkey-Wallet/portkey-web/commit/d8550698ac863abdbf6421fbc1219fcd8fa306d3))
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+### Features
+
+- 🎸 fb and twitter oauth ([7e2bdfe](https://github.com/Portkey-Wallet/portkey-web/commit/7e2bdfe652af24885215c4d7509f64950abd490e))
+
+### Bug Fixes
+
+- 🐛 facebook & twitter accessToken ([df98170](https://github.com/Portkey-Wallet/portkey-web/commit/df981708b5b50dcf637ced64cf71e7e9ea137260))
+- 🐛 ref ([d01a333](https://github.com/Portkey-Wallet/portkey-web/commit/d01a333d975fd2ba54fa2cea78650c9d7971fcb7))
 
 ## [2.0.0-alpha.19](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.18...v2.0.0-alpha.19) (2024-01-30)
 

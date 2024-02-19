@@ -134,7 +134,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
 
                 if (!guardian) throw 'No match';
                 const accountType = guardian.guardianType;
-                if (!SocialLoginList.includes(accountType)) throw 'No match for Apple、 Google or Telegram';
+                if (!SocialLoginList.includes(accountType)) throw 'No match for Social Login';
                 try {
                   const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);
                   approvedList.push(approvedItem);
@@ -166,9 +166,9 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       }
       // guardianList.length === 1
       const guardian = guardianList[0];
-      console.log(guardian, 'guardian=getGuardians');
+
       const accountType = guardian.guardianType;
-      // Apple and Google approve;
+      // social approve;
       if (SocialLoginList.includes(accountType)) {
         try {
           const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);

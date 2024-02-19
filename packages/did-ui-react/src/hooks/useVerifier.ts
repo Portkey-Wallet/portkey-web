@@ -3,16 +3,14 @@ import { did, verification } from '../utils';
 import { ChainId } from '@portkey/types';
 import { AccountType, OperationTypeEnum } from '@portkey/services';
 import { useVerifyToken } from './authentication';
-import { ISocialLoginConfig, NetworkType } from '../types';
-import ConfigProvider from '../components/config-provider';
+import { ISocialLogin, NetworkType } from '../types';
 import { IVerifier } from '../components';
 import useReCaptchaModal from './useReCaptchaModal';
+import { getSocialConfig } from '../components/utils/social.utils';
 
 const useVerifier = () => {
   const verifyToken = useVerifyToken();
   const reCaptchaHandler = useReCaptchaModal();
-
-  const socialLogin = useMemo<ISocialLoginConfig | undefined>(() => ConfigProvider.getSocialLoginConfig(), []);
 
   const getRecommendationVerifier: (chainId: ChainId) => Promise<IVerifier> = useCallback(
     async (chainId) =>
@@ -40,32 +38,12 @@ const useVerifier = () => {
       networkType?: NetworkType;
       operationType: OperationTypeEnum;
     }) => {
-      let accessToken;
-      let clientId;
-      let redirectURI;
-      let customLoginHandler;
-      switch (accountType) {
-        case 'Apple':
-          accessToken = token;
-          clientId = socialLogin?.Apple?.clientId;
-          redirectURI = socialLogin?.Apple?.redirectURI;
-          customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-          break;
-        case 'Google':
-          accessToken = token;
-          clientId = socialLogin?.Google?.clientId;
-          customLoginHandler = socialLogin?.Google?.customLoginHandler;
-          break;
-        case 'Telegram':
-          accessToken = token;
-          customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-          break;
-        default:
-          throw 'accountType is not supported';
-      }
+      const _accountType = accountType as ISocialLogin;
+      const { clientId, redirectURI, customLoginHandler } = getSocialConfig(_accountType);
+
       if (!verifier?.id) throw 'Verifier is not missing';
-      return verifyToken(accountType, {
-        accessToken,
+      return verifyToken(_accountType, {
+        accessToken: token,
         id: guardianIdentifier,
         verifierId: verifier.id,
         chainId,
@@ -76,7 +54,7 @@ const useVerifier = () => {
         customLoginHandler,
       });
     },
-    [socialLogin, verifyToken],
+    [verifyToken],
   );
 
   const sendVerifyCode = useCallback(

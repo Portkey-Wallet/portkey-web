@@ -52,6 +52,8 @@ function GuardianItems({
         );
       case 'Apple':
       case 'Telegram':
+      case 'Twitter':
+      case 'Facebook':
         return (
           <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>

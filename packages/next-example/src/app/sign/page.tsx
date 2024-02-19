@@ -30,19 +30,21 @@ ConfigProvider.setGlobalConfig({
       websiteIcon: '',
     },
   },
-  loginConfig: {
-    loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Phone', 'Apple', 'Scan'],
-    recommendIndexes: [0, 1],
-  },
+  // loginConfig: {
+  //   loginMethodsOrder: ['Facebook', 'Twitter', 'Email', 'Telegram', 'Google', 'Phone', 'Apple', 'Scan'],
+  //   recommendIndexes: [0, 1],
+  // },
   requestDefaults: {
     timeout: 30000,
   },
-  serviceUrl: 'https://localtest-applesign2.portkey.finance',
+  // https://test3-applesign-v2.portkey.finance
+  serviceUrl: 'https://test4-applesign-v2.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
   // },
   graphQLUrl: '/graphql',
+  customNetworkType: 'Offline',
 });
 
 export default function Sign() {
@@ -131,20 +133,20 @@ export default function Sign() {
         uiType={uiType}
         defaultChainId={CHAIN_ID}
         // extraElement={}
-        extraElementList={[
-          <div key="1" style={{ height: 300, background: 'red' }}></div>,
-          <div key="2" className="switch-old-portkey-wrapper">
-            Account registered in old Portkey? Log in&nbsp;
-            <span
-              className="switch-btn"
-              onClick={async () => {
-                const isOK = await switchToV1Modal();
-                console.log(isOK, 'isOK==');
-              }}>
-              here
-            </span>
-          </div>,
-        ]}
+        // extraElementList={[
+        //   <div key="1" style={{ height: 300, background: 'red' }}></div>,
+        //   <div key="2" className="switch-old-portkey-wrapper">
+        //     Account registered in old Portkey? Log in&nbsp;
+        //     <span
+        //       className="switch-btn"
+        //       onClick={async () => {
+        //         const isOK = await switchToV1Modal();
+        //         console.log(isOK, 'isOK==');
+        //       }}>
+        //       here
+        //     </span>
+        //   </div>,
+        // ]}
         getContainer="#wrapper"
         isShowScan
         className="sign-in-wrapper"
