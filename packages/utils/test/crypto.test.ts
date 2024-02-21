@@ -15,9 +15,16 @@ describe('WebCryptoManager', () => {
   test('should encrypt and decrypt well', async () => {
     const data = 'portkey';
     const keyPair = await cryptoManager.generateKeyPair();
-    const encrypted = await cryptoManager.encrypt(keyPair.publicKey, data);
+
+    const cryptoManagerPublic = new WebCryptoManager(webcrypto.subtle);
+
+    const encrypted = await cryptoManagerPublic.encrypt(keyPair.publicKey, data);
+
     expect(typeof encrypted).toBe('string');
-    const decrypted = await cryptoManager.decrypt(keyPair.privateKey, encrypted);
+
+    const cryptoManagerPrivateKey = new WebCryptoManager(webcrypto.subtle);
+
+    const decrypted = await cryptoManagerPrivateKey.decrypt(keyPair.privateKey, encrypted);
     expect(decrypted).toEqual(data);
   });
 });

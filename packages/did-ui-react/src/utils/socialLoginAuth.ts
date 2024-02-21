@@ -1,11 +1,17 @@
-import { getCustomNetworkType, getServiceUrl } from '../components/config-provider/utils';
+import {
+  getCustomNetworkType,
+  getServiceUrl,
+  getSocketUrl,
+  getStorageInstance,
+} from '../components/config-provider/utils';
 import { WEB_PAGE, WEB_PAGE_TEST } from '../constants';
 import { ISocialLogin, NetworkType } from '../types';
 import { stringify } from 'query-string';
 import { dealURLLastChar } from './lib';
-import { facebookAuthPath, twitterAuthPath } from '../constants/network';
+import OpenLogin from './openlogin';
+import { facebookAuthPath, twitterAuthPath } from './openlogin/contants';
 
-export const socialLoginAuth = ({
+export const socialLoginAuthOpen = ({
   type,
   clientId,
   redirectURI,
@@ -87,3 +93,38 @@ export const socialLoginAuth = ({
       }
     }, 1600);
   });
+
+export const socialLoginAuth = async ({
+  type,
+  clientId,
+}: {
+  type: ISocialLogin;
+  clientId?: string;
+  redirectURI?: string;
+  network?: NetworkType;
+  serviceUrl?: string;
+}): Promise<{
+  token: string;
+  provider: ISocialLogin;
+}> => {
+  const serviceURI = getServiceUrl();
+  const socketURI = getSocketUrl();
+
+  const openlogin = new OpenLogin({
+    network: getCustomNetworkType(),
+    serviceURI: serviceURI,
+    clientId,
+    socketURI,
+    currentStorage: getStorageInstance(),
+    // sdkUrl: 'http://localhost:3000',
+  });
+
+  const result = await openlogin.login({
+    from: 'openlogin',
+    loginProvider: type,
+  });
+  if (!result) throw 'Not result';
+  if (result?.code) throw result.message;
+  console.log(result, 'result===');
+  return result;
+};
