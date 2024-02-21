@@ -111,7 +111,7 @@ class OpenLogin {
       currentWindow
         .listenOnChannel(loginId, 'onAuthStatusChanged')
         .then(async (res) => {
-          const decrypted = await cryptoManager.decrypt(keyPair.privateKey, res);
+          const decrypted = await cryptoManager.encryptLong(keyPair.privateKey, res);
           let result;
 
           try {

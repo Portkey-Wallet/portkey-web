@@ -33,9 +33,9 @@ describe('WebCryptoManager', () => {
     const data =
       'portkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkeyportkey';
     const keyPair = await cryptoManager.generateKeyPair();
-    const encrypted = await cryptoManager.encryptToLong(keyPair.publicKey, data);
+    const encrypted = await cryptoManager.encryptLong(keyPair.publicKey, data);
     expect(typeof encrypted).toBe('string');
-    const decrypted = await cryptoManager.decryptToLong(keyPair.privateKey, encrypted);
+    const decrypted = await cryptoManager.decryptLong(keyPair.privateKey, encrypted);
     expect(decrypted).toEqual(data);
   });
 });

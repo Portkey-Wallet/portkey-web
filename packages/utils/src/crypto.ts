@@ -7,8 +7,8 @@ export interface ICryptoManager {
   generateKeyPair(): Promise<KeyPairJSON>;
   encrypt(cryptoKey: string, data: string): Promise<string>;
   decrypt(cryptoKey: string, data: string): Promise<string>;
-  encryptToLong(cryptoKey: string, data: string): Promise<string>;
-  decryptToLong(cryptoKey: string, data: string): Promise<string>;
+  encryptLong(cryptoKey: string, data: string): Promise<string>;
+  decryptLong(cryptoKey: string, data: string): Promise<string>;
 }
 
 export class WebCryptoManager implements ICryptoManager {
@@ -58,7 +58,7 @@ export class WebCryptoManager implements ICryptoManager {
     return btoa(String.fromCharCode(...new Uint8Array(encrypted)));
   };
 
-  public encryptToLong = async (cryptoKey: string | JsonWebKey, data: string): Promise<string> => {
+  public encryptLong = async (cryptoKey: string | JsonWebKey, data: string): Promise<string> => {
     const padding = 117;
     const count = data.length;
     const num = Math.floor(count / padding);
@@ -96,7 +96,7 @@ export class WebCryptoManager implements ICryptoManager {
     );
     return new TextDecoder().decode(decrypted);
   };
-  public decryptToLong = async (cryptoKey: string | JsonWebKey, data: string): Promise<string> => {
+  public decryptLong = async (cryptoKey: string | JsonWebKey, data: string): Promise<string> => {
     const list = data.split(';');
     let str = '';
     for (let i = 0; i < list.length; i++) {
