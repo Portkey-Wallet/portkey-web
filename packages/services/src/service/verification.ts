@@ -7,13 +7,10 @@ import {
   SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
-  VerifyGoogleTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
-  VerifyTelegramTokenParams,
-  VerifyFacebookTokenParams,
-  VerifyTwitterTokenParams,
+  VerifierSocialTokenParams,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
@@ -56,7 +53,7 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       url: `/api/app/userExtraInfo/${params.userId}`,
     });
   }
-  verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyGoogleToken',
@@ -73,21 +70,21 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
-  verifyTelegramToken(params: VerifyTelegramTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTelegramToken',
       params,
     });
   }
-  verifyTwitterToken(params: VerifyTwitterTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyTwitterToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTwitterToken',
       params,
     });
   }
-  verifyFacebookToken(params: VerifyFacebookTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyFacebookToken',

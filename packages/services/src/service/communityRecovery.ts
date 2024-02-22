@@ -23,13 +23,10 @@ import {
   SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
-  VerifyGoogleTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
-  VerifyTelegramTokenParams,
-  VerifyFacebookTokenParams,
-  VerifyTwitterTokenParams,
+  VerifierSocialTokenParams,
 } from '../types/verification';
 import { Search } from './search';
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
@@ -124,7 +121,7 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     });
   }
 
-  verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyGoogleToken',
@@ -141,21 +138,21 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
-  verifyTelegramToken(params: VerifyTelegramTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTelegramToken',
       params,
     });
   }
-  verifyTwitterToken(params: VerifyTwitterTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyTwitterToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTwitterToken',
       params,
     });
   }
-  verifyFacebookToken(params: VerifyFacebookTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyFacebookToken',

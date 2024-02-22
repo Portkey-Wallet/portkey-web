@@ -59,6 +59,7 @@ describe('communityRecovery describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -131,7 +132,27 @@ describe('communityRecovery describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
+    expect(result).toHaveProperty('verificationDoc');
+    expect(result).toHaveProperty('signature');
+  });
+
+  test('test getAppleUserExtraInfo', async () => {
+    const result = await communityRecovery.getAppleUserExtraInfo({ userId: 'string' });
+    expect(result).toHaveProperty('userId');
+    expect(result.userId).toEqual('userId_mock');
+  });
+
+  test('test verifyTelegramToken', async () => {
+    const result = await communityRecovery.verifyTelegramToken({
+      accessToken: 'accessToken_mock',
+      verifierId: 'verifierId_mock',
+      chainId: 'AELF',
+      operationType: 0,
+      operationDetails: '{}',
+    });
+
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
   });
@@ -142,6 +163,7 @@ describe('communityRecovery describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
