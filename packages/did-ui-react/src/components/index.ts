@@ -15,6 +15,7 @@ export { default as CodeVerify } from './CodeVerify';
 export { default as CodeVerifyUI } from './CodeVerifyUI';
 export { default as GuardianApproval } from './GuardianApproval';
 export { default as SignIn } from './SignIn';
+export { default as useSignInHandler } from './SignIn/hooks/onSignIn';
 export { default as PortkeyLoading } from './PortkeyLoading';
 export { default as PortkeyQRCode } from './PortkeyQRCode';
 export { default as Unlock } from './Unlock';

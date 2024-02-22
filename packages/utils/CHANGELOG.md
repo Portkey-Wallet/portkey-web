@@ -3,19 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.0.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.22...v2.0.0-alpha.23) (2024-02-05)
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
+## [2.0.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.0) (2024-02-22)
 
 **Note:** Version bump only for package @portkey/utils
 
-## [2.0.0-alpha.22](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.21...v2.0.0-alpha.22) (2024-02-05)
+## [2.0.0-alpha.28](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.27...v2.0.0-alpha.28) (2024-02-18)
 
-**Note:** Version bump only for package @portkey/utils
+### Bug Fixes
 
-## [2.0.0-alpha.21](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.20...v2.0.0-alpha.21) (2024-02-04)
+- 🐛 crypto long ([8c77632](https://github.com/Portkey-Wallet/portkey-web/commit/8c776325c005887b93b13ce10b97a03f98a56168))
 
-**Note:** Version bump only for package @portkey/utils
+## [2.0.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.1-alpha.1) (2024-02-21)
 
-## [2.0.0-alpha.20](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.0-alpha.20) (2024-02-02)
+### Features
+
+- 🎸 add auth by socket ([2ba3d2a](https://github.com/Portkey-Wallet/portkey-web/commit/2ba3d2a38656c229810b5abe548ea27635821f20))
+- 🎸 crypto ([2f86519](https://github.com/Portkey-Wallet/portkey-web/commit/2f86519404d59e1043a78fe96a52e98dc4e3f2ce))
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
 
 **Note:** Version bump only for package @portkey/utils
 

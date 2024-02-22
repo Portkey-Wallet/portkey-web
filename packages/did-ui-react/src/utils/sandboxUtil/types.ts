@@ -1,4 +1,4 @@
-import { ICAInstanceOptions, IEOAInstanceOptions, IProviderOptions } from '@portkey/contracts';
+import { ICAInstanceOptions, IEOAInstanceOptions } from '@portkey/contracts';
 import { CallOptions, ChainType, SendOptions } from '@portkey/types';
 
 export interface BaseSendOption {

@@ -1,6 +1,14 @@
 import { useCallback } from 'react';
 import { ISocialLogin, NetworkType, VerifyTokenParams } from '../types';
-import { did, getGoogleUserInfo, parseAppleIdentityToken, parseTelegramToken, socialLoginAuth } from '../utils';
+import {
+  did,
+  getGoogleUserInfo,
+  parseAppleIdentityToken,
+  parseFacebookToken,
+  parseTelegramToken,
+  parseTwitterToken,
+  socialLoginAuth,
+} from '../utils';
 import { OperationTypeEnum } from '@portkey/services';
 import type { ChainId, TStringJSON } from '@portkey/types';
 
@@ -127,10 +135,78 @@ export function useVerifyTelegram() {
   }, []);
 }
 
+export function useVerifyFacebook() {
+  return useCallback(async (params: VerifySocialLoginParams) => {
+    let tokenInfo = params.accessToken;
+    const { isExpired: tokenIsExpired, accessToken: token } = (await parseFacebookToken(tokenInfo)) || {};
+    if (!token || tokenIsExpired) {
+      if (params?.customLoginHandler) {
+        const result = await params?.customLoginHandler();
+        if (result.error) throw result.error;
+        tokenInfo = result.data?.accessToken;
+      } else {
+        const authRes: any = await socialLoginAuth({
+          type: 'Facebook',
+          network: params.networkType,
+        });
+        if (!authRes) throw new Error('Missing Response');
+        tokenInfo = authRes?.token;
+      }
+    }
+    const { userId, accessToken } = (await parseFacebookToken(tokenInfo)) || {};
+    if (!tokenInfo || !accessToken) throw new Error('accessToken is not defined');
+    if (userId !== params.id) throw new Error('Account does not match your guardian');
+
+    return did.services.verifyFacebookToken({
+      verifierId: params.verifierId,
+      chainId: params.chainId,
+      accessToken,
+      operationType: params.operationType,
+      targetChainId: params.targetChainId,
+      operationDetails: params.operationDetails,
+    });
+  }, []);
+}
+
+export function useVerifyTwitter() {
+  return useCallback(async (params: VerifySocialLoginParams) => {
+    let tokenInfo = params.accessToken;
+    const { isExpired: tokenIsExpired, accessToken: token } = parseTwitterToken(tokenInfo) || {};
+    if (!token || tokenIsExpired) {
+      if (params?.customLoginHandler) {
+        const result = await params?.customLoginHandler();
+        if (result.error) throw result.error;
+        tokenInfo = result.data?.accessToken;
+      } else {
+        const authRes: any = await socialLoginAuth({
+          type: 'Twitter',
+          network: params.networkType,
+        });
+        if (!authRes) throw new Error('Missing Response');
+        tokenInfo = authRes?.token;
+      }
+    }
+    const { userId, accessToken } = parseTwitterToken(tokenInfo) || {};
+    if (!tokenInfo || !accessToken) throw new Error('accessToken is not defined');
+    if (userId !== params.id) throw new Error('Account does not match your guardian');
+
+    return did.services.verifyTwitterToken({
+      verifierId: params.verifierId,
+      chainId: params.chainId,
+      accessToken,
+      operationType: params.operationType,
+      targetChainId: params.targetChainId,
+      operationDetails: params.operationDetails,
+    });
+  }, []);
+}
+
 export function useVerifyToken() {
   const verifyGoogleToken = useVerifyGoogleToken();
   const verifyAppleToken = useVerifyAppleToken();
   const verifyTelegram = useVerifyTelegram();
+  const verifyFacebook = useVerifyFacebook();
+  const verifyTwitter = useVerifyTwitter();
 
   return useCallback(
     (type: ISocialLogin, params: VerifySocialLoginParams) => {
@@ -141,9 +217,13 @@ export function useVerifyToken() {
         func = verifyGoogleToken;
       } else if (type === 'Telegram') {
         func = verifyTelegram;
+      } else if (type === 'Facebook') {
+        func = verifyFacebook;
+      } else if (type === 'Twitter') {
+        func = verifyTwitter;
       }
       return func(params);
     },
-    [verifyAppleToken, verifyGoogleToken, verifyTelegram],
+    [verifyAppleToken, verifyFacebook, verifyGoogleToken, verifyTelegram, verifyTwitter],
   );
 }

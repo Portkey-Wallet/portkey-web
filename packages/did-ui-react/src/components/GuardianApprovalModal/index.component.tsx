@@ -11,21 +11,25 @@ import { getGuardianList } from '../SignStep/utils/getGuardians';
 import { getOperationDetails } from '../utils/operation.util';
 
 const GuardianApprovalModalMain = forwardRef(
-  ({
-    className,
-    open,
-    caHash,
-    originChainId,
-    targetChainId,
-    networkType,
-    sandboxId,
-    isErrorTip = true,
-    onClose,
-    onBack,
-    onApprovalSuccess,
-    onApprovalError,
-    operationType,
-  }: GuardianApprovalModalProps) => {
+  (
+    {
+      className,
+      open,
+      caHash,
+      originChainId,
+      targetChainId,
+      networkType,
+      sandboxId,
+      isErrorTip = true,
+      onClose,
+      onBack,
+      onApprovalSuccess,
+      onApprovalError,
+      operationType,
+    }: GuardianApprovalModalProps,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ref,
+  ) => {
     const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
 
     const getData = useCallback(async () => {

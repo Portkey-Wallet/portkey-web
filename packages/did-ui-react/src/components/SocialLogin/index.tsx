@@ -172,7 +172,7 @@ export default function SocialLogin({
                 className="icon-wrapper portkey-ui-flex-center"
                 key={item}
                 onClick={() => handleNotRecommendChange(item)}>
-                <CustomSvg type={TotalAccountsInfo[item as IWeb2Login].icon} />
+                <CustomSvg type={TotalAccountsInfo[item].icon} />
               </div>
             ),
         )}
@@ -185,7 +185,7 @@ export default function SocialLogin({
                   className="icon-wrapper portkey-ui-flex-center"
                   key={item}
                   onClick={() => handleNotRecommendChange(item)}>
-                  <CustomSvg type={TotalAccountsInfo[item as IWeb2Login].icon} />
+                  <CustomSvg type={TotalAccountsInfo[item].icon} />
                 </div>
               ),
           )}
