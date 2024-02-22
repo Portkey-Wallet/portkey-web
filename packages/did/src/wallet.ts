@@ -19,7 +19,7 @@ import {
   ChainId,
   SendOptions,
 } from '@portkey/types';
-import { aes } from '@portkey/utils';
+import { aes, retryAsyncFunction } from '@portkey/utils';
 import {
   AccountLoginParams,
   BaseDIDWallet,
@@ -108,7 +108,11 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const status = await this.services.getRecoverStatus(sessionId);
     if (status?.recoveryStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
       try {
-        const info = await this.getHolderInfo({ caHash: status.caHash, chainId });
+        const info = await retryAsyncFunction(
+          () => this.getHolderInfo({ caHash: status.caHash, chainId }),
+          undefined,
+          error => !(error?.message as string)?.includes('timeout'),
+        );
         const address = this.managementAccount.address;
         const currentInfo = info.managerInfos.find(i => i.address === address);
         if (currentInfo) {
@@ -155,7 +159,11 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const status = await this.services.getRegisterStatus(sessionId);
     if (status?.registerStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
       try {
-        const info = await this.getHolderInfo({ caHash: status.caHash, chainId });
+        const info = await retryAsyncFunction(
+          () => this.getHolderInfo({ caHash: status.caHash, chainId }),
+          undefined,
+          error => !(error?.message as string)?.includes('timeout'),
+        );
         const address = this.managementAccount.address;
         const currentInfo = info.managerInfos.find(i => i.address === address);
         if (currentInfo) {
