@@ -27,6 +27,10 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 - 🐛 facebook & twitter accessToken ([df98170](https://github.com/Portkey-Wallet/portkey-web/commit/df981708b5b50dcf637ced64cf71e7e9ea137260))
 - 🐛 ref ([d01a333](https://github.com/Portkey-Wallet/portkey-web/commit/d01a333d975fd2ba54fa2cea78650c9d7971fcb7))
 
+## [2.0.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.0) (2024-02-22)
+
+**Note:** Version bump only for package root
+
 ## [2.0.0-alpha.28](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.27...v2.0.0-alpha.28) (2024-02-18)
 
 **Note:** Version bump only for package root
