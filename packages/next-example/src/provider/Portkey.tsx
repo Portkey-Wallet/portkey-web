@@ -1,8 +1,16 @@
 'use client';
-import { NetworkType, PortkeyProvider } from '@portkey/did-ui-react';
+import { NetworkType, PortkeyProvider, ConfigProvider } from '@portkey/did-ui-react';
 import { ReactNode, useEffect, useState } from 'react';
 import '@portkey/did-ui-react/dist/assets/index.css';
 import { Button } from 'antd';
+
+ConfigProvider.setGlobalConfig({
+  // https://test3-applesign-v2.portkey.finance
+  // serviceUrl: 'https://test4-applesign-v2.portkey.finance',
+  graphQLUrl: '/graphql',
+  customNetworkType: 'Offline',
+});
+
 export default function Portkey({ children }: { children?: ReactNode }) {
   const [dark, setDark] = useState<boolean>(false);
   const [networkType, setNetworkType] = useState<NetworkType>('TESTNET');

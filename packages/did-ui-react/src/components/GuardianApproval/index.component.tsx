@@ -30,15 +30,16 @@ import {
   OnErrorFunc,
   IVerificationInfo,
   NetworkType,
+  ISocialLogin,
 } from '../../types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
-import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
 import './index.less';
 import { SocialLoginList } from '../../constants/guardian';
+import { getSocialConfig } from '../utils/social.utils';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -136,31 +137,12 @@ const GuardianApprovalMain = forwardRef(
         try {
           setLoading(true);
           const accessToken = item?.accessToken;
-          const socialLogin = ConfigProvider.config.socialLogin;
-          let clientId;
-          let redirectURI;
-          let customLoginHandler;
-          switch (item.guardianType) {
-            case 'Apple':
-              clientId = socialLogin?.Apple?.clientId;
-              redirectURI = socialLogin?.Apple?.redirectURI;
-              customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-
-              break;
-            case 'Google':
-              clientId = socialLogin?.Google?.clientId;
-              customLoginHandler = socialLogin?.Google?.customLoginHandler;
-              break;
-            case 'Telegram':
-              customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-              break;
-            default:
-              throw 'accountType is not supported';
-          }
+          const accountType = item.guardianType as ISocialLogin;
+          const { clientId, redirectURI, customLoginHandler } = getSocialConfig(accountType);
           if (!item.verifier?.id) throw 'verifier id is not exist';
           const id = item.identifier || item.identifierHash;
           if (!id) throw 'identifier is not exist';
-          const rst = await verifyToken(item.guardianType, {
+          const rst = await verifyToken(accountType, {
             accessToken,
             id,
             verifierId: item.verifier?.id,

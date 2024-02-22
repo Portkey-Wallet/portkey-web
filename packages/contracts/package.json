@@ -1,6 +1,6 @@
 {
   "name": "@portkey/contracts",
-  "version": "2.0.0",
+  "version": "2.0.1-alpha.2",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -40,9 +40,9 @@
     "start": "tsc --watch"
   },
   "peerDependencies": {
-    "@portkey/provider-types": "1.1.0",
-    "@portkey/types": "^1.5.2-alpha.0",
-    "@portkey/utils": "^1.5.2-alpha.0",
+    "@portkey/provider-types": "2.0.0-alpha.2",
+    "@portkey/types": "^2.0.0-alpha.19",
+    "@portkey/utils": "^2.0.0-alpha.19",
     "aelf-sdk": "^3.2.45-beta.0"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
