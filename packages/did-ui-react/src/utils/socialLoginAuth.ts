@@ -11,7 +11,7 @@ import { dealURLLastChar } from './lib';
 import OpenLogin from './openlogin';
 import { facebookAuthPath, twitterAuthPath } from './openlogin/contants';
 
-export const socialLoginAuthOpen = ({
+export const socialLoginAuthOpener = ({
   type,
   clientId,
   redirectURI,
@@ -46,7 +46,21 @@ export const socialLoginAuthOpen = ({
 
     const ctw = getCustomNetworkType();
 
-    const thirdPage = ctw === 'Offline' ? WEB_PAGE_TEST : WEB_PAGE;
+    let thirdPage;
+    switch (ctw) {
+      case 'Offline':
+        thirdPage = WEB_PAGE_TEST;
+        break;
+      case 'onLine':
+        thirdPage = WEB_PAGE;
+        break;
+
+      case 'local':
+        thirdPage = 'http://localhost:3000';
+        break;
+      default:
+        thirdPage = WEB_PAGE;
+    }
 
     const onMessage = (event: MessageEvent) => {
       const type = event.data.type;
@@ -94,7 +108,7 @@ export const socialLoginAuthOpen = ({
     }, 1600);
   });
 
-export const socialLoginAuth = async ({
+export const socialLoginAuthBySocket = async ({
   type,
   clientId,
 }: {
@@ -116,7 +130,7 @@ export const socialLoginAuth = async ({
     clientId,
     socketURI,
     currentStorage: getStorageInstance(),
-    // sdkUrl: 'http://localhost:3000',
+    sdkUrl: 'http://localhost:3000',
   });
 
   const result = await openlogin.login({
@@ -128,3 +142,5 @@ export const socialLoginAuth = async ({
   console.log(result, 'result===');
   return result;
 };
+
+export const socialLoginAuth = socialLoginAuthBySocket;
