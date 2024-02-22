@@ -1,5 +1,5 @@
 import { ChainId, IBaseRequest } from '@portkey/types';
-import { IClientType, IRampProviderInfo, ITransDirectEnum } from '.';
+import { TClientType, IRampProviderInfo, ITransDirectEnum } from '.';
 import { IRampProviderType } from '..';
 
 export type IRampServiceOptions = { fetchRequest: IBaseRequest };
@@ -201,7 +201,7 @@ export type IGetAchPaySignatureResult = {
 export interface IRampService {
   fetchRequest: IBaseRequest;
   baseUrl?: string;
-  clientType?: IClientType;
+  clientType?: TClientType;
 
   getRampInfo(): IRampServiceCommon<IRampInfoResult>;
 

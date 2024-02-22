@@ -74,7 +74,7 @@ export abstract class BaseRamp implements IBaseRamp {
     const clientId = randomId();
     try {
       await this.rampSignalr.doOpen({
-        url: `${this.service.baseUrl}/ca`,
+        url: this.config.requestConfig?.socketUrl || `${this.config.requestConfig.baseURL || ''}/ca`,
         clientId,
       });
     } catch (error) {

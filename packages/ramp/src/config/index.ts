@@ -1,20 +1,17 @@
-import { HTTPHeaders, HTTPMethod, IRequestDefaults } from '@portkey/types';
-import { IRampConfig, IRampConfigOptions } from '../types';
+import { HTTPHeaders } from '@portkey/types';
+import { IRampConfig, IRampConfigOptions, IRequestDefaultsConfigOptions, TExtraRequestHeaders } from '../types';
 
 export class RequestDefaultsConfig {
-  public headers?: HTTPHeaders;
+  public headers?: HTTPHeaders & TExtraRequestHeaders;
   public baseURL?: string;
-  public url?: string;
-  public method?: HTTPMethod;
-  public timeout?: number;
-  public connectUrl?: string;
-  constructor(config?: IRequestDefaults) {
+  public socketUrl?: string;
+  constructor(config?: IRequestDefaultsConfigOptions) {
     this.setConfig(config);
   }
-  setConfig(config?: IRequestDefaults) {
+  setConfig(config?: IRequestDefaultsConfigOptions) {
     if (config) {
       Object.entries(config).forEach(([key, value]) => {
-        this[key as keyof IRequestDefaults] = value;
+        this[key as keyof IRequestDefaultsConfigOptions] = value;
       });
     }
   }

@@ -37,7 +37,7 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
-  serviceUrl: 'http://192.168.66.117:5577',
+  serviceUrl: 'https://test4-applesign-v2.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
