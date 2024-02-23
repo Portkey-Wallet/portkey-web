@@ -34,6 +34,7 @@ import { SocialLoginList, guardianIconMap } from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
 
@@ -71,6 +72,9 @@ function GuardianView({
     () => (currentGuardian.isLoginGuardian ? OperationTypeEnum.unsetLoginAccount : OperationTypeEnum.setLoginAccount),
     [currentGuardian.isLoginGuardian],
   );
+
+  const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
+
   const reCaptchaHandler = useReCaptchaModal();
   const verifyToken = useVerifyToken();
   const socialBasic = useCallback(
@@ -100,6 +104,7 @@ function GuardianView({
         network: networkType,
       });
       if (!response?.token) throw new Error('auth failed');
+
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
         accessToken: response?.token,
         id: _guardian.guardianIdentifier || '',
@@ -109,6 +114,7 @@ function GuardianView({
         redirectURI,
         networkType,
         operationType,
+        operationDetails,
         customLoginHandler,
       });
       if (!rst) return;
@@ -116,7 +122,7 @@ function GuardianView({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, verifyToken, originChainId, networkType, operationType],
+    [socialBasic, networkType, verifyToken, originChainId, operationType, operationDetails],
   );
 
   const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
@@ -404,6 +410,7 @@ function GuardianView({
         onClose={onCloseApproval}>
         <GuardianApproval
           header={<BackHeader onBack={onCloseApproval} />}
+          operationDetails={operationDetails}
           originChainId={originChainId}
           guardianList={guardianList?.filter((item) => item.key !== currentGuardian.key)}
           networkType={networkType}

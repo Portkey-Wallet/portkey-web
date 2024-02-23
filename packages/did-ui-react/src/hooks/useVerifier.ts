@@ -1,6 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { did, verification } from '../utils';
-import { ChainId } from '@portkey/types';
+import { ChainId, TStringJSON } from '@portkey/types';
 import { AccountType, OperationTypeEnum } from '@portkey/services';
 import { useVerifyToken } from './authentication';
 import { ISocialLogin, NetworkType } from '../types';
@@ -29,6 +29,7 @@ const useVerifier = () => {
       chainId,
       operationType,
       networkType,
+      operationDetails,
     }: {
       guardianIdentifier: string;
       accountType: AccountType;
@@ -37,6 +38,7 @@ const useVerifier = () => {
       chainId: ChainId;
       networkType?: NetworkType;
       operationType: OperationTypeEnum;
+      operationDetails: TStringJSON;
     }) => {
       const _accountType = accountType as ISocialLogin;
       const { clientId, redirectURI, customLoginHandler } = getSocialConfig(_accountType);
@@ -51,6 +53,7 @@ const useVerifier = () => {
         redirectURI,
         operationType,
         networkType,
+        operationDetails,
         customLoginHandler,
       });
     },

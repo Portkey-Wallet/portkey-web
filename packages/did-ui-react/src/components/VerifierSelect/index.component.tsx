@@ -18,6 +18,7 @@ import { getChainInfo } from '../../hooks/useChainInfo';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { usePortkey } from '../context';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 
@@ -193,6 +194,7 @@ export default function VerifierSelect({
       const { clientId, redirectURI, customLoginHandler } = getSocialConfig(_accountType);
 
       if (!selectItem?.id) throw 'Verifier is not missing';
+      const operationDetails = getOperationDetails(OperationTypeEnum.register);
       const rst = await verifyToken(_accountType, {
         accessToken,
         id: guardianIdentifier,
@@ -202,6 +204,7 @@ export default function VerifierSelect({
         redirectURI,
         operationType: OperationTypeEnum.register,
         networkType,
+        operationDetails,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);

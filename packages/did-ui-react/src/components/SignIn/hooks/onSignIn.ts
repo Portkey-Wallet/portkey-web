@@ -8,6 +8,7 @@ import useVerifier from '../../../hooks/useVerifier';
 import { GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import useSendCode from './useSendCode';
 import { SocialLoginList } from '../../../constants/guardian';
+import { getOperationDetails } from '../../utils/operation.util';
 
 interface Props {
   isErrorTip?: boolean;
@@ -62,6 +63,9 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
   const approveSocialLogin = useCallback(
     async (guardianIdentifierInfo: IGuardianIdentifierInfo, guardian: BaseGuardianItem) => {
       const verifier = guardian.verifier as VerifierItem;
+      const operationType = OperationTypeEnum.communityRecovery;
+      const operationDetails = getOperationDetails(operationType);
+
       const result = await verifySocialToken({
         accountType: guardian.guardianType,
         token: guardian.accessToken,
@@ -69,7 +73,8 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         verifier,
         networkType,
         chainId: guardianIdentifierInfo.chainId,
-        operationType: OperationTypeEnum.communityRecovery,
+        operationType,
+        operationDetails,
       });
       if (!result.signature || !result.verificationDoc) throw 'Verify social login error';
       const approvedItem = {

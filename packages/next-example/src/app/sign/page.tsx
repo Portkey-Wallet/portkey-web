@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ConfigProvider,
   SignIn,
@@ -8,9 +8,7 @@ import {
   TDesign,
   UI_TYPE,
   modalMethod,
-  BaseModalMethod,
   TSignUpContinueHandler,
-  handleErrorCode,
   SignUpValue,
   TModalMethodRef,
 } from '@portkey/did-ui-react';
@@ -48,12 +46,9 @@ ConfigProvider.setGlobalConfig({
 
 export default function Sign() {
   const ref = useRef<ISignIn>();
-  const [defaultLifeCycle, setLifeCycle] = useState<any>();
+  const [, setLifeCycle] = useState<any>();
   const [design, setDesign] = useState<TDesign>('Web2Design');
   const [uiType, setUIType] = useState<UI_TYPE>('Modal');
-
-  const [lockOpen, setLockOpen] = useState<boolean>();
-  const [password, setPassword] = useState<string>();
 
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') ?? '{}'));

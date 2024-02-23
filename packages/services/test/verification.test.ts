@@ -32,6 +32,7 @@ describe('verification describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -57,6 +58,7 @@ describe('verification describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -68,6 +70,7 @@ describe('verification describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');

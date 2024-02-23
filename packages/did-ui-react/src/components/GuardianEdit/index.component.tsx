@@ -35,6 +35,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
 import './index.less';
@@ -212,6 +213,9 @@ function GuardianEdit({
     },
     [isErrorTip, onError],
   );
+
+  const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
+
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
@@ -230,6 +234,7 @@ function GuardianEdit({
         clientId,
         redirectURI,
         networkType,
+        operationDetails,
         operationType: OperationTypeEnum.unsetLoginAccount,
         customLoginHandler,
       });
@@ -238,7 +243,7 @@ function GuardianEdit({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, verifyToken, originChainId, networkType],
+    [socialBasic, networkType, verifyToken, originChainId, operationDetails],
   );
   const sendCode = useCallback(async () => {
     try {
@@ -506,6 +511,7 @@ function GuardianEdit({
         onClose={() => setApprovalVisible(false)}>
         <GuardianApproval
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
+          operationDetails={operationDetails}
           originChainId={originChainId}
           guardianList={approvalGuardianList}
           networkType={networkType}

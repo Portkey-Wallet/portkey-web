@@ -26,7 +26,6 @@ import {
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
-  TSupportAccountType,
   UserGuardianStatus,
   VerifyStatus,
 } from '../../types';
@@ -56,6 +55,7 @@ import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import { ILoginConfig } from '../config-provider/types';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
 
@@ -129,6 +129,8 @@ function GuardianAdd({
     () => (loginConfig?.loginMethodsOrder as AccountType[]) || AccountGuardianList,
     [loginConfig?.loginMethodsOrder],
   );
+
+  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.addGuardian), []);
 
   const guardianTypeSelectItems = useMemo(() => {
     if (Array.isArray(loginMethodsOrder)) {
@@ -326,12 +328,15 @@ function GuardianAdd({
     },
     [isErrorTip, networkType, onError, socialBasic, socialUserInfo],
   );
+
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       try {
         const { clientId, redirectURI, customLoginHandler } =
           socialBasic(_guardian?.guardianType as ISocialLogin) || {};
         const info: any = await socialUserInfo(_guardian?.guardianType as ISocialLogin, _guardian?.accessToken || '');
+        const operationType = OperationTypeEnum.addGuardian;
+
         const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
           accessToken: _guardian?.accessToken,
           id: info?.id,
@@ -340,7 +345,8 @@ function GuardianAdd({
           clientId,
           redirectURI,
           networkType,
-          operationType: OperationTypeEnum.addGuardian,
+          operationDetails,
+          operationType,
           customLoginHandler,
         });
         if (!rst) return;
@@ -360,7 +366,7 @@ function GuardianAdd({
         setLoading(false);
       }
     },
-    [socialBasic, socialUserInfo, verifyToken, originChainId, networkType, isErrorTip, onError],
+    [socialBasic, socialUserInfo, verifyToken, originChainId, networkType, operationDetails, isErrorTip, onError],
   );
 
   const checkValid = useCallback(async () => {
@@ -681,7 +687,7 @@ function GuardianAdd({
     !customPhoneCountry && getPhoneCountry();
   });
   return (
-    <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
+    <div className={clsx('portkey-ui-guardian-add', 'portkey-ui-flex-column', className)}>
       {header}
       <div className="guardian-add-body portkey-ui-flex-column portkey-ui-flex-1">
         <div className="input-item">
@@ -714,7 +720,7 @@ function GuardianAdd({
           {verifierExist && <div className="guardian-error-tip">{verifierExistTip}</div>}
         </div>
       </div>
-      <div className="guardian-edit-footer">
+      <div className="guardian-add-footer">
         <ThrottleButton
           type="primary"
           className="guardian-btn"
@@ -754,6 +760,7 @@ function GuardianAdd({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}
+          operationDetails={operationDetails}
         />
       </CommonBaseModal>
     </div>
