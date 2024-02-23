@@ -1,6 +1,7 @@
 import { ChainId, ChainType } from '@portkey/types';
 import { BaseToken } from '../../components/types/assets';
 import { callCASendMethod } from './callCASendMethod';
+import { GuardianApprovedItem } from '../../components/Guardian/utils/type';
 
 const sameChainTransfer = async ({
   chainId,
@@ -12,6 +13,7 @@ const sameChainTransfer = async ({
   tokenInfo,
   memo = '',
   toAddress: to,
+  guardiansApproved,
 }: {
   sandboxId?: string;
   chainId: ChainId;
@@ -22,6 +24,7 @@ const sameChainTransfer = async ({
   amount: number;
   toAddress: string;
   memo?: string;
+  guardiansApproved?: GuardianApprovedItem[];
 }) => {
   return callCASendMethod({
     sandboxId,
@@ -37,6 +40,9 @@ const sameChainTransfer = async ({
     caHash,
     chainType,
     privateKey,
+    sendOptions: {
+      appendParams: { guardiansApproved },
+    },
   });
 };
 

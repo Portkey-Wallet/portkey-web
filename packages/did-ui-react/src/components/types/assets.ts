@@ -13,6 +13,7 @@ export interface BaseToken {
   decimals: number | string;
   address: string; // token  contract address
   symbol: string;
+  imageUrl?: string;
 }
 
 export interface BaseTokenExpand extends BaseToken {

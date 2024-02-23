@@ -1,10 +1,10 @@
-import { Button } from 'antd';
 import { useCallback, useRef, useState } from 'react';
 import EmailInput, { EmailInputInstance } from '../EmailInput';
 import { ValidatorHandler } from '../../types';
 import { handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
 import clsx from 'clsx';
+import ThrottleButton from '../ThrottleButton';
 
 interface EmailTabProps {
   className?: string;
@@ -20,6 +20,7 @@ export default function EmailTab({ className, confirmText, validate, onFinish }:
   const onClick = useCallback(async () => {
     try {
       setLoading(true);
+      console.log(val, 'val===');
       await emailInputInstance?.current?.validateEmail(val);
       setLoading(false);
       val && onFinish?.(val);
@@ -42,9 +43,9 @@ export default function EmailTab({ className, confirmText, validate, onFinish }:
           setVal(v);
         }}
       />
-      <Button className="login-primary-btn" type="primary" disabled={!val || !!error} onClick={onClick}>
+      <ThrottleButton className="login-primary-btn" type="primary" disabled={!val || !!error} onClick={onClick}>
         {confirmText}
-      </Button>
+      </ThrottleButton>
     </div>
   );
 }

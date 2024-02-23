@@ -44,55 +44,93 @@
       color: var(--portkey-ui-font-4);
     }
   }
-  .password-wrapper {
-    padding-top: 26px;
+}
 
-    /** pin */
+.portkey-ui-code-verify-passcode {
+  padding-top: 26px;
 
-    .adm-passcode-input,
-    .adm-passcode-input-cell-container {
-      width: 100%;
-    }
+  /** pin */
 
+  .adm-passcode-input,
+  .adm-passcode-input-cell-container {
+    width: 100%;
+  }
+  .adm-passcode-input-cell-container {
+    justify-content: center;
+  }
+
+  .adm-passcode-input-cell {
+    margin: 0;
+    font-size: 24px;
+    line-height: 48px;
+    height: 48px;
+    width: 48px;
+    max-width: 48px;
+    color: var(--portkey-ui-text-primary);
+    font-weight: 500;
+  }
+  .adm-passcode-input.adm-passcode-input-seperated {
     .adm-passcode-input-cell {
-      margin: 0;
-      width: auto;
-      flex: 1;
-      font-size: 36px;
-      line-height: 52px;
-      height: 52px;
-      color: var(--portkey-ui-text-primary);
-      font-weight: 500;
+      border: 1px solid var(--portkey-ui-default-border);
+      border-radius: 6px;
     }
-    .adm-passcode-input.adm-passcode-input-seperated .adm-passcode-input-cell {
-      border: 0;
-      border-bottom: 1px solid var(--portkey-ui-default-border);
-      border-radius: 0;
-    }
-    .adm-passcode-input.adm-passcode-input-seperated .adm-passcode-input-cell-focused {
+    .adm-passcode-input-cell-focused {
       box-shadow: none;
     }
 
-    .adm-passcode-input.adm-passcode-input-seperated .adm-passcode-input-cell:not(:last-child) {
+    .adm-passcode-input-cell:not(:last-child) {
       margin-right: 20px;
     }
+  }
 
-    /** btn */
+  &.portkey-ui-code-verify-passcode-error {
+    .adm-passcode-input .adm-passcode-input-cell {
+      border-color: var(--portkey-ui-error-border);
+    }
     .resend-btn {
-      width: auto;
-      margin: auto;
-      display: block;
-      margin-top: 24px;
-      color: var(--portkey-ui-font-4);
-      &:hover {
-        background-color: transparent;
-      }
-      span {
-        line-height: 20px;
-        font-size: 14px;
-      }
-      &.resend-after-btn {
-        color: var(--portkey-ui-text-tip);
+      color: var(--portkey-ui-text-error) !important;
+    }
+  }
+
+  /** btn */
+  .resend-btn {
+    width: auto;
+    margin: auto;
+    display: block;
+    margin-top: 24px;
+    color: var(--portkey-ui-font-4);
+    &:hover {
+      background-color: transparent;
+    }
+    span {
+      line-height: 20px;
+      font-size: 14px;
+    }
+    &.resend-after-btn {
+      color: var(--portkey-ui-text-tip);
+    }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .verifier-account-wrapper {
+    .login-account {
+      font-size: 16px;
+    }
+    .send-tip {
+      font-size: 14px;
+    }
+  }
+
+  .portkey-ui-code-verify-passcode {
+    padding-top: 48px;
+    .adm-passcode-input-cell {
+      width: 44px;
+      max-width: 44px;
+    }
+    .adm-passcode-input.adm-passcode-input-seperated {
+      .adm-passcode-input-cell:not(:last-child) {
+        margin-right: 14px;
       }
     }
   }

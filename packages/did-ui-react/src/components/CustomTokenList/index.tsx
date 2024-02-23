@@ -1,5 +1,4 @@
 import { ReactNode, useCallback, useMemo, useState } from 'react';
-import { ELF_SYMBOL } from '../../constants/assets';
 import CustomSvg from '../CustomSvg';
 import { transNetworkText } from '../../utils/converter';
 import { BaseToken } from '../types/assets';
@@ -7,6 +6,7 @@ import { NetworkType } from '../../types';
 import { MAINNET } from '../../constants/network';
 import TitleWrapper from '../TitleWrapper';
 import AssetDropdown from '../AssetDropdown';
+import TokenImageDisplay from '../TokenImageDisplay';
 import './index.less';
 
 export interface ICustomTokenListProps {
@@ -34,13 +34,7 @@ export default function CustomTokenList({
       return (
         <div className="item" key={`${token.symbol}_${token.chainId}`} onClick={onChange?.bind(undefined, token)}>
           <div className="icon">
-            <div className="custom">
-              {token.symbol === ELF_SYMBOL ? (
-                <CustomSvg className="token-logo" type="ELF" />
-              ) : (
-                token?.symbol?.slice(0, 1)
-              )}
-            </div>
+            <TokenImageDisplay src={token.imageUrl} symbol={token.symbol} />
           </div>
           <div className="info">
             <p className="symbol">{`${token.symbol}`}</p>

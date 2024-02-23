@@ -7,6 +7,8 @@ export const DIGIT_CODE = {
   length: 6,
 };
 
+export const PASSWORD_LENGTH = 6;
+
 export const ZERO = new BigNumber(0);
 
 export const isEffectiveNumber = (v: any) => {

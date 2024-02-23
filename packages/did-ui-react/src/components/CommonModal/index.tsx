@@ -1,37 +1,31 @@
-import { Col, ModalProps, Row } from 'antd';
+import { Col, Row } from 'antd';
 import clsx from 'clsx';
-import { LeftOutlined } from '@ant-design/icons';
+import { LeftOutlined as LeftOutlinedIcon } from '@ant-design/icons';
 import { ReactNode } from 'react';
-import { Theme } from '../types';
 import CommonBaseModal from '../CommonBaseModal';
+import { PortkeyModalProps } from '../PortkeyModal';
 import './styles.less';
 
-export interface CommonModalProps extends ModalProps {
-  theme?: Theme;
+const LeftOutlined = (LeftOutlinedIcon as any).default || LeftOutlinedIcon;
+export interface CommonModalProps extends PortkeyModalProps {
   className?: string;
   leftCallBack?: () => void;
   leftElement?: ReactNode;
-  transitionName?: string;
 }
 
 export default function CommonModal(props: CommonModalProps) {
-  const { leftCallBack, width, title, leftElement, transitionName, maskClosable } = props;
+  const { leftCallBack, width, title, leftElement } = props;
   return (
     <CommonBaseModal
-      maskClosable={maskClosable}
-      centered={props.centered ?? true}
       destroyOnClose
-      footer={null}
-      maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
       {...props}
       width={width ? width : '400px'}
       className={clsx('portkey-ui-common-modals', props.className)}
-      transitionName={transitionName}
       title={
         <Row justify="space-between">
           {leftCallBack || leftElement ? (
             <Col className="common-modal-left-icon" flex={1} onClick={leftCallBack}>
-              {leftElement || <LeftOutlined />}
+              {leftElement || (LeftOutlined && <LeftOutlined />)}
             </Col>
           ) : null}
           <Col flex={2} style={{ textAlign: 'center' }}>

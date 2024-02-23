@@ -12,7 +12,6 @@ export interface ICurToken {
 export interface ITokenInputProps {
   value: string;
   fiatList: FiatType[];
-  isShowSelectInModal?: boolean;
   onChange: (val: string) => void;
   readOnly: boolean;
   onKeyDown: (e: IKeyDownParams) => void;
@@ -23,7 +22,6 @@ export interface ITokenInputProps {
 export default function TokenInput({
   value,
   fiatList,
-  isShowSelectInModal = true,
   onChange,
   readOnly,
   onKeyDown,
@@ -54,7 +52,6 @@ export default function TokenInput({
         open={openDrawer}
         onClose={() => setOpenDrawer(false)}
         onSelect={onSelect}
-        isModal={isShowSelectInModal}
       />
     </>
   );

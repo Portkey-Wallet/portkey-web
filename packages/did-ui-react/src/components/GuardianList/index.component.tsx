@@ -1,7 +1,5 @@
-import { Button } from 'antd';
 import { useTranslation } from 'react-i18next';
-import { useState, useMemo, useEffect, memo } from 'react';
-import { getApprovalCount } from '../../utils';
+import { useState, useEffect, memo, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
 import CommonTooltip from '../CommonTooltip/index.component';
 import GuardianItems from './components/GuardianItems';
@@ -9,6 +7,7 @@ import { ChainId } from '@portkey/types';
 import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
 import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 export interface GuardianListProps {
   originChainId: ChainId;
@@ -17,7 +16,10 @@ export interface GuardianListProps {
   guardianList?: UserGuardianStatus[];
   expiredTime?: number;
   isErrorTip?: boolean;
+  approvalLength: number;
+  alreadyApprovalLength: number;
   operationType?: OperationTypeEnum;
+  isFetching: boolean;
   onError?: OnErrorFunc;
   onConfirm?: () => void;
   onSend?: (item: UserGuardianStatus, index: number) => void;
@@ -32,6 +34,9 @@ function GuardianList({
   expiredTime,
   isErrorTip = true,
   operationType = OperationTypeEnum.communityRecovery,
+  approvalLength,
+  isFetching,
+  alreadyApprovalLength,
   onError,
   onConfirm,
   onSend,
@@ -40,15 +45,6 @@ function GuardianList({
   const { t } = useTranslation();
 
   const [isExpired, setIsExpired] = useState<boolean>(false);
-
-  const approvalLength = useMemo(() => {
-    return getApprovalCount(guardianList.length);
-  }, [guardianList.length]);
-
-  const alreadyApprovalLength = useMemo(
-    () => guardianList?.filter((item) => item?.status === VerifyStatus.Verified).length,
-    [guardianList],
-  );
 
   useEffect(() => {
     if (!expiredTime) return setIsExpired(false);
@@ -64,6 +60,16 @@ function GuardianList({
       clearInterval(timer);
     };
   }, [expiredTime]);
+
+  const btnDisabled = useMemo(
+    () => alreadyApprovalLength <= 0 || alreadyApprovalLength !== approvalLength,
+    [alreadyApprovalLength, approvalLength],
+  );
+
+  const onFinish = useCallback(() => {
+    if (isFetching) return;
+    onConfirm?.();
+  }, [isFetching, onConfirm]);
 
   return (
     <div className={clsx('guardian-list-wrapper', className)}>
@@ -103,13 +109,15 @@ function GuardianList({
           ))}
           {!isExpired && (
             <div className="btn-wrap">
-              <Button
+              <ThrottleButton
                 type="primary"
                 className="confirm-approve-btn"
-                disabled={alreadyApprovalLength <= 0 || alreadyApprovalLength !== approvalLength}
-                onClick={onConfirm}>
+                loading={isFetching}
+                disabled={btnDisabled}
+                onClick={onFinish}>
                 {t('Confirm')}
-              </Button>
+                {isFetching}
+              </ThrottleButton>
             </div>
           )}
         </ul>

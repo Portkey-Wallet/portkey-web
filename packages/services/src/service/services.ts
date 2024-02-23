@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest, IReferralConfig } from '@portkey/types';
 import { IServices } from '../types/services';
 import {
   ICommunityRecoveryService,
@@ -27,9 +27,9 @@ export class Services<T extends IBaseRequest = IBaseRequest> extends CommunityRe
   readonly activity: IActivityService;
   readonly security: ISecurityService;
 
-  constructor(request: T, didGraphQL: IDIDGraphQL) {
-    super(request, didGraphQL);
-    this.communityRecovery = new CommunityRecovery(request, didGraphQL);
+  constructor(request: T, didGraphQL: IDIDGraphQL, referralConfig: IReferralConfig) {
+    super(request, didGraphQL, referralConfig);
+    this.communityRecovery = new CommunityRecovery(request, didGraphQL, referralConfig);
     this.ramp = new Ramp(request);
     this.assets = new Assets(request);
     this.token = new Token(request);

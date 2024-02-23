@@ -1,7 +1,7 @@
-import { Button } from 'antd';
 import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 export interface SecurityCheckAndAccelerateProps {
   className?: string;
@@ -31,9 +31,9 @@ export default function SecurityCheckAndAccelerateMain({
 
       <div className={`${PrefixCls}-footer`}>
         <div className="portkey-ui-btn-wrapper">
-          <Button type="primary" onClick={onConfirm}>
+          <ThrottleButton type="primary" onClick={onConfirm}>
             OK
-          </Button>
+          </ThrottleButton>
         </div>
       </div>
     </div>

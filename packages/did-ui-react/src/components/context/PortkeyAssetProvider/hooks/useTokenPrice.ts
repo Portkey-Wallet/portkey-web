@@ -1,12 +1,12 @@
 import { useMemo } from 'react';
 import { usePortkeyAsset } from '../index';
 import { basicAssetViewAsync } from '../actions';
-import { useThrottleEffect } from '../../../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 
 export function useTokenPrice(symbol = '') {
   const [{ tokenPrices }, { dispatch }] = usePortkeyAsset();
 
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     symbol && basicAssetViewAsync.setTokenPrices({ symbols: [symbol] }).then(dispatch);
   }, [symbol]);
   return useMemo(() => tokenPrices?.tokenPriceObject?.[symbol] || 0, [symbol, tokenPrices?.tokenPriceObject]);

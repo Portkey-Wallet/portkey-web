@@ -1,0 +1,84 @@
+.portkey-ui-area-code-wrapper {
+  top: 56px;
+  .no-search-result {
+    margin-top: 72px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--portkey-ui-text-tip);
+  }
+  .portkey-ant-drawer-body {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.portkey-ui-area-code-title {
+  color: var(--portkey-ui-text-primary);
+  text-align: center;
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 22px;
+  padding: 17px 20px 9px;
+  .backleft-icon.left-arrow {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+  }
+}
+
+.portkey-ui-area-code-list {
+  flex: 1;
+  .adm-index-bar-anchor-title {
+    background: var(--portkey-ui-default-bg);
+  }
+
+  .adm-index-bar-anchor-title,
+  .adm-list-item {
+    padding-left: 0;
+    // background-color: ;
+  }
+  .adm-list-item-content {
+    padding-right: 0;
+  }
+  .adm-list-item-content,
+  .adm-list-default .adm-list-body {
+    border: none;
+  }
+
+  .adm-list-item-content-main,
+  .adm-index-bar-anchor-title {
+    padding-left: 20px;
+    padding-right: 40px;
+  }
+
+  a.adm-list-item:active:not(.adm-list-item-disabled) {
+    background: var(--portkey-ui-default-bg);
+  }
+  .adm-list-item-content-main {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 17px;
+    padding-bottom: 17px;
+    background-color: var(--portkey-ui-list-item-bg);
+    cursor: pointer;
+    & > span:first-child {
+      color: var(--portkey-ui-text-primary);
+      font-size: 16px;
+      line-height: 22px;
+    }
+    & > span:last-child {
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--portkey-ui-text-secondary);
+      text-align: right;
+    }
+    &:hover {
+      & > span {
+        color: var(--portkey-ui-font-4);
+      }
+    }
+  }
+}

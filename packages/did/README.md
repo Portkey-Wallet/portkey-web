@@ -288,6 +288,24 @@ did.getVerifierServers({
 });
 ```
 
+### check manager is exist
+
+Check whether the manager has management permissions for the account.
+
+```ts
+checkManagerIsExist(params:{chainId: ChainId, caHash:string, manager:string}): Promise<boolean>;
+```
+
+Example
+
+```ts
+did.checkManagerIsExist({
+  chainId: 'chainId',
+  caHash: 'caHash',
+  manager: 'manager'
+});
+```
+
 ### services
 
 #### services.getVerificationCode
@@ -314,6 +332,7 @@ did.services.getVerificationCode({
   },
 });
 ```
+
 [operationType types](../services/src/types/communityRecovery.ts)
 
 #### services.verifyVerificationCode
@@ -399,5 +418,4 @@ did.services.sendAppleUserExtraInfo({
 ```
 
 [npm-image-version]: https://img.shields.io/npm/v/@portkey/did
-[npm-image-downloads]: https://img.shields.io/npm/dm/@portkey/did.svg
 [npm-url]: https://npmjs.org/package/@portkey/did

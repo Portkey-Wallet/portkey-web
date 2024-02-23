@@ -1,3 +1,5 @@
+@import '../../assets/theme/constants.less';
+
 .portkey-sign-full-wrapper {
   min-height: 500px;
 }
@@ -53,12 +55,20 @@
 
 .portkey-ui-unlock-input {
   border: none;
-  border-bottom: 2px solid;
-  border-color: var(--portkey-ui-border-7);
-  border-radius: 0;
-  padding-left: 0;
-  padding-right: 0;
+  border-bottom: 2px solid var(--portkey-ui-border-1) !important;
+  border-radius: 0 !important;
+  padding: 7px 0 5px !important;
+
   &:hover {
-    border-color: var(--portkey-ui-border-7) !important;
+    border-color: var(--portkey-ui-border-1) !important;
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .unlock-body {
+    padding-top: 100px;
+    .unlock-title {
+      margin-bottom: 60px;
+    }
   }
 }

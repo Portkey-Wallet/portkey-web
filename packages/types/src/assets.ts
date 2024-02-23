@@ -3,6 +3,7 @@ export interface ITokenInfoType {
   decimals: string;
   balanceInUsd: string;
   tokenContractAddress: string;
+  imageUrl: string;
 }
 
 export interface IBaseNFTType {

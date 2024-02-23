@@ -15,7 +15,7 @@ export default function CustomTokenModal({
   ...props
 }: ICustomTokenModalProps) {
   return (
-    <AssetModal {...props} maskClosable={true} onCancel={onClose}>
+    <AssetModal {...props} onClose={onClose}>
       <CustomTokenList
         tokenList={tokenList}
         title={title}

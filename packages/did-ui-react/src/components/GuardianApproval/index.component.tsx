@@ -1,11 +1,36 @@
-import { useState, useCallback, ReactNode, useRef, useEffect, memo, forwardRef } from 'react';
+import {
+  useState,
+  useCallback,
+  ReactNode,
+  useRef,
+  useEffect,
+  memo,
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+} from 'react';
+import type { SetStateAction, Dispatch } from 'react';
 import clsx from 'clsx';
 import GuardianList from '../GuardianList/index.component';
 import VerifierPage from './components/VerifierPage';
-import { errorTip, handleErrorMessage, handleVerificationDoc, setLoading } from '../../utils';
+import {
+  errorTip,
+  getAlreadyApprovalLength,
+  getApprovalCount,
+  handleErrorMessage,
+  handleVerificationDoc,
+  setLoading,
+} from '../../utils';
 import type { ChainId } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
-import { BaseGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc, IVerificationInfo } from '../../types';
+import {
+  BaseGuardianItem,
+  UserGuardianStatus,
+  VerifyStatus,
+  OnErrorFunc,
+  IVerificationInfo,
+  NetworkType,
+} from '../../types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
@@ -13,6 +38,7 @@ import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
 import './index.less';
+import { SocialLoginList } from '../../constants/guardian';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -25,9 +51,14 @@ export interface GuardianApprovalProps {
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
   operationType?: OperationTypeEnum;
+  networkType: NetworkType;
   onError?: OnErrorFunc;
-  onConfirm?: (guardianList: GuardiansApproved[]) => void;
+  onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
+}
+
+export interface IGuardianApprovalInstance {
+  setVerifyAccountIndex: Dispatch<SetStateAction<number | undefined>>;
 }
 
 const GuardianApprovalMain = forwardRef(
@@ -38,6 +69,7 @@ const GuardianApprovalMain = forwardRef(
       targetChainId,
       className,
       guardianList: defaultGuardianList,
+      networkType,
       isErrorTip = true,
       wrapperStyle,
       operationType = OperationTypeEnum.communityRecovery,
@@ -45,7 +77,6 @@ const GuardianApprovalMain = forwardRef(
       onConfirm,
       onGuardianListChange,
     }: GuardianApprovalProps,
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
   ) => {
     const [verifyAccountIndex, setVerifyAccountIndex] = useState<number | undefined>();
@@ -59,7 +90,7 @@ const GuardianApprovalMain = forwardRef(
       onConfirmRef.current = onConfirm;
     });
 
-    console.log(guardianList, defaultGuardianList, 'guardianList==GuardianApproval');
+    useImperativeHandle(ref, () => ({ setVerifyAccountIndex }));
 
     useUpdateEffect(() => {
       onGuardianListChange?.(guardianList);
@@ -120,6 +151,9 @@ const GuardianApprovalMain = forwardRef(
               clientId = socialLogin?.Google?.clientId;
               customLoginHandler = socialLogin?.Google?.customLoginHandler;
               break;
+            case 'Telegram':
+              customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
+              break;
             default:
               throw 'accountType is not supported';
           }
@@ -135,9 +169,10 @@ const GuardianApprovalMain = forwardRef(
             clientId,
             redirectURI,
             operationType,
+            networkType,
             customLoginHandler,
           });
-          if (!rst && item.guardianType === 'Apple') return;
+          if (!rst || !rst.verificationDoc) return;
 
           const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
           const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
@@ -166,12 +201,12 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [originChainId, targetChainId, isErrorTip, onError, operationType, verifyToken],
+      [verifyToken, originChainId, targetChainId, operationType, networkType, isErrorTip, onError],
     );
 
     const onVerifyingHandler = useCallback(
       async (_item: UserGuardianStatus, index: number) => {
-        const isSocialLogin = _item.guardianType === 'Google' || _item.guardianType === 'Apple';
+        const isSocialLogin = SocialLoginList.includes(_item.guardianType);
         if (isSocialLogin) return socialVerifyHandler(_item, index);
 
         try {
@@ -210,18 +245,27 @@ const GuardianApprovalMain = forwardRef(
       [],
     );
 
-    const onConfirmHandler = useCallback(() => {
-      const verificationList = guardianList
-        .filter((item) => Boolean(item.signature && item.verificationDoc))
-        .map((item) => ({
-          type: item.guardianType,
-          identifier: item.identifier || item.identifierHash || '',
-          verifierId: item.verifier?.id || '',
-          verificationDoc: item.verificationDoc || '',
-          signature: item.signature || '',
-          identifierHash: item.identifierHash || '',
-        }));
-      onConfirmRef.current?.(verificationList);
+    const onConfirmHandler = useCallback(async () => {
+      setFetching(true);
+      try {
+        const verificationList = guardianList
+          .filter((item) => Boolean(item.signature && item.verificationDoc))
+          .map((item) => ({
+            type: item.guardianType,
+            identifier: item.identifier || item.identifierHash || '',
+            verifierId: item.verifier?.id || '',
+            verificationDoc: item.verificationDoc || '',
+            signature: item.signature || '',
+            identifierHash: item.identifierHash || '',
+          }));
+        await onConfirmRef.current?.(verificationList);
+        setFetching(false);
+      } catch (error) {
+        console.error(handleErrorMessage(error));
+        setFetching(false);
+      }
+
+      setFetching(false);
     }, [guardianList]);
 
     const onReSendVerifyHandler = useCallback(({ verifierSessionId }: TVerifyCodeInfo, verifyAccountIndex: number) => {
@@ -235,6 +279,19 @@ const GuardianApprovalMain = forwardRef(
         return list;
       });
     }, []);
+
+    const approvalLength = useMemo(() => getApprovalCount(guardianList.length), [guardianList.length]);
+
+    const alreadyApprovalLength = useMemo(() => getAlreadyApprovalLength(guardianList), [guardianList]);
+
+    const [isFetching, setFetching] = useState<boolean>(false);
+
+    useUpdateEffect(() => {
+      const disabled = alreadyApprovalLength <= 0 || alreadyApprovalLength !== approvalLength;
+      if (!disabled) {
+        onConfirmHandler();
+      }
+    }, [approvalLength, alreadyApprovalLength]);
 
     return (
       <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
@@ -263,6 +320,9 @@ const GuardianApprovalMain = forwardRef(
               targetChainId={targetChainId}
               expiredTime={expiredTime}
               operationType={operationType}
+              isFetching={isFetching}
+              approvalLength={approvalLength}
+              alreadyApprovalLength={alreadyApprovalLength}
               guardianList={guardianList}
               isErrorTip={isErrorTip}
               onSend={onSendCodeHandler}

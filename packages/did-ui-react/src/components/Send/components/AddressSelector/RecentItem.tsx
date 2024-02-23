@@ -1,6 +1,5 @@
 import { RecentContactItemType } from '@portkey/services';
 import { IClickAddressProps } from '../../../types/assets';
-import ContactCard from './ContactCard';
 import clsx from 'clsx';
 import { formatStr2EllipsisStr } from '../../../../utils';
 import { transNetworkText } from '../../../../utils/converter';

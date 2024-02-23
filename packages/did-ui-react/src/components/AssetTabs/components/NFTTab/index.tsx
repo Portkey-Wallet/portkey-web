@@ -7,9 +7,8 @@ import CustomSvg from '../../../CustomSvg';
 import { ChainId } from '@portkey/types';
 import useNFTMaxCount from '../../../../hooks/useNFTMaxCount';
 import { INftCollectionItem } from '@portkey/services';
-import './index.less';
-import CircleLoading from '../../../CircleLoading';
 import CheckFetchLoading from '../../../CheckFetchLoading';
+import './index.less';
 
 export interface NFTTabProps {
   isMainnet?: boolean;

@@ -293,7 +293,7 @@ class SandboxUtil {
       if (!transaction?.Success) throw 'Transaction failed';
       callback(event, {
         code: SandboxErrorCode.success,
-        message: transaction.TransactionFee,
+        message: transaction,
         sid: data.sid,
       });
     } catch (e) {

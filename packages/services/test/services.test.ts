@@ -8,7 +8,7 @@ const request = new FetchRequestMock({});
 
 describe('Services describe', () => {
   test('test fetchTconstructorxFee', async () => {
-    const services = new Services(request, {} as any);
+    const services = new Services(request, {} as any, {} as any);
 
     expect(services).toHaveProperty('communityRecovery');
     expect(services).toHaveProperty('ramp');

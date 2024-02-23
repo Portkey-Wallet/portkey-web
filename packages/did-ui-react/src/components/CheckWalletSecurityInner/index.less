@@ -14,3 +14,19 @@
 .portkey-ui-check-wallet-security-add-guardian {
   height: 566px;
 }
+
+@media screen and (max-width: 768px) {
+  .portkey-ui-check-wallet-security-content {
+    height: 100%;
+    .portkey-ui-security-check-wrapper,
+    .portkey-ui-security-check-body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .portkey-ui-security-check-body {
+      flex: 1;
+    }
+  }
+}

@@ -7,7 +7,7 @@ import './theme.css';
 
 function Index() {
   const [dark, setDark] = useState<boolean>(false);
-  const [networkType, setNetworkType] = useState<NetworkType>('MAIN');
+  const [networkType, setNetworkType] = useState<NetworkType>('MAINNET');
 
   useEffect(() => {
     if (dark) {
@@ -28,7 +28,7 @@ function Index() {
         </button>
         <button
           onClick={async () => {
-            setNetworkType(v => (v === 'MAIN' ? 'TESTNET' : 'MAIN'));
+            setNetworkType(v => (v === 'MAINNET' ? 'TESTNET' : 'MAINNET'));
           }}>
           Only change networkType
         </button>

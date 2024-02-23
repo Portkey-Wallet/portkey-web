@@ -1,11 +1,9 @@
-import { Button, Input } from 'antd';
+import { Input } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 import { AssetTokenExpand } from '../../../types/assets';
 import { handleKeyDown } from '../../utils/handlerKey';
 import { divDecimals, formatAmountShow } from '../../../../utils/converter';
-import CustomSvg from '../../../CustomSvg';
-import { ELF_SYMBOL } from '../../../../constants/assets';
 import { ZERO } from '../../../../constants/misc';
 import { usePortkey } from '../../../context';
 import { MAINNET } from '../../../../constants/network';
@@ -16,7 +14,9 @@ import { amountInUsdShow } from '../../../../utils/assets';
 import { useCheckManagerSyncState } from '../../../../hooks/wallet';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
 import { useFeeByChainId } from '../../../context/PortkeyAssetProvider/hooks/txFee';
-import { useThrottleEffect } from '../../../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../../../hooks/throttle';
+import TokenImageDisplay from '../../../TokenImageDisplay';
+import ThrottleButton from '../../../ThrottleButton';
 
 export default function TokenInput({
   fromAccount,
@@ -116,7 +116,7 @@ export default function TokenInput({
     token.symbol,
   ]);
 
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     getTokenBalance();
     getMaxAmount();
   }, [getMaxAmount, getTokenBalance]);
@@ -147,11 +147,7 @@ export default function TokenInput({
         <div className="control">
           <div className="asset-selector">
             <div className="icon">
-              {token.symbol === ELF_SYMBOL ? (
-                <CustomSvg className="token-logo" type="ELF" />
-              ) : (
-                <div className="custom">{token?.symbol[0]}</div>
-              )}
+              <TokenImageDisplay src={token.imageUrl} width={24} symbol={token.symbol} />
             </div>
             <div className="center">
               <p className="symbol">{token?.symbol}</p>
@@ -165,7 +161,7 @@ export default function TokenInput({
       <div className="item amount">
         <div className="label">
           <div>Amount:</div>
-          <Button onClick={handleMax}>Max</Button>
+          <ThrottleButton onClick={handleMax}>Max</ThrottleButton>
         </div>
         <div className="control">
           <div className="amount-input">

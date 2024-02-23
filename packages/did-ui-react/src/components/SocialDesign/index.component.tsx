@@ -12,6 +12,8 @@ import clsx from 'clsx';
 import { usePortkey } from '../context';
 import { useSignHandler } from '../../hooks/useSignHandler';
 import './index.less';
+import useMobile from '../../hooks/useMobile';
+import { SocialLoginList } from '../../constants/guardian';
 
 type SocialDesignType = AccountType | 'Scan' | null;
 export interface SocialDesignProps extends IBaseGetGuardianProps {
@@ -26,8 +28,10 @@ function SocialDesign({
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
-  extraElement,
+  extraElementList,
   termsOfService,
+  privacyPolicy,
+  loginMethodsOrder,
   onError,
   onSuccess,
   validateEmail: defaultValidateEmail,
@@ -40,12 +44,13 @@ function SocialDesign({
   const validatePhoneRef = useRef<SocialDesignProps['validatePhone']>(defaultValidatePhone);
   const onChainIdChangeRef = useRef<SocialDesignProps['onChainIdChange']>(onChainIdChange);
   const onErrorRef = useRef<SocialDesignProps['onError']>(onError);
+  const [{ networkType, chainType }] = usePortkey();
 
   const socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
 
-  const { loginByApple, loginByGoogle } = useSocialLogin({ socialLogin });
+  const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
 
-  const [{ networkType, chainType }] = usePortkey();
+  const isMobile = useMobile();
 
   const handlerParam = useMemo(
     () => ({
@@ -63,15 +68,19 @@ function SocialDesign({
   const onAccountTypeChange = useCallback(
     async (type: AccountType | 'Scan') => {
       try {
-        if (type !== 'Apple' && type !== 'Google') return setAccountType(type);
+        if (!SocialLoginList.includes(type)) return setAccountType(type);
         let result;
+        setLoading(true);
+
         if (type === 'Google') {
-          setLoading(true);
-          result = await loginByGoogle();
+          result = await socialLoginHandler('Google');
         } else if (type === 'Apple') {
-          setLoading(true);
-          result = await loginByApple();
+          result = await socialLoginHandler('Apple');
+        } else if (type === 'Telegram') {
+          result = await socialLoginHandler('Telegram');
         } else throw Error('AccountType is not support');
+        setLoading(false);
+
         await onSocialFinish(result);
       } catch (error) {
         setLoading(false);
@@ -85,13 +94,14 @@ function SocialDesign({
         );
       }
     },
-    [isErrorTip, loginByApple, loginByGoogle, onSocialFinish],
+    [isErrorTip, onSocialFinish, socialLoginHandler],
   );
 
   return (
     <div className={clsx('portkey-ui-user-input-wrapper', className)} style={style}>
       {accountType === 'Scan' && (
         <ScanCard
+          isMobile={isMobile}
           chainId={defaultChainId}
           backIcon={<CustomSvg type="PC" />}
           chainType={chainType}
@@ -118,9 +128,11 @@ function SocialDesign({
       {!accountType && (
         <Overview
           isShowScan={showScan}
-          extraElement={extraElement}
+          extraElementList={extraElementList}
           onAccountTypeChange={onAccountTypeChange}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
+          loginMethodsOrder={loginMethodsOrder}
         />
       )}
     </div>

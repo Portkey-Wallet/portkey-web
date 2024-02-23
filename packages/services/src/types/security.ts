@@ -33,6 +33,7 @@ export interface ITransferLimitItem {
   dailyLimit: string;
   restricted: boolean;
   decimals: number | string;
+  imageUrl?: string;
   defaultSingleLimit?: string;
   defaultDailyLimit?: string;
 }

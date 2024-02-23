@@ -1,5 +1,5 @@
 import { detectBrowserName } from '../utils';
-import { EXTENSION_DOWNLOAD_URL } from '../constants';
+import { EXTENSION_DOWNLOAD_URL, EXTENSION_V2_DOWNLOAD_URL } from '../constants';
 import { IEvokeExtensionProps } from './types';
 import detectProvider from '@portkey/detect-provider';
 
@@ -21,9 +21,11 @@ const checkPortkeyExtension = async (params?: IEvokeExtensionProps) => {
   const _window: any = window;
 
   if (await isPortkeyProvider()) return true;
+  const version = params?.version;
+  const downloadUrl = version !== 'v1' ? EXTENSION_V2_DOWNLOAD_URL : EXTENSION_DOWNLOAD_URL;
 
   const browserName = detectBrowserName();
-  const downloadURL = EXTENSION_DOWNLOAD_URL[browserName] || EXTENSION_DOWNLOAD_URL.DEFAULT;
+  const downloadURL = downloadUrl[browserName] || downloadUrl.DEFAULT;
 
   _window.open(downloadURL, openTarget);
   return false;

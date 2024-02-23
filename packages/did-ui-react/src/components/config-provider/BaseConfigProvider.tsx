@@ -6,6 +6,7 @@ import { ReactNode } from 'react';
 import clsx from 'clsx';
 import { ChainType } from '@portkey/types';
 import { NetworkType } from '../../types';
+import { PORTKEY_ROOT_ID } from '../../constants';
 
 export default function BaseConfigProvider({
   sandboxId,
@@ -14,7 +15,7 @@ export default function BaseConfigProvider({
   theme = 'light',
   children,
 }: {
-  // Required when running on chrome extension
+  /** @alpha Required when running on chrome extension */
   sandboxId?: string;
   // Currently theme is used to control content such as pictures under the black/light theme
   theme?: Theme;
@@ -24,7 +25,7 @@ export default function BaseConfigProvider({
 }) {
   return (
     <PortkeyProvider sandboxId={sandboxId} chainType={chainType} networkType={networkType} theme={theme}>
-      <div id="portkey-ui-root" className={clsx('portkey-ui-wrapper', theme === 'dark' && 'portkey-ui-dark-wrapper')}>
+      <div id={PORTKEY_ROOT_ID} className={clsx('portkey-ui-wrapper', theme === 'dark' && 'portkey-ui-dark-wrapper')}>
         {children}
         <ScreenLoading />
         <ReCaptchaModal />

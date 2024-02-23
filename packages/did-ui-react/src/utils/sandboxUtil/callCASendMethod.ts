@@ -67,6 +67,7 @@ export const callCASendMethodOnWeb = async (params: CallCASendMethodParams) => {
     params.paramsOption,
     params.sendOptions,
   );
+  console.log('callCASendMethodOnWeb callSendMethod req:', req);
   if (req.error) throw handleErrorMessage(req);
   return req.data;
 };

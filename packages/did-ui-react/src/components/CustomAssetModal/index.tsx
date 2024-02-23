@@ -13,7 +13,7 @@ import AssetsTokenItem from './components/AssetsTokenItem';
 import AssetsNFTItem from './components/AssetsNFTItem';
 import '../CustomTokenList/index.less';
 import { TokenType } from '../types/assets';
-import { useThrottleCallback } from '../../hooks/throttle';
+import { useThrottleFirstCallback } from '../../hooks/throttle';
 import CheckFetchLoading from '../CheckFetchLoading';
 
 type ICustomTokenModalProps = ModalProps & {
@@ -34,7 +34,7 @@ export default function CustomAssetModal({
   const [filterWord, setFilterWord] = useState<string>('');
 
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
-  const onSearchValChange = useThrottleCallback(
+  const onSearchValChange = useThrottleFirstCallback(
     (v: string) => {
       setFilterWord(v);
       if (!caAddressInfos) return;
@@ -49,7 +49,7 @@ export default function CustomAssetModal({
   );
 
   return (
-    <AssetModal {...props} maskClosable={false} onCancel={onCancel}>
+    <AssetModal {...props} onClose={onCancel}>
       <div className="portkey-ui-flex-column portkey-ui-custom-token-list">
         <TitleWrapper
           className="custom-token-header"

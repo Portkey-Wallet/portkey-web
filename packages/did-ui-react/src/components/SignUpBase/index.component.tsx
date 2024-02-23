@@ -1,11 +1,19 @@
 import { useState, useCallback, useRef, useEffect, useMemo, ReactNode } from 'react';
-import { ISocialLoginConfig, OnErrorFunc, SocialLoginFinishHandler, ValidatorHandler } from '../../types';
+import {
+  ISocialLoginConfig,
+  NetworkType,
+  OnErrorFunc,
+  SocialLoginFinishHandler,
+  TotalAccountType,
+  ValidatorHandler,
+} from '../../types';
 import InputLogin from '../InputLogin';
 import { IPhoneCountry, LoginFinishWithoutPin } from '../types';
 import SocialLogin from '../SocialLogin';
 import { GuardianInputInfo } from '../types/signIn';
 import clsx from 'clsx';
 import ConfigProvider from '../config-provider';
+import { AccountType } from '@portkey/services';
 import './index.less';
 
 enum STEP {
@@ -17,10 +25,14 @@ export interface SignUpBaseProps {
   phoneCountry?: IPhoneCountry;
   socialLogin?: ISocialLoginConfig;
   isErrorTip?: boolean;
+  isMobile?: boolean;
   wrapperClassName?: string;
   extraElement?: ReactNode; // extra element
   termsOfService?: ReactNode;
-  networkType?: string;
+  privacyPolicy?: string;
+  networkType: NetworkType;
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
   onLoginByPortkey?: LoginFinishWithoutPin;
   onBack?: () => void;
   onError?: OnErrorFunc;
@@ -34,10 +46,14 @@ export default function SignUpBase({
   socialLogin,
   phoneCountry,
   isErrorTip = true,
+  isMobile,
   networkType,
   wrapperClassName,
   extraElement,
   termsOfService,
+  privacyPolicy,
+  loginMethodsOrder,
+  recommendIndexes,
   onBack,
   onError,
   onInputFinish,
@@ -60,12 +76,15 @@ export default function SignUpBase({
     onBackRef?.current?.();
   }, []);
 
+  const [defaultKey, setDefaultKey] = useState<AccountType>();
+
   return (
     <div className={clsx('register-start-card sign-ui-card', wrapperClassName)}>
       {step === STEP.inputLogin ? (
         <InputLogin
           type="Sign up"
           phoneCountry={phoneCountry}
+          defaultAccountType={defaultKey}
           validateEmail={validateEmail}
           validatePhone={validatePhone}
           onFinish={onInputFinish}
@@ -75,13 +94,20 @@ export default function SignUpBase({
         <SocialLogin
           type="Sign up"
           className="portkey-ui-flex-1"
+          isMobile={isMobile}
           extraElement={extraElement}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
           isErrorTip={isErrorTip}
           networkType={networkType}
           socialLogin={_socialLogin}
+          loginMethodsOrder={loginMethodsOrder}
+          recommendIndexes={recommendIndexes}
           onFinish={onSocialSignFinish}
-          switchGuardianType={() => setStep(STEP.inputLogin)}
+          switchGuardianType={(type) => {
+            setStep(STEP.inputLogin);
+            setDefaultKey(type);
+          }}
           onBack={_onBack}
           onError={onError}
           onLoginByPortkey={onLoginByPortkey}

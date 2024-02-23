@@ -1,9 +1,8 @@
 import { TokenItemShowType } from '../../../types/assets';
-import CustomSvg from '../../../CustomSvg';
-import { ELF_SYMBOL } from '../../../../constants/assets';
 import { divDecimals, formatAmountShow, transNetworkText } from '../../../../utils/converter';
 import BigNumber from 'bignumber.js';
 import CheckFetchLoading from '../../../CheckFetchLoading';
+import TokenImageDisplay from '../../../TokenImageDisplay';
 import './index.less';
 
 export default function TokenTab({
@@ -26,11 +25,8 @@ export default function TokenTab({
               className="token-list-item"
               key={`${item.chainId}_${item.symbol}`}
               onClick={() => onViewTokenItem?.(item)}>
-              {item.symbol === ELF_SYMBOL ? (
-                <CustomSvg className="token-logo" type={'ELF'} />
-              ) : (
-                <div className="token-logo custom-word-logo">{item.symbol?.slice(0, 1)}</div>
-              )}
+              <TokenImageDisplay src={item.imageUrl} symbol={item.symbol} />
+
               <div className="desc">
                 <div className="info">
                   <span>{item.symbol}</span>

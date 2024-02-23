@@ -1,6 +1,11 @@
 import { IBaseRequest } from '@portkey/types';
-import { BaseService } from '../types';
+import { BaseListResponse, BaseService } from '../types';
 import {
+  AchNFTOrderInfo,
+  AchNFTSignatureResult,
+  AchNFTTokenResult,
+  GetAchNFTSignatureParams,
+  GetAchOrderInfoByOrderIdParams,
   GetAchSignatureParams,
   GetAchSignatureResult,
   GetAchTokenParams,
@@ -19,6 +24,27 @@ import {
 } from '../types/ramp';
 
 export class Ramp<T extends IBaseRequest = IBaseRequest> extends BaseService<T> implements IRampService {
+  getAchNFTToken(params: GetAchTokenParams): Promise<AchNFTTokenResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/thirdPart/alchemy/token/nft',
+      params,
+    });
+  }
+  getAchNFTSignature(params: GetAchNFTSignatureParams): Promise<AchNFTSignatureResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/thirdPart/alchemy/signature/api',
+      params,
+    });
+  }
+  getAchNFTOrderInfoByOrderId(params: GetAchOrderInfoByOrderIdParams): Promise<BaseListResponse<AchNFTOrderInfo>> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/thirdPart/orders',
+      params,
+    });
+  }
   getFiatList(params: GetFiatListParams): Promise<GetFiatListResult> {
     return this._request.send({
       method: 'GET',

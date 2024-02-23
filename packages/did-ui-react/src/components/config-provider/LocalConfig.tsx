@@ -61,6 +61,11 @@ class LocalConfigProvider {
     if ('reCaptchaConfig' in _config) {
       _config['reCaptchaConfig'] && setReCaptchaConfig(_config['reCaptchaConfig']);
     }
+    if ('referralInfo' in _config) {
+      did.setConfig({
+        referralInfo: _config['referralInfo'],
+      });
+    }
 
     this.config = { ...this.config, ..._config };
   };

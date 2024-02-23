@@ -1,8 +1,5 @@
-import { Segmented } from 'antd';
-import { useState } from 'react';
-import PhoneTab from '../PhoneTab';
 import { GuardianInputInfo, IPhoneCountry } from '../types';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
+import { AccountType } from '@portkey/services';
 import { ValidatorHandler } from '../../types';
 import EmailTab from '../EmailTab';
 import './index.less';
@@ -16,25 +13,18 @@ export interface InputInfoProps {
   onFinish?: (v: GuardianInputInfo) => void;
 }
 
-export default function SegmentedInput({
-  confirmText,
-  phoneCountry,
-  defaultActiveKey = 'Phone',
-  onFinish,
-  validateEmail,
-  validatePhone,
-}: InputInfoProps) {
-  const [value, setValue] = useState<AccountType>(defaultActiveKey);
+export default function SegmentedInput({ confirmText, onFinish, validateEmail }: InputInfoProps) {
+  // const [value, setValue] = useState<AccountType>(defaultActiveKey);
   return (
     <div className="portkey-ui-segmented-input">
-      <Segmented
+      {/* <Segmented
         className="portkey-ui-segmented"
-        value={value}
+        value={'Email'}
         block
-        options={['Phone', 'Email']}
+        options={['Email']}
         onChange={(v) => setValue(v as any)}
-      />
-      {value === 'Phone' && (
+      /> */}
+      {/* {value === 'Phone' && (
         <PhoneTab
           className="portkey-ui-segmented-phone"
           confirmText={confirmText}
@@ -47,20 +37,20 @@ export default function SegmentedInput({
             })
           }
         />
-      )}
-      {value === 'Email' && (
-        <EmailTab
-          className="portkey-ui-segmented-email"
-          confirmText={confirmText}
-          validate={validateEmail}
-          onFinish={(v) =>
-            onFinish?.({
-              accountType: AccountTypeEnum[AccountTypeEnum.Email] as AccountType,
-              identifier: v,
-            })
-          }
-        />
-      )}
+      )} */}
+      {/* {value === 'Email' && ( */}
+      <EmailTab
+        className="portkey-ui-segmented-email"
+        confirmText={confirmText}
+        validate={validateEmail}
+        onFinish={(v) =>
+          onFinish?.({
+            accountType: 'Email',
+            identifier: v,
+          })
+        }
+      />
+      {/* )} */}
     </div>
   );
 }

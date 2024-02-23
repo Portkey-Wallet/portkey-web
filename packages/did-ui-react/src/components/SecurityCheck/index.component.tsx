@@ -1,7 +1,7 @@
-import { Button } from 'antd';
 import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
 
 export interface SecurityCheckProps {
   className?: string;
@@ -26,10 +26,10 @@ export default function SecurityCheckMain({ className, onCancel, onConfirm }: Se
 
       <div className={`${PrefixCls}-footer`}>
         <div className="portkey-ui-btn-wrapper">
-          <Button onClick={onCancel}>Not Now</Button>
-          <Button type="primary" onClick={onConfirm}>
+          <ThrottleButton onClick={onCancel}>Not Now</ThrottleButton>
+          <ThrottleButton type="primary" onClick={onConfirm}>
             Add Guardians
-          </Button>
+          </ThrottleButton>
         </div>
       </div>
     </div>

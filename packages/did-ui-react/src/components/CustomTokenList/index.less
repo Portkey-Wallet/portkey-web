@@ -6,6 +6,7 @@
       text-align: center;
       font-size: 18px;
       line-height: 22px;
+      font-size: 20px;
     }
     .portkey-ui-custom-svg {
       height: 24px;
@@ -88,24 +89,6 @@
           width: 32px;
           height: 32px;
         }
-        .custom {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid var(--portkey-ui-border-1);
-          border-radius: 50%;
-          background-color: var(--portkey-ui-bg-6);
-          img {
-            width: 32px;
-            height: 32px;
-          }
-        }
-        .portkey-ui-custom-svg {
-          svg {
-            width: 32px;
-            height: 32px;
-          }
-        }
       }
       .info {
         flex: 1;
@@ -151,6 +134,17 @@
         line-height: 20px;
         color: var(--portkey-ui-text-tip);
         font-size: 14px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .portkey-ui-custom-token-list {
+    .custom-token-header {
+      padding: 25px 24px 16px;
+      .title-center {
+        font-size: 20px;
       }
     }
   }

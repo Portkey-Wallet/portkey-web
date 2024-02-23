@@ -24,7 +24,10 @@ export class Search<T extends IBaseRequest = IBaseRequest> extends BaseService<T
     });
     return req.items;
   }
-  async getRegisterStatus(id: string, options = DefaultQueryOptions): Promise<RegisterStatusResult> {
+  async getRegisterStatus(
+    id: string,
+    options = JSON.parse(JSON.stringify(DefaultQueryOptions)),
+  ): Promise<RegisterStatusResult> {
     if (options.reCount > options.maxCount) throw new Error('timeout');
     const req = await this._request.send({
       method: searchMethod,
@@ -40,7 +43,10 @@ export class Search<T extends IBaseRequest = IBaseRequest> extends BaseService<T
     }
     return result;
   }
-  async getRecoverStatus(id: string, options = DefaultQueryOptions): Promise<RecoverStatusResult> {
+  async getRecoverStatus(
+    id: string,
+    options = JSON.parse(JSON.stringify(DefaultQueryOptions)),
+  ): Promise<RecoverStatusResult> {
     if (options.reCount > options.maxCount) throw new Error('timeout');
     const req = await this._request.send({
       method: searchMethod,

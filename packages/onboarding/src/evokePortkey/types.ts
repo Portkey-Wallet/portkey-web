@@ -7,7 +7,7 @@ export interface IBaseEvokeAppOption {
   customFailureCallback?: () => void;
   onStatusChange?: EvokeAppOptions['logFunc'];
 }
-
+export type TVersion = { version?: string };
 export type EvokePortkeyByLogin = PartialOption<Omit<schemeUtils.ILoginHandleSchemeParams, 'scheme'>, 'domain'> &
   IBaseEvokeAppOption;
 export type EvokePortkeyByLinkDapp = PartialOption<Omit<schemeUtils.ILinkDappHandleSchemeParams, 'scheme'>, 'domain'> &
@@ -23,12 +23,13 @@ export type EvokePortkeyByAddGroup = PartialOption<Omit<schemeUtils.IAddGroupHan
   IBaseEvokeAppOption;
 
 export interface IEvokePortkeyApp {
-  evokePortkeyApp(params: EvokePortkeyByLogin): void;
-  evokePortkeyApp(params: EvokePortkeyByLinkDapp): void;
-  evokePortkeyApp(params: EvokePortkeyByAddContact): void;
-  evokePortkeyApp(params: EvokePortkeyByAddGroup): void;
+  evokePortkeyApp(params: EvokePortkeyByLogin & TVersion): void;
+  evokePortkeyApp(params: EvokePortkeyByLinkDapp & TVersion): void;
+  evokePortkeyApp(params: EvokePortkeyByAddContact & TVersion): void;
+  evokePortkeyApp(params: EvokePortkeyByAddGroup & TVersion): void;
 }
 
 export interface IEvokeExtensionProps {
   openTarget?: '_self' | '_blank';
+  version?: string;
 }

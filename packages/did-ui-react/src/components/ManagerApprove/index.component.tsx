@@ -6,7 +6,7 @@ import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } f
 import { getChain } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
-import { BaseGuardianItem, IGuardiansApproved } from '../../types';
+import { BaseGuardianItem, IGuardiansApproved, NetworkType } from '../../types';
 import { OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import BackHeader from '../BackHeader';
@@ -19,6 +19,7 @@ export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
   targetChainId: ChainId;
   caHash: string;
+  networkType: NetworkType;
 }
 
 export interface IManagerApproveResult {
@@ -42,6 +43,7 @@ export default function ManagerApproveInner({
   max,
   originChainId,
   targetChainId,
+  networkType,
   caHash,
   amount,
   dappInfo,
@@ -189,7 +191,8 @@ export default function ManagerApproveInner({
             originChainId={originChainId}
             targetChainId={targetChainId}
             guardianList={guardianList}
-            onConfirm={(approvalInfo) => {
+            networkType={networkType}
+            onConfirm={async (approvalInfo) => {
               const approved: IGuardiansApproved[] = approvalInfo.map((guardian) => ({
                 type: AccountTypeEnum[guardian.type || 'Google'],
                 identifierHash: guardian.identifierHash || '',
@@ -200,7 +203,7 @@ export default function ManagerApproveInner({
                 },
               }));
 
-              onFinish?.({
+              await onFinish?.({
                 amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
                 guardiansApproved: approved,
               });

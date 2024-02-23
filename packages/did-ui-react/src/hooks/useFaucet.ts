@@ -1,12 +1,11 @@
 import { useCallback } from 'react';
 import { MAINNET, MAIN_CHAIN_ID } from '../constants/network';
 import { IFaucetConfig } from '../components/types/assets';
-import { message } from 'antd';
 import { handleErrorMessage, setLoading } from '../utils';
 import { callCASendMethod } from '../utils/sandboxUtil/callCASendMethod';
 import { timesDecimals } from '../utils/converter';
 import { usePortkey } from '../components/context';
-import { usePortkeyAsset } from '../components';
+import { singleMessage, usePortkeyAsset } from '../components';
 
 export const useFaucet = (faucet?: IFaucetConfig) => {
   const [{ sandboxId, networkType, chainType }] = usePortkey();
@@ -15,8 +14,8 @@ export const useFaucet = (faucet?: IFaucetConfig) => {
     const faucetUrl = faucet?.faucetUrl;
     const faucetContractAddress = faucet?.faucetContractAddress;
     if (faucetUrl && networkType !== MAINNET) return window.open(faucetUrl);
-    if (!faucetContractAddress) return message.error('Please configure `faucets`');
-    if (!caHash || !managementAccount?.privateKey) return message.error('Please confirm whether to log in!');
+    if (!faucetContractAddress) return singleMessage.error('Please configure `faucets`');
+    if (!caHash || !managementAccount?.privateKey) return singleMessage.error('Please confirm whether to log in!');
     try {
       setLoading(true);
       const result = await callCASendMethod({
@@ -33,12 +32,12 @@ export const useFaucet = (faucet?: IFaucetConfig) => {
         privateKey: managementAccount.privateKey,
       });
       setLoading(false);
-      message.success('Token successfully requested');
+      singleMessage.success('Token successfully requested');
       // TODO
       console.log(result, 'result==callCASendMethod');
     } catch (error) {
       setLoading(false);
-      message.error(handleErrorMessage(error));
+      singleMessage.error(handleErrorMessage(error));
     }
   }, [caHash, chainType, faucet?.faucetContractAddress, faucet?.faucetUrl, managementAccount, networkType, sandboxId]);
 };

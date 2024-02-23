@@ -1,13 +1,14 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
 import BackHeaderForPage from '../BackHeaderForPage';
-import { Button, Form, FormProps, Input } from 'antd';
+import { Form, FormProps, Input } from 'antd';
 import { ITransferLimitItem } from '@portkey/services';
 import { formatWithCommas } from '../../utils/converter';
 import { AmountSign } from '../../types/activity';
 import { NoLimit, SetLimitExplain } from '../../constants/security';
 import './index.less';
 import SwitchComponent from '../SwitchComponent';
+import ThrottleButton from '../ThrottleButton';
 
 export interface TransferSettingsProps extends FormProps {
   className?: string;
@@ -99,9 +100,9 @@ export default function TransferSettingsMain({
         </div>
         {isShowEditButton && (
           <FormItem className="portkey-ui-footer-btn-wrap">
-            <Button className="portkey-ui-footer-btn" type="primary" onClick={onEdit}>
+            <ThrottleButton className="portkey-ui-footer-btn" type="primary" onClick={onEdit}>
               {'Edit'}
-            </Button>
+            </ThrottleButton>
           </FormItem>
         )}
       </Form>

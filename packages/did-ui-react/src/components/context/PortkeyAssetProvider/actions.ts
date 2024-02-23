@@ -122,7 +122,6 @@ const fetchTokenList = async ({
     skipCount,
     maxResultCount,
     caAddressInfos,
-    caAddresses: caAddressInfos.map((info) => info.caAddress),
   });
   let data;
   // mock data for new account
@@ -236,7 +235,6 @@ const fetchActivityList = async ({
     height: -1,
     maxResultCount,
     skipCount,
-    caAddresses: caAddressInfos?.map((info) => info.caAddress),
     caAddressInfos,
     managerAddresses,
     transactionTypes,

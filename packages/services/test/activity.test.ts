@@ -10,7 +10,6 @@ const activityService = new Activity(request);
 describe('activityService describe', () => {
   test('test getActivityList', async () => {
     const result = await activityService.getActivityList({
-      caAddresses: ['caAddresses_mock'],
       caAddressInfos: [{ caAddress: 'caAddress_mock', chainId: 'AELF' }],
       skipCount: 0,
       maxResultCount: 10,
@@ -40,6 +39,7 @@ describe('activityService describe', () => {
   });
   test('test getActivityDetail', async () => {
     const result = await activityService.getActivityDetail({
+      caAddressInfos: [{ caAddress: 'caAddress_mock', chainId: 'AELF' }],
       transactionId: 'transactionId_mock',
       blockHash: 'blockHash_mock',
     });

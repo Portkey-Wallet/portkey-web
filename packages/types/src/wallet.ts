@@ -102,3 +102,8 @@ export interface IKeyStore {
 export interface ISignature {
   signature: Buffer;
 }
+
+export interface IReferralInfo {
+  referralCode?: string;
+  projectCode?: string;
+}

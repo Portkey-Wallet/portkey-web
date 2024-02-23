@@ -15,6 +15,8 @@ import {
   ChainId,
   BaseWalletFactory,
   IConfig,
+  SendOptions,
+  TransactionStatus,
 } from '@portkey/types';
 
 export type LoginType = 'scan' | 'account';
@@ -29,6 +31,13 @@ export type EditManagerParams = {
   caHash?: string;
   managerInfo?: IManagerInfo;
 };
+
+export type CheckManagerParams = {
+  chainId: ChainId;
+  caHash: string;
+  managementAddress: string;
+};
+
 export type ScanLoginParams = EditManagerParams;
 
 export type AccountLoginParams = Omit<RecoveryParams, 'manager'>;
@@ -62,10 +71,12 @@ export type LoginResult = {
   sessionId: string;
   error: Error | undefined;
 };
+export type LogoutResult = { transactionId: string; status?: TransactionStatus };
+
 export interface IDIDAccountMethods extends IAccountMethods {
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
-  logout(params: EditManagerParams): Promise<boolean>;
+  logout(params: EditManagerParams, options?: SendOptions): Promise<LogoutResult>;
   getLoginStatus(params: { chainId: ChainId; sessionId: string }): Promise<RecoverStatusResult>;
   register(params: Omit<RegisterParams, 'manager'>): Promise<RegisterResult>;
   getRegisterStatus(params: { chainId: ChainId; sessionId: string }): Promise<RegisterStatusResult>;
@@ -73,6 +84,14 @@ export interface IDIDAccountMethods extends IAccountMethods {
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   getVerifierServers(chainId: ChainId): Promise<VerifierItem[]>;
   getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo>;
+  /**
+   * @param caHash - CA wallet hash
+   * @param managementAddress - address of managementAccount
+   * @param chainId - If you want to check whether the manager synchronization is completed, the chainId is the chainId of the target chain.
+   *  If you want to check if the manager is removed from the Portkey wallet, the chainId is originChainId
+   * @returns boolean
+   */
+  checkManagerIsExist(params: CheckManagerParams): Promise<boolean>;
 }
 
 export interface IDIDWallet extends IDIDBaseWallet, IDIDAccountMethods {}

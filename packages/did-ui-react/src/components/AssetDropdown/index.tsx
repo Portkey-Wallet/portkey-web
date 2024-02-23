@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from 'react';
 import DropdownSearch from '../DropdownSearch';
-import useDebounce from '../../hooks/useDebounce';
+import { useDebounce } from '../../hooks/debounce';
 import './index.less';
 
 export default function AssetDropdown({

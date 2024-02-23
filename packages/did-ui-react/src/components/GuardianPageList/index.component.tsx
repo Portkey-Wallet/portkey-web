@@ -8,18 +8,22 @@ export interface GuardianListProps {
   header?: ReactNode;
   className?: string;
   guardianList?: UserGuardianStatus[];
+  tipContainer?: ReactNode;
   onViewGuardian: (item: UserGuardianStatus) => void;
 }
 
-function GuardianPageList({ header, className, guardianList = [], onViewGuardian }: GuardianListProps) {
+function GuardianPageList({ header, className, guardianList = [], tipContainer, onViewGuardian }: GuardianListProps) {
   return (
-    <div className={clsx('guardian-list-wrapper guardian-page-list-wrapper', className)}>
+    <div className={clsx('guardian-list-wrapper guardian-page-list-wrapper portkey-ui-flex-column', className)}>
       {header}
-      <ul className="guardian-list-container">
-        {guardianList.map((item) => (
-          <GuardianItems key={item.key} item={item} onClick={onViewGuardian} />
-        ))}
-      </ul>
+      <div className="portkey-ui-flex-column portkey-ui-flex-between guardian-list-container">
+        <ul className="guardian-list">
+          {guardianList.map((item) => (
+            <GuardianItems key={item.key} item={item} onClick={onViewGuardian} />
+          ))}
+        </ul>
+        {tipContainer}
+      </div>
     </div>
   );
 }

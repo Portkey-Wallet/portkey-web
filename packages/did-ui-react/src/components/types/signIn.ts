@@ -7,8 +7,7 @@ export interface GuardianInputInfo {
   identifier: string;
   accountType: AccountType;
   authenticationInfo?: {
-    appleIdToken?: string;
-    googleAccessToken?: string;
+    authToken?: string;
   };
 }
 
