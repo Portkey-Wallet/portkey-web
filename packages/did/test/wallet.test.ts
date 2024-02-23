@@ -702,7 +702,7 @@ describe('DIDWallet error describe', () => {
 
   test('test getRegisterStatus branch', async () => {
     const wallet = await getLoggedInWallet();
-    wallet.caInfo = undefined as any;
+    wallet.caInfo = {} as any;
     const result = await wallet.getRegisterStatus({
       chainId: 'tDVW',
       sessionId: 'sessionId_mock',
@@ -748,7 +748,7 @@ describe('DIDWallet error describe', () => {
 
   test('test getLoginStatus branch', async () => {
     const wallet = await getLoggedInWallet();
-    wallet.caInfo = undefined as any;
+    wallet.caInfo = {} as any;
     const result = await wallet.getLoginStatus({
       chainId: 'tDVW',
       sessionId: 'sessionId_mock',
