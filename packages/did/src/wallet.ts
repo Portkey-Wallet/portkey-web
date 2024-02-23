@@ -19,7 +19,7 @@ import {
   ChainId,
   SendOptions,
 } from '@portkey/types';
-import { aes, retryAsyncFunction } from '@portkey/utils';
+import { aes } from '@portkey/utils';
 import {
   AccountLoginParams,
   BaseDIDWallet,
@@ -44,8 +44,11 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public connectServices?: IConnectService;
   public contracts: { [key: string]: IPortkeyContract };
   public chainsInfo?: { [key: string]: ChainInfo };
+  /** @deprecated Please use aaInfo instead  */
   public caInfo: { [key: string]: CAInfo };
+  /** @deprecated Please use aaInfo instead  */
   public accountInfo: { loginAccount?: string; nickName?: string };
+  public aaInfo: { accountInfo?: CAInfo; nickName?: string };
   constructor({
     accountProvider,
     storage,
@@ -63,6 +66,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.contracts = {};
     this.caInfo = {};
     this.accountInfo = {};
+    this.aaInfo = {};
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -107,23 +111,9 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }): Promise<RecoverStatusResult> {
     const status = await this.services.getRecoverStatus(sessionId);
     if (status?.recoveryStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
-      try {
-        const info = await retryAsyncFunction(
-          () => this.getHolderInfo({ caHash: status.caHash, chainId }),
-          undefined,
-          error => !(error?.message as string)?.includes('timeout'),
-        );
-        const address = this.managementAccount.address;
-        const currentInfo = info.managerInfos.find(i => i.address === address);
-        if (currentInfo) {
-          this.accountInfo = {
-            loginAccount: info.guardianList.guardians[0].guardianIdentifier,
-          };
-          this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
-        }
-      } catch (error) {
-        console.log(error, '=====error');
-      }
+      this.accountInfo = { loginAccount: status.caHash };
+      this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
+      this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
     }
     return status;
   }
@@ -158,23 +148,9 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }): Promise<RegisterStatusResult> {
     const status = await this.services.getRegisterStatus(sessionId);
     if (status?.registerStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
-      try {
-        const info = await retryAsyncFunction(
-          () => this.getHolderInfo({ caHash: status.caHash, chainId }),
-          undefined,
-          error => !(error?.message as string)?.includes('timeout'),
-        );
-        const address = this.managementAccount.address;
-        const currentInfo = info.managerInfos.find(i => i.address === address);
-        if (currentInfo) {
-          this.accountInfo = {
-            loginAccount: info.guardianList.guardians[0].guardianIdentifier,
-          };
-          this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
-        }
-      } catch (error) {
-        console.log(error, '=====error');
-      }
+      this.accountInfo = { loginAccount: status.caHash };
+      this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
+      this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
     }
     return status;
   }
@@ -258,7 +234,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
         guardianIdentifier: params.loginGuardianIdentifier,
       });
       // get current account info
-      if (result && managerInfo.loginGuardianIdentifier === this.accountInfo?.loginAccount) {
+      if (result && result?.caHash === this.aaInfo?.accountInfo?.caHash) {
         const { caAddress, caHash } = result;
         this.caInfo[chainId] = { caAddress, caHash };
       }
@@ -315,7 +291,10 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const info = await this.connectServices.getConnectToken(config);
 
     const caHolderInfo = await this.services.getCAHolderInfo(`Bearer ${info.access_token}`, caHash);
-    if (caHolderInfo.nickName) this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
+    if (caHolderInfo.nickName) {
+      this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
+      this.aaInfo = { ...this.aaInfo, nickName: caHolderInfo.nickName };
+    }
     return caHolderInfo;
   }
   public async signTransaction<T extends Record<string, unknown>>(
@@ -347,7 +326,12 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public async save(password: string, keyName?: string | undefined): Promise<boolean> {
     if (!this._storage) throw new Error('Please set storage first');
     const aesPrivateKey = await this.aesEncrypt(password);
-    const data = JSON.stringify({ aesPrivateKey, caInfo: this.caInfo, accountInfo: this.accountInfo });
+    const data = JSON.stringify({
+      aesPrivateKey,
+      caInfo: this.caInfo,
+      accountInfo: this.accountInfo,
+      aaInfo: this.aaInfo,
+    });
     const aesStr = aes.encrypt(data, password);
     await this._storage.setItem(keyName ?? this._defaultKeyName, aesStr);
     return true;
@@ -358,12 +342,13 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (aesStr) {
       const data = aes.decrypt(aesStr, password);
       if (data) {
-        const { aesPrivateKey, caInfo, accountInfo } = JSON.parse(data);
+        const { aesPrivateKey, caInfo, accountInfo, aaInfo } = JSON.parse(data);
         const privateKey = aes.decrypt(aesPrivateKey, password);
         if (aesPrivateKey && privateKey) {
           this.managementAccount = await this._accountProvider.privateKeyToAccount(privateKey);
           this.caInfo = caInfo || {};
           this.accountInfo = accountInfo || {};
+          this.aaInfo = aaInfo || {};
         }
       }
     }
@@ -373,6 +358,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.contracts = {};
     this.caInfo = {};
     this.accountInfo = {};
+    this.aaInfo = {};
     this.managementAccount = undefined;
   }
 
