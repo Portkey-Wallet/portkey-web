@@ -26,7 +26,6 @@ import {
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
-  TSupportAccountType,
   UserGuardianStatus,
   VerifyStatus,
 } from '../../types';

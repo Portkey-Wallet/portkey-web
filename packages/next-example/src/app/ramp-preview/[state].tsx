@@ -12,7 +12,7 @@ export default function RampPreviewPage() {
   useEffect(() => {
     setInitState(JSON.parse(router?.query?.state as string).initState);
     setChainId(JSON.parse(router?.query?.state as string).chainId);
-  }, []);
+  }, [router?.query?.state]);
 
   return (
     <div>

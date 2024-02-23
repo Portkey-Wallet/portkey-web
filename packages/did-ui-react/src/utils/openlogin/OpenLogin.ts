@@ -72,7 +72,7 @@ class OpenLogin {
   private async openloginHandler(
     url: string,
     queryParams: OpenloginParamConfig,
-    popupTimeout = 1000 * 10,
+    popupTimeout = 1000,
   ): Promise<PopupResponse | undefined> {
     const loginId = await this.getLoginId();
 
@@ -123,11 +123,13 @@ class OpenLogin {
         })
         .catch(reject);
 
-      try {
-        currentWindow.open();
-      } catch (error) {
-        reject(error);
-      }
+      currentWindow.on('socket-connect', () => {
+        try {
+          currentWindow.open();
+        } catch (error) {
+          reject(error);
+        }
+      });
     });
   }
 }

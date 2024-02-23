@@ -50,7 +50,6 @@ class PopupHandler extends EventEmitter {
     this.windowTimer = undefined;
     this.iClosedWindow = false;
     this.timeout = timeout;
-    this._setupTimer();
   }
 
   _setupTimer(): void {
@@ -59,9 +58,7 @@ class PopupHandler extends EventEmitter {
         if (this.window && this.window.closed) {
           clearInterval(this.windowTimer);
           setTimeout(() => {
-            if (!this.iClosedWindow) {
-              this.emit('close');
-            }
+            this.emit('close');
             this.iClosedWindow = false;
             this.window = undefined;
             this.socketInstance?.destroy();
@@ -75,6 +72,7 @@ class PopupHandler extends EventEmitter {
 
   open(): void {
     this.window = window.open(this.url, this.target, this.features);
+    this._setupTimer();
     if (!this.window) throw 'Popup was blocked. Please call this function as soon as user clicks button.';
     if (this.window?.focus) this.window.focus();
   }
@@ -99,6 +97,8 @@ class PopupHandler extends EventEmitter {
           url: this.socketURI,
           clientId,
         });
+
+        this.emit('socket-connect', true);
 
         openloginSignal[methodName]({ requestId: clientId }, (result: any) => {
           console.log(result);

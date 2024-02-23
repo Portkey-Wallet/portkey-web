@@ -10,7 +10,7 @@ export const OPENLOGIN_ACTIONS = {
   NFT_CHECKOUT: 'nft_checkout',
 } as const;
 
-export const twitterAuthPath = '/api/app/twitterAuth/unifyReceive';
+export const twitterAuthPath = '/api/app/twitterAuth/callback';
 export const facebookAuthPath = '/api/app/facebookAuth/unifyReceive';
 
 export const appleAuthPath = '/api/app/appleAuth/unifyReceive';

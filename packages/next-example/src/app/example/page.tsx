@@ -1,25 +1,14 @@
 'use client';
 import {
   ConfigProvider,
-  CryptoDesign,
-  SetPinAndAddManager,
-  VerifierSelect,
-  CodeVerify,
-  GuardianApproval,
-  PortkeyLoading,
-  SocialDesign,
   SignIn,
   Web2Design,
   ISignIn,
   CommonModal,
-  PortkeyStyleProvider,
   PortkeyNumberKeyboard,
   Unlock,
-  SetPinMobileBase,
-  PortkeyBaseNumberKeyboard,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
-import { OperationTypeEnum } from '@portkey/services';
 import { Button } from 'antd';
 
 ConfigProvider.setGlobalConfig({
