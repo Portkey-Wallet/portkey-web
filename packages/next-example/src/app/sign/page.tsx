@@ -41,7 +41,7 @@ ConfigProvider.setGlobalConfig({
   //   siteKey: '',
   // },
   graphQLUrl: '/graphql',
-  customNetworkType: 'Offline',
+  customNetworkType: 'offline',
 });
 
 export default function Sign() {

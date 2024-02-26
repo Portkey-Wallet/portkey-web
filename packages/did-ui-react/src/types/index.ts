@@ -68,4 +68,4 @@ export type ValidData = {
   errorMsg: string;
 };
 
-export type TCustomNetworkType = 'Offline' | 'onLine' | 'local';
+export type TCustomNetworkType = 'offline' | 'onLine' | 'local';

@@ -27,6 +27,7 @@ import {
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
   VerifierSocialTokenParams,
+  VerifyTwitterTokenHeader,
 } from '../types/verification';
 import { Search } from './search';
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
@@ -145,11 +146,15 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
-  verifyTwitterToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyTwitterToken(
+    params: VerifierSocialTokenParams,
+    headers: VerifyTwitterTokenHeader,
+  ): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTwitterToken',
       params,
+      headers,
     });
   }
   verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {

@@ -15,7 +15,7 @@ class OpenLogin {
 
     if (!options.sdkUrl) {
       if (options.network === 'local') options.sdkUrl = 'http://localhost:3000';
-      if (options.network === 'Offline') options.sdkUrl = WEB_PAGE_TEST;
+      if (options.network === 'offline') options.sdkUrl = WEB_PAGE_TEST;
       if (options.network === 'onLine') options.sdkUrl = WEB_PAGE;
     }
 
