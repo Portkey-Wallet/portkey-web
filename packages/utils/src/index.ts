@@ -8,4 +8,6 @@ export * as did from './did';
 export * as scheme from './scheme';
 export * as devices from './devices';
 export * as rsa from './rsa';
-export * as cryptoWeb from './crypto';
+export * as cryptoWeb from './crypto/web';
+export * as forgeWeb from './crypto/forge';
+export * from './crypto/utils';
