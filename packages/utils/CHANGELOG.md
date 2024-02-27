@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.2...v2.1.0-alpha.0) (2024-02-27)
+
+### Features
+
+- 🎸 forge ([d82f028](https://github.com/Portkey-Wallet/portkey-web/commit/d82f028d475e93689e9fc0ce11529fec603193eb))
+- 🎸 update CryptoManager ([80f4a5a](https://github.com/Portkey-Wallet/portkey-web/commit/80f4a5acb983d4bc6b6d027868654611ca1e8138))
+
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
+
+### Bug Fixes
+
+- 🐛 crypto long ([8c77632](https://github.com/Portkey-Wallet/portkey-web/commit/8c776325c005887b93b13ce10b97a03f98a56168))
+
+## [2.0.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.1-alpha.1) (2024-02-21)
+
+### Features
+
+- 🎸 add auth by socket ([2ba3d2a](https://github.com/Portkey-Wallet/portkey-web/commit/2ba3d2a38656c229810b5abe548ea27635821f20))
+- 🎸 crypto ([2f86519](https://github.com/Portkey-Wallet/portkey-web/commit/2f86519404d59e1043a78fe96a52e98dc4e3f2ce))
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
 ## [2.0.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1...v2.0.2) (2024-02-23)
 
 **Note:** Version bump only for package @portkey/utils
