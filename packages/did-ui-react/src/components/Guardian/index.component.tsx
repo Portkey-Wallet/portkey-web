@@ -98,8 +98,6 @@ function GuardianMain({
         isErrorTip,
         onError,
       );
-    } finally {
-      setLoading(false);
     }
   }, [originChainId, chainType, isErrorTip, onError, sandboxId]);
 
@@ -123,8 +121,6 @@ function GuardianMain({
         isErrorTip,
         onError,
       );
-    } finally {
-      setLoading(false);
     }
   }, [caHash, chainType, isErrorTip, onError, originChainId, sandboxId]);
 
@@ -340,6 +336,8 @@ function GuardianMain({
           isErrorTip,
           onError,
         );
+      } finally {
+        setLoading(false);
       }
     },
     [sandboxId, originChainId, caHash, fetchGuardianList, getVerifierEnableNum, guardianList, isErrorTip, onError],
