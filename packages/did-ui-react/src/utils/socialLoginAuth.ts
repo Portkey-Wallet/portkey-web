@@ -48,7 +48,7 @@ export const socialLoginAuthOpener = ({
 
     let thirdPage;
     switch (ctw) {
-      case 'Offline':
+      case 'offline':
         thirdPage = WEB_PAGE_TEST;
         break;
       case 'onLine':
@@ -130,7 +130,7 @@ export const socialLoginAuthBySocket = async ({
     clientId,
     socketURI,
     currentStorage: getStorageInstance(),
-    sdkUrl: 'http://localhost:3000',
+    // sdkUrl: 'http://192.168.10.96:3000', //  'http://localhost:3000',
   });
 
   const result = await openlogin.login({

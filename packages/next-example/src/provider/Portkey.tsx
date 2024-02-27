@@ -8,7 +8,7 @@ ConfigProvider.setGlobalConfig({
   // https://test3-applesign-v2.portkey.finance
   // serviceUrl: 'https://test4-applesign-v2.portkey.finance',
   graphQLUrl: '/graphql',
-  customNetworkType: 'Offline',
+  customNetworkType: 'offline',
 });
 
 export default function Portkey({ children }: { children?: ReactNode }) {
