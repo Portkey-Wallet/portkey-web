@@ -11,3 +11,4 @@ export * as rsa from './rsa';
 export * as cryptoWeb from './crypto/web';
 export * as forgeWeb from './crypto/forge';
 export * from './crypto/utils';
+export * from './retry';
