@@ -199,7 +199,7 @@ export function useVerifyTwitter() {
         targetChainId: params.targetChainId,
         operationDetails: params.operationDetails,
       },
-      { oauth_version: '1.0A' },
+      { 'oauth-version': '1.0A' },
     );
   }, []);
 }

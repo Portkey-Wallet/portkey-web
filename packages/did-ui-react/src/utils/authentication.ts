@@ -152,26 +152,27 @@ interface TwitterTokenUserInfo {
   id?: string;
   name?: string;
   username?: string;
+  token?: string;
 }
 
-export function getTwitterInfoByToken(token: string) {
-  const strArr = token.split('&');
-  const map = {} as any;
-  strArr.forEach((str) => {
-    const [key, value] = str.split('=');
-    //  Get only user parameters
-    map[key] = value;
-  });
-  return map as TwitterTokenUserInfo;
+export function getTwitterInfoByToken(tokenStr: string): TwitterTokenUserInfo {
+  try {
+    return JSON.parse(tokenStr);
+  } catch (error) {
+    return {};
+  }
 }
 
 export function parseTwitterToken(tokenStr?: string | null): TwitterUserInfo | undefined {
   if (!tokenStr) return;
-
+  console.log(tokenStr, 'tokenStr=');
   try {
-    const { id = '', name = '', username = '' } = getTwitterInfoByToken(tokenStr);
-    const [firstName, lastName] = name.split(' ');
+    const info = getTwitterInfoByToken(tokenStr);
+    console.log(info, 'info===');
+    const { id = '', name = '', username = '', token = '' } = info;
 
+    const [firstName, lastName] = name.split(' ');
+    if (!token) return;
     let expirationTime = Date.now() + 60 * 60 * 1000;
 
     if (XUserInfo[tokenStr]) expirationTime = XUserInfo[tokenStr].expirationTime;
@@ -188,7 +189,7 @@ export function parseTwitterToken(tokenStr?: string | null): TwitterUserInfo | u
       email: undefined,
       isPrivate: true,
       name: name,
-      accessToken: tokenStr,
+      accessToken: token,
       username,
     };
   } catch (error) {

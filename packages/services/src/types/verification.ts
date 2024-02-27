@@ -90,7 +90,7 @@ export type VerifierItem = {
 };
 
 export type VerifyTwitterTokenHeader = {
-  oauth_version: string;
+  'oauth-version': string;
   [x: string]: string;
 };
 export interface IVerificationService {
