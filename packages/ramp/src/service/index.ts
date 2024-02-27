@@ -37,7 +37,7 @@ export class RampService implements IRampService {
   public fetchRequest: IBaseRequest;
 
   constructor(options: IRampServiceOptions) {
-    this.fetchRequest = options?.fetchRequest;
+    this.fetchRequest = options.fetchRequest;
   }
 
   getRampInfo(): IRampServiceCommon<IRampInfoResult> {

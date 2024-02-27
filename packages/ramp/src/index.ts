@@ -74,7 +74,7 @@ export abstract class BaseRamp implements IBaseRamp {
     const clientId = randomId();
     try {
       await this.rampSignalr.doOpen({
-        url: this.config.requestConfig?.socketUrl || `${this.config.requestConfig.baseURL || ''}/ca`,
+        url: this.config.requestConfig.socketUrl || `${this.config.requestConfig.baseURL || ''}/ca`,
         clientId,
       });
     } catch (error) {
@@ -129,7 +129,6 @@ export abstract class BaseRamp implements IBaseRamp {
       clearTimeout(timer);
       timer = undefined;
     }
-
     if (signalrSellResult === null) throw new Error('Transaction failed.');
     if (signalrSellResult === 'timeout') {
       if (!isTransferred) throw new Error('Transaction failed.');

@@ -13,10 +13,10 @@ export interface IRequestDefaultsConfigOptions extends IRequestDefaults {
 }
 
 export interface IRampConfigOptions {
-  requestConfig: IRequestDefaults;
+  requestConfig: IRequestDefaultsConfigOptions;
 }
 
 export interface IRampConfig {
-  requestConfig: IRequestDefaults;
+  requestConfig: IRequestDefaultsConfigOptions;
   setConfig(config: IRampConfigOptions): void;
 }
