@@ -19,6 +19,7 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { usePortkey } from '../context';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 
 type SelectVerifierStorageInfo = {
   verifier: VerifierItem;
@@ -212,6 +213,7 @@ export default function VerifierSelect({
           throw 'accountType is not supported';
       }
       if (!selectItem?.id) throw 'Verifier is not missing';
+      const operationDetails = getOperationDetails(OperationTypeEnum.register);
       const rst = await verifyToken(accountType, {
         accessToken,
         id: guardianIdentifier,
@@ -221,6 +223,7 @@ export default function VerifierSelect({
         redirectURI,
         operationType: OperationTypeEnum.register,
         networkType,
+        operationDetails,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);
