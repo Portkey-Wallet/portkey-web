@@ -21,7 +21,7 @@ import {
   handleVerificationDoc,
   setLoading,
 } from '../../utils';
-import type { ChainId } from '@portkey/types';
+import type { ChainId, TStringJSON } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
 import {
   BaseGuardianItem,
@@ -37,8 +37,8 @@ import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import './index.less';
 import { SocialLoginList } from '../../constants/guardian';
+import './index.less';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -50,7 +50,8 @@ export interface GuardianApprovalProps {
   guardianList?: BaseGuardianItem[];
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
-  operationType?: OperationTypeEnum;
+  operationType: OperationTypeEnum;
+  operationDetails: TStringJSON;
   networkType: NetworkType;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
@@ -72,7 +73,8 @@ const GuardianApprovalMain = forwardRef(
       networkType,
       isErrorTip = true,
       wrapperStyle,
-      operationType = OperationTypeEnum.communityRecovery,
+      operationType,
+      operationDetails,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -170,6 +172,7 @@ const GuardianApprovalMain = forwardRef(
             redirectURI,
             operationType,
             networkType,
+            operationDetails,
             customLoginHandler,
           });
           if (!rst || !rst.verificationDoc) return;
@@ -201,7 +204,7 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [verifyToken, originChainId, targetChainId, operationType, networkType, isErrorTip, onError],
+      [verifyToken, originChainId, targetChainId, operationType, networkType, operationDetails, isErrorTip, onError],
     );
 
     const onVerifyingHandler = useCallback(

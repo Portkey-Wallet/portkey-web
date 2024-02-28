@@ -23,6 +23,7 @@ import { sleep } from '@portkey/utils';
 import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -273,6 +274,8 @@ export default function TransferSettingsEditMain({
     ],
   );
 
+  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.modifyTransferLimit), []);
+
   const onFinish = () => {
     const errorCount = handleFormChange();
     if (errorCount > 0) return;
@@ -370,6 +373,7 @@ export default function TransferSettingsEditMain({
           onConfirm={approvalSuccess}
           onError={onGuardiansApproveError}
           operationType={OperationTypeEnum.modifyTransferLimit}
+          operationDetails={operationDetails}
         />
       </CommonBaseModal>
     </div>

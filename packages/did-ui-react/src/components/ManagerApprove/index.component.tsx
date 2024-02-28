@@ -14,6 +14,7 @@ import { divDecimals, timesDecimals } from '../../utils/converter';
 import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL, DEFAULT_NFT_DECIMAL } from '../../constants';
 import { isNFT } from '../../utils/assets';
 import './index.less';
+import { getOperationDetails } from '../utils/operation.util';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
@@ -166,6 +167,8 @@ export default function ManagerApproveInner({
     getTokenInfo();
   }, [getTokenInfo]);
 
+  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.managerApprove), []);
+
   return (
     <PortkeyStyleProvider>
       <div className="portkey-ui-flex-column portkey-ui-manager-approval-wrapper">
@@ -210,6 +213,7 @@ export default function ManagerApproveInner({
             }}
             // onError={(error) => onError?.(Error(handleErrorMessage(error.error)))}
             operationType={OperationTypeEnum.managerApprove}
+            operationDetails={operationDetails}
           />
         )}
       </div>
