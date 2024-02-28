@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.2...v2.0.3) (2024-02-28)
+
+### Bug Fixes
+
+- 🐛 codeVerify ui ([316e92c](https://github.com/Portkey-Wallet/portkey-web/commit/316e92cc153b59e919ba0045c2eafa1613862866))
+
 ## [2.0.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1...v2.0.2) (2024-02-23)
 
 **Note:** Version bump only for package @portkey/did-ui-react
