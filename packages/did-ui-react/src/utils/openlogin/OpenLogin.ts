@@ -123,13 +123,13 @@ class OpenLogin {
         })
         .catch(reject);
 
-      // currentWindow.on('socket-connect', () => {
-      try {
-        currentWindow.open();
-      } catch (error) {
-        reject(error);
-      }
-      // });
+      currentWindow.on('socket-connect', () => {
+        try {
+          currentWindow.open();
+        } catch (error) {
+          reject(error);
+        }
+      });
     });
   }
 }
