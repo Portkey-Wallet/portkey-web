@@ -301,6 +301,7 @@ function GuardianView({
         chainId: originChainId,
         loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
       });
+      setSwitchDisable(false);
       CustomModal({
         type: 'info',
         okText: 'Close',
