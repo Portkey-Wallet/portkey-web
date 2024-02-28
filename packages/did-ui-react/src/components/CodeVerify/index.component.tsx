@@ -7,7 +7,6 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
 import { sleep } from '@portkey/utils';
-import './index.less';
 
 const MAX_TIMER = 60;
 
