@@ -27,7 +27,7 @@
   .login-account {
     line-height: 20px;
     color: var(--portkey-ui-text-primary);
-    font-size: 14px;
+    font-size: 16px;
     word-wrap: break-word;
     .text-overflow(2);
   }
@@ -38,8 +38,8 @@
   }
   .send-tip {
     line-height: 22px;
-    color: var(--portkey-ui-text-primary);
-    font-size: 16px;
+    color: var(--portkey-ui-text-secondary);
+    font-size: 14px;
     .account {
       color: var(--portkey-ui-font-4);
     }
@@ -93,12 +93,13 @@
   }
 
   /** btn */
-  .resend-btn {
+  .portkey-ant-btn.resend-btn {
     width: auto;
     margin: auto;
     display: block;
     margin-top: 24px;
     color: var(--portkey-ui-font-4);
+    background-color: transparent;
     &:hover {
       background-color: transparent;
     }
