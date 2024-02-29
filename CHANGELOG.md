@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.3...v2.0.4-alpha.0) (2024-02-29)
+
+### Features
+
+- 🎸 contract utils ([3629024](https://github.com/Portkey-Wallet/portkey-web/commit/36290240a63acd199a46080fb5ecd766d6d0b0ef))
+- 🎸 import queryString ([c716c4f](https://github.com/Portkey-Wallet/portkey-web/commit/c716c4fb1a78154a9e2db960219c8035b752583b))
+
+### Bug Fixes
+
+- 🐛 guardian list loading ([e94fb77](https://github.com/Portkey-Wallet/portkey-web/commit/e94fb7786c8e6e963a7028b29af2107ff50ae78d))
+- 🐛 import queryString ([0a5ff7d](https://github.com/Portkey-Wallet/portkey-web/commit/0a5ff7d681fe9e882fabdd01791167765722b10b))
+
 ## [2.0.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.2...v2.0.3) (2024-02-28)
 
 ### Bug Fixes

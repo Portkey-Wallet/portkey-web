@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.3...v2.0.4-alpha.0) (2024-02-29)
+
+### Features
+
+- 🎸 contract utils ([3629024](https://github.com/Portkey-Wallet/portkey-web/commit/36290240a63acd199a46080fb5ecd766d6d0b0ef))
+
 ## [2.0.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.2...v2.0.3) (2024-02-28)
 
 **Note:** Version bump only for package @portkey/contracts
