@@ -1,4 +1,4 @@
-import { stringifyUrl } from 'query-string';
+import queryString from 'query-string';
 import { EvokeAppConfig, EvokeAppOptions, Intent } from './types';
 
 // Generate basic url scheme
@@ -12,7 +12,7 @@ export function buildScheme(config: EvokeAppConfig, options: EvokeAppOptions): s
 
   const { domain, protocol } = scheme;
 
-  return stringifyUrl(
+  return queryString.stringifyUrl(
     {
       url: `${protocol}://${domain}/${path}`,
       query: param,

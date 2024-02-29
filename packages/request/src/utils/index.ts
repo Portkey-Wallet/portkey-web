@@ -1,5 +1,5 @@
 import { RequestOpts } from '@portkey/types';
-import { stringify } from 'query-string';
+import queryString from 'query-string';
 import { IAbortSignal } from '../types';
 
 export const timeoutPromise = (delay?: number) => {
@@ -46,7 +46,7 @@ export const fetchFormat = async (config: RequestOpts, signal: IAbortSignal) => 
   if (method === 'GET' || method === 'DELETE') {
     const _query = query || params;
     if (_query) {
-      uri = Object.keys(_query).length > 0 ? `${uri}?${stringify(_query)}` : uri;
+      uri = Object.keys(_query).length > 0 ? `${uri}?${queryString.stringify(_query)}` : uri;
     }
     body = undefined;
   }
