@@ -65,7 +65,7 @@ export function generateUniversalLink(config: EvokeAppConfig, options: EvokeAppO
 
   const protocol = 'https';
 
-  const newUniversalLink = stringifyUrl(
+  const newUniversalLink = queryString.stringifyUrl(
     {
       url: `${protocol}://${domain}/${path}`,
       query: param,
@@ -73,7 +73,7 @@ export function generateUniversalLink(config: EvokeAppConfig, options: EvokeAppO
     { encode: true },
   );
 
-  const oldUniversalLink = stringifyUrl(
+  const oldUniversalLink = queryString.stringifyUrl(
     {
       url: `${protocol}://${domain}/${path}`,
       query: pathKey ? { [pathKey]: path, ...param } : param,
