@@ -8,3 +8,4 @@ export * as did from './did';
 export * as scheme from './scheme';
 export * as devices from './devices';
 export * from './retry';
+export * as devicesEnv from './devices.environment';
