@@ -193,3 +193,43 @@ export const handleContractParams = async (params: HandleContractParamsParams) =
   if (functionName === 'ManagerForwardCall') return handleManagerForwardCall(params);
   return paramsOption;
 };
+
+type TCreateManagerForwardCallParams = {
+  paramsOption: {
+    contractAddress: string;
+    methodName: string;
+    args: any;
+    caHash: string;
+  };
+  caContractAddress: string;
+  instance?: any;
+  rpcUrl?: string;
+};
+export const createManagerForwardCall = async ({
+  rpcUrl,
+  instance,
+  paramsOption,
+  caContractAddress,
+}: TCreateManagerForwardCallParams) => {
+  const ManagerForwardCall = 'ManagerForwardCall';
+  let _instance;
+  if (rpcUrl) _instance = aelf.getAelfInstance(rpcUrl);
+  if (instance) _instance = instance;
+  if (!_instance) throw new Error('Please pass in instance or rpcUrl');
+  const [managerForwardCall, caMethods] = await Promise.all([
+    handleManagerForwardCall({
+      instance,
+      functionName: ManagerForwardCall,
+      paramsOption,
+    }),
+    getContractMethods(instance, caContractAddress),
+  ]);
+  const managerForwardCallInputType = caMethods[ManagerForwardCall];
+  let input = AElf.utils.transform.transformMapToArray(managerForwardCallInputType, managerForwardCall);
+
+  input = AElf.utils.transform.transform(managerForwardCallInputType, input, AElf.utils.transform.INPUT_TRANSFORMERS);
+
+  const message = managerForwardCallInputType.fromObject(input);
+
+  return AElf.utils.uint8ArrayToHex(managerForwardCallInputType.encode(message).finish()) as string;
+};
