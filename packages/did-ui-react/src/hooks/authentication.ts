@@ -2,12 +2,13 @@ import { useCallback } from 'react';
 import { ISocialLogin, NetworkType, VerifyTokenParams } from '../types';
 import { did, getGoogleUserInfo, parseAppleIdentityToken, parseTelegramToken, socialLoginAuth } from '../utils';
 import { OperationTypeEnum } from '@portkey/services';
-import type { ChainId } from '@portkey/types';
+import type { ChainId, TStringJSON } from '@portkey/types';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
   targetChainId?: ChainId;
   networkType?: NetworkType;
+  operationDetails: TStringJSON;
 }
 
 interface BaseAuthProps {
@@ -56,6 +57,7 @@ export function useVerifyGoogleToken() {
       accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      operationDetails: params.operationDetails,
     });
   }, []);
 }
@@ -88,6 +90,7 @@ export function useVerifyAppleToken() {
       identityToken: accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      operationDetails: params.operationDetails,
     });
   }, []);
 }
@@ -119,6 +122,7 @@ export function useVerifyTelegram() {
       accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      operationDetails: params.operationDetails,
     });
   }, []);
 }

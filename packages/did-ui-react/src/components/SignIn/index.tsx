@@ -39,6 +39,7 @@ import './index.less';
 import { SocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
 import ConfigProvider from '../config-provider';
 import { ILoginConfig } from '../config-provider/types';
+import { getOperationDetails } from '../utils/operation.util';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -282,6 +283,9 @@ const SignIn = forwardRef(
           const verifier = await getRecommendationVerifier(chainId);
           setLoading(false);
           const { accountType, authenticationInfo, identifier } = value;
+          const operationType = OperationTypeEnum.register;
+          const operationDetails = getOperationDetails(operationType);
+
           if (SocialLoginList.includes(accountType)) {
             setLoading(true);
             const result = await verifySocialToken({
@@ -291,7 +295,8 @@ const SignIn = forwardRef(
               verifier,
               chainId,
               networkType,
-              operationType: OperationTypeEnum.register,
+              operationType,
+              operationDetails,
             });
             setLoading(false);
 

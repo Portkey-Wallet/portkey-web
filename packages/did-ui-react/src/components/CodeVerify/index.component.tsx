@@ -7,6 +7,7 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
 import { sleep } from '@portkey/utils';
+import { getOperationDetails } from '../utils/operation.util';
 
 const MAX_TIMER = 60;
 
@@ -55,6 +56,8 @@ export default function CodeVerify({
         if (code && code.length === 6) {
           if (!verifierSessionId) throw Error(`VerifierSessionId(${verifierSessionId}) is invalid`);
           setLoading(true);
+          const operationDetails = getOperationDetails(operationType);
+
           const result = await verification.checkVerificationCode({
             verifierSessionId,
             verificationCode: code,
@@ -63,6 +66,7 @@ export default function CodeVerify({
             chainId: originChainId,
             targetChainId,
             operationType,
+            operationDetails,
           });
           setLoading(false);
           console.log(result, 'verifyErrorHandler==');
@@ -97,12 +101,12 @@ export default function CodeVerify({
       guardianIdentifier,
       verifier.id,
       originChainId,
+      targetChainId,
       operationType,
       onSuccess,
+      setInputError,
       isErrorTip,
       onError,
-      targetChainId,
-      setInputError,
     ],
   );
 
