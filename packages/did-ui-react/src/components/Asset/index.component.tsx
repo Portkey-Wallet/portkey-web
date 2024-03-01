@@ -6,7 +6,7 @@ import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { WalletError, dealURLLastChar, did, handleErrorMessage } from '../../utils';
+import { WalletError, did, handleErrorMessage } from '../../utils';
 import { IAssetItemType, ITransferLimitItem, IUserTokenItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
@@ -14,7 +14,6 @@ import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
 import { TRampInitState, TRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
-import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import SendMain, { SendExtraConfig } from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
@@ -84,12 +83,6 @@ function AssetMain({
 }: AssetMainProps) {
   const [{ networkType, sandboxId }] = usePortkey();
   const [{ caInfo, initialized, originChainId, caHash, managementAccount }, { dispatch }] = usePortkeyAsset();
-  const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
-
-  const portkeyWebSocketUrl = useMemo(
-    () => ConfigProvider.config.socketUrl || `${dealURLLastChar(portkeyServiceUrl)}/ca`,
-    [portkeyServiceUrl],
-  );
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
   const preStepRef = useRef<AssetStep>(AssetStep.overview);
@@ -189,18 +182,14 @@ function AssetMain({
     setAssetStep(AssetStep.receive);
   }, []);
 
-  const onBuy = useCallback(
-    async (v: any) => {
-      if (!portkeyWebSocketUrl) return singleMessage.error('Please configure socket service url in setGlobalConfig');
-      setSelectToken({
-        ...v,
-        address: v.address || v.tokenContractAddress,
-      });
-      await sleep(50);
-      setAssetStep(AssetStep.ramp);
-    },
-    [portkeyWebSocketUrl],
-  );
+  const onBuy = useCallback(async (v: any) => {
+    setSelectToken({
+      ...v,
+      address: v.address || v.tokenContractAddress,
+    });
+    await sleep(50);
+    setAssetStep(AssetStep.ramp);
+  }, []);
 
   const onSend = useCallback(async (v: IAssetItemType) => {
     setSendToken(v);
@@ -326,7 +315,6 @@ function AssetMain({
       {assetStep === AssetStep.ramp && selectToken && (
         <RampMain
           initState={rampExtraConfig}
-          portkeyWebSocketUrl={portkeyWebSocketUrl}
           tokenInfo={{
             ...selectToken,
             tokenContractAddress: selectToken.address,
@@ -357,7 +345,6 @@ function AssetMain({
         <RampPreviewMain
           isMainnet={networkType === MAINNET}
           initState={rampPreview}
-          portkeyServiceUrl={portkeyServiceUrl || 'https://did-portkey.portkey.finance'}
           chainId={selectToken.chainId}
           onBack={() => {
             setAssetStep(AssetStep.ramp);

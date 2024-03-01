@@ -23,7 +23,6 @@ export default function RampMain({
   className,
   initState,
   tokenInfo,
-  portkeyWebSocketUrl,
   isMainnet,
   isBuySectionShow = true,
   isSellSectionShow = true,
@@ -37,7 +36,7 @@ export default function RampMain({
   const [{ initialized, caHash, originChainId }] = usePortkeyAsset();
   const [page, setPage] = useState<RampType>(RampType.BUY);
   const isSell = useRef(0); // guaranteed to make only one transfer
-  const handleAchSell = useHandleAchSell({ tokenInfo, portkeyWebSocketUrl });
+  const handleAchSell = useHandleAchSell({ tokenInfo });
   const [isBuyShow, setIsBuyShow] = useState<boolean>(isBuySectionShow);
   const [isSellShow, setIsSellShow] = useState<boolean>(isSellSectionShow);
 

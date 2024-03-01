@@ -24,7 +24,6 @@ export default function RampPreviewPage() {
             isMainnet={true}
             initState={initState}
             chainId={chainId}
-            portkeyServiceUrl="https://localtest-applesign.portkey.finance"
             onBack={function (): void {
               router.back();
             }}

@@ -6,7 +6,6 @@ import RampPreviewMain from './index.component';
 export interface IRampPreviewProps {
   className?: string;
   initState: TRampPreviewInitState;
-  portkeyServiceUrl: string;
   chainId?: ChainId;
   isMainnet: boolean;
   isBuySectionShow?: boolean;

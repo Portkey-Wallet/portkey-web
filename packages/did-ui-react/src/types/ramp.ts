@@ -12,7 +12,6 @@ export type ITokenInfo = {
 
 export interface IUseHandleAchSellParams {
   tokenInfo: ITokenInfo;
-  portkeyWebSocketUrl: string; // ip
 }
 
 export type NFTCheckoutType = 'MARKET' | 'MINT';

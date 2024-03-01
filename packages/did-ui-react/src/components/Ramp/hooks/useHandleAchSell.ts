@@ -21,7 +21,7 @@ interface TransferParams {
   amount: number;
 }
 
-const useHandleAchSell = ({ tokenInfo, portkeyWebSocketUrl }: IUseHandleAchSellParams) => {
+const useHandleAchSell = ({ tokenInfo }: IUseHandleAchSellParams) => {
   const chainId = useRef(tokenInfo?.chainId || MAIN_CHAIN_ID);
   const [{ chainType }] = usePortkey();
   const [{ managementAccount, caInfo, initialized }] = usePortkeyAsset();
@@ -92,7 +92,6 @@ const useHandleAchSell = ({ tokenInfo, portkeyWebSocketUrl }: IUseHandleAchSellP
       try {
         if (isMainnet && initializedRef && managementAccountRef.current && caInfoRef.current) {
           setLoading(true, 'Payment is being processed and may take around 10 seconds to complete.');
-          // TODO ramp set baseurl: portkeyWebSocketUrl
           await ramp.transferCrypto(orderId, paymentSellTransfer);
           singleMessage.success('Transaction completed.');
         }
