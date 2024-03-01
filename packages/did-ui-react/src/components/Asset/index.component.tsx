@@ -32,6 +32,7 @@ import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 import { useDebounce } from '../../hooks/debounce';
 import singleMessage from '../CustomAnt/message';
+import CustomSvg from '../CustomSvg';
 import './index.less';
 
 export enum AssetStep {
@@ -256,247 +257,269 @@ function AssetMain({
     [getLimitFromContract],
   );
 
+  const smallScreen = useMemo(
+    () =>
+      [AssetStep.receive, AssetStep.ramp, AssetStep.rampPreview, AssetStep.send, AssetStep.NFTDetail].includes(
+        assetStep,
+      ),
+    [assetStep],
+  );
+
   return (
-    <div className={clsx('portkey-ui-asset-wrapper', className)}>
-      {(!assetStep || assetStep === AssetStep.overview) && (
-        <AssetOverviewMain
-          allToken={allToken}
-          isShowRamp={isShowRamp}
-          faucet={faucet}
-          backIcon={backIcon}
-          onAvatarClick={onAvatarClick}
-          onBack={onOverviewBack}
-          onReceive={onReceive}
-          onBuy={onBuy}
-          onSend={(v) => {
-            preStepRef.current = AssetStep.overview;
+    <div className={clsx('portkey-ui-asset-wrapper portkey-ui-flex-column-center', className)}>
+      <div className="portkey-ui-logo portkey-ui-flex">
+        <CustomSvg type="PortkeyLogo" />
+      </div>
 
-            onSend(v);
-          }}
-          onViewActivityItem={(v) => {
-            preStepRef.current = AssetStep.overview;
-            onViewActivityItem(v);
-          }}
-          onViewTokenItem={(v) => {
-            setTokenDetail(v);
-            setAssetStep(AssetStep.tokenDetail);
-          }}
-          onNFTView={(v) => {
-            setAssetStep(AssetStep.NFTDetail);
-            setNFTDetail(v);
-          }}
-        />
-      )}
-      {assetStep === AssetStep.receive && caInfo && selectToken && (
-        <ReceiveCard
-          receiveInfo={{
-            address: caInfo[selectToken.chainId]?.caAddress,
-            name: '',
-          }}
-          symbolIcon={selectToken.imageUrl}
-          assetInfo={{
-            symbol: selectToken.symbol,
-            tokenContractAddress: selectToken.address,
-            chainId: selectToken.chainId,
-            decimals: selectToken.decimals,
-          }}
-          networkType={networkType}
-          chainId={selectToken.chainId}
-          onBack={() => setAssetStep(AssetStep.overview)}
-        />
-      )}
-      {assetStep === AssetStep.ramp && selectToken && (
-        <RampMain
-          initState={rampExtraConfig}
-          portkeyWebSocketUrl={portkeyWebSocketUrl}
-          tokenInfo={{
-            ...selectToken,
-            tokenContractAddress: selectToken.address,
-          }}
-          onBack={() => {
-            setRampExtraConfig(undefined);
-            onBack();
-          }}
-          onShowPreview={({ initState }) => {
-            setRampPreview(initState);
-            setAssetStep(AssetStep.rampPreview);
-          }}
-          isBuySectionShow={isShowRampBuy}
-          isSellSectionShow={isShowRampSell}
-          isMainnet={networkType === MAINNET}
-          onModifyLimit={async (data) => {
-            const res = await getLimitFromContract(data);
-            setViewPaymentSecurity({ ...data, ...res });
-            setAssetStep(AssetStep.transferSettingsEdit);
-          }}
-          onModifyGuardians={() => {
-            setAccelerateChainId(selectToken.chainId);
-            setAssetStep(AssetStep.guardians);
-          }}
-        />
-      )}
-      {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
-        <RampPreviewMain
-          initState={rampPreview}
-          portkeyServiceUrl={portkeyServiceUrl || 'https://did-portkey.portkey.finance'}
-          chainId={selectToken.chainId}
-          onBack={() => {
-            setAssetStep(AssetStep.ramp);
-          }}
-          isBuySectionShow={true}
-          isSellSectionShow={true}
-          overrideAchConfig={overrideAchConfig}
-        />
-      )}
+      <div className={clsx('portkey-ui-asset-container', smallScreen && 'small-screen')}>
+        {(!assetStep || assetStep === AssetStep.overview) && (
+          <AssetOverviewMain
+            allToken={allToken}
+            isShowRamp={isShowRamp}
+            faucet={faucet}
+            backIcon={backIcon}
+            onAvatarClick={onAvatarClick}
+            onBack={onOverviewBack}
+            onReceive={onReceive}
+            onBuy={onBuy}
+            onSend={(v) => {
+              preStepRef.current = AssetStep.overview;
 
-      {assetStep === AssetStep.send && sendToken && (
-        <SendMain
-          assetItem={sendToken}
-          extraConfig={sendExtraConfig}
-          onCancel={() => {
-            setSendExtraConfig(undefined);
-            onBack();
-          }}
-          onSuccess={() => {
-            setAssetStep(AssetStep.overview);
-          }}
-          onModifyLimit={async (data) => {
-            const res = await getLimitFromContract(data);
-            setViewPaymentSecurity({ ...data, ...res });
-            setAssetStep(AssetStep.transferSettingsEdit);
-          }}
-          onModifyGuardians={() => {
-            setAccelerateChainId(sendToken.chainId as ChainId);
-            setAssetStep(AssetStep.guardians);
-          }}
-        />
-      )}
+              onSend(v);
+            }}
+            onViewActivityItem={(v) => {
+              preStepRef.current = AssetStep.overview;
+              onViewActivityItem(v);
+            }}
+            onViewTokenItem={(v) => {
+              setTokenDetail(v);
+              setAssetStep(AssetStep.tokenDetail);
+            }}
+            onNFTView={(v) => {
+              setAssetStep(AssetStep.NFTDetail);
+              setNFTDetail(v);
+            }}
+          />
+        )}
+        {assetStep === AssetStep.receive && caInfo && selectToken && (
+          <ReceiveCard
+            receiveInfo={{
+              address: caInfo[selectToken.chainId]?.caAddress,
+              name: '',
+            }}
+            symbolIcon={selectToken.imageUrl}
+            assetInfo={{
+              symbol: selectToken.symbol,
+              tokenContractAddress: selectToken.address,
+              chainId: selectToken.chainId,
+              decimals: selectToken.decimals,
+            }}
+            networkType={networkType}
+            chainId={selectToken.chainId}
+            onBack={() => setAssetStep(AssetStep.overview)}
+          />
+        )}
+        {assetStep === AssetStep.ramp && selectToken && (
+          <RampMain
+            initState={rampExtraConfig}
+            portkeyWebSocketUrl={portkeyWebSocketUrl}
+            tokenInfo={{
+              ...selectToken,
+              tokenContractAddress: selectToken.address,
+            }}
+            onBack={() => {
+              setRampExtraConfig(undefined);
+              onBack();
+            }}
+            onShowPreview={({ initState }) => {
+              setRampPreview(initState);
+              setAssetStep(AssetStep.rampPreview);
+            }}
+            isBuySectionShow={isShowRampBuy}
+            isSellSectionShow={isShowRampSell}
+            isMainnet={networkType === MAINNET}
+            onModifyLimit={async (data) => {
+              const res = await getLimitFromContract(data);
+              setViewPaymentSecurity({ ...data, ...res });
+              setAssetStep(AssetStep.transferSettingsEdit);
+            }}
+            onModifyGuardians={() => {
+              setAccelerateChainId(selectToken.chainId);
+              setAssetStep(AssetStep.guardians);
+            }}
+          />
+        )}
+        {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
+          <RampPreviewMain
+            initState={rampPreview}
+            portkeyServiceUrl={portkeyServiceUrl || 'https://did-portkey.portkey.finance'}
+            chainId={selectToken.chainId}
+            onBack={() => {
+              setAssetStep(AssetStep.ramp);
+            }}
+            isBuySectionShow={true}
+            isSellSectionShow={true}
+            overrideAchConfig={overrideAchConfig}
+          />
+        )}
 
-      {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
-        <Transaction
-          chainId={transactionDetail?.chainId}
-          caAddressInfos={caAddressInfos}
-          onClose={onBack}
-          transactionDetail={transactionDetail}
-        />
-      )}
+        {assetStep === AssetStep.send && sendToken && (
+          <SendMain
+            assetItem={sendToken}
+            extraConfig={sendExtraConfig}
+            onCancel={() => {
+              setSendExtraConfig(undefined);
+              onBack();
+            }}
+            onSuccess={() => {
+              setAssetStep(AssetStep.overview);
+            }}
+            onModifyLimit={async (data) => {
+              const res = await getLimitFromContract(data);
+              setViewPaymentSecurity({ ...data, ...res });
+              setAssetStep(AssetStep.transferSettingsEdit);
+            }}
+            onModifyGuardians={() => {
+              setAccelerateChainId(sendToken.chainId as ChainId);
+              setAssetStep(AssetStep.guardians);
+            }}
+          />
+        )}
 
-      {assetStep === AssetStep.tokenDetail && tokenDetail && (
-        <TokenDetailMain
-          faucet={faucet}
-          isShowRamp={isShowRamp}
-          tokenInfo={tokenDetail}
-          onBack={() => {
-            setAssetStep(AssetStep.overview);
-          }}
-          onReceive={onReceive}
-          onBuy={onBuy}
-          onSend={(token) => {
-            const info: IAssetItemType = {
-              chainId: token.chainId,
-              symbol: token.symbol,
-              address: token.tokenContractAddress || token.address,
-              tokenInfo: {
-                ...token,
-                balance: token.balance || '0',
-                decimals: token.decimals.toString(),
-                balanceInUsd: token.balanceInUsd || '',
-                imageUrl: token.imageUrl || '',
-                tokenContractAddress: token.tokenContractAddress || '',
-              },
-            };
-            preStepRef.current = AssetStep.tokenDetail;
-            onSend(info);
-          }}
-          onViewActivityItem={(v) => {
-            preStepRef.current = AssetStep.tokenDetail;
-            onViewActivityItem(v);
-          }}
-        />
-      )}
+        {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
+          <Transaction
+            chainId={transactionDetail?.chainId}
+            caAddressInfos={caAddressInfos}
+            onClose={onBack}
+            transactionDetail={transactionDetail}
+          />
+        )}
 
-      {assetStep === AssetStep.NFTDetail && NFTDetail && (
-        <NFTDetailMain
-          NFTDetail={NFTDetail}
-          onBack={() => setAssetStep(AssetStep.overview)}
-          onSend={(nft) => {
-            const info: IAssetItemType = {
-              chainId: nft.chainId,
-              symbol: nft.symbol,
-              address: nft.tokenContractAddress,
-              nftInfo: nft,
-            };
-            preStepRef.current = AssetStep.NFTDetail;
-            onSend(info);
-          }}
-        />
-      )}
+        {assetStep === AssetStep.tokenDetail && tokenDetail && (
+          <TokenDetailMain
+            faucet={faucet}
+            isShowRamp={isShowRamp}
+            tokenInfo={tokenDetail}
+            onBack={() => {
+              setAssetStep(AssetStep.overview);
+            }}
+            onReceive={onReceive}
+            onBuy={onBuy}
+            onSend={(token) => {
+              const info: IAssetItemType = {
+                chainId: token.chainId,
+                symbol: token.symbol,
+                address: token.tokenContractAddress || token.address,
+                tokenInfo: {
+                  ...token,
+                  balance: token.balance || '0',
+                  decimals: token.decimals.toString(),
+                  balanceInUsd: token.balanceInUsd || '',
+                  imageUrl: token.imageUrl || '',
+                  tokenContractAddress: token.tokenContractAddress || '',
+                },
+              };
+              preStepRef.current = AssetStep.tokenDetail;
+              onSend(info);
+            }}
+            onViewActivityItem={(v) => {
+              preStepRef.current = AssetStep.tokenDetail;
+              onViewActivityItem(v);
+            }}
+          />
+        )}
 
-      {assetStep === AssetStep.my && (
-        // My
-        <MenuListMain
-          menuList={myMenuList}
-          headerConfig={{
-            title: 'My',
-            onBack: () => setAssetStep(AssetStep.overview),
-          }}
-        />
-      )}
+        {assetStep === AssetStep.NFTDetail && NFTDetail && (
+          <NFTDetailMain
+            NFTDetail={NFTDetail}
+            onBack={() => setAssetStep(AssetStep.overview)}
+            onSend={(nft) => {
+              const info: IAssetItemType = {
+                chainId: nft.chainId,
+                symbol: nft.symbol,
+                address: nft.tokenContractAddress,
+                nftInfo: nft,
+              };
+              preStepRef.current = AssetStep.NFTDetail;
+              onSend(info);
+            }}
+          />
+        )}
 
-      {assetStep === AssetStep.guardians && (
-        <Guardian
-          sandboxId={sandboxId}
-          caHash={caHash || ''}
-          networkType={networkType}
-          originChainId={originChainId}
-          accelerateChainId={accelerateChainId}
-          onBack={() => setAssetStep(AssetStep.my)}
-        />
-      )}
+        {assetStep === AssetStep.my && (
+          // My
+          <MenuListMain
+            menuList={myMenuList}
+            headerConfig={{
+              title: 'My',
+              onBack: () => setAssetStep(AssetStep.overview),
+            }}
+          />
+        )}
 
-      {assetStep === AssetStep.walletSecurity && (
-        // My - WalletSecurity
-        <MenuListMain
-          menuList={WalletSecurityMenuList}
-          headerConfig={{
-            title: 'Wallet Security',
-            onBack: () => setAssetStep(AssetStep.my),
-          }}
-        />
-      )}
+        {assetStep === AssetStep.guardians && (
+          <Guardian
+            sandboxId={sandboxId}
+            caHash={caHash || ''}
+            networkType={networkType}
+            originChainId={originChainId}
+            accelerateChainId={accelerateChainId}
+            onBack={() => setAssetStep(AssetStep.my)}
+          />
+        )}
 
-      {assetStep === AssetStep.paymentSecurity && (
-        <PaymentSecurity
-          onBack={() => setAssetStep(AssetStep.walletSecurity)}
-          networkType={networkType}
-          caHash={caHash || ''}
-          onClickItem={async (data) => {
-            const res = await getLimitFromContract(data);
-            setViewPaymentSecurity({ ...data, ...res });
-            setAssetStep(AssetStep.transferSettings);
-          }}
-        />
-      )}
+        {assetStep === AssetStep.walletSecurity && (
+          // My - WalletSecurity
+          <MenuListMain
+            menuList={WalletSecurityMenuList}
+            headerConfig={{
+              title: 'Wallet Security',
+              onBack: () => setAssetStep(AssetStep.my),
+            }}
+          />
+        )}
 
-      {assetStep === AssetStep.transferSettings && (
-        <TransferSettings
-          onBack={() => setAssetStep(AssetStep.paymentSecurity)}
-          initData={viewPaymentSecurity}
-          onEdit={() => setAssetStep(AssetStep.transferSettingsEdit)}
-        />
-      )}
+        {assetStep === AssetStep.paymentSecurity && (
+          <PaymentSecurity
+            onBack={() => setAssetStep(AssetStep.walletSecurity)}
+            networkType={networkType}
+            caHash={caHash || ''}
+            onClickItem={async (data) => {
+              const res = await getLimitFromContract(data);
+              setViewPaymentSecurity({ ...data, ...res });
+              setAssetStep(AssetStep.transferSettings);
+            }}
+          />
+        )}
 
-      {assetStep === AssetStep.transferSettingsEdit && (
-        <TransferSettingsEdit
-          initData={viewPaymentSecurity}
-          caHash={caHash || ''}
-          originChainId={originChainId}
-          sandboxId={sandboxId}
-          networkType={networkType}
-          onBack={transferSettingsEditBack}
-          onSuccess={transferSettingsEditBack}
-        />
-      )}
+        {assetStep === AssetStep.transferSettings && (
+          <TransferSettings
+            onBack={() => setAssetStep(AssetStep.paymentSecurity)}
+            initData={viewPaymentSecurity}
+            onEdit={() => setAssetStep(AssetStep.transferSettingsEdit)}
+          />
+        )}
+
+        {assetStep === AssetStep.transferSettingsEdit && (
+          <TransferSettingsEdit
+            initData={viewPaymentSecurity}
+            caHash={caHash || ''}
+            originChainId={originChainId}
+            sandboxId={sandboxId}
+            networkType={networkType}
+            onBack={transferSettingsEditBack}
+            onSuccess={transferSettingsEditBack}
+          />
+        )}
+
+        <div className="portkey-ui-powered-wrapper">
+          <div className="portkey-ui-powered portkey-ui-flex-center">
+            <div className="powered-by">Powered By</div>
+            <CustomSvg type="Portkey" />
+            <div className="brand-name">Portkey</div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

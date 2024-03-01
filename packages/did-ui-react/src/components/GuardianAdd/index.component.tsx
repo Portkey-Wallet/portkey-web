@@ -663,7 +663,7 @@ function GuardianAdd({
     !customPhoneCountry && getPhoneCountry();
   });
   return (
-    <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
+    <div className={clsx('portkey-ui-guardian-add', 'portkey-ui-flex-column', className)}>
       {header}
       <div className="guardian-add-body portkey-ui-flex-column portkey-ui-flex-1">
         <div className="input-item">
@@ -696,7 +696,7 @@ function GuardianAdd({
           {verifierExist && <div className="guardian-error-tip">{verifierExistTip}</div>}
         </div>
       </div>
-      <div className="guardian-edit-footer">
+      <div className="guardian-add-footer">
         <ThrottleButton
           type="primary"
           className="guardian-btn"
