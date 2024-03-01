@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4-alpha.1...v2.0.4) (2024-03-01)
+
+### Features
+
+- 🎸 update func name ([ca3b94c](https://github.com/Portkey-Wallet/portkey-web/commit/ca3b94c8e4f6ba9446ca574c0eace92d0dde0f63))
+
 ## [2.0.4-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4-alpha.0...v2.0.4-alpha.1) (2024-02-29)
 
 **Note:** Version bump only for package @portkey/utils
