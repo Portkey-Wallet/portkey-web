@@ -23,6 +23,6 @@ export type TSignatureObject = {
 export function zeroFill(str: string | BN) {
   return isBN(str) ? str.toString(16, 64) : str.padStart(64, '0');
 }
-export const SigObjToStr = (sigObj: TSignatureObject) => {
+export const sigObjToStr = (sigObj: TSignatureObject) => {
   return [zeroFill(sigObj.r), zeroFill(sigObj.s), `0${sigObj?.recoveryParam?.toString() || 0}`].join('');
 };
