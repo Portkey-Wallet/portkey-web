@@ -4,7 +4,7 @@ import { getPortkeyShellApp, isPortkeyProvider } from '../src/devices.environmen
 declare module MyGlobalThis {
   interface MyGlobal {
     window: {
-      portkeyAPP?: any;
+      portkeyShellApp?: any;
     };
   }
 }
@@ -19,13 +19,13 @@ declare const globalThis: MyGlobalThis.MyGlobal;
 
 describe('scheme describe', () => {
   test('test - no portkey shell app', async () => {
-    const portkeyAPP = await getPortkeyShellApp();
-    expect(portkeyAPP).toBeNull();
+    const portkeyShellApp = await getPortkeyShellApp();
+    expect(portkeyShellApp).toBeNull();
     globalThis.window = {};
     const portkeyApp1 = await getPortkeyShellApp(500);
     expect(portkeyApp1).toEqual(null);
 
-    globalThis.window = { portkeyAPP: {} };
+    globalThis.window = { portkeyShellApp: {} };
 
     const portkeyApp2 = await getPortkeyShellApp();
     expect(portkeyApp2).toEqual(null);
@@ -34,13 +34,13 @@ describe('scheme describe', () => {
 
     const ids = setTimeout(() => {
       clearTimeout(ids);
-      globalThis.window.portkeyAPP = portkeyAppObject;
+      globalThis.window.portkeyShellApp = portkeyAppObject;
     }, 200);
 
     const portkeyApp3 = await getPortkeyShellApp(500);
     expect(portkeyApp3).toHaveProperty('invokeClientMethod');
 
-    globalThis.window.portkeyAPP = portkeyAppObject;
+    globalThis.window.portkeyShellApp = portkeyAppObject;
 
     const portkeyApp4 = await getPortkeyShellApp();
     expect(portkeyApp4).toHaveProperty('invokeClientMethod');
@@ -56,8 +56,8 @@ describe('scheme describe', () => {
     expect(isProvider1).toEqual(false);
 
     if (!globalThis.window) globalThis.window = {};
-    globalThis.window.portkeyAPP = portkeyAppObject;
-    const isProvider2 = isPortkeyProvider(globalThis.window.portkeyAPP);
+    globalThis.window.portkeyShellApp = portkeyAppObject;
+    const isProvider2 = isPortkeyProvider(globalThis.window.portkeyShellApp);
 
     expect(isProvider2).toEqual(true);
   });

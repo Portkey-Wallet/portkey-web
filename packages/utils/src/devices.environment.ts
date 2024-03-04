@@ -39,15 +39,15 @@ export async function getPortkeyShellApp<T extends IClient = IClient>(timeout?: 
   if (typeof window === 'undefined') return null;
   const _window: any = window;
 
-  if (_window.portkeyAPP) {
-    return isPortkeyProvider<T>(_window.portkeyAPP) ? _window.portkeyAPP : null;
+  if (_window.portkeyShellApp) {
+    return isPortkeyProvider<T>(_window.portkeyShellApp) ? _window.portkeyShellApp : null;
   }
 
   return new Promise(resolve => {
     const handlePortkey = () => {
       clearTimeout(timerId);
-      if (isPortkeyProvider<T>(_window.portkeyAPP)) {
-        resolve(_window.portkeyAPP);
+      if (isPortkeyProvider<T>(_window.portkeyShellApp)) {
+        resolve(_window.portkeyShellApp);
       } else {
         resolve(null);
       }
