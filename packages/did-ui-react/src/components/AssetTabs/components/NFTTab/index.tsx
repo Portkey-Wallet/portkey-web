@@ -9,6 +9,7 @@ import useNFTMaxCount from '../../../../hooks/useNFTMaxCount';
 import { INftCollectionItem } from '@portkey/services';
 import CheckFetchLoading from '../../../CheckFetchLoading';
 import './index.less';
+import SeedBadge from '../SeedBadge';
 
 export interface NFTTabProps {
   isMainnet?: boolean;
@@ -130,6 +131,7 @@ const NFTTab = forwardRef(
                           collectionImageUrl: nft.imageUrl,
                         })
                       }>
+                      <SeedBadge className="item-seed-type" isSeed={nftItem.isSeed} seedType={nftItem.seedType} />
                       <div className="mask">
                         <p className="alias">{nftItem.alias}</p>
                         <p className="token-id">#{nftItem.tokenId}</p>

@@ -1,6 +1,7 @@
 import { IAssetItemType } from '@portkey/services';
 import React from 'react';
 import { transNetworkText } from '../../../../utils/converter';
+import SeedBadge from '../../../AssetTabs/components/SeedBadge';
 
 export default function AssetsNFTItem({
   isMainnet,
@@ -17,7 +18,14 @@ export default function AssetsNFTItem({
       className="item protocol"
       onClick={onSelect?.bind(undefined, token, 'NFT')}>
       <div className="avatar">
-        {token.nftInfo?.imageUrl ? <img src={token.nftInfo.imageUrl} /> : token.nftInfo?.alias?.slice(0, 1)}
+        {token.nftInfo?.imageUrl ? (
+          <div className="portkey-ui-relative">
+            <img src={token.nftInfo.imageUrl} />
+            <SeedBadge className="seed-type-badge" isSeed={token.nftInfo?.isSeed} seedType={token.nftInfo?.seedType} />
+          </div>
+        ) : (
+          token.nftInfo?.alias?.slice(0, 1)
+        )}
       </div>
       <div className="info">
         <p className="alias">{`${token.nftInfo?.alias} #${token.nftInfo?.tokenId}`}</p>

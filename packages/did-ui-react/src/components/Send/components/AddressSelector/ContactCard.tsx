@@ -42,7 +42,7 @@ export default function ContactCard({ user, className, fromRecents = true, onCha
       <Collapse.Panel header={header} key={user.address}>
         <div className="content">
           {user?.addresses?.map((address: RecentAddressItem) => (
-            <div key={address.address} className={clsx(['flex-between-center', 'content-item'])}>
+            <div key={address.address} className={clsx(['portkey-ui-flex-between-center', 'content-item'])}>
               <div
                 className={clsx(['main-info', isDisabled(address?.transactionTime) ? 'disabled' : null])}
                 onClick={() =>

@@ -101,6 +101,8 @@ function SendContent({
       tokenId: isNFT ? assetItem.nftInfo?.tokenId : '',
       balance: isNFT ? assetItem.nftInfo?.balance : assetItem.tokenInfo?.balance,
       balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
+      isSeed: assetItem.nftInfo?.isSeed,
+      seedType: assetItem.nftInfo?.seedType,
     }),
     [assetItem, isNFT],
   );

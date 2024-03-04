@@ -191,7 +191,7 @@ export function TransferLimitApprovalModal({
       content: (
         <div>
           <div
-            className="flex-center close-icon"
+            className="portkey-ui-flex-center close-icon"
             onClick={() => {
               resolve(false);
               modal.destroy();

@@ -100,7 +100,7 @@ export default function SendPreview({
         <div className="amount-preview nft">
           <div className="avatar">{imageUrl ? <img src={imageUrl} /> : <p>{symbol?.slice(0, 1)}</p>}</div>
           <div className="info">
-            <p className="index flex">
+            <p className="portkey-ui-flex index">
               <p className="alias">{alias}</p>
               <p className="token-id">{`#${tokenId}`}</p>
             </p>

@@ -110,12 +110,24 @@
         padding-bottom: 0;
       }
       .item {
+        position: relative;
         width: 96px;
         height: 96px;
         border-radius: 6px;
         background-color: var(--portkey-ui-bg-6);
         background-position: center;
         background-size: cover;
+        .item-seed-type {
+          position: absolute;
+          right: 6px;
+          top: 0;
+          width: 32px;
+          height: 16px;
+          .portkey-ui-custom-svg {
+            width: 32px;
+            height: 16px;
+          }
+        }
         .mask {
           display: flex;
           flex-direction: column;
@@ -211,6 +223,9 @@
         .item {
           width: 120px;
           height: 120px;
+          .item-seed-type {
+            right: 12px;
+          }
         }
       }
     }

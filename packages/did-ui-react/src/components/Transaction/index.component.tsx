@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { SetStateAction, useCallback, useMemo, useState } from 'react';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { useDefaultToken } from '../../hooks/assets';
 import { AmountSign, TransactionStatus } from '../../types/activity';
@@ -60,10 +60,10 @@ export default function TransactionMain({
 
     did.services.activity
       .getActivityDetail(params)
-      .then((res) => {
+      .then((res: SetStateAction<ActivityItemType>) => {
         setActivityItem(res);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error('getActivityDetail:' + handleErrorMessage(err));
       });
   }, [caAddressInfos, chainId]);

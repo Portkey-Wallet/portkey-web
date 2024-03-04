@@ -1,5 +1,5 @@
 import { INftCollectionItem } from '@portkey/services';
-import { ChainId, ChainType } from '@portkey/types';
+import { ChainId, ChainType, SeedTypeEnum } from '@portkey/types';
 
 export enum BalanceTab {
   TOKEN = 'token',
@@ -26,6 +26,8 @@ export interface BaseTokenExpand extends BaseToken {
 export interface AssetTokenExpand extends BaseTokenExpand {
   balanceInUsd?: string;
   balance?: string;
+  isSeed?: boolean;
+  seedType?: SeedTypeEnum;
 }
 
 export interface TokenItemType extends BaseTokenExpand {
@@ -57,7 +59,6 @@ export type NFTItemBaseType = {
 };
 
 export interface NFTItemBaseExpand extends INftCollectionItem {
-  decimals?: 0;
   collectionName: string;
   collectionImageUrl: string;
 }

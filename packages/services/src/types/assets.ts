@@ -1,4 +1,4 @@
-import { ChainId, INftInfoType, ITokenInfoType } from '@portkey/types';
+import { ChainId, INftInfoType, ITokenInfoType, SeedTypeEnum } from '@portkey/types';
 
 export type ITokenItemResponse = {
   decimals: number;
@@ -35,6 +35,8 @@ export type INftCollection = {
   imageUrl: string;
   itemCount: number;
   symbol: string;
+  isSeed: boolean;
+  decimals: number;
 };
 export type FetchAccountNftCollectionListParams = {
   skipCount: number;
@@ -58,7 +60,25 @@ export type INftCollectionItem = {
   tokenContractAddress: string;
   tokenId: string;
   totalSupply: string;
+  decimals: number;
+  inscriptionInformation: TNftInscriptionInformation;
+  traits: TNftTraits;
+  generationInfo: TNftGenerationInfo;
+  isSeed: boolean;
+  seedType: SeedTypeEnum;
 };
+
+export type TNftInscriptionInformation = {
+  inscriptionName: string;
+  limitPerMint: number;
+};
+
+export type TNftTraits = {};
+
+export type TNftGenerationInfo = {
+  generation: string;
+};
+
 export type FetchAccountNftCollectionItemListParams = {
   symbol: string;
   caAddressInfos: CaAddressInfosType;

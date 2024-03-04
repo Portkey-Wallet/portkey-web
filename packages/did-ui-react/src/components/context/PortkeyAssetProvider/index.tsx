@@ -88,7 +88,6 @@ function reducer(state: AssetState, { type, payload }: any) {
         maxResultCount: maxNFTCount,
         totalRecordCount: 0,
         children: [],
-        decimals: 0,
         ...item,
       }));
       // TODO Handle pagination requests

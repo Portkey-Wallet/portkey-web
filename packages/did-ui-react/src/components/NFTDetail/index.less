@@ -24,7 +24,7 @@
   }
 
   .collection {
-    margin: 8px 24px 0;
+    margin: 10px 24px 0;
     .img {
       width: 24px;
       height: 24px;
@@ -63,8 +63,8 @@
   }
 
   .picture {
+    position: relative;
     margin: 16px auto 24px;
-
     width: 320px;
     height: 320px;
     img {
@@ -76,6 +76,11 @@
       font-size: 40px;
       color: var(--portkey-ui-text-tip);
     }
+    .seed-type-badge {
+      position: absolute;
+      top: 0;
+      right: 20px;
+    }
   }
 
   .picture-common {
@@ -85,7 +90,7 @@
   }
 
   .info {
-    padding: 0 24px 42px;
+    padding: 0 24px 32px;
     .title {
       font-size: 16px;
       line-height: 22px;
@@ -98,18 +103,30 @@
       white-space: nowrap;
     }
     .info-item {
-      margin-top: 14px;
+      margin-top: 12px;
       font-size: 14px;
       line-height: 20px;
       font-weight: 400;
       color: var(--portkey-ui-text-primary);
       .label {
         color: var(--portkey-ui-text-secondary);
+        .below-label-value {
+          color: var(--portkey-ui-text-primary);
+          font-weight: bold;
+          margin-top: 4px;
+        }
       }
     }
     .contract {
       .contract-title {
         gap: 8px;
+        .portkey-ui-copy-wrapper {
+          .portkey-ui-custom-svg {
+            svg path {
+              fill: var(--portkey-ui-font-4);
+            }
+          }
+        }
       }
     }
     .alias {
@@ -119,6 +136,9 @@
         text-overflow: ellipsis;
         white-space: nowrap;
       }
+    }
+    &:last-child {
+      padding-bottom: 40px;
     }
   }
   .btn-wrap {
