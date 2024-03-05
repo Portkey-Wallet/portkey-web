@@ -9,7 +9,7 @@ import useNFTMaxCount from '../../../../hooks/useNFTMaxCount';
 import { INftCollectionItem } from '@portkey/services';
 import CheckFetchLoading from '../../../CheckFetchLoading';
 import './index.less';
-import SeedBadge from '../SeedBadge';
+import NFTImage from '../../../NFTImage';
 
 export interface NFTTabProps {
   isMainnet?: boolean;
@@ -117,12 +117,13 @@ const NFTTab = forwardRef(
                 const curNftNum = nftNum[nftColKey] ?? 0;
                 return (
                   index < curNftNum * maxNftNum && (
-                    <div
+                    <NFTImage
                       key={`${nft.symbol}-${nftItem.symbol}-${nftItem.chainId}`}
-                      style={{
-                        backgroundImage: `url('${nftItem.imageUrl}')`,
-                      }}
                       className={clsx(['item', nftItem.imageUrl ? 'item-img' : ''])}
+                      name=""
+                      imageUrl={nftItem.imageUrl}
+                      isSeed={nftItem.isSeed}
+                      seedType={nftItem.seedType}
                       onClick={() =>
                         onNFTView?.({
                           ...nftItem,
@@ -131,12 +132,11 @@ const NFTTab = forwardRef(
                           collectionImageUrl: nft.imageUrl,
                         })
                       }>
-                      <SeedBadge className="item-seed-type" isSeed={nftItem.isSeed} seedType={nftItem.seedType} />
                       <div className="mask">
                         <p className="alias">{nftItem.alias}</p>
                         <p className="token-id">#{nftItem.tokenId}</p>
                       </div>
-                    </div>
+                    </NFTImage>
                   )
                 );
               })}

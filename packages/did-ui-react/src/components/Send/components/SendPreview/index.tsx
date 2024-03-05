@@ -9,7 +9,7 @@ import { ZERO } from '../../../../constants/misc';
 import { useTokenPrice } from '../../../context/PortkeyAssetProvider/hooks';
 import { formatStr2EllipsisStr } from '../../../../utils';
 import './index.less';
-import SeedBadge from '../../../AssetTabs/components/SeedBadge';
+import NFTImage from '../../../NFTImage';
 
 export interface SendPreviewProps {
   nickname?: string;
@@ -105,16 +105,7 @@ export default function SendPreview({
         </div>
       ) : (
         <div className="amount-preview nft">
-          <div className="avatar">
-            {imageUrl ? (
-              <div className="portkey-ui-relative">
-                <img src={imageUrl} />
-                <SeedBadge className="seed-type-badge" isSeed={isSeed} seedType={seedType} />
-              </div>
-            ) : (
-              <p>{symbol?.slice(0, 1)}</p>
-            )}
-          </div>
+          <NFTImage name={symbol} imageUrl={imageUrl} isSeed={isSeed} seedType={seedType} />
           <div className="info">
             <p className="portkey-ui-flex index">
               <p className="alias">{alias}</p>

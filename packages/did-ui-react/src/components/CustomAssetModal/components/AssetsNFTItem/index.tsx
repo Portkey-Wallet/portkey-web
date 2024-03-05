@@ -1,6 +1,6 @@
 import { IAssetItemType } from '@portkey/services';
 import { divDecimalsStr, transNetworkText } from '../../../../utils/converter';
-import SeedBadge from '../../../AssetTabs/components/SeedBadge';
+import NFTImage from '../../../NFTImage';
 
 export default function AssetsNFTItem({
   isMainnet,
@@ -16,16 +16,13 @@ export default function AssetsNFTItem({
       key={`${token.chainId}_${token.nftInfo?.alias}_${token.nftInfo?.tokenId}`}
       className="item protocol"
       onClick={onSelect?.bind(undefined, token, 'NFT')}>
-      <div className="avatar">
-        {token.nftInfo?.imageUrl ? (
-          <div className="portkey-ui-relative">
-            <img src={token.nftInfo.imageUrl} />
-            <SeedBadge className="seed-type-badge" isSeed={token.nftInfo?.isSeed} seedType={token.nftInfo?.seedType} />
-          </div>
-        ) : (
-          token.nftInfo?.alias?.slice(0, 1)
-        )}
-      </div>
+      <NFTImage
+        className="avatar"
+        name={token.nftInfo?.alias}
+        imageUrl={token.nftInfo?.imageUrl}
+        isSeed={token.nftInfo?.isSeed}
+        seedType={token.nftInfo?.seedType}
+      />
       <div className="info">
         <p className="alias">{`${token.nftInfo?.alias} #${token.nftInfo?.tokenId}`}</p>
         <p className="network">{transNetworkText(token.chainId, isMainnet)}</p>

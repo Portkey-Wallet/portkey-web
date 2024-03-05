@@ -2,11 +2,11 @@ import { Input } from 'antd';
 import { useCallback, useState } from 'react';
 import { AssetTokenExpand } from '../../../types/assets';
 import { divDecimalsStr } from '../../../../utils/converter';
-import { handleKeyDown, handleKeyDownInt } from '../../utils/handlerKey';
+import { handleDecimalInput, handleKeyDown, handleKeyDownInt } from '../../utils/handlerKey';
 import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import { getBalanceByContract } from '../../../../utils/sandboxUtil/getBalance';
 import { usePortkey } from '../../../context';
-import SeedBadge from '../../../AssetTabs/components/SeedBadge';
+import NFTImage from '../../../NFTImage';
 
 export default function NftInput({
   fromAccount,
@@ -52,16 +52,7 @@ export default function NftInput({
   return (
     <div className="amount-wrap">
       <div className="item asset nft">
-        <div className="avatar">
-          {token.imageUrl ? (
-            <div className="portkey-ui-relative">
-              <img src={token.imageUrl} />
-              <SeedBadge className="seed-type-badge" isSeed={token?.isSeed} seedType={token?.seedType} />
-            </div>
-          ) : (
-            <p>{token.symbol[0]}</p>
-          )}
-        </div>
+        <NFTImage name={token.symbol} imageUrl={token.imageUrl} isSeed={token?.isSeed} seedType={token?.seedType} />
         <div className="info">
           <div className="index">
             <p className="alias">{token.alias}</p>
@@ -81,6 +72,7 @@ export default function NftInput({
               maxLength={18}
               placeholder={`0`}
               value={amount}
+              onInput={(event: any) => handleDecimalInput(event, token.decimals)}
               onKeyDown={Number(token.decimals) > 0 ? handleKeyDown : handleKeyDownInt}
               onBlur={handleAmountBlur}
               onChange={(e) => {

@@ -64,30 +64,24 @@
   }
 
   .picture {
-    position: relative;
     margin: 16px auto 24px;
     width: 320px;
     height: 320px;
-    img {
-      object-fit: contain;
-      border-radius: 6px;
-    }
-    .picture-text {
-      background-color: var(--portkey-ui-bg-14);
-      font-size: 40px;
-      color: var(--portkey-ui-text-tip);
-    }
-    .seed-type-badge {
-      position: absolute;
-      top: 0;
-      right: 20px;
-    }
-  }
+    font-size: 40px;
 
-  .picture-common {
-    width: 100%;
-    height: 100%;
-    border-radius: 6px;
+    .portkey-ui-seed-badge {
+      right: 20px;
+      width: 48px;
+      height: 24px;
+      .portkey-ui-custom-svg {
+        width: 48px;
+        height: 24px;
+        svg {
+          width: 48px;
+          height: 24px;
+        }
+      }
+    }
   }
 
   .info {

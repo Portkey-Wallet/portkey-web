@@ -9,8 +9,8 @@ import { ChainId, SeedTypeEnum } from '@portkey/types';
 import { NFTItemBaseExpand } from '../types/assets';
 import { formatStr2EllipsisStr } from '../../utils';
 import ThrottleButton from '../ThrottleButton';
-import SeedBadge from '../AssetTabs/components/SeedBadge';
 import clsx from 'clsx';
+import NFTImage from '../NFTImage';
 
 export interface NFTDetailProps {
   NFTDetail: NFTItemBaseExpand;
@@ -42,16 +42,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   const renderPicture = useMemo(() => {
     const { imageUrl, symbol, isSeed, seedType } = NFTDetail;
 
-    return (
-      <div className="picture portkey-ui-flex-center">
-        {imageUrl ? (
-          <img className="picture-common" src={imageUrl} />
-        ) : (
-          <div className="picture-text picture-common portkey-ui-flex-center">{symbol?.slice(0, 1)}</div>
-        )}
-        <SeedBadge className="seed-type-badge" isSeed={isSeed} seedType={seedType} />
-      </div>
-    );
+    return <NFTImage className="picture" name={symbol} imageUrl={imageUrl} isSeed={isSeed} seedType={seedType} />;
   }, [NFTDetail]);
 
   const renderInfoRow = useCallback(

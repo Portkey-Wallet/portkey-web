@@ -2,7 +2,7 @@ import { Input } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useMemo, useState } from 'react';
 import { AssetTokenExpand } from '../../../types/assets';
-import { handleKeyDown } from '../../utils/handlerKey';
+import { handleDecimalInput, handleKeyDown } from '../../utils/handlerKey';
 import { divDecimals, formatAmountShow } from '../../../../utils/converter';
 import { ZERO } from '../../../../constants/misc';
 import { usePortkey } from '../../../context';
@@ -171,6 +171,7 @@ export default function TokenInput({
               className={clsx(isMainnet && 'need-convert')}
               value={amount}
               maxLength={18}
+              onInput={(event: any) => handleDecimalInput(event, token.decimals)}
               onKeyDown={handleKeyDown}
               onFocus={() => {
                 setAmount((v) => v?.replace(` ${token?.symbol}`, ''));
