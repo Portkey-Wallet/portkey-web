@@ -22,6 +22,7 @@ import { getChain } from '../../hooks/useChainInfo';
 import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { CaAddressInfosType } from '@portkey/services';
 import './index.less';
+import SeedBadge from '../AssetTabs/components/SeedBadge';
 
 export interface TransactionProps {
   transactionDetail: ActivityItemType;
@@ -89,7 +90,10 @@ export default function TransactionMain({
       <div className="nft-amount">
         <div className="assets">
           {nftInfo?.imageUrl ? (
-            <img className="assets-img" src={nftInfo?.imageUrl} />
+            <div className="portkey-ui-relative">
+              <img className="assets-img" src={nftInfo?.imageUrl} />
+              <SeedBadge className="seed-type-badge" isSeed={nftInfo?.isSeed} seedType={nftInfo?.seedType} />
+            </div>
           ) : (
             <p>{nftInfo?.alias?.slice(0, 1)}</p>
           )}
