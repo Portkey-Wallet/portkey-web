@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { ChainId } from '@portkey/types';
+import { ChainId, SeedTypeEnum } from '@portkey/types';
 import { formatAmountShow } from '../../../../utils/converter';
 import { supplementAllAelfAddress, isAelfAddress } from '../../../../utils/aelf';
 import { amountInUsdShow, chainShowText } from '../../../../utils/assets';
@@ -9,6 +9,7 @@ import { ZERO } from '../../../../constants/misc';
 import { useTokenPrice } from '../../../context/PortkeyAssetProvider/hooks';
 import { formatStr2EllipsisStr } from '../../../../utils';
 import './index.less';
+import SeedBadge from '../../../AssetTabs/components/SeedBadge';
 
 export interface SendPreviewProps {
   nickname?: string;
@@ -18,6 +19,9 @@ export interface SendPreviewProps {
   alias: string;
   balanceInUsd?: string;
   imageUrl: string;
+  decimals: string | number;
+  isSeed: boolean;
+  seedType: SeedTypeEnum;
   toAccount: { name?: string; address: string };
   transactionFee: string | number;
   type: 'nft' | 'token';
@@ -37,6 +41,9 @@ export default function SendPreview({
   transactionFee,
   type,
   imageUrl,
+  decimals,
+  isSeed,
+  seedType,
   chainId,
   isCross,
   tokenId,
@@ -98,14 +105,23 @@ export default function SendPreview({
         </div>
       ) : (
         <div className="amount-preview nft">
-          <div className="avatar">{imageUrl ? <img src={imageUrl} /> : <p>{symbol?.slice(0, 1)}</p>}</div>
+          <div className="avatar">
+            {imageUrl ? (
+              <div className="portkey-ui-relative">
+                <img src={imageUrl} />
+                <SeedBadge className="seed-type-badge" isSeed={isSeed} seedType={seedType} />
+              </div>
+            ) : (
+              <p>{symbol?.slice(0, 1)}</p>
+            )}
+          </div>
           <div className="info">
             <p className="portkey-ui-flex index">
               <p className="alias">{alias}</p>
               <p className="token-id">{`#${tokenId}`}</p>
             </p>
             <p className="quantity">
-              Amount: <span>{formatAmountShow(amount)}</span>
+              Amount: <span>{formatAmountShow(amount, decimals)}</span>
             </p>
           </div>
         </div>

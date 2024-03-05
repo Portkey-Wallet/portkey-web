@@ -1,8 +1,8 @@
 import { Input } from 'antd';
 import { useCallback, useState } from 'react';
 import { AssetTokenExpand } from '../../../types/assets';
-import { divDecimals, formatAmountShow } from '../../../../utils/converter';
-import { handleKeyDownInt } from '../../utils/handlerKey';
+import { divDecimalsStr } from '../../../../utils/converter';
+import { handleKeyDown, handleKeyDownInt } from '../../utils/handlerKey';
 import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import { getBalanceByContract } from '../../../../utils/sandboxUtil/getBalance';
 import { usePortkey } from '../../../context';
@@ -68,7 +68,7 @@ export default function NftInput({
             <p className="token-id">#{token.tokenId}</p>
           </div>
           <p className="quantity">
-            Balance: <span>{`${formatAmountShow(divDecimals(balance, token.decimals))}`}</span>
+            Balance: <span>{`${divDecimalsStr(balance, token.decimals)}`}</span>
           </p>
         </div>
       </div>
@@ -81,7 +81,7 @@ export default function NftInput({
               maxLength={18}
               placeholder={`0`}
               value={amount}
-              onKeyDown={handleKeyDownInt}
+              onKeyDown={Number(token.decimals) > 0 ? handleKeyDown : handleKeyDownInt}
               onBlur={handleAmountBlur}
               onChange={(e) => {
                 setAmount(e.target.value);

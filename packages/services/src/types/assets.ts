@@ -37,6 +37,7 @@ export type INftCollection = {
   symbol: string;
   isSeed: boolean;
   decimals: number;
+  expires?: string;
 };
 export type FetchAccountNftCollectionListParams = {
   skipCount: number;

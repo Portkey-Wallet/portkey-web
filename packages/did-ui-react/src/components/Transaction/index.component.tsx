@@ -7,6 +7,7 @@ import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
 import {
   addressFormat,
   dateFormatTransTo13,
+  divDecimalsStr,
   formatAmountShow,
   formatWithCommas,
   transNetworkText,
@@ -83,7 +84,7 @@ export default function TransactionMain({
   const isNft = useMemo(() => !!activityItem?.nftInfo?.nftId, [activityItem?.nftInfo?.nftId]);
 
   const nftHeaderUI = useCallback(() => {
-    const { nftInfo, amount } = activityItem;
+    const { nftInfo, amount, decimals } = activityItem;
     return (
       <div className="nft-amount">
         <div className="assets">
@@ -98,7 +99,7 @@ export default function TransactionMain({
             <span>{nftInfo?.alias}</span>
             <span className="token-id">#{nftInfo?.nftId}</span>
           </p>
-          <p className="quantity">{`Amount: ${amount}`}</p>
+          <p className="quantity">{`Amount: ${divDecimalsStr(amount, decimals)}`}</p>
         </div>
       </div>
     );

@@ -126,7 +126,7 @@ const NFTTab = forwardRef(
                       onClick={() =>
                         onNFTView?.({
                           ...nftItem,
-                          decimals: 0,
+                          expires: nft.expires,
                           collectionName: nft.collectionName,
                           collectionImageUrl: nft.imageUrl,
                         })

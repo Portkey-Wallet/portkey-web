@@ -16,8 +16,9 @@ export interface IBaseNFTType {
 }
 
 export enum SeedTypeEnum {
-  FT = 'FT',
-  NFT = 'NFT',
+  FT = 1,
+  NFT = 2,
+  NULL = 0,
 }
 
 export interface INftInfoType {

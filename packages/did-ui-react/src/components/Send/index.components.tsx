@@ -6,7 +6,7 @@ import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
-import { ChainId } from '@portkey/types';
+import { ChainId, SeedTypeEnum } from '@portkey/types';
 import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
 import AddressSelector from './components/AddressSelector';
@@ -92,7 +92,7 @@ function SendContent({
   const tokenInfo: AssetTokenExpand = useMemo(
     () => ({
       chainId: assetItem.chainId as ChainId,
-      decimals: isNFT ? 0 : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
+      decimals: isNFT ? assetItem.nftInfo?.decimals || '0' : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
       address: (isNFT ? assetItem?.nftInfo?.tokenContractAddress : assetItem?.tokenInfo?.tokenContractAddress) || '',
       symbol: assetItem.symbol,
       name: assetItem.symbol,
@@ -567,6 +567,9 @@ function SendContent({
             symbol={tokenInfo?.symbol || ''}
             alias={tokenInfo.alias || ''}
             imageUrl={tokenInfo.imageUrl || ''}
+            decimals={tokenInfo.decimals}
+            isSeed={tokenInfo.isSeed || false}
+            seedType={tokenInfo.seedType || SeedTypeEnum.NULL}
             chainId={tokenInfo.chainId || ''}
             transactionFee={txFee || ''}
             isCross={isCrossChain(toAccount.address, tokenInfo.chainId)}

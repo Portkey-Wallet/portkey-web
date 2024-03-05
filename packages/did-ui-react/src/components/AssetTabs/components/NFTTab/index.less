@@ -148,11 +148,18 @@
       }
       .item.item-img {
         .mask {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 50%;
+          border-radius: 0px 0px 8px 8px;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
           justify-content: flex-end;
           padding: 9px 8px 4px;
           color: var(--portkey-ui-font-12);
-          opacity: 0.8;
           .alias {
+            text-wrap: nowrap;
             -webkit-line-clamp: 1;
             height: 16px;
             line-height: 16px;

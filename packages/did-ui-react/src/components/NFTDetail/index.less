@@ -59,6 +59,7 @@
     font-size: 20px;
     line-height: 24px;
     font-weight: 500;
+    word-break: break-word;
     color: var(--portkey-ui-text-primary);
   }
 
@@ -129,9 +130,11 @@
         }
       }
     }
-    .alias {
-      .alias-name {
-        max-width: 115px;
+    .symbol {
+      gap: 24px;
+      .symbol-value {
+        text-align: end;
+        flex: 1;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;

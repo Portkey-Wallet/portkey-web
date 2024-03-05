@@ -1,6 +1,5 @@
 import { IAssetItemType } from '@portkey/services';
-import React from 'react';
-import { transNetworkText } from '../../../../utils/converter';
+import { divDecimalsStr, transNetworkText } from '../../../../utils/converter';
 import SeedBadge from '../../../AssetTabs/components/SeedBadge';
 
 export default function AssetsNFTItem({
@@ -32,7 +31,7 @@ export default function AssetsNFTItem({
         <p className="network">{transNetworkText(token.chainId, isMainnet)}</p>
       </div>
       <div className="amount">
-        <div className="balance">{token.nftInfo?.balance}</div>
+        <div className="balance">{divDecimalsStr(token.nftInfo?.balance, token.nftInfo?.decimals)}</div>
       </div>
     </div>
   );

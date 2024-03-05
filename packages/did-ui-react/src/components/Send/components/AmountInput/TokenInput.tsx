@@ -147,7 +147,7 @@ export default function TokenInput({
         <div className="control">
           <div className="asset-selector">
             <div className="icon">
-              <TokenImageDisplay src={token.imageUrl} width={24} symbol={token.symbol} />
+              <TokenImageDisplay src={token.imageUrl} width={40} symbol={token.symbol} />
             </div>
             <div className="center">
               <p className="symbol">{token?.symbol}</p>
