@@ -41,7 +41,6 @@ export default function CryptoDesignBaseCom({
   const validateEmailRef = useRef<CryptoDesignProps['validateEmail']>(validateEmail);
   const validatePhoneRef = useRef<CryptoDesignProps['validatePhone']>(validatePhone);
   const onChainIdChangeRef = useRef<CryptoDesignProps['onChainIdChange']>(onChainIdChange);
-  const onSuccessRef = useRef<CryptoDesignProps['onSuccess']>(onSuccess);
   const onErrorRef = useRef<CryptoDesignProps['onError']>(onError);
 
   const _socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
@@ -54,7 +53,6 @@ export default function CryptoDesignBaseCom({
     validatePhoneRef.current = validatePhone;
     onChainIdChangeRef.current = onChainIdChange;
     onErrorRef.current = onError;
-    onSuccessRef.current = onSuccess;
   });
 
   const [_type, setType] = useState<CreateWalletType>(type ?? 'Login');
@@ -76,12 +74,12 @@ export default function CryptoDesignBaseCom({
     () => ({
       defaultChainId,
       onError: onErrorRef.current,
-      onSuccess: onSuccessRef.current,
+      onSuccess,
       customValidateEmail: validateEmailRef.current,
       customValidatePhone: validatePhoneRef.current,
       onChainIdChange: onChainIdChangeRef.current,
     }),
-    [defaultChainId],
+    [defaultChainId, onSuccess],
   );
   const {
     validateEmail: _validateEmail,
