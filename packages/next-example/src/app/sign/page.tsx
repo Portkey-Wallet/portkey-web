@@ -37,7 +37,7 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
-  serviceUrl: 'https://localtest-applesign2.portkey.finance',
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
@@ -124,7 +124,7 @@ export default function Sign() {
     <div>
       <div>-----------</div>
       <SignIn
-        // pin={'23aa'}
+        pin={'111111'}
         ref={ref}
         keyboard={true}
         design={design}
@@ -226,7 +226,7 @@ export default function Sign() {
           const wallet = await did.load(PIN);
           console.log('wallet:', wallet);
           // Mock chainId: 'AELF'
-          const result = await did.logout({ chainId: CHAIN_ID }, { onMethod: 'transactionHash' });
+          const result = await did.logout({ chainId: CHAIN_ID });
           console.log(result, 'logout====');
         }}>
         logout

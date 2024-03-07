@@ -16,7 +16,10 @@ export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {
   }
 
   public doOpen = async ({ url, clientId }: { url: string; clientId: string }) => {
-    const signalr = new HubConnectionBuilder().withUrl(url).withAutomaticReconnect().build();
+    const signalr = new HubConnectionBuilder()
+      .withUrl(url, { withCredentials: false })
+      .withAutomaticReconnect()
+      .build();
     this._listener(signalr);
     if (this.signalr) await this.signalr.stop();
     await signalr.start();
