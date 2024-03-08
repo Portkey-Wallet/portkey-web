@@ -37,7 +37,6 @@ export type INftCollection = {
   symbol: string;
   isSeed: boolean;
   decimals: number;
-  expires?: string;
 };
 export type FetchAccountNftCollectionListParams = {
   skipCount: number;
@@ -62,16 +61,13 @@ export type INftCollectionItem = {
   tokenId: string;
   totalSupply: string;
   decimals: number;
-  inscriptionInformation: TNftInscriptionInformation;
-  traits: TNftTraits;
-  generationInfo: TNftGenerationInfo;
   isSeed: boolean;
   seedType: SeedTypeEnum;
-};
-
-export type TNftInscriptionInformation = {
   inscriptionName: string;
   limitPerMint: number;
+  expires: string;
+  seedOwnedSymbol: string;
+  recommendedRefreshSeconds: number;
 };
 
 export type TNftTraits = {};
@@ -92,6 +88,10 @@ export type FetchAccountNftCollectionItemListResult = {
   data: INftCollectionItem[];
   totalRecordCount: number;
 };
+
+export type TFetchAccountNftItemParams = { symbol: string; caAddressInfos: CaAddressInfosType };
+
+export type TFetchAccountNftItemResult = INftCollectionItem;
 
 export type FetchTokenPriceParams = {
   symbols: string[];
@@ -151,6 +151,7 @@ export interface IAssetsService {
   fetchAccountNftCollectionItemList(
     params: FetchAccountNftCollectionItemListParams,
   ): Promise<FetchAccountNftCollectionItemListResult>;
+  fetchAccountNftItem(params: TFetchAccountNftItemParams): Promise<TFetchAccountNftItemResult>;
   fetchTokenPrice(params: FetchTokenPriceParams): Promise<FetchTokenPriceResult>;
   getUserTokenList(params: GetUserTokenListParams): Promise<GetUserTokenListResult>;
   getAccountAssetsByKeywords(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsResult>;

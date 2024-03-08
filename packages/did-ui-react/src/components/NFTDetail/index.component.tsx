@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { usePortkey } from '../context';
 import { MAINNET } from '../../constants/network';
 import { addressFormat, divDecimalsStr, transNetworkText } from '../../utils/converter';
@@ -7,10 +7,13 @@ import SettingHeader from '../SettingHeader';
 import './index.less';
 import { ChainId, SeedTypeEnum } from '@portkey/types';
 import { NFTItemBaseExpand } from '../types/assets';
-import { formatStr2EllipsisStr } from '../../utils';
+import { did, formatStr2EllipsisStr } from '../../utils';
 import ThrottleButton from '../ThrottleButton';
 import clsx from 'clsx';
 import NFTImage from '../NFTImage';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
+import { sleep } from '@portkey/utils';
+import moment from 'moment';
 
 export interface NFTDetailProps {
   NFTDetail: NFTItemBaseExpand;
@@ -19,11 +22,49 @@ export interface NFTDetailProps {
 }
 
 export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailProps) {
+  const [info, setInfo] = useState<NFTItemBaseExpand>({ ...NFTDetail });
   const [{ networkType, chainType }] = usePortkey();
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
+  const [{ caInfo, initialized }] = usePortkeyAsset();
+
+  const caAddressInfos = useMemo(() => {
+    if (!caInfo) return;
+    return Object.entries(caInfo ?? {}).map(([chainId, info]) => ({
+      chainId: chainId as ChainId,
+      caAddress: info.caAddress,
+    }));
+  }, [caInfo]);
+
+  const updateDetail = useCallback(async () => {
+    if (!caAddressInfos) return;
+
+    const data = await did.services.assets.fetchAccountNftItem({
+      symbol: '',
+      caAddressInfos: caAddressInfos,
+    });
+    setInfo({ ...NFTDetail, ...data });
+    // polling to get data
+    if (!data.recommendedRefreshSeconds) return;
+    sleep(data.recommendedRefreshSeconds * 1000);
+    await updateDetail();
+  }, [NFTDetail, caAddressInfos]);
+
+  const initGetDetail = useCallback(async () => {
+    const { recommendedRefreshSeconds } = NFTDetail;
+    if (!recommendedRefreshSeconds) return;
+    sleep(recommendedRefreshSeconds * 1000);
+    await updateDetail();
+  }, [NFTDetail, updateDetail]);
+
+  useEffect(() => {
+    if (initialized) {
+      initGetDetail();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialized]);
 
   const renderCollectionInfo = useMemo(() => {
-    const { collectionName, collectionImageUrl } = NFTDetail;
+    const { collectionName, collectionImageUrl } = info;
 
     return (
       <div className="collection portkey-ui-flex-start-center">
@@ -37,13 +78,13 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
         <div className="name">{collectionName}</div>
       </div>
     );
-  }, [NFTDetail]);
+  }, [info]);
 
   const renderPicture = useMemo(() => {
-    const { imageUrl, symbol, isSeed, seedType } = NFTDetail;
+    const { imageUrl, symbol, isSeed, seedType } = info;
 
     return <NFTImage className="picture" name={symbol} imageUrl={imageUrl} isSeed={isSeed} seedType={seedType} />;
-  }, [NFTDetail]);
+  }, [info]);
 
   const renderInfoRow = useCallback(
     ({
@@ -70,7 +111,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   );
 
   const renderBasicInfo = useMemo(() => {
-    const { tokenContractAddress, chainId, symbol, totalSupply, decimals } = NFTDetail;
+    const { tokenContractAddress, chainId, symbol, totalSupply, decimals } = info;
 
     const formatTokenContractAds = addressFormat(tokenContractAddress, chainId as ChainId, chainType);
     return (
@@ -97,10 +138,12 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
         })}
       </div>
     );
-  }, [NFTDetail, chainType, isMainnet, renderInfoRow]);
+  }, [info, chainType, isMainnet, renderInfoRow]);
 
   const renderOriginSeedInfo = useMemo(() => {
-    const { expires, isSeed, seedType, symbol } = NFTDetail;
+    const { expires, isSeed, seedType, seedOwnedSymbol } = info;
+    const formatExpires = expires ? `${moment.unix(Number(expires)).utc().format('MMM DD YYYY HH:mm:ss')} UTC` : '-';
+
     return (
       isSeed && (
         <div className="info">
@@ -110,12 +153,12 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
             value: seedType === SeedTypeEnum.FT ? 'Token' : 'NFT',
             className: 'origin-seed-type',
           })}
-          {renderInfoRow({ label: 'Token Symbol', value: symbol, className: 'origin-seed-token-symbol' })}
-          {renderInfoRow({ label: 'Expires', value: expires, className: 'origin-seed-expires' })}
+          {renderInfoRow({ label: 'Token Symbol', value: seedOwnedSymbol, className: 'origin-seed-token-symbol' })}
+          {renderInfoRow({ label: 'Expires', value: formatExpires, className: 'origin-seed-expires' })}
         </div>
       )
     );
-  }, [NFTDetail, renderInfoRow]);
+  }, [info, renderInfoRow]);
 
   const renderTraitsInfo = useMemo(() => {
     return (
@@ -149,14 +192,15 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   }, [renderInfoRow]);
 
   const renderInscriptionInfo = useMemo(() => {
+    const { inscriptionName, limitPerMint } = info;
     return (
       <div className="info">
         <div className="title">Inscription info</div>
-        {renderInfoRow({ label: 'Inscription Name', value: 'Inscription Name', className: 'inscription-name' })}
-        {renderInfoRow({ label: 'Limit Per Mint', value: 'Limit Per Mint', className: 'inscription-limit' })}
+        {renderInfoRow({ label: 'Inscription Name', value: inscriptionName, className: 'inscription-name' })}
+        {renderInfoRow({ label: 'Limit Per Mint', value: String(limitPerMint), className: 'inscription-limit' })}
       </div>
     );
-  }, [renderInfoRow]);
+  }, [info, renderInfoRow]);
 
   const renderDetail = useMemo(() => {
     return (
@@ -171,20 +215,20 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   }, [renderBasicInfo, renderGenerationInfo, renderInscriptionInfo, renderOriginSeedInfo, renderTraitsInfo]);
 
   const renderFooter = useMemo(() => {
-    const { balance, decimals } = NFTDetail;
+    const { balance, decimals } = info;
     return (
       <div>
         <div className="btn-wrap portkey-ui-flex-column-center">
           <div className="balance">{`You have: ${divDecimalsStr(balance, decimals)}`}</div>
-          <ThrottleButton type="primary" onClick={() => onSend?.(NFTDetail)}>
+          <ThrottleButton type="primary" onClick={() => onSend?.(info)}>
             Send
           </ThrottleButton>
         </div>
       </div>
     );
-  }, [NFTDetail, onSend]);
+  }, [info, onSend]);
 
-  const { alias, tokenId } = NFTDetail;
+  const { alias, tokenId } = info;
 
   return (
     <div className="portkey-ui-nft-detail">

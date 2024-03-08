@@ -100,7 +100,7 @@ function reducer(state: AssetState, { type, payload }: any) {
       state.NFTCollection.updateRandom = randomId();
       return Object.assign({}, state);
     }
-    case PortkeyAssetActions.setNFTItem: {
+    case PortkeyAssetActions.setNFTItemList: {
       if (!payload) return state;
       const { list, totalRecordCount, symbol, chainId, skipCount } = payload;
       if (!state.NFTCollection?.list) return state;

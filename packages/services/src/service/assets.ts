@@ -16,6 +16,8 @@ import {
   GetUserTokenListParams,
   GetUserTokenListResult,
   IAssetsService,
+  TFetchAccountNftItemParams,
+  TFetchAccountNftItemResult,
 } from '../types/assets';
 
 export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T> implements IAssetsService {
@@ -48,6 +50,13 @@ export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T
     return this._request.send({
       method: 'POST',
       url: '/api/app/user/assets/nftItems',
+      params,
+    });
+  }
+  fetchAccountNftItem(params: TFetchAccountNftItemParams): Promise<TFetchAccountNftItemResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/user/assets/nftItem',
       params,
     });
   }

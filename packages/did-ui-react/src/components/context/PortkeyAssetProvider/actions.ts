@@ -23,7 +23,7 @@ export const PortkeyAssetActions = {
   setCAInfo: 'setCAInfo',
   setTokenList: 'setTokenList',
   setNFTCollections: 'setNFTCollections',
-  setNFTItem: 'setNFTItem',
+  setNFTItemList: 'setNFTItemList',
   setTokenPrice: 'setTokenPrice',
   setAllAssets: 'setAllAssets',
   setTxFee: 'setTxFee',
@@ -160,7 +160,7 @@ const fetchNFTCollections = async ({
   });
 };
 
-const fetchNFTItem = async ({
+const fetchNFTItemList = async ({
   chainId,
   symbol,
   caAddressInfos,
@@ -175,7 +175,7 @@ const fetchNFTItem = async ({
     width: NFT_SMALL_SIZE,
     height: -1,
   });
-  return basicActions(PortkeyAssetActions['setNFTItem'], {
+  return basicActions(PortkeyAssetActions['setNFTItemList'], {
     symbol,
     chainId,
     list: response.data,
@@ -256,7 +256,7 @@ const fetchActivityList = async ({
 export const basicAssetViewAsync = {
   setTokenList: fetchTokenList,
   setNFTCollections: fetchNFTCollections,
-  setNFTItem: fetchNFTItem,
+  setNFTItemList: fetchNFTItemList,
   setTokenPrices: fetchTokenPrices,
   setAllAssetInfo: fetchAllAsset,
   setTxFee: fetchTxFee,

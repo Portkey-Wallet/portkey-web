@@ -59,7 +59,6 @@ export type NFTItemBaseType = {
 };
 
 export interface NFTItemBaseExpand extends INftCollectionItem {
-  expires?: string;
   collectionName: string;
   collectionImageUrl: string;
 }
