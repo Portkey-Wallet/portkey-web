@@ -13,7 +13,7 @@ module.exports = [
     // { source: '/connect/:path*', destination: 'http://192.168.64.201:8080/connect/:path*' },
     // { source: '/graphql/:path*', destination: 'http://192.168.64.202:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*' },
 
-    // // // test4
+    // test4
     // { source: '/api/:path*', destination: 'http://192.168.67.179:5001/api/:path*' },
     // { source: '/connect/:path*', destination: 'http://192.168.67.179:8001/connect/:path*' },
     // { source: '/graphql/:path*', destination: 'http://192.168.67.67:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*' },

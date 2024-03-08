@@ -18,6 +18,7 @@ import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { Button } from 'antd';
 import { FetchRequest } from '@portkey/request';
+import { signalrSell } from '@portkey/socket';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
@@ -36,6 +37,7 @@ ConfigProvider.setGlobalConfig({
   },
   requestDefaults: {
     timeout: 30000,
+    baseURL: 'https://aa-portkey-test.portkey.finance',
   },
   serviceUrl: 'https://aa-portkey-test.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
