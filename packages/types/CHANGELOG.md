@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.5...v2.1.0) (2024-03-08)
+
+### Features
+
+- 🎸 manager speed ([638c39f](https://github.com/Portkey-Wallet/portkey-web/commit/638c39f08ed5f0dd37514989bf5fefe26e0f23b7))
+
 ## [2.0.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4...v2.0.5) (2024-03-04)
 
 **Note:** Version bump only for package @portkey/types

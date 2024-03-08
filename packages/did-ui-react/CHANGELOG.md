@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.5...v2.1.0) (2024-03-08)
+
+### Features
+
+- 🎸 manager speed ([638c39f](https://github.com/Portkey-Wallet/portkey-web/commit/638c39f08ed5f0dd37514989bf5fefe26e0f23b7))
+
+### Bug Fixes
+
+- 🐛 change default ach appid ([028647d](https://github.com/Portkey-Wallet/portkey-web/commit/028647db8a526941c0d8625ceef0f323776d9287))
+- 🐛 check timing for manager ([5d18c0a](https://github.com/Portkey-Wallet/portkey-web/commit/5d18c0a25d46f3976927267161b6c448ba6ca7bf))
+
 ## [2.0.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4...v2.0.5) (2024-03-04)
 
 ### Features
