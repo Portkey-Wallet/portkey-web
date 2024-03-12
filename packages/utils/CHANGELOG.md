@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.5...v2.1.0) (2024-03-08)
+
+**Note:** Version bump only for package @portkey/utils
+
+## [2.0.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4...v2.0.5) (2024-03-04)
+
+### Features
+
+- 🎸 devices.environment ([08b6e5d](https://github.com/Portkey-Wallet/portkey-web/commit/08b6e5d0ff06e404abd1503b67fd6906141fdfa6))
+
 ## [2.0.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4-alpha.1...v2.0.4) (2024-03-01)
 
 ### Features

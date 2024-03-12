@@ -1,6 +1,6 @@
 {
   "name": "@portkey/request",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -40,7 +40,7 @@
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@portkey/types": "^2.0.4",
+    "@portkey/types": "^2.1.0",
     "query-string": "^7.1.1"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"

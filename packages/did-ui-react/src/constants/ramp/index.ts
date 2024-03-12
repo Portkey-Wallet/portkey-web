@@ -47,7 +47,7 @@ export enum NFTCheckoutByACH {
 
 // mainnet
 export const AchConfig: IAchConfig = {
-  appId: 'P0e0l39jipsNYT46',
+  appId: 'H41s4ysiPX57fj31',
   baseUrl: 'https://ramp.alchemypay.org',
   updateAchOrder: '/api/app/thirdPart/order/alchemy',
 };

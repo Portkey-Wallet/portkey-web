@@ -3,6 +3,7 @@ import { PORTKEY_VERSION, WEB_PAGE, WEB_PAGE_TEST } from '../constants';
 import { ISocialLogin, NetworkType } from '../types';
 import { stringify } from 'query-string';
 import { dealURLLastChar } from './lib';
+import { devicesEnv } from '@portkey/utils';
 
 export const socialLoginAuth = ({
   type,
@@ -20,7 +21,7 @@ export const socialLoginAuth = ({
   token: string;
   provider: ISocialLogin;
 }> =>
-  new Promise((resolve, reject) => {
+  new Promise(async (resolve, reject) => {
     let timer: any = null;
     let serviceURI = dealURLLastChar(serviceUrl);
 
@@ -28,6 +29,36 @@ export const socialLoginAuth = ({
     const ctw = getCustomNetworkType();
 
     const thirdPage = ctw === 'Offline' ? WEB_PAGE_TEST : WEB_PAGE;
+
+    const app = await devicesEnv.getPortkeyShellApp();
+
+    if (app) {
+      return app.invokeClientMethod(
+        {
+          type: 'login',
+          params: {
+            type,
+            ctw: ctw === 'Offline' ? 'offline' : ctw,
+            serviceURI,
+          },
+        },
+        (args): any => {
+          if (args.status === 1) {
+            const token = args.data?.token;
+            if (!token) {
+              reject('auth error');
+            } else {
+              resolve({
+                token,
+                provider: type,
+              });
+            }
+          } else {
+            reject(args.msg || 'auth error');
+          }
+        },
+      );
+    }
 
     const onMessage = (event: MessageEvent) => {
       const type = event.data.type;
