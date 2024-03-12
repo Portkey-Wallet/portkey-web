@@ -1,6 +1,6 @@
 import { IAssetItemType } from '@portkey/services';
-import React from 'react';
-import { transNetworkText } from '../../../../utils/converter';
+import { divDecimalsStr, transNetworkText } from '../../../../utils/converter';
+import NFTImage from '../../../NFTImage';
 
 export default function AssetsNFTItem({
   isMainnet,
@@ -16,15 +16,19 @@ export default function AssetsNFTItem({
       key={`${token.chainId}_${token.nftInfo?.alias}_${token.nftInfo?.tokenId}`}
       className="item protocol"
       onClick={onSelect?.bind(undefined, token, 'NFT')}>
-      <div className="avatar">
-        {token.nftInfo?.imageUrl ? <img src={token.nftInfo.imageUrl} /> : token.nftInfo?.alias?.slice(0, 1)}
-      </div>
+      <NFTImage
+        className="avatar"
+        name={token.nftInfo?.alias}
+        imageUrl={token.nftInfo?.imageUrl}
+        isSeed={token.nftInfo?.isSeed}
+        seedType={token.nftInfo?.seedType}
+      />
       <div className="info">
         <p className="alias">{`${token.nftInfo?.alias} #${token.nftInfo?.tokenId}`}</p>
         <p className="network">{transNetworkText(token.chainId, isMainnet)}</p>
       </div>
       <div className="amount">
-        <div className="balance">{token.nftInfo?.balance}</div>
+        <div className="balance">{divDecimalsStr(token.nftInfo?.balance, token.nftInfo?.decimals)}</div>
       </div>
     </div>
   );
