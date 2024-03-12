@@ -63,18 +63,17 @@ export type INftCollectionItem = {
   decimals: number;
   isSeed: boolean;
   seedType: SeedTypeEnum;
-  inscriptionName: string;
-  limitPerMint: number;
-  expires: string;
-  seedOwnedSymbol: string;
-  recommendedRefreshSeconds: number;
+  inscriptionName?: string;
+  limitPerMint?: number;
+  expires?: string;
+  seedOwnedSymbol?: string;
+  recommendedRefreshSeconds?: number;
+  generation?: string;
+  traits?: string;
+  traitsPercentages?: TTraitsPercentage[];
 };
 
-export type TNftTraits = {};
-
-export type TNftGenerationInfo = {
-  generation: string;
-};
+export type TTraitsPercentage = { traitType: string; value: string; percent: string };
 
 export type FetchAccountNftCollectionItemListParams = {
   symbol: string;
@@ -89,7 +88,12 @@ export type FetchAccountNftCollectionItemListResult = {
   totalRecordCount: number;
 };
 
-export type TFetchAccountNftItemParams = { symbol: string; caAddressInfos: CaAddressInfosType };
+export type TFetchAccountNftItemParams = {
+  symbol: string;
+  caAddressInfos: CaAddressInfosType;
+  width: number;
+  height: number;
+};
 
 export type TFetchAccountNftItemResult = INftCollectionItem;
 

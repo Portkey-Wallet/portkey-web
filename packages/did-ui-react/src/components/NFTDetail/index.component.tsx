@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePortkey } from '../context';
 import { MAINNET } from '../../constants/network';
 import { addressFormat, divDecimalsStr, transNetworkText } from '../../utils/converter';
@@ -12,8 +12,8 @@ import ThrottleButton from '../ThrottleButton';
 import clsx from 'clsx';
 import NFTImage from '../NFTImage';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { sleep } from '@portkey/utils';
 import moment from 'moment';
+import { NFT_SMALL_SIZE } from '../../constants/assets';
 
 export interface NFTDetailProps {
   NFTDetail: NFTItemBaseExpand;
@@ -26,6 +26,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   const [{ networkType, chainType }] = usePortkey();
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   const [{ caInfo, initialized }] = usePortkeyAsset();
+  const updateTimerRef = useRef<NodeJS.Timer | number>();
 
   const caAddressInfos = useMemo(() => {
     if (!caInfo) return;
@@ -36,32 +37,34 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   }, [caInfo]);
 
   const updateDetail = useCallback(async () => {
-    if (!caAddressInfos) return;
+    const { symbol } = NFTDetail;
+    if (!caAddressInfos || !symbol) return;
 
     const data = await did.services.assets.fetchAccountNftItem({
-      symbol: '',
+      symbol,
       caAddressInfos: caAddressInfos,
+      width: NFT_SMALL_SIZE,
+      height: -1,
     });
+
     setInfo({ ...NFTDetail, ...data });
-    // polling to get data
-    if (!data.recommendedRefreshSeconds) return;
-    sleep(data.recommendedRefreshSeconds * 1000);
-    await updateDetail();
   }, [NFTDetail, caAddressInfos]);
 
-  const initGetDetail = useCallback(async () => {
-    const { recommendedRefreshSeconds } = NFTDetail;
-    if (!recommendedRefreshSeconds) return;
-    sleep(recommendedRefreshSeconds * 1000);
-    await updateDetail();
-  }, [NFTDetail, updateDetail]);
-
   useEffect(() => {
+    // polling to get data
     if (initialized) {
-      initGetDetail();
+      if (!info?.recommendedRefreshSeconds) return;
+      updateTimerRef.current = setInterval(() => {
+        updateDetail();
+      }, info.recommendedRefreshSeconds * 1000);
     }
+
+    return () => {
+      clearInterval(updateTimerRef.current);
+      updateTimerRef.current = undefined;
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialized]);
+  }, [NFTDetail, info?.recommendedRefreshSeconds, initialized]);
 
   const renderCollectionInfo = useMemo(() => {
     const { collectionName, collectionImageUrl } = info;
@@ -148,59 +151,76 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
       isSeed && (
         <div className="info">
           <div className="title">Token Creation via This Seed</div>
-          {renderInfoRow({
-            label: 'Type',
-            value: seedType === SeedTypeEnum.FT ? 'Token' : 'NFT',
-            className: 'origin-seed-type',
-          })}
-          {renderInfoRow({ label: 'Token Symbol', value: seedOwnedSymbol, className: 'origin-seed-token-symbol' })}
-          {renderInfoRow({ label: 'Expires', value: formatExpires, className: 'origin-seed-expires' })}
+          {seedType &&
+            renderInfoRow({
+              label: 'Type',
+              value: seedType === SeedTypeEnum.FT ? 'Token' : 'NFT',
+              className: 'origin-seed-type',
+            })}
+          {seedOwnedSymbol &&
+            renderInfoRow({ label: 'Token Symbol', value: seedOwnedSymbol, className: 'origin-seed-token-symbol' })}
+          {formatExpires && renderInfoRow({ label: 'Expires', value: formatExpires, className: 'origin-seed-expires' })}
         </div>
       )
     );
   }, [info, renderInfoRow]);
 
   const renderTraitsInfo = useMemo(() => {
+    const { traitsPercentages } = info;
+
     return (
-      <div className="info">
-        <div className="title">Traits</div>
-        <div className="origin-seed-token-symbol info-item portkey-ui-flex-between-center">
-          <div className="label portkey-ui-flex-column">
-            <span>Background</span>
-            <span className="below-label-value">{'Background-value'}</span>
+      <>
+        {Array.isArray(traitsPercentages) && traitsPercentages?.length > 0 && (
+          <div className="info">
+            <div className="title">Traits</div>
+            {traitsPercentages?.map((item, index) => {
+              return (
+                <div key={item.traitType + index} className="traits-info info-item portkey-ui-flex-between-center">
+                  <div className="label portkey-ui-flex-column">
+                    <span>{item.traitType}</span>
+                    <span className="below-label-value">{item.value}</span>
+                  </div>
+                  <div>{item.percent}</div>
+                </div>
+              );
+            })}
           </div>
-          <div>{'Background'}</div>
-        </div>
-        <div className="origin-seed-expires info-item portkey-ui-flex-between-center">
-          <div className="label portkey-ui-flex-column">
-            <span>Eyes</span>
-            <span className="below-label-value">{'Eyes-value'}</span>
-          </div>
-          <div>{'Eyes'}</div>
-        </div>
-      </div>
+        )}
+      </>
     );
-  }, []);
+  }, [info]);
 
   const renderGenerationInfo = useMemo(() => {
     return (
-      <div className="info">
-        <div className="title">Generation info</div>
-        {renderInfoRow({ label: 'Generation', value: 'Generation', className: 'generation-token-symbol' })}
-      </div>
+      <>
+        {info?.generation && (
+          <div className="info">
+            <div className="title">Generation info</div>
+            {renderInfoRow({ label: 'Generation', value: info.generation, className: 'generation' })}
+          </div>
+        )}
+      </>
     );
-  }, [renderInfoRow]);
+  }, [info.generation, renderInfoRow]);
 
   const renderInscriptionInfo = useMemo(() => {
-    const { inscriptionName, limitPerMint } = info;
     return (
-      <div className="info">
-        <div className="title">Inscription info</div>
-        {renderInfoRow({ label: 'Inscription Name', value: inscriptionName, className: 'inscription-name' })}
-        {renderInfoRow({ label: 'Limit Per Mint', value: String(limitPerMint), className: 'inscription-limit' })}
-      </div>
+      <>
+        {info?.inscriptionName && (
+          <div className="info">
+            <div className="title">Inscription info</div>
+            {renderInfoRow({ label: 'Inscription Name', value: info.inscriptionName, className: 'inscription-name' })}
+            {info.limitPerMint != null &&
+              renderInfoRow({
+                label: 'Limit Per Mint',
+                value: String(info.limitPerMint),
+                className: 'inscription-limit',
+              })}
+          </div>
+        )}
+      </>
     );
-  }, [info, renderInfoRow]);
+  }, [info?.inscriptionName, info?.limitPerMint, renderInfoRow]);
 
   const renderDetail = useMemo(() => {
     return (
