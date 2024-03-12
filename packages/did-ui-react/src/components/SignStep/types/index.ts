@@ -5,7 +5,6 @@ import {
   CreateWalletType,
   DIDWalletInfo,
   IGuardianIdentifierInfo,
-  IPhoneCountry,
   TDesign,
   TVerifierItem,
 } from '../../types';
@@ -88,7 +87,6 @@ export interface SignInProps {
 
   // Login
   isShowScan?: boolean;
-  phoneCountry?: IPhoneCountry;
   /** @deprecated Please use `extraElementList` */
   extraElement?: ReactNode; // extra element
   extraElementList?: ReactNode[]; // extra element
@@ -96,7 +94,6 @@ export interface SignInProps {
   privacyPolicy?: string;
   design?: TDesign;
   validateEmail?: ValidatorHandler;
-  validatePhone?: ValidatorHandler;
   onChainIdChange?(chainId?: ChainId): void;
   /**
    * Fired when it is detected that the user is not registered.

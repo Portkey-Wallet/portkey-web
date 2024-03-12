@@ -3,21 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.0.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.22...v2.0.0-alpha.23) (2024-02-05)
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
+## [2.0.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.0) (2024-02-22)
 
 **Note:** Version bump only for package @portkey/next-example
 
-## [2.0.0-alpha.22](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.21...v2.0.0-alpha.22) (2024-02-05)
+## [2.0.0-alpha.28](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.27...v2.0.0-alpha.28) (2024-02-18)
 
 **Note:** Version bump only for package @portkey/next-example
 
-## [2.0.0-alpha.21](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.20...v2.0.0-alpha.21) (2024-02-04)
+## [2.0.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.1-alpha.1) (2024-02-21)
 
-**Note:** Version bump only for package @portkey/next-example
+### Features
 
-## [2.0.0-alpha.20](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.0-alpha.20) (2024-02-02)
+- 🎸 add auth by socket ([2ba3d2a](https://github.com/Portkey-Wallet/portkey-web/commit/2ba3d2a38656c229810b5abe548ea27635821f20))
 
-**Note:** Version bump only for package @portkey/next-example
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+### Features
+
+- 🎸 fb and twitter oauth ([7e2bdfe](https://github.com/Portkey-Wallet/portkey-web/commit/7e2bdfe652af24885215c4d7509f64950abd490e))
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+### Features
+
+- 🎸 fb and twitter oauth ([7e2bdfe](https://github.com/Portkey-Wallet/portkey-web/commit/7e2bdfe652af24885215c4d7509f64950abd490e))
 
 ## [2.0.0-alpha.19](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.18...v2.0.0-alpha.19) (2024-01-30)
 

@@ -3,7 +3,6 @@ import { Tabs, TabsProps } from 'antd';
 import { forwardRef, useImperativeHandle, useMemo, useState } from 'react';
 import { ValidatorHandler } from '../../types';
 import EmailTab from '../EmailTab';
-import PhoneTab from '../PhoneTab';
 import { IPhoneCountry } from '../types';
 import { GuardianInputInfo } from '../types/signIn';
 import './index.less';
@@ -22,10 +21,7 @@ export interface InputInfoRef {
 }
 
 const InputInfo = forwardRef(
-  (
-    { confirmText, phoneCountry, defaultActiveKey = 'Phone', onFinish, validateEmail, validatePhone }: InputInfoProps,
-    ref,
-  ) => {
+  ({ confirmText, defaultActiveKey = 'Email', onFinish, validateEmail }: InputInfoProps, ref) => {
     const [activeKey, setActiveKey] = useState<AccountType>(defaultActiveKey);
 
     useImperativeHandle(
@@ -38,23 +34,23 @@ const InputInfo = forwardRef(
 
     const items: TabsProps['items'] = useMemo(
       () => [
-        {
-          key: AccountTypeEnum[AccountTypeEnum.Phone],
-          label: 'Phone',
-          children: (
-            <PhoneTab
-              phoneCountry={phoneCountry}
-              confirmText={confirmText}
-              validate={validatePhone}
-              onFinish={(v) =>
-                onFinish?.({
-                  accountType: AccountTypeEnum[AccountTypeEnum.Phone] as AccountType,
-                  identifier: `+${v.code} ${v.phoneNumber}`,
-                })
-              }
-            />
-          ),
-        },
+        // {
+        //   key: AccountTypeEnum[AccountTypeEnum.Phone],
+        //   label: 'Phone',
+        //   children: (
+        //     <PhoneTab
+        //       phoneCountry={phoneCountry}
+        //       confirmText={confirmText}
+        //       validate={validatePhone}
+        //       onFinish={(v) =>
+        //         onFinish?.({
+        //           accountType: AccountTypeEnum[AccountTypeEnum.Phone] as AccountType,
+        //           identifier: `+${v.code} ${v.phoneNumber}`,
+        //         })
+        //       }
+        //     />
+        //   ),
+        // },
         {
           key: AccountTypeEnum[AccountTypeEnum.Email],
           label: 'Email',
@@ -72,7 +68,7 @@ const InputInfo = forwardRef(
           ),
         },
       ],
-      [confirmText, onFinish, phoneCountry, validateEmail, validatePhone],
+      [confirmText, onFinish, validateEmail],
     );
 
     return (

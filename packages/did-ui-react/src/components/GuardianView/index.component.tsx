@@ -1,8 +1,7 @@
 import { ChainId } from '@portkey/types';
 import { memo, useCallback, ReactNode, useState, useRef, useMemo } from 'react';
-import { AccountType, AccountTypeEnum, OperationTypeEnum, VerifierItem, GuardiansApproved } from '@portkey/services';
+import { AccountTypeEnum, OperationTypeEnum, VerifierItem, GuardiansApproved } from '@portkey/services';
 import { useTranslation } from 'react-i18next';
-import CustomSvg from '../CustomSvg';
 import {
   ISocialLogin,
   IVerificationInfo,
@@ -29,14 +28,15 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
-import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
 import './index.less';
-import { SocialLoginList } from '../../constants/guardian';
+import { SocialLoginList, guardianIconMap } from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
+import { getSocialConfig } from '../utils/social.utils';
+import GuardianTypeIcon from '../GuardianTypeIcon';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -50,14 +50,6 @@ export interface GuardianViewProps {
   onEditGuardian?: () => void;
   handleSetLoginGuardian: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
 }
-
-const guardianIconMap: Record<AccountType, any> = {
-  Email: 'Email',
-  Phone: 'GuardianPhone',
-  Google: 'GuardianGoogle',
-  Apple: 'GuardianApple',
-  Telegram: 'GuardianTelegram',
-};
 
 function GuardianView({
   header,
@@ -88,27 +80,7 @@ function GuardianView({
   const socialBasic = useCallback(
     (v: ISocialLogin) => {
       try {
-        const socialLogin = ConfigProvider.config.socialLogin;
-        let clientId;
-        let redirectURI;
-        let customLoginHandler;
-        switch (v) {
-          case 'Apple':
-            clientId = socialLogin?.Apple?.clientId;
-            redirectURI = socialLogin?.Apple?.redirectURI;
-            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-            break;
-          case 'Google':
-            clientId = socialLogin?.Google?.clientId;
-            customLoginHandler = socialLogin?.Google?.customLoginHandler;
-            break;
-          case 'Telegram':
-            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-            break;
-          default:
-            throw 'accountType is not supported';
-        }
-        return { clientId, redirectURI, customLoginHandler };
+        return getSocialConfig(v);
       } catch (error) {
         errorTip(
           {
@@ -375,7 +347,7 @@ function GuardianView({
             <div className="guardian-view-input-item">
               <div className="guardian-view-input-item-label">{`Guardian ${currentGuardian.guardianType}`}</div>
               <div className="guardian-view-input-item-control portkey-ui-flex">
-                <CustomSvg type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
+                <GuardianTypeIcon type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
                 <GuardianAccountShow guardian={currentGuardian} />
               </div>
             </div>

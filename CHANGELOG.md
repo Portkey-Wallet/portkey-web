@@ -3,6 +3,61 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
+
+### Bug Fixes
+
+- 🐛 crypto long ([8c77632](https://github.com/Portkey-Wallet/portkey-web/commit/8c776325c005887b93b13ce10b97a03f98a56168))
+
+## [2.0.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.1-alpha.1) (2024-02-21)
+
+### Features
+
+- 🎸 add auth by socket ([2ba3d2a](https://github.com/Portkey-Wallet/portkey-web/commit/2ba3d2a38656c229810b5abe548ea27635821f20))
+- 🎸 crypto ([2f86519](https://github.com/Portkey-Wallet/portkey-web/commit/2f86519404d59e1043a78fe96a52e98dc4e3f2ce))
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+### Features
+
+- 🎸 fb and twitter oauth ([7e2bdfe](https://github.com/Portkey-Wallet/portkey-web/commit/7e2bdfe652af24885215c4d7509f64950abd490e))
+
+### Bug Fixes
+
+- 🐛 facebook & twitter accessToken ([df98170](https://github.com/Portkey-Wallet/portkey-web/commit/df981708b5b50dcf637ced64cf71e7e9ea137260))
+- 🐛 ref ([d01a333](https://github.com/Portkey-Wallet/portkey-web/commit/d01a333d975fd2ba54fa2cea78650c9d7971fcb7))
+
+## [2.0.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.0) (2024-02-22)
+
+**Note:** Version bump only for package root
+
+## [2.0.0-alpha.28](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.27...v2.0.0-alpha.28) (2024-02-18)
+
+**Note:** Version bump only for package root
+
+## [2.0.0-alpha.27](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.26...v2.0.0-alpha.27) (2024-02-07)
+
+### Features
+
+- 🎸 change download app url ([47ea2d9](https://github.com/Portkey-Wallet/portkey-web/commit/47ea2d9da731d55e191f5d967c0a6622a5d45343))
+
+## [2.0.0-alpha.26](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.25...v2.0.0-alpha.26) (2024-02-07)
+
+**Note:** Version bump only for package root
+
+## [2.0.0-alpha.25](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.24...v2.0.0-alpha.25) (2024-02-06)
+
+### Performance Improvements
+
+- ⚡️ rm defined but never used ([b94d567](https://github.com/Portkey-Wallet/portkey-web/commit/b94d56741ce886c712ad292a379fc3290cb79bfe))
+
+## [2.0.0-alpha.24](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.23...v2.0.0-alpha.24) (2024-02-06)
+
+### Features
+
+- 🎸 export signin handler ([2ca3c25](https://github.com/Portkey-Wallet/portkey-web/commit/2ca3c250be4a104c4c8c9ae0990b46b659fafcd9))
+- 🎸 rm phone guardian ([e4130e8](https://github.com/Portkey-Wallet/portkey-web/commit/e4130e8caf2f2c61838f60222fcd0c3c260f3b0d))
+
 ## [2.0.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.22...v2.0.0-alpha.23) (2024-02-05)
 
 ### Bug Fixes
@@ -24,6 +79,17 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ### Bug Fixes
 
 - 🐛 drawer height ([d855069](https://github.com/Portkey-Wallet/portkey-web/commit/d8550698ac863abdbf6421fbc1219fcd8fa306d3))
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+### Features
+
+- 🎸 fb and twitter oauth ([7e2bdfe](https://github.com/Portkey-Wallet/portkey-web/commit/7e2bdfe652af24885215c4d7509f64950abd490e))
+
+### Bug Fixes
+
+- 🐛 facebook & twitter accessToken ([df98170](https://github.com/Portkey-Wallet/portkey-web/commit/df981708b5b50dcf637ced64cf71e7e9ea137260))
+- 🐛 ref ([d01a333](https://github.com/Portkey-Wallet/portkey-web/commit/d01a333d975fd2ba54fa2cea78650c9d7971fcb7))
 
 ## [2.0.0-alpha.19](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.18...v2.0.0-alpha.19) (2024-01-30)
 
