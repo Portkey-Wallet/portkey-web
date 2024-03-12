@@ -119,9 +119,9 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
     const formatTokenContractAds = addressFormat(tokenContractAddress, chainId as ChainId, chainType);
     return (
       <div className="info">
-        <div className="title">Basic info</div>
+        <div className="title">Basic Info</div>
         <div className="contract info-item portkey-ui-flex-between">
-          <div className="label">Contract address</div>
+          <div className="label">Contract Address</div>
           <div className="contract-title portkey-ui-flex">
             {formatStr2EllipsisStr(formatTokenContractAds, [6, 7])}
             <Copy toCopy={formatTokenContractAds} />
@@ -129,13 +129,13 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
         </div>
         {renderInfoRow({ label: 'Blockchain', value: transNetworkText(chainId, isMainnet), className: 'chain' })}
         {renderInfoRow({
-          label: 'Token symbol',
+          label: 'Symbol',
           value: symbol,
           className: 'symbol',
           valueClassName: 'symbol-value',
         })}
         {renderInfoRow({
-          label: 'Total supply',
+          label: 'Total Supply',
           value: divDecimalsStr(totalSupply, decimals),
           className: 'total-supply',
         })}
@@ -195,7 +195,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
       <>
         {info?.generation && (
           <div className="info">
-            <div className="title">Generation info</div>
+            <div className="title">Generation Info</div>
             {renderInfoRow({ label: 'Generation', value: info.generation, className: 'generation' })}
           </div>
         )}
@@ -208,7 +208,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
       <>
         {info?.inscriptionName && (
           <div className="info">
-            <div className="title">Inscription info</div>
+            <div className="title">Inscription Info</div>
             {renderInfoRow({ label: 'Inscription Name', value: info.inscriptionName, className: 'inscription-name' })}
             {info.limitPerMint != null &&
               renderInfoRow({
