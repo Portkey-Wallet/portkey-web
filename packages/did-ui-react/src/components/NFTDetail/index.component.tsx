@@ -53,7 +53,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   useEffect(() => {
     // polling to get data
     if (initialized) {
-      if (!info?.recommendedRefreshSeconds) return;
+      if (!info?.recommendedRefreshSeconds || !info?.inscriptionName) return;
       updateTimerRef.current = setInterval(() => {
         updateDetail();
       }, info.recommendedRefreshSeconds * 1000);
