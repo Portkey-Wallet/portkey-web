@@ -123,7 +123,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
         <div className="contract info-item portkey-ui-flex-between">
           <div className="label">Contract Address</div>
           <div className="contract-title portkey-ui-flex">
-            {formatStr2EllipsisStr(formatTokenContractAds, [6, 7])}
+            {formatStr2EllipsisStr(formatTokenContractAds, [8, 9])}
             <Copy toCopy={formatTokenContractAds} />
           </div>
         </div>
@@ -158,7 +158,12 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
               className: 'origin-seed-type',
             })}
           {seedOwnedSymbol &&
-            renderInfoRow({ label: 'Token Symbol', value: seedOwnedSymbol, className: 'origin-seed-token-symbol' })}
+            renderInfoRow({
+              label: 'Token Symbol',
+              value: seedOwnedSymbol,
+              className: 'symbol',
+              valueClassName: 'symbol-value',
+            })}
           {formatExpires && renderInfoRow({ label: 'Expires', value: formatExpires, className: 'origin-seed-expires' })}
         </div>
       )
