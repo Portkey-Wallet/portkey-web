@@ -2,6 +2,9 @@ import { RefreshTokenConfig } from '@portkey/services';
 import { did, isValidRefreshTokenConfig, queryAuthorization } from './did';
 import { ChainId, RequestOpts } from '@portkey/types';
 import { fetchFormat, timeoutPromise } from '@portkey/request';
+import ramp from '@portkey/ramp';
+import { apiVersion } from '../components/config-provider/LocalConfig';
+import { getSocketUrl } from '../components/config-provider/utils';
 const DEFAULT_FETCH_TIMEOUT = 8000;
 
 interface IAuthTokenServe {
@@ -46,6 +49,16 @@ export class AuthServeInit implements IAuthTokenServe {
         Authorization: token,
       };
       did.setConfig({ requestDefaults });
+      ramp.init({
+        requestConfig: {
+          socketUrl: getSocketUrl(),
+          headers: {
+            Version: apiVersion,
+            'Client-Type': 'ThirdParty',
+            Authorization: token,
+          },
+        },
+      });
       return token;
     } catch (error) {
       return;

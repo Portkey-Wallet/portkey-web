@@ -24,7 +24,7 @@ const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
 
 ConfigProvider.setGlobalConfig({
-  connectUrl: 'https://auth-portkey-test.portkey.finance',
+  connectUrl: 'http://192.168.66.117:8080',
   socialLogin: {
     Portkey: {
       websiteName: 'website demo',
@@ -148,7 +148,7 @@ export default function Sign() {
           </div>,
         ]}
         getContainer="#wrapper"
-        isShowScan
+        isShowScan={true}
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
         privacyPolicy={'https://portkey.finance/privacy-policy'}

@@ -1,14 +1,13 @@
 import { ChainId } from '@portkey/types';
-import { IAchConfig, IRampPreviewInitState } from '../../types';
+import { TRampPreviewInitState } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampPreviewMain from './index.component';
 
 export interface IRampPreviewProps {
   className?: string;
-  initState: IRampPreviewInitState;
-  portkeyServiceUrl: string;
+  initState: TRampPreviewInitState;
   chainId?: ChainId;
-  overrideAchConfig?: IAchConfig;
+  isMainnet: boolean;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
   onBack: () => void;
