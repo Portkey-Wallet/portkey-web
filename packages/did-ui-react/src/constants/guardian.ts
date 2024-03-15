@@ -6,7 +6,7 @@ export type TAccountType = AccountType;
 
 export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple'];
 
-export const Web2LoginList: string[] = ['Phone', 'Email'];
+export const Web2LoginList: string[] = ['Email'];
 
 export const AccountLoginList = [...SocialLoginList, ...Web2LoginList] as TotalAccountType[];
 

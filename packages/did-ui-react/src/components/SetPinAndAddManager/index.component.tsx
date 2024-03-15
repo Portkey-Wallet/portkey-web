@@ -27,7 +27,7 @@ export interface SetPinAndAddManagerProps {
   onCreatePending?: (pendingInfo: CreatePendingInfo) => void;
 }
 
-export default function SetPinAndAddManager({
+function SetPinAndAddManager({
   type,
   chainId = 'AELF',
   keyboard: defaultKeyboard,
@@ -121,3 +121,5 @@ export default function SetPinAndAddManager({
     </>
   );
 }
+
+export default SetPinAndAddManager;

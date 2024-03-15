@@ -66,6 +66,25 @@ export function handleGetTxResult(instance: any) {
   return instance.getTxResult ? instance.getTxResult : instance.chain.getTxResult;
 }
 
+export class TXError extends Error {
+  public TransactionId?: string;
+  public transactionId?: string;
+  constructor(message: string, id?: string) {
+    super(message);
+    this.TransactionId = id;
+    this.transactionId = id;
+  }
+}
+
+export function handleContractErrorMessage(error?: any) {
+  if (typeof error === 'string') return error;
+  if (error?.message) return error.message;
+  if (error.Error) {
+    return error.Error.Details || error.Error.Message || error.Error;
+  }
+  return `Transaction: ${error.Status}`;
+}
+
 export async function getTxResult(
   instance: any,
   TransactionId: string,
@@ -73,34 +92,37 @@ export async function getTxResult(
   notExistedReGetCount = 0,
 ): Promise<TransactionResult> {
   const txFun = handleGetTxResult(instance);
+  let txResult;
+  try {
+    txResult = await txFun(TransactionId);
+  } catch (error) {
+    throw new TXError(handleContractErrorMessage(error), TransactionId);
+  }
 
-  const txResult = await txFun(TransactionId);
-  if (txResult.error && txResult.errorMessage)
-    throw Error(txResult.errorMessage.message || txResult.errorMessage.Message);
+  if (txResult?.error && txResult?.errorMessage) {
+    throw new TXError(txResult.errorMessage.message || txResult.errorMessage.Message, TransactionId);
+  }
 
   const result = txResult?.result || txResult;
-
-  if (!result) throw Error('Can not get transaction result.');
+  if (!result) throw new TXError('Can not get transaction result.', TransactionId);
 
   const lowerCaseStatus = result.Status.toLowerCase();
 
   if (lowerCaseStatus === 'notexisted') {
-    if (notExistedReGetCount > 5) return result;
+    if (notExistedReGetCount > 5) throw new TXError(result.Error || `Transaction: ${result.Status}`, TransactionId);
     await sleep(1000);
     notExistedReGetCount++;
     reGetCount++;
     return getTxResult(instance, TransactionId, reGetCount, notExistedReGetCount);
   }
-
   if (lowerCaseStatus === 'pending' || lowerCaseStatus === 'pending_validation') {
-    if (reGetCount > 20) return result;
+    if (reGetCount > 20) throw new TXError(result.Error || `Transaction: ${result.Status}`, TransactionId);
     await sleep(1000);
     reGetCount++;
     return getTxResult(instance, TransactionId, reGetCount, notExistedReGetCount);
   }
-
   if (lowerCaseStatus === 'mined') return result;
-  throw Error(result.Error || `Transaction: ${result.Status}`);
+  throw new TXError(result.Error || `Transaction: ${result.Status}`, TransactionId);
 }
 
 export function handleContractError(error?: any, req?: any) {
@@ -192,4 +214,44 @@ export const handleContractParams = async (params: HandleContractParamsParams) =
   const { paramsOption, functionName } = params;
   if (functionName === 'ManagerForwardCall') return handleManagerForwardCall(params);
   return paramsOption;
+};
+
+type TCreateManagerForwardCallParams = {
+  paramsOption: {
+    contractAddress: string;
+    methodName: string;
+    args: any;
+    caHash: string;
+  };
+  caContractAddress: string;
+  instance?: any;
+  rpcUrl?: string;
+};
+export const createManagerForwardCall = async ({
+  rpcUrl,
+  instance,
+  paramsOption,
+  caContractAddress,
+}: TCreateManagerForwardCallParams) => {
+  const ManagerForwardCall = 'ManagerForwardCall';
+  let _instance;
+  if (rpcUrl) _instance = aelf.getAelfInstance(rpcUrl);
+  if (instance) _instance = instance;
+  if (!_instance) throw new Error('Please pass in instance or rpcUrl');
+  const [managerForwardCall, caMethods] = await Promise.all([
+    handleManagerForwardCall({
+      instance,
+      functionName: ManagerForwardCall,
+      paramsOption,
+    }),
+    getContractMethods(instance, caContractAddress),
+  ]);
+  const managerForwardCallInputType = caMethods[ManagerForwardCall];
+  let input = AElf.utils.transform.transformMapToArray(managerForwardCallInputType, managerForwardCall);
+
+  input = AElf.utils.transform.transform(managerForwardCallInputType, input, AElf.utils.transform.INPUT_TRANSFORMERS);
+
+  const message = managerForwardCallInputType.fromObject(input);
+
+  return AElf.utils.uint8ArrayToHex(managerForwardCallInputType.encode(message).finish()) as string;
 };

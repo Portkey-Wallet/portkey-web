@@ -1,0 +1,40 @@
+.portkey-ui-nft-image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 64px;
+  height: 64px;
+  font-size: 24px;
+  border-radius: 6px;
+  background-color: var(--portkey-ui-bg-14);
+  color: var(--portkey-ui-text-tip);
+  overflow: hidden;
+
+  .portkey-ui-nft-image-self-wrapper {
+    width: 100%;
+    height: 100%;
+    .portkey-ui-nft-image-self {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .portkey-ui-seed-badge {
+      position: absolute;
+      top: 0;
+      right: 4px;
+      line-height: 0;
+      width: 32px;
+      height: 16px;
+      .portkey-ui-custom-svg {
+        width: 32px;
+        height: 16px;
+        svg {
+          width: 32px;
+          height: 16px;
+        }
+      }
+    }
+  }
+}

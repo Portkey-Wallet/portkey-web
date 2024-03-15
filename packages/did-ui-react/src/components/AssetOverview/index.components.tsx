@@ -89,7 +89,7 @@ export function AssetOverviewContent({
       if (totalRecordCount === 0 || Number(totalRecordCount) >= children.length) {
         // setLoading(true);
         basicAssetViewAsync
-          .setNFTItem({
+          .setNFTItemList({
             chainId,
             symbol,
             caAddressInfos,

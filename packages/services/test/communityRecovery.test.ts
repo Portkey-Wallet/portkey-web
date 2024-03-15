@@ -1,14 +1,23 @@
 import 'isomorphic-fetch';
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test, jest } from '@jest/globals';
 import FetchRequestMock from './__mocks__/request';
 import { CommunityRecovery } from '../src/service/communityRecovery';
 import DIDGraphQLMock from './__mocks__/didGraphQL';
+import { IReferralConfig } from '@portkey/types';
 
 const request = new FetchRequestMock({});
 const didGraphQL = new DIDGraphQLMock({
   client: {} as any,
 });
-const communityRecovery = new CommunityRecovery(request, didGraphQL, {} as any);
+const referral: IReferralConfig = {
+  referralInfo: {
+    referralCode: '1000',
+    projectCode: '2000',
+  },
+  setReferralInfo: jest.fn(),
+  getReferralInfo: jest.fn(),
+};
+const communityRecovery = new CommunityRecovery(request, didGraphQL, referral);
 
 describe('communityRecovery describe', () => {
   test('test getHolderInfo', async () => {
@@ -59,6 +68,7 @@ describe('communityRecovery describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
@@ -131,7 +141,27 @@ describe('communityRecovery describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
+    expect(result).toHaveProperty('verificationDoc');
+    expect(result).toHaveProperty('signature');
+  });
+
+  test('test getAppleUserExtraInfo', async () => {
+    const result = await communityRecovery.getAppleUserExtraInfo({ userId: 'string' });
+    expect(result).toHaveProperty('userId');
+    expect(result.userId).toEqual('userId_mock');
+  });
+
+  test('test verifyTelegramToken', async () => {
+    const result = await communityRecovery.verifyTelegramToken({
+      accessToken: 'accessToken_mock',
+      verifierId: 'verifierId_mock',
+      chainId: 'AELF',
+      operationType: 0,
+      operationDetails: '{}',
+    });
+
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');
   });
@@ -142,6 +172,7 @@ describe('communityRecovery describe', () => {
       verifierId: 'verifierId_mock',
       chainId: 'AELF',
       operationType: 0,
+      operationDetails: '{}',
     });
     expect(result).toHaveProperty('verificationDoc');
     expect(result).toHaveProperty('signature');

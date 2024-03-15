@@ -55,3 +55,17 @@ export const getMissParams = (obj: object): string | undefined => {
     });
   return _key;
 };
+
+export enum TipsLevelEnum {
+  log = 'log',
+  warn = 'warn',
+  error = 'error',
+  throwError = 'throwError',
+  returnError = 'returnError',
+}
+
+export function handlerErrorTipLevel(errorMessage: string, tipsLevel: `${TipsLevelEnum}` = 'throwError') {
+  if (tipsLevel === 'throwError') throw errorMessage;
+  if (tipsLevel === 'returnError') return errorMessage;
+  console[tipsLevel](errorMessage);
+}

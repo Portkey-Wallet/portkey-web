@@ -3,6 +3,94 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.5...v2.1.0) (2024-03-08)
+
+### Features
+
+- 🎸 manager speed ([638c39f](https://github.com/Portkey-Wallet/portkey-web/commit/638c39f08ed5f0dd37514989bf5fefe26e0f23b7))
+
+### Bug Fixes
+
+- 🐛 change default ach appid ([028647d](https://github.com/Portkey-Wallet/portkey-web/commit/028647db8a526941c0d8625ceef0f323776d9287))
+- 🐛 check timing for manager ([5d18c0a](https://github.com/Portkey-Wallet/portkey-web/commit/5d18c0a25d46f3976927267161b6c448ba6ca7bf))
+
+## [2.0.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4...v2.0.5) (2024-03-04)
+
+### Features
+
+- 🎸 devices.environment ([08b6e5d](https://github.com/Portkey-Wallet/portkey-web/commit/08b6e5d0ff06e404abd1503b67fd6906141fdfa6))
+
+### Bug Fixes
+
+- 🐛 check login guardian ([103b0cd](https://github.com/Portkey-Wallet/portkey-web/commit/103b0cd84710a4956b8fdd82f1ad82d99454152c))
+
+## [2.0.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4-alpha.1...v2.0.4) (2024-03-01)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.0.4-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.4-alpha.0...v2.0.4-alpha.1) (2024-02-29)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.0.4-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.3...v2.0.4-alpha.0) (2024-02-29)
+
+### Bug Fixes
+
+- 🐛 guardian list loading ([e94fb77](https://github.com/Portkey-Wallet/portkey-web/commit/e94fb7786c8e6e963a7028b29af2107ff50ae78d))
+
+## [2.0.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.2...v2.0.3) (2024-02-28)
+
+### Bug Fixes
+
+- 🐛 codeVerify ui ([316e92c](https://github.com/Portkey-Wallet/portkey-web/commit/316e92cc153b59e919ba0045c2eafa1613862866))
+
+## [2.0.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1...v2.0.2) (2024-02-23)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.0.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0...v2.0.1) (2024-02-23)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.0.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.0) (2024-02-22)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.0.0-alpha.28](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.27...v2.0.0-alpha.28) (2024-02-18)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.0.0-alpha.27](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.26...v2.0.0-alpha.27) (2024-02-07)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.0.0-alpha.26](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.25...v2.0.0-alpha.26) (2024-02-07)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.0.0-alpha.25](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.24...v2.0.0-alpha.25) (2024-02-06)
+
+### Performance Improvements
+
+- ⚡️ rm defined but never used ([b94d567](https://github.com/Portkey-Wallet/portkey-web/commit/b94d56741ce886c712ad292a379fc3290cb79bfe))
+
+## [2.0.0-alpha.24](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.23...v2.0.0-alpha.24) (2024-02-06)
+
+### Features
+
+- 🎸 export signin handler ([2ca3c25](https://github.com/Portkey-Wallet/portkey-web/commit/2ca3c250be4a104c4c8c9ae0990b46b659fafcd9))
+- 🎸 rm phone guardian ([e4130e8](https://github.com/Portkey-Wallet/portkey-web/commit/e4130e8caf2f2c61838f60222fcd0c3c260f3b0d))
+
+## [2.0.0-alpha.23](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.22...v2.0.0-alpha.23) (2024-02-05)
+
+### Bug Fixes
+
+- 🐛 edit guardian ([50c5790](https://github.com/Portkey-Wallet/portkey-web/commit/50c57904b977cef263862393df9c5f54511cff0e))
+
+## [2.0.0-alpha.22](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.21...v2.0.0-alpha.22) (2024-02-05)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
 ## [2.0.0-alpha.21](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.20...v2.0.0-alpha.21) (2024-02-04)
 
 ### Bug Fixes

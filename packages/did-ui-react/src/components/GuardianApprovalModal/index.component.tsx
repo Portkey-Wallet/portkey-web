@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { forwardRef, memo, useCallback, useEffect, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
@@ -8,23 +8,28 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { UserGuardianStatus } from '../../types';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
+import { getOperationDetails } from '../utils/operation.util';
 
 const GuardianApprovalModalMain = forwardRef(
-  ({
-    className,
-    open,
-    caHash,
-    originChainId,
-    targetChainId,
-    networkType,
-    sandboxId,
-    isErrorTip = true,
-    onClose,
-    onBack,
-    onApprovalSuccess,
-    onApprovalError,
-    operationType,
-  }: GuardianApprovalModalProps) => {
+  (
+    {
+      className,
+      open,
+      caHash,
+      originChainId,
+      targetChainId,
+      networkType,
+      sandboxId,
+      isErrorTip = true,
+      onClose,
+      onBack,
+      onApprovalSuccess,
+      onApprovalError,
+      operationType,
+    }: GuardianApprovalModalProps,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    ref,
+  ) => {
     const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
 
     const getData = useCallback(async () => {
@@ -56,10 +61,13 @@ const GuardianApprovalModalMain = forwardRef(
       getData();
     }, [getData]);
 
+    const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
+
     return (
       <CommonBaseModal className={clsx('portkey-ui-modal-approval', className)} open={open} onClose={onClose}>
         <GuardianApproval
           header={<BackHeader onBack={onBack} />}
+          operationDetails={operationDetails}
           originChainId={originChainId}
           targetChainId={targetChainId}
           guardianList={guardianList}

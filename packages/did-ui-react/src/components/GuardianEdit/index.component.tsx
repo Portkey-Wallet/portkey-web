@@ -37,6 +37,7 @@ import { useVerifyToken } from '../../hooks';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 
 const guardianIconMap: Record<AccountType, any> = {
   Email: 'Email',
@@ -105,6 +106,7 @@ function GuardianEdit({
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const verifyToken = useVerifyToken();
   const [step, setStep] = useState<GuardianEditStatus>(GuardianEditStatus.EditGuardian);
+  const [editBtnLoading, setEditBtnLoading] = useState<boolean>(false);
   const operationType: OperationTypeEnum = useMemo(() => {
     if (step === GuardianEditStatus.EditGuardian) {
       return OperationTypeEnum.editGuardian;
@@ -152,6 +154,10 @@ function GuardianEdit({
           .find((_guardian) => _guardian.verifierId === item.id),
       })),
     [guardianList, preGuardian?.key, verifierList],
+  );
+  const approvalGuardianList = useMemo(
+    () => guardianList?.filter((item) => item.key !== preGuardian?.key),
+    [guardianList, preGuardian?.key],
   );
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
@@ -234,6 +240,9 @@ function GuardianEdit({
     },
     [isErrorTip, onError],
   );
+
+  const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
+
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
@@ -252,6 +261,7 @@ function GuardianEdit({
         clientId,
         redirectURI,
         networkType,
+        operationDetails,
         operationType: OperationTypeEnum.unsetLoginAccount,
         customLoginHandler,
       });
@@ -260,7 +270,7 @@ function GuardianEdit({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, verifyToken, originChainId, networkType],
+    [socialBasic, networkType, verifyToken, originChainId, operationDetails],
   );
   const sendCode = useCallback(async () => {
     try {
@@ -409,8 +419,16 @@ function GuardianEdit({
   }, [handleCommonVerify, handleSocialVerify, preGuardian?.guardianType]);
 
   const onConfirm = useCallback(async () => {
-    const valid = await checkValid();
-    if (valid) {
+    let _valid = true;
+    try {
+      setEditBtnLoading(true);
+      _valid = await checkValid();
+      setEditBtnLoading(false);
+    } catch (error) {
+      _valid = false;
+      setEditBtnLoading(false);
+    }
+    if (_valid) {
       setStep(GuardianEditStatus.EditGuardian);
       setApprovalVisible(true);
     }
@@ -486,7 +504,12 @@ function GuardianEdit({
           <ThrottleButton className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
             {t('Remove')}
           </ThrottleButton>
-          <ThrottleButton type="primary" className="guardian-btn " onClick={onConfirm} disabled={editBtnDisable}>
+          <ThrottleButton
+            type="primary"
+            className="guardian-btn "
+            onClick={onConfirm}
+            disabled={editBtnDisable}
+            loading={editBtnLoading}>
             {t('Send Request')}
           </ThrottleButton>
         </div>
@@ -515,8 +538,9 @@ function GuardianEdit({
         onClose={() => setApprovalVisible(false)}>
         <GuardianApproval
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
+          operationDetails={operationDetails}
           originChainId={originChainId}
-          guardianList={guardianList?.filter((item) => item.key !== preGuardian?.key)}
+          guardianList={approvalGuardianList}
           networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}

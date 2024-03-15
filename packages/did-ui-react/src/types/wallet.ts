@@ -85,4 +85,6 @@ export type TSocialLoginHandler = () => Promise<SocialResponseInfo>;
 
 export type SocialLoginFinishHandler = (value: { type: ISocialLogin; data?: TSocialResponseData }) => void;
 
+export type TSupportAccountType = Exclude<AccountType, 'Phone'> | 'Scan';
+
 export type TotalAccountType = AccountType | 'Scan';

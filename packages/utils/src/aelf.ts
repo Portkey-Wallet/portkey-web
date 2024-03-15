@@ -32,3 +32,26 @@ export const getELFContract = async (rpcUrl: string, tokenAddress: string, priva
 export function getWallet(privateKey: string) {
   return AElf.wallet.getWalletByPrivateKey(privateKey);
 }
+
+export const getRawTx = ({
+  blockHeightInput,
+  blockHashInput,
+  packedInput,
+  address,
+  contractAddress,
+  functionName,
+}: any) => {
+  const rawTx = AElf.pbUtils.getTransaction(address, contractAddress, functionName, packedInput);
+  rawTx.refBlockNumber = blockHeightInput;
+  const blockHash = blockHashInput.match(/^0x/) ? blockHashInput.substring(2) : blockHashInput;
+  rawTx.refBlockPrefix = Buffer.from(blockHash, 'hex').subarray(0, 4);
+  return rawTx;
+};
+
+export function encodeTransaction(tx: any): string {
+  let _tx = AElf.pbUtils.Transaction.encode(tx).finish();
+  if (_tx instanceof Buffer) {
+    return _tx.toString('hex');
+  }
+  return AElf.utils.uint8ArrayToHex(_tx); // hex str
+}
