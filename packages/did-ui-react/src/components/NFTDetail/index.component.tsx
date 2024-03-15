@@ -214,7 +214,12 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
         {info?.inscriptionName && (
           <div className="info">
             <div className="title">Inscription Info</div>
-            {renderInfoRow({ label: 'Inscription Name', value: info.inscriptionName, className: 'inscription-name' })}
+            {renderInfoRow({
+              label: 'Inscription Name',
+              value: info.inscriptionName,
+              className: 'inscription-name',
+              valueClassName: 'inscription-name-value',
+            })}
             {info.limitPerMint != null &&
               renderInfoRow({
                 label: 'Limit Per Mint',
