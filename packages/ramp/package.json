@@ -1,7 +1,7 @@
 {
   "name": "@portkey/ramp",
   "private": true,
-  "version": "2.0.0-alpha.20",
+  "version": "2.1.0",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -42,12 +42,12 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@portkey/accounts": "^2.0.0-alpha.17",
-    "@portkey/contracts": "^2.0.0-alpha.17",
-    "@portkey/graphql": "^2.0.0-alpha.17",
-    "@portkey/request": "^2.0.0-alpha.17",
-    "@portkey/types": "^2.0.0-alpha.17",
-    "@portkey/utils": "^2.0.0-alpha.17",
+    "@portkey/accounts": "^2.1.0",
+    "@portkey/contracts": "^2.1.0",
+    "@portkey/graphql": "^2.1.0",
+    "@portkey/request": "^2.1.0",
+    "@portkey/types": "^2.1.0",
+    "@portkey/utils": "^2.1.0",
     "@jest/globals": "^29.3.1",
     "babel-jest": "^29.3.1",
     "jest": "^29.3.1",
