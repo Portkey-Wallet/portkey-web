@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.2.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.2.0...v2.2.1-alpha.0) (2024-03-19)
+
+### Features
+
+- 🎸 bn.js ([d9a5549](https://github.com/Portkey-Wallet/portkey-web/commit/d9a5549dfe05add6c18f6a608efd93ed09135720))
+
 ## [2.2.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.1.1...v2.2.0) (2024-03-15)
 
 ### Features
