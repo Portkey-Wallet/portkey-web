@@ -34,6 +34,9 @@ import singleMessage from '../CustomAnt/message';
 import CustomSvg from '../CustomSvg';
 import './index.less';
 import { mixRampShow } from '../Ramp/utils';
+import { Button } from 'antd';
+import DeleteAccount from '../DeleteAccount';
+import { useIsShowDeletion } from '../../hooks/wallet';
 
 export enum AssetStep {
   overview = 'overview',
@@ -50,6 +53,7 @@ export enum AssetStep {
   paymentSecurity = 'paymentSecurity',
   transferSettings = 'transferSettings',
   transferSettingsEdit = 'transferSettingsEdit',
+  deleteAccount = 'deleteAccount',
 }
 
 export interface AssetMainProps
@@ -87,7 +91,7 @@ function AssetMain({
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
   const preStepRef = useRef<AssetStep>(AssetStep.overview);
-
+  const showDeletion = useIsShowDeletion();
   const [isMixShowRamp, setIsMixShowRamp] = useState<boolean>(isShowRamp);
   const [isMixShowBuy, setIsMixShowBuy] = useState<boolean>(isShowRampBuy);
   const [isMixShowSell, setIsMixShowSell] = useState<boolean>(isShowRampSell);
@@ -452,12 +456,30 @@ function AssetMain({
 
         {assetStep === AssetStep.my && (
           // My
-          <MenuListMain
-            menuList={myMenuList}
-            headerConfig={{
-              title: 'My',
-              onBack: () => setAssetStep(AssetStep.overview),
-            }}
+          <div>
+            <MenuListMain
+              menuList={myMenuList}
+              headerConfig={{
+                title: 'My',
+                onBack: () => setAssetStep(AssetStep.overview),
+              }}
+              isShowFooter={!showDeletion} // TODO delete w
+              footerElement={
+                <Button
+                  className="delete-account-button"
+                  type="text"
+                  onClick={() => setAssetStep(AssetStep.deleteAccount)}>
+                  Delete Account
+                </Button>
+              }
+            />
+          </div>
+        )}
+
+        {assetStep === AssetStep.deleteAccount && (
+          <DeleteAccount
+            onBack={() => setAssetStep(AssetStep.my)}
+            onCloseAccountCancellationModal={() => setAssetStep(AssetStep.my)}
           />
         )}
 

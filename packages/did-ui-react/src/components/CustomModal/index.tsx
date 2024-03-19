@@ -1,8 +1,10 @@
 import { ReactNode } from 'react';
 import './index.less';
 import { Modal } from '../CustomAnt';
+import clsx from 'clsx';
 
 export interface ICustomModalProps {
+  className?: string;
   type?: 'info' | 'confirm';
   content: ReactNode;
   okText?: string;
@@ -11,7 +13,7 @@ export interface ICustomModalProps {
   onCancel?: () => void;
 }
 
-const CustomModal = ({ type, content, okText, onCancel, onOk, cancelText }: ICustomModalProps) => {
+const CustomModal = ({ className, type, content, okText, onCancel, onOk, cancelText }: ICustomModalProps) => {
   const props = {
     open: true,
     width: 320,
@@ -27,7 +29,7 @@ const CustomModal = ({ type, content, okText, onCancel, onOk, cancelText }: ICus
   return type === 'confirm'
     ? Modal.confirm({
         ...props,
-        className: 'confirm-modal',
+        className: clsx('confirm-modal', className),
         okText: okText || 'OK',
         cancelText: cancelText || 'Cancel',
         content,
@@ -36,7 +38,7 @@ const CustomModal = ({ type, content, okText, onCancel, onOk, cancelText }: ICus
       })
     : Modal.info({
         ...props,
-        className: 'info-modal',
+        className: clsx('info-modal', className),
         okText: okText || 'OK',
         content,
         onOk: onOk,
