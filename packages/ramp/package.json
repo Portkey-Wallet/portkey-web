@@ -1,6 +1,5 @@
 {
   "name": "@portkey/ramp",
-  "private": true,
   "version": "2.1.0",
   "description": "",
   "main": "./dist/commonjs/index.js",
