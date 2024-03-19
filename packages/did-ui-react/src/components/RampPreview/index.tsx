@@ -10,7 +10,7 @@ export interface IRampPreviewProps {
   isMainnet: boolean;
   isBuySectionShow?: boolean;
   isSellSectionShow?: boolean;
-  onBack: () => void;
+  onBack: (state?: TRampPreviewInitState) => void;
 }
 
 export default function Ramp(props: IRampPreviewProps) {

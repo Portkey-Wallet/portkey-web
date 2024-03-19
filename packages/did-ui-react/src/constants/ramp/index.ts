@@ -61,7 +61,7 @@ export const initCrypto: IRampCryptoDefault = {
   chainId: MAIN_CHAIN_ID,
   network: '',
   icon: 'https://explorer-test.aelf.io/favicon.test.ico', // TODO ramp
-  amount: initFiatAmount,
+  amount: initCryptoAmount,
   decimals: 8,
   address: '',
 };
@@ -71,7 +71,7 @@ export const initFiat: IRampFiatDefault = {
   symbol: 'USD',
   countryName: 'United States',
   icon: 'https://static.alchemypay.org/alchemypay/flag/US.png',
-  amount: initCryptoAmount,
+  amount: initFiatAmount,
 };
 
 export const initPreviewData = {

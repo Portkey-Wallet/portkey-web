@@ -60,50 +60,57 @@ export default function RampPreviewMain({
     setReceive(provider.amount);
   }, []);
 
-  const getRampDetail = useCallback(async () => {
-    try {
-      let canUseProviders: Array<IGetBuyDetail | IGetSellDetail> = [];
-      if (initData.side === RampType.BUY) {
-        canUseProviders = await getBuyDetail({
-          network: initData.network,
-          crypto: initData.crypto,
-          fiat: initData.fiat,
-          country: initData.country,
-          fiatAmount: initData.amount,
-        });
-      } else {
-        canUseProviders = await getSellDetail({
-          network: initData.network,
-          crypto: initData.crypto,
-          fiat: initData.fiat,
-          country: initData.country,
-          cryptoAmount: initData.amount,
-        });
-      }
+  const getRampDetail = useCallback(
+    async (init = false) => {
+      try {
+        let canUseProviders: Array<IGetBuyDetail | IGetSellDetail> = [];
+        if (initData.side === RampType.BUY) {
+          canUseProviders = await getBuyDetail({
+            network: initData.network,
+            crypto: initData.crypto,
+            fiat: initData.fiat,
+            country: initData.country,
+            fiatAmount: initData.amount,
+          });
+        } else {
+          canUseProviders = await getSellDetail({
+            network: initData.network,
+            crypto: initData.crypto,
+            fiat: initData.fiat,
+            country: initData.country,
+            cryptoAmount: initData.amount,
+          });
+        }
+        if (!Array.isArray(canUseProviders)) return;
+        if (init && canUseProviders[0]?.thirdPart) {
+          providerSelectedKey.current = canUseProviders[0]?.thirdPart;
+        }
 
-      setProviderList(canUseProviders);
-      const providerSelectedExit = canUseProviders.filter((item) => item?.thirdPart === providerSelectedKey.current);
-      if (providerSelectedExit.length === 0) {
-        // providerSelected not exit
-        onSwitchProvider(canUseProviders[0]);
-      } else {
-        onSwitchProvider(providerSelectedExit[0]);
+        setProviderList(canUseProviders);
+        const providerSelectedExit = canUseProviders.filter((item) => item?.thirdPart === providerSelectedKey.current);
+        if (providerSelectedExit.length === 0) {
+          // providerSelected not exit
+          onSwitchProvider(canUseProviders[0]);
+        } else {
+          onSwitchProvider(providerSelectedExit[0]);
+        }
+      } catch (error) {
+        console.log('getRampDetail error:', error);
       }
-    } catch (error) {
-      console.log('getRampDetail error:', error);
-    }
-  }, [
-    initData.amount,
-    initData.country,
-    initData.crypto,
-    initData.fiat,
-    initData.network,
-    initData.side,
-    onSwitchProvider,
-  ]);
+    },
+    [
+      initData.amount,
+      initData.country,
+      initData.crypto,
+      initData.fiat,
+      initData.network,
+      initData.side,
+      onSwitchProvider,
+    ],
+  );
 
   useEffect(() => {
-    getRampDetail();
+    getRampDetail(true);
   }, [getRampDetail]);
 
   useEffect(() => {
@@ -132,7 +139,7 @@ export default function RampPreviewMain({
     if ((side === RampType.BUY && !isBuyShow) || (side === RampType.SELL && !isSellShow)) {
       setLoading(false);
       singleMessage.error(SERVICE_UNAVAILABLE_TEXT);
-      onBack?.();
+      onBack?.(initData);
     }
 
     try {
@@ -169,7 +176,7 @@ export default function RampPreviewMain({
       window.open(url, '_blank');
 
       sleep(500);
-      onBack?.();
+      onBack?.(initData);
     } catch (error) {
       singleMessage.error('There is a network error, please try again.');
     } finally {
@@ -257,7 +264,7 @@ export default function RampPreviewMain({
     <div className={clsx(['portkey-ui-ramp-preview-frame portkey-ui-flex-column', className])}>
       <BackHeaderForPage
         title={`${initData.side === RampType.BUY ? 'Buy' : 'Sell'} ${initState.crypto}`}
-        leftCallBack={onBack}
+        leftCallBack={() => onBack?.(initData)}
       />
       <div className="portkey-ui-ramp-preview-content">
         <div className="transaction portkey-ui-flex-column-center">

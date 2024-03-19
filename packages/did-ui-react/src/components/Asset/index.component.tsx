@@ -359,7 +359,8 @@ function AssetMain({
             isMainnet={networkType === MAINNET}
             initState={rampPreview}
             chainId={selectToken.chainId}
-            onBack={() => {
+            onBack={(state?: TRampPreviewInitState) => {
+              setRampExtraConfig({ ...state });
               setAssetStep(AssetStep.ramp);
             }}
             isBuySectionShow={isMixShowBuy}

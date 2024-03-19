@@ -34,6 +34,8 @@ export default function BuyFrom({
   network,
   fiat,
   country,
+  countryName,
+  icon,
   amount,
   tokenInfo,
   onBack,
@@ -45,8 +47,20 @@ export default function BuyFrom({
   const [{ initialized }] = usePortkeyAsset();
 
   // init data
-  const [defaultFiat, setDefaultFiat] = useState<IRampFiatDefault>(initFiat);
-  const [defaultCrypto, setDefaultCrypto] = useState<IRampCryptoDefault>(initCrypto);
+  const [defaultFiat, setDefaultFiat] = useState<IRampFiatDefault>({
+    country: country || initFiat.country,
+    symbol: fiat || initFiat.symbol,
+    countryName: countryName || initFiat.countryName,
+    icon: icon || initFiat.icon,
+    amount: amount || initFiat.amount,
+  });
+  const [defaultCrypto, setDefaultCrypto] = useState<IRampCryptoDefault>({
+    symbol: crypto || initCrypto.symbol,
+    amount: initCrypto.amount,
+    network: network || initCrypto.network,
+    chainId: chainId || initCrypto.chainId,
+    icon: icon || initCrypto.icon,
+  });
   const [fiatList, setFiatList] = useState<IRampFiatItem[]>([]);
   const [defaultCryptoList, setDefaultCryptoList] = useState<IRampCryptoItem[]>([]);
   const [supportCryptoList, setSupportCryptoList] = useState<IRampCryptoItem[]>(defaultCryptoList);
@@ -54,12 +68,12 @@ export default function BuyFrom({
   // pay
   const [fiatAmount, setFiatAmount] = useState<string>(amount || defaultFiat.amount);
   const fiatAmountRef = useRef<string>(amount || defaultFiat.amount);
-  const [fiatSelected, setFiatSelected] = useState<IRampFiatItem>(initFiat);
-  const fiatSelectedRef = useRef<IRampFiatItem>(initFiat);
+  const [fiatSelected, setFiatSelected] = useState<IRampFiatItem>(defaultFiat);
+  const fiatSelectedRef = useRef<IRampFiatItem>(defaultFiat);
 
   // receive
-  const [cryptoSelected, setCryptoSelected] = useState<IRampCryptoItem>(initCrypto as IRampCryptoItem);
-  const cryptoSelectedRef = useRef<IRampCryptoItem>(initCrypto as IRampCryptoItem);
+  const [cryptoSelected, setCryptoSelected] = useState<IRampCryptoItem>(defaultCrypto as IRampCryptoItem);
+  const cryptoSelectedRef = useRef<IRampCryptoItem>(defaultCrypto as IRampCryptoItem);
 
   // 15s interval
   const { receive, exchange, updateTime, errMsg, updateBuyReceive } = useUpdateReceiveAndInterval(RampType.BUY, {
@@ -208,6 +222,8 @@ export default function BuyFrom({
           network: cryptoSelectedRef.current.network,
           fiat: fiatSelectedRef.current.symbol,
           country: fiatSelectedRef.current.country,
+          countryName: fiatSelectedRef.current.countryName,
+          icon: fiatSelectedRef.current.icon,
           amount: fiatAmountRef.current,
           side: RampType.BUY,
           tokenInfo,

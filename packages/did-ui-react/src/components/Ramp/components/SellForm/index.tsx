@@ -47,6 +47,8 @@ export default function SellFrom({
   network,
   fiat,
   country,
+  countryName,
+  icon,
   amount,
   tokenInfo,
   isSellSectionShow,
@@ -62,19 +64,31 @@ export default function SellFrom({
   const [{ managementAccount, caInfo, initialized, caHash, originChainId }] = usePortkeyAsset();
 
   // currency data
-  const [defaultCrypto, setDefaultCrypto] = useState<IRampCryptoDefault>(initCrypto);
+  const [defaultCrypto, setDefaultCrypto] = useState<IRampCryptoDefault>({
+    symbol: crypto || initCrypto.symbol,
+    amount: amount || initCrypto.amount,
+    network: network || initCrypto.network,
+    chainId: chainId || initCrypto.chainId,
+    icon: icon || initCrypto.icon,
+  });
+  const defaultFiat = useRef<IRampFiatItem>({
+    country: country || initFiat.country,
+    symbol: fiat || initFiat.symbol,
+    countryName: countryName || initFiat.countryName,
+    icon: icon || initFiat.icon,
+  });
   const [cryptoList, setCryptoList] = useState<IRampCryptoItem[]>([]);
   const [defaultFiatList, setDefaultFiatList] = useState<IRampFiatItem[]>([]);
 
   // pay
   const [cryptoAmount, setCryptoAmount] = useState<string>(amount || defaultCrypto.amount);
   const cryptoAmountRef = useRef<string>(amount || defaultCrypto.amount);
-  const [cryptoSelected, setCryptoSelected] = useState<IRampCryptoItem>(initCrypto as IRampCryptoItem);
-  const cryptoSelectedRef = useRef<IRampCryptoItem>(initCrypto as IRampCryptoItem);
+  const [cryptoSelected, setCryptoSelected] = useState<IRampCryptoItem>(defaultCrypto as IRampCryptoItem);
+  const cryptoSelectedRef = useRef<IRampCryptoItem>(defaultCrypto as IRampCryptoItem);
 
   // receive
-  const [fiatSelected, setFiatSelected] = useState<IRampFiatItem>(initFiat);
-  const fiatSelectedRef = useRef<IRampFiatItem>(initFiat);
+  const [fiatSelected, setFiatSelected] = useState<IRampFiatItem>(defaultFiat.current);
+  const fiatSelectedRef = useRef<IRampFiatItem>(defaultFiat.current);
 
   // 15s interval
   const {
@@ -175,6 +189,8 @@ export default function SellFrom({
           network: cryptoSelectedRef.current.network,
           fiat: fiatSelectedRef.current.symbol,
           country: fiatSelectedRef.current.country,
+          countryName: fiatSelectedRef.current.countryName,
+          icon: fiatSelectedRef.current.icon,
           amount: cryptoAmountRef.current,
           side: RampType.SELL,
           tokenInfo: tokenInfo,
@@ -226,6 +242,8 @@ export default function SellFrom({
               network: cryptoSelectedRef.current.network,
               fiat: fiatSelectedRef.current.symbol,
               country: fiatSelectedRef.current.country,
+              countryName: fiatSelectedRef.current.countryName,
+              icon: fiatSelectedRef.current.icon,
               amount: cryptoAmountRef.current,
               side: RampType.SELL,
             },
