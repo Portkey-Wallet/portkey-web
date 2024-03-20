@@ -192,9 +192,7 @@ export class Ramp extends BaseRamp {
   }
 }
 
-const ramp = new Ramp();
-
-export default ramp;
+export const ramp = new Ramp();
 
 export * from './api';
 export * from './config';

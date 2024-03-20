@@ -2,7 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { did, setLoading } from '../../utils';
 import clsx from 'clsx';
-import ramp, { IRampProviderType, RampType } from '@portkey/ramp';
+import { ramp, IRampProviderType, RampType } from '@portkey/ramp';
 import './index.less';
 import {
   DISCLAIMER_TEXT,
