@@ -21,34 +21,36 @@ export interface DeleteAccountProps {
 
 const DeleteAccountConditions = {
   warning:
-    'Please note that once you cancel your account, it cannot be recovered. Are you still want to proceed with the account cancellation?',
+    "Are you sure you want to delete your account?Please note that you won't be able to recover your account once it's deleted. ",
   explanation:
-    'Account cancellation is a highly risky operation, and once canceled, it cannot be retrieved permanently. Please carefully confirm this again.',
-  summary: 'Please note that the cancellation of the account requires the following conditions.',
+    'Account deletion is an irreversible operation. Once deleted, your account cannot be recovered. Please carefully consider this before continuing.',
+  summary: 'Please note that your account can only be deleted if it meets the following conditions:',
   conditions: [
     {
       key: 1,
-      label: 'Assets',
-      content: 'Please transfer all of your assets out of your account, including Tokens and NFTs.',
+      label: 'Asset',
+      content: 'Your account has no balance, including tokens and NFTs.',
     },
     {
       key: 2,
-      label: 'Guardians',
-      content: 'Please ensure that other users have already disassociated the Guardian from your current Apple ID.',
+      label: 'Guardian',
+      content: 'Your Apple ID is not set as a guardian by any other accounts.',
     },
     {
       key: 3,
-      label: 'Login Devices',
-      content: 'Please remove other login devices.',
+      label: 'Login Device',
+      content: 'Your account is only logged in on this device.',
     },
   ],
   accountDetection: {
-    title: 'Account Detection',
+    title: 'Unable to Delete Account',
     content: {
-      assets: 'There are still remaining assets in your account. Please transfer all assets out of your account.',
+      assets:
+        'There are still remaining assets in your account. To proceed, please first transfer all assets out of your account.',
       guardians:
-        'Your Apple ID has been used by other users to bind Guardian. Please release these binding relationships.',
-      loginDevices: 'Your account has been logged in on another device. Please remove the other device.',
+        "Your Apple ID is set as a guardian by other accounts. To proceed, please first remove your Apple ID's linked guardian.",
+      loginDevices:
+        'Your account is logged in on other devices. To proceed, please first log out there or remove the login device.',
     },
     okText: 'Ok',
   },
@@ -97,17 +99,22 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
       appleToken = token;
     } catch (error) {
       // error
+      setLoading(false);
     }
     if (!appleToken) return setLoading(false);
 
     try {
+      setLoading(true);
+
       await did.services.communityRecovery.deletionAccount({ appleToken });
     } catch (error) {
       console.log(error);
       const message = handleErrorMessage(error, 'deletion account error');
       singleMessage.error(message);
     } finally {
-      did.logout({ chainId: originChainId });
+      await did.logout({ chainId: originChainId });
+      setLoading(false);
+
       onDelete?.();
     }
   }, [_socialLogin, caHash, managementAccount?.address, networkType, onDelete, originChainId]);
@@ -181,7 +188,7 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
   return (
     <div className={clsx('portkey-ui-delete-account', className)}>
       <div className="portkey-ui-flex-1">
-        <BackHeaderForPage title="Account Cancelation" leftCallBack={onBack} />
+        <BackHeaderForPage title="Delete Account" leftCallBack={onBack} />
         <div className="portkey-ui-flex-column-center portkey-ui-delete-account-body">
           <CustomSvg type="WarnRedBackground" style={{ width: 48, height: 48 }} />
           <div className="warning-tip">{DeleteAccountConditions.explanation}</div>

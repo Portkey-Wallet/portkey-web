@@ -41,18 +41,15 @@ export const useCheckManagerSyncState = () => {
 };
 
 export const useIsShowDeletion = () => {
-  const isIOS = devices.isMobile().apple.device;
-  const [showDeletion, setShowDeletion] = useState(false);
-  const init = useCallback(async () => {
+  return useCallback(async () => {
+    const isIOS = devices.isMobile().apple.device;
+
+    if (!isIOS) return false;
     try {
       const req = await did.services.communityRecovery.getShowDeletionEntrance();
-      setShowDeletion(!!req?.entranceDisplay);
+      return !!req?.entranceDisplay;
     } catch (error) {
       console.log('GetShowDeletionEntrance error: ', error);
     }
   }, []);
-  useEffectOnce(() => {
-    if (isIOS) init();
-  });
-  return showDeletion;
 };
