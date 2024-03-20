@@ -60,7 +60,7 @@ export const initCrypto: IRampCryptoDefault = {
   symbol: DEFAULT_SYMBOL,
   chainId: MAIN_CHAIN_ID,
   network: '',
-  icon: 'https://explorer-test.aelf.io/favicon.test.ico', // TODO ramp
+  icon: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin-ELF.png',
   amount: initCryptoAmount,
   decimals: 8,
   address: '',

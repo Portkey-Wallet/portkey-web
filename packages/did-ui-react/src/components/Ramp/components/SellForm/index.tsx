@@ -179,7 +179,7 @@ export default function SellFrom({
   );
 
   const showRateText = generateRateText(cryptoSelected.symbol, exchange, fiatSelected.symbol);
-  const [approvalVisible, setApprovalVisible] = useState<boolean>(false); // TODO ramp !!approvalVisible
+  const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
 
   const handleShowPreview = useCallback(
     (approveList?: GuardianApprovedItem[]) => {
@@ -250,7 +250,7 @@ export default function SellFrom({
           },
           balance,
           chainType,
-          tokenContractAddress: tokenInfo?.tokenContractAddress || '', // TODO ramp
+          tokenContractAddress: tokenInfo?.tokenContractAddress || '',
           ownerCaAddress: caInfo[chainId]?.caAddress || '',
           onOneTimeApproval: async () => {
             setApprovalVisible(true);
@@ -301,7 +301,7 @@ export default function SellFrom({
         sandboxId,
         chainType,
         chainId: chainId,
-        tokenContractAddress: tokenInfo?.tokenContractAddress || '', // TODO ramp
+        tokenContractAddress: tokenInfo?.tokenContractAddress || '',
         paramsOption: {
           owner: caInfo[chainId]?.caAddress || '',
           symbol: cryptoSelectedRef.current.symbol,
@@ -373,7 +373,6 @@ export default function SellFrom({
   }, [country, crypto, fiat, network, updateSellReceive]);
 
   useEffectOnce(() => {
-    // TODO ramp onBack?.()
     // check security
     walletSecurityCheck({
       originChainId: originChainId,

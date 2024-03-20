@@ -166,7 +166,7 @@ export default function RampMain({
             countryName={initBuyState?.countryName}
             icon={initBuyState?.icon}
             amount={initBuyState?.amount}
-            tokenInfo={tokenInfo as TokenItemShowType} // TODO ramp
+            tokenInfo={tokenInfo as TokenItemShowType}
             onBack={onBack}
             onShowPreview={onShowPreview}
           />
@@ -182,7 +182,7 @@ export default function RampMain({
             countryName={initSellState?.countryName}
             icon={initSellState?.icon}
             amount={initSellState?.amount}
-            tokenInfo={tokenInfo as TokenItemShowType} // TODO ramp
+            tokenInfo={tokenInfo as TokenItemShowType}
             isErrorTip={isErrorTip}
             onBack={onBack}
             onShowPreview={onShowPreview}

@@ -157,7 +157,7 @@ export default function RampPreviewMain({
       const { url, orderId } = await provider.createOrder({
         type: side,
         address: caInfo[chainId]?.caAddress || '',
-        email: emailGuardian?.guardianIdentifier, // TODO ramp
+        email: emailGuardian?.guardianIdentifier,
         crypto: providerSelected.providerSymbol || crypto,
         network: providerSelected.providerNetwork,
         country: country,
