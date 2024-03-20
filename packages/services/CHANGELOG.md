@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.0...v2.3.1) (2024-03-20)
+
+### Features
+
+- 🎸 delete account ([3228972](https://github.com/Portkey-Wallet/portkey-web/commit/3228972f1be906813d57d252b0449be3e0bbb48b))
+
 ## [2.3.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.2.1-alpha.0...v2.3.0) (2024-03-19)
 
 **Note:** Version bump only for package @portkey/services
