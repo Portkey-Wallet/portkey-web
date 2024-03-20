@@ -17,7 +17,7 @@ export default function Portkey({ children }: { children?: ReactNode }) {
 
   return (
     <PortkeyProvider networkType={networkType} theme={dark ? 'dark' : 'light'}>
-      <div style={{ background: dark ? '#1E212B' : '#fff' }} id={dark ? 'ids' : ''}>
+      <div style={{ background: dark ? '#1E212B' : '#fff', height: '100%' }} id={dark ? 'ids' : ''}>
         <Button
           onClick={async () => {
             setDark(v => !v);
