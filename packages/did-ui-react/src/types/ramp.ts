@@ -23,6 +23,8 @@ export type TRampPreviewInitState = {
   network: string;
   fiat: string;
   country: string;
+  countryName: string;
+  icon: string;
   amount: string;
   side: RampType;
   tokenInfo?: TokenItemShowType;

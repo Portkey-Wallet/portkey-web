@@ -1,5 +1,5 @@
 import { describe, expect, jest, test } from '@jest/globals';
-import ramp, { IRampProviderType, SELL_ORDER_DISPLAY_STATUS } from '../src';
+import { ramp, IRampProviderType, SELL_ORDER_DISPLAY_STATUS } from '../src';
 import { rampRequestConfig } from './__mocks__/commonData';
 import { rampInfoResponse } from './__mocks__/requestData';
 import RampFetchRequestMock, { commonResponse } from './__mocks__/rampRequest';

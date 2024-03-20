@@ -1,5 +1,6 @@
 import { ZERO } from '../../../constants/misc';
-import ramp, {
+import {
+  ramp,
   IGetCryptoDataRequest,
   IGetLimitRequest,
   IGetExchangeRequest,

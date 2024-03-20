@@ -12,7 +12,7 @@ import { usePortkeyAsset } from '../../context/PortkeyAssetProvider';
 import { usePortkey } from '../../context';
 import singleMessage from '../../CustomAnt/message';
 import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../../constants/storage';
-import ramp, { IOrderInfo } from '@portkey/ramp';
+import { ramp, IOrderInfo } from '@portkey/ramp';
 import { MAIN_CHAIN_ID } from '../../../constants/network';
 
 interface TransferParams {

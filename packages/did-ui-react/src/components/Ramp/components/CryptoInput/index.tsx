@@ -41,7 +41,6 @@ export default function CryptoInput({
         onKeyDown={onKeyDown}
         suffix={
           <div className="portkey-ui-flex-center" onClick={() => setOpenDrawer(true)}>
-            {/* TODO ramp img */}
             <div className="img">
               <img src={curCrypto.icon} />
             </div>

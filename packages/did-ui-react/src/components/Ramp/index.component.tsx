@@ -34,11 +34,14 @@ export default function RampMain({
 }: IRampProps) {
   const { t } = useTranslation();
   const [{ initialized, caHash, originChainId }] = usePortkeyAsset();
-  const [page, setPage] = useState<RampType>(RampType.BUY);
+  const [page, setPage] = useState<RampType>(initState?.side || RampType.BUY);
   const isSell = useRef(0); // guaranteed to make only one transfer
   const handleAchSell = useHandleAchSell({ tokenInfo });
   const [isBuyShow, setIsBuyShow] = useState<boolean>(isBuySectionShow);
   const [isSellShow, setIsSellShow] = useState<boolean>(isSellSectionShow);
+
+  const [initBuyState, setInitBuyState] = useState(initState?.side === RampType.BUY ? initState : {});
+  const [initSellState, setInitSellState] = useState(initState?.side === RampType.SELL ? initState : {});
 
   useEffectOnce(() => {
     if (initialized) {
@@ -65,9 +68,9 @@ export default function RampMain({
       }
     };
     const checkAchSell = async (data: any) => {
-      if (isSell.current === 0) {
+      if (isSell.current === 0 && typeof data?.payload === 'string' && data?.payload?.length > 0) {
         isSell.current = 1;
-        const orderNo = JSON.parse(data?.payload).orderNo;
+        const orderNo = JSON.parse(data?.payload)?.orderNo;
         await handleAchSell({ orderId: orderNo, isMainnet });
       }
     };
@@ -112,13 +115,18 @@ export default function RampMain({
             caHash: caHash || '',
             onOk: onModifyGuardians,
           });
-          if (!res) return setLoading(false);
+          if (!res) {
+            setInitSellState({});
+            setLoading(false);
+          }
         } catch (error) {
           setLoading(false);
 
           const msg = handleErrorMessage(error);
           singleMessage.error(msg);
         }
+      } else {
+        setInitBuyState({});
       }
 
       setPage(side);
@@ -151,12 +159,14 @@ export default function RampMain({
           <BuyForm
             isMainnet={isMainnet}
             isBuySectionShow={isBuySectionShow}
-            crypto={initState?.crypto}
-            network={initState?.network}
-            fiat={initState?.fiat}
-            country={initState?.country}
-            amount={initState?.amount}
-            tokenInfo={tokenInfo as TokenItemShowType} // TODO ramp
+            crypto={initBuyState?.crypto}
+            network={initBuyState?.network}
+            fiat={initBuyState?.fiat}
+            country={initBuyState?.country}
+            countryName={initBuyState?.countryName}
+            icon={initBuyState?.icon}
+            amount={initBuyState?.amount}
+            tokenInfo={tokenInfo as TokenItemShowType}
             onBack={onBack}
             onShowPreview={onShowPreview}
           />
@@ -165,12 +175,14 @@ export default function RampMain({
           <SellForm
             isMainnet={isMainnet}
             isSellSectionShow={isSellSectionShow}
-            crypto={initState?.crypto}
-            network={initState?.network}
-            fiat={initState?.fiat}
-            country={initState?.country}
-            amount={initState?.amount}
-            tokenInfo={tokenInfo as TokenItemShowType} // TODO ramp
+            crypto={initSellState?.crypto}
+            network={initSellState?.network}
+            fiat={initSellState?.fiat}
+            country={initSellState?.country}
+            countryName={initSellState?.countryName}
+            icon={initSellState?.icon}
+            amount={initSellState?.amount}
+            tokenInfo={tokenInfo as TokenItemShowType}
             isErrorTip={isErrorTip}
             onBack={onBack}
             onShowPreview={onShowPreview}
