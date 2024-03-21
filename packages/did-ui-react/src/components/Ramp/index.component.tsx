@@ -160,11 +160,12 @@ export default function RampMain({
             isMainnet={isMainnet}
             isBuySectionShow={isBuySectionShow}
             crypto={initBuyState?.crypto}
+            cryptoIcon={initBuyState?.cryptoIcon}
             network={initBuyState?.network}
             fiat={initBuyState?.fiat}
             country={initBuyState?.country}
             countryName={initBuyState?.countryName}
-            icon={initBuyState?.icon}
+            fiatIcon={initBuyState?.fiatIcon}
             amount={initBuyState?.amount}
             tokenInfo={tokenInfo as TokenItemShowType}
             onBack={onBack}
@@ -176,11 +177,12 @@ export default function RampMain({
             isMainnet={isMainnet}
             isSellSectionShow={isSellSectionShow}
             crypto={initSellState?.crypto}
+            cryptoIcon={initBuyState?.cryptoIcon}
             network={initSellState?.network}
             fiat={initSellState?.fiat}
             country={initSellState?.country}
             countryName={initSellState?.countryName}
-            icon={initSellState?.icon}
+            fiatIcon={initBuyState?.fiatIcon}
             amount={initSellState?.amount}
             tokenInfo={tokenInfo as TokenItemShowType}
             isErrorTip={isErrorTip}
