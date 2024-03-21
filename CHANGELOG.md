@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.1...v2.3.2) (2024-03-21)
+
+### Features
+
+- 🎸 seedWithBuffer ([b9edd88](https://github.com/Portkey-Wallet/portkey-web/commit/b9edd88afece8b158ccc7e10661576176fabc306))
+
 ## [2.3.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.0...v2.3.1) (2024-03-20)
 
 ### Features
