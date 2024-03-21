@@ -20,11 +20,12 @@ export type TRampInitState = Partial<TRampPreviewInitState>;
 
 export type TRampPreviewInitState = {
   crypto: string;
+  cryptoIcon: string;
   network: string;
   fiat: string;
   country: string;
   countryName: string;
-  icon: string;
+  fiatIcon: string;
   amount: string;
   side: RampType;
   tokenInfo?: TokenItemShowType;

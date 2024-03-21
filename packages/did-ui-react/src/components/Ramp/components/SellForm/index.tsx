@@ -44,11 +44,12 @@ interface ISellFormProps extends TRampInitState {
 export default function SellFrom({
   isMainnet,
   crypto,
+  cryptoIcon,
   network,
   fiat,
   country,
   countryName,
-  icon,
+  fiatIcon,
   amount,
   tokenInfo,
   isSellSectionShow,
@@ -69,13 +70,13 @@ export default function SellFrom({
     amount: amount || initCrypto.amount,
     network: network || initCrypto.network,
     chainId: chainId || initCrypto.chainId,
-    icon: icon || initCrypto.icon,
+    icon: cryptoIcon || initCrypto.icon,
   });
   const defaultFiat = useRef<IRampFiatItem>({
     country: country || initFiat.country,
     symbol: fiat || initFiat.symbol,
     countryName: countryName || initFiat.countryName,
-    icon: icon || initFiat.icon,
+    icon: fiatIcon || initFiat.icon,
   });
   const [cryptoList, setCryptoList] = useState<IRampCryptoItem[]>([]);
   const [defaultFiatList, setDefaultFiatList] = useState<IRampFiatItem[]>([]);
@@ -186,11 +187,12 @@ export default function SellFrom({
       onShowPreview({
         initState: {
           crypto: cryptoSelectedRef.current.symbol,
+          cryptoIcon: cryptoSelectedRef.current.icon,
           network: cryptoSelectedRef.current.network,
           fiat: fiatSelectedRef.current.symbol,
           country: fiatSelectedRef.current.country,
           countryName: fiatSelectedRef.current.countryName,
-          icon: fiatSelectedRef.current.icon,
+          fiatIcon: fiatSelectedRef.current.icon,
           amount: cryptoAmountRef.current,
           side: RampType.SELL,
           tokenInfo: tokenInfo,
@@ -239,11 +241,12 @@ export default function SellFrom({
             module: 'ramp-sell',
             extraConfig: {
               crypto: cryptoSelectedRef.current.symbol,
+              cryptoIcon: cryptoSelectedRef.current.icon,
               network: cryptoSelectedRef.current.network,
               fiat: fiatSelectedRef.current.symbol,
               country: fiatSelectedRef.current.country,
               countryName: fiatSelectedRef.current.countryName,
-              icon: fiatSelectedRef.current.icon,
+              fiatIcon: fiatSelectedRef.current.icon,
               amount: cryptoAmountRef.current,
               side: RampType.SELL,
             },

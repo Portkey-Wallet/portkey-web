@@ -17,6 +17,8 @@ import { divDecimals } from '../../../utils/converter';
 import CustomSvg from '../../CustomSvg';
 import { getBalanceByContract } from '../../../utils/sandboxUtil/getBalance';
 import './index.less';
+import { TRampPreviewInitState } from '../../../types';
+import { SendExtraConfig } from '../../Send/index.components';
 
 interface ITransferLimitCheckProps {
   wrapClassName?: string;
@@ -31,7 +33,7 @@ interface ITransferLimitCheckProps {
   sandboxId?: string;
   businessFrom?: {
     module: IBusinessFrom;
-    extraConfig?: any;
+    extraConfig?: TRampPreviewInitState | SendExtraConfig;
   };
   balance?: string;
   chainType?: ChainType;

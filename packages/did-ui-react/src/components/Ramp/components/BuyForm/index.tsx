@@ -31,11 +31,12 @@ export default function BuyFrom({
   isMainnet,
   isBuySectionShow,
   crypto,
+  cryptoIcon,
   network,
   fiat,
   country,
   countryName,
-  icon,
+  fiatIcon,
   amount,
   tokenInfo,
   onBack,
@@ -51,7 +52,7 @@ export default function BuyFrom({
     country: country || initFiat.country,
     symbol: fiat || initFiat.symbol,
     countryName: countryName || initFiat.countryName,
-    icon: icon || initFiat.icon,
+    icon: fiatIcon || initFiat.icon,
     amount: amount || initFiat.amount,
   });
   const [defaultCrypto, setDefaultCrypto] = useState<IRampCryptoDefault>({
@@ -59,7 +60,7 @@ export default function BuyFrom({
     amount: initCrypto.amount,
     network: network || initCrypto.network,
     chainId: chainId || initCrypto.chainId,
-    icon: icon || initCrypto.icon,
+    icon: cryptoIcon || initCrypto.icon,
   });
   const [fiatList, setFiatList] = useState<IRampFiatItem[]>([]);
   const [defaultCryptoList, setDefaultCryptoList] = useState<IRampCryptoItem[]>([]);
@@ -186,7 +187,10 @@ export default function BuyFrom({
     setSupportCryptoList(buyDefaultCryptoList);
 
     const paramsCrypto = crypto || tokenInfo?.symbol;
-    if (paramsCrypto && paramsCrypto !== buyDefaultCrypto.symbol) {
+
+    // if [fiat && crypto], it means returning from the RampPreview page. So default crypto and default fiat should be them.
+    // if [!fiat && tokenInfo?.symbol], it means jumping from a certain token panel page. So default crypto should be this token.
+    if (!fiat && paramsCrypto && paramsCrypto !== buyDefaultCrypto.symbol) {
       // to support more network
       const filterCrypto = buyDefaultCryptoList.filter((item) => item.symbol === paramsCrypto);
       if (filterCrypto.length > 0) {
@@ -219,11 +223,12 @@ export default function BuyFrom({
       onShowPreview({
         initState: {
           crypto: cryptoSelectedRef.current.symbol,
+          cryptoIcon: cryptoSelectedRef.current.icon,
           network: cryptoSelectedRef.current.network,
           fiat: fiatSelectedRef.current.symbol,
           country: fiatSelectedRef.current.country,
           countryName: fiatSelectedRef.current.countryName,
-          icon: fiatSelectedRef.current.icon,
+          fiatIcon: fiatSelectedRef.current.icon,
           amount: fiatAmountRef.current,
           side: RampType.BUY,
           tokenInfo,
