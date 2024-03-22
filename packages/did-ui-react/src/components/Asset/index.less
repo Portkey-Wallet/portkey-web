@@ -5,64 +5,36 @@
   width: 100%;
   height: 100%;
   background-color: var(--portkey-ui-default-base-bg);
+
   .portkey-ui-logo {
+    height: 60px;
     .portkeylogo-icon {
       width: 108px;
       height: 24px;
-      margin: 18px 0;
     }
   }
   .portkey-ui-asset-container {
-    position: relative;
-    height: 100%;
-    min-height: calc(100vh - 60px - 28px);
-    margin-bottom: 28px;
-    background-color: var(--portkey-ui-default-bg);
-    .portkey-ui-token-list,
-    .portkey-ui-nft-tab,
-    .portkey-ui-nft-detail,
-    .portkey-ui-send-wrapper,
-    .portkey-ui-ramp-frame,
-    .portkey-ui-guardian-page,
-    .portkey-ui-menu-list-wrapper,
-    .portkey-ui-transfer-settings-wrapper,
-    .portkey-ui-transfer-settings-edit-wrapper,
-    .portkey-ui-ramp-preview-frame {
-      margin-bottom: 28px;
-    }
-    .portkey-ui-nft-detail,
-    .portkey-ui-guardian-page,
-    .portkey-ui-guardian-add,
-    .portkey-ui-guardian-view,
-    .portkey-ui-guardian-edit,
-    .portkey-ui-transfer-settings-wrapper,
-    .portkey-ui-menu-list-wrapper,
-    .portkey-ui-transfer-settings-edit-wrapper {
-      height: 100%;
-      min-height: calc(100vh - 104px);
-    }
-    .guardian-list-wrapper.guardian-page-list-wrapper .guardian-list-container,
-    .portkey-ui-transfer-settings-wrapper .portkey-ui-transfer-settings-form,
-    .portkey-ui-transfer-settings-edit-wrapper .portkey-ui-transfer-settings-edit-form {
-      min-height: calc(100vh - 176px);
-    }
+    height: calc(100% - 60px); // 100% - height(header logo)
+    
     &.small-screen {
       width: 440px;
       min-width: 440px;
       max-width: 440px;
-      .portkey-ui-send-wrapper,
-      .portkey-ui-ramp-frame,
-      .portkey-ui-ramp-preview-frame {
-        height: 100%;
-        min-height: calc(100vh - 104px);
-      }
+    }
+
+    .portkey-ui-asset-container-body {
+      flex: 1;
+      flex-basis: calc(100% - 28px - 24px); // 100% - height(powered) - border
+      background-color: var(--portkey-ui-default-bg);
     }
     .portkey-ui-powered-wrapper {
-      position: absolute;
-      bottom: 8px;
       width: 100%;
+      flex-shrink: 0;
+      border-bottom: 24px solid var(--portkey-ui-default-base-bg);
+      background-color: var(--portkey-ui-default-bg);
       .portkey-ui-powered {
         height: 20px;
+        margin-bottom: 8px;
         color: var(--portkey-ui-font-7);
         .powered-by {
           font-size: 12px;
@@ -82,6 +54,17 @@
           }
         }
       }
+    }
+    .delete-account-button {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 16px;
+      color: var(--portkey-ui-font-7);
+      font-size: 14px;
+      margin: 0 auto;
+      width: fit-content;
     }
   }
 }
@@ -122,35 +105,18 @@
   .portkey-ui-asset-wrapper {
     .portkey-ui-asset-container {
       width: 100%;
+      height: 100%;
       min-width: 360px;
-      margin-bottom: 0;
-      min-height: 100vh;
-      .portkey-ui-nft-detail,
-      .portkey-ui-guardian-page,
-      .portkey-ui-guardian-add,
-      .portkey-ui-guardian-view,
-      .portkey-ui-guardian-edit,
-      .portkey-ui-transfer-settings-wrapper,
-      .portkey-ui-menu-list-wrapper,
-      .portkey-ui-transfer-settings-edit-wrapper {
-        height: 100%;
-        min-height: calc(100vh - 28px);
-      }
-      .guardian-list-wrapper.guardian-page-list-wrapper .guardian-list-container,
-      .portkey-ui-transfer-settings-wrapper .portkey-ui-transfer-settings-form,
-      .portkey-ui-transfer-settings-edit-wrapper .portkey-ui-transfer-settings-edit-form {
-        min-height: calc(100vh - 100px);
-      }
       &.small-screen {
         width: 100%;
-        max-width: 100%;
+        width: 100%;
         min-width: 360px;
-        .portkey-ui-send-wrapper,
-        .portkey-ui-ramp-frame,
-        .portkey-ui-ramp-preview-frame {
-          height: 100%;
-          min-height: calc(100vh - 28px);
-        }
+      }
+      .portkey-ui-asset-container-body {
+        flex-basis: calc(100% - 28px); // 100% - height(powered)
+      }
+      .portkey-ui-powered-wrapper {
+        border-bottom: none;
       }
     }
     .portkey-ui-logo {

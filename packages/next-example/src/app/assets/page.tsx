@@ -1,6 +1,7 @@
 'use client';
 
 import { ConfigProvider, Asset, PortkeyAssetProvider } from '@portkey/did-ui-react';
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 ConfigProvider.setGlobalConfig({
@@ -17,6 +18,7 @@ ConfigProvider.setGlobalConfig({
 });
 
 export default function Assets() {
+  const router = useRouter();
   return (
     <PortkeyAssetProvider pin="111111" originChainId="AELF">
       <Asset
@@ -25,6 +27,9 @@ export default function Assets() {
         }}
         onLifeCycleChange={lifeCycle => {
           console.log(lifeCycle, 'onLifeCycleChange');
+        }}
+        onDeleteAccount={() => {
+          router.replace('/sign');
         }}
       />
     </PortkeyAssetProvider>

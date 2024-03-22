@@ -127,6 +127,16 @@ export interface IPhoneCountryCodeResult {
   locateData?: ICountryItem;
 }
 
+export type TDeletionEntranceResult = {
+  entranceDisplay: boolean;
+};
+
+export type TCheckDeletionResult = { validatedAssets: false; validatedGuardian: true; validatedDevice: false };
+
+export type TDeletionAccountParams = {
+  appleToken: string;
+};
+
 export interface ICommunityRecoveryService extends IVerificationService, ISearchService {
   register(params: RegisterParams): Promise<RegisterResult>;
   recovery(params: RecoveryParams): Promise<RecoveryResult>;
@@ -135,4 +145,7 @@ export interface ICommunityRecoveryService extends IVerificationService, ISearch
   getRegisterInfo(params: GetRegisterInfoParams): Promise<RegisterInfo>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult>;
+  getShowDeletionEntrance(): Promise<TDeletionEntranceResult>;
+  checkDeletion(): Promise<TCheckDeletionResult>;
+  deletionAccount(params: TDeletionAccountParams): Promise<any>;
 }

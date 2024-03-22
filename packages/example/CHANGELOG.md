@@ -3,6 +3,38 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.0...v2.3.3-alpha.1) (2024-03-22)
+
+**Note:** Version bump only for package @portkey/example
+
+## [2.3.3-alpha.0](https://github.com/Aurora-ptk/portkey-web/compare/v2.3.2...v2.3.3-alpha.0) (2024-03-22)
+
+**Note:** Version bump only for package @portkey/example
+
+## [2.3.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.1...v2.3.2) (2024-03-21)
+
+**Note:** Version bump only for package @portkey/example
+
+## [2.3.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.0...v2.3.1) (2024-03-20)
+
+**Note:** Version bump only for package @portkey/example
+
+## [2.3.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.2.1-alpha.0...v2.3.0) (2024-03-19)
+
+**Note:** Version bump only for package @portkey/example
+
+## [2.2.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.2.0...v2.2.1-alpha.0) (2024-03-19)
+
+**Note:** Version bump only for package @portkey/example
+
+## [2.2.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.1.1...v2.2.0) (2024-03-15)
+
+**Note:** Version bump only for package @portkey/example
+
+## [2.1.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.1.0...v2.1.1) (2024-03-13)
+
+**Note:** Version bump only for package @portkey/example
+
 ## [2.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.5...v2.1.0) (2024-03-08)
 
 **Note:** Version bump only for package @portkey/example

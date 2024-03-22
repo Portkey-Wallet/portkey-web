@@ -1,0 +1,72 @@
+.portkey-ui-delete-account {
+  height: calc(100vh - 28px);
+  display: flex;
+  flex-direction: column;
+  .portkey-ui-delete-account-body {
+    padding: 24px 24px 0;
+    .warning-tip {
+      font-size: 14px;
+      color: var(--portkey-ui-font-6);
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+    .conditions {
+      width: 100%;
+      border-radius: 6px;
+      padding: 24px 12px;
+      background-color: var(--portkey-ui-bg-4);
+
+      .conditions-summary {
+        font-size: 14px;
+        color: var(--portkey-ui-font-8);
+      }
+      .conditions-item {
+        margin-top: 24px;
+      }
+      .conditions-item-label {
+        font-size: 16px;
+        font-weight: 500;
+        color: var(--portkey-ui-font-6);
+        height: 22px;
+        line-height: 22px;
+      }
+      .conditions-item-value {
+        line-height: 20px;
+      }
+    }
+  }
+  .portkey-ui-delete-account-footer {
+    width: 100%;
+    height: 80px;
+    padding: 16px;
+    margin-top: 24px;
+    border-top: 1px solid var(--portkey-ui-default-border);
+
+    .portkey-ant-btn {
+      height: 48px;
+      border-radius: 22px;
+      font-size: 16px;
+      line-height: 22px;
+    }
+  }
+}
+
+.portkey-ui-account-cancellation-modal {
+  gap: 8px;
+  .portkey-ant-modal-confirm-content {
+    margin-top: 0;
+  }
+  .account-cancellation-modal-title {
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--portkey-ui-text-primary);
+    margin-bottom: 8px;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .portkey-ui-delete-account {
+    height: calc(100vh - 116px);
+  }
+}

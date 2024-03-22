@@ -3,6 +3,45 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.0...v2.3.3-alpha.1) (2024-03-22)
+
+**Note:** Version bump only for package @portkey/services
+
+## [2.3.3-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.2...v2.3.3-alpha.0) (2024-03-22)
+
+**Note:** Version bump only for package @portkey/services
+
+## [2.3.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.1...v2.3.2) (2024-03-21)
+
+**Note:** Version bump only for package @portkey/services
+
+## [2.3.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.0...v2.3.1) (2024-03-20)
+
+### Features
+
+- 🎸 delete account ([3228972](https://github.com/Portkey-Wallet/portkey-web/commit/3228972f1be906813d57d252b0449be3e0bbb48b))
+
+## [2.3.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.2.1-alpha.0...v2.3.0) (2024-03-19)
+
+**Note:** Version bump only for package @portkey/services
+
+## [2.2.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.2.0...v2.2.1-alpha.0) (2024-03-19)
+
+**Note:** Version bump only for package @portkey/services
+
+## [2.2.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.1.1...v2.2.0) (2024-03-15)
+
+### Features
+
+- 🎸 dev 404 nft details ([d381f8d](https://github.com/Portkey-Wallet/portkey-web/commit/d381f8dbc7e129414e5df1eb39bb2a506a0addc7))
+- 🎸 dev inscription nft ([3c754bc](https://github.com/Portkey-Wallet/portkey-web/commit/3c754bc6bfda080662f71994f58bcbafd7b49048))
+- 🎸 dev nft ([7d5d75d](https://github.com/Portkey-Wallet/portkey-web/commit/7d5d75d1a7e0222e47e2265c6873d9f97b077dd0))
+- 🎸 nft seedtype ([b18ccd4](https://github.com/Portkey-Wallet/portkey-web/commit/b18ccd41e7ee6ef2f4cc10ddafed26c3d6cc380d))
+
+## [2.1.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.1.0...v2.1.1) (2024-03-13)
+
+**Note:** Version bump only for package @portkey/services
+
 ## [2.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.5...v2.1.0) (2024-03-08)
 
 ### Features

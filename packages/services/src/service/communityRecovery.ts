@@ -14,6 +14,9 @@ import {
   RegisterInfo,
   IPhoneCountryCodeResult,
   CheckGoogleRecaptchaParams,
+  TDeletionAccountParams,
+  TCheckDeletionResult,
+  TDeletionEntranceResult,
 } from '../types/communityRecovery';
 import {
   GetRecommendationVerifierParams,
@@ -149,6 +152,28 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/getVerifierServer',
+      params,
+    });
+  }
+
+  getShowDeletionEntrance(): Promise<TDeletionEntranceResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/account/revoke/entrance',
+    });
+  }
+
+  checkDeletion(): Promise<TCheckDeletionResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/account/revoke/check',
+    });
+  }
+
+  deletionAccount(params: TDeletionAccountParams): Promise<any> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/revoke/request',
       params,
     });
   }
