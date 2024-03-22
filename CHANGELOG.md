@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.3-alpha.0](https://github.com/Aurora-ptk/portkey-web/compare/v2.3.2...v2.3.3-alpha.0) (2024-03-22)
+
+### Bug Fixes
+
+- 🐛 loading always show ([4f750ab](https://github.com/Aurora-ptk/portkey-web/commit/4f750ab2273008ea06b6d3b926b39c8209715779))
+
 ## [2.3.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.1...v2.3.2) (2024-03-21)
 
 ### Features
