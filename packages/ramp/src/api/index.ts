@@ -1,4 +1,15 @@
-export default {
+import { HTTPMethod } from '@portkey/types';
+
+export type TRampApi = {
+  [key in string]: {
+    target: string;
+    config: {
+      method: HTTPMethod;
+    };
+  };
+};
+
+export const RampApi: TRampApi = {
   getRampInfo: {
     target: '/api/app/thirdPart/ramp/info',
     config: { method: 'GET' },
@@ -43,4 +54,4 @@ export default {
     target: '/api/app/thirdPart/ramp/alchemy/signature',
     config: { method: 'GET' },
   },
-} as const;
+};
