@@ -403,7 +403,7 @@ function AssetMain({
         {assetStep === AssetStep.tokenDetail && tokenDetail && (
           <TokenDetailMain
             faucet={faucet}
-            isShowRamp={isShowRamp}
+            isShowRamp={isMixShowRamp}
             tokenInfo={tokenDetail}
             onBack={() => {
               setAssetStep(AssetStep.overview);
