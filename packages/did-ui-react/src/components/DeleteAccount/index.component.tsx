@@ -98,9 +98,11 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
 
       appleToken = token;
     } catch (error) {
-      // error
+      console.log(error);
+    } finally {
       setLoading(false);
     }
+
     if (!appleToken) return setLoading(false);
 
     try {
