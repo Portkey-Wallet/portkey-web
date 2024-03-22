@@ -3,6 +3,26 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.1...v2.4.0) (2024-03-22)
+
+### Features
+
+- 🎸 adjust ui ([73bd9c8](https://github.com/Portkey-Wallet/portkey-web/commit/73bd9c8186410d54bff3c47ebb8506f5243a8fb6))
+- 🎸 change ramp export ([401c717](https://github.com/Portkey-Wallet/portkey-web/commit/401c71705963caf987cd7ca7275be434a5d2e4a9))
+- 🎸 delete useless params ([70696b3](https://github.com/Portkey-Wallet/portkey-web/commit/70696b3bcacd6ca13c554707f3c40930aa475a5a))
+- 🎸 delete useless type and constants ([8da064d](https://github.com/Portkey-Wallet/portkey-web/commit/8da064d78d6f620a96d04e35fa38658f23d1619a))
+- 🎸 dev ramp components ([e67c0ac](https://github.com/Portkey-Wallet/portkey-web/commit/e67c0acede2812265ee85023453424a85062dd4c))
+- 🎸 dev ramp from token detail ([990be9f](https://github.com/Portkey-Wallet/portkey-web/commit/990be9f3ca779f02e187ca42d605aa67eb020c4a))
+- 🎸 dev ramp logic ([38ef329](https://github.com/Portkey-Wallet/portkey-web/commit/38ef329158d8ec29854099c3ed458fc250e6de93))
+- 🎸 modify ramp request ([a8c35bc](https://github.com/Portkey-Wallet/portkey-web/commit/a8c35bc5f3a41f0c47132aaf63cf969acf24a130))
+
+### Bug Fixes
+
+- 🐛 ramp entry ([8ef03d5](https://github.com/Portkey-Wallet/portkey-web/commit/8ef03d5dc2b6b16a0474c089f1749bea40183ce1))
+- 🐛 ramp entry in token detail ([85e0b39](https://github.com/Portkey-Wallet/portkey-web/commit/85e0b3923b8a8e7cbc1e0459d79ac5ce5824036a))
+- 🐛 ramp ue ([a2bd4c8](https://github.com/Portkey-Wallet/portkey-web/commit/a2bd4c83e4ec440fa4226cee1970526b91a4a70e))
+- 🐛 return from ramp preview ([f944ffe](https://github.com/Portkey-Wallet/portkey-web/commit/f944ffe9b9d1b2ff65844bed64b75dc0085b09e8))
+
 ## [2.3.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.0...v2.3.3-alpha.1) (2024-03-22)
 
 **Note:** Version bump only for package @portkey/did-ui-react

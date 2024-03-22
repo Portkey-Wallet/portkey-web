@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.1...v2.4.0) (2024-03-22)
+
+### Features
+
+- 🎸 delete useless params ([70696b3](https://github.com/Portkey-Wallet/portkey-web/commit/70696b3bcacd6ca13c554707f3c40930aa475a5a))
+- 🎸 delete useless type and constants ([8da064d](https://github.com/Portkey-Wallet/portkey-web/commit/8da064d78d6f620a96d04e35fa38658f23d1619a))
+- 🎸 dev ramp components ([e67c0ac](https://github.com/Portkey-Wallet/portkey-web/commit/e67c0acede2812265ee85023453424a85062dd4c))
+- 🎸 modify ramp request ([a8c35bc](https://github.com/Portkey-Wallet/portkey-web/commit/a8c35bc5f3a41f0c47132aaf63cf969acf24a130))
+
 ## [2.3.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.0...v2.3.3-alpha.1) (2024-03-22)
 
 **Note:** Version bump only for package @portkey/next-example
