@@ -29,7 +29,7 @@ import {
   ISellLimitResult,
   ISellPriceResult,
 } from '../types/services';
-import RampApi from '../api';
+import { RampApi } from '../api';
 import { RampType } from '../constants';
 import { IBaseRequest } from '@portkey/types';
 

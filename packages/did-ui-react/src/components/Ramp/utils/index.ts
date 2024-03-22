@@ -20,11 +20,13 @@ export const generateReceiveText = (receive: string, symbol: string) => {
 
 export const mixRampShow = async ({
   isMainnet,
+  isRampEntryShow = true,
   isBuySectionShow,
   isSellSectionShow,
   isFetch,
 }: {
   isMainnet: boolean;
+  isRampEntryShow?: boolean;
   isBuySectionShow: boolean;
   isSellSectionShow: boolean;
   isFetch?: boolean;
@@ -32,9 +34,9 @@ export const mixRampShow = async ({
   const { isRampShow, isBuyShow, isSellShow } = await getApiRampShow(isMainnet, isFetch);
 
   return {
-    isRampShow: isRampShow && isBuySectionShow && isSellSectionShow,
-    isBuyShow: isBuySectionShow && isBuyShow,
-    isSellShow: isSellSectionShow && isSellShow,
+    isRampShow: isRampShow && isRampEntryShow,
+    isBuyShow: isRampEntryShow && isBuySectionShow && isBuyShow,
+    isSellShow: isRampEntryShow && isSellSectionShow && isSellShow,
   };
 };
 

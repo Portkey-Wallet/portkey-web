@@ -1,4 +1,4 @@
-import BN, { isBN } from 'bn.js';
+import BN from 'bn.js';
 export const sleep = (time: number) => {
   return new Promise<void>(resolve => {
     const timeout = setTimeout(() => {
@@ -21,7 +21,7 @@ export type TSignatureObject = {
 };
 
 export function zeroFill(str: string | BN) {
-  return isBN(str) ? str.toString(16, 64) : str.padStart(64, '0');
+  return BN.isBN(str) ? str.toString(16, 64) : str.padStart(64, '0');
 }
 export const sigObjToStr = (sigObj: TSignatureObject) => {
   return [zeroFill(sigObj.r), zeroFill(sigObj.s), `0${sigObj?.recoveryParam?.toString() || 0}`].join('');

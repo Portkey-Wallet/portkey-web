@@ -3,6 +3,59 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.3.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.0...v2.3.3-alpha.1) (2024-03-22)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.3.3-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.2...v2.3.3-alpha.0) (2024-03-22)
+
+### Bug Fixes
+
+- 🐛 loading always show ([4f750ab](https://github.com/Portkey-Wallet/portkey-web/commit/4f750ab2273008ea06b6d3b926b39c8209715779))
+
+## [2.3.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.1...v2.3.2) (2024-03-21)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.3.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.0...v2.3.1) (2024-03-20)
+
+### Features
+
+- 🎸 delete account ([45b1276](https://github.com/Portkey-Wallet/portkey-web/commit/45b12768e92572a116d5dfa2f3fb241d833d28ce))
+- 🎸 delete account ([3228972](https://github.com/Portkey-Wallet/portkey-web/commit/3228972f1be906813d57d252b0449be3e0bbb48b))
+- 🎸 delete account the copy ([1524883](https://github.com/Portkey-Wallet/portkey-web/commit/1524883834e84d75e0d070ee4708caac1e383327))
+
+## [2.3.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.2.1-alpha.0...v2.3.0) (2024-03-19)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.2.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.2.0...v2.2.1-alpha.0) (2024-03-19)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.2.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.1.1...v2.2.0) (2024-03-15)
+
+### Features
+
+- 🎸 dev 404 nft details ([d381f8d](https://github.com/Portkey-Wallet/portkey-web/commit/d381f8dbc7e129414e5df1eb39bb2a506a0addc7))
+- 🎸 dev 404 nft interval ([ac3c534](https://github.com/Portkey-Wallet/portkey-web/commit/ac3c53445dbfaa47ffd5b5983462b0c065ee8bb3))
+- 🎸 dev inscription nft ([3c754bc](https://github.com/Portkey-Wallet/portkey-web/commit/3c754bc6bfda080662f71994f58bcbafd7b49048))
+- 🎸 dev nft ([7d5d75d](https://github.com/Portkey-Wallet/portkey-web/commit/7d5d75d1a7e0222e47e2265c6873d9f97b077dd0))
+- 🎸 dev nft badge ([1772f68](https://github.com/Portkey-Wallet/portkey-web/commit/1772f68439bd2fa71904a660d210a8620bf7b90b))
+- 🎸 dev nft detail labels ([544346e](https://github.com/Portkey-Wallet/portkey-web/commit/544346eb75471ff4d800a46307d50c71b57ed056))
+- 🎸 dev NFTImage ([462c534](https://github.com/Portkey-Wallet/portkey-web/commit/462c534c22759defbd485df244a7ffff87c530c7))
+- 🎸 nft seedtype ([b18ccd4](https://github.com/Portkey-Wallet/portkey-web/commit/b18ccd41e7ee6ef2f4cc10ddafed26c3d6cc380d))
+
+### Bug Fixes
+
+- 🐛 nft traits font-weight ([263fd77](https://github.com/Portkey-Wallet/portkey-web/commit/263fd775bee8da17c6e829cf54e6e04bd86f71bd))
+- 🐛 ui styles ([caa9e09](https://github.com/Portkey-Wallet/portkey-web/commit/caa9e0950819cfdb378822e23258098be072ec0a))
+- 🐛 ui styles ([54b4257](https://github.com/Portkey-Wallet/portkey-web/commit/54b42570f74eaaaf7dd7783a08dca96c8bbb836f))
+
+## [2.1.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.1.0...v2.1.1) (2024-03-13)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
 ## [2.1.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.5...v2.1.0) (2024-03-08)
 
 ### Features
