@@ -44,12 +44,12 @@
     "@portkey/services": "^2.3.3-alpha.1"
   },
   "peerDependencies": {
-    "@portkey/accounts": "^1.5.2-alpha.0",
-    "@portkey/contracts": "^1.5.2-alpha.0",
-    "@portkey/graphql": "^1.5.2-alpha.0",
-    "@portkey/request": "^1.5.2-alpha.0",
-    "@portkey/types": "^1.5.2-alpha.0",
-    "@portkey/utils": "^1.5.2-alpha.0",
+    "@portkey/accounts": "^2.0.0-alpha.19",
+    "@portkey/contracts": "^2.0.0-alpha.19",
+    "@portkey/graphql": "^2.0.0-alpha.19",
+    "@portkey/request": "^2.0.0-alpha.19",
+    "@portkey/types": "^2.0.0-alpha.19",
+    "@portkey/utils": "^2.0.0-alpha.19",
     "aelf-sdk": "^3.2.45-beta.0",
     "react": "^18.2.0"
   },

@@ -12,20 +12,19 @@ import {
   NFTCheckout,
   did,
   PortkeyProvider,
-  PortkeyStyleProvider,
   singleMessage,
   PortkeyAssetProvider,
 } from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
 import { message, Button } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
   loginConfig: {
-    loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
+    loginMethodsOrder: ['Email', 'Google', 'Apple', 'Scan'],
     recommendIndexes: [0, 1],
   },
 });

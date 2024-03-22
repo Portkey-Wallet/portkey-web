@@ -148,6 +148,20 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
+  verifyTwitterToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTwitterToken',
+      params,
+    });
+  }
+  verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyFacebookToken',
+      params,
+    });
+  }
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {
     return this._request.send({
       method: 'POST',

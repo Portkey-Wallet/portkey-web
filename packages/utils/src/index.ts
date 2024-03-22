@@ -9,3 +9,5 @@ export * as scheme from './scheme';
 export * as devices from './devices';
 export * from './retry';
 export * as devicesEnv from './devices.environment';
+export * as rsa from './rsa';
+export * as cryptoWeb from './crypto';
