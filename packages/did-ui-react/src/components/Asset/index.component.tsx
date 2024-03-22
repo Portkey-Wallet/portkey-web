@@ -95,6 +95,7 @@ function AssetMain({
     try {
       const { isRampShow, isBuyShow, isSellShow } = await mixRampShow({
         isMainnet: networkType === MAINNET,
+        isRampEntryShow: isShowRamp,
         isBuySectionShow: isShowRampBuy,
         isSellSectionShow: isShowRampSell,
         isFetch: true,
@@ -105,7 +106,7 @@ function AssetMain({
     } catch (error) {
       throw handleErrorMessage(error);
     }
-  }, [isShowRampBuy, isShowRampSell, networkType]);
+  }, [isShowRamp, isShowRampBuy, isShowRampSell, networkType]);
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);
