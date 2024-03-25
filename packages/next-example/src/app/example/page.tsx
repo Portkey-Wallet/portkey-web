@@ -262,6 +262,8 @@ function Example() {
             onSuccess={(value: any) => {
               console.log('onSuccess:', value);
             }}
+            loginMethodsOrder={['Telegram', 'Google', 'Apple', 'Google', 'Apple']}
+            recommendIndexes={[0, 1]}
           />
         </div>
       </div>

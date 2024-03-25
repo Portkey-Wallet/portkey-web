@@ -11,6 +11,7 @@ import Activity from '../Activity';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { useFaucet } from '../../hooks/useFaucet';
 import SettingHeader from '../SettingHeader';
+import { SHOW_RAMP_CHAIN_ID_LIST, SHOW_RAMP_SYMBOL_LIST } from '../../constants/ramp';
 
 export enum TokenTransferStatus {
   CONFIRMED = 'Confirmed',
@@ -43,7 +44,10 @@ function TokenDetailMain({
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
 
   const isShowBuy = useMemo(
-    () => tokenInfo.symbol === 'ELF' && tokenInfo.chainId === 'AELF' && isShowRamp,
+    () =>
+      SHOW_RAMP_SYMBOL_LIST.includes(tokenInfo.symbol) &&
+      SHOW_RAMP_CHAIN_ID_LIST.includes(tokenInfo.chainId) &&
+      isShowRamp,
     [tokenInfo.chainId, tokenInfo.symbol, isShowRamp],
   );
   const onFaucet = useFaucet(faucet);

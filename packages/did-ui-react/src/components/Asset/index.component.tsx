@@ -6,15 +6,14 @@ import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { WalletError, dealURLLastChar, did, handleErrorMessage } from '../../utils';
+import { WalletError, did, handleErrorMessage } from '../../utils';
 import { IAssetItemType, ITransferLimitItem, IUserTokenItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
-import { IAchConfig, IRampInitState, IRampPreviewInitState } from '../../types';
+import { TRampInitState, TRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
-import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import SendMain, { SendExtraConfig } from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
@@ -34,6 +33,7 @@ import { useDebounce } from '../../hooks/debounce';
 import singleMessage from '../CustomAnt/message';
 import CustomSvg from '../CustomSvg';
 import './index.less';
+import { mixRampShow } from '../Ramp/utils';
 import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
@@ -59,9 +59,8 @@ export enum AssetStep {
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
   onOverviewBack?: () => void;
-  rampState?: IRampInitState;
+  rampState?: TRampInitState;
   className?: string;
-  overrideAchConfig?: IAchConfig;
   isShowRampBuy?: boolean;
   isShowRampSell?: boolean;
   onDeleteAccount?: () => void;
@@ -83,7 +82,6 @@ function AssetMain({
   faucet,
   backIcon,
   className,
-  overrideAchConfig,
   isShowRampBuy = true,
   isShowRampSell = true,
   onOverviewBack,
@@ -92,15 +90,29 @@ function AssetMain({
 }: AssetMainProps) {
   const [{ networkType, sandboxId }] = usePortkey();
   const [{ caInfo, initialized, originChainId, caHash, managementAccount }, { dispatch }] = usePortkeyAsset();
-  const portkeyServiceUrl = useMemo(() => ConfigProvider.config.serviceUrl, []);
-
-  const portkeyWebSocketUrl = useMemo(
-    () => ConfigProvider.config.socketUrl || `${dealURLLastChar(portkeyServiceUrl)}/ca`,
-    [portkeyServiceUrl],
-  );
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
   const preStepRef = useRef<AssetStep>(AssetStep.overview);
+
+  const [isMixShowRamp, setIsMixShowRamp] = useState<boolean>(isShowRamp);
+  const [isMixShowBuy, setIsMixShowBuy] = useState<boolean>(isShowRampBuy);
+  const [isMixShowSell, setIsMixShowSell] = useState<boolean>(isShowRampSell);
+  const getRampEntry = useCallback(async () => {
+    try {
+      const { isRampShow, isBuyShow, isSellShow } = await mixRampShow({
+        isMainnet: networkType === MAINNET,
+        isRampEntryShow: isShowRamp,
+        isBuySectionShow: isShowRampBuy,
+        isSellSectionShow: isShowRampSell,
+        isFetch: true,
+      });
+      setIsMixShowRamp(isRampShow);
+      setIsMixShowBuy(isBuyShow);
+      setIsMixShowSell(isSellShow);
+    } catch (error) {
+      throw handleErrorMessage(error);
+    }
+  }, [isShowRamp, isShowRampBuy, isShowRampSell, networkType]);
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);
@@ -148,8 +160,9 @@ function AssetMain({
         .then(dispatch);
 
       getAllTokenList();
+      getRampEntry();
     }
-  }, [caAddressInfos, dispatch, getAllTokenList, initialized, maxNftNum]);
+  }, [caAddressInfos, dispatch, getAllTokenList, getRampEntry, initialized, maxNftNum]);
 
   const [showDeletion, setShowDeletion] = useState<boolean>();
 
@@ -166,14 +179,13 @@ function AssetMain({
 
   const [sendToken, setSendToken] = useState<IAssetItemType>();
   const [sendExtraConfig, setSendExtraConfig] = useState<SendExtraConfig>();
-  const [rampExtraConfig, setRampExtraConfig] = useState<IRampInitState | undefined>(rampState);
-  const [rampPreview, setRampPreview] = useState<IRampPreviewInitState>();
+  const [rampExtraConfig, setRampExtraConfig] = useState<TRampInitState | undefined>(rampState);
+  const [rampPreview, setRampPreview] = useState<TRampPreviewInitState>();
 
   const [transactionDetail, setTransactionDetail] = useState<ActivityItemType & { chainId?: ChainId }>();
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
-
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
 
   const onAvatarClick = useCallback(async () => {
@@ -189,18 +201,14 @@ function AssetMain({
     setAssetStep(AssetStep.receive);
   }, []);
 
-  const onBuy = useCallback(
-    async (v: any) => {
-      if (!portkeyWebSocketUrl) return singleMessage.error('Please configure socket service url in setGlobalConfig');
-      setSelectToken({
-        ...v,
-        address: v.address || v.tokenContractAddress,
-      });
-      await sleep(50);
-      setAssetStep(AssetStep.ramp);
-    },
-    [portkeyWebSocketUrl],
-  );
+  const onBuy = useCallback(async (v: any) => {
+    setSelectToken({
+      ...v,
+      address: v.address || v.tokenContractAddress,
+    });
+    await sleep(50);
+    setAssetStep(AssetStep.ramp);
+  }, []);
 
   const onSend = useCallback(async (v: IAssetItemType) => {
     setSendToken(v);
@@ -293,7 +301,7 @@ function AssetMain({
           {(!assetStep || assetStep === AssetStep.overview) && (
             <AssetOverviewMain
               allToken={allToken}
-              isShowRamp={isShowRamp}
+              isShowRamp={isMixShowRamp}
               faucet={faucet}
               backIcon={backIcon}
               onAvatarClick={onAvatarClick}
@@ -319,6 +327,7 @@ function AssetMain({
               }}
             />
           )}
+
           {assetStep === AssetStep.receive && caInfo && selectToken && (
             <ReceiveCard
               receiveInfo={{
@@ -337,10 +346,10 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.overview)}
             />
           )}
+
           {assetStep === AssetStep.ramp && selectToken && (
             <RampMain
               initState={rampExtraConfig}
-              portkeyWebSocketUrl={portkeyWebSocketUrl}
               tokenInfo={{
                 ...selectToken,
                 tokenContractAddress: selectToken.address,
@@ -353,8 +362,8 @@ function AssetMain({
                 setRampPreview(initState);
                 setAssetStep(AssetStep.rampPreview);
               }}
-              isBuySectionShow={isShowRampBuy}
-              isSellSectionShow={isShowRampSell}
+              isBuySectionShow={isMixShowBuy}
+              isSellSectionShow={isMixShowSell}
               isMainnet={networkType === MAINNET}
               onModifyLimit={async (data) => {
                 const res = await getLimitFromContract(data);
@@ -367,17 +376,18 @@ function AssetMain({
               }}
             />
           )}
+
           {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
             <RampPreviewMain
+              isMainnet={networkType === MAINNET}
               initState={rampPreview}
-              portkeyServiceUrl={portkeyServiceUrl || 'https://did-portkey.portkey.finance'}
               chainId={selectToken.chainId}
-              onBack={() => {
+              onBack={(state?: TRampPreviewInitState) => {
+                setRampExtraConfig({ ...state });
                 setAssetStep(AssetStep.ramp);
               }}
-              isBuySectionShow={true}
-              isSellSectionShow={true}
-              overrideAchConfig={overrideAchConfig}
+              isBuySectionShow={isMixShowBuy}
+              isSellSectionShow={isMixShowSell}
             />
           )}
 
@@ -416,7 +426,7 @@ function AssetMain({
           {assetStep === AssetStep.tokenDetail && tokenDetail && (
             <TokenDetailMain
               faucet={faucet}
-              isShowRamp={isShowRamp}
+              isShowRamp={isMixShowRamp}
               tokenInfo={tokenDetail}
               onBack={() => {
                 setAssetStep(AssetStep.overview);

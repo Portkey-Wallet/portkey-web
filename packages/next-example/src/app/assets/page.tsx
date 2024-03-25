@@ -6,7 +6,6 @@ import React from 'react';
 
 ConfigProvider.setGlobalConfig({
   // storageMethod: myStore,
-
   requestDefaults: {
     timeout: 30000,
   },

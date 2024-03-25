@@ -16,6 +16,7 @@
     "accounts": "yarn workspace @portkey/accounts run",
     "contracts": "yarn workspace @portkey/contracts run",
     "did": "yarn workspace @portkey/did run",
+    "ramp": "yarn workspace @portkey/ramp run",
     "example": "yarn workspace @portkey/example run",
     "next-example": "yarn workspace @portkey/next-example run",
     "graphql": "yarn workspace @portkey/graphql run",
