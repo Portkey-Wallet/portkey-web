@@ -5,7 +5,7 @@ import { WEB_PAGE, WEB_PAGE_TEST } from '../../constants';
 import { dealURLLastChar, randomId } from '../lib';
 import { constructURL, jsonToBase64 } from './utils';
 import { ISocialLogin } from '../../types';
-import { cryptoWeb } from '@portkey/utils';
+import { forgeWeb } from '@portkey/utils';
 
 class OpenLogin {
   options: OpenLoginOptions;
@@ -15,7 +15,7 @@ class OpenLogin {
 
     if (!options.sdkUrl) {
       if (options.network === 'local') options.sdkUrl = 'http://localhost:3000';
-      if (options.network === 'Offline') options.sdkUrl = WEB_PAGE_TEST;
+      if (options.network === 'offline') options.sdkUrl = WEB_PAGE_TEST;
       if (options.network === 'onLine') options.sdkUrl = WEB_PAGE;
     }
 
@@ -88,7 +88,7 @@ class OpenLogin {
       return undefined;
     }
     // Get publicKey and privateKey
-    const cryptoManager = new cryptoWeb.WebCryptoManager(crypto.subtle);
+    const cryptoManager = new forgeWeb.ForgeCryptoManager();
     const keyPair = await cryptoManager.generateKeyPair();
 
     queryParams.publicKey = keyPair.publicKey;

@@ -5,7 +5,7 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 
 ## [2.4.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.1...v2.4.0) (2024-03-22)
 
-**Note:** Version bump only for package @portkey/accounts
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
 
 ## [2.3.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.3.3-alpha.0...v2.3.3-alpha.1) (2024-03-22)
 

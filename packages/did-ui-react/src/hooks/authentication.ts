@@ -190,14 +190,17 @@ export function useVerifyTwitter() {
     if (!tokenInfo || !accessToken) throw new Error('accessToken is not defined');
     if (userId !== params.id) throw new Error('Account does not match your guardian');
 
-    return did.services.verifyTwitterToken({
-      verifierId: params.verifierId,
-      chainId: params.chainId,
-      accessToken,
-      operationType: params.operationType,
-      targetChainId: params.targetChainId,
-      operationDetails: params.operationDetails,
-    });
+    return did.services.verifyTwitterToken(
+      {
+        verifierId: params.verifierId,
+        chainId: params.chainId,
+        accessToken,
+        operationType: params.operationType,
+        targetChainId: params.targetChainId,
+        operationDetails: params.operationDetails,
+      },
+      { 'oauth-version': '1.0A' },
+    );
   }, []);
 }
 

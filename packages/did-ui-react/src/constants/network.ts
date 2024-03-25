@@ -13,6 +13,3 @@ export const SIDE_CHAIN = 'SideChain';
 export const MAINNET = 'MAINNET';
 export const TESTNET = 'TESTNET';
 export const TEST_NET = 'Testnet';
-
-export const twitterAuthPath = '/api/app/twitterAuth/unifyReceive';
-export const facebookAuthPath = '/api/app/facebookAuth/unifyReceive';
