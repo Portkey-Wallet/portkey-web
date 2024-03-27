@@ -12,9 +12,18 @@ export class OpenloginSignalr extends BaseSignalr implements IOpenloginSignalr {
       }
     });
   }
+  public onCheckSellResult({ requestId }: { requestId: string }, callback: (data: string | null) => void) {
+    return this.listen('onCheckSellResult', (data: { body: string; requestId: string }) => {
+      if (data?.requestId === requestId) {
+        callback(data.body);
+      } else {
+        callback(null);
+      }
+    });
+  }
 }
 
-export const openloginListenList = ['onAuthStatusChanged'] as const;
+export const openloginListenList = ['onAuthStatusChanged', 'onCheckSellResult'] as const;
 export type TOpenloginListenList = (typeof openloginListenList)[number];
 
 export const openloginSignal = new OpenloginSignalr({

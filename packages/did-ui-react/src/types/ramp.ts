@@ -31,6 +31,7 @@ export type TRampPreviewInitState = {
   tokenInfo?: TokenItemShowType;
   openGuardiansApprove?: boolean;
   approveList?: GuardianApprovedItem[];
+  openloginSignalClientId?: string;
 };
 
 export type IRampLimit = {

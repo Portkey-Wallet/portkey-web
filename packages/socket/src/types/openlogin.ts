@@ -11,6 +11,12 @@ export interface IOpenloginSignalr {
     },
     callback: (data: TAuthFinishResult | null) => void,
   );
+  onCheckSellResult(
+    params: {
+      requestId: string;
+    },
+    callback: (data: string | null) => void,
+  );
 }
 
 export type TIOpenloginSignalrHandler = keyof IOpenloginSignalr;
