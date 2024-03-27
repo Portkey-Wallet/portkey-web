@@ -6,6 +6,7 @@ import { dealURLLastChar, randomId } from '../lib';
 import { constructURL, jsonToBase64 } from './utils';
 import { ISocialLogin } from '../../types';
 import { forgeWeb } from '@portkey/utils';
+import { TOpenLoginGuardianLocationState } from '../../types/openlogin';
 
 class OpenLogin {
   options: OpenLoginOptions;
@@ -69,9 +70,9 @@ class OpenLogin {
     return loginId;
   }
 
-  private async openloginHandler(
+  async openloginHandler(
     url: string,
-    queryParams: OpenloginParamConfig,
+    queryParams: OpenloginParamConfig | TOpenLoginGuardianLocationState,
     popupTimeout = 1000,
   ): Promise<PopupResponse | undefined> {
     const loginId = await this.getLoginId();
