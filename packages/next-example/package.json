@@ -1,6 +1,6 @@
 {
   "name": "@portkey/next-example",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -8,13 +8,15 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@portkey/did-ui-react": "^2.4.0",
-    "@portkey/onboarding": "^2.4.0",
+    "@portkey/did-ui-react": "^2.4.1",
+    "@portkey/onboarding": "^2.4.1",
     "aelf-sdk": "^3.2.45-beta.1",
     "next": "14.0.3",
     "next-transpile-modules": "^10.0.0",
+    "querystring": "^0.2.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-use": "^17.5.0"
   },
   "devDependencies": {
     "@types/node": "^20",

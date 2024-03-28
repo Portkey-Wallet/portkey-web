@@ -88,6 +88,26 @@ export type VerifierItem = {
   name: string;
   imageUrl: string;
 };
+
+export type VerifyTwitterTokenHeader = {
+  'oauth-version': string;
+  [x: string]: string;
+};
+
+export type TGetTelegramAuthTokenParams = {
+  id: string;
+  auth_date: string;
+  first_name: string;
+  last_name?: string;
+  hash: string;
+  proto_url?: string;
+  username?: string;
+};
+
+export type TGetTelegramAuthTokenResult = {
+  token: string;
+};
+
 export interface IVerificationService {
   getVerificationCode(params: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult>;
   verifyVerificationCode(params: VerifyVerificationCodeParams): Promise<VerifyVerificationCodeResult>;
@@ -96,6 +116,12 @@ export interface IVerificationService {
   verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyTwitterToken(
+    params: VerifierSocialTokenParams,
+    headers?: VerifyTwitterTokenHeader,
+  ): Promise<VerifyVerificationCodeResult>;
+  verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
+  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult>;
 }

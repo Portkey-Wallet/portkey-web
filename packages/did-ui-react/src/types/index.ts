@@ -67,3 +67,5 @@ export type ValidData = {
   validateStatus: ValidateStatus;
   errorMsg: string;
 };
+
+export type TCustomNetworkType = 'offline' | 'onLine' | 'local';

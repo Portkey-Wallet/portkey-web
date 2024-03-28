@@ -42,6 +42,8 @@ export interface IRampProviderCoverage {
   sell: boolean;
 }
 
+type NetworkType = 'MAINNET' | 'TESTNET';
+
 export type IRampProviderCreateOrderParams = {
   type: RampType;
   address: string;
@@ -52,6 +54,8 @@ export type IRampProviderCreateOrderParams = {
   fiat: string;
   amount: string;
   withdrawUrl?: string; // only for sell
+  clientId: string;
+  networkType: NetworkType;
 };
 
 export type IRampProviderCreateOrderResult = { orderId: string; url: string };

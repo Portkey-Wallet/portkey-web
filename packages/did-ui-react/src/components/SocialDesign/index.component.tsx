@@ -69,16 +69,10 @@ function SocialDesign({
     async (type: AccountType | 'Scan') => {
       try {
         if (!SocialLoginList.includes(type)) return setAccountType(type);
-        let result;
         setLoading(true);
 
-        if (type === 'Google') {
-          result = await socialLoginHandler('Google');
-        } else if (type === 'Apple') {
-          result = await socialLoginHandler('Apple');
-        } else if (type === 'Telegram') {
-          result = await socialLoginHandler('Telegram');
-        } else throw Error('AccountType is not support');
+        const result = await socialLoginHandler(type as any);
+
         setLoading(false);
 
         await onSocialFinish(result);

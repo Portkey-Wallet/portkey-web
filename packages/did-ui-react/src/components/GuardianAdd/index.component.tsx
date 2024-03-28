@@ -13,7 +13,9 @@ import {
   handleErrorMessage,
   handleVerificationDoc,
   parseAppleIdentityToken,
+  parseFacebookToken,
   parseTelegramToken,
+  parseTwitterToken,
   setLoading,
   socialLoginAuth,
   verification,
@@ -24,7 +26,6 @@ import {
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
-  TSupportAccountType,
   UserGuardianStatus,
   VerifyStatus,
 } from '../../types';
@@ -44,7 +45,7 @@ import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
 import {
-  AccountLoginList,
+  AccountGuardianList,
   AddGuardiansType,
   guardianAccountExistTip,
   verifierExistTip,
@@ -55,6 +56,8 @@ import './index.less';
 import { ILoginConfig } from '../config-provider/types';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
+import { getSocialConfig } from '../utils/social.utils';
+import GuardianTypeIcon from '../GuardianTypeIcon';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -123,7 +126,7 @@ function GuardianAdd({
 
   const loginConfig = ConfigProvider.getConfig('loginConfig') as ILoginConfig;
   const loginMethodsOrder = useMemo(
-    () => (loginConfig?.loginMethodsOrder as AccountType[]) || AccountLoginList,
+    () => (loginConfig?.loginMethodsOrder as AccountType[]) || AccountGuardianList,
     [loginConfig?.loginMethodsOrder],
   );
 
@@ -132,13 +135,13 @@ function GuardianAdd({
   const guardianTypeSelectItems = useMemo(() => {
     if (Array.isArray(loginMethodsOrder)) {
       const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) =>
-        AccountLoginList.includes(item as TSupportAccountType),
+        AccountGuardianList.includes(item),
       );
       return filterLoginMethodsOrder?.map((item: AccountType) => {
         return {
           value: AddGuardiansType[item]?.value,
           label: AddGuardiansType[item]?.label,
-          icon: <CustomSvg type={AddGuardiansType[item]?.icon} />,
+          icon: <GuardianTypeIcon type={AddGuardiansType[item]?.icon} />,
           id: AddGuardiansType[item]?.id,
         };
       });
@@ -213,27 +216,7 @@ function GuardianAdd({
   const socialBasic = useCallback(
     (v: ISocialLogin) => {
       try {
-        const socialLogin = ConfigProvider.config.socialLogin;
-        let clientId;
-        let redirectURI;
-        let customLoginHandler;
-        switch (v) {
-          case 'Apple':
-            clientId = socialLogin?.Apple?.clientId;
-            redirectURI = socialLogin?.Apple?.redirectURI;
-            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-            break;
-          case 'Google':
-            clientId = socialLogin?.Google?.clientId;
-            customLoginHandler = socialLogin?.Google?.customLoginHandler;
-            break;
-          case 'Telegram':
-            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-            break;
-          default:
-            throw 'accountType is not supported';
-        }
-        return { clientId, redirectURI, customLoginHandler };
+        return getSocialConfig(v);
       } catch (error) {
         errorTip(
           {
@@ -278,6 +261,32 @@ function GuardianAdd({
       }
     } else if (v === 'Telegram') {
       const userInfo = parseTelegramToken(accessToken);
+      if (!userInfo) return;
+      const { firstName, isPrivate, userId } = userInfo;
+      if (userInfo) {
+        info = {
+          id: userId,
+          firstName,
+          thirdPartyEmail: undefined,
+          accessToken,
+          isPrivate,
+        };
+      }
+    } else if (v === 'Facebook') {
+      const userInfo = await parseFacebookToken(accessToken);
+      if (!userInfo) return;
+      const { firstName, isPrivate, userId } = userInfo;
+      if (userInfo) {
+        info = {
+          id: userId,
+          firstName,
+          thirdPartyEmail: undefined,
+          accessToken,
+          isPrivate,
+        };
+      }
+    } else if (v === 'Twitter') {
+      const userInfo = parseTwitterToken(accessToken);
       if (!userInfo) return;
       const { firstName, isPrivate, userId } = userInfo;
       if (userInfo) {
@@ -512,6 +521,14 @@ function GuardianAdd({
       [AccountTypeEnum[AccountTypeEnum.Telegram]]: {
         element: renderSocialGuardianAccount('Telegram'),
         label: t('Guardian Telegram'),
+      },
+      [AccountTypeEnum[AccountTypeEnum.Facebook]]: {
+        element: renderSocialGuardianAccount('Facebook'),
+        label: t('Guardian Facebook'),
+      },
+      [AccountTypeEnum[AccountTypeEnum.Twitter]]: {
+        element: renderSocialGuardianAccount('Twitter'),
+        label: t('Guardian Twitter'),
       },
     }),
     [

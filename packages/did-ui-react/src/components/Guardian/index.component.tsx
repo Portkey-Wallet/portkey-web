@@ -23,6 +23,11 @@ import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGua
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
+import { isTelegramPlatform, openLinkFromTelegram } from '../../utils/telegram';
+import { Open_Login_Bridge, Open_Login_Guardian_Bridge } from '../../constants/telegram';
+import OpenLogin from '../../utils/openlogin';
+import { getServiceUrl, getSocketUrl, getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
+import { CrossTabPushMessageType } from '@portkey/socket';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -145,13 +150,57 @@ function GuardianMain({
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const onAddGuardian = useCallback(() => {
+  const handleWithinTelegram = useCallback(
+    async (guardianStep: GuardianStep, socketMethod: Array<CrossTabPushMessageType>, item?: UserGuardianStatus) => {
+      if (!isTelegramPlatform()) {
+        const serviceURI = getServiceUrl();
+        const socketURI = getSocketUrl();
+        const openlogin = new OpenLogin({
+          network: getCustomNetworkType(),
+          serviceURI: serviceURI,
+          socketURI,
+          currentStorage: getStorageInstance(),
+          sdkUrl: Open_Login_Bridge,
+        });
+
+        const params = {
+          networkType,
+          originChainId,
+          chainType,
+          caHash,
+          guardianStep,
+          isErrorTip,
+          currentGuardian: item,
+        };
+        const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params, socketMethod);
+        if (!result) return null;
+        openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
+        return;
+      }
+    },
+    [caHash, chainType, isErrorTip, networkType, originChainId],
+  );
+  const onAddGuardian = useCallback(async () => {
+    await handleWithinTelegram(GuardianStep.guardianAdd, [CrossTabPushMessageType.onAddGuardianResult]);
     setStep(GuardianStep.guardianAdd);
-  }, []);
-  const onViewGuardian = useCallback((item: UserGuardianStatus) => {
-    setCurrentGuardian(item);
-    setStep(GuardianStep.guardianView);
-  }, []);
+  }, [handleWithinTelegram]);
+  const onViewGuardian = useCallback(
+    async (item: UserGuardianStatus) => {
+      setCurrentGuardian(item);
+      await handleWithinTelegram(
+        GuardianStep.guardianView,
+        [
+          CrossTabPushMessageType.onSetLoginGuardianResult,
+          CrossTabPushMessageType.onEditGuardianResult,
+          CrossTabPushMessageType.onRemoveGuardianResult,
+        ],
+        item,
+      );
+      setStep(GuardianStep.guardianView);
+    },
+    [handleWithinTelegram],
+  );
+
   const onEditGuardian = useCallback(() => {
     setPreGuardian(currentGuardian);
     setStep(GuardianStep.guardianEdit);

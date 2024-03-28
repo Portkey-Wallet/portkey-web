@@ -6,11 +6,11 @@ import React from 'react';
 
 ConfigProvider.setGlobalConfig({
   // storageMethod: myStore,
-  serviceUrl: 'https://test4-applesign-v2.portkey.finance',
-
   requestDefaults: {
     timeout: 30000,
   },
+  serviceUrl: 'https://test4-applesign-v2.portkey.finance',
+
   // loginConfig: {
   //   loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
   //   recommendIndexes: [0, 1],

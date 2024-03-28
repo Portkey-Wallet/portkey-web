@@ -27,10 +27,10 @@ module.exports = [
   // { source: '/graphql/:path*', destination: 'https://dapp-aa-portkey.portkey.finance/Portkey_V2_DID/PortKeyIndexerCASchema/graphql/:path*' },
 
   // testnet
-  { source: '/api/:path*', destination: 'https://aa-portkey-test.portkey.finance/api/:path*' },
-  { source: '/connect/:path*', destination: 'https://auth-aa-portkey-test.portkey.finance/connect/:path*' },
-  {
-    source: '/graphql/:path*',
-    destination: 'https://dapp-aa-portkey-test.portkey.finance/Portkey_V2_DID/PortKeyIndexerCASchema/graphql/:path*',
-  },
+  // { source: '/api/:path*', destination: 'https://aa-portkey-test.portkey.finance/api/:path*' },
+  // { source: '/connect/:path*', destination: 'https://auth-aa-portkey-test.portkey.finance/connect/:path*' },
+  // {
+  //   source: '/graphql/:path*',
+  //   destination: 'https://dapp-aa-portkey-test.portkey.finance/Portkey_V2_DID/PortKeyIndexerCASchema/graphql/:path*',
+  // },
 ];

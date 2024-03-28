@@ -7,7 +7,9 @@ import {
   handleErrorCode,
   handleErrorMessage,
   parseAppleIdentityToken,
+  parseFacebookToken,
   parseTelegramToken,
+  parseTwitterToken,
   setLoading,
 } from '../utils';
 import { SocialLoginFinishHandler } from '../types';
@@ -119,6 +121,14 @@ export const useSignHandler = ({
           if (!userId) throw 'Authorization failed';
         } else if (type === 'Telegram') {
           const userInfo = parseTelegramToken(data?.accessToken);
+          userId = userInfo?.userId;
+          if (!userId) throw 'Authorization failed';
+        } else if (type === 'Twitter') {
+          const userInfo = parseTwitterToken(data?.accessToken);
+          userId = userInfo?.userId;
+          if (!userId) throw 'Authorization failed';
+        } else if (type === 'Facebook') {
+          const userInfo = await parseFacebookToken(data?.accessToken);
           userId = userInfo?.userId;
           if (!userId) throw 'Authorization failed';
         } else {

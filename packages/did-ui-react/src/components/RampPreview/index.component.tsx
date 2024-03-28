@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { did, setLoading } from '../../utils';
+import { did, randomId, setLoading } from '../../utils';
 import clsx from 'clsx';
 import { ramp, IRampProviderType, RampType } from '@portkey/ramp';
 import './index.less';
@@ -26,6 +26,7 @@ import { generateRateText, generateReceiveText, mixRampShow } from '../Ramp/util
 import { AccountTypeKeyEnum } from '@portkey/services';
 import { sleep } from '@portkey/utils';
 import { MAIN_CHAIN_ID } from '../../constants/network';
+import { usePortkey } from '../context';
 
 export default function RampPreviewMain({
   className,
@@ -128,6 +129,7 @@ export default function RampPreviewMain({
   }, []);
 
   const [{ guardianList, caInfo }] = usePortkeyAsset();
+  const [{ networkType }] = usePortkey();
   const goPayPage = useCallback(async () => {
     if (!providerSelected?.providerInfo) return;
     const { side } = initData;
@@ -154,6 +156,7 @@ export default function RampPreviewMain({
       );
 
       const { country, fiat, amount, crypto } = initData;
+      const clientId = randomId();
       const { url, orderId } = await provider.createOrder({
         type: side,
         address: caInfo[chainId]?.caAddress || '',
@@ -164,6 +167,8 @@ export default function RampPreviewMain({
         fiat: fiat,
         amount: amount,
         withdrawUrl: RAMP_WITH_DRAW_URL,
+        clientId,
+        networkType,
       });
 
       if (Array.isArray(initData?.approveList) && initData?.approveList.length > 0) {
@@ -176,7 +181,7 @@ export default function RampPreviewMain({
       window.open(url, '_blank');
 
       sleep(500);
-      onBack?.(initData);
+      onBack?.({ ...initData, openloginSignalClientId: clientId });
     } catch (error) {
       singleMessage.error('There is a network error, please try again.');
     } finally {
@@ -194,6 +199,7 @@ export default function RampPreviewMain({
     onBack,
     guardianList,
     chainId,
+    networkType,
     initState.approveList,
   ]);
 
