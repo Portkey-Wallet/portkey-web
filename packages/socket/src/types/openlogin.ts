@@ -1,3 +1,13 @@
+export enum CrossTabPushMessageType {
+  onAuthStatusChanged = 'onAuthStatusChanged',
+  onSetLoginGuardianResult = 'onSetLoginGuardianResult',
+  onAddGuardianResult = 'onAddGuardianResult',
+  onRemoveGuardianResult = 'onRemoveGuardianResult',
+  onEditGuardianResult = 'onEditGuardianResult',
+  onGuardianApprovalResult = 'onGuardianApprovalResult',
+  onCheckSellResult = 'onCheckSellResult',
+}
+
 export type TAuthFinishResult = {
   type: 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter';
   status: 'success' | 'fail';
@@ -11,6 +21,42 @@ export interface IOpenloginSignalr {
     },
     callback: (data: TAuthFinishResult | null) => void,
   );
+
+  onSetLoginGuardianResult<T>(
+    params: {
+      requestId: string;
+    },
+    callback: (data: T | null) => void,
+  );
+
+  onAddGuardianResult<T>(
+    params: {
+      requestId: string;
+    },
+    callback: (data: T | null) => void,
+  );
+
+  onRemoveGuardianResult<T>(
+    params: {
+      requestId: string;
+    },
+    callback: (data: T | null) => void,
+  );
+
+  onEditGuardianResult<T>(
+    params: {
+      requestId: string;
+    },
+    callback: (data: T | null) => void,
+  );
+
+  onGuardianApprovalResult<T>(
+    params: {
+      requestId: string;
+    },
+    callback: (data: T | null) => void,
+  );
+
   onCheckSellResult(
     params: {
       requestId: string;

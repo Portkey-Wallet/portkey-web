@@ -27,6 +27,7 @@ import { isTelegramPlatform, openLinkFromTelegram } from '../../utils/telegram';
 import { Open_Login_Bridge, Open_Login_Guardian_Bridge } from '../../constants/telegram';
 import OpenLogin from '../../utils/openlogin';
 import { getServiceUrl, getSocketUrl, getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
+import { CrossTabPushMessageType } from '@portkey/socket';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -150,7 +151,7 @@ function GuardianMain({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const handleWithinTelegram = useCallback(
-    async (guardianStep: GuardianStep, item?: UserGuardianStatus) => {
+    async (guardianStep: GuardianStep, socketMethod: Array<CrossTabPushMessageType>, item?: UserGuardianStatus) => {
       if (!isTelegramPlatform()) {
         const serviceURI = getServiceUrl();
         const socketURI = getSocketUrl();
@@ -171,7 +172,7 @@ function GuardianMain({
           isErrorTip,
           currentGuardian: item,
         };
-        const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params);
+        const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params, socketMethod);
         if (!result) return null;
         openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
         return;
@@ -180,13 +181,21 @@ function GuardianMain({
     [caHash, chainType, isErrorTip, networkType, originChainId],
   );
   const onAddGuardian = useCallback(async () => {
-    await handleWithinTelegram(GuardianStep.guardianAdd);
+    await handleWithinTelegram(GuardianStep.guardianAdd, [CrossTabPushMessageType.onAddGuardianResult]);
     setStep(GuardianStep.guardianAdd);
   }, [handleWithinTelegram]);
   const onViewGuardian = useCallback(
     async (item: UserGuardianStatus) => {
       setCurrentGuardian(item);
-      await handleWithinTelegram(GuardianStep.guardianView, item);
+      await handleWithinTelegram(
+        GuardianStep.guardianView,
+        [
+          CrossTabPushMessageType.onSetLoginGuardianResult,
+          CrossTabPushMessageType.onEditGuardianResult,
+          CrossTabPushMessageType.onRemoveGuardianResult,
+        ],
+        item,
+      );
       setStep(GuardianStep.guardianView);
     },
     [handleWithinTelegram],

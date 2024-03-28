@@ -13,8 +13,10 @@
     "aelf-sdk": "^3.2.45-beta.1",
     "next": "14.0.3",
     "next-transpile-modules": "^10.0.0",
+    "querystring": "^0.2.1",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "react-use": "^17.5.0"
   },
   "devDependencies": {
     "@types/node": "^20",

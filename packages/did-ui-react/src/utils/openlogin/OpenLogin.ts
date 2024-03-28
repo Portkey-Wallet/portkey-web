@@ -7,6 +7,7 @@ import { constructURL, jsonToBase64 } from './utils';
 import { ISocialLogin } from '../../types';
 import { forgeWeb } from '@portkey/utils';
 import { TOpenLoginGuardianLocationState } from '../../types/openlogin';
+import { CrossTabPushMessageType } from '@portkey/socket';
 
 class OpenLogin {
   options: OpenLoginOptions;
@@ -58,7 +59,9 @@ class OpenLogin {
       serviceURI: this.serviceURI,
     };
     console.log(dataObject, 'dataObject==');
-    const result = await this.openloginHandler(`${this.baseUrl}/social-start`, dataObject);
+    const result = await this.openloginHandler(`${this.baseUrl}/social-start`, dataObject, [
+      CrossTabPushMessageType.onAuthStatusChanged,
+    ]);
     if (!result) return null;
     if (this.options.uxMode === UX_MODE.REDIRECT) return null;
     return result;
@@ -73,6 +76,7 @@ class OpenLogin {
   async openloginHandler(
     url: string,
     queryParams: OpenloginParamConfig | TOpenLoginGuardianLocationState,
+    socketMethod: Array<CrossTabPushMessageType>,
     popupTimeout = 1000,
   ): Promise<PopupResponse | undefined> {
     const loginId = await this.getLoginId();
@@ -109,20 +113,22 @@ class OpenLogin {
         reject('User close the prompt');
       });
 
-      currentWindow
-        .listenOnChannel(loginId, 'onAuthStatusChanged')
-        .then(async (res) => {
-          const decrypted = await cryptoManager.decryptLong(keyPair.privateKey, res);
-          let result;
+      socketMethod.forEach((item) => {
+        currentWindow
+          .listenOnChannel(loginId, item)
+          .then(async (res) => {
+            const decrypted = await cryptoManager.decryptLong(keyPair.privateKey, res);
+            let result;
 
-          try {
-            result = JSON.parse(decrypted);
-          } catch (error) {
-            result = decrypted;
-          }
-          resolve(result);
-        })
-        .catch(reject);
+            try {
+              result = JSON.parse(decrypted);
+            } catch (error) {
+              result = decrypted;
+            }
+            resolve(result);
+          })
+          .catch(reject);
+      });
 
       currentWindow.on('socket-connect', () => {
         try {
