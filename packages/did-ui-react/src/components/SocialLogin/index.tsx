@@ -24,6 +24,8 @@ import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constant
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
+import { getTelegram, isTelegramPlatform } from '../../utils/telegram';
+import { Portkey_Bot_Webapp } from '../../constants/telegram';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -92,6 +94,14 @@ export default function SocialLogin({
     async (type: ISocialLogin) => {
       try {
         setLoading(true);
+        // check platform
+
+        if (type === 'Telegram' && isTelegramPlatform()) {
+          const Telegram = getTelegram();
+          Telegram?.WebApp.openTelegramLink(Portkey_Bot_Webapp);
+          return;
+        }
+
         const result = await socialLoginHandler(type);
         setLoading(false);
         onFinishRef.current?.(result);

@@ -12,6 +12,8 @@ import {
   GetAppleUserExtraInfoParams,
   VerifierSocialTokenParams,
   VerifyTwitterTokenHeader,
+  TGetTelegramAuthTokenParams,
+  TGetTelegramAuthTokenResult,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
@@ -100,6 +102,13 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/getVerifierServer',
+      params,
+    });
+  }
+  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/telegramAuth/token',
       params,
     });
   }
