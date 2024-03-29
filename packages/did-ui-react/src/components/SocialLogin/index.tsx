@@ -17,7 +17,7 @@ import AccountRecommendGroup from '../AccountRecommendGroup';
 import TermsOfServiceItem from '../TermsOfServiceItem';
 import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import useSocialLogin from '../../hooks/useSocialLogin';
-import { errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
 import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constants/guardian';
@@ -26,6 +26,10 @@ import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 import { getTelegram, isTelegramPlatform } from '../../utils/telegram';
 import { Portkey_Bot_Webapp } from '../../constants/telegram';
+import { pushEncodeMessage } from '../../utils/openlogin/crossTabMessagePush';
+import { CrossTabPushMessageType } from '@portkey/socket';
+import { PORTKEY_SIGN_IN_STORAGE_KEY, PORTKEY_SIGN_UP_STORAGE_KEY } from '../../constants/storage';
+import { forgeWeb, randomId } from '@portkey/utils';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -90,15 +94,35 @@ export default function SocialLogin({
 
   const isLogin = useMemo(() => type === 'Login', [type]);
 
+  const tgAuthWithInTelegram = useCallback(async () => {
+    const Telegram = getTelegram();
+    // save data
+    // Get publicKey and privateKey
+    const cryptoManager = new forgeWeb.ForgeCryptoManager();
+    const keyPair = await cryptoManager.generateKeyPair();
+    const loginId = randomId();
+    const session = JSON.stringify({
+      loginId: loginId,
+      publicKey: keyPair.publicKey,
+    });
+    const storageKey = `${isLogin ? PORTKEY_SIGN_IN_STORAGE_KEY : PORTKEY_SIGN_UP_STORAGE_KEY}_Telegram`;
+    await did.config.storageMethod.setItem(
+      storageKey,
+      JSON.stringify({ isLogin, accountType: 'Telegram', rsaKey: keyPair.privateKey, stepInfo: {} }),
+    );
+    const params = JSON.stringify({ storageKey });
+    await pushEncodeMessage(session, CrossTabPushMessageType.onAuthStatusChanged, params);
+    // open link
+    Telegram?.WebApp.openTelegramLink(Portkey_Bot_Webapp);
+  }, [isLogin]);
+
   const onSocialChange = useCallback(
     async (type: ISocialLogin) => {
       try {
         setLoading(true);
         // check platform
-
         if (type === 'Telegram' && isTelegramPlatform()) {
-          const Telegram = getTelegram();
-          Telegram?.WebApp.openTelegramLink(Portkey_Bot_Webapp);
+          await tgAuthWithInTelegram();
           return;
         }
 
@@ -117,7 +141,7 @@ export default function SocialLogin({
         );
       }
     },
-    [isErrorTip, socialLoginHandler],
+    [isErrorTip, socialLoginHandler, tgAuthWithInTelegram],
   );
 
   const recommendList = useMemo(() => {

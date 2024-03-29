@@ -152,51 +152,77 @@ function GuardianMain({
   }, []);
   const handleWithinTelegram = useCallback(
     async (guardianStep: GuardianStep, socketMethod: Array<CrossTabPushMessageType>, item?: UserGuardianStatus) => {
-      if (!isTelegramPlatform()) {
-        const serviceURI = getServiceUrl();
-        const socketURI = getSocketUrl();
-        const openlogin = new OpenLogin({
-          network: getCustomNetworkType(),
-          serviceURI: serviceURI,
-          socketURI,
-          currentStorage: getStorageInstance(),
-          sdkUrl: Open_Login_Bridge,
-        });
+      const serviceURI = getServiceUrl();
+      const socketURI = getSocketUrl();
+      const openlogin = new OpenLogin({
+        network: getCustomNetworkType(),
+        serviceURI: serviceURI,
+        socketURI,
+        currentStorage: getStorageInstance(),
+        sdkUrl: Open_Login_Bridge,
+      });
 
-        const params = {
-          networkType,
-          originChainId,
-          chainType,
-          caHash,
-          guardianStep,
-          isErrorTip,
-          currentGuardian: item,
-        };
-        const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params, socketMethod);
-        if (!result) return null;
-        // openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
-        return;
+      const params = {
+        networkType,
+        originChainId,
+        chainType,
+        caHash,
+        guardianStep,
+        isErrorTip,
+        currentGuardian: item,
+      };
+      const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params, socketMethod);
+      if (!result) return null;
+      // openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
+      // TODO tg
+      switch (guardianStep) {
+        case GuardianStep.guardianAdd:
+          console.log(result);
+          // await handleAddGuardian(result);
+          break;
+
+        case GuardianStep.guardianView:
+          // setLoginAccount
+          // await handleSetLoginGuardian(result);
+          // edit
+          // await handleEditGuardian(result);
+          // remove
+          // await handleRemoveGuardian(result);
+          break;
+
+        default:
+          break;
       }
+
+      return;
     },
     [caHash, chainType, isErrorTip, networkType, originChainId],
   );
   const onAddGuardian = useCallback(async () => {
-    await handleWithinTelegram(GuardianStep.guardianAdd, [CrossTabPushMessageType.onAddGuardianResult]);
-    setStep(GuardianStep.guardianAdd);
+    // TODO tg
+    if (!isTelegramPlatform()) {
+      await handleWithinTelegram(GuardianStep.guardianAdd, [CrossTabPushMessageType.onAddGuardianResult]);
+    } else {
+      setStep(GuardianStep.guardianAdd);
+    }
   }, [handleWithinTelegram]);
   const onViewGuardian = useCallback(
     async (item: UserGuardianStatus) => {
       setCurrentGuardian(item);
-      await handleWithinTelegram(
-        GuardianStep.guardianView,
-        [
-          CrossTabPushMessageType.onSetLoginGuardianResult,
-          CrossTabPushMessageType.onEditGuardianResult,
-          CrossTabPushMessageType.onRemoveGuardianResult,
-        ],
-        item,
-      );
-      setStep(GuardianStep.guardianView);
+      // TODO tg
+      if (!isTelegramPlatform()) {
+        await handleWithinTelegram(
+          GuardianStep.guardianView,
+          [
+            CrossTabPushMessageType.onSetLoginGuardianResult,
+            CrossTabPushMessageType.onEditGuardianResult,
+            CrossTabPushMessageType.onRemoveGuardianResult,
+          ],
+          item,
+        );
+      } else {
+        setStep(GuardianStep.guardianView);
+      }
     },
     [handleWithinTelegram],
   );

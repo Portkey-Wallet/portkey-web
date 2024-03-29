@@ -69,7 +69,7 @@ export default function DappWebapp() {
           className="dapp-bot-sign"
           termsOfService={termsOfService}
           privacyPolicy={privacyPolicy}
-          uiType="Modal"
+          uiType="Full"
           ref={signInRef}
           onFinish={onFinish}
           onCancel={onCancel}
