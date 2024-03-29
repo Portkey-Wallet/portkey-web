@@ -15,7 +15,7 @@ module.exports = [
 
   // test4-v2
   { source: '/api/:path*', destination: 'http://192.168.66.117:5577/api/:path*' },
-  { source: '/ca/:path*', destination: 'http://192.168.66.117:5577/ca/:path*' },
+  { source: '/communication/:path*', destination: 'http://192.168.66.117:5577/communication/:path*' },
   { source: '/connect/:path*', destination: 'http://192.168.66.117:8080/connect/:path*' },
   {
     source: '/graphql/:path*',
