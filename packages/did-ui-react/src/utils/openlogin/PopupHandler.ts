@@ -90,7 +90,7 @@ class PopupHandler extends EventEmitter {
     }
   }
 
-  async listenOnChannel(clientId: string, methodName: TIOpenloginSignalrHandler): Promise<any> {
+  async listenOnChannel(clientId: string, methodNames: TIOpenloginSignalrHandler[]): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
         await openloginSignal.doOpen({
@@ -99,18 +99,19 @@ class PopupHandler extends EventEmitter {
         });
 
         this.emit('socket-connect', true);
-
-        openloginSignal[methodName]({ requestId: clientId }, (result: any) => {
-          console.log(result);
-          const message = result;
-          if (!message) return;
-          try {
-            resolve(JSON.parse(message));
-          } catch (error) {
-            resolve(message);
-          }
-          openloginSignal.destroy();
-          this.close();
+        methodNames.forEach((methodName) => {
+          openloginSignal[methodName]({ requestId: clientId }, (result: any) => {
+            console.log(result);
+            const message = result;
+            if (!message) return;
+            try {
+              resolve(JSON.parse(message));
+            } catch (error) {
+              resolve(message);
+            }
+            openloginSignal.destroy();
+            this.close();
+          });
         });
       } catch (error) {
         reject(error);

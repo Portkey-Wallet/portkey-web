@@ -87,6 +87,7 @@ export type { IAllowance } from './SetAllowance/index.component';
 export { default as CommonBaseModal } from './CommonBaseModal';
 export { default as PortkeyModal } from './PortkeyModal';
 export { default as PortkeyNumberKeyboard } from './PortkeyNumberKeyboard';
+export { default as TelegramLoginButton } from './TelegramLoginButton';
 
 export * from './CustomAnt';
 

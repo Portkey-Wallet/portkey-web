@@ -6,5 +6,5 @@ export enum Telegram_Link_Params {
 }
 
 export const Open_Login_Bridge = 'http://localhost:3002';
-export const Open_Login_Guardian_Bridge = 'http://127.0.0.1:3002/guardian';
-export const Open_Login_Guardian_Approval_Bridge = 'http://127.0.0.1:3002/guardian/approval';
+export const Open_Login_Guardian_Bridge = 'http://localhost:3002/guardian';
+export const Open_Login_Guardian_Approval_Bridge = 'http://localhost:3002/guardian/approval';
