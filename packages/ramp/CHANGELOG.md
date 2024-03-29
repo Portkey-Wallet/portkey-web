@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.1...v2.4.2-alpha.0) (2024-03-29)
+
+### Features
+
+- the communication mode of sell is changed from browser communication to server-side data push ([ce55b7e](https://github.com/Portkey-Wallet/portkey-web/commit/ce55b7e784a0919be704d6beb0a963113be84b61))
+
 ## [2.4.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.0...v2.4.1) (2024-03-26)
 
 **Note:** Version bump only for package @portkey/ramp

@@ -3,6 +3,49 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.1...v2.4.2-alpha.0) (2024-03-29)
+
+### Features
+
+- 🎸 dev guardian for tg ([6a5f8df](https://github.com/Portkey-Wallet/portkey-web/commit/6a5f8df71ec33ae99a740c5486f213acb2f009da))
+- 🎸 modify savaData api and openLogin api ([a89a9e5](https://github.com/Portkey-Wallet/portkey-web/commit/a89a9e5ad02da5e96185d8b070ef2bb53f15a97f))
+- 🎸 openlogin socket ([57c7ff3](https://github.com/Portkey-Wallet/portkey-web/commit/57c7ff3af9c1c7d96417c39759f7033acf43bb85))
+- 🎸 tg auth within tg app ([c573c90](https://github.com/Portkey-Wallet/portkey-web/commit/c573c90331d7ae99efc4df27990c7f2c61061421))
+- 🎸 tg example ([f9b3095](https://github.com/Portkey-Wallet/portkey-web/commit/f9b3095905dfc5c723d3c8b6c3310092e2858ce1))
+- the communication mode of sell is changed from browser communication to server-side data push ([ce55b7e](https://github.com/Portkey-Wallet/portkey-web/commit/ce55b7e784a0919be704d6beb0a963113be84b61))
+
+## [2.1.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.2...v2.1.0-alpha.0) (2024-02-27)
+
+### Features
+
+- 🎸 update CryptoManager ([80f4a5a](https://github.com/Portkey-Wallet/portkey-web/commit/80f4a5acb983d4bc6b6d027868654611ca1e8138))
+
+### Bug Fixes
+
+- 🐛 connect socket ([f0d382e](https://github.com/Portkey-Wallet/portkey-web/commit/f0d382ebfb040d6c384bd5b1510aed3a5465433c))
+- 🐛 decryp info ([ced9efe](https://github.com/Portkey-Wallet/portkey-web/commit/ced9efebff146c3763ca8ad03e2ac858bb345623))
+- 🐛 guardian list loading ([3f855d7](https://github.com/Portkey-Wallet/portkey-web/commit/3f855d7eb39f701f84667fe657912c51f4b0ddd1))
+- 🐛 twitter header ([7c83bbb](https://github.com/Portkey-Wallet/portkey-web/commit/7c83bbbc33d5e16bd698789cfee2e5fd30a3f563))
+
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
+
+## [2.0.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.1-alpha.1) (2024-02-21)
+
+### Features
+
+- 🎸 add auth by socket ([2ba3d2a](https://github.com/Portkey-Wallet/portkey-web/commit/2ba3d2a38656c229810b5abe548ea27635821f20))
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+### Features
+
+- 🎸 fb and twitter oauth ([7e2bdfe](https://github.com/Portkey-Wallet/portkey-web/commit/7e2bdfe652af24885215c4d7509f64950abd490e))
+
+### Bug Fixes
+
+- 🐛 facebook & twitter accessToken ([df98170](https://github.com/Portkey-Wallet/portkey-web/commit/df981708b5b50dcf637ced64cf71e7e9ea137260))
+- 🐛 ref ([d01a333](https://github.com/Portkey-Wallet/portkey-web/commit/d01a333d975fd2ba54fa2cea78650c9d7971fcb7))
+
 ## [2.4.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.0...v2.4.1) (2024-03-26)
 
 **Note:** Version bump only for package @portkey/did-ui-react

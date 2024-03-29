@@ -3,6 +3,31 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.1...v2.4.2-alpha.0) (2024-03-29)
+
+### Features
+
+- 🎸 dev guardian for tg ([6a5f8df](https://github.com/Portkey-Wallet/portkey-web/commit/6a5f8df71ec33ae99a740c5486f213acb2f009da))
+- 🎸 modify savaData api and openLogin api ([a89a9e5](https://github.com/Portkey-Wallet/portkey-web/commit/a89a9e5ad02da5e96185d8b070ef2bb53f15a97f))
+- 🎸 tg auth within tg app ([c573c90](https://github.com/Portkey-Wallet/portkey-web/commit/c573c90331d7ae99efc4df27990c7f2c61061421))
+- 🎸 tg example ([f9b3095](https://github.com/Portkey-Wallet/portkey-web/commit/f9b3095905dfc5c723d3c8b6c3310092e2858ce1))
+
+## [2.1.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.2...v2.1.0-alpha.0) (2024-02-27)
+
+### Bug Fixes
+
+- 🐛 twitter header ([7c83bbb](https://github.com/Portkey-Wallet/portkey-web/commit/7c83bbbc33d5e16bd698789cfee2e5fd30a3f563))
+
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
+
+## [2.0.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.1-alpha.1) (2024-02-21)
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+### Features
+
+- 🎸 fb and twitter oauth ([7e2bdfe](https://github.com/Portkey-Wallet/portkey-web/commit/7e2bdfe652af24885215c4d7509f64950abd490e))
+
 ## [2.4.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.0...v2.4.1) (2024-03-26)
 
 **Note:** Version bump only for package @portkey/services

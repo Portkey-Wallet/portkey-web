@@ -3,6 +3,24 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.1...v2.4.2-alpha.0) (2024-03-29)
+
+### Features
+
+- 🎸 modify savaData api and openLogin api ([a89a9e5](https://github.com/Portkey-Wallet/portkey-web/commit/a89a9e5ad02da5e96185d8b070ef2bb53f15a97f))
+- 🎸 openlogin socket ([57c7ff3](https://github.com/Portkey-Wallet/portkey-web/commit/57c7ff3af9c1c7d96417c39759f7033acf43bb85))
+- the communication mode of sell is changed from browser communication to server-side data push ([ce55b7e](https://github.com/Portkey-Wallet/portkey-web/commit/ce55b7e784a0919be704d6beb0a963113be84b61))
+
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
+
+## [2.0.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.1-alpha.1) (2024-02-21)
+
+### Features
+
+- 🎸 add auth by socket ([2ba3d2a](https://github.com/Portkey-Wallet/portkey-web/commit/2ba3d2a38656c229810b5abe548ea27635821f20))
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
 ## [2.4.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.0...v2.4.1) (2024-03-26)
 
 **Note:** Version bump only for package @portkey/socket
