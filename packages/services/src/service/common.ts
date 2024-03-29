@@ -1,9 +1,9 @@
 import { IBaseRequest } from '@portkey/types';
 import { BaseService } from '../types';
-import { TCommonService } from '../types/common';
+import { TCommonService, TSaveDataApiParams } from '../types/common';
 
 export class Common<T extends IBaseRequest = IBaseRequest> extends BaseService<T> implements TCommonService {
-  saveData(params: Record<string, any>): Promise<string> {
+  saveData(params: TSaveDataApiParams): Promise<string> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/tab/complete',

@@ -80,6 +80,13 @@ export class OpenloginSignalr extends BaseSignalr implements IOpenloginSignalr {
       }
     });
   }
+
+  public GetTabDataAsync({ requestId, methodName }: { requestId: string; methodName: CrossTabPushMessageType }) {
+    return this.invoke('GetTabDataAsync', {
+      clientId: requestId,
+      methodName,
+    });
+  }
 }
 
 export const openloginListenList = [

@@ -33,7 +33,7 @@ class OpenLogin {
 
   get socketURI(): string {
     if (this.options.socketURI) return dealURLLastChar(this.options.socketURI);
-    return `${this.serviceURI}/ca`;
+    return `${this.serviceURI}/communication`;
   }
 
   private get baseUrl(): string {
