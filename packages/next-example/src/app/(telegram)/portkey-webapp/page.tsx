@@ -5,6 +5,7 @@ import { useEffectOnce } from 'react-use';
 import '@portkey/did-ui-react/dist/assets/index.css';
 import { Button } from 'antd';
 import { did, TelegramLoginButton } from '@portkey/did-ui-react';
+import { evokePortkey } from '@portkey/onboarding';
 
 export default function PortkeyWebapp() {
   const TelegramRef = useRef<any>();
@@ -48,6 +49,16 @@ export default function PortkeyWebapp() {
   return (
     <div>
       <h1>Portkey webapp</h1>
+      <Button
+        onClick={() => {
+          evokePortkey.thirdParty({
+            action: 'login',
+            isEvokeApp: true,
+            custom: {},
+          });
+        }}>
+        evokePortkeyApp
+      </Button>
       <Button onClick={() => checkRegister('5990848037')}>checkRegister</Button>
       <Button onClick={onJumpDappWebapp}>Jump Dapp webapp</Button>
       <TelegramLoginButton />
