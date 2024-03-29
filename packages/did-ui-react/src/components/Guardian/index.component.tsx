@@ -23,7 +23,7 @@ import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGua
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
-import { isTelegramPlatform, openLinkFromTelegram } from '../../utils/telegram';
+import { isTelegramPlatform } from '../../utils/telegram';
 import { Open_Login_Bridge, Open_Login_Guardian_Bridge } from '../../constants/telegram';
 import OpenLogin from '../../utils/openlogin';
 import { getServiceUrl, getSocketUrl, getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
@@ -174,7 +174,7 @@ function GuardianMain({
         };
         const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params, socketMethod);
         if (!result) return null;
-        openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
+        // openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
         return;
       }
     },

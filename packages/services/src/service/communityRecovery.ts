@@ -31,10 +31,10 @@ import {
   GetAppleUserExtraInfoParams,
   VerifierSocialTokenParams,
   VerifyTwitterTokenHeader,
-  TGetTelegramAuthTokenParams,
   TGetTelegramAuthTokenResult,
 } from '../types/verification';
 import { Search } from './search';
+import { TelegramWebappInitData } from '@portkey/types';
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   extends Search<T>
   implements ICommunityRecoveryService
@@ -200,7 +200,7 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   /**
    * deprecated Please use `verification.getTelegramAuthToken`
    */
-  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult> {
+  getTelegramAuthToken(params: TelegramWebappInitData): Promise<TGetTelegramAuthTokenResult> {
     return this._request.send({
       method: 'GET',
       url: '/api/app/telegramAuth/token',

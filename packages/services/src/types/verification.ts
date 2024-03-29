@@ -1,5 +1,6 @@
 import { ChainId, TStringJSON } from '@portkey/types';
 import { AccountType, CheckGoogleRecaptchaParams, OperationTypeEnum } from '.';
+import { TelegramWebappInitData } from '@portkey/types';
 
 export type SendVerificationCodeParams = {
   type: AccountType;
@@ -94,16 +95,6 @@ export type VerifyTwitterTokenHeader = {
   [x: string]: string;
 };
 
-export type TGetTelegramAuthTokenParams = {
-  id: string;
-  auth_date: string;
-  first_name: string;
-  last_name?: string;
-  hash: string;
-  proto_url?: string;
-  username?: string;
-};
-
 export type TGetTelegramAuthTokenResult = {
   token: string;
 };
@@ -123,5 +114,5 @@ export interface IVerificationService {
   verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
-  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult>;
+  getTelegramAuthToken(params: TelegramWebappInitData): Promise<TGetTelegramAuthTokenResult>;
 }
