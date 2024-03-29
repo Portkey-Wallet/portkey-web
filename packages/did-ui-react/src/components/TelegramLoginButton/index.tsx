@@ -5,8 +5,10 @@ import qs from 'query-string';
 import { sleep } from '@portkey/utils';
 import { TelegramWebappInitData } from '@portkey/types';
 import './index.less';
-import { did } from '../../utils';
+import { did, handleErrorMessage, setLoading } from '../../utils';
 import { singleMessage } from '../CustomAnt';
+import { saveDataWithInTelegram } from '../../utils/telegram';
+import { Dapp_Bot_Webapp } from '../../constants/telegram';
 
 export interface TelegramWebappInitUserData {
   id: string;
@@ -53,8 +55,26 @@ export default function TelegramLoginButton() {
     if (!telegramInitData.current?.user || !telegramInitData.current?.auth_date || !telegramInitData.current?.hash) {
       return singleMessage.info('Please wait');
     }
-    const res = await did.services.getTelegramAuthToken(telegramInitData.current);
-    console.log('getTelegramAuthToken res:', res);
+
+    try {
+      setLoading(true);
+      const res = await did.services.getTelegramAuthToken(telegramInitData.current);
+      console.log('getTelegramAuthToken res:', res);
+
+      // sava data
+      await saveDataWithInTelegram({
+        isSaveDataToStorage: false,
+        isOpenTelegramLink: true,
+        telegramLink: Dapp_Bot_Webapp,
+      });
+
+      setLoading(false);
+    } catch (error) {
+      throw Error(handleErrorMessage(error));
+    } finally {
+      setLoading(false);
+    }
+
     // did.services.getRegisterInfo({
     //   loginGuardianIdentifier: userId,
     // });
