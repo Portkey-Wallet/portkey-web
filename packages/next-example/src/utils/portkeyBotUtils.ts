@@ -24,7 +24,7 @@ export function handleLoginCommand(msg: TelegramBot.Message) {
           {
             text: 'New Portkey TG Login',
             web_app: {
-              url: 'https://a090-123-127-215-130.ngrok-free.app/portkeySignIn',
+              url: 'https://portkey-web-next-example.vercel.app/portkeySignIn',
               // url: url, // "https://next-five-indol.vercel.app/portkeySignIn"
             },
           },
@@ -51,7 +51,7 @@ export function handleLoginCommand(msg: TelegramBot.Message) {
       //     {
       //       text: "Portkey Wallet",
       //       web_app: {
-      //         url: "https://a090-123-127-215-130.ngrok-free.app/portkeySignIn",
+      //         url: "https://portkey-web-next-example.vercel.app/portkeySignIn",
       //         // url: url, // "https://next-five-indol.vercel.app/portkeySignIn"
       //       },
       //     },

@@ -3,7 +3,7 @@ import { handleApproveCommand, handleLoginCommand, portkeyTelegramBot } from '..
 export default function TgBot() {
   // const reg = new RegExp("^/approve$");
   // bot.onText(reg, () => {});
-  portkeyTelegramBot.addListener('message', (message: any, metadata: any) => {
+  portkeyTelegramBot.addListener('message', (message: any) => {
     console.log('portkey bot message', message);
     // bot.sendMessage("", "Approve");
   });

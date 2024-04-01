@@ -3,7 +3,7 @@ import { handleApproveCommand, handleLoginCommand, dappTelegramBot } from '../..
 export default function TgBot() {
   // const reg = new RegExp("^/approve$");
   // bot.onText(reg, () => {});
-  dappTelegramBot.addListener('message', (message: any, metadata: any) => {
+  dappTelegramBot.addListener('message', (message: any) => {
     console.log('dapp bot message', message);
     // bot.sendMessage("", "Approve");
   });

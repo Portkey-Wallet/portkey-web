@@ -56,7 +56,8 @@ export default function DappWebapp() {
   }, []);
 
   const openTgLoginIFrame = useCallback(() => {
-    TelegramRef.current.WebApp.openTelegramLink(`https://t.me/Dapp_V5_Bot/dappv5?startapp=clientId`);
+    const url = 'https://t.me/sTestABot/aelf?startapp=clientId'; //`https://t.me/Dapp_V5_Bot/dappv5?startapp=clientId`
+    TelegramRef.current.WebApp.openTelegramLink(url);
   }, []);
 
   return (
