@@ -1,12 +1,12 @@
 import PopupHandler, { PopupResponse } from './PopupHandler';
-import { OPENLOGIN_ACTIONS, UX_MODE, openLoginRedirectURI } from './contants';
+import { OPENLOGIN_ACTIONS, UX_MODE, openLoginRedirectURI } from './constants';
 import { LoginParams, OpenLoginOptions, OpenloginParamConfig } from './types';
 import { WEB_PAGE, WEB_PAGE_TEST } from '../../constants';
 import { dealURLLastChar, randomId } from '../lib';
 import { constructURL, jsonToBase64 } from './utils';
 import { ISocialLogin } from '../../types';
 import { forgeWeb } from '@portkey/utils';
-import { TOpenLoginGuardianLocationState } from '../../types/openlogin';
+import { IOpenLoginGuardianResponse, TOpenLoginGuardianLocationState } from '../../types/openlogin';
 import { CrossTabPushMessageType } from '@portkey/socket';
 
 class OpenLogin {
@@ -71,7 +71,7 @@ class OpenLogin {
 
     if (!result) return null;
     if (this.options.uxMode === UX_MODE.REDIRECT) return null;
-    return result;
+    return result.data as PopupResponse;
   }
 
   async getLoginId(): Promise<string> {
@@ -85,7 +85,7 @@ class OpenLogin {
     queryParams: OpenloginParamConfig | TOpenLoginGuardianLocationState,
     socketMethod: Array<CrossTabPushMessageType>,
     popupTimeout = 1000,
-  ): Promise<PopupResponse | undefined> {
+  ): Promise<{ data?: PopupResponse | IOpenLoginGuardianResponse; methodName?: string } | undefined> {
     const loginId = await this.getLoginId();
 
     queryParams.loginId = loginId;
@@ -123,7 +123,7 @@ class OpenLogin {
       currentWindow
         .listenOnChannel(loginId, socketMethod)
         .then(async (res) => {
-          const decrypted = await cryptoManager.decryptLong(keyPair.privateKey, res);
+          const decrypted = await cryptoManager.decryptLong(keyPair.privateKey, res.message);
           let result;
 
           try {
@@ -131,7 +131,7 @@ class OpenLogin {
           } catch (error) {
             result = decrypted;
           }
-          resolve(result);
+          resolve({ data: result, methodName: res.methodName });
         })
         .catch(reject);
 

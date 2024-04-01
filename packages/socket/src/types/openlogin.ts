@@ -19,49 +19,49 @@ export interface IOpenloginSignalr {
     params: {
       requestId: string;
     },
-    callback: (data: TAuthFinishResult | null) => void,
+    callback: (data: TAuthFinishResult | null, methodName?: CrossTabPushMessageType) => void,
   );
 
   onSetLoginGuardianResult<T>(
     params: {
       requestId: string;
     },
-    callback: (data: T | null) => void,
+    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
   );
 
   onAddGuardianResult<T>(
     params: {
       requestId: string;
     },
-    callback: (data: T | null) => void,
+    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
   );
 
   onRemoveGuardianResult<T>(
     params: {
       requestId: string;
     },
-    callback: (data: T | null) => void,
+    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
   );
 
   onEditGuardianResult<T>(
     params: {
       requestId: string;
     },
-    callback: (data: T | null) => void,
+    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
   );
 
   onGuardianApprovalResult<T>(
     params: {
       requestId: string;
     },
-    callback: (data: T | null) => void,
+    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
   );
 
   onCheckSellResult(
     params: {
       requestId: string;
     },
-    callback: (data: string | null) => void,
+    callback: (data: string | null, methodName?: CrossTabPushMessageType) => void,
   );
 }
 

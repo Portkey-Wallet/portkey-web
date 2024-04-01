@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 
 import { getPopupFeatures } from './utils';
-import { openloginSignal, TIOpenloginSignalrHandler } from '@portkey/socket';
+import { openloginSignal, TIOpenloginSignalrHandler, CrossTabPushMessageType } from '@portkey/socket';
 import { ISocialLogin } from '../../types';
 
 export interface PopupResponse {
@@ -100,14 +100,14 @@ class PopupHandler extends EventEmitter {
 
         this.emit('socket-connect', true);
         methodNames.forEach((methodName) => {
-          openloginSignal[methodName]({ requestId: clientId }, (result: any) => {
+          openloginSignal[methodName]({ requestId: clientId }, (result: any, methodName?: CrossTabPushMessageType) => {
             console.log(result);
             const message = result;
             if (!message) return;
             try {
-              resolve(JSON.parse(message));
+              resolve({ message: JSON.parse(message), methodName });
             } catch (error) {
-              resolve(message);
+              resolve({ message, methodName });
             }
             openloginSignal.destroy();
             this.close();

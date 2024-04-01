@@ -9,6 +9,7 @@ import { did, handleErrorMessage, setLoading } from '../../utils';
 import { singleMessage } from '../CustomAnt';
 import { saveDataWithInTelegram } from '../../utils/telegram';
 import { Dapp_Bot_Webapp } from '../../constants/telegram';
+import clsx from 'clsx';
 
 export interface TelegramWebappInitUserData {
   id: string;
@@ -18,7 +19,12 @@ export interface TelegramWebappInitUserData {
   allows_write_to_pm: boolean;
 }
 
-export default function TelegramLoginButton() {
+export interface TelegramLoginButtonProps {
+  className?: string;
+  onBeforeBack?: () => Promise<void> | void;
+}
+
+export default function TelegramLoginButton({ className, onBeforeBack }: TelegramLoginButtonProps) {
   const TelegramRef = useRef<any>();
   const telegramInitData = useRef<TelegramWebappInitData>();
   const [userName, setUserName] = useState('');
@@ -66,6 +72,8 @@ export default function TelegramLoginButton() {
         isSaveDataToStorage: false,
         isOpenTelegramLink: true,
         telegramLink: Dapp_Bot_Webapp,
+        pushMessage: { token: res },
+        onBeforeOpenLink: onBeforeBack,
       });
 
       setLoading(false);
@@ -78,11 +86,11 @@ export default function TelegramLoginButton() {
     // did.services.getRegisterInfo({
     //   loginGuardianIdentifier: userId,
     // });
-  }, []);
+  }, [onBeforeBack]);
 
   return (
     <>
-      <Button onClick={handleTGAuth} className="portkey-ui-telegram-login-button">
+      <Button onClick={handleTGAuth} className={clsx('portkey-ui-telegram-login-button', className)}>
         {`Log in as ${userName}`}
       </Button>
     </>

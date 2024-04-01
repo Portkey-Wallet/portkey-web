@@ -10,7 +10,8 @@ import { stringify } from 'query-string';
 import { dealURLLastChar } from './lib';
 import { devicesEnv } from '@portkey/utils';
 import OpenLogin from './openlogin';
-import { facebookAuthPath, twitterAuthPath } from './openlogin/contants';
+import { facebookAuthPath, twitterAuthPath } from './openlogin/constants';
+import { isTelegramPlatform, saveDataWithInTelegram } from './telegram';
 
 export const socialLoginAuthOpener = ({
   type,
@@ -142,16 +143,18 @@ export const socialLoginAuthOpener = ({
 export const socialLoginAuthBySocket = async ({
   type,
   clientId,
+  paramForTelegram,
 }: {
   type: ISocialLogin;
   clientId?: string;
   redirectURI?: string;
   network?: NetworkType;
   serviceUrl?: string;
+  paramForTelegram?: any;
 }): Promise<{
   token: string;
   provider: ISocialLogin;
-}> => {
+} | void> => {
   const serviceURI = getServiceUrl();
   const socketURI = getSocketUrl();
 
@@ -163,6 +166,44 @@ export const socialLoginAuthBySocket = async ({
     currentStorage: getStorageInstance(),
     // sdkUrl: 'http://localhost:3000',
   });
+
+  // check platform
+  const app = await devicesEnv.getPortkeyShellApp();
+  if (app) {
+    return new Promise(async (resolve, reject) => {
+      const ctw = getCustomNetworkType();
+      return app.invokeClientMethod(
+        {
+          type: 'login',
+          params: {
+            type,
+            ctw: ctw === 'offline' ? 'offline' : ctw,
+            serviceURI,
+          },
+        },
+        (args): any => {
+          if (args.status === 1) {
+            const token = args.data?.token;
+            if (!token) {
+              reject('auth error');
+            } else {
+              resolve({
+                token,
+                provider: type,
+              });
+            }
+          } else {
+            reject(args.msg || 'auth error');
+          }
+        },
+      );
+    });
+  }
+
+  if (type === 'Telegram' && isTelegramPlatform()) {
+    await saveDataWithInTelegram(paramForTelegram);
+    return;
+  }
 
   const result = await openlogin.login({
     from: 'openlogin',

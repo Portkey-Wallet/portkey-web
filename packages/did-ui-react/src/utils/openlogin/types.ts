@@ -1,6 +1,6 @@
 import { IStorageSuite } from '@portkey/types';
 import { ISocialLogin, TCustomNetworkType } from '../../types';
-import { OPENLOGIN_ACTIONS, UX_MODE } from './contants';
+import { OPENLOGIN_ACTIONS, UX_MODE } from './constants';
 import { CrossTabPushMessageType } from '@portkey/socket';
 
 export type UX_MODE_TYPE = (typeof UX_MODE)[keyof typeof UX_MODE];
@@ -83,11 +83,13 @@ export interface OpenloginParamConfig extends LoginParams {
 export type TOpenLoginSessionInfo = {
   loginId: string;
   publicKey: string;
+  needPersist?: boolean;
 };
 
 export type TPushMessageByApiParams = {
   loginId: string;
   data: string;
+  needPersist: boolean;
 };
 
 export type TPushMessageByApi = {

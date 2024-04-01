@@ -10,6 +10,11 @@ export const getSocketUrl = () => {
   return ConfigProvider.config.socketUrl || `${getServiceUrl()}/ca`;
 };
 
+// TODO: tg
+export const getCommunicationSocketUrl = () => {
+  return ConfigProvider.config.socketUrl || `${getServiceUrl()}/communication`;
+};
+
 export const getCustomNetworkType = () => {
   return ConfigProvider.config.customNetworkType || 'onLine';
 };

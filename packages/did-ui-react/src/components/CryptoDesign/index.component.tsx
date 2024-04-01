@@ -90,21 +90,22 @@ export default function CryptoDesignBaseCom({
     onSocialFinish,
   } = useSignHandler(handlerParam);
 
-  const handleProcessAfterTelegramAuth = useCallback(() => {
-    Telegram_Login_Storage_key.forEach(async (key) => {
-      const storage = await did.config.storageMethod.getItem(key);
-      if (typeof storage === 'string' && storage.length > 0) {
-        const storageObject = JSON.parse(storage);
-        console.log('>>>>>> storageObject:', storageObject);
-        // get data from api
-        onSocialFinish({ type: 'Telegram', data: { accessToken: '' } });
-      }
-    });
-  }, [onSocialFinish]);
+  // TODO tg
+  // const handleProcessAfterTelegramAuth = useCallback(() => {
+  //   Telegram_Login_Storage_key.forEach(async (key) => {
+  //     const storage = await did.config.storageMethod.getItem(key);
+  //     if (typeof storage === 'string' && storage.length > 0) {
+  //       const storageObject = JSON.parse(storage);
+  //       console.log('>>>>>> storageObject:', storageObject);
+  //       // get data from api
+  //       onSocialFinish({ type: 'Telegram', data: { accessToken: '' } });
+  //     }
+  //   });
+  // }, [onSocialFinish]);
 
-  useEffect(() => {
-    handleProcessAfterTelegramAuth();
-  }, [handleProcessAfterTelegramAuth]);
+  // useEffect(() => {
+  //   handleProcessAfterTelegramAuth();
+  // }, [handleProcessAfterTelegramAuth]);
 
   const extra = useMemo(() => <>{extraElementList?.map((item) => item) ?? null}</>, [extraElementList]);
   const extraFirst = useMemo(() => <>{extraElementList?.[0] ?? null}</>, [extraElementList]);
