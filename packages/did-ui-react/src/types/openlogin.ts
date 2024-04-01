@@ -1,4 +1,5 @@
 import { ChainId, ChainType } from '@portkey/types';
+import { GuardiansApproved } from '@portkey/services';
 import { GuardianStep } from '../components/Guardian/index.component';
 import { NetworkType } from './wallet';
 import { UserGuardianStatus } from './guardian';
@@ -12,3 +13,9 @@ export type TOpenLoginGuardianLocationState = {
   isErrorTip?: boolean;
   currentGuardian?: UserGuardianStatus;
 } & Record<string, any>;
+
+export interface IOpenLoginGuardianResponse {
+  preGuardian?: UserGuardianStatus;
+  currentGuardian: UserGuardianStatus;
+  approvalInfo: GuardiansApproved[];
+}

@@ -19,7 +19,7 @@ import './index.less';
 import { TokenItemShowType } from '../types/assets';
 import { mixRampShow } from './utils';
 import { openloginSignal } from '@portkey/socket';
-import { getSocketUrl } from '../config-provider/utils';
+import { getCommunicationSocketUrl } from '../config-provider/utils';
 
 export default function RampMain({
   className,
@@ -69,7 +69,7 @@ export default function RampMain({
       try {
         openloginSignal
           .doOpen({
-            url: getSocketUrl(),
+            url: getCommunicationSocketUrl(),
             clientId,
           })
           .then(() => {

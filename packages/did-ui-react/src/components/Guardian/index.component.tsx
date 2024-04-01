@@ -26,8 +26,14 @@ import ThrottleButton from '../ThrottleButton';
 import { isTelegramPlatform } from '../../utils/telegram';
 import { Open_Login_Bridge, Open_Login_Guardian_Bridge } from '../../constants/telegram';
 import OpenLogin from '../../utils/openlogin';
-import { getServiceUrl, getSocketUrl, getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
+import {
+  getServiceUrl,
+  getCommunicationSocketUrl,
+  getCustomNetworkType,
+  getStorageInstance,
+} from '../config-provider/utils';
 import { CrossTabPushMessageType } from '@portkey/socket';
+import { IOpenLoginGuardianResponse } from '../../types/openlogin';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -150,96 +156,6 @@ function GuardianMain({
     getData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  const handleWithinTelegram = useCallback(
-    async (guardianStep: GuardianStep, socketMethod: Array<CrossTabPushMessageType>, item?: UserGuardianStatus) => {
-      const serviceURI = getServiceUrl();
-      const socketURI = getSocketUrl();
-      const openlogin = new OpenLogin({
-        network: getCustomNetworkType(),
-        serviceURI: serviceURI,
-        socketURI,
-        currentStorage: getStorageInstance(),
-        sdkUrl: Open_Login_Bridge,
-      });
-
-      const params = {
-        networkType,
-        originChainId,
-        chainType,
-        caHash,
-        guardianStep,
-        isErrorTip,
-        currentGuardian: item,
-      };
-      const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params, socketMethod);
-      if (!result) return null;
-      // openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
-      // TODO tg
-      switch (guardianStep) {
-        case GuardianStep.guardianAdd:
-          console.log(result);
-          // await handleAddGuardian(result);
-          break;
-
-        case GuardianStep.guardianView:
-          // setLoginAccount
-          // await handleSetLoginGuardian(result);
-          // edit
-          // await handleEditGuardian(result);
-          // remove
-          // await handleRemoveGuardian(result);
-          break;
-
-        default:
-          break;
-      }
-
-      return;
-    },
-    [caHash, chainType, isErrorTip, networkType, originChainId],
-  );
-  const onAddGuardian = useCallback(async () => {
-    // TODO tg
-    if (!isTelegramPlatform()) {
-      await handleWithinTelegram(GuardianStep.guardianAdd, [CrossTabPushMessageType.onAddGuardianResult]);
-    } else {
-      setStep(GuardianStep.guardianAdd);
-    }
-  }, [handleWithinTelegram]);
-  const onViewGuardian = useCallback(
-    async (item: UserGuardianStatus) => {
-      setCurrentGuardian(item);
-      // TODO tg
-      if (!isTelegramPlatform()) {
-        await handleWithinTelegram(
-          GuardianStep.guardianView,
-          [
-            CrossTabPushMessageType.onSetLoginGuardianResult,
-            CrossTabPushMessageType.onEditGuardianResult,
-            CrossTabPushMessageType.onRemoveGuardianResult,
-          ],
-          item,
-        );
-      } else {
-        setStep(GuardianStep.guardianView);
-      }
-    },
-    [handleWithinTelegram],
-  );
-
-  const onEditGuardian = useCallback(() => {
-    setPreGuardian(currentGuardian);
-    setStep(GuardianStep.guardianEdit);
-  }, [currentGuardian]);
-  const onGoBackList = useCallback(() => {
-    setStep(GuardianStep.guardianList);
-    setCurrentGuardian(undefined);
-  }, []);
-  const onGoView = useCallback(() => {
-    setPreGuardian(currentGuardian);
-    setCurrentGuardian(currentGuardian);
-    setStep(GuardianStep.guardianView);
-  }, [currentGuardian]);
   const handleAddGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
       const params = formatAddGuardianValue({ currentGuardian, approvalInfo });
@@ -305,11 +221,16 @@ function GuardianMain({
       isErrorTip,
     ],
   );
+
   const handleEditGuardian = useCallback(
-    async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
+    async (
+      currentGuardian: UserGuardianStatus,
+      approvalInfo: GuardiansApproved[],
+      _preGuardian?: UserGuardianStatus,
+    ) => {
       const params = formatEditGuardianValue({
         currentGuardian,
-        preGuardian,
+        preGuardian: _preGuardian || preGuardian,
         approvalInfo,
       });
       try {
@@ -342,9 +263,9 @@ function GuardianMain({
     [preGuardian, sandboxId, originChainId, caHash, fetchGuardianList, getVerifierEnableNum, isErrorTip, onError],
   );
   const handleRemoveGuardian = useCallback(
-    async (approvalInfo: GuardiansApproved[]) => {
+    async (approvalInfo: GuardiansApproved[], _currentGuardian?: UserGuardianStatus) => {
       const params = formatDelGuardianValue({
-        currentGuardian,
+        currentGuardian: _currentGuardian || currentGuardian,
         approvalInfo,
       });
       try {
@@ -417,6 +338,110 @@ function GuardianMain({
     },
     [sandboxId, originChainId, caHash, fetchGuardianList, getVerifierEnableNum, guardianList, isErrorTip, onError],
   );
+  const handleWithinTelegram = useCallback(
+    async (guardianStep: GuardianStep, socketMethod: Array<CrossTabPushMessageType>, item?: UserGuardianStatus) => {
+      const serviceURI = getServiceUrl();
+      const socketURI = getCommunicationSocketUrl();
+      const openlogin = new OpenLogin({
+        network: getCustomNetworkType(),
+        serviceURI: serviceURI,
+        socketURI,
+        currentStorage: getStorageInstance(),
+        sdkUrl: Open_Login_Bridge,
+      });
+
+      const params = {
+        networkType,
+        originChainId,
+        chainType,
+        caHash,
+        guardianStep,
+        isErrorTip,
+        currentGuardian: item,
+      };
+      const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params, socketMethod);
+      if (!result) return null;
+      const {
+        currentGuardian: _currentGuardian,
+        approvalInfo,
+        preGuardian: _preGuardian,
+      } = result.data as IOpenLoginGuardianResponse;
+      // openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
+      switch (guardianStep) {
+        case GuardianStep.guardianAdd:
+          await handleAddGuardian(_currentGuardian, approvalInfo);
+          break;
+
+        case GuardianStep.guardianView:
+          if (result.methodName === CrossTabPushMessageType.onSetLoginGuardianResult) {
+            await handleSetLoginGuardian(_currentGuardian, approvalInfo);
+          } else if (result.methodName === CrossTabPushMessageType.onEditGuardianResult) {
+            await handleEditGuardian(_currentGuardian, approvalInfo, _preGuardian);
+          } else if (result.methodName === CrossTabPushMessageType.onRemoveGuardianResult) {
+            await handleRemoveGuardian(approvalInfo, _currentGuardian);
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      return;
+    },
+    [
+      caHash,
+      chainType,
+      handleAddGuardian,
+      handleEditGuardian,
+      handleRemoveGuardian,
+      handleSetLoginGuardian,
+      isErrorTip,
+      networkType,
+      originChainId,
+    ],
+  );
+  const onAddGuardian = useCallback(async () => {
+    // TODO tg
+    if (!isTelegramPlatform()) {
+      await handleWithinTelegram(GuardianStep.guardianAdd, [CrossTabPushMessageType.onAddGuardianResult]);
+    } else {
+      setStep(GuardianStep.guardianAdd);
+    }
+  }, [handleWithinTelegram]);
+  const onViewGuardian = useCallback(
+    async (item: UserGuardianStatus) => {
+      setCurrentGuardian(item);
+      // TODO tg
+      if (!isTelegramPlatform()) {
+        await handleWithinTelegram(
+          GuardianStep.guardianView,
+          [
+            CrossTabPushMessageType.onSetLoginGuardianResult,
+            CrossTabPushMessageType.onEditGuardianResult,
+            CrossTabPushMessageType.onRemoveGuardianResult,
+          ],
+          item,
+        );
+      } else {
+        setStep(GuardianStep.guardianView);
+      }
+    },
+    [handleWithinTelegram],
+  );
+
+  const onEditGuardian = useCallback(() => {
+    setPreGuardian(currentGuardian);
+    setStep(GuardianStep.guardianEdit);
+  }, [currentGuardian]);
+  const onGoBackList = useCallback(() => {
+    setStep(GuardianStep.guardianList);
+    setCurrentGuardian(undefined);
+  }, []);
+  const onGoView = useCallback(() => {
+    setPreGuardian(currentGuardian);
+    setCurrentGuardian(currentGuardian);
+    setStep(GuardianStep.guardianView);
+  }, [currentGuardian]);
 
   const renderBackHeaderLeftEle = useCallback(
     (goBack?: () => void) => (
