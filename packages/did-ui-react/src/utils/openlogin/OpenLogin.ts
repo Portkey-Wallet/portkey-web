@@ -1,5 +1,5 @@
 import PopupHandler, { PopupResponse } from './PopupHandler';
-import { OPENLOGIN_ACTIONS, UX_MODE, openLoginRedirectURI } from './contants';
+import { OPENLOGIN_ACTIONS, UX_MODE, openLoginRedirectURI } from './constants';
 import { LoginParams, OpenLoginOptions, OpenloginParamConfig } from './types';
 import { WEB_PAGE, WEB_PAGE_TEST } from '../../constants';
 import { dealURLLastChar, randomId } from '../lib';

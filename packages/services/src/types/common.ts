@@ -2,4 +2,4 @@ export type TCommonService = {
   saveData(params: TSaveDataApiParams): Promise<string>;
 };
 
-export type TSaveDataApiParams = { needPersist?: boolean } & Record<string, string>;
+export type TSaveDataApiParams = Record<string, any>;

@@ -22,13 +22,14 @@ export default function useSocialLogin({
   );
 
   const onSocialLogin = useCallback(
-    async (type: ISocialLogin) => {
+    async (type: ISocialLogin, paramForTelegram?: any) => {
       if (socialLogin?.[type]?.customLoginHandler) return login(type);
       const response = await socialLoginAuth({
         type,
         clientId: socialLogin?.Google?.clientId,
         redirectURI: socialLogin?.Google?.redirectURI,
         network,
+        paramForTelegram,
       });
 
       if (!response?.token) throw new Error(`${type} login failed`);
