@@ -73,6 +73,7 @@ export default function TelegramLoginButton({ className, onBeforeBack }: Telegra
         isOpenTelegramLink: true,
         telegramLink: Dapp_Bot_Webapp,
         pushMessage: { token: res },
+        needPersist: true,
         onBeforeOpenLink: onBeforeBack,
       });
 
