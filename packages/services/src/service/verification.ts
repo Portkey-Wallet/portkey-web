@@ -108,7 +108,7 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
   getTelegramAuthToken(params: TelegramWebappInitData): Promise<TGetTelegramAuthTokenResult> {
     return this._request.send({
       method: 'GET',
-      url: '/api/app/telegramAuth/token',
+      url: 'http://192.168.66.117:5577/api/app/telegramAuth/token',
       params,
     });
   }

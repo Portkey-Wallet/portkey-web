@@ -24,13 +24,13 @@ export function handleLoginCommand(msg: TelegramBot.Message) {
           {
             text: 'Portkey Auth',
             web_app: {
-              url: 'https://a090-123-127-215-130.ngrok-free.app/portkey-webapp',
+              url: 'https://portkey-web-next-example.vercel.app/portkey-webapp',
             },
           },
           {
             text: 'Dapp Webapp',
             web_app: {
-              url: 'https://a090-123-127-215-130.ngrok-free.app/dapp-webapp',
+              url: 'https://3portkey-web-next-example.vercel.app/dapp-webapp',
             },
           },
         ],
@@ -40,7 +40,7 @@ export function handleLoginCommand(msg: TelegramBot.Message) {
       //     {
       //       text: "Portkey Wallet",
       //       web_app: {
-      //         url: "https://a090-123-127-215-130.ngrok-free.app/portkey-webapp",
+      //         url: "https://portkey-web-next-example.vercel.app/portkey-webapp",
       //         // url: url, // "https://next-five-indol.vercel.app/portkeySignIn"
       //       },
       //     },
