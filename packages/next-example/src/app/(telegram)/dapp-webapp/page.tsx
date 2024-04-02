@@ -32,8 +32,8 @@ export default function DappWebapp() {
       TelegramRef.current.WebApp.ready();
 
       // TelegramRef.current.WebApp.CloudStorage.setItem('auth_test', '123456');
-      const authTest = TelegramRef.current.WebApp.CloudStorage.getItem('auth_test');
-      console.log('dapp authTest', authTest);
+      // const authTest = TelegramRef.current.WebApp.CloudStorage.getItem('auth_test');
+      // console.log('dapp authTest', authTest);
     }
   }, []);
 
