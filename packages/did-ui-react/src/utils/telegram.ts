@@ -217,18 +217,22 @@ export async function getAndDecodeAccessToken(loginId: string, methodName: Cross
 }
 
 // usage: first step - attach telegram login in dapp-webapp
-export async function saveDataAndOpenPortkeyWebapp(telegramLink: string) {
+export async function saveDataAndOpenPortkeyWebapp(yourTelegramLink: string, targetTelegramLink: string) {
   try {
     const storageKey = `${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`;
-    const loginId = await saveEncodeInfoToStorageAndPortkeyDatabase(
+    const { loginId } = await saveEncodeInfoToStorageAndPortkeyDatabase(
       storageKey,
       CrossTabPushMessageType.onSavePublicKey,
+      { yourTelegramLink },
     );
-
-    if (telegramLink) {
+    console.log('=== loginId', loginId);
+    if (targetTelegramLink) {
       const Telegram = getTelegram();
-      Telegram?.WebApp.openTelegramLink(`${telegramLink}?startapp=${loginId}`);
+      // TODO tg test
+      // window.open(`${targetTelegramLink}?startapp=${loginId}`);
+      Telegram?.WebApp.openTelegramLink(`${targetTelegramLink}?startapp=${loginId}`);
     }
+    return;
   } catch (error) {
     throw Error(handleErrorMessage(error));
   }
@@ -247,22 +251,29 @@ export async function getAccessTokenAndOpenPortkeyWebapp({
   try {
     const data = await invokeDataFromPortkeyDatabase(loginId, CrossTabPushMessageType.onSavePublicKey);
     console.log('===dapp data', data);
-    if (!data?.publicKey) throw Error('No publicKey');
+    let dataParse = data;
+    if (data && typeof data === 'string' && data.length > 0) {
+      dataParse = JSON.parse(data);
+    }
 
+    if (!dataParse?.publicKey) throw Error('No publicKey');
+
+    // TODO tg test
     const accessToken = await generateAccessTokenByPortkeyServer(telegramUserInfo);
+    // const accessToken = '21345yutgmhnfgbdvfsadfsgdhfjgkhkjghfnbgdvfc';
     console.log('=== accessToken', accessToken);
     await saveAccessTokenToPortkeyDatabase(
       loginId,
-      data.publicKey,
+      dataParse.publicKey,
       CrossTabPushMessageType.onAuthStatusChanged,
-      accessToken.token,
+      accessToken,
     );
 
     await onBeforeBack?.(loginId);
 
-    if (data?.telegramLink) {
+    if (dataParse?.telegramLink) {
       const Telegram = getTelegram();
-      Telegram?.WebApp.openTelegramLink(`${data.telegramLink}?startapp=${loginId}`);
+      Telegram?.WebApp.openTelegramLink(`${dataParse.telegramLink}?startapp=${loginId}`);
     }
   } catch (error) {
     throw Error(handleErrorMessage(error));

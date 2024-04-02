@@ -8,7 +8,6 @@ import '@portkey/did-ui-react/dist/assets/index.css';
 import './styles.css';
 import { Button } from 'antd';
 import { sleep } from '@portkey/utils';
-import qs from 'query-string';
 
 ConfigProvider.setGlobalConfig({
   graphQLUrl: '/graphql',
@@ -17,6 +16,7 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     baseURL: 'https://test4-applesign-v2.portkey.finance',
   },
+  dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappv5',
 });
 
 export default function DappWebapp() {
