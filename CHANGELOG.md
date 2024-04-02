@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-04-02)
+
+### Features
+
+- 🎸 modify TelegramLoginButton ([eb68d25](https://github.com/Portkey-Wallet/portkey-web/commit/eb68d25718a2aa90b2e361cec6a822ceb2fb68a9))
+
+### Bug Fixes
+
+- 🐛 delete account ts ([f76024a](https://github.com/Portkey-Wallet/portkey-web/commit/f76024a34ea9311b5b6af8128244e32141601672))
+
 ## [2.4.2-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.2...v2.4.2-alpha.3) (2024-04-01)
 
 **Note:** Version bump only for package root
