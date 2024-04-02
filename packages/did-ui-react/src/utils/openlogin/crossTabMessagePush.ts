@@ -6,7 +6,7 @@ import { handleErrorMessage } from '../errorHandler';
 import { CrossTabPushMessageType } from '@portkey/socket';
 
 export const pushMessageByApi = async ({ methodName, params, times = 0 }: TPushMessageByApi): Promise<any> => {
-  const { loginId, data, needPersist = false } = params;
+  const { loginId, data, needPersist } = params;
 
   try {
     return await did.services.common.saveData({
@@ -31,7 +31,7 @@ export const pushMessageByApi = async ({ methodName, params, times = 0 }: TPushM
 
 export const pushEncodeMessage = async (storage: string, methodName: CrossTabPushMessageType, params: string) => {
   const sessionInfo = (JSON.parse(storage) || {}) as TOpenLoginSessionInfo;
-  const { publicKey, loginId, needPersist = false } = sessionInfo;
+  const { publicKey, loginId, needPersist } = sessionInfo;
   console.log(publicKey, loginId, params);
   let encrypted;
   try {

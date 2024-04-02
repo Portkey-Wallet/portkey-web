@@ -32,7 +32,7 @@ export default function PortkeyWebapp() {
       if (!TelegramRef.current) return;
 
       TelegramRef.current.WebApp.ready();
-
+      console.log('🌈 🌈 🌈 🌈 🌈 🌈 TelegramRef.current', TelegramRef.current);
       // const { BackButton, MainButton } = TelegramRef.current.WebApp;
       // BackButton.isVisible = true;
       // MainButton.isVisible = true;
@@ -56,6 +56,10 @@ export default function PortkeyWebapp() {
     console.log('originChainId', originChainId);
   }, []);
 
+  const onBeforeBack = useCallback(async () => {
+    console.log('🌈 🌈 🌈 🌈 🌈 🌈 ', '');
+  }, []);
+
   useEffectOnce(() => {
     getTelegram();
   });
@@ -75,7 +79,7 @@ export default function PortkeyWebapp() {
       </Button>
       <Button onClick={() => checkRegister('5990848037')}>checkRegister</Button>
       <Button onClick={onJumpDappWebapp}>Jump Dapp webapp</Button>
-      <TelegramLoginButton />
+      <TelegramLoginButton onBeforeBack={onBeforeBack} />
     </div>
   );
 }

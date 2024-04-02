@@ -24,11 +24,7 @@ import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constant
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
-import { decodeDataWithInTelegram, getTelegramStartParam } from '../../utils/telegram';
-import { PORTKEY_LOGIN_STORAGE_KEY } from '../../constants/storage';
-import { Portkey_Bot_Webapp } from '../../constants/telegram';
-import { CrossTabPushMessageType, openloginSignal } from '@portkey/socket';
-import { sleep } from '@portkey/utils';
+import { getAccessTokenInDappTelegram, getTelegramStartParam } from '../../utils/telegram';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -98,21 +94,8 @@ export default function SocialLogin({
       try {
         setLoading(true);
         // const storageKey = `${isLogin ? PORTKEY_SIGN_IN_STORAGE_KEY : PORTKEY_SIGN_UP_STORAGE_KEY}_Telegram`;
-        const paramsForTelegram = {
-          needPersist: false,
-          isSaveDataToStorage: true,
-          storageKey: `${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`,
-          storageValue: {
-            isLogin,
-            accountType: 'Telegram',
-            stepInfo: {
-              step: 'GetAccessToken',
-            },
-          },
-          telegramLink: Portkey_Bot_Webapp,
-        };
 
-        const result = await socialLoginHandler(type, paramsForTelegram);
+        const result = await socialLoginHandler(type);
         setLoading(false);
         onFinishRef.current?.(result);
       } catch (error) {
@@ -127,24 +110,17 @@ export default function SocialLogin({
         );
       }
     },
-    [isErrorTip, isLogin, socialLoginHandler],
+    [isErrorTip, socialLoginHandler],
   );
 
   const handleLoginAfterAuthWithInTelegram = useCallback(async () => {
     const { startParam } = getTelegramStartParam();
+    console.log('====startParam', startParam);
     if (startParam) {
-      await openloginSignal.doOpen({
-        url: 'https://test4-applesign-v2.portkey.finance/communication', // TODO tg
-        clientId: startParam,
-      });
-      await sleep(500); // TODO tg
-      const res = await openloginSignal.GetTabDataAsync({
-        requestId: startParam,
-        methodName: CrossTabPushMessageType.onAuthStatusChanged,
-      });
-      console.log('===res.data', res.data);
-      const decodeResult = await decodeDataWithInTelegram(`${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`, res.data);
-      console.log('===decodeResult', decodeResult);
+      clearInterval(timerRef.current);
+      const decodeResult = await getAccessTokenInDappTelegram(startParam);
+      console.log('===res.data', decodeResult);
+
       // get AccessToken from socket
       const result = {
         type: 'Telegram' as ISocialLogin,
@@ -156,8 +132,18 @@ export default function SocialLogin({
     }
   }, []);
 
+  const timerRef = useRef<NodeJS.Timer | number>();
   useEffect(() => {
-    handleLoginAfterAuthWithInTelegram();
+    console.log('=== useEffect setInterval', '');
+    // TODO tg
+    timerRef.current = setInterval(() => {
+      handleLoginAfterAuthWithInTelegram();
+    }, 2000);
+
+    return () => {
+      clearInterval(timerRef.current);
+      timerRef.current = undefined;
+    };
   }, [handleLoginAfterAuthWithInTelegram]);
 
   const recommendList = useMemo(() => {

@@ -11,7 +11,8 @@ import { dealURLLastChar } from './lib';
 import { devicesEnv } from '@portkey/utils';
 import OpenLogin from './openlogin';
 import { facebookAuthPath, twitterAuthPath } from './openlogin/constants';
-import { isTelegramPlatform, saveDataWithInTelegram } from './telegram';
+import { isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from './telegram';
+import { Portkey_Bot_Webapp } from '../constants/telegram';
 
 export const socialLoginAuthOpener = ({
   type,
@@ -143,14 +144,12 @@ export const socialLoginAuthOpener = ({
 export const socialLoginAuthBySocket = async ({
   type,
   clientId,
-  paramForTelegram,
 }: {
   type: ISocialLogin;
   clientId?: string;
   redirectURI?: string;
   network?: NetworkType;
   serviceUrl?: string;
-  paramForTelegram?: any;
 }): Promise<{
   token: string;
   provider: ISocialLogin;
@@ -201,7 +200,8 @@ export const socialLoginAuthBySocket = async ({
   }
 
   if (type === 'Telegram' && isTelegramPlatform()) {
-    await saveDataWithInTelegram(paramForTelegram);
+    // await saveDataWithInTelegram(paramForTelegram); // TODO tg
+    await saveDataAndOpenPortkeyWebapp(Portkey_Bot_Webapp);
     return;
   }
 
