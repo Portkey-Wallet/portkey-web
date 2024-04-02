@@ -62,6 +62,7 @@ export async function saveDataWithInTelegram({
   isSaveDataToStorage = true,
   isOpenTelegramLink = true,
   needPersist = false,
+  loginId = '',
   storageKey = '',
   storageValue,
   pushMessage,
@@ -71,6 +72,7 @@ export async function saveDataWithInTelegram({
   isSaveDataToStorage?: boolean;
   isOpenTelegramLink?: boolean;
   needPersist?: boolean;
+  loginId?: string;
   storageKey?: string;
   storageValue?: Record<string, any>;
   pushMessage?: Record<string, any>;
@@ -81,7 +83,7 @@ export async function saveDataWithInTelegram({
   // 1. Get publicKey and privateKey
   const cryptoManager = new forgeWeb.ForgeCryptoManager();
   const keyPair = await cryptoManager.generateKeyPair();
-  const loginId = randomId();
+  loginId = loginId || randomId();
   const sessionAuth = JSON.stringify({
     loginId: loginId,
     publicKey: keyPair.publicKey,

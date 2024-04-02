@@ -99,7 +99,8 @@ export default function SocialLogin({
         setLoading(true);
         // const storageKey = `${isLogin ? PORTKEY_SIGN_IN_STORAGE_KEY : PORTKEY_SIGN_UP_STORAGE_KEY}_Telegram`;
         const paramsForTelegram = {
-          needPersist: true,
+          needPersist: false,
+          isSaveDataToStorage: true,
           storageKey: `${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`,
           storageValue: {
             isLogin,
