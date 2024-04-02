@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.4...v2.4.2-alpha.5) (2024-04-02)
+
+### Features
+
+- 🎸 modify telegram auth ([b4635fe](https://github.com/Portkey-Wallet/portkey-web/commit/b4635fe2672dbda97453a7ebb66a1fb7c1f6d28a))
+
 ## [2.4.2-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-04-02)
 
 ### Features
