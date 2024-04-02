@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.7...v2.4.2-alpha.8) (2024-04-02)
+
+### Features
+
+- 🎸 modify tg token ([9dc987e](https://github.com/Portkey-Wallet/portkey-web/commit/9dc987e98d0b441558163230e4aef9a838d9c1bb))
+
 ## [2.4.2-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.6...v2.4.2-alpha.7) (2024-04-02)
 
 ### Features
