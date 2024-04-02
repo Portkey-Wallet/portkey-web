@@ -13,6 +13,7 @@ import OpenLogin from './openlogin';
 import { facebookAuthPath, twitterAuthPath } from './openlogin/constants';
 import { isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from './telegram';
 import { Portkey_Bot_Webapp } from '../constants/telegram';
+import ConfigProvider from '../components/config-provider';
 
 export const socialLoginAuthOpener = ({
   type,
@@ -200,8 +201,9 @@ export const socialLoginAuthBySocket = async ({
   }
 
   if (type === 'Telegram' && isTelegramPlatform()) {
-    // await saveDataWithInTelegram(paramForTelegram); // TODO tg
-    await saveDataAndOpenPortkeyWebapp(Portkey_Bot_Webapp);
+    const dappTelegramLink = ConfigProvider.getConfig('dappTelegramLink') as string;
+    if (!dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
+    await saveDataAndOpenPortkeyWebapp(dappTelegramLink, Portkey_Bot_Webapp);
     return;
   }
 

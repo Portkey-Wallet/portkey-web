@@ -114,7 +114,9 @@ export default function SocialLogin({
   );
 
   const handleLoginAfterAuthWithInTelegram = useCallback(async () => {
+    // TODO tg test
     const { startParam } = getTelegramStartParam();
+    // const startParam = '1712049223890_986012';
     console.log('====startParam', startParam);
     if (startParam) {
       clearInterval(timerRef.current);
@@ -128,6 +130,7 @@ export default function SocialLogin({
           accessToken: decodeResult?.token || '',
         },
       };
+      console.log('=== result', result);
       onFinishRef.current?.(result);
     }
   }, []);

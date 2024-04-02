@@ -19,4 +19,5 @@ export interface GlobalConfigProps extends IConfig {
   serviceUrl?: string;
   loginConfig?: ILoginConfig;
   customNetworkType?: TCustomNetworkType;
+  dappTelegramLink?: string;
 }
