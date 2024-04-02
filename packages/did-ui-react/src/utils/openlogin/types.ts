@@ -83,7 +83,7 @@ export interface OpenloginParamConfig extends LoginParams {
 export type TOpenLoginSessionInfo = {
   loginId: string;
   publicKey: string;
-  needPersist?: boolean;
+  needPersist: boolean;
 };
 
 export type TPushMessageByApiParams = {

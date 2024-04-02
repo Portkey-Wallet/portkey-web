@@ -1,5 +1,6 @@
 export enum CrossTabPushMessageType {
   onAuthStatusChanged = 'onAuthStatusChanged',
+  onSavePublicKey = 'onSavePublicKey',
   onSetLoginGuardianResult = 'onSetLoginGuardianResult',
   onAddGuardianResult = 'onAddGuardianResult',
   onRemoveGuardianResult = 'onRemoveGuardianResult',
@@ -15,6 +16,13 @@ export type TAuthFinishResult = {
 };
 
 export interface IOpenloginSignalr {
+  onSavePublicKey<T>(
+    params: {
+      requestId: string;
+    },
+    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
+  );
+
   onAuthStatusChanged(
     params: {
       requestId: string;

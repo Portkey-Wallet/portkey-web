@@ -8,6 +8,7 @@ import '@portkey/did-ui-react/dist/assets/index.css';
 import './styles.css';
 import { Button } from 'antd';
 import { sleep } from '@portkey/utils';
+import qs from 'query-string';
 
 ConfigProvider.setGlobalConfig({
   graphQLUrl: '/graphql',
@@ -21,6 +22,7 @@ ConfigProvider.setGlobalConfig({
 export default function DappWebapp() {
   const signInRef = useRef<ISignIn>(null);
   const TelegramRef = useRef<any>();
+  // const TelegramInitDataRef = useRef<any>();
 
   const getTelegram = useCallback(async () => {
     if (typeof window !== 'undefined') {
@@ -32,8 +34,15 @@ export default function DappWebapp() {
       TelegramRef.current.WebApp.ready();
 
       // TelegramRef.current.WebApp.CloudStorage.setItem('auth_test', '123456');
-      // const authTest = TelegramRef.current.WebApp.CloudStorage.getItem('auth_test');
-      // console.log('dapp authTest', authTest);
+      // const authTest =
+      //   TelegramRef.current.WebApp.CloudStorage.getItem("auth_test");
+      // console.log("dapp authTest", authTest);
+
+      // const { initData } = TelegramRef.current.WebApp;
+      // TelegramInitDataRef.current = qs.parse(initData);
+      // if (initData?.start_param) {
+      //   // get step from localStorage
+      // }
     }
   }, []);
 
@@ -65,6 +74,9 @@ export default function DappWebapp() {
       <Button onClick={openSignIn}>sign in</Button>
       <Button onClick={sendData}>send data</Button>
       <Button onClick={openTgLoginIFrame}>open Portkey webapp</Button>
+      <a href="assets">
+        <Button>Go to assets</Button>
+      </a>
       <PortkeyProvider networkType={'TESTNET'}>
         <SignIn
           className="dapp-bot-sign"

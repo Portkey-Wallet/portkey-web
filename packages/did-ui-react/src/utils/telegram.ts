@@ -1,8 +1,11 @@
-import { CrossTabPushMessageType } from '@portkey/socket';
-import { forgeWeb, randomId } from '@portkey/utils';
+import { CrossTabPushMessageType, openloginSignal } from '@portkey/socket';
+import { forgeWeb, randomId, sleep } from '@portkey/utils';
 import { stringifyUrl } from 'query-string';
-import { pushEncodeMessage } from './openlogin/crossTabMessagePush';
-import { decodeMessageByRsaKey, did } from '.';
+import { pushEncodeMessage, pushMessageByApi } from './openlogin/crossTabMessagePush';
+import { decodeMessageByRsaKey, did, handleErrorMessage } from '.';
+import qs from 'query-string';
+import { TelegramWebappInitData } from '@portkey/types';
+import { PORTKEY_LOGIN_STORAGE_KEY } from '../constants/storage';
 
 export function getTelegram() {
   if (window != undefined) {
@@ -22,8 +25,12 @@ export function getTelegramStartParam() {
   if (isTelegramPlatform()) {
     const Telegram = getTelegram();
     if (Telegram) {
-      const startParam = Telegram?.WebApp.initData;
-      return { startParam };
+      const initData = Telegram?.WebApp.initData;
+      console.log('=== initData', initData);
+      if (initData && typeof initData === 'string' && initData.length > 0) {
+        console.log('===  qs.parse(initData)', qs.parse(initData));
+        return { startParam: (qs.parse(initData)?.start_param as string) || '' };
+      }
     }
   }
   return { startParam: null };
@@ -59,9 +66,9 @@ export function openLinkFromTelegram(url: string, params: Record<string, any>) {
 }
 
 export async function saveDataWithInTelegram({
+  needPersist,
   isSaveDataToStorage = true,
   isOpenTelegramLink = true,
-  needPersist = false,
   loginId = '',
   storageKey = '',
   storageValue,
@@ -69,9 +76,9 @@ export async function saveDataWithInTelegram({
   telegramLink,
   onBeforeOpenLink,
 }: {
+  needPersist: boolean;
   isSaveDataToStorage?: boolean;
   isOpenTelegramLink?: boolean;
-  needPersist?: boolean;
   loginId?: string;
   storageKey?: string;
   storageValue?: Record<string, any>;
@@ -116,8 +123,163 @@ export async function saveDataWithInTelegram({
   return {
     loginId: loginId,
     publicKey: keyPair.publicKey,
-    privateKey: keyPair.privateKey,
+    rsaKey: keyPair.privateKey,
   };
+}
+
+// usage: telegram auth in dapp-webapp
+export async function saveEncodeInfoToStorageAndPortkeyDatabase(
+  storageKey: string,
+  methodName: CrossTabPushMessageType,
+  extraData?: Record<string, any>,
+) {
+  // 1. Generate publicKey and privateKey
+  const cryptoManager = new forgeWeb.ForgeCryptoManager();
+  const keyPair = await cryptoManager.generateKeyPair();
+  const loginId = randomId();
+
+  // 2. Save encode info to dapp localStorage
+  const storageValue = {
+    loginId,
+    rsaKey: keyPair.privateKey,
+    methodName,
+  };
+  await did.config.storageMethod.setItem(storageKey, JSON.stringify(storageValue));
+  let concatData = { publicKey: keyPair.publicKey };
+  if (extraData && typeof extraData === 'object') {
+    concatData = Object.assign({}, concatData, extraData);
+  }
+  // 3. Save publicKey to database
+  await pushMessageByApi({
+    methodName,
+    params: {
+      loginId,
+      data: JSON.stringify(concatData),
+      needPersist: true,
+    },
+  });
+
+  return { loginId };
+}
+
+export async function invokeDataFromPortkeyDatabase(loginId: string, methodName: CrossTabPushMessageType) {
+  // 1. open socket to get data
+  await openloginSignal.doOpen({
+    url: 'https://test4-applesign-v2.portkey.finance/communication', // TODO tg
+    clientId: loginId,
+  });
+  await sleep(500); // TODO tg
+  const res = await openloginSignal.GetTabDataAsync({
+    requestId: loginId,
+    methodName,
+  });
+  await openloginSignal.destroy();
+
+  // 2. Return publicKey
+  return res.data;
+}
+
+// usage: jump to portkey-webapp
+export async function generateAccessTokenByPortkeyServer(telegramUserInfo: TelegramWebappInitData) {
+  return await did.services.getTelegramAuthToken(telegramUserInfo);
+}
+
+// usage: jump to portkey-webapp
+export async function saveAccessTokenToPortkeyDatabase(
+  loginId: string,
+  publicKey: string,
+  methodName: CrossTabPushMessageType,
+  token: string,
+) {
+  const sessionAuth = JSON.stringify({
+    loginId: loginId,
+    publicKey: publicKey,
+    needPersist: true,
+  });
+  await pushEncodeMessage(sessionAuth, methodName, token);
+}
+
+// usage: back to dapp-webapp
+export async function getPrivateKeyFromLocalStorage(storageKey: string, matchLoginId: string) {
+  const storage = await did.config.storageMethod.getItem(storageKey);
+  if (storage && typeof storage === 'string' && storage.length > 0) {
+    const { rsaKey, loginId } = JSON.parse(storage);
+    return loginId === matchLoginId ? rsaKey : null;
+  }
+  return null;
+}
+
+// usage: back to dapp-webapp
+export async function getAndDecodeAccessToken(loginId: string, methodName: CrossTabPushMessageType, rsaKey: string) {
+  const encodeData = await invokeDataFromPortkeyDatabase(loginId, methodName);
+  console.log('=== encodeData', encodeData);
+  return decodeMessageByRsaKey(rsaKey, encodeData);
+}
+
+// usage: first step - attach telegram login in dapp-webapp
+export async function saveDataAndOpenPortkeyWebapp(telegramLink: string) {
+  try {
+    const storageKey = `${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`;
+    const loginId = await saveEncodeInfoToStorageAndPortkeyDatabase(
+      storageKey,
+      CrossTabPushMessageType.onSavePublicKey,
+    );
+
+    if (telegramLink) {
+      const Telegram = getTelegram();
+      Telegram?.WebApp.openTelegramLink(`${telegramLink}?startapp=${loginId}`);
+    }
+  } catch (error) {
+    throw Error(handleErrorMessage(error));
+  }
+}
+
+// usage: second step - get accessToken in portkey-webapp
+export async function getAccessTokenAndOpenPortkeyWebapp({
+  loginId,
+  telegramUserInfo,
+  onBeforeBack,
+}: {
+  loginId: string;
+  telegramUserInfo: TelegramWebappInitData;
+  onBeforeBack?: (loginId: string) => Promise<void> | void;
+}) {
+  try {
+    const data = await invokeDataFromPortkeyDatabase(loginId, CrossTabPushMessageType.onSavePublicKey);
+    console.log('===dapp data', data);
+    if (!data?.publicKey) throw Error('No publicKey');
+
+    const accessToken = await generateAccessTokenByPortkeyServer(telegramUserInfo);
+    console.log('=== accessToken', accessToken);
+    await saveAccessTokenToPortkeyDatabase(
+      loginId,
+      data.publicKey,
+      CrossTabPushMessageType.onAuthStatusChanged,
+      accessToken.token,
+    );
+
+    await onBeforeBack?.(loginId);
+
+    if (data?.telegramLink) {
+      const Telegram = getTelegram();
+      Telegram?.WebApp.openTelegramLink(`${data.telegramLink}?startapp=${loginId}`);
+    }
+  } catch (error) {
+    throw Error(handleErrorMessage(error));
+  }
+}
+
+// usage: last step - get accessToken in dapp-webapp
+export async function getAccessTokenInDappTelegram(loginId: string) {
+  try {
+    const storageKey = `${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`;
+    const rsaKey = await getPrivateKeyFromLocalStorage(storageKey, loginId);
+    console.log('=== rsaKey', rsaKey);
+    if (!rsaKey) throw Error('No RsaKey');
+    return await getAndDecodeAccessToken(loginId, CrossTabPushMessageType.onAuthStatusChanged, rsaKey);
+  } catch (error) {
+    throw Error(handleErrorMessage(error));
+  }
 }
 
 export async function decodeDataWithInTelegram(storageKey: string, encodeData: string) {

@@ -5,10 +5,9 @@ import qs from 'query-string';
 import { sleep } from '@portkey/utils';
 import { TelegramWebappInitData } from '@portkey/types';
 import './index.less';
-import { did, handleErrorMessage, setLoading } from '../../utils';
+import { handleErrorMessage, setLoading } from '../../utils';
 import { singleMessage } from '../CustomAnt';
-import { saveDataWithInTelegram } from '../../utils/telegram';
-import { Dapp_Bot_Webapp } from '../../constants/telegram';
+import { getAccessTokenAndOpenPortkeyWebapp, getTelegramStartParam } from '../../utils/telegram';
 import clsx from 'clsx';
 
 export interface TelegramWebappInitUserData {
@@ -64,17 +63,14 @@ export default function TelegramLoginButton({ className, onBeforeBack }: Telegra
 
     try {
       setLoading(true);
-      const res = await did.services.getTelegramAuthToken(telegramInitData.current);
-      console.log('getTelegramAuthToken res:', res);
 
-      // sava data
-      await saveDataWithInTelegram({
-        isSaveDataToStorage: false,
-        isOpenTelegramLink: true,
-        telegramLink: Dapp_Bot_Webapp,
-        pushMessage: { token: res },
-        needPersist: true,
-        onBeforeOpenLink: onBeforeBack,
+      const { startParam } = getTelegramStartParam();
+      if (!startParam) throw Error('No loginId');
+
+      await getAccessTokenAndOpenPortkeyWebapp({
+        loginId: startParam,
+        telegramUserInfo: telegramInitData.current,
+        onBeforeBack,
       });
 
       setLoading(false);
