@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.4.2-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.8...v2.4.2-alpha.9) (2024-04-02)
+
+### Features
+
+- 🎸 tg remove storage ([fa66da3](https://github.com/Portkey-Wallet/portkey-web/commit/fa66da3c992ae532218bc2f7d411467b572f8403))
+
 ## [2.4.2-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.7...v2.4.2-alpha.8) (2024-04-02)
 
 ### Features
