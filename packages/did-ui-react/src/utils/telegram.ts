@@ -266,7 +266,7 @@ export async function getAccessTokenAndOpenPortkeyWebapp({
       loginId,
       dataParse.publicKey,
       CrossTabPushMessageType.onAuthStatusChanged,
-      accessToken,
+      accessToken.token,
     );
 
     await onBeforeBack?.(loginId);
