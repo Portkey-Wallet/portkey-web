@@ -2,7 +2,7 @@
 import { useCallback, useRef } from 'react';
 import { useEffectOnce } from 'react-use';
 import { privacyPolicy, termsOfService } from '@/constants/common';
-import { DIDWalletInfo, SignIn, ISignIn, PortkeyProvider, ConfigProvider } from '@portkey/did-ui-react';
+import { DIDWalletInfo, SignIn, ISignIn, PortkeyProvider, ConfigProvider, did } from '@portkey/did-ui-react';
 // import { Telegram_Link_Params } from '@portkey/did-ui-react/src/constants/telegram';
 import '@portkey/did-ui-react/dist/assets/index.css';
 import './styles.css';
@@ -58,6 +58,7 @@ export default function DappWebapp() {
 
   const onFinish = useCallback(async (didWallet: DIDWalletInfo) => {
     console.log('didWallet', didWallet);
+    did.save(didWallet.pin);
   }, []);
 
   const sendData = useCallback(() => {
