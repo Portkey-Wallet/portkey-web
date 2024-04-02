@@ -17,7 +17,7 @@ import AccountRecommendGroup from '../AccountRecommendGroup';
 import TermsOfServiceItem from '../TermsOfServiceItem';
 import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import useSocialLogin from '../../hooks/useSocialLogin';
-import { errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
 import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constants/guardian';
@@ -25,6 +25,7 @@ import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 import { getAccessTokenInDappTelegram, getTelegramStartParam } from '../../utils/telegram';
+import { PORTKEY_LOGIN_STORAGE_KEY } from '../../constants/storage';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -122,6 +123,8 @@ export default function SocialLogin({
       clearInterval(timerRef.current);
       const decodeResult = await getAccessTokenInDappTelegram(startParam);
       console.log('===res.data', decodeResult);
+
+      await did.config.storageMethod.removeItem(`${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`);
 
       // get AccessToken from socket
       const result = {
