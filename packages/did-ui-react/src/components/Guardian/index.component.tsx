@@ -24,7 +24,7 @@ import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
 import { isTelegramPlatform } from '../../utils/telegram';
-import { Open_Login_Bridge, Open_Login_Guardian_Bridge } from '../../constants/telegram';
+import { Open_Login_Guardian_Bridge } from '../../constants/telegram';
 import OpenLogin from '../../utils/openlogin';
 import {
   getServiceUrl,
@@ -342,12 +342,13 @@ function GuardianMain({
     async (guardianStep: GuardianStep, socketMethod: Array<CrossTabPushMessageType>, item?: UserGuardianStatus) => {
       const serviceURI = getServiceUrl();
       const socketURI = getCommunicationSocketUrl();
+      const ctw = getCustomNetworkType();
       const openlogin = new OpenLogin({
-        network: getCustomNetworkType(),
+        network: ctw,
         serviceURI: serviceURI,
         socketURI,
         currentStorage: getStorageInstance(),
-        sdkUrl: Open_Login_Bridge,
+        // sdkUrl: Open_Login_Bridge.local,
       });
 
       const params = {
@@ -359,7 +360,7 @@ function GuardianMain({
         isErrorTip,
         currentGuardian: item,
       };
-      const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge, params, socketMethod);
+      const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge[ctw], params, socketMethod);
       if (!result) return null;
       const {
         currentGuardian: _currentGuardian,
