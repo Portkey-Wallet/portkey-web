@@ -6,6 +6,7 @@ import { decodeMessageByRsaKey, did, handleErrorMessage } from '.';
 import qs from 'query-string';
 import { TelegramWebappInitData } from '@portkey/types';
 import { PORTKEY_LOGIN_STORAGE_KEY } from '../constants/storage';
+import { getServiceUrl } from '../components/config-provider/utils';
 
 export function getTelegram() {
   if (window != undefined) {
@@ -164,11 +165,11 @@ export async function saveEncodeInfoToStorageAndPortkeyDatabase(
 
 export async function invokeDataFromPortkeyDatabase(loginId: string, methodName: CrossTabPushMessageType) {
   // 1. open socket to get data
+  const serviceURI = getServiceUrl();
   await openloginSignal.doOpen({
-    url: 'https://test4-applesign-v2.portkey.finance/communication', // TODO tg
+    url: `${serviceURI}/communication`,
     clientId: loginId,
   });
-  await sleep(500); // TODO tg
   const res = await openloginSignal.GetTabDataAsync({
     requestId: loginId,
     methodName,
@@ -260,7 +261,7 @@ export async function getAccessTokenAndOpenPortkeyWebapp({
 
     // TODO tg test
     const accessToken = await generateAccessTokenByPortkeyServer(telegramUserInfo);
-    // const accessToken = '21345yutgmhnfgbdvfsadfsgdhfjgkhkjghfnbgdvfc';
+    // const accessToken = { token: '21345yutgmhnfgbdvfsadfsgdhfjgkhkjghfnbgdvfc' };
     console.log('=== accessToken', accessToken);
     await saveAccessTokenToPortkeyDatabase(
       loginId,
@@ -271,9 +272,9 @@ export async function getAccessTokenAndOpenPortkeyWebapp({
 
     await onBeforeBack?.(loginId);
 
-    if (dataParse?.telegramLink) {
+    if (dataParse?.yourTelegramLink) {
       const Telegram = getTelegram();
-      Telegram?.WebApp.openTelegramLink(`${dataParse.telegramLink}?startapp=${loginId}`);
+      Telegram?.WebApp.openTelegramLink(`${dataParse.yourTelegramLink}?startapp=${loginId}`);
     }
   } catch (error) {
     throw Error(handleErrorMessage(error));
@@ -286,7 +287,7 @@ export async function getAccessTokenInDappTelegram(loginId: string) {
     const storageKey = `${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`;
     const rsaKey = await getPrivateKeyFromLocalStorage(storageKey, loginId);
     console.log('=== rsaKey', rsaKey);
-    if (!rsaKey) throw Error('No RsaKey');
+    if (!rsaKey) return; // TODO tg
     return await getAndDecodeAccessToken(loginId, CrossTabPushMessageType.onAuthStatusChanged, rsaKey);
   } catch (error) {
     throw Error(handleErrorMessage(error));

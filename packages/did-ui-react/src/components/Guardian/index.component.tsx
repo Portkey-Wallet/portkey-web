@@ -401,8 +401,7 @@ function GuardianMain({
     ],
   );
   const onAddGuardian = useCallback(async () => {
-    // TODO tg
-    if (!isTelegramPlatform()) {
+    if (isTelegramPlatform()) {
       await handleWithinTelegram(GuardianStep.guardianAdd, [CrossTabPushMessageType.onAddGuardianResult]);
     } else {
       setStep(GuardianStep.guardianAdd);
@@ -411,8 +410,7 @@ function GuardianMain({
   const onViewGuardian = useCallback(
     async (item: UserGuardianStatus) => {
       setCurrentGuardian(item);
-      // TODO tg
-      if (!isTelegramPlatform()) {
+      if (isTelegramPlatform()) {
         await handleWithinTelegram(
           GuardianStep.guardianView,
           [
