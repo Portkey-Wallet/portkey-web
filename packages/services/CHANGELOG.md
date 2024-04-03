@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.9...v2.5.0-alpha.0) (2024-04-03)
+
+### Features
+
+- 🎸 modify tg auth ([3856ab2](https://github.com/Portkey-Wallet/portkey-web/commit/3856ab296e280dd87bdad15cc7b50a75d66629fe))
+
 ## [2.4.2-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.8...v2.4.2-alpha.9) (2024-04-02)
 
 **Note:** Version bump only for package @portkey/services
