@@ -20,6 +20,10 @@ export type SendOptions = {
 
   // append params;
   appendParams?: any;
+  /**
+   * Set aelf transaction BestChainHeight, Must be less than 0
+   */
+  refBlockNumberStrategy?: number;
 };
 
 export type CallOptions = {

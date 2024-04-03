@@ -76,7 +76,7 @@
     "postcss": "^8.4.21"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.2.45-beta.0",
+    "aelf-sdk": "^3.4.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
