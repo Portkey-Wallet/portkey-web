@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.1...v2.5.0-alpha.2) (2024-04-07)
+
+### Bug Fixes
+
+- login with google in telegram ([d4622ed](https://github.com/Portkey-Wallet/portkey-web/commit/d4622ed6c615615679c79d9839eddde8357d76c0))
+
 ## [2.5.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.0...v2.5.0-alpha.1) (2024-04-03)
 
 ### Features
