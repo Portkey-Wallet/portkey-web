@@ -1,6 +1,7 @@
 import { ISocialLogin, ISocialLoginConfig, NetworkType } from '../types';
 import { useCallback } from 'react';
 import { socialLoginAuth } from '../utils';
+import { isTelegramPlatform } from '../utils/telegram';
 
 export default function useSocialLogin({
   socialLogin,
@@ -30,6 +31,7 @@ export default function useSocialLogin({
         redirectURI: socialLogin?.Google?.redirectURI,
         network,
       });
+      if (type === 'Telegram' && isTelegramPlatform()) return;
 
       if (!response?.token) throw new Error(`${type} login failed`);
       return {
