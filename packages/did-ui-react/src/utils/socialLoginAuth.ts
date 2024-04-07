@@ -15,6 +15,42 @@ import { isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from './telegram';
 import { Portkey_Bot_Webapp } from '../constants/telegram';
 import ConfigProvider from '../components/config-provider';
 
+export const socialLoginInPortkeyApp = async (type: ISocialLogin) => {
+  const serviceURI = getServiceUrl();
+  const app = await devicesEnv.getPortkeyShellApp();
+
+  if (app) {
+    return new Promise(async (resolve, reject) => {
+      const ctw = getCustomNetworkType();
+      return app.invokeClientMethod(
+        {
+          type: 'login',
+          params: {
+            type,
+            ctw: ctw === 'offline' ? 'offline' : ctw,
+            serviceURI,
+          },
+        },
+        (args): any => {
+          if (args.status === 1) {
+            const token = args.data?.token;
+            if (!token) {
+              reject('auth error');
+            } else {
+              resolve({
+                token,
+                provider: type,
+              });
+            }
+          } else {
+            reject(args.msg || 'auth error');
+          }
+        },
+      );
+    });
+  }
+};
+
 export const socialLoginAuthOpener = ({
   type,
   clientId,
@@ -66,35 +102,7 @@ export const socialLoginAuthOpener = ({
         thirdPage = WEB_PAGE;
     }
 
-    const app = await devicesEnv.getPortkeyShellApp();
-
-    if (app) {
-      return app.invokeClientMethod(
-        {
-          type: 'login',
-          params: {
-            type,
-            ctw: ctw === 'offline' ? 'offline' : ctw,
-            serviceURI,
-          },
-        },
-        (args): any => {
-          if (args.status === 1) {
-            const token = args.data?.token;
-            if (!token) {
-              reject('auth error');
-            } else {
-              resolve({
-                token,
-                provider: type,
-              });
-            }
-          } else {
-            reject(args.msg || 'auth error');
-          }
-        },
-      );
-    }
+    await socialLoginInPortkeyApp(type);
 
     const onMessage = (event: MessageEvent) => {
       const type = event.data.type;
@@ -145,6 +153,7 @@ export const socialLoginAuthOpener = ({
 export const socialLoginAuthBySocket = async ({
   type,
   clientId,
+  network,
 }: {
   type: ISocialLogin;
   clientId?: string;
@@ -157,9 +166,10 @@ export const socialLoginAuthBySocket = async ({
 } | void> => {
   const serviceURI = getServiceUrl();
   const socketURI = getCommunicationSocketUrl();
+  const ctw = getCustomNetworkType();
 
   const openlogin = new OpenLogin({
-    network: getCustomNetworkType(),
+    network: ctw,
     serviceURI: serviceURI,
     clientId,
     socketURI,
@@ -168,42 +178,13 @@ export const socialLoginAuthBySocket = async ({
   });
 
   // check platform
-  const app = await devicesEnv.getPortkeyShellApp();
-  if (app) {
-    return new Promise(async (resolve, reject) => {
-      const ctw = getCustomNetworkType();
-      return app.invokeClientMethod(
-        {
-          type: 'login',
-          params: {
-            type,
-            ctw: ctw === 'offline' ? 'offline' : ctw,
-            serviceURI,
-          },
-        },
-        (args): any => {
-          if (args.status === 1) {
-            const token = args.data?.token;
-            if (!token) {
-              reject('auth error');
-            } else {
-              resolve({
-                token,
-                provider: type,
-              });
-            }
-          } else {
-            reject(args.msg || 'auth error');
-          }
-        },
-      );
-    });
-  }
+  await socialLoginInPortkeyApp(type);
 
   if (type === 'Telegram' && isTelegramPlatform()) {
     const dappTelegramLink = ConfigProvider.getConfig('dappTelegramLink') as string;
     if (!dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
-    await saveDataAndOpenPortkeyWebapp(dappTelegramLink, Portkey_Bot_Webapp);
+    const portkeyBotWebappLink = network ? Portkey_Bot_Webapp[ctw][network] : Portkey_Bot_Webapp[ctw].MAINNET;
+    await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink);
     return;
   }
 

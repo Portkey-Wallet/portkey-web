@@ -3,6 +3,7 @@ import { GuardiansApproved } from '@portkey/services';
 import { GuardianStep } from '../components/Guardian/index.component';
 import { NetworkType } from './wallet';
 import { UserGuardianStatus } from './guardian';
+import { TCustomNetworkType } from '.';
 
 export type TOpenLoginGuardianLocationState = {
   networkType: NetworkType;
@@ -19,3 +20,7 @@ export interface IOpenLoginGuardianResponse {
   currentGuardian: UserGuardianStatus;
   approvalInfo: GuardiansApproved[];
 }
+
+export type TOpenLoginBridgeURL = {
+  [key in TCustomNetworkType]: string;
+};
