@@ -12,6 +12,7 @@ import { evokePortkey } from '@portkey/onboarding';
 import './index.less';
 import singleMessage from '../CustomAnt/message';
 import ThrottleButton from '../ThrottleButton';
+import { isTelegramPlatform } from '../../utils/telegram';
 
 export default function WakeUpPortkey({
   type,
@@ -77,6 +78,11 @@ export default function WakeUpPortkey({
       const dataStr = JSON.stringify(data);
 
       const extraData = JSON.stringify(websiteInfo);
+
+      if (isTelegramPlatform()) {
+        evokePortkey.thirdParty({ action: 'login', isEvokeApp: true, custom: { data: dataStr, extraData } });
+        return;
+      }
 
       evokePortkey.app({
         action: 'login',

@@ -3,6 +3,56 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.0...v2.5.0-alpha.1) (2024-04-03)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.9...v2.5.0-alpha.0) (2024-04-03)
+
+### Features
+
+- 🎸 modify demo ([570c74d](https://github.com/Portkey-Wallet/portkey-web/commit/570c74d33beecf07b512ac7b8979f71e33d8e0fd))
+
+## [2.4.2-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.8...v2.4.2-alpha.9) (2024-04-02)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.4.2-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.7...v2.4.2-alpha.8) (2024-04-02)
+
+### Features
+
+- 🎸 modify tg token ([9dc987e](https://github.com/Portkey-Wallet/portkey-web/commit/9dc987e98d0b441558163230e4aef9a838d9c1bb))
+
+## [2.4.2-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.6...v2.4.2-alpha.7) (2024-04-02)
+
+### Features
+
+- 🎸 modify tg auth ([6b864b8](https://github.com/Portkey-Wallet/portkey-web/commit/6b864b891d1da4ea208273028da4e7007cd505ff))
+
+## [2.4.2-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.5...v2.4.2-alpha.6) (2024-04-02)
+
+### Features
+
+- 🎸 tg auth ([49bc34a](https://github.com/Portkey-Wallet/portkey-web/commit/49bc34ae386dde582828919eded741895662809d))
+
+## [2.4.2-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.4...v2.4.2-alpha.5) (2024-04-02)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.4.2-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-04-02)
+
+### Features
+
+- 🎸 modify TelegramLoginButton ([eb68d25](https://github.com/Portkey-Wallet/portkey-web/commit/eb68d25718a2aa90b2e361cec6a822ceb2fb68a9))
+
+## [2.4.2-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.2...v2.4.2-alpha.3) (2024-04-01)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.4.2-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.1...v2.4.2-alpha.2) (2024-04-01)
+
+**Note:** Version bump only for package @portkey/next-example
+
 ## [2.4.2-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.0...v2.4.2-alpha.1) (2024-04-01)
 
 ### Features
