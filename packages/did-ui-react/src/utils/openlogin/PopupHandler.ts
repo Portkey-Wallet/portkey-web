@@ -3,6 +3,7 @@ import { EventEmitter } from 'events';
 import { getPopupFeatures } from './utils';
 import { openloginSignal, TIOpenloginSignalrHandler, CrossTabPushMessageType } from '@portkey/socket';
 import { ISocialLogin } from '../../types';
+import { isTelegramPlatform } from '../telegram';
 
 export interface PopupResponse {
   token: string;
@@ -73,6 +74,7 @@ class PopupHandler extends EventEmitter {
   open(): void {
     this.window = window.open(this.url, this.target, this.features);
     this._setupTimer();
+    if (isTelegramPlatform()) return;
     if (!this.window) throw 'Popup was blocked. Please check your browser settings.';
     if (this.window?.focus) this.window.focus();
   }

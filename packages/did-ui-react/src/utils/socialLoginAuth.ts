@@ -1,7 +1,7 @@
 import {
+  getCommunicationSocketUrl,
   getCustomNetworkType,
   getServiceUrl,
-  getSocketUrl,
   getStorageInstance,
 } from '../components/config-provider/utils';
 import { WEB_PAGE, WEB_PAGE_TEST } from '../constants';
@@ -156,7 +156,7 @@ export const socialLoginAuthBySocket = async ({
   provider: ISocialLogin;
 } | void> => {
   const serviceURI = getServiceUrl();
-  const socketURI = getSocketUrl();
+  const socketURI = getCommunicationSocketUrl();
 
   const openlogin = new OpenLogin({
     network: getCustomNetworkType(),
