@@ -122,7 +122,9 @@ export default function Web2Design({
         setLoading(true);
         const result = await socialLoginHandler(type as ISocialLogin);
         setLoading(false);
-        onSocialFinish?.(result);
+        if (result) {
+          onSocialFinish?.(result);
+        }
       } catch (error) {
         setLoading(false);
         errorTip(
