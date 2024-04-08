@@ -4,7 +4,9 @@ import { TotalAccountType } from '../types';
 
 export type TAccountType = AccountType;
 
-export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple', 'Twitter', 'Facebook'];
+// Hide Twitter and Facebook logins for now
+// export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple', 'Twitter', 'Facebook'];
+export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple'];
 
 export const Web2LoginList: string[] = ['Email'];
 
