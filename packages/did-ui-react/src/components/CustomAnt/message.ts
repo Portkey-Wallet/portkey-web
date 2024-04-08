@@ -40,14 +40,18 @@ function setDefaultArgs(originalArgs: ArgsProps, defaultArgs: Partial<ArgsProps>
 typeList.forEach((type) => {
   singleMessage[type] = (...params) => {
     const _content = params[0];
+    const _duration = params[1] as number | undefined;
+    const _onClose = params[2];
     const content = isArgsProps(_content)
       ? _content
       : {
           content: _content,
+          duration: _duration,
+          onClose: _onClose,
         };
     message.destroy(content.content as any);
 
-    return message[type](setDefaultArgs(content, defaultMessageArgs), params[1], params[2]);
+    return message[type](setDefaultArgs(content, defaultMessageArgs));
   };
 });
 
