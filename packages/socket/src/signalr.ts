@@ -27,6 +27,10 @@ export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {
     this.connectionId = signalr.connectionId ?? '';
     this.signalr = signalr;
     this.url = url;
+
+    this.onReconnected(async () => {
+      await signalr.invoke('Connect', clientId);
+    });
     return signalr;
   };
 
@@ -48,6 +52,10 @@ export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {
 
   public on: HubConnection['on'] = (...args) => {
     return this._checkSignalr().on(...args);
+  };
+
+  public onReconnected: HubConnection['onreconnected'] = (...args) => {
+    return this._checkSignalr().onreconnected(...args);
   };
 
   public invoke: HubConnection['invoke'] = (...args) => {

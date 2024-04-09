@@ -29,7 +29,7 @@ export default function Assets() {
       </a>
       <Asset
         faucet={{
-          faucetContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',
+          faucetContractAddress: '233wFn5JbyD4i8R5Me4cW4z6edfFGRn5bpWnGuY8fjR7b2kRsD',
         }}
         onLifeCycleChange={lifeCycle => {
           console.log(lifeCycle, 'onLifeCycleChange');

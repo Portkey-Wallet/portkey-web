@@ -3,6 +3,74 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.8...v2.5.0-alpha.12) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 invoke get result ([b08c724](https://github.com/Portkey-Wallet/portkey-web/commit/b08c7241e532ee4ccf233d653235a170c551ce18))
+
+## [2.5.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.10...v2.5.0-alpha.11) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.5.0-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.9...v2.5.0-alpha.10) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.5.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.8...v2.5.0-alpha.9) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 invoke get result ([b08c724](https://github.com/Portkey-Wallet/portkey-web/commit/b08c7241e532ee4ccf233d653235a170c551ce18))
+
+## [2.5.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.7...v2.5.0-alpha.8) (2024-04-09)
+
+### Features
+
+- 🎸 tg guardian approval ([2c6600d](https://github.com/Portkey-Wallet/portkey-web/commit/2c6600d883c13ad3e7eb3fd57ea055f447e42ac2))
+
+## [2.5.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.6...v2.5.0-alpha.7) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.5.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.5...v2.5.0-alpha.6) (2024-04-09)
+
+### Features
+
+- 🎸 cancel close when telegram platform ([996bdd7](https://github.com/Portkey-Wallet/portkey-web/commit/996bdd792e25fd84f6ea9d60cf91ef6237359dd1))
+
+## [2.5.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.4...v2.5.0-alpha.5) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 change check shell portkey app ([84e779a](https://github.com/Portkey-Wallet/portkey-web/commit/84e779a19895ef9b01eb9de270e7b4316314ddec))
+- 🐛 socket reconnect ([3d832e7](https://github.com/Portkey-Wallet/portkey-web/commit/3d832e79251593769a93d6ce1600fe73b6a3a3aa))
+
+## [2.5.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.3...v2.5.0-alpha.4) (2024-04-09)
+
+### Performance Improvements
+
+- ⚡️ change tg save data key and delete useless constants ([36290d1](https://github.com/Portkey-Wallet/portkey-web/commit/36290d11c17b15e93c9f8779ec3f90c8babe7e64))
+
+## [2.5.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.2...v2.5.0-alpha.3) (2024-04-08)
+
+### Features
+
+- hide Twitter and Facebook logins in SocialLoginList ([4bc9606](https://github.com/Portkey-Wallet/portkey-web/commit/4bc96065cfbf7ce483dccb0ffcd6e6bf16884b4a))
+
+### Bug Fixes
+
+- 🐛 p css and login loading ([a3ecf2e](https://github.com/Portkey-Wallet/portkey-web/commit/a3ecf2e88b671bcdc5c042f5d242c51acc004321))
+- copy message ([6ec7b67](https://github.com/Portkey-Wallet/portkey-web/commit/6ec7b67911d011f570cfa9b81a3230701214dab6))
+- social login handling in SocialDesign and Web2Design components ([9cc0028](https://github.com/Portkey-Wallet/portkey-web/commit/9cc00287102d2c6fc1b981ffd727f1f2077f48b2))
+- telegram login failed message ([bc9f39d](https://github.com/Portkey-Wallet/portkey-web/commit/bc9f39dd58adff364bc741399ef72dc096998b89))
+
+## [2.5.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.1...v2.5.0-alpha.2) (2024-04-07)
+
+### Bug Fixes
+
+- login with google in telegram ([d4622ed](https://github.com/Portkey-Wallet/portkey-web/commit/d4622ed6c615615679c79d9839eddde8357d76c0))
+
 ## [2.5.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.0...v2.5.0-alpha.1) (2024-04-03)
 
 ### Features

@@ -1,6 +1,6 @@
 {
   "name": "@portkey/onboarding",
-  "version": "2.5.0-alpha.1",
+  "version": "2.5.0-alpha.12",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,10 +41,10 @@
   },
   "dependencies": {
     "@portkey/detect-provider": "^2.0.0-alpha.2",
-    "@portkey/types": "^2.5.0-alpha.1",
-    "@portkey/utils": "^2.5.0-alpha.1",
+    "@portkey/types": "^2.5.0-alpha.12",
+    "@portkey/utils": "^2.5.0-alpha.12",
     "bowser": "^2.11.0",
     "query-string": "^7.1.1"
   },
-  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
+  "gitHead": "13acdc07aeac8dc6ee5ca61d8b6699328ac55b03"
 }

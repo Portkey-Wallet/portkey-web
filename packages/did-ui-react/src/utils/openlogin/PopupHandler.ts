@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events';
 
 import { getPopupFeatures } from './utils';
-import { openloginSignal, TIOpenloginSignalrHandler, CrossTabPushMessageType } from '@portkey/socket';
+import { openloginSignal, TIOpenloginSignalrHandler, IOpenloginSignalr } from '@portkey/socket';
 import { ISocialLogin } from '../../types';
 import { isTelegramPlatform } from '../telegram';
 
@@ -27,6 +27,7 @@ class PopupHandler extends EventEmitter {
   iClosedWindow: boolean;
 
   timeout: number;
+  invokeTimer?: number;
 
   constructor({
     url,
@@ -51,6 +52,7 @@ class PopupHandler extends EventEmitter {
     this.windowTimer = undefined;
     this.iClosedWindow = false;
     this.timeout = timeout;
+    this.invokeTimer = undefined;
   }
 
   _setupTimer(): void {
@@ -73,8 +75,8 @@ class PopupHandler extends EventEmitter {
 
   open(): void {
     this.window = window.open(this.url, this.target, this.features);
-    this._setupTimer();
     if (isTelegramPlatform()) return;
+    this._setupTimer();
     if (!this.window) throw 'Popup was blocked. Please check your browser settings.';
     if (this.window?.focus) this.window.focus();
   }
@@ -92,6 +94,32 @@ class PopupHandler extends EventEmitter {
     }
   }
 
+  async getResultByInvoke(clientId: string, methodName: string) {
+    return new Promise(async (resolve) => {
+      if (this.invokeTimer) clearInterval(this.invokeTimer);
+      this.invokeTimer = Number(
+        setInterval(async () => {
+          const result = await openloginSignal.GetTabDataAsync({
+            requestId: clientId,
+            methodName: methodName as any,
+          });
+          console.log(result, 'result===');
+          result?.data && resolve(result.data);
+        }, 1000),
+      );
+    });
+  }
+
+  async getResultByListener(clientId: string, methodName: keyof IOpenloginSignalr): Promise<any> {
+    return new Promise((resolve) => {
+      openloginSignal[methodName]({ requestId: clientId }, (result: any) => {
+        console.log(result);
+        const message = result;
+        resolve(message);
+      });
+    });
+  }
+
   async listenOnChannel(clientId: string, methodNames: TIOpenloginSignalrHandler[]): Promise<any> {
     return new Promise(async (resolve, reject) => {
       try {
@@ -101,19 +129,29 @@ class PopupHandler extends EventEmitter {
         });
 
         this.emit('socket-connect', true);
-        methodNames.forEach((methodName) => {
-          openloginSignal[methodName]({ requestId: clientId }, (result: any, methodName?: CrossTabPushMessageType) => {
-            console.log(result);
-            const message = result;
-            if (!message) return;
-            try {
-              resolve({ message: JSON.parse(message), methodName });
-            } catch (error) {
-              resolve({ message, methodName });
-            }
-            openloginSignal.destroy();
-            this.close();
-          });
+
+        methodNames.forEach(async (methodName) => {
+          // 1. get result by invoke;
+          // 2. get result by socket listener
+
+          const result = await Promise.race([
+            this.getResultByInvoke(clientId, methodName),
+            this.getResultByListener(clientId, methodName),
+          ]);
+
+          this.invokeTimer && clearInterval(this.invokeTimer);
+          this.invokeTimer = undefined;
+
+          console.log(result);
+          const message = result;
+          if (!message) return;
+          try {
+            resolve({ message: JSON.parse(message), methodName });
+          } catch (error) {
+            resolve({ message, methodName });
+          }
+          openloginSignal.destroy();
+          this.close();
         });
       } catch (error) {
         reject(error);

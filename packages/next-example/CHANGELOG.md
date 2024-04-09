@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.8...v2.5.0-alpha.12) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.10...v2.5.0-alpha.11) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.9...v2.5.0-alpha.10) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.8...v2.5.0-alpha.9) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.7...v2.5.0-alpha.8) (2024-04-09)
+
+### Features
+
+- 🎸 tg guardian approval ([2c6600d](https://github.com/Portkey-Wallet/portkey-web/commit/2c6600d883c13ad3e7eb3fd57ea055f447e42ac2))
+
+## [2.5.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.6...v2.5.0-alpha.7) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.5...v2.5.0-alpha.6) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.4...v2.5.0-alpha.5) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.3...v2.5.0-alpha.4) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.5.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.2...v2.5.0-alpha.3) (2024-04-08)
+
+### Bug Fixes
+
+- 🐛 p css and login loading ([a3ecf2e](https://github.com/Portkey-Wallet/portkey-web/commit/a3ecf2e88b671bcdc5c042f5d242c51acc004321))
+
+## [2.5.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.1...v2.5.0-alpha.2) (2024-04-07)
+
+**Note:** Version bump only for package @portkey/next-example
+
 ## [2.5.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.0...v2.5.0-alpha.1) (2024-04-03)
 
 **Note:** Version bump only for package @portkey/next-example

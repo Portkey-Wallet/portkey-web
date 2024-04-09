@@ -134,14 +134,14 @@ class OpenLogin {
           resolve({ data: result, methodName: res.methodName });
         })
         .catch(reject);
-
-      currentWindow.on('socket-connect', () => {
-        try {
-          currentWindow.open();
-        } catch (error) {
-          reject(error);
-        }
-      });
+      // TODO  Invoke get result and socket listen
+      // currentWindow.on('socket-connect', () => {
+      //   try {
+      currentWindow.open();
+      //   } catch (error) {
+      //     reject(error);
+      //   }
+      // });
     });
   }
 }

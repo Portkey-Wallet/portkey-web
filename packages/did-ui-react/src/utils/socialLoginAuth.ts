@@ -15,40 +15,40 @@ import { isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from './telegram';
 import { Portkey_Bot_Webapp } from '../constants/telegram';
 import ConfigProvider from '../components/config-provider';
 
-export const socialLoginInPortkeyApp = async (type: ISocialLogin) => {
+export const socialLoginInPortkeyApp = async (
+  app: devicesEnv.IPortkeyShellClient,
+  type: ISocialLogin,
+): Promise<{ token: string; provider: ISocialLogin }> => {
   const serviceURI = getServiceUrl();
-  const app = await devicesEnv.getPortkeyShellApp();
 
-  if (app) {
-    return new Promise(async (resolve, reject) => {
-      const ctw = getCustomNetworkType();
-      return app.invokeClientMethod(
-        {
-          type: 'login',
-          params: {
-            type,
-            ctw: ctw === 'offline' ? 'offline' : ctw,
-            serviceURI,
-          },
+  return new Promise(async (resolve, reject) => {
+    const ctw = getCustomNetworkType();
+    return app.invokeClientMethod(
+      {
+        type: 'login',
+        params: {
+          type,
+          ctw: ctw === 'offline' ? 'offline' : ctw,
+          serviceURI,
         },
-        (args): any => {
-          if (args.status === 1) {
-            const token = args.data?.token;
-            if (!token) {
-              reject('auth error');
-            } else {
-              resolve({
-                token,
-                provider: type,
-              });
-            }
+      },
+      (args): any => {
+        if (args.status === 1) {
+          const token = args.data?.token;
+          if (!token) {
+            reject('auth error');
           } else {
-            reject(args.msg || 'auth error');
+            resolve({
+              token,
+              provider: type,
+            });
           }
-        },
-      );
-    });
-  }
+        } else {
+          reject(args.msg || 'auth error');
+        }
+      },
+    );
+  });
 };
 
 export const socialLoginAuthOpener = ({
@@ -102,7 +102,9 @@ export const socialLoginAuthOpener = ({
         thirdPage = WEB_PAGE;
     }
 
-    await socialLoginInPortkeyApp(type);
+    const app = await devicesEnv.getPortkeyShellApp();
+
+    if (app) return await socialLoginInPortkeyApp(app, type);
 
     const onMessage = (event: MessageEvent) => {
       const type = event.data.type;
@@ -182,7 +184,6 @@ export const socialLoginAuthBySocket = async ({
   const serviceURI = getServiceUrl();
   const socketURI = getCommunicationSocketUrl();
   const ctw = getCustomNetworkType();
-
   const openlogin = new OpenLogin({
     network: ctw,
     serviceURI: serviceURI,
@@ -193,7 +194,9 @@ export const socialLoginAuthBySocket = async ({
   });
 
   // check platform
-  await socialLoginInPortkeyApp(type);
+  const app = await devicesEnv.getPortkeyShellApp();
+
+  if (app) return socialLoginInPortkeyApp(app, type);
 
   if (type === 'Telegram' && isTelegramPlatform()) {
     telegramLoginAuth({ network });

@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useEffectOnce } from 'react-use';
 import { privacyPolicy, termsOfService } from '@/constants/common';
 import { DIDWalletInfo, SignIn, ISignIn, ConfigProvider, did } from '@portkey/did-ui-react';
@@ -11,9 +11,9 @@ import { sleep } from '@portkey/utils';
 ConfigProvider.setGlobalConfig({
   graphQLUrl: '/graphql',
   connectUrl: 'http://192.168.66.117:8080',
-  serviceUrl: 'https://test4-applesign-v2.portkey.finance',
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
   requestDefaults: {
-    baseURL: 'https://test4-applesign-v2.portkey.finance',
+    baseURL: 'https://aa-portkey-test.portkey.finance',
   },
   dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappv5',
 });
@@ -37,6 +37,13 @@ export default function DappWebapp() {
     getTelegram();
   });
 
+  const setCurrentLifeCycle = useCallback(async () => {
+    signInRef.current?.setCurrentLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') || '{}'));
+  }, []);
+  useEffect(() => {
+    typeof window !== 'undefined' && setCurrentLifeCycle();
+  }, [setCurrentLifeCycle]);
+
   const onCancel = useCallback(() => signInRef.current?.setOpen(false), [signInRef]);
 
   const onFinish = useCallback(async (didWallet: DIDWalletInfo) => {
@@ -49,6 +56,9 @@ export default function DappWebapp() {
       <a href="assets">
         <Button>Go to assets</Button>
       </a>
+
+      <Button onClick={setCurrentLifeCycle}>setCurrentLifeCycle</Button>
+
       <SignIn
         className="dapp-bot-sign"
         termsOfService={termsOfService}
@@ -57,6 +67,17 @@ export default function DappWebapp() {
         ref={signInRef}
         onFinish={onFinish}
         onCancel={onCancel}
+        // defaultLifeCycle={}
+        onLifeCycleChange={(lifeCycle: any, nextLifeCycleProps: any) => {
+          console.log(
+            'onLifeCycleChange:',
+            lifeCycle,
+            nextLifeCycleProps,
+            { [lifeCycle]: nextLifeCycleProps },
+            JSON.stringify({ [lifeCycle]: nextLifeCycleProps }),
+          );
+          localStorage.setItem('portkeyLifeCycle', JSON.stringify({ [lifeCycle]: nextLifeCycleProps }));
+        }}
       />
     </div>
   );
