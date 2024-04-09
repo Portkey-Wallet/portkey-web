@@ -11,6 +11,8 @@ ConfigProvider.setGlobalConfig({
     timeout: 30000,
   },
   serviceUrl: 'https://test4-applesign-v2.portkey.finance',
+  // serviceUrl: 'https://aa-portkey-test.portkey.finance',
+  dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappv5',
 
   // loginConfig: {
   //   loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
