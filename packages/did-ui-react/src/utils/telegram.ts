@@ -113,7 +113,7 @@ export async function invokeDataFromPortkeyDatabase(loginId: string, methodName:
   await openloginSignal.destroy();
 
   // 2. Return publicKey
-  return res.data;
+  return res?.data;
 }
 
 // usage: jump to portkey-webapp

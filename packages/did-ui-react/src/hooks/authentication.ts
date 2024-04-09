@@ -11,6 +11,7 @@ import {
 } from '../utils';
 import { OperationTypeEnum } from '@portkey/services';
 import type { ChainId, TStringJSON } from '@portkey/types';
+import { isTelegramPlatform } from '../utils/telegram';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
@@ -117,6 +118,7 @@ export function useVerifyTelegram() {
           type: 'Telegram',
           network: params.networkType,
         });
+        if (isTelegramPlatform()) return;
         if (!authRes) throw new Error('Missing Response');
         accessToken = authRes?.token;
       }
