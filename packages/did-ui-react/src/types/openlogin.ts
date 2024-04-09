@@ -13,6 +13,7 @@ export type TOpenLoginGuardianLocationState = {
   guardianStep: GuardianStep;
   isErrorTip?: boolean;
   currentGuardian?: UserGuardianStatus;
+  telegramAccessToken: string;
 } & Record<string, any>;
 
 export interface IOpenLoginGuardianResponse {

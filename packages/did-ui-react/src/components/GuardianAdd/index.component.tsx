@@ -71,6 +71,7 @@ export interface GuardianAddProps {
   networkType: NetworkType;
   sandboxId?: string;
   isErrorTip?: boolean;
+  telegramAccessToken?: string;
   onError?: OnErrorFunc;
   handleAddGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
 }
@@ -95,6 +96,7 @@ function GuardianAdd({
   guardianList,
   networkType,
   sandboxId,
+  telegramAccessToken,
   onError,
   handleAddGuardian,
 }: GuardianAddProps) {
@@ -305,15 +307,21 @@ function GuardianAdd({
   const socialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
-        const { clientId, redirectURI } = socialBasic(v) || {};
-        const response = await socialLoginAuth({
-          type: v,
-          clientId,
-          redirectURI,
-          network: networkType,
-        });
-        if (!response?.token) throw new Error('add guardian failed');
-        const info = await socialUserInfo(v, response.token);
+        let token = '';
+        if (v === 'Telegram' && telegramAccessToken) {
+          token = telegramAccessToken;
+        } else {
+          const { clientId, redirectURI } = socialBasic(v) || {};
+          const response = await socialLoginAuth({
+            type: v,
+            clientId,
+            redirectURI,
+            network: networkType,
+          });
+          if (!response?.token) throw new Error('add guardian failed');
+          token = response.token;
+        }
+        const info = await socialUserInfo(v, token);
         return info;
       } catch (error) {
         errorTip(
@@ -326,7 +334,7 @@ function GuardianAdd({
         );
       }
     },
-    [isErrorTip, networkType, onError, socialBasic, socialUserInfo],
+    [isErrorTip, networkType, onError, socialBasic, socialUserInfo, telegramAccessToken],
   );
 
   const socialVerify = useCallback(

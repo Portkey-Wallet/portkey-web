@@ -59,6 +59,7 @@ export interface GuardianEditProps {
   networkType: NetworkType;
   chainType?: ChainType;
   sandboxId?: string;
+  telegramAccessToken?: string;
   onError?: OnErrorFunc;
   handleEditGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
   handleRemoveGuardian?: (approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -85,6 +86,7 @@ function GuardianEdit({
   networkType,
   chainType = 'aelf',
   sandboxId,
+  telegramAccessToken,
   onError,
   handleEditGuardian,
   handleRemoveGuardian,
@@ -219,15 +221,21 @@ function GuardianEdit({
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
-      const response = await socialLoginAuth({
-        type: _guardian?.guardianType as ISocialLogin,
-        clientId,
-        redirectURI,
-        network: networkType,
-      });
-      if (!response?.token) throw new Error('auth failed');
+      let token = '';
+      if (_guardian?.guardianType === 'Telegram' && telegramAccessToken) {
+        token = telegramAccessToken;
+      } else {
+        const response = await socialLoginAuth({
+          type: _guardian?.guardianType as ISocialLogin,
+          clientId,
+          redirectURI,
+          network: networkType,
+        });
+        if (!response?.token) throw new Error('auth failed');
+        token = response.token;
+      }
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
-        accessToken: response?.token,
+        accessToken: token,
         id: _guardian.guardianIdentifier || '',
         verifierId: _guardian?.verifier?.id || '',
         chainId: originChainId,
@@ -243,7 +251,7 @@ function GuardianEdit({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, networkType, verifyToken, originChainId, operationDetails],
+    [socialBasic, telegramAccessToken, verifyToken, originChainId, networkType, operationDetails],
   );
   const sendCode = useCallback(async () => {
     try {

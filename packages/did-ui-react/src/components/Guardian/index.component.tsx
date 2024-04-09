@@ -4,7 +4,14 @@ import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
 import { GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
-import { AuthServe, errorTip, getVerifierStatusMap, handleErrorMessage, setLoading } from '../../utils';
+import {
+  AuthServe,
+  errorTip,
+  getVerifierStatusMap,
+  handleErrorMessage,
+  setLoading,
+  telegramLoginAuth,
+} from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
@@ -46,7 +53,14 @@ export interface IAddGuardianFinishCbParams {
   syncStatus: boolean;
 }
 
+export interface IStorageData {
+  accessToken?: string;
+  guardianStep?: GuardianStep;
+  item?: UserGuardianStatus;
+}
+
 export interface GuardianProps {
+  storageData?: IStorageData;
   caHash: string;
   className?: string;
   sandboxId?: string;
@@ -61,6 +75,7 @@ export interface GuardianProps {
 }
 
 function GuardianMain({
+  storageData,
   caHash,
   className,
   originChainId = 'AELF',
@@ -339,7 +354,25 @@ function GuardianMain({
     [sandboxId, originChainId, caHash, fetchGuardianList, getVerifierEnableNum, guardianList, isErrorTip, onError],
   );
   const handleWithinTelegram = useCallback(
-    async (guardianStep: GuardianStep, socketMethod: Array<CrossTabPushMessageType>, item?: UserGuardianStatus) => {
+    async ({
+      guardianStep,
+      socketMethod,
+      item,
+      telegramAccessToken,
+    }: {
+      guardianStep: GuardianStep;
+      socketMethod: Array<CrossTabPushMessageType>;
+      item?: UserGuardianStatus;
+      telegramAccessToken?: string;
+    }) => {
+      console.log('++++++++++++ telegramAccessToken: ', telegramAccessToken);
+      if (!telegramAccessToken) {
+        await telegramLoginAuth({
+          network: networkType,
+          extraStorageData: { guardianStep, item },
+        });
+        return;
+      }
       const serviceURI = getServiceUrl();
       const socketURI = getCommunicationSocketUrl();
       const ctw = getCustomNetworkType();
@@ -359,6 +392,7 @@ function GuardianMain({
         guardianStep,
         isErrorTip,
         currentGuardian: item,
+        telegramAccessToken,
       };
       const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge[ctw], params, socketMethod);
       if (!result) return null;
@@ -401,26 +435,34 @@ function GuardianMain({
       originChainId,
     ],
   );
-  const onAddGuardian = useCallback(async () => {
-    if (isTelegramPlatform()) {
-      await handleWithinTelegram(GuardianStep.guardianAdd, [CrossTabPushMessageType.onAddGuardianResult]);
-    } else {
-      setStep(GuardianStep.guardianAdd);
-    }
-  }, [handleWithinTelegram]);
+  const onAddGuardian = useCallback(
+    async (telegramAccessToken?: string) => {
+      if (isTelegramPlatform()) {
+        await handleWithinTelegram({
+          guardianStep: GuardianStep.guardianAdd,
+          socketMethod: [CrossTabPushMessageType.onAddGuardianResult],
+          telegramAccessToken,
+        });
+      } else {
+        setStep(GuardianStep.guardianAdd);
+      }
+    },
+    [handleWithinTelegram],
+  );
   const onViewGuardian = useCallback(
-    async (item: UserGuardianStatus) => {
+    async (item: UserGuardianStatus, telegramAccessToken?: string) => {
       setCurrentGuardian(item);
       if (isTelegramPlatform()) {
-        await handleWithinTelegram(
-          GuardianStep.guardianView,
-          [
+        await handleWithinTelegram({
+          guardianStep: GuardianStep.guardianView,
+          socketMethod: [
             CrossTabPushMessageType.onSetLoginGuardianResult,
             CrossTabPushMessageType.onEditGuardianResult,
             CrossTabPushMessageType.onRemoveGuardianResult,
           ],
           item,
-        );
+          telegramAccessToken,
+        });
       } else {
         setStep(GuardianStep.guardianView);
       }
@@ -441,6 +483,35 @@ function GuardianMain({
     setCurrentGuardian(currentGuardian);
     setStep(GuardianStep.guardianView);
   }, [currentGuardian]);
+
+  const handleGuardianOperationAfterAuthWithInTelegram = useCallback(
+    ({
+      guardianStep,
+      item,
+      telegramAccessToken,
+    }: {
+      guardianStep: GuardianStep;
+      item?: UserGuardianStatus;
+      telegramAccessToken: string;
+    }) => {
+      if (guardianStep === GuardianStep.guardianAdd) {
+        onAddGuardian(telegramAccessToken);
+      } else if (guardianStep === GuardianStep.guardianView && item) {
+        onViewGuardian(item, telegramAccessToken);
+      }
+    },
+    [onAddGuardian, onViewGuardian],
+  );
+
+  useEffect(() => {
+    if (storageData?.accessToken && guardianList) {
+      handleGuardianOperationAfterAuthWithInTelegram({
+        guardianStep: storageData.guardianStep!,
+        item: storageData.item,
+        telegramAccessToken: storageData.accessToken,
+      });
+    }
+  }, [storageData, handleGuardianOperationAfterAuthWithInTelegram, guardianList]);
 
   const renderBackHeaderLeftEle = useCallback(
     (goBack?: () => void) => (
@@ -472,7 +543,7 @@ function GuardianMain({
               leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
                 verifierEnableNum > 0 ? (
-                  <ThrottleButton onClick={onAddGuardian} className="title-add-guardian-btn">
+                  <ThrottleButton onClick={() => onAddGuardian()} className="title-add-guardian-btn">
                     Add Guardians
                   </ThrottleButton>
                 ) : null

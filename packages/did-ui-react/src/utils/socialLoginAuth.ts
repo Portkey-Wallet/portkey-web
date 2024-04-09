@@ -150,6 +150,21 @@ export const socialLoginAuthOpener = ({
     }, 1600);
   });
 
+export const telegramLoginAuth = async ({
+  network,
+  extraStorageData,
+}: {
+  network?: NetworkType;
+  extraStorageData?: Record<string, any>;
+}) => {
+  console.log('ConfigProvider config: ', ConfigProvider.config);
+  const ctw = getCustomNetworkType();
+  const dappTelegramLink = ConfigProvider.getConfig('dappTelegramLink') as string;
+  if (!dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
+  const portkeyBotWebappLink = network ? Portkey_Bot_Webapp[ctw][network] : Portkey_Bot_Webapp[ctw].MAINNET;
+  await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink, extraStorageData);
+};
+
 export const socialLoginAuthBySocket = async ({
   type,
   clientId,
@@ -181,10 +196,7 @@ export const socialLoginAuthBySocket = async ({
   await socialLoginInPortkeyApp(type);
 
   if (type === 'Telegram' && isTelegramPlatform()) {
-    const dappTelegramLink = ConfigProvider.getConfig('dappTelegramLink') as string;
-    if (!dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
-    const portkeyBotWebappLink = network ? Portkey_Bot_Webapp[ctw][network] : Portkey_Bot_Webapp[ctw].MAINNET;
-    await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink);
+    telegramLoginAuth({ network });
     return;
   }
 
