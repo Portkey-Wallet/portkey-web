@@ -1,6 +1,6 @@
 import { ISocialLogin, TCustomNetworkType } from './util.type';
 
-interface IClient {
+export interface IPortkeyShellClient {
   invokeClientMethod(request: IRequest<ILoginParams>, callback: (args: IResponse<ILoginResponse>) => {}): void;
 }
 
@@ -31,11 +31,15 @@ interface ILoginResponse {
  * @param provider - the object that need to be checked
  * @returns provider is IClient
  */
-export function isPortkeyProvider<T extends IClient = IClient>(provider: unknown): provider is T {
+export function isPortkeyProvider<T extends IPortkeyShellClient = IPortkeyShellClient>(
+  provider: unknown,
+): provider is T {
   return !!(provider && typeof provider === 'object' && 'invokeClientMethod' in provider);
 }
 
-export async function getPortkeyShellApp<T extends IClient = IClient>(timeout?: number): Promise<T | null> {
+export async function getPortkeyShellApp<T extends IPortkeyShellClient = IPortkeyShellClient>(
+  timeout?: number,
+): Promise<T | null> {
   if (typeof window === 'undefined') return null;
   const _window: any = window;
 

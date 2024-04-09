@@ -3,6 +3,23 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.6...v2.5.0-alpha.7) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.5.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.5...v2.5.0-alpha.6) (2024-04-09)
+
+### Features
+
+- 🎸 cancel close when telegram platform ([996bdd7](https://github.com/Portkey-Wallet/portkey-web/commit/996bdd792e25fd84f6ea9d60cf91ef6237359dd1))
+
+## [2.5.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.4...v2.5.0-alpha.5) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 change check shell portkey app ([84e779a](https://github.com/Portkey-Wallet/portkey-web/commit/84e779a19895ef9b01eb9de270e7b4316314ddec))
+- 🐛 socket reconnect ([3d832e7](https://github.com/Portkey-Wallet/portkey-web/commit/3d832e79251593769a93d6ce1600fe73b6a3a3aa))
+
 ## [2.5.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.3...v2.5.0-alpha.4) (2024-04-09)
 
 ### Performance Improvements
