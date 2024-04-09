@@ -9,8 +9,9 @@ import {
   parseTwitterToken,
   socialLoginAuth,
 } from '../utils';
-import { OperationTypeEnum } from '@portkey/services';
+import { OperationTypeEnum, VerifyVerificationCodeResult } from '@portkey/services';
 import type { ChainId, TStringJSON } from '@portkey/types';
+import { isTelegramPlatform } from '../utils/telegram';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
@@ -117,6 +118,7 @@ export function useVerifyTelegram() {
           type: 'Telegram',
           network: params.networkType,
         });
+        if (isTelegramPlatform()) return;
         if (!authRes) throw new Error('Missing Response');
         accessToken = authRes?.token;
       }
@@ -213,7 +215,8 @@ export function useVerifyToken() {
 
   return useCallback(
     (type: ISocialLogin, params: VerifySocialLoginParams) => {
-      let func = verifyAppleToken;
+      let func: (params: VerifySocialLoginParams) => Promise<VerifyVerificationCodeResult | undefined> =
+        verifyAppleToken;
       if (type === 'Apple') {
         func = verifyAppleToken;
       } else if (type === 'Google') {
@@ -225,7 +228,7 @@ export function useVerifyToken() {
       } else if (type === 'Twitter') {
         func = verifyTwitter;
       }
-      return func(params);
+      return func?.(params);
     },
     [verifyAppleToken, verifyFacebook, verifyGoogleToken, verifyTelegram, verifyTwitter],
   );
