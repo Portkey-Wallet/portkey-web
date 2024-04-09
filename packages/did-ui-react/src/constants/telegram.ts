@@ -1,6 +1,5 @@
 import { NetworkType, TCustomNetworkType } from '../types';
 import { TOpenLoginBridgeURL } from '../types/openlogin';
-import { PORTKEY_SIGN_IN_STORAGE_KEY_TELEGRAM, PORTKEY_SIGN_UP_STORAGE_KEY_TELEGRAM } from './storage';
 
 export const Portkey_Bot_Webapp: {
   [key in TCustomNetworkType]: {
@@ -43,5 +42,3 @@ export const Open_Login_Guardian_Approval_Bridge: TOpenLoginBridgeURL = {
   offline: Open_Login_Bridge.offline + '/guardian/approval',
   local: Open_Login_Bridge.local + '/guardian/approval',
 };
-
-export const Telegram_Login_Storage_key = [PORTKEY_SIGN_IN_STORAGE_KEY_TELEGRAM, PORTKEY_SIGN_UP_STORAGE_KEY_TELEGRAM];
