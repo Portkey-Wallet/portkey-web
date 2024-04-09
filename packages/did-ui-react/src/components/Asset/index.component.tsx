@@ -201,7 +201,7 @@ function AssetMain({
         setLoading(true);
         const decodeResult = await getAccessTokenInDappTelegram(startParam);
         console.log('=== res.data', decodeResult);
-
+        if (!decodeResult) return;
         await did.config.storageMethod.removeItem(startParam);
         setStorageData(decodeResult);
         setAssetStep(AssetStep.guardians);
