@@ -169,7 +169,6 @@ export const socialLoginAuthBySocket = async ({
   const serviceURI = getServiceUrl();
   const socketURI = getCommunicationSocketUrl();
   const ctw = getCustomNetworkType();
-
   const openlogin = new OpenLogin({
     network: ctw,
     serviceURI: serviceURI,
@@ -182,7 +181,7 @@ export const socialLoginAuthBySocket = async ({
   // check platform
   const app = await devicesEnv.getPortkeyShellApp();
 
-  if (app) return await socialLoginInPortkeyApp(app, type);
+  if (app) return socialLoginInPortkeyApp(app, type);
 
   if (type === 'Telegram' && isTelegramPlatform()) {
     const dappTelegramLink = ConfigProvider.getConfig('dappTelegramLink') as string;
