@@ -300,6 +300,7 @@ const SignIn = forwardRef(
             });
             setLoading(false);
 
+            if (!result?.signature || !result?.verificationDoc) throw 'Verify social login error';
             onStep2OfSignUpFinish(
               {
                 verifier,
