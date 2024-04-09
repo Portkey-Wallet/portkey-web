@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.3...v2.5.0-alpha.4) (2024-04-09)
+
+### Performance Improvements
+
+- ⚡️ change tg save data key and delete useless constants ([36290d1](https://github.com/Portkey-Wallet/portkey-web/commit/36290d11c17b15e93c9f8779ec3f90c8babe7e64))
+
 ## [2.5.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.2...v2.5.0-alpha.3) (2024-04-08)
 
 ### Features
