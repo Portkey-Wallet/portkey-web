@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.12...v2.5.0-alpha.13) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 tg guardian approval ([8dd92c7](https://github.com/Portkey-Wallet/portkey-web/commit/8dd92c7f283d996b9ef27cb5128707948f937316))
+- 🐛 ts error ([9b53f3f](https://github.com/Portkey-Wallet/portkey-web/commit/9b53f3ff207024ca85914d8c57191948e5aec42d))
+
 ## [2.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.8...v2.5.0-alpha.12) (2024-04-09)
 
 ### Bug Fixes
