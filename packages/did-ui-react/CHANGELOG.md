@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.3...v2.5.0-alpha.4) (2024-04-09)
+
+### Performance Improvements
+
+- ⚡️ change tg save data key and delete useless constants ([36290d1](https://github.com/Portkey-Wallet/portkey-web/commit/36290d11c17b15e93c9f8779ec3f90c8babe7e64))
+
+## [2.5.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.2...v2.5.0-alpha.3) (2024-04-08)
+
+### Features
+
+- hide Twitter and Facebook logins in SocialLoginList ([4bc9606](https://github.com/Portkey-Wallet/portkey-web/commit/4bc96065cfbf7ce483dccb0ffcd6e6bf16884b4a))
+
+### Bug Fixes
+
+- 🐛 p css and login loading ([a3ecf2e](https://github.com/Portkey-Wallet/portkey-web/commit/a3ecf2e88b671bcdc5c042f5d242c51acc004321))
+- copy message ([6ec7b67](https://github.com/Portkey-Wallet/portkey-web/commit/6ec7b67911d011f570cfa9b81a3230701214dab6))
+- social login handling in SocialDesign and Web2Design components ([9cc0028](https://github.com/Portkey-Wallet/portkey-web/commit/9cc00287102d2c6fc1b981ffd727f1f2077f48b2))
+- telegram login failed message ([bc9f39d](https://github.com/Portkey-Wallet/portkey-web/commit/bc9f39dd58adff364bc741399ef72dc096998b89))
+
 ## [2.5.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.1...v2.5.0-alpha.2) (2024-04-07)
 
 ### Bug Fixes

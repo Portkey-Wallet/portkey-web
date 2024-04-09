@@ -25,7 +25,6 @@ import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 import { getAccessTokenInDappTelegram, getTelegramStartParam } from '../../utils/telegram';
-import { PORTKEY_LOGIN_STORAGE_KEY } from '../../constants/storage';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -94,11 +93,11 @@ export default function SocialLogin({
     async (type: ISocialLogin) => {
       try {
         setLoading(true);
-        // const storageKey = `${isLogin ? PORTKEY_SIGN_IN_STORAGE_KEY : PORTKEY_SIGN_UP_STORAGE_KEY}_Telegram`;
-
         const result = await socialLoginHandler(type);
         setLoading(false);
-        onFinishRef.current?.(result);
+        if (result) {
+          onFinishRef.current?.(result);
+        }
       } catch (error) {
         setLoading(false);
         errorTip(
@@ -121,20 +120,27 @@ export default function SocialLogin({
     console.log('====startParam', startParam);
     if (startParam) {
       clearInterval(timerRef.current);
-      const decodeResult = await getAccessTokenInDappTelegram(startParam);
-      console.log('===res.data', decodeResult);
+      try {
+        setLoading(true);
+        const decodeResult = await getAccessTokenInDappTelegram(startParam);
+        console.log('===res.data', decodeResult);
 
-      await did.config.storageMethod.removeItem(`${PORTKEY_LOGIN_STORAGE_KEY}_Telegram`);
+        await did.config.storageMethod.removeItem(startParam);
 
-      // get AccessToken from socket
-      const result = {
-        type: 'Telegram' as ISocialLogin,
-        data: {
-          accessToken: decodeResult || '',
-        },
-      };
-      console.log('=== result', result);
-      onFinishRef.current?.(result);
+        // get AccessToken from socket
+        const result = {
+          type: 'Telegram' as ISocialLogin,
+          data: {
+            accessToken: decodeResult || '',
+          },
+        };
+        console.log('=== result', result);
+        onFinishRef.current?.(result);
+      } catch (error) {
+        throw new Error(handleErrorMessage(error));
+      } finally {
+        setLoading(false);
+      }
     }
   }, []);
 
