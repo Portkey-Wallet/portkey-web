@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.13...v2.5.0-alpha.14) (2024-04-09)
+
+### Features
+
+- get telegram access token within telegram ([7a0aa18](https://github.com/Portkey-Wallet/portkey-web/commit/7a0aa180b4c0f03dc759ddb15d1a2173b9f4314f))
+
+### Bug Fixes
+
+- decodeResult may be undefined ([a7e2b25](https://github.com/Portkey-Wallet/portkey-web/commit/a7e2b255496bc9fc356966141caa915c64f9d377))
+
 ## [2.5.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.12...v2.5.0-alpha.13) (2024-04-09)
 
 ### Bug Fixes
