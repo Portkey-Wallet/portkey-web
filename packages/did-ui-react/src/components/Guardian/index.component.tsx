@@ -504,9 +504,9 @@ function GuardianMain({
   );
 
   useEffect(() => {
-    if (storageData?.accessToken && guardianList) {
+    if (storageData?.accessToken && storageData?.guardianStep && guardianList) {
       handleGuardianOperationAfterAuthWithInTelegram({
-        guardianStep: storageData.guardianStep!,
+        guardianStep: storageData.guardianStep,
         item: storageData.item,
         telegramAccessToken: storageData.accessToken,
       });
