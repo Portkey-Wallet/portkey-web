@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.5...v2.5.0-alpha.6) (2024-04-09)
+
+### Features
+
+- 🎸 cancel close when telegram platform ([996bdd7](https://github.com/Portkey-Wallet/portkey-web/commit/996bdd792e25fd84f6ea9d60cf91ef6237359dd1))
+
 ## [2.5.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.4...v2.5.0-alpha.5) (2024-04-09)
 
 ### Bug Fixes
