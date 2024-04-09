@@ -1,6 +1,6 @@
 {
   "name": "@portkey/did",
-  "version": "2.5.0-alpha.10",
+  "version": "2.5.0-alpha.11",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,7 +41,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey/services": "^2.5.0-alpha.10"
+    "@portkey/services": "^2.5.0-alpha.11"
   },
   "peerDependencies": {
     "@portkey/accounts": "^2.0.0-alpha.19",
@@ -56,5 +56,5 @@
   "devDependencies": {
     "imap": "^0.8.19"
   },
-  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
+  "gitHead": "cb6f6199df8d8a260421e23075ebc76292d61db5"
 }

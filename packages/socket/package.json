@@ -1,6 +1,6 @@
 {
   "name": "@portkey/socket",
-  "version": "2.5.0-alpha.10",
+  "version": "2.5.0-alpha.11",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -46,5 +46,5 @@
   "peerDependencies": {
     "@portkey/utils": "^1.5.2-alpha.0"
   },
-  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
+  "gitHead": "cb6f6199df8d8a260421e23075ebc76292d61db5"
 }
