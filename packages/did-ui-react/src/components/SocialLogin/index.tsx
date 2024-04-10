@@ -124,6 +124,7 @@ export default function SocialLogin({
         setLoading(true);
         const decodeResult = await getAccessTokenInDappTelegram(startParam);
         console.log('===res.data', decodeResult);
+        if (!decodeResult) return;
 
         await did.config.storageMethod.removeItem(startParam);
 

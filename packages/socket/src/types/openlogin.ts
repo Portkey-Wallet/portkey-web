@@ -7,6 +7,7 @@ export enum CrossTabPushMessageType {
   onEditGuardianResult = 'onEditGuardianResult',
   onGuardianApprovalResult = 'onGuardianApprovalResult',
   onCheckSellResult = 'onCheckSellResult',
+  onTransferSettingApproval = 'onTransferSettingApproval',
 }
 
 export type TAuthFinishResult = {
@@ -59,6 +60,13 @@ export interface IOpenloginSignalr {
   );
 
   onGuardianApprovalResult<T>(
+    params: {
+      requestId: string;
+    },
+    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
+  );
+
+  onTransferSettingApproval<T>(
     params: {
       requestId: string;
     },

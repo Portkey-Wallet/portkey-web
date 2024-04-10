@@ -1,5 +1,5 @@
 import { CrossTabPushMessageType, openloginSignal } from '@portkey/socket';
-import { forgeWeb, randomId, sleep } from '@portkey/utils';
+import { forgeWeb, randomId } from '@portkey/utils';
 import { stringifyUrl } from 'query-string';
 import { pushEncodeMessage, pushMessageByApi } from './openlogin/crossTabMessagePush';
 import { decodeMessageByRsaKey, did, handleErrorMessage } from '.';
@@ -21,25 +21,25 @@ export function isTelegramPlatform() {
   return false;
 }
 
-export function getTelegramStartParam() {
+export function getTelegramInitData() {
   if (isTelegramPlatform()) {
     const Telegram = getTelegram();
-    if (Telegram) {
-      const initData = Telegram?.WebApp.initData;
-      console.log('=== initData', initData);
-      if (initData && typeof initData === 'string' && initData.length > 0) {
-        console.log('===  qs.parse(initData)', qs.parse(initData));
-        return { startParam: (qs.parse(initData)?.start_param as string) || '' };
-      }
+    const initData = Telegram?.WebApp.initData;
+    if (initData && typeof initData === 'string') {
+      return qs.parse(initData) as unknown as TelegramWebappInitData;
     }
   }
-  return { startParam: null };
+}
+
+export function getTelegramStartParam() {
+  const initData = getTelegramInitData();
+  return { startParam: initData?.start_param || '' };
 }
 
 export async function getTelegramStorageById(storageKey: string, idKey: string, id: string) {
   if (isTelegramPlatform()) {
     const value = await did.config.storageMethod.getItem(storageKey);
-    if (value && typeof value === 'string' && value.length > 0) {
+    if (value && typeof value === 'string') {
       const valueParse = JSON.parse(value);
       if (valueParse[idKey] === id) {
         return valueParse;
@@ -143,7 +143,7 @@ export async function saveAccessTokenToPortkeyDatabase(
 export async function getDataFromLocalStorage(loginId: string) {
   const storage = await did.config.storageMethod.getItem(loginId);
   console.log('storage: ', storage);
-  if (storage && typeof storage === 'string' && storage.length > 0) {
+  if (storage && typeof storage === 'string') {
     return JSON.parse(storage);
   }
   return null;
@@ -197,7 +197,7 @@ export async function getAccessTokenAndOpenPortkeyWebapp({
     const data = await invokeDataFromPortkeyDatabase(loginId, CrossTabPushMessageType.onSavePublicKey);
     console.log('===dapp data', data);
     let dataParse = data;
-    if (data && typeof data === 'string' && data.length > 0) {
+    if (data && typeof data === 'string') {
       dataParse = JSON.parse(data);
     }
 

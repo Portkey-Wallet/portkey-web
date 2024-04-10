@@ -1,6 +1,8 @@
 import {
   getCommunicationSocketUrl,
   getCustomNetworkType,
+  getDappTelegramLink,
+  getPortkeyBotWebappLink,
   getServiceUrl,
   getStorageInstance,
 } from '../components/config-provider/utils';
@@ -12,8 +14,6 @@ import { devicesEnv } from '@portkey/utils';
 import OpenLogin from './openlogin';
 import { facebookAuthPath, twitterAuthPath } from './openlogin/constants';
 import { isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from './telegram';
-import { Portkey_Bot_Webapp } from '../constants/telegram';
-import ConfigProvider from '../components/config-provider';
 
 export const socialLoginInPortkeyApp = async (
   app: devicesEnv.IPortkeyShellClient,
@@ -159,11 +159,9 @@ export const telegramLoginAuth = async ({
   network?: NetworkType;
   extraStorageData?: Record<string, any>;
 }) => {
-  console.log('ConfigProvider config: ', ConfigProvider.config);
   const ctw = getCustomNetworkType();
-  const dappTelegramLink = ConfigProvider.getConfig('dappTelegramLink') as string;
-  if (!dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
-  const portkeyBotWebappLink = network ? Portkey_Bot_Webapp[ctw][network] : Portkey_Bot_Webapp[ctw].MAINNET;
+  const dappTelegramLink = getDappTelegramLink();
+  const portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, network);
   await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink, extraStorageData);
 };
 
