@@ -5065,10 +5065,10 @@ adjust-sourcemap-loader@^4.0.0:
     loader-utils "^2.0.0"
     regex-parser "^2.2.11"
 
-aelf-sdk@^3.2.45-beta.0, aelf-sdk@^3.2.45-beta.1:
-  version "3.4.1"
-  resolved "https://registry.npmjs.org/aelf-sdk/-/aelf-sdk-3.4.1.tgz#498afcf3fba256e624d2e00679a5ea6fa3937cad"
-  integrity sha512-ab3wH8Xilw97hM2her4TgcPaa/Ftpr5TLa2h1UpSzbi9uBydJfQUlnKZL+BRIezwOaZmC1VdJJ847YhI+jvdMA==
+aelf-sdk@^3.4.7:
+  version "3.4.7"
+  resolved "https://registry.npmjs.org/aelf-sdk/-/aelf-sdk-3.4.7.tgz#6b9a85c970cb971944e384b394e6f7b859081058"
+  integrity sha512-6wbt7gF2eSNkPwjjhB2CKC7RHaKu0VU0macrt0il6FmdW1E7f0JffzLEPrQ/qaYXfaeV0PrC1EoOXqsl7avaXQ==
   dependencies:
     "@aelfqueen/protobufjs" "^6.8.9"
     "@aws-crypto/sha256-js" "^5.0.0"
@@ -5076,10 +5076,11 @@ aelf-sdk@^3.2.45-beta.0, aelf-sdk@^3.2.45-beta.1:
     assert "^2.0.0"
     bignumber.js "^9.0.0"
     bip39 "^3.0.2"
+    bn.js "^5.2.1"
     browserify-cipher "^1.0.1"
     bs58 "^4.0.1"
     buffer "^5.2.1"
-    crypto-js "^3.1.9-1"
+    crypto-js "^4.2.0"
     elliptic "^6.4.1"
     hdkey "^1.1.1"
     query-string "5.1.1"
@@ -6005,6 +6006,11 @@ bn.js@^4.11.8, bn.js@^4.11.9:
   version "4.12.0"
   resolved "https://registry.npmjs.org/bn.js/-/bn.js-4.12.0.tgz#775b3f278efbb9718eec7361f483fb36fbbfea88"
   integrity sha512-c98Bf3tPniI+scsdk237ku1Dc3ujXQTSgyiPUDEOe7tRkhrqridvh8klBv0HCEso1OLOYcHuCv/cS6DNxKH+ZA==
+
+bn.js@^5.2.1:
+  version "5.2.1"
+  resolved "https://registry.npmjs.org/bn.js/-/bn.js-5.2.1.tgz#0bc527a6a0d18d0aa8d5b0538ce4a77dccfa7b70"
+  integrity sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==
 
 body-parser@1.20.1:
   version "1.20.1"
@@ -7135,10 +7141,10 @@ cross-spawn@^7.0.0, cross-spawn@^7.0.1, cross-spawn@^7.0.2, cross-spawn@^7.0.3:
     shebang-command "^2.0.0"
     which "^2.0.1"
 
-crypto-js@^3.1.9-1:
-  version "3.3.0"
-  resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
-  integrity sha512-DIT51nX0dCfKltpRiXV+/TVZq+Qq2NgF4644+K7Ttnla7zEzqc+kjJyiB96BHNyUTBxyjzRcZYpUdZa+QAqi6Q==
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 crypto-random-string@^2.0.0:
   version "2.0.0"

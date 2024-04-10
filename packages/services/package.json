@@ -50,7 +50,7 @@
     "@portkey/graphql": "^2.0.0-alpha.19",
     "@portkey/request": "^2.0.0-alpha.19",
     "@portkey/types": "^2.0.0-alpha.19",
-    "aelf-sdk": "^3.2.45-beta.0",
+    "aelf-sdk": "^3.4.7",
     "query-string": "^7.1.1"
   },
   "gitHead": "13acdc07aeac8dc6ee5ca61d8b6699328ac55b03"

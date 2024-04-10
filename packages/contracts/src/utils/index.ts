@@ -29,7 +29,7 @@ export const getContractBasic: IGetContract['getContractBasic'] = async (
     return chainProvider.getContract(contractAddress) as IPortkeyContract;
   }
 
-  const { aelfInstance, rpcUrl, account } = options;
+  const { aelfInstance, rpcUrl, account, extraOptions } = options;
   let instance = aelfInstance;
   if (rpcUrl) instance = aelf.getAelfInstance(rpcUrl);
   if (!instance) throw new Error('Get instance error');
@@ -41,12 +41,14 @@ export const getContractBasic: IGetContract['getContractBasic'] = async (
     rpcUrl: (instance as any)?.currentProvider?.host || 'host',
   };
 
+  const contractInitOption = { refBlockNumberStrategy: extraOptions?.refBlockNumberStrategy };
+
   // use ca contract
   if (callType === 'ca') {
     const { caContractAddress, caHash } = options as ICAInstanceOptions;
     const [aelfContract, caContract] = await Promise.all([
-      instance.chain.contractAt(contractAddress, account as AElfWallet),
-      instance.chain.contractAt(caContractAddress, account as AElfWallet),
+      instance.chain.contractAt(contractAddress, account as AElfWallet, contractInitOption),
+      instance.chain.contractAt(caContractAddress, account as AElfWallet, contractInitOption),
     ]);
     return new AElfCAContract({
       ...contractOptions,
@@ -56,7 +58,7 @@ export const getContractBasic: IGetContract['getContractBasic'] = async (
       caContractAddress,
     });
   }
-  const aelfContract = await instance.chain.contractAt(contractAddress, account as AElfWallet);
+  const aelfContract = await instance.chain.contractAt(contractAddress, account as AElfWallet, contractInitOption);
 
   // use basic contract
   return new ContractBasic({ ...contractOptions, aelfContract });
