@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.16...v2.5.0-alpha.17) (2024-04-10)
+
+**Note:** Version bump only for package @portkey/accounts
+
+## [2.5.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.15...v2.5.0-alpha.16) (2024-04-10)
+
+## [2.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.9...v2.4.3) (2024-04-03)
+
+### Features
+
+- 🎸 update aelf-sdk version to 3.4.7 ([6b4d9be](https://github.com/Portkey-Wallet/portkey-web/commit/6b4d9be2af7d7ac01626dfbd852109f8918e5f3f))
+
+## [2.5.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.14...v2.5.0-alpha.15) (2024-04-10)
+
+**Note:** Version bump only for package @portkey/accounts
+
+## [2.5.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.13...v2.5.0-alpha.14) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/accounts
+
+## [2.5.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.12...v2.5.0-alpha.13) (2024-04-09)
+
+**Note:** Version bump only for package @portkey/accounts
+
 ## [2.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.8...v2.5.0-alpha.12) (2024-04-09)
 
 **Note:** Version bump only for package @portkey/accounts

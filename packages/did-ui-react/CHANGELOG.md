@@ -3,6 +3,54 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.16...v2.5.0-alpha.17) (2024-04-10)
+
+### Bug Fixes
+
+- telegram user id type ([9e44d0b](https://github.com/Portkey-Wallet/portkey-web/commit/9e44d0bc91fd95660760cbecf82f5a510d2522ed))
+
+## [2.5.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.15...v2.5.0-alpha.16) (2024-04-10)
+
+### Bug Fixes
+
+- 🐛 decodeResult value ([01d86fa](https://github.com/Portkey-Wallet/portkey-web/commit/01d86fa5cead2e7080cb7097ec88169acf050e66))
+- accessToken in SocialLogin component ([570bb0e](https://github.com/Portkey-Wallet/portkey-web/commit/570bb0e9318d7bdd5d8860d18d3fd756337dbc53))
+
+## [2.4.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.9...v2.4.3) (2024-04-03)
+
+### Features
+
+- 🎸 update aelf-sdk version to 3.4.7 ([6b4d9be](https://github.com/Portkey-Wallet/portkey-web/commit/6b4d9be2af7d7ac01626dfbd852109f8918e5f3f))
+
+## [2.5.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.14...v2.5.0-alpha.15) (2024-04-10)
+
+### Features
+
+- 🎸 add portkey platform ([41e2d7a](https://github.com/Portkey-Wallet/portkey-web/commit/41e2d7a827922d07d77fce7791ea0b8973a9754c))
+- 🎸 modify telegram utils ([8c2869d](https://github.com/Portkey-Wallet/portkey-web/commit/8c2869dcbb22508fdc3455fe5d5f68d343c0d3c0))
+
+### Bug Fixes
+
+- fix issue with GuardianMain component not handling guardianStep properly ([4dbb187](https://github.com/Portkey-Wallet/portkey-web/commit/4dbb18759b5c5919958fc28f99515d126cf6f821))
+- improve getting telegram access token within telegram ([415cf36](https://github.com/Portkey-Wallet/portkey-web/commit/415cf36a998505e24684c9a0edc0fe4f4cd86778))
+
+## [2.5.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.13...v2.5.0-alpha.14) (2024-04-09)
+
+### Features
+
+- get telegram access token within telegram ([7a0aa18](https://github.com/Portkey-Wallet/portkey-web/commit/7a0aa180b4c0f03dc759ddb15d1a2173b9f4314f))
+
+### Bug Fixes
+
+- decodeResult may be undefined ([a7e2b25](https://github.com/Portkey-Wallet/portkey-web/commit/a7e2b255496bc9fc356966141caa915c64f9d377))
+
+## [2.5.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.12...v2.5.0-alpha.13) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 tg guardian approval ([8dd92c7](https://github.com/Portkey-Wallet/portkey-web/commit/8dd92c7f283d996b9ef27cb5128707948f937316))
+- 🐛 ts error ([9b53f3f](https://github.com/Portkey-Wallet/portkey-web/commit/9b53f3ff207024ca85914d8c57191948e5aec42d))
+
 ## [2.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.8...v2.5.0-alpha.12) (2024-04-09)
 
 ### Bug Fixes
