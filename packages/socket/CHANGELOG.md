@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.14...v2.5.0-alpha.15) (2024-04-10)
+
+### Features
+
+- 🎸 modify telegram utils ([8c2869d](https://github.com/Portkey-Wallet/portkey-web/commit/8c2869dcbb22508fdc3455fe5d5f68d343c0d3c0))
+
 ## [2.5.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.13...v2.5.0-alpha.14) (2024-04-09)
 
 **Note:** Version bump only for package @portkey/socket
