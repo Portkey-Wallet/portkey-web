@@ -1,5 +1,5 @@
 import { ChainId, ChainType } from '@portkey/types';
-import { GuardiansApproved } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { GuardianStep } from '../components/Guardian/index.component';
 import { NetworkType } from './wallet';
 import { UserGuardianStatus } from './guardian';
@@ -19,6 +19,20 @@ export type TOpenLoginGuardianLocationState = {
 export interface IOpenLoginGuardianResponse {
   preGuardian?: UserGuardianStatus;
   currentGuardian: UserGuardianStatus;
+  approvalInfo: GuardiansApproved[];
+}
+
+export type TOpenLoginGuardianApprovalLocationState = {
+  networkType: NetworkType;
+  originChainId: ChainId;
+  targetChainId: ChainId;
+  caHash?: string;
+  identifier?: string;
+  operationType: OperationTypeEnum;
+  isErrorTip?: boolean;
+} & Record<string, any>;
+
+export interface IOpenLoginGuardianApprovalResponse {
   approvalInfo: GuardiansApproved[];
 }
 

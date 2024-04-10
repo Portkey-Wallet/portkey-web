@@ -45,7 +45,7 @@ export default function TelegramLoginButton({ className, onBeforeBack }: Telegra
       telegramInitData.current = initData;
 
       // show user name
-      if (initData?.user && typeof initData.user === 'string' && initData.user.length > 0) {
+      if (initData?.user && typeof initData.user === 'string') {
         const userObject = JSON.parse(initData.user) as TelegramWebappInitUserData;
         setUserName(userObject.first_name);
       }

@@ -1,5 +1,5 @@
 import { CrossTabPushMessageType, openloginSignal } from '@portkey/socket';
-import { forgeWeb, randomId, sleep } from '@portkey/utils';
+import { forgeWeb, randomId } from '@portkey/utils';
 import { stringifyUrl } from 'query-string';
 import { pushEncodeMessage, pushMessageByApi } from './openlogin/crossTabMessagePush';
 import { decodeMessageByRsaKey, did, handleErrorMessage } from '.';
@@ -39,7 +39,7 @@ export function getTelegramStartParam() {
 export async function getTelegramStorageById(storageKey: string, idKey: string, id: string) {
   if (isTelegramPlatform()) {
     const value = await did.config.storageMethod.getItem(storageKey);
-    if (value && typeof value === 'string' && value.length > 0) {
+    if (value && typeof value === 'string') {
       const valueParse = JSON.parse(value);
       if (valueParse[idKey] === id) {
         return valueParse;
@@ -143,7 +143,7 @@ export async function saveAccessTokenToPortkeyDatabase(
 export async function getDataFromLocalStorage(loginId: string) {
   const storage = await did.config.storageMethod.getItem(loginId);
   console.log('storage: ', storage);
-  if (storage && typeof storage === 'string' && storage.length > 0) {
+  if (storage && typeof storage === 'string') {
     return JSON.parse(storage);
   }
   return null;
@@ -197,7 +197,7 @@ export async function getAccessTokenAndOpenPortkeyWebapp({
     const data = await invokeDataFromPortkeyDatabase(loginId, CrossTabPushMessageType.onSavePublicKey);
     console.log('===dapp data', data);
     let dataParse = data;
-    if (data && typeof data === 'string' && data.length > 0) {
+    if (data && typeof data === 'string') {
       dataParse = JSON.parse(data);
     }
 
