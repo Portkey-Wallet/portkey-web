@@ -132,7 +132,7 @@ export default function SocialLogin({
         const result = {
           type: 'Telegram' as ISocialLogin,
           data: {
-            accessToken: decodeResult || '',
+            accessToken: decodeResult?.accessToken || '',
           },
         };
         console.log('=== result', result);

@@ -315,8 +315,8 @@ const GuardianApprovalMain = forwardRef(
               console.log('===res.data', decodeResult);
               if (!decodeResult) return;
               await did.config.storageMethod.removeItem(startParam);
-              item.accessToken === decodeResult;
-              await socialVerifyHandler({ ...item, accessToken: decodeResult }, index);
+              item.accessToken = decodeResult?.accessToken || '';
+              await socialVerifyHandler({ ...item, accessToken: decodeResult?.accessToken || '' }, index);
               return;
             }
           });
