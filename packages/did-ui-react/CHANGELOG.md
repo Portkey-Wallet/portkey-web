@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.16...v2.5.0-alpha.17) (2024-04-10)
+
+### Bug Fixes
+
+- telegram user id type ([9e44d0b](https://github.com/Portkey-Wallet/portkey-web/commit/9e44d0bc91fd95660760cbecf82f5a510d2522ed))
+
 ## [2.5.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.15...v2.5.0-alpha.16) (2024-04-10)
 
 ### Bug Fixes
