@@ -32,6 +32,7 @@ import {
   IVerificationInfo,
   NetworkType,
   ISocialLogin,
+  ITelegramInfo,
 } from '../../types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
@@ -56,6 +57,7 @@ export interface GuardianApprovalProps {
   operationType: OperationTypeEnum;
   operationDetails: TStringJSON;
   networkType: NetworkType;
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -78,6 +80,7 @@ const GuardianApprovalMain = forwardRef(
       wrapperStyle,
       operationType,
       operationDetails,
+      telegramInfo,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -140,8 +143,11 @@ const GuardianApprovalMain = forwardRef(
       async (item: UserGuardianStatus, index: number) => {
         try {
           setLoading(true);
-          const accessToken = item?.accessToken;
           const accountType = item.guardianType as ISocialLogin;
+          const accessToken =
+            accountType === 'Telegram' && telegramInfo?.userId === item.guardianIdentifier && telegramInfo?.accessToken
+              ? telegramInfo.accessToken
+              : item.accessToken;
           const { clientId, redirectURI, customLoginHandler } = getSocialConfig(accountType);
           if (!item.verifier?.id) throw 'verifier id is not exist';
           const id = item.identifier || item.identifierHash;
@@ -188,7 +194,18 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [verifyToken, originChainId, targetChainId, operationType, networkType, operationDetails, isErrorTip, onError],
+      [
+        telegramInfo?.userId,
+        telegramInfo?.accessToken,
+        verifyToken,
+        originChainId,
+        targetChainId,
+        operationType,
+        networkType,
+        operationDetails,
+        isErrorTip,
+        onError,
+      ],
     );
 
     const onVerifyingHandler = useCallback(

@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.14...v2.5.0-alpha.15) (2024-04-10)
+
+### Features
+
+- 🎸 add portkey platform ([41e2d7a](https://github.com/Portkey-Wallet/portkey-web/commit/41e2d7a827922d07d77fce7791ea0b8973a9754c))
+- 🎸 modify telegram utils ([8c2869d](https://github.com/Portkey-Wallet/portkey-web/commit/8c2869dcbb22508fdc3455fe5d5f68d343c0d3c0))
+
+### Bug Fixes
+
+- fix issue with GuardianMain component not handling guardianStep properly ([4dbb187](https://github.com/Portkey-Wallet/portkey-web/commit/4dbb18759b5c5919958fc28f99515d126cf6f821))
+- improve getting telegram access token within telegram ([415cf36](https://github.com/Portkey-Wallet/portkey-web/commit/415cf36a998505e24684c9a0edc0fe4f4cd86778))
+
 ## [2.5.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.13...v2.5.0-alpha.14) (2024-04-09)
 
 ### Features

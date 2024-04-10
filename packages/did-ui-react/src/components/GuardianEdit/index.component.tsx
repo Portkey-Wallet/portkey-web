@@ -14,6 +14,7 @@ import {
 } from '../../utils';
 import {
   ISocialLogin,
+  ITelegramInfo,
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
@@ -59,7 +60,7 @@ export interface GuardianEditProps {
   networkType: NetworkType;
   chainType?: ChainType;
   sandboxId?: string;
-  telegramAccessToken?: string;
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   handleEditGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
   handleRemoveGuardian?: (approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -86,7 +87,7 @@ function GuardianEdit({
   networkType,
   chainType = 'aelf',
   sandboxId,
-  telegramAccessToken,
+  telegramInfo,
   onError,
   handleEditGuardian,
   handleRemoveGuardian,
@@ -222,8 +223,12 @@ function GuardianEdit({
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
       let token = '';
-      if (_guardian?.guardianType === 'Telegram' && telegramAccessToken) {
-        token = telegramAccessToken;
+      if (
+        _guardian?.guardianType === 'Telegram' &&
+        telegramInfo?.userId === _guardian?.guardianIdentifier &&
+        telegramInfo?.accessToken
+      ) {
+        token = telegramInfo.accessToken;
       } else {
         const response = await socialLoginAuth({
           type: _guardian?.guardianType as ISocialLogin,
@@ -251,7 +256,15 @@ function GuardianEdit({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, telegramAccessToken, verifyToken, originChainId, networkType, operationDetails],
+    [
+      socialBasic,
+      telegramInfo?.userId,
+      telegramInfo?.accessToken,
+      verifyToken,
+      originChainId,
+      networkType,
+      operationDetails,
+    ],
   );
   const sendCode = useCallback(async () => {
     try {
@@ -523,6 +536,7 @@ function GuardianEdit({
           originChainId={originChainId}
           guardianList={approvalGuardianList}
           networkType={networkType}
+          telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
