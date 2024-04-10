@@ -3,7 +3,7 @@ import { GuardiansApproved } from '@portkey/services';
 import { GuardianStep } from '../components/Guardian/index.component';
 import { NetworkType } from './wallet';
 import { UserGuardianStatus } from './guardian';
-import { TCustomNetworkType } from '.';
+import { ITelegramInfo, TCustomNetworkType } from '.';
 
 export type TOpenLoginGuardianLocationState = {
   networkType: NetworkType;
@@ -13,7 +13,7 @@ export type TOpenLoginGuardianLocationState = {
   guardianStep: GuardianStep;
   isErrorTip?: boolean;
   currentGuardian?: UserGuardianStatus;
-  telegramAccessToken: string;
+  telegramInfo: ITelegramInfo;
 } & Record<string, any>;
 
 export interface IOpenLoginGuardianResponse {

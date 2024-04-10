@@ -30,7 +30,7 @@ import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGua
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
-import { isTelegramPlatform } from '../../utils/telegram';
+import { getTelegramInitData, isTelegramPlatform } from '../../utils/telegram';
 import { Open_Login_Guardian_Bridge } from '../../constants/telegram';
 import OpenLogin from '../../utils/openlogin';
 import {
@@ -98,7 +98,23 @@ function GuardianMain({
   useThrottleFirstEffect(() => {
     AuthServe.addRequestAuthCheck(originChainId);
   }, []);
+  const [currentStorageData, setCurrentStorageData] = useState<IStorageData>({});
+
+  useEffect(() => {
+    setCurrentStorageData(storageData || {});
+  }, [storageData]);
+
+  const telegramUserId = useMemo(() => {
+    const telegramInitData = getTelegramInitData();
+    const telegramUserInfo = telegramInitData?.user ? JSON.parse(telegramInitData.user) : {};
+    return telegramUserInfo.id as string | undefined;
+  }, []);
+
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);
+  const hasTelegramGuardian = useMemo(
+    () => guardianList?.some((item) => item?.guardianType === 'Telegram'),
+    [guardianList],
+  );
   const getVerifierInfo = useCallback(async () => {
     try {
       const chainInfo = await getChainInfo(originChainId);
@@ -366,7 +382,11 @@ function GuardianMain({
       telegramAccessToken?: string;
     }) => {
       console.log('++++++++++++ telegramAccessToken: ', telegramAccessToken);
-      if (!telegramAccessToken) {
+      if (!telegramUserId) return;
+      if (
+        (guardianStep === GuardianStep.guardianAdd && !telegramAccessToken) ||
+        (guardianStep === GuardianStep.guardianView && hasTelegramGuardian && !telegramAccessToken)
+      ) {
         await telegramLoginAuth({
           network: networkType,
           extraStorageData: { guardianStep, item },
@@ -392,7 +412,10 @@ function GuardianMain({
         guardianStep,
         isErrorTip,
         currentGuardian: item,
-        telegramAccessToken,
+        telegramInfo: {
+          accessToken: telegramAccessToken,
+          userId: telegramUserId,
+        },
       };
       const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge[ctw], params, socketMethod);
       if (!result) return null;
@@ -430,9 +453,11 @@ function GuardianMain({
       handleEditGuardian,
       handleRemoveGuardian,
       handleSetLoginGuardian,
+      hasTelegramGuardian,
       isErrorTip,
       networkType,
       originChainId,
+      telegramUserId,
     ],
   );
   const onAddGuardian = useCallback(
@@ -504,14 +529,15 @@ function GuardianMain({
   );
 
   useEffect(() => {
-    if (storageData?.accessToken && storageData?.guardianStep && guardianList) {
+    if (currentStorageData?.accessToken && currentStorageData?.guardianStep && guardianList) {
+      setCurrentStorageData({});
       handleGuardianOperationAfterAuthWithInTelegram({
-        guardianStep: storageData.guardianStep,
-        item: storageData.item,
-        telegramAccessToken: storageData.accessToken,
+        guardianStep: currentStorageData.guardianStep,
+        item: currentStorageData.item,
+        telegramAccessToken: currentStorageData.accessToken,
       });
     }
-  }, [storageData, handleGuardianOperationAfterAuthWithInTelegram, guardianList]);
+  }, [currentStorageData, handleGuardianOperationAfterAuthWithInTelegram, guardianList]);
 
   const renderBackHeaderLeftEle = useCallback(
     (goBack?: () => void) => (

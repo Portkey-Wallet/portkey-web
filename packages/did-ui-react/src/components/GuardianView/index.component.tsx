@@ -4,6 +4,7 @@ import { AccountTypeEnum, OperationTypeEnum, VerifierItem, GuardiansApproved } f
 import { useTranslation } from 'react-i18next';
 import {
   ISocialLogin,
+  ITelegramInfo,
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
@@ -46,7 +47,7 @@ export interface GuardianViewProps {
   currentGuardian: UserGuardianStatus;
   guardianList?: UserGuardianStatus[];
   networkType: NetworkType;
-  telegramAccessToken?: string;
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -61,7 +62,7 @@ function GuardianView({
   currentGuardian,
   guardianList,
   networkType,
-  telegramAccessToken,
+  telegramInfo,
   handleSetLoginGuardian,
   onError,
 }: GuardianViewProps) {
@@ -100,8 +101,12 @@ function GuardianView({
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
       let token = '';
-      if (_guardian?.guardianType === 'Telegram' && telegramAccessToken) {
-        token = telegramAccessToken;
+      if (
+        _guardian?.guardianType === 'Telegram' &&
+        telegramInfo?.userId === _guardian?.guardianIdentifier &&
+        telegramInfo?.accessToken
+      ) {
+        token = telegramInfo.accessToken;
       } else {
         const response = await socialLoginAuth({
           type: _guardian?.guardianType as ISocialLogin,
@@ -129,7 +134,16 @@ function GuardianView({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, telegramAccessToken, verifyToken, originChainId, networkType, operationType, operationDetails],
+    [
+      socialBasic,
+      telegramInfo?.userId,
+      telegramInfo?.accessToken,
+      verifyToken,
+      originChainId,
+      networkType,
+      operationType,
+      operationDetails,
+    ],
   );
 
   const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
@@ -422,6 +436,7 @@ function GuardianView({
           originChainId={originChainId}
           guardianList={guardianList?.filter((item) => item.key !== currentGuardian.key)}
           networkType={networkType}
+          telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}

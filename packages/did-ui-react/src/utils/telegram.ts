@@ -21,19 +21,19 @@ export function isTelegramPlatform() {
   return false;
 }
 
-export function getTelegramStartParam() {
+export function getTelegramInitData() {
   if (isTelegramPlatform()) {
     const Telegram = getTelegram();
-    if (Telegram) {
-      const initData = Telegram?.WebApp.initData;
-      console.log('=== initData', initData);
-      if (initData && typeof initData === 'string' && initData.length > 0) {
-        console.log('===  qs.parse(initData)', qs.parse(initData));
-        return { startParam: (qs.parse(initData)?.start_param as string) || '' };
-      }
+    const initData = Telegram?.WebApp.initData;
+    if (initData && typeof initData === 'string') {
+      return qs.parse(initData) as unknown as TelegramWebappInitData;
     }
   }
-  return { startParam: null };
+}
+
+export function getTelegramStartParam() {
+  const initData = getTelegramInitData();
+  return { startParam: initData?.start_param || '' };
 }
 
 export async function getTelegramStorageById(storageKey: string, idKey: string, id: string) {
