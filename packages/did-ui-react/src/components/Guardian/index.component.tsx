@@ -107,7 +107,7 @@ function GuardianMain({
   const telegramUserId = useMemo(() => {
     const telegramInitData = getTelegramInitData();
     const telegramUserInfo = telegramInitData?.user ? JSON.parse(telegramInitData.user) : {};
-    return telegramUserInfo.id as string | undefined;
+    return telegramUserInfo.id ? String(telegramUserInfo.id) : undefined;
   }, []);
 
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);
