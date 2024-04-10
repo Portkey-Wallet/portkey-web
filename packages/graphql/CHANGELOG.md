@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.15...v2.5.0-alpha.16) (2024-04-10)
+
+**Note:** Version bump only for package @portkey/graphql
+
 ## [2.5.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.14...v2.5.0-alpha.15) (2024-04-10)
 
 **Note:** Version bump only for package @portkey/graphql
