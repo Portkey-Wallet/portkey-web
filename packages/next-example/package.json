@@ -10,7 +10,7 @@
   "dependencies": {
     "@portkey/did-ui-react": "^2.5.0-alpha.14",
     "@portkey/onboarding": "^2.5.0-alpha.14",
-    "aelf-sdk": "^3.2.45-beta.1",
+    "aelf-sdk": "^3.4.7",
     "antd": "4.24.14",
     "next": "14.0.3",
     "next-transpile-modules": "^10.0.0",
