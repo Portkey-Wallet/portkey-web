@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.17...v2.5.0-alpha.18) (2024-04-11)
+
+### Bug Fixes
+
+- add support for Telegram type in GuardianAccountShow component ([64510c5](https://github.com/Portkey-Wallet/portkey-web/commit/64510c54e20a6d6b2b6a31079aa57ff827492eb3))
+- include telegramUserId in hasTelegramGuardian check ([67b2aa2](https://github.com/Portkey-Wallet/portkey-web/commit/67b2aa23fb580cfaa87ae1cb68e4100f263e07eb))
+
 ## [2.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.16...v2.5.0-alpha.17) (2024-04-10)
 
 ### Bug Fixes
