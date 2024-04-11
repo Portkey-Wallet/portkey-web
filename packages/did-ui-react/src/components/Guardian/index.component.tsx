@@ -112,8 +112,9 @@ function GuardianMain({
 
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);
   const hasTelegramGuardian = useMemo(
-    () => guardianList?.some((item) => item?.guardianType === 'Telegram'),
-    [guardianList],
+    () =>
+      guardianList?.some((item) => item?.guardianType === 'Telegram' && item?.guardianIdentifier === telegramUserId),
+    [guardianList, telegramUserId],
   );
   const getVerifierInfo = useCallback(async () => {
     try {
