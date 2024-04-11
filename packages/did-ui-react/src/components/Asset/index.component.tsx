@@ -12,9 +12,9 @@ import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
-import { TRampInitState, TRampPreviewInitState } from '../../types';
+import { TAssetPageState, TRampInitState, TRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
-import { useUpdateEffect } from 'react-use';
+import { useEffectOnce, useUpdateEffect } from 'react-use';
 import SendMain, { SendExtraConfig } from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
@@ -39,24 +39,8 @@ import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
 import { getAccessTokenInDappTelegram, getTelegramStartParam } from '../../utils/telegram';
 import { IStorageData } from '../Guardian/index.component';
-
-export enum AssetStep {
-  overview = 'overview',
-  receive = 'receive',
-  ramp = 'ramp',
-  rampPreview = 'rampPreview',
-  send = 'send',
-  transactionDetail = 'transactionDetail',
-  tokenDetail = 'tokenDetail',
-  NFTDetail = 'NFTDetail',
-  my = 'my',
-  guardians = 'guardians',
-  walletSecurity = 'walletSecurity',
-  paymentSecurity = 'paymentSecurity',
-  transferSettings = 'transferSettings',
-  transferSettingsEdit = 'transferSettingsEdit',
-  deleteAccount = 'deleteAccount',
-}
+import { AssetStep } from '../../constants/assets';
+import { PortkeyAssetLiftCycle } from '../../constants/storage';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -94,6 +78,7 @@ function AssetMain({
   const [{ caInfo, initialized, originChainId, caHash, managementAccount }, { dispatch }] = usePortkeyAsset();
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
+  const [preStep, setPreStep] = useState<AssetStep>(AssetStep.overview);
   const preStepRef = useRef<AssetStep>(AssetStep.overview);
 
   const [isMixShowRamp, setIsMixShowRamp] = useState<boolean>(isShowRamp);
@@ -115,10 +100,6 @@ function AssetMain({
       throw handleErrorMessage(error);
     }
   }, [isShowRamp, isShowRampBuy, isShowRampSell, networkType]);
-
-  useUpdateEffect(() => {
-    onLifeCycleChange?.(assetStep || AssetStep.overview);
-  }, [assetStep]);
 
   const getShowDeletion = useIsShowDeletion();
 
@@ -230,6 +211,90 @@ function AssetMain({
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);
   }, []);
+
+  const saveLiftCycleInfo = useCallback(async () => {
+    console.log('====== saveLiftCycleInfo', assetStep);
+    let storageValue = {
+      assetStep: assetStep || AssetStep.overview,
+      preStep: preStep || AssetStep.overview,
+      accelerateChainId,
+    };
+    switch (assetStep) {
+      case AssetStep.send:
+        storageValue = Object.assign(storageValue, {
+          selectToken,
+          sendToken,
+          sendExtraConfig,
+          viewPaymentSecurity,
+        });
+        break;
+
+      case AssetStep.transferSettingsEdit:
+        storageValue = Object.assign(storageValue, {
+          viewPaymentSecurity,
+        });
+        break;
+      case AssetStep.ramp:
+        storageValue = Object.assign(storageValue, {
+          rampExtraConfig,
+          viewPaymentSecurity,
+        });
+
+        break;
+
+      default:
+        storageValue = Object.assign(storageValue, {
+          rampExtraConfig: rampState,
+          viewPaymentSecurity: InitTransferLimitData,
+        });
+        break;
+    }
+
+    await did.config.storageMethod.setItem(PortkeyAssetLiftCycle, JSON.stringify(storageValue));
+  }, [
+    accelerateChainId,
+    assetStep,
+    preStep,
+    rampExtraConfig,
+    rampState,
+    selectToken,
+    sendExtraConfig,
+    sendToken,
+    viewPaymentSecurity,
+  ]);
+
+  const setPageState = useCallback((pageState: TAssetPageState) => {
+    setAssetStep(pageState.assetStep);
+    setPreStep(pageState?.preStep || AssetStep.overview);
+    preStepRef.current = pageState?.preStep || AssetStep.overview;
+    pageState?.accelerateChainId && setAccelerateChainId(pageState.accelerateChainId);
+    pageState?.selectToken && setSelectToken(pageState.selectToken);
+    pageState?.sendToken && setSendToken(pageState.sendToken);
+    pageState?.sendExtraConfig && setSendExtraConfig(pageState.sendExtraConfig);
+    pageState?.rampExtraConfig && setRampExtraConfig(pageState.rampExtraConfig);
+    pageState?.viewPaymentSecurity && setViewPaymentSecurity(pageState.viewPaymentSecurity);
+  }, []);
+
+  const restorePageState = useCallback(async () => {
+    // get data from localStorage, for restore page form telegram auth
+    const storageValue = await did.config.storageMethod.getItem(PortkeyAssetLiftCycle);
+    if (storageValue && typeof storageValue === 'string') {
+      const storageValueParsed = JSON.parse(storageValue);
+      setPageState(storageValueParsed);
+    }
+  }, [setPageState]);
+
+  useEffectOnce(() => {
+    if (initialized) {
+      restorePageState();
+    }
+  });
+
+  useUpdateEffect(() => {
+    onLifeCycleChange?.(assetStep || AssetStep.overview);
+
+    saveLiftCycleInfo();
+  }, [assetStep]);
 
   const onReceive = useCallback(async (v: any) => {
     setSelectToken({
@@ -349,11 +414,12 @@ function AssetMain({
               onBuy={onBuy}
               onSend={(v) => {
                 preStepRef.current = AssetStep.overview;
-
+                setPreStep(AssetStep.overview);
                 onSend(v);
               }}
               onViewActivityItem={(v) => {
                 preStepRef.current = AssetStep.overview;
+                setPreStep(AssetStep.overview);
                 onViewActivityItem(v);
               }}
               onViewTokenItem={(v) => {
@@ -487,10 +553,12 @@ function AssetMain({
                   },
                 };
                 preStepRef.current = AssetStep.tokenDetail;
+                setPreStep(AssetStep.tokenDetail);
                 onSend(info);
               }}
               onViewActivityItem={(v) => {
                 preStepRef.current = AssetStep.tokenDetail;
+                setPreStep(AssetStep.tokenDetail);
                 onViewActivityItem(v);
               }}
             />
@@ -508,6 +576,7 @@ function AssetMain({
                   nftInfo: nft,
                 };
                 preStepRef.current = AssetStep.NFTDetail;
+                setPreStep(AssetStep.NFTDetail);
                 onSend(info);
               }}
             />

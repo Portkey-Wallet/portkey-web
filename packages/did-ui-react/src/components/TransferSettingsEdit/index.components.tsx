@@ -24,6 +24,20 @@ import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
+import { isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from '../../utils/telegram';
+import { CrossTabPushMessageType } from '@portkey/socket';
+import {
+  getCommunicationSocketUrl,
+  getCustomNetworkType,
+  getDappTelegramLink,
+  getPortkeyBotWebappLink,
+  getServiceUrl,
+  getStorageInstance,
+} from '../config-provider/utils';
+import OpenLogin from '../../utils/openlogin';
+import { Open_Login_Guardian_Approval_Bridge } from '../../constants/telegram';
+import { IOpenLoginGuardianApprovalResponse } from '../../types/openlogin';
+import { TransferSettingBusinessKey } from '../../constants/storage';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -276,10 +290,77 @@ export default function TransferSettingsEditMain({
 
   const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.modifyTransferLimit), []);
 
-  const onFinish = () => {
+  const telegramAccessTokenRef = useRef<string>('');
+  const handleWithinTelegram = useCallback(
+    async (socketMethod: Array<CrossTabPushMessageType>) => {
+      try {
+        setLoading(true);
+        // savaDataToStorage - initData
+        const serviceURI = getServiceUrl();
+        const socketURI = getCommunicationSocketUrl();
+        const ctw = getCustomNetworkType();
+
+        const openlogin = new OpenLogin({
+          network: ctw,
+          serviceURI: serviceURI,
+          socketURI,
+          currentStorage: getStorageInstance(),
+          // sdkUrl: Open_Login_Bridge.local,
+        });
+        console.log('=== openlogin', openlogin);
+
+        const params = {
+          networkType,
+          originChainId,
+          targetChainId,
+          caHash,
+          operationType: OperationTypeEnum.modifyTransferLimit,
+          isErrorTip,
+          telegramAuth: telegramAccessTokenRef.current,
+        };
+        console.log('=== params', params);
+        const result = await openlogin.openloginHandler(Open_Login_Guardian_Approval_Bridge[ctw], params, socketMethod);
+        console.log('====== result', result);
+        if (!result) return null;
+        await did.config.storageMethod.removeItem(TransferSettingBusinessKey);
+        const { approvalInfo } = result.data as IOpenLoginGuardianApprovalResponse;
+        console.log('====== approvalInfo', approvalInfo);
+        approvalSuccess(approvalInfo);
+        return;
+      } catch (error) {
+        throw new Error(handleErrorMessage(error));
+      } finally {
+        setLoading(false);
+      }
+    },
+    [approvalSuccess, caHash, isErrorTip, networkType, originChainId, targetChainId],
+  );
+
+  const onFinish = async () => {
     const errorCount = handleFormChange();
     if (errorCount > 0) return;
+    console.log('====== initData.singleLimit', initData.singleLimit);
 
+    // Check Platform
+    if (isTelegramPlatform()) {
+      // inside the telegram app
+      const ctw = getCustomNetworkType();
+      const dappTelegramLink = getDappTelegramLink();
+      const portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, networkType);
+      const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
+      const storageValue = JSON.stringify({
+        ...initData,
+        singleLimit: timesDecimals(singleLimit, initData.decimals).toFixed(),
+        dailyLimit: timesDecimals(dailyLimit, initData.decimals).toFixed(),
+        restricted: restricted,
+        needGoToOpenLoginApproval: true,
+      });
+      await did.config.storageMethod.setItem(TransferSettingBusinessKey, storageValue);
+      await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink);
+      return;
+    }
+
+    // not inside telegram app
     setApprovalVisible(true);
   };
 
@@ -290,6 +371,27 @@ export default function TransferSettingsEditMain({
     setLoading(false);
   }, [getGuardianList, getVerifierInfo]);
 
+  const handleApprovalWithInOpenLogin = useCallback(async () => {
+    const storageValue = await did.config.storageMethod.getItem(TransferSettingBusinessKey);
+    if (storageValue && typeof storageValue === 'string') {
+      const storageValueParsed = JSON.parse(storageValue);
+      if (storageValueParsed.needGoToOpenLoginApproval) {
+        form.setFieldValue(
+          'singleLimit',
+          divDecimals(storageValueParsed.singleLimit, storageValueParsed.decimals).toFixed(),
+        );
+        form.setFieldValue(
+          'dailyLimit',
+          divDecimals(storageValueParsed.dailyLimit, storageValueParsed.decimals).toFixed(),
+        );
+        form.setFieldValue('restricted', storageValueParsed.restricted);
+        setRestrictedValue(storageValueParsed.restricted);
+
+        await handleWithinTelegram([CrossTabPushMessageType.onTransferSettingApproval]);
+      }
+    }
+  }, [form, handleWithinTelegram]);
+
   useEffectOnce(() => {
     getData();
 
@@ -298,11 +400,19 @@ export default function TransferSettingsEditMain({
       form.setFieldValue('dailyLimit', divDecimals(initData.defaultDailyLimit, initData.decimals).toFixed());
     }
     handleDisableCheck();
+
+    if (isTelegramPlatform()) handleApprovalWithInOpenLogin();
   });
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
-      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={() => onBack?.(initData)} />
+      <BackHeaderForPage
+        title={`Transfer Settings`}
+        leftCallBack={async () => {
+          did.config.storageMethod.removeItem(TransferSettingBusinessKey);
+          onBack?.(initData);
+        }}
+      />
       <Form
         form={form}
         autoComplete="off"
