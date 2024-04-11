@@ -97,3 +97,10 @@ export type TPushMessageByApi = {
   params: TPushMessageByApiParams;
   times?: number;
 };
+
+export interface PopupResponse {
+  token: string;
+  provider: ISocialLogin;
+  code?: string;
+  message?: string;
+}

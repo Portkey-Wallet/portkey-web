@@ -17,14 +17,14 @@ import AccountRecommendGroup from '../AccountRecommendGroup';
 import TermsOfServiceItem from '../TermsOfServiceItem';
 import { CreateWalletType, LoginFinishWithoutPin, Theme } from '../types';
 import useSocialLogin from '../../hooks/useSocialLogin';
-import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
 import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
-import { getAccessTokenInDappTelegram, getTelegramStartParam } from '../../utils/telegram';
+import { useGetTelegramAccessToken } from '../../hooks/telegram';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -113,51 +113,17 @@ export default function SocialLogin({
     [isErrorTip, socialLoginHandler],
   );
 
-  const handleLoginAfterAuthWithInTelegram = useCallback(async () => {
-    // TODO tg test
-    const { startParam } = getTelegramStartParam();
-    // const startParam = '1712052456778_38986';
-    console.log('====startParam', startParam);
-    if (startParam) {
-      clearInterval(timerRef.current);
-      try {
-        setLoading(true);
-        const decodeResult = await getAccessTokenInDappTelegram(startParam);
-        console.log('===res.data', decodeResult);
-        if (!decodeResult) return;
-
-        await did.config.storageMethod.removeItem(startParam);
-
-        // get AccessToken from socket
-        const result = {
-          type: 'Telegram' as ISocialLogin,
-          data: {
-            accessToken: decodeResult?.accessToken || '',
-          },
-        };
-        console.log('=== result', result);
-        onFinishRef.current?.(result);
-      } catch (error) {
-        throw new Error(handleErrorMessage(error));
-      } finally {
-        setLoading(false);
-      }
-    }
-  }, []);
-
-  const timerRef = useRef<NodeJS.Timer | number>();
-  useEffect(() => {
-    console.log('=== useEffect setInterval', '');
-    // TODO tg
-    timerRef.current = setInterval(() => {
-      handleLoginAfterAuthWithInTelegram();
-    }, 2000);
-
-    return () => {
-      clearInterval(timerRef.current);
-      timerRef.current = undefined;
+  const handleLoginAfterAuthWithInTelegram = useCallback(async (token: string) => {
+    const result = {
+      type: 'Telegram' as ISocialLogin,
+      data: {
+        accessToken: token,
+      },
     };
-  }, [handleLoginAfterAuthWithInTelegram]);
+    console.log('=== result', result);
+    onFinishRef.current?.(result);
+  }, []);
+  useGetTelegramAccessToken(handleLoginAfterAuthWithInTelegram);
 
   const recommendList = useMemo(() => {
     if (Array.isArray(recommendIndexes)) {

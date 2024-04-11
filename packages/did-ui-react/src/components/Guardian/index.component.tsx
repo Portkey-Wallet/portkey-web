@@ -30,7 +30,7 @@ import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGua
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
-import { getTelegramInitData, isTelegramPlatform } from '../../utils/telegram';
+import { getTelegramUserId, hasCurrentTelegramGuardian, isTelegramPlatform } from '../../utils/telegram';
 import { Open_Login_Guardian_Bridge } from '../../constants/telegram';
 import OpenLogin from '../../utils/openlogin';
 import {
@@ -104,18 +104,8 @@ function GuardianMain({
     setCurrentStorageData(storageData || {});
   }, [storageData]);
 
-  const telegramUserId = useMemo(() => {
-    const telegramInitData = getTelegramInitData();
-    const telegramUserInfo = telegramInitData?.user ? JSON.parse(telegramInitData.user) : {};
-    return telegramUserInfo.id ? String(telegramUserInfo.id) : undefined;
-  }, []);
-
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);
-  const hasTelegramGuardian = useMemo(
-    () =>
-      guardianList?.some((item) => item?.guardianType === 'Telegram' && item?.guardianIdentifier === telegramUserId),
-    [guardianList, telegramUserId],
-  );
+  const hasTelegramGuardian = useMemo(() => hasCurrentTelegramGuardian(guardianList), [guardianList]);
   const getVerifierInfo = useCallback(async () => {
     try {
       const chainInfo = await getChainInfo(originChainId);
@@ -383,7 +373,7 @@ function GuardianMain({
       telegramAccessToken?: string;
     }) => {
       console.log('++++++++++++ telegramAccessToken: ', telegramAccessToken);
-      if (!telegramUserId) return;
+      if (!getTelegramUserId()) return;
       if (
         (guardianStep === GuardianStep.guardianAdd && !telegramAccessToken) ||
         (guardianStep === GuardianStep.guardianView && hasTelegramGuardian && !telegramAccessToken)
@@ -415,7 +405,7 @@ function GuardianMain({
         currentGuardian: item,
         telegramInfo: {
           accessToken: telegramAccessToken,
-          userId: telegramUserId,
+          userId: getTelegramUserId(),
         },
       };
       const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge[ctw], params, socketMethod);
@@ -458,7 +448,6 @@ function GuardianMain({
       isErrorTip,
       networkType,
       originChainId,
-      telegramUserId,
     ],
   );
   const onAddGuardian = useCallback(

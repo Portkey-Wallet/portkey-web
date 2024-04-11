@@ -235,6 +235,7 @@ function GuardianEdit({
           clientId,
           redirectURI,
           network: networkType,
+          guardianIdentifier: _guardian.guardianIdentifier,
         });
         if (!response?.token) throw new Error('auth failed');
         token = response.token;
