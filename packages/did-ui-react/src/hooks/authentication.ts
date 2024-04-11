@@ -117,6 +117,7 @@ export function useVerifyTelegram() {
         const authRes: any = await socialLoginAuth({
           type: 'Telegram',
           network: params.networkType,
+          guardianIdentifier: params.id,
         });
         if (isTelegramPlatform()) return;
         if (!authRes) throw new Error('Missing Response');

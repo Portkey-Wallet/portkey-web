@@ -1,17 +1,12 @@
-import PopupHandler, { PopupResponse } from './PopupHandler';
+import PopupHandler from './PopupHandler';
 import { OPENLOGIN_ACTIONS, UX_MODE, openLoginRedirectURI } from './constants';
-import { LoginParams, OpenLoginOptions, OpenloginParamConfig } from './types';
+import { LoginParams, OpenLoginOptions, OpenloginParamConfig, PopupResponse } from './types';
 import { WEB_PAGE, WEB_PAGE_TEST } from '../../constants';
 import { dealURLLastChar, randomId } from '../lib';
 import { constructURL, jsonToBase64 } from './utils';
 import { ISocialLogin } from '../../types';
 import { forgeWeb } from '@portkey/utils';
-import {
-  IOpenLoginGuardianApprovalResponse,
-  IOpenLoginGuardianResponse,
-  TOpenLoginGuardianApprovalLocationState,
-  TOpenLoginGuardianLocationState,
-} from '../../types/openlogin';
+import { TOpenLoginHandlerResponse, TOpenLoginQueryParams } from '../../types/openlogin';
 import { CrossTabPushMessageType } from '@portkey/socket';
 
 class OpenLogin {
@@ -87,13 +82,10 @@ class OpenLogin {
 
   async openloginHandler(
     url: string,
-    queryParams: OpenloginParamConfig | TOpenLoginGuardianLocationState | TOpenLoginGuardianApprovalLocationState,
+    queryParams: TOpenLoginQueryParams,
     socketMethod: Array<CrossTabPushMessageType>,
     popupTimeout = 1000,
-  ): Promise<
-    | { data?: PopupResponse | IOpenLoginGuardianResponse | IOpenLoginGuardianApprovalResponse; methodName?: string }
-    | undefined
-  > {
+  ): Promise<{ data?: TOpenLoginHandlerResponse; methodName?: string } | undefined> {
     const loginId = await this.getLoginId();
 
     queryParams.loginId = loginId;

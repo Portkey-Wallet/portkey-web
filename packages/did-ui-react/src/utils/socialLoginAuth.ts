@@ -13,7 +13,7 @@ import { dealURLLastChar } from './lib';
 import { devicesEnv } from '@portkey/utils';
 import OpenLogin from './openlogin';
 import { facebookAuthPath, twitterAuthPath } from './openlogin/constants';
-import { isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from './telegram';
+import { getTelegramUserId, isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from './telegram';
 
 export const socialLoginInPortkeyApp = async (
   app: devicesEnv.IPortkeyShellClient,
@@ -169,8 +169,10 @@ export const socialLoginAuthBySocket = async ({
   type,
   clientId,
   network,
+  guardianIdentifier,
 }: {
   type: ISocialLogin;
+  guardianIdentifier?: string;
   clientId?: string;
   redirectURI?: string;
   network?: NetworkType;
@@ -196,7 +198,11 @@ export const socialLoginAuthBySocket = async ({
 
   if (app) return socialLoginInPortkeyApp(app, type);
 
-  if (type === 'Telegram' && isTelegramPlatform()) {
+  if (
+    type === 'Telegram' &&
+    isTelegramPlatform() &&
+    ((guardianIdentifier && guardianIdentifier === getTelegramUserId()) || !guardianIdentifier)
+  ) {
     telegramLoginAuth({ network });
     return;
   }

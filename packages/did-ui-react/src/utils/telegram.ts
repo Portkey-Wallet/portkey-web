@@ -5,7 +5,16 @@ import { pushEncodeMessage, pushMessageByApi } from './openlogin/crossTabMessage
 import { decodeMessageByRsaKey, did, handleErrorMessage } from '.';
 import qs from 'query-string';
 import { TelegramWebappInitData } from '@portkey/types';
-import { getServiceUrl } from '../components/config-provider/utils';
+import {
+  getCommunicationSocketUrl,
+  getCustomNetworkType,
+  getServiceUrl,
+  getStorageInstance,
+} from '../components/config-provider/utils';
+import { UserGuardianStatus } from '../types';
+import { Open_Login_Guardian_Approval_Bridge } from '../constants/telegram';
+import OpenLogin from './openlogin';
+import { TOpenLoginQueryParams } from '../types/openlogin';
 
 export function getTelegram() {
   if (window != undefined) {
@@ -29,6 +38,19 @@ export function getTelegramInitData() {
       return qs.parse(initData) as unknown as TelegramWebappInitData;
     }
   }
+}
+
+export function getTelegramUserId() {
+  const telegramInitData = getTelegramInitData();
+  const telegramUserInfo =
+    telegramInitData?.user && typeof telegramInitData?.user === 'string' ? JSON.parse(telegramInitData.user) : {};
+  return telegramUserInfo?.id ? String(telegramUserInfo.id) : undefined;
+}
+
+export function hasCurrentTelegramGuardian(guardianList?: UserGuardianStatus[]) {
+  return guardianList?.some(
+    (item) => item?.guardianType === 'Telegram' && item?.guardianIdentifier === getTelegramUserId(),
+  );
 }
 
 export function getTelegramStartParam() {
@@ -245,4 +267,39 @@ export async function decodeDataWithInTelegram(storageKey: string, encodeData: s
   const storage = await did.config.storageMethod.getItem(storageKey);
   const { rsaKey } = JSON.parse(storage);
   return decodeMessageByRsaKey(rsaKey, encodeData);
+}
+
+export async function getDataFromOpenLogin<T>({
+  params,
+  isRemoveLocalStorage = false,
+  removeLocalStorageKey = '',
+  callback,
+}: {
+  params: TOpenLoginQueryParams;
+  isRemoveLocalStorage?: boolean;
+  removeLocalStorageKey?: string;
+  callback: (data: T) => Promise<void>;
+}) {
+  // savaDataToStorage - initData
+  const serviceURI = getServiceUrl();
+  const socketURI = getCommunicationSocketUrl();
+  const ctw = getCustomNetworkType();
+
+  const openlogin = new OpenLogin({
+    network: ctw,
+    serviceURI: serviceURI,
+    socketURI,
+    currentStorage: getStorageInstance(),
+    // sdkUrl: Open_Login_Bridge.local,
+  });
+  console.log('=== openlogin', openlogin);
+
+  console.log('=== params', params);
+  const result = await openlogin.openloginHandler(Open_Login_Guardian_Approval_Bridge[ctw], params, [
+    CrossTabPushMessageType.onTransferSettingApproval,
+  ]);
+  console.log('====== result', result);
+  if (!result) return null;
+  if (isRemoveLocalStorage && removeLocalStorageKey) await did.config.storageMethod.removeItem(removeLocalStorageKey);
+  await callback(result.data as T);
 }

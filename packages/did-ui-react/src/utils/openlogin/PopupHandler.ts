@@ -2,15 +2,8 @@ import { EventEmitter } from 'events';
 
 import { getPopupFeatures } from './utils';
 import { openloginSignal, TIOpenloginSignalrHandler, IOpenloginSignalr } from '@portkey/socket';
-import { ISocialLogin } from '../../types';
 import { isTelegramPlatform } from '../telegram';
 
-export interface PopupResponse {
-  token: string;
-  provider: ISocialLogin;
-  code?: string;
-  message?: string;
-}
 class PopupHandler extends EventEmitter {
   url: string;
 
