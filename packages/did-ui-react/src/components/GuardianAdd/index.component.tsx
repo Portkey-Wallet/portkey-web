@@ -305,11 +305,19 @@ function GuardianAdd({
     return info;
   }, []);
 
+  const hasCurrentTelegramUserGuardian = useMemo(() => {
+    return guardianList?.some(
+      (item) =>
+        item.guardianType === AccountTypeEnum[AccountTypeEnum.Telegram] &&
+        item.guardianIdentifier === telegramInfo?.userId,
+    );
+  }, [guardianList, telegramInfo?.userId]);
+
   const socialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
         let token = '';
-        if (v === 'Telegram' && telegramInfo?.accessToken) {
+        if (v === 'Telegram' && telegramInfo?.accessToken && !hasCurrentTelegramUserGuardian) {
           token = telegramInfo.accessToken;
         } else {
           const { clientId, redirectURI } = socialBasic(v) || {};
