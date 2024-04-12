@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.19](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.18...v2.5.0-alpha.19) (2024-04-12)
+
+### Features
+
+- 🎸 support telegram auth for non-logged-in telegrm account ([65effeb](https://github.com/Portkey-Wallet/portkey-web/commit/65effeb03d36013e40ef515a2443704b3f00de05))
+- 🎸 transfer limit approval ([1d7b5c2](https://github.com/Portkey-Wallet/portkey-web/commit/1d7b5c2f331b9e117e922a97aa2f2b4f2bb5e298))
+- open link confirm modal ([c1626fb](https://github.com/Portkey-Wallet/portkey-web/commit/c1626fba6b3cc349696f4aa0ae3d7c840d41a8b3))
+
+### Bug Fixes
+
+- check for existing Telegram guardian before adding a new one ([726f856](https://github.com/Portkey-Wallet/portkey-web/commit/726f8564ee8a21c531e12579a3f83713084c5524))
+
 ## [2.5.0-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.17...v2.5.0-alpha.18) (2024-04-11)
 
 ### Bug Fixes
