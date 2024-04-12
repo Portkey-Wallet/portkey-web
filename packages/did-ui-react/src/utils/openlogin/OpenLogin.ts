@@ -59,9 +59,11 @@ class OpenLogin {
       serviceURI: this.serviceURI,
     };
     console.log(dataObject, 'dataObject==');
-    const result = await this.openloginHandler(`${this.baseUrl}/social-start`, dataObject, [
-      CrossTabPushMessageType.onAuthStatusChanged,
-    ]);
+    const result = await this.openloginHandler({
+      url: `${this.baseUrl}/social-start`,
+      queryParams: dataObject,
+      socketMethod: [CrossTabPushMessageType.onAuthStatusChanged],
+    });
 
     // const result = {
     //   token:
@@ -80,12 +82,19 @@ class OpenLogin {
     return loginId;
   }
 
-  async openloginHandler(
-    url: string,
-    queryParams: TOpenLoginQueryParams,
-    socketMethod: Array<CrossTabPushMessageType>,
+  async openloginHandler({
+    url,
+    queryParams,
+    socketMethod,
     popupTimeout = 1000,
-  ): Promise<IOpenloginHandlerResult | undefined> {
+    needConfirm = false,
+  }: {
+    url: string;
+    queryParams: TOpenLoginQueryParams;
+    socketMethod: Array<CrossTabPushMessageType>;
+    popupTimeout?: number;
+    needConfirm?: boolean;
+  }): Promise<IOpenloginHandlerResult | undefined> {
     const loginId = await this.getLoginId();
 
     queryParams.loginId = loginId;
@@ -137,7 +146,7 @@ class OpenLogin {
       // TODO  Invoke get result and socket listen
       // currentWindow.on('socket-connect', () => {
       //   try {
-      currentWindow.open();
+      currentWindow.open({ needConfirm });
       //   } catch (error) {
       //     reject(error);
       //   }

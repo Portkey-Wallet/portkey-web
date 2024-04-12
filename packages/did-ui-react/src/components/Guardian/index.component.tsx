@@ -399,6 +399,7 @@ function GuardianMain({
         },
         socketMethod,
         openLoginBridgeURLMap: Open_Login_Guardian_Bridge,
+        needConfirm: true,
         callback: async (result) => {
           const {
             currentGuardian: _currentGuardian,

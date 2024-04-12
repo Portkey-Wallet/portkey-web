@@ -275,6 +275,7 @@ export async function getDataFromOpenLogin({
   openLoginBridgeURLMap,
   isRemoveLocalStorage = false,
   removeLocalStorageKey = '',
+  needConfirm = false,
   callback,
 }: {
   params: TOpenLoginQueryParams;
@@ -282,6 +283,7 @@ export async function getDataFromOpenLogin({
   openLoginBridgeURLMap: typeof Open_Login_Guardian_Approval_Bridge | typeof Open_Login_Guardian_Bridge;
   isRemoveLocalStorage?: boolean;
   removeLocalStorageKey?: string;
+  needConfirm?: boolean;
   callback: (
     result: Pick<Required<IOpenloginHandlerResult>, 'data'> & Omit<IOpenloginHandlerResult, 'data'>,
   ) => Promise<void>;
@@ -301,7 +303,12 @@ export async function getDataFromOpenLogin({
   console.log('=== openlogin', openlogin);
 
   console.log('=== params', params);
-  const result = await openlogin.openloginHandler(openLoginBridgeURLMap[ctw], params, socketMethod);
+  const result = await openlogin.openloginHandler({
+    url: openLoginBridgeURLMap[ctw],
+    queryParams: params,
+    socketMethod,
+    needConfirm,
+  });
   console.log('====== result', result);
   if (!result?.data) return null;
   if (isRemoveLocalStorage && removeLocalStorageKey) await did.config.storageMethod.removeItem(removeLocalStorageKey);
