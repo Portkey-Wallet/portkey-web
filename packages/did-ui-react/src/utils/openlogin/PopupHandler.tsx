@@ -68,7 +68,7 @@ class PopupHandler extends EventEmitter {
     );
   }
 
-  open({ needConfirm }: { needConfirm?: boolean } = {}): void {
+  open({ needConfirm = false }: { needConfirm?: boolean } = {}): void {
     if (isTelegramPlatform() && needConfirm) {
       modalMethod({
         wrapClassName: 'portkey-ui-open-link-confirm-modal',

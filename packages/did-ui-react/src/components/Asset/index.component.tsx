@@ -183,6 +183,10 @@ function AssetMain({
     callback: handleAuthWithInTelegram,
   });
 
+  const clearStorageData = useCallback(() => {
+    setStorageData({});
+  }, []);
+
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);
   }, []);
@@ -590,6 +594,7 @@ function AssetMain({
               originChainId={originChainId}
               accelerateChainId={accelerateChainId}
               onBack={() => setAssetStep(AssetStep.my)}
+              onClearStorageData={clearStorageData}
             />
           )}
 
