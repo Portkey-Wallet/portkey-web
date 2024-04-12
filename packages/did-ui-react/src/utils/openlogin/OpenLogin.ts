@@ -1,17 +1,12 @@
-import PopupHandler, { PopupResponse } from './PopupHandler';
+import PopupHandler from './PopupHandler';
 import { OPENLOGIN_ACTIONS, UX_MODE, openLoginRedirectURI } from './constants';
-import { LoginParams, OpenLoginOptions, OpenloginParamConfig } from './types';
+import { LoginParams, OpenLoginOptions, OpenloginParamConfig, PopupResponse } from './types';
 import { WEB_PAGE, WEB_PAGE_TEST } from '../../constants';
 import { dealURLLastChar, randomId } from '../lib';
 import { constructURL, jsonToBase64 } from './utils';
 import { ISocialLogin } from '../../types';
 import { forgeWeb } from '@portkey/utils';
-import {
-  IOpenLoginGuardianApprovalResponse,
-  IOpenLoginGuardianResponse,
-  TOpenLoginGuardianApprovalLocationState,
-  TOpenLoginGuardianLocationState,
-} from '../../types/openlogin';
+import { IOpenloginHandlerResult, TOpenLoginQueryParams } from '../../types/openlogin';
 import { CrossTabPushMessageType } from '@portkey/socket';
 
 class OpenLogin {
@@ -64,9 +59,11 @@ class OpenLogin {
       serviceURI: this.serviceURI,
     };
     console.log(dataObject, 'dataObject==');
-    const result = await this.openloginHandler(`${this.baseUrl}/social-start`, dataObject, [
-      CrossTabPushMessageType.onAuthStatusChanged,
-    ]);
+    const result = await this.openloginHandler({
+      url: `${this.baseUrl}/social-start`,
+      queryParams: dataObject,
+      socketMethod: [CrossTabPushMessageType.onAuthStatusChanged],
+    });
 
     // const result = {
     //   token:
@@ -85,15 +82,19 @@ class OpenLogin {
     return loginId;
   }
 
-  async openloginHandler(
-    url: string,
-    queryParams: OpenloginParamConfig | TOpenLoginGuardianLocationState | TOpenLoginGuardianApprovalLocationState,
-    socketMethod: Array<CrossTabPushMessageType>,
+  async openloginHandler({
+    url,
+    queryParams,
+    socketMethod,
     popupTimeout = 1000,
-  ): Promise<
-    | { data?: PopupResponse | IOpenLoginGuardianResponse | IOpenLoginGuardianApprovalResponse; methodName?: string }
-    | undefined
-  > {
+    needConfirm = false,
+  }: {
+    url: string;
+    queryParams: TOpenLoginQueryParams;
+    socketMethod: Array<CrossTabPushMessageType>;
+    popupTimeout?: number;
+    needConfirm?: boolean;
+  }): Promise<IOpenloginHandlerResult | undefined> {
     const loginId = await this.getLoginId();
 
     queryParams.loginId = loginId;
@@ -145,7 +146,7 @@ class OpenLogin {
       // TODO  Invoke get result and socket listen
       // currentWindow.on('socket-connect', () => {
       //   try {
-      currentWindow.open();
+      currentWindow.open({ needConfirm });
       //   } catch (error) {
       //     reject(error);
       //   }

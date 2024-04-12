@@ -30,15 +30,13 @@ import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGua
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
-import { getTelegramInitData, isTelegramPlatform } from '../../utils/telegram';
-import { Open_Login_Guardian_Bridge } from '../../constants/telegram';
-import OpenLogin from '../../utils/openlogin';
 import {
-  getServiceUrl,
-  getCommunicationSocketUrl,
-  getCustomNetworkType,
-  getStorageInstance,
-} from '../config-provider/utils';
+  getDataFromOpenLogin,
+  getTelegramUserId,
+  hasCurrentTelegramGuardian,
+  isTelegramPlatform,
+} from '../../utils/telegram';
+import { Open_Login_Guardian_Bridge } from '../../constants/telegram';
 import { CrossTabPushMessageType } from '@portkey/socket';
 import { IOpenLoginGuardianResponse } from '../../types/openlogin';
 
@@ -104,18 +102,8 @@ function GuardianMain({
     setCurrentStorageData(storageData || {});
   }, [storageData]);
 
-  const telegramUserId = useMemo(() => {
-    const telegramInitData = getTelegramInitData();
-    const telegramUserInfo = telegramInitData?.user ? JSON.parse(telegramInitData.user) : {};
-    return telegramUserInfo.id ? String(telegramUserInfo.id) : undefined;
-  }, []);
-
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);
-  const hasTelegramGuardian = useMemo(
-    () =>
-      guardianList?.some((item) => item?.guardianType === 'Telegram' && item?.guardianIdentifier === telegramUserId),
-    [guardianList, telegramUserId],
-  );
+  const hasTelegramGuardian = useMemo(() => hasCurrentTelegramGuardian(guardianList), [guardianList]);
   const getVerifierInfo = useCallback(async () => {
     try {
       const chainInfo = await getChainInfo(originChainId);
@@ -383,6 +371,7 @@ function GuardianMain({
       telegramAccessToken?: string;
     }) => {
       console.log('++++++++++++ telegramAccessToken: ', telegramAccessToken);
+      const telegramUserId = getTelegramUserId();
       if (!telegramUserId) return;
       if (
         (guardianStep === GuardianStep.guardianAdd && !telegramAccessToken) ||
@@ -394,58 +383,49 @@ function GuardianMain({
         });
         return;
       }
-      const serviceURI = getServiceUrl();
-      const socketURI = getCommunicationSocketUrl();
-      const ctw = getCustomNetworkType();
-      const openlogin = new OpenLogin({
-        network: ctw,
-        serviceURI: serviceURI,
-        socketURI,
-        currentStorage: getStorageInstance(),
-        // sdkUrl: Open_Login_Bridge.local,
-      });
-
-      const params = {
-        networkType,
-        originChainId,
-        chainType,
-        caHash,
-        guardianStep,
-        isErrorTip,
-        currentGuardian: item,
-        telegramInfo: {
-          accessToken: telegramAccessToken,
-          userId: telegramUserId,
+      await getDataFromOpenLogin({
+        params: {
+          networkType,
+          originChainId,
+          chainType,
+          caHash,
+          guardianStep,
+          isErrorTip,
+          currentGuardian: item,
+          telegramInfo: {
+            accessToken: telegramAccessToken,
+            userId: telegramUserId,
+          },
         },
-      };
-      const result = await openlogin.openloginHandler(Open_Login_Guardian_Bridge[ctw], params, socketMethod);
-      if (!result) return null;
-      const {
-        currentGuardian: _currentGuardian,
-        approvalInfo,
-        preGuardian: _preGuardian,
-      } = result.data as IOpenLoginGuardianResponse;
-      // openLinkFromTelegram(Open_Login_Guardian_Bridge, params);
-      switch (guardianStep) {
-        case GuardianStep.guardianAdd:
-          await handleAddGuardian(_currentGuardian, approvalInfo);
-          break;
+        socketMethod,
+        openLoginBridgeURLMap: Open_Login_Guardian_Bridge,
+        needConfirm: true,
+        callback: async (result) => {
+          const {
+            currentGuardian: _currentGuardian,
+            approvalInfo,
+            preGuardian: _preGuardian,
+          } = result.data as IOpenLoginGuardianResponse;
+          switch (guardianStep) {
+            case GuardianStep.guardianAdd:
+              await handleAddGuardian(_currentGuardian, approvalInfo);
+              break;
 
-        case GuardianStep.guardianView:
-          if (result.methodName === CrossTabPushMessageType.onSetLoginGuardianResult) {
-            await handleSetLoginGuardian(_currentGuardian, approvalInfo);
-          } else if (result.methodName === CrossTabPushMessageType.onEditGuardianResult) {
-            await handleEditGuardian(_currentGuardian, approvalInfo, _preGuardian);
-          } else if (result.methodName === CrossTabPushMessageType.onRemoveGuardianResult) {
-            await handleRemoveGuardian(approvalInfo, _currentGuardian);
+            case GuardianStep.guardianView:
+              if (result.methodName === CrossTabPushMessageType.onSetLoginGuardianResult) {
+                await handleSetLoginGuardian(_currentGuardian, approvalInfo);
+              } else if (result.methodName === CrossTabPushMessageType.onEditGuardianResult) {
+                await handleEditGuardian(_currentGuardian, approvalInfo, _preGuardian);
+              } else if (result.methodName === CrossTabPushMessageType.onRemoveGuardianResult) {
+                await handleRemoveGuardian(approvalInfo, _currentGuardian);
+              }
+              break;
+
+            default:
+              break;
           }
-          break;
-
-        default:
-          break;
-      }
-
-      return;
+        },
+      });
     },
     [
       caHash,
@@ -458,7 +438,6 @@ function GuardianMain({
       isErrorTip,
       networkType,
       originChainId,
-      telegramUserId,
     ],
   );
   const onAddGuardian = useCallback(

@@ -4,6 +4,7 @@ import { GuardianStep } from '../components/Guardian/index.component';
 import { NetworkType } from './wallet';
 import { UserGuardianStatus } from './guardian';
 import { ITelegramInfo, TCustomNetworkType } from '.';
+import { OpenloginParamConfig, PopupResponse } from '../utils/openlogin/types';
 
 export type TOpenLoginGuardianLocationState = {
   networkType: NetworkType;
@@ -39,3 +40,15 @@ export interface IOpenLoginGuardianApprovalResponse {
 export type TOpenLoginBridgeURL = {
   [key in TCustomNetworkType]: string;
 };
+
+export type TOpenLoginQueryParams =
+  | OpenloginParamConfig
+  | TOpenLoginGuardianLocationState
+  | TOpenLoginGuardianApprovalLocationState;
+
+export type TOpenLoginHandlerResponse = PopupResponse | IOpenLoginGuardianResponse | IOpenLoginGuardianApprovalResponse;
+
+export interface IOpenloginHandlerResult {
+  data?: TOpenLoginHandlerResponse;
+  methodName?: string;
+}
