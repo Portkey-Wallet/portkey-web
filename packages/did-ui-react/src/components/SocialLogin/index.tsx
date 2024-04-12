@@ -113,17 +113,17 @@ export default function SocialLogin({
     [isErrorTip, socialLoginHandler],
   );
 
-  const handleLoginAfterAuthWithInTelegram = useCallback(async (token: string) => {
+  const handleLoginAfterAuthWithInTelegram = useCallback(async (data?: { accessToken?: string }) => {
     const result = {
       type: 'Telegram' as ISocialLogin,
       data: {
-        accessToken: token,
+        accessToken: data?.accessToken || '',
       },
     };
     console.log('=== result', result);
     onFinishRef.current?.(result);
   }, []);
-  useGetTelegramAccessToken(handleLoginAfterAuthWithInTelegram);
+  useGetTelegramAccessToken({ callback: handleLoginAfterAuthWithInTelegram });
 
   const recommendList = useMemo(() => {
     if (Array.isArray(recommendIndexes)) {

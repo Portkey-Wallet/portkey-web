@@ -47,3 +47,8 @@ export type TOpenLoginQueryParams =
   | TOpenLoginGuardianApprovalLocationState;
 
 export type TOpenLoginHandlerResponse = PopupResponse | IOpenLoginGuardianResponse | IOpenLoginGuardianApprovalResponse;
+
+export interface IOpenloginHandlerResult {
+  data?: TOpenLoginHandlerResponse;
+  methodName?: string;
+}

@@ -6,7 +6,7 @@ import { dealURLLastChar, randomId } from '../lib';
 import { constructURL, jsonToBase64 } from './utils';
 import { ISocialLogin } from '../../types';
 import { forgeWeb } from '@portkey/utils';
-import { TOpenLoginHandlerResponse, TOpenLoginQueryParams } from '../../types/openlogin';
+import { IOpenloginHandlerResult, TOpenLoginQueryParams } from '../../types/openlogin';
 import { CrossTabPushMessageType } from '@portkey/socket';
 
 class OpenLogin {
@@ -85,7 +85,7 @@ class OpenLogin {
     queryParams: TOpenLoginQueryParams,
     socketMethod: Array<CrossTabPushMessageType>,
     popupTimeout = 1000,
-  ): Promise<{ data?: TOpenLoginHandlerResponse; methodName?: string } | undefined> {
+  ): Promise<IOpenloginHandlerResult | undefined> {
     const loginId = await this.getLoginId();
 
     queryParams.loginId = loginId;

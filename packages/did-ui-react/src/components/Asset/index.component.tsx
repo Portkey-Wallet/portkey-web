@@ -6,7 +6,7 @@ import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { WalletError, did, handleErrorMessage, setLoading } from '../../utils';
+import { WalletError, did, handleErrorMessage } from '../../utils';
 import { IAssetItemType, ITransferLimitItem, IUserTokenItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
@@ -37,10 +37,10 @@ import { mixRampShow } from '../Ramp/utils';
 import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
-import { getAccessTokenInDappTelegram, getTelegramStartParam } from '../../utils/telegram';
 import { IStorageData } from '../Guardian/index.component';
 import { AssetStep } from '../../constants/assets';
 import { PortkeyAssetLiftCycle } from '../../constants/storage';
+import { useGetTelegramAccessToken } from '../../hooks/telegram';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -173,40 +173,15 @@ function AssetMain({
 
   const [storageData, setStorageData] = useState<IStorageData>({});
 
-  const handleAuthWithInTelegram = useCallback(async () => {
-    const { startParam } = getTelegramStartParam();
-    console.log('=== startParam', startParam);
-    if (startParam) {
-      clearInterval(timerRef.current);
-      try {
-        setLoading(true);
-        const decodeResult = await getAccessTokenInDappTelegram(startParam);
-        console.log('=== res.data', decodeResult);
-        if (!decodeResult) return;
-        await did.config.storageMethod.removeItem(startParam);
-        setStorageData(decodeResult);
-        setAssetStep(AssetStep.guardians);
-      } catch (error) {
-        setLoading(false);
-        throw new Error(handleErrorMessage(error));
-      }
-    }
+  const handleAuthWithInTelegram = useCallback(async (decodeResult?: IStorageData) => {
+    setStorageData(decodeResult || {});
+    setAssetStep(AssetStep.guardians);
   }, []);
 
-  const timerRef = useRef<NodeJS.Timer | number>();
-  useEffect(() => {
-    if (caHash) {
-      console.log('=== useEffect setInterval', '');
-      timerRef.current = setInterval(() => {
-        handleAuthWithInTelegram();
-      }, 2000);
-    }
-
-    return () => {
-      clearInterval(timerRef.current);
-      timerRef.current = undefined;
-    };
-  }, [caHash, handleAuthWithInTelegram]);
+  useGetTelegramAccessToken({
+    canGetAuthToken: !!caHash,
+    callback: handleAuthWithInTelegram,
+  });
 
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);

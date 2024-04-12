@@ -12,9 +12,9 @@ import {
   getStorageInstance,
 } from '../components/config-provider/utils';
 import { UserGuardianStatus } from '../types';
-import { Open_Login_Guardian_Approval_Bridge } from '../constants/telegram';
+import { Open_Login_Guardian_Approval_Bridge, Open_Login_Guardian_Bridge } from '../constants/telegram';
 import OpenLogin from './openlogin';
-import { TOpenLoginQueryParams } from '../types/openlogin';
+import { IOpenloginHandlerResult, TOpenLoginQueryParams } from '../types/openlogin';
 
 export function getTelegram() {
   if (window != undefined) {
@@ -269,16 +269,22 @@ export async function decodeDataWithInTelegram(storageKey: string, encodeData: s
   return decodeMessageByRsaKey(rsaKey, encodeData);
 }
 
-export async function getDataFromOpenLogin<T>({
+export async function getDataFromOpenLogin({
   params,
+  socketMethod,
+  openLoginBridgeURLMap,
   isRemoveLocalStorage = false,
   removeLocalStorageKey = '',
   callback,
 }: {
   params: TOpenLoginQueryParams;
+  socketMethod: CrossTabPushMessageType[];
+  openLoginBridgeURLMap: typeof Open_Login_Guardian_Approval_Bridge | typeof Open_Login_Guardian_Bridge;
   isRemoveLocalStorage?: boolean;
   removeLocalStorageKey?: string;
-  callback: (data: T) => Promise<void>;
+  callback: (
+    result: Pick<Required<IOpenloginHandlerResult>, 'data'> & Omit<IOpenloginHandlerResult, 'data'>,
+  ) => Promise<void>;
 }) {
   // savaDataToStorage - initData
   const serviceURI = getServiceUrl();
@@ -295,11 +301,9 @@ export async function getDataFromOpenLogin<T>({
   console.log('=== openlogin', openlogin);
 
   console.log('=== params', params);
-  const result = await openlogin.openloginHandler(Open_Login_Guardian_Approval_Bridge[ctw], params, [
-    CrossTabPushMessageType.onTransferSettingApproval,
-  ]);
+  const result = await openlogin.openloginHandler(openLoginBridgeURLMap[ctw], params, socketMethod);
   console.log('====== result', result);
-  if (!result) return null;
+  if (!result?.data) return null;
   if (isRemoveLocalStorage && removeLocalStorageKey) await did.config.storageMethod.removeItem(removeLocalStorageKey);
-  await callback(result.data as T);
+  await callback(result as Parameters<typeof callback>[0]);
 }

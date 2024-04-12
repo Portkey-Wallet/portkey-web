@@ -33,6 +33,9 @@ import {
 import { getCustomNetworkType, getDappTelegramLink, getPortkeyBotWebappLink } from '../config-provider/utils';
 import { TransferSettingBusinessKey } from '../../constants/storage';
 import { useGetTelegramAccessToken } from '../../hooks/telegram';
+import { Open_Login_Guardian_Approval_Bridge } from '../../constants/telegram';
+import { CrossTabPushMessageType } from '@portkey/socket';
+import { IOpenLoginGuardianApprovalResponse } from '../../types/openlogin';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -286,7 +289,7 @@ export default function TransferSettingsEditMain({
   const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.modifyTransferLimit), []);
 
   const handleWithinTelegram = useCallback(
-    async (accessToken?: string) => {
+    async (data?: { accessToken?: string }) => {
       try {
         setLoading(true);
 
@@ -297,13 +300,15 @@ export default function TransferSettingsEditMain({
           caHash,
           operationType: OperationTypeEnum.modifyTransferLimit,
           isErrorTip,
-          telegramAuth: accessToken,
+          telegramAuth: data?.accessToken,
         };
         await getDataFromOpenLogin({
           params,
+          socketMethod: [CrossTabPushMessageType.onTransferSettingApproval],
+          openLoginBridgeURLMap: Open_Login_Guardian_Approval_Bridge,
           isRemoveLocalStorage: true,
           removeLocalStorageKey: TransferSettingBusinessKey,
-          callback: approvalSuccess,
+          callback: (result) => approvalSuccess((result.data as IOpenLoginGuardianApprovalResponse).approvalInfo),
         });
       } catch (error) {
         throw new Error(handleErrorMessage(error));
@@ -313,7 +318,7 @@ export default function TransferSettingsEditMain({
     },
     [approvalSuccess, caHash, isErrorTip, networkType, originChainId, targetChainId],
   );
-  useGetTelegramAccessToken(handleWithinTelegram);
+  useGetTelegramAccessToken({ callback: handleWithinTelegram });
   const hasTelegramGuardian = useMemo(() => hasCurrentTelegramGuardian(guardianList), [guardianList]);
   const onFinish = async () => {
     const errorCount = handleFormChange();
