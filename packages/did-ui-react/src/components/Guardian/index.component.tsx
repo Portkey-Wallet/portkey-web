@@ -70,6 +70,7 @@ export interface GuardianProps {
   onError?: OnErrorFunc;
   onBack?: () => void;
   onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
+  onClearStorageData?: () => void;
 }
 
 function GuardianMain({
@@ -85,6 +86,7 @@ function GuardianMain({
   onError,
   onBack,
   onAddGuardianFinish,
+  onClearStorageData,
 }: GuardianProps) {
   const [step, setStep] = useState<GuardianStep>(GuardianStep.guardianList);
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
@@ -96,11 +98,6 @@ function GuardianMain({
   useThrottleFirstEffect(() => {
     AuthServe.addRequestAuthCheck(originChainId);
   }, []);
-  const [currentStorageData, setCurrentStorageData] = useState<IStorageData>({});
-
-  useEffect(() => {
-    setCurrentStorageData(storageData || {});
-  }, [storageData]);
 
   const editable = useMemo(() => Number(guardianList?.length) > 1, [guardianList?.length]);
   const hasTelegramGuardian = useMemo(() => hasCurrentTelegramGuardian(guardianList), [guardianList]);
@@ -509,15 +506,15 @@ function GuardianMain({
   );
 
   useEffect(() => {
-    if (currentStorageData?.accessToken && currentStorageData?.guardianStep && guardianList) {
-      setCurrentStorageData({});
+    if (storageData?.accessToken && storageData?.guardianStep && guardianList) {
+      onClearStorageData?.();
       handleGuardianOperationAfterAuthWithInTelegram({
-        guardianStep: currentStorageData.guardianStep,
-        item: currentStorageData.item,
-        telegramAccessToken: currentStorageData.accessToken,
+        guardianStep: storageData.guardianStep,
+        item: storageData.item,
+        telegramAccessToken: storageData.accessToken,
       });
     }
-  }, [currentStorageData, handleGuardianOperationAfterAuthWithInTelegram, guardianList]);
+  }, [storageData, handleGuardianOperationAfterAuthWithInTelegram, guardianList, onClearStorageData]);
 
   const renderBackHeaderLeftEle = useCallback(
     (goBack?: () => void) => (
