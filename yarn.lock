@@ -3565,10 +3565,28 @@
   dependencies:
     "@portkey/provider-types" "^2.0.0-alpha.2"
 
+"@portkey/graphql@^2.5.0-alpha.20":
+  version "2.5.0-alpha.20"
+  resolved "https://registry.npmjs.org/@portkey/graphql/-/graphql-2.5.0-alpha.20.tgz#2e950b18fc0cdcd2b2b5b7baba3fe0ad3c45d54e"
+  integrity sha512-izYHsK0UmjNPWqnaX+EJFihvh/Fp6KpfkX16ornBtpfnZcn4JVjq2EId68mBxZCZttMrsGYsXrjkLobb3ijBVw==
+  dependencies:
+    "@apollo/client" "^3.7.3"
+    "@portkey/types" "^2.5.0-alpha.20"
+    graphql "^16.6.0"
+    subscriptions-transport-ws "^0.11.0"
+
 "@portkey/provider-types@^2.0.0-alpha.2":
   version "2.0.0-alpha.2"
   resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-2.0.0-alpha.2.tgz#77dda91b85537c10384594807779605963b5aa77"
   integrity sha512-KFLBqi9a/2CykEDuWBVG68zDJXRBNVUMrh+GhMMs9BCvEhdMI1ym5dKelpb+J/aQvHlGRaXqEDoFna5YQiOO/A==
+  dependencies:
+    "@portkey/types" "^2.0.0-alpha.0"
+    "@types/readable-stream" "^2.3.15"
+
+"@portkey/provider-types@^2.1.0":
+  version "2.1.0"
+  resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-2.1.0.tgz#10713b38463463f2bd9737496d425906ab9e38a1"
+  integrity sha512-FyNQHIr4G04mY2RPHNLTRM/iEMUVLtMwFKayu2UIhxTz2E+EjLq9jWz6zlkZjr1PESxYvBJiVUQikK+giVcCbg==
   dependencies:
     "@portkey/types" "^2.0.0-alpha.0"
     "@types/readable-stream" "^2.3.15"
