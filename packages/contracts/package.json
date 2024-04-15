@@ -41,8 +41,8 @@
   },
   "peerDependencies": {
     "@portkey/provider-types": "1.1.0",
-    "@portkey/types": "^1.5.2-alpha.0",
-    "@portkey/utils": "^1.5.2-alpha.0",
+    "@portkey/types": "^2.4.3",
+    "@portkey/utils": "^2.4.3",
     "aelf-sdk": "^3.4.7"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
