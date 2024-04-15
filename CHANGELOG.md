@@ -3,6 +3,250 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.21](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.4...v2.5.0-alpha.21) (2024-04-15)
+
+## [2.5.0-alpha.20](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.19...v2.5.0-alpha.20) (2024-04-12)
+
+### Bug Fixes
+
+- clear storage data in assets page ([22a55a6](https://github.com/Portkey-Wallet/portkey-web/commit/22a55a6d3872e93af95030b7cefb583b36db7304))
+
+## [2.5.0-alpha.19](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.18...v2.5.0-alpha.19) (2024-04-12)
+
+### Features
+
+- 🎸 support telegram auth for non-logged-in telegrm account ([65effeb](https://github.com/Portkey-Wallet/portkey-web/commit/65effeb03d36013e40ef515a2443704b3f00de05))
+- 🎸 transfer limit approval ([1d7b5c2](https://github.com/Portkey-Wallet/portkey-web/commit/1d7b5c2f331b9e117e922a97aa2f2b4f2bb5e298))
+- open link confirm modal ([c1626fb](https://github.com/Portkey-Wallet/portkey-web/commit/c1626fba6b3cc349696f4aa0ae3d7c840d41a8b3))
+
+### Bug Fixes
+
+- check for existing Telegram guardian before adding a new one ([726f856](https://github.com/Portkey-Wallet/portkey-web/commit/726f8564ee8a21c531e12579a3f83713084c5524))
+
+## [2.5.0-alpha.18](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.17...v2.5.0-alpha.18) (2024-04-11)
+
+### Bug Fixes
+
+- add support for Telegram type in GuardianAccountShow component ([64510c5](https://github.com/Portkey-Wallet/portkey-web/commit/64510c54e20a6d6b2b6a31079aa57ff827492eb3))
+- include telegramUserId in hasTelegramGuardian check ([67b2aa2](https://github.com/Portkey-Wallet/portkey-web/commit/67b2aa23fb580cfaa87ae1cb68e4100f263e07eb))
+
+## [2.5.0-alpha.17](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.16...v2.5.0-alpha.17) (2024-04-10)
+
+### Bug Fixes
+
+- telegram user id type ([9e44d0b](https://github.com/Portkey-Wallet/portkey-web/commit/9e44d0bc91fd95660760cbecf82f5a510d2522ed))
+
+## [2.5.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.15...v2.5.0-alpha.16) (2024-04-10)
+
+### Bug Fixes
+
+- 🐛 decodeResult value ([01d86fa](https://github.com/Portkey-Wallet/portkey-web/commit/01d86fa5cead2e7080cb7097ec88169acf050e66))
+- accessToken in SocialLogin component ([570bb0e](https://github.com/Portkey-Wallet/portkey-web/commit/570bb0e9318d7bdd5d8860d18d3fd756337dbc53))
+
+## [2.5.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.14...v2.5.0-alpha.15) (2024-04-10)
+
+### Features
+
+- 🎸 add portkey platform ([41e2d7a](https://github.com/Portkey-Wallet/portkey-web/commit/41e2d7a827922d07d77fce7791ea0b8973a9754c))
+- 🎸 modify telegram utils ([8c2869d](https://github.com/Portkey-Wallet/portkey-web/commit/8c2869dcbb22508fdc3455fe5d5f68d343c0d3c0))
+
+### Bug Fixes
+
+- fix issue with GuardianMain component not handling guardianStep properly ([4dbb187](https://github.com/Portkey-Wallet/portkey-web/commit/4dbb18759b5c5919958fc28f99515d126cf6f821))
+- improve getting telegram access token within telegram ([415cf36](https://github.com/Portkey-Wallet/portkey-web/commit/415cf36a998505e24684c9a0edc0fe4f4cd86778))
+
+## [2.5.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.13...v2.5.0-alpha.14) (2024-04-09)
+
+### Features
+
+- get telegram access token within telegram ([7a0aa18](https://github.com/Portkey-Wallet/portkey-web/commit/7a0aa180b4c0f03dc759ddb15d1a2173b9f4314f))
+
+### Bug Fixes
+
+- decodeResult may be undefined ([a7e2b25](https://github.com/Portkey-Wallet/portkey-web/commit/a7e2b255496bc9fc356966141caa915c64f9d377))
+
+## [2.5.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.12...v2.5.0-alpha.13) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 tg guardian approval ([8dd92c7](https://github.com/Portkey-Wallet/portkey-web/commit/8dd92c7f283d996b9ef27cb5128707948f937316))
+- 🐛 ts error ([9b53f3f](https://github.com/Portkey-Wallet/portkey-web/commit/9b53f3ff207024ca85914d8c57191948e5aec42d))
+
+## [2.5.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.8...v2.5.0-alpha.12) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 invoke get result ([b08c724](https://github.com/Portkey-Wallet/portkey-web/commit/b08c7241e532ee4ccf233d653235a170c551ce18))
+
+## [2.5.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.7...v2.5.0-alpha.8) (2024-04-09)
+
+### Features
+
+- 🎸 tg guardian approval ([2c6600d](https://github.com/Portkey-Wallet/portkey-web/commit/2c6600d883c13ad3e7eb3fd57ea055f447e42ac2))
+
+## [2.5.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.6...v2.5.0-alpha.7) (2024-04-09)
+
+## [2.5.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.5...v2.5.0-alpha.6) (2024-04-09)
+
+### Features
+
+- 🎸 cancel close when telegram platform ([996bdd7](https://github.com/Portkey-Wallet/portkey-web/commit/996bdd792e25fd84f6ea9d60cf91ef6237359dd1))
+
+## [2.5.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.4...v2.5.0-alpha.5) (2024-04-09)
+
+### Bug Fixes
+
+- 🐛 socket reconnect ([3d832e7](https://github.com/Portkey-Wallet/portkey-web/commit/3d832e79251593769a93d6ce1600fe73b6a3a3aa))
+
+## [2.5.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.3...v2.5.0-alpha.4) (2024-04-09)
+
+### Performance Improvements
+
+- ⚡️ change tg save data key and delete useless constants ([36290d1](https://github.com/Portkey-Wallet/portkey-web/commit/36290d11c17b15e93c9f8779ec3f90c8babe7e64))
+
+## [2.5.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.2...v2.5.0-alpha.3) (2024-04-08)
+
+### Features
+
+- hide Twitter and Facebook logins in SocialLoginList ([4bc9606](https://github.com/Portkey-Wallet/portkey-web/commit/4bc96065cfbf7ce483dccb0ffcd6e6bf16884b4a))
+
+### Bug Fixes
+
+- 🐛 change check shell portkey app ([84e779a](https://github.com/Portkey-Wallet/portkey-web/commit/84e779a19895ef9b01eb9de270e7b4316314ddec))
+- 🐛 p css and login loading ([a3ecf2e](https://github.com/Portkey-Wallet/portkey-web/commit/a3ecf2e88b671bcdc5c042f5d242c51acc004321))
+- copy message ([6ec7b67](https://github.com/Portkey-Wallet/portkey-web/commit/6ec7b67911d011f570cfa9b81a3230701214dab6))
+- social login handling in SocialDesign and Web2Design components ([9cc0028](https://github.com/Portkey-Wallet/portkey-web/commit/9cc00287102d2c6fc1b981ffd727f1f2077f48b2))
+- telegram login failed message ([bc9f39d](https://github.com/Portkey-Wallet/portkey-web/commit/bc9f39dd58adff364bc741399ef72dc096998b89))
+
+## [2.5.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.1...v2.5.0-alpha.2) (2024-04-07)
+
+### Bug Fixes
+
+- login with google in telegram ([d4622ed](https://github.com/Portkey-Wallet/portkey-web/commit/d4622ed6c615615679c79d9839eddde8357d76c0))
+
+## [2.5.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.0...v2.5.0-alpha.1) (2024-04-03)
+
+### Features
+
+- 🎸 modify url config ([5ce75cc](https://github.com/Portkey-Wallet/portkey-web/commit/5ce75ccac2955bb960e13d7a4aec0caf0337449a))
+
+## [2.5.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.3...v2.5.0-alpha.0) (2024-04-03)
+
+### Features
+
+- 🎸 modify demo ([570c74d](https://github.com/Portkey-Wallet/portkey-web/commit/570c74d33beecf07b512ac7b8979f71e33d8e0fd))
+- 🎸 modify tg auth ([3856ab2](https://github.com/Portkey-Wallet/portkey-web/commit/3856ab296e280dd87bdad15cc7b50a75d66629fe))
+
+## [2.4.2-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.8...v2.4.2-alpha.9) (2024-04-02)
+
+### Features
+
+- 🎸 tg remove storage ([fa66da3](https://github.com/Portkey-Wallet/portkey-web/commit/fa66da3c992ae532218bc2f7d411467b572f8403))
+
+## [2.4.2-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.7...v2.4.2-alpha.8) (2024-04-02)
+
+### Features
+
+- 🎸 modify tg token ([9dc987e](https://github.com/Portkey-Wallet/portkey-web/commit/9dc987e98d0b441558163230e4aef9a838d9c1bb))
+
+## [2.4.2-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.6...v2.4.2-alpha.7) (2024-04-02)
+
+### Features
+
+- 🎸 modify tg auth ([6b864b8](https://github.com/Portkey-Wallet/portkey-web/commit/6b864b891d1da4ea208273028da4e7007cd505ff))
+
+### Bug Fixes
+
+- 🐛 token response ([c1464b8](https://github.com/Portkey-Wallet/portkey-web/commit/c1464b867a6d98b6ef39ec5dfe98854ff9f7646e))
+
+## [2.4.2-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.5...v2.4.2-alpha.6) (2024-04-02)
+
+### Features
+
+- 🎸 tg auth ([49bc34a](https://github.com/Portkey-Wallet/portkey-web/commit/49bc34ae386dde582828919eded741895662809d))
+
+## [2.4.2-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.4...v2.4.2-alpha.5) (2024-04-02)
+
+### Features
+
+- 🎸 modify telegram auth ([b4635fe](https://github.com/Portkey-Wallet/portkey-web/commit/b4635fe2672dbda97453a7ebb66a1fb7c1f6d28a))
+
+## [2.4.2-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.3...v2.4.2-alpha.4) (2024-04-02)
+
+### Features
+
+- 🎸 modify TelegramLoginButton ([eb68d25](https://github.com/Portkey-Wallet/portkey-web/commit/eb68d25718a2aa90b2e361cec6a822ceb2fb68a9))
+
+### Bug Fixes
+
+- 🐛 delete account ts ([f76024a](https://github.com/Portkey-Wallet/portkey-web/commit/f76024a34ea9311b5b6af8128244e32141601672))
+
+## [2.4.2-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.2...v2.4.2-alpha.3) (2024-04-01)
+
+## [2.4.2-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.1...v2.4.2-alpha.2) (2024-04-01)
+
+### Features
+
+- 🎸 tg auth ([864e60f](https://github.com/Portkey-Wallet/portkey-web/commit/864e60f1f53d6f38fb6f2e6a918d42660fdfa88c))
+- guardian operation ([6209935](https://github.com/Portkey-Wallet/portkey-web/commit/6209935366924fbbd56e89f17b577a1060b1458b))
+
+## [2.4.2-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.2-alpha.0...v2.4.2-alpha.1) (2024-04-01)
+
+### Features
+
+- 🎸 save date in tg ([5f25a38](https://github.com/Portkey-Wallet/portkey-web/commit/5f25a38cf8718ac4b98bf233801032c4f5d7005a))
+
+## [2.4.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.1...v2.4.2-alpha.0) (2024-03-29)
+
+### Features
+
+- 🎸 dev guardian for tg ([6a5f8df](https://github.com/Portkey-Wallet/portkey-web/commit/6a5f8df71ec33ae99a740c5486f213acb2f009da))
+- 🎸 modify next-example ([5e9b2d4](https://github.com/Portkey-Wallet/portkey-web/commit/5e9b2d4c82aa564dddbf788d44d20e78bef7e952))
+- 🎸 modify savaData api and openLogin api ([a89a9e5](https://github.com/Portkey-Wallet/portkey-web/commit/a89a9e5ad02da5e96185d8b070ef2bb53f15a97f))
+- 🎸 openlogin socket ([57c7ff3](https://github.com/Portkey-Wallet/portkey-web/commit/57c7ff3af9c1c7d96417c39759f7033acf43bb85))
+- 🎸 tg auth within tg app ([c573c90](https://github.com/Portkey-Wallet/portkey-web/commit/c573c90331d7ae99efc4df27990c7f2c61061421))
+- 🎸 tg example ([f9b3095](https://github.com/Portkey-Wallet/portkey-web/commit/f9b3095905dfc5c723d3c8b6c3310092e2858ce1))
+- evoke app by opening a new window ([1de0112](https://github.com/Portkey-Wallet/portkey-web/commit/1de011242ca0cebdee9a7c351afb83dd7156d43f))
+- the communication mode of sell is changed from browser communication to server-side data push ([ce55b7e](https://github.com/Portkey-Wallet/portkey-web/commit/ce55b7e784a0919be704d6beb0a963113be84b61))
+
+## [2.1.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.2...v2.1.0-alpha.0) (2024-02-27)
+
+### Features
+
+- 🎸 forge ([d82f028](https://github.com/Portkey-Wallet/portkey-web/commit/d82f028d475e93689e9fc0ce11529fec603193eb))
+- 🎸 update CryptoManager ([80f4a5a](https://github.com/Portkey-Wallet/portkey-web/commit/80f4a5acb983d4bc6b6d027868654611ca1e8138))
+
+### Bug Fixes
+
+- 🐛 connect socket ([f0d382e](https://github.com/Portkey-Wallet/portkey-web/commit/f0d382ebfb040d6c384bd5b1510aed3a5465433c))
+- 🐛 decryp info ([ced9efe](https://github.com/Portkey-Wallet/portkey-web/commit/ced9efebff146c3763ca8ad03e2ac858bb345623))
+- 🐛 guardian list loading ([3f855d7](https://github.com/Portkey-Wallet/portkey-web/commit/3f855d7eb39f701f84667fe657912c51f4b0ddd1))
+- 🐛 twitter header ([7c83bbb](https://github.com/Portkey-Wallet/portkey-web/commit/7c83bbbc33d5e16bd698789cfee2e5fd30a3f563))
+
+## [2.0.1-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.1-alpha.1...v2.0.1-alpha.2) (2024-02-21)
+
+### Bug Fixes
+
+- 🐛 crypto long ([8c77632](https://github.com/Portkey-Wallet/portkey-web/commit/8c776325c005887b93b13ce10b97a03f98a56168))
+
+## [2.0.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.28...v2.0.1-alpha.1) (2024-02-21)
+
+### Features
+
+- 🎸 add auth by socket ([2ba3d2a](https://github.com/Portkey-Wallet/portkey-web/commit/2ba3d2a38656c229810b5abe548ea27635821f20))
+- 🎸 crypto ([2f86519](https://github.com/Portkey-Wallet/portkey-web/commit/2f86519404d59e1043a78fe96a52e98dc4e3f2ce))
+
+## [2.0.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.0.0-alpha.19...v2.0.1-alpha.0) (2024-02-02)
+
+### Features
+
+- 🎸 fb and twitter oauth ([7e2bdfe](https://github.com/Portkey-Wallet/portkey-web/commit/7e2bdfe652af24885215c4d7509f64950abd490e))
+
+### Bug Fixes
+
+- 🐛 facebook & twitter accessToken ([df98170](https://github.com/Portkey-Wallet/portkey-web/commit/df981708b5b50dcf637ced64cf71e7e9ea137260))
+- 🐛 ref ([d01a333](https://github.com/Portkey-Wallet/portkey-web/commit/d01a333d975fd2ba54fa2cea78650c9d7971fcb7))
+
 ## [2.5.0-alpha.20](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.19...v2.5.0-alpha.20) (2024-04-12)
 
 ### Bug Fixes

@@ -3565,16 +3565,6 @@
   dependencies:
     "@portkey/provider-types" "^2.0.0-alpha.2"
 
-"@portkey/graphql@^2.5.0-alpha.20":
-  version "2.5.0-alpha.20"
-  resolved "https://registry.npmjs.org/@portkey/graphql/-/graphql-2.5.0-alpha.20.tgz#2e950b18fc0cdcd2b2b5b7baba3fe0ad3c45d54e"
-  integrity sha512-izYHsK0UmjNPWqnaX+EJFihvh/Fp6KpfkX16ornBtpfnZcn4JVjq2EId68mBxZCZttMrsGYsXrjkLobb3ijBVw==
-  dependencies:
-    "@apollo/client" "^3.7.3"
-    "@portkey/types" "^2.5.0-alpha.20"
-    graphql "^16.6.0"
-    subscriptions-transport-ws "^0.11.0"
-
 "@portkey/provider-types@^2.0.0-alpha.2":
   version "2.0.0-alpha.2"
   resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-2.0.0-alpha.2.tgz#77dda91b85537c10384594807779605963b5aa77"
