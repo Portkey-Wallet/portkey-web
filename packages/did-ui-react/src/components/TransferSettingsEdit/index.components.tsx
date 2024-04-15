@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import BackHeaderForPage from '../BackHeaderForPage';
 import './index.less';
-import { useMemo, useState, useCallback, useRef, useEffect } from 'react';
+import { useMemo, useState, useCallback, useRef } from 'react';
 import { divDecimals, timesDecimals } from '../../utils/converter';
 import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { ITransferSettingsFormInit } from '../TransferSettings/index.components';
@@ -12,7 +12,7 @@ import { isValidInteger } from '../../utils/reg';
 import { NetworkType, OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
-import { did, errorTip, handleErrorMessage, parseTelegramToken, setLoading } from '../../utils';
+import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
 import { ELF_SYMBOL } from '../../constants/assets';
 import { getChainInfo } from '../../hooks';
@@ -301,6 +301,7 @@ export default function TransferSettingsEditMain({
           caHash,
           operationType: OperationTypeEnum.modifyTransferLimit,
           isErrorTip,
+          socketMethod: CrossTabPushMessageType.onTransferSettingApproval,
           telegramAuth: data?.accessToken,
           telegramUserId: getTelegramUserId(),
         };
