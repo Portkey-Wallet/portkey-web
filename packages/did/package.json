@@ -41,15 +41,15 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey/services": "^2.4.4-alpha.0"
+    "@portkey/services": "^2.4.4-alpha.0",
+    "@portkey/accounts": "^2.4.4-alpha.0",
+    "@portkey/contracts": "^2.4.4-alpha.0",
+    "@portkey/graphql": "^2.4.4-alpha.0",
+    "@portkey/request": "^2.4.4-alpha.0",
+    "@portkey/types": "^2.4.4-alpha.0",
+    "@portkey/utils": "^2.4.4-alpha.0"
   },
   "peerDependencies": {
-    "@portkey/accounts": "^2.4.3",
-    "@portkey/contracts": "^2.4.3",
-    "@portkey/graphql": "^2.4.3",
-    "@portkey/request": "^2.4.3",
-    "@portkey/types": "^2.4.3",
-    "@portkey/utils": "^2.4.3",
     "aelf-sdk": "^3.4.7",
     "react": "^18.2.0"
   },
