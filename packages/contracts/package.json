@@ -1,6 +1,6 @@
 {
   "name": "@portkey/contracts",
-  "version": "2.4.1",
+  "version": "2.4.4-alpha.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -39,11 +39,13 @@
     "format": "prettier --write '**/*'",
     "start": "tsc --watch"
   },
+  "dependencies": {
+    "@portkey/provider-types": "^2.1.0",
+    "@portkey/types": "^2.4.4-alpha.1",
+    "@portkey/utils": "^2.4.4-alpha.1"
+  },
   "peerDependencies": {
-    "@portkey/provider-types": "1.1.0",
-    "@portkey/types": "^1.5.2-alpha.0",
-    "@portkey/utils": "^1.5.2-alpha.0",
-    "aelf-sdk": "^3.2.45-beta.0"
+    "aelf-sdk": "^3.4.7"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
 }

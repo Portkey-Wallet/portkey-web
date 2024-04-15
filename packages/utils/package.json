@@ -1,6 +1,6 @@
 {
   "name": "@portkey/utils",
-  "version": "2.4.1",
+  "version": "2.4.4-alpha.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -40,7 +40,7 @@
     "start": "tsc --watch"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.2.45-beta.0",
+    "aelf-sdk": "^3.4.7",
     "query-string": "^7.1.1"
   },
   "devDependencies": {

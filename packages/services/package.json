@@ -1,6 +1,6 @@
 {
   "name": "@portkey/services",
-  "version": "2.4.1",
+  "version": "2.4.4-alpha.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -40,6 +40,11 @@
     "start": "tsc --watch",
     "test": "jest"
   },
+  "dependencies": {
+    "@portkey/graphql": "^2.4.4-alpha.1",
+    "@portkey/request": "^2.4.4-alpha.1",
+    "@portkey/types": "^2.4.4-alpha.1"
+  },
   "devDependencies": {
     "@jest/globals": "^29.3.1",
     "babel-jest": "^29.3.1",
@@ -47,10 +52,7 @@
     "ts-jest": "^29.0.5"
   },
   "peerDependencies": {
-    "@portkey/graphql": "^1.5.1",
-    "@portkey/request": "^1.5.1",
-    "@portkey/types": "^1.5.1",
-    "aelf-sdk": "^3.2.45-beta.0",
+    "aelf-sdk": "^3.4.7",
     "query-string": "^7.1.1"
   },
   "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"

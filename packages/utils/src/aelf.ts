@@ -23,10 +23,15 @@ export const encodedTx = async ({ instance, functionName, paramsOption, contract
   return raw;
 };
 
-export const getELFContract = async (rpcUrl: string, tokenAddress: string, privateKey: string) => {
+export const getELFContract = async (
+  rpcUrl: string,
+  tokenAddress: string,
+  privateKey: string,
+  option: { refBlockNumberStrategy?: number } = {},
+) => {
   const aelf = getAelfInstance(rpcUrl);
   const wallet = getWallet(privateKey);
-  return await aelf.chain.contractAt(tokenAddress, wallet);
+  return await aelf.chain.contractAt(tokenAddress, wallet, option);
 };
 
 export function getWallet(privateKey: string) {
