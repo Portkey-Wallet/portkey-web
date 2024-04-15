@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.22](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.21...v2.5.0-alpha.22) (2024-04-15)
+
+### Features
+
+- 🎸 assets step ([a11899b](https://github.com/Portkey-Wallet/portkey-web/commit/a11899bb56326a1ff9ae370ac0c78c748014e65d))
+- 🎸 change custom network type ([e1cb97b](https://github.com/Portkey-Wallet/portkey-web/commit/e1cb97bf5f1df000e8bf8ef7b9fe2be3bfb1ddf1))
+
 ## [2.5.0-alpha.21](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.4...v2.5.0-alpha.21) (2024-04-15)
 
 ## [2.5.0-alpha.20](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.19...v2.5.0-alpha.20) (2024-04-12)
