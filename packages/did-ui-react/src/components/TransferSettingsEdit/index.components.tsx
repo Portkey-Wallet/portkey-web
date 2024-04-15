@@ -304,6 +304,7 @@ export default function TransferSettingsEditMain({
           socketMethod: CrossTabPushMessageType.onTransferSettingApproval,
           telegramAuth: data?.accessToken,
           telegramUserId: getTelegramUserId(),
+          needConfirm: true,
         };
         await getDataFromOpenLogin({
           params,
