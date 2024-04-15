@@ -14,7 +14,7 @@ import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
 import { TAssetPageState, TRampInitState, TRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
-import { useEffectOnce, useUpdateEffect } from 'react-use';
+import { useUpdateEffect } from 'react-use';
 import SendMain, { SendExtraConfig } from '../Send/index.components';
 import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
@@ -175,7 +175,7 @@ function AssetMain({
 
   const handleAuthWithInTelegram = useCallback(async (decodeResult?: IStorageData) => {
     setStorageData(decodeResult || {});
-    setAssetStep(AssetStep.guardians);
+    // setAssetStep(AssetStep.guardians);
   }, []);
 
   useGetTelegramAccessToken({
@@ -263,11 +263,11 @@ function AssetMain({
     }
   }, [setPageState]);
 
-  useEffectOnce(() => {
+  useEffect(() => {
     if (initialized) {
       restorePageState();
     }
-  });
+  }, [initialized, restorePageState]);
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);

@@ -6,7 +6,7 @@ export const Portkey_Bot_Webapp: {
     [key in NetworkType]: string;
   };
 } = {
-  onLine: {
+  online: {
     MAINNET: '',
     TESTNET: 'https://t.me/Lucky_V5_Bot/lucky666',
   },
@@ -27,18 +27,18 @@ export enum Telegram_Link_Params {
 }
 
 export const Open_Login_Bridge: TOpenLoginBridgeURL = {
-  onLine: 'https://openlogin.portkey.finance',
+  online: 'https://openlogin.portkey.finance',
   offline: 'https://openlogin-test.portkey.finance',
   local: 'http://localhost:3002',
 };
 
 export const Open_Login_Guardian_Bridge: TOpenLoginBridgeURL = {
-  onLine: Open_Login_Bridge.onLine + '/guardian',
+  online: Open_Login_Bridge.online + '/guardian',
   offline: Open_Login_Bridge.offline + '/guardian',
   local: Open_Login_Bridge.local + '/guardian',
 };
 export const Open_Login_Guardian_Approval_Bridge: TOpenLoginBridgeURL = {
-  onLine: Open_Login_Bridge.onLine + '/guardian/approval',
+  online: Open_Login_Bridge.online + '/guardian/approval',
   offline: Open_Login_Bridge.offline + '/guardian/approval',
   local: Open_Login_Bridge.local + '/guardian/approval',
 };
