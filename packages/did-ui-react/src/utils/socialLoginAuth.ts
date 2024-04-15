@@ -91,7 +91,7 @@ export const socialLoginAuthOpener = ({
       case 'offline':
         thirdPage = WEB_PAGE_TEST;
         break;
-      case 'onLine':
+      case 'online':
         thirdPage = WEB_PAGE;
         break;
 

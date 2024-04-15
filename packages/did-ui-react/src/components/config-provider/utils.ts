@@ -17,8 +17,10 @@ export const getCommunicationSocketUrl = () => {
   return ConfigProvider.config.socketUrl || `${getServiceUrl()}/communication`;
 };
 
-export const getCustomNetworkType = () => {
-  return ConfigProvider.config.customNetworkType || 'onLine';
+export const getCustomNetworkType = (): TCustomNetworkType => {
+  return ConfigProvider.config.customNetworkType
+    ? (ConfigProvider.config.customNetworkType.toLowerCase() as TCustomNetworkType)
+    : 'online';
 };
 
 export const getStorageInstance = () => {

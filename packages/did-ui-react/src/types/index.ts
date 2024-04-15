@@ -68,7 +68,7 @@ export type ValidData = {
   errorMsg: string;
 };
 
-export type TCustomNetworkType = 'offline' | 'onLine' | 'local';
+export type TCustomNetworkType = 'offline' | 'online' | 'local';
 
 export interface ITelegramInfo {
   accessToken?: string;

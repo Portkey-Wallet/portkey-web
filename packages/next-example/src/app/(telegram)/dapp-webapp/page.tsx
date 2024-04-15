@@ -10,12 +10,12 @@ import { sleep } from '@portkey/utils';
 
 ConfigProvider.setGlobalConfig({
   graphQLUrl: '/graphql',
-  connectUrl: 'http://192.168.66.117:8080',
+  connectUrl: 'https://auth-aa-portkey-test.portkey.finance',
   serviceUrl: 'https://aa-portkey-test.portkey.finance',
   requestDefaults: {
     baseURL: 'https://aa-portkey-test.portkey.finance',
   },
-  dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappv5',
+  dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappv5test',
 });
 
 export default function DappWebapp() {

@@ -13,12 +13,12 @@ class OpenLogin {
   options: OpenLoginOptions;
 
   constructor(options: OpenLoginOptions) {
-    if (!options.network) options.network = 'onLine';
+    if (!options.network) options.network = 'online';
 
     if (!options.sdkUrl) {
       if (options.network === 'local') options.sdkUrl = 'http://localhost:3000';
       if (options.network === 'offline') options.sdkUrl = WEB_PAGE_TEST;
-      if (options.network === 'onLine') options.sdkUrl = WEB_PAGE;
+      if (options.network === 'online') options.sdkUrl = WEB_PAGE;
     }
 
     if (!options.uxMode) options.uxMode = UX_MODE.POPUP;
