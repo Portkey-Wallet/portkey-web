@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.26](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.25...v2.5.0-alpha.26) (2024-04-16)
+
+### Features
+
+- 🎸 add zIndex for open-link modal ([b410b7a](https://github.com/Portkey-Wallet/portkey-web/commit/b410b7abca90633f12b2bbd49db78dda2678ce9d))
+
 ## [2.5.0-alpha.25](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.24...v2.5.0-alpha.25) (2024-04-16)
 
 ### Features
