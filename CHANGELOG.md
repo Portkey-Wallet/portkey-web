@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.25](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.24...v2.5.0-alpha.25) (2024-04-16)
+
+### Features
+
+- 🎸 add openLinkModal for transfer limit edit ([e015ff4](https://github.com/Portkey-Wallet/portkey-web/commit/e015ff49ab3be287cac69d3ee55578514c3aed24))
+
 ## [2.5.0-alpha.24](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.23...v2.5.0-alpha.24) (2024-04-15)
 
 ### Features
