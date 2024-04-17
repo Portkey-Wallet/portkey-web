@@ -1,7 +1,7 @@
 import PopupHandler from './PopupHandler';
 import { OPENLOGIN_ACTIONS, UX_MODE, openLoginRedirectURI } from './constants';
 import { LoginParams, OpenLoginOptions, OpenloginParamConfig, PopupResponse } from './types';
-import { WEB_PAGE, WEB_PAGE_TEST } from '../../constants';
+import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '../../constants';
 import { dealURLLastChar, randomId } from '../lib';
 import { constructURL, jsonToBase64 } from './utils';
 import { ISocialLogin } from '../../types';
@@ -13,12 +13,13 @@ class OpenLogin {
   options: OpenLoginOptions;
 
   constructor(options: OpenLoginOptions) {
-    if (!options.network) options.network = 'online';
+    if (!options.customNetworkType) options.customNetworkType = 'online';
 
     if (!options.sdkUrl) {
-      if (options.network === 'local') options.sdkUrl = 'http://localhost:3000';
-      if (options.network === 'offline') options.sdkUrl = WEB_PAGE_TEST;
-      if (options.network === 'online') options.sdkUrl = WEB_PAGE;
+      if (options.customNetworkType === 'local') options.sdkUrl = 'http://localhost:3000';
+      if (options.customNetworkType === 'offline') options.sdkUrl = WEB_PAGE_TEST;
+      if (options.customNetworkType === 'online')
+        options.sdkUrl = options.networkType === 'TESTNET' ? WEB_PAGE_TESTNET : WEB_PAGE;
     }
 
     if (!options.uxMode) options.uxMode = UX_MODE.POPUP;
@@ -98,7 +99,7 @@ class OpenLogin {
     const loginId = await this.getLoginId();
 
     queryParams.loginId = loginId;
-    queryParams.network = this.options.network;
+    queryParams.network = this.options.customNetworkType;
 
     if (this.options.uxMode === UX_MODE.REDIRECT) {
       const loginUrl = constructURL({

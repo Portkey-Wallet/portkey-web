@@ -1,5 +1,5 @@
 import { IStorageSuite } from '@portkey/types';
-import { ISocialLogin, TCustomNetworkType } from '../../types';
+import { ISocialLogin, NetworkType, TCustomNetworkType } from '../../types';
 import { OPENLOGIN_ACTIONS, UX_MODE } from './constants';
 import { CrossTabPushMessageType } from '@portkey/socket';
 
@@ -12,7 +12,9 @@ export type OpenLoginOptions = {
   /**
    * specifies the network to be used.
    */
-  network: TCustomNetworkType;
+  customNetworkType: TCustomNetworkType;
+
+  networkType: NetworkType;
 
   /**
    * socketURI
