@@ -6,7 +6,8 @@ export abstract class BaseCryptoManager implements ICryptoManager {
   abstract encrypt(cryptoKey: string, data: string): Promise<string>;
   abstract decrypt(cryptoKey: string, data: string): Promise<string>;
   public encryptLong = async (cryptoKey: string, data: string): Promise<string> => {
-    const list = sliceCryptoStr(data, 64);
+    const base64EncodedData = Buffer.from(data).toString('base64');
+    const list = sliceCryptoStr(base64EncodedData, 64);
     const num = list.length;
     let str = '';
     for (let i = 0; i < num; i++) {
@@ -24,6 +25,7 @@ export abstract class BaseCryptoManager implements ICryptoManager {
       const element = list[i];
       str += await this.decrypt(cryptoKey, element);
     }
-    return str;
+    const decodedString = Buffer.from(str, 'base64').toString();
+    return decodedString;
   };
 }
