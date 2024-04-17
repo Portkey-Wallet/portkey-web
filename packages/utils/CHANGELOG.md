@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.29](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.28...v2.5.0-alpha.29) (2024-04-17)
+
+### Features
+
+- 🎸 add ForgeCryptoManagerHex ([74e9289](https://github.com/Portkey-Wallet/portkey-web/commit/74e92894f0900c66f90efc7267d8d3301b5f1e26))
+- 🎸 modify BaseCryptoManager ([78e23c5](https://github.com/Portkey-Wallet/portkey-web/commit/78e23c5819e4b4934f8bd3ea981dc6ee4433eaf3))
+
 ## [2.5.0-alpha.28](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.27...v2.5.0-alpha.28) (2024-04-17)
 
 **Note:** Version bump only for package @portkey/utils
