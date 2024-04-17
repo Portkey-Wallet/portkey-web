@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.28](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.27...v2.5.0-alpha.28) (2024-04-17)
+
+### Features
+
+- 🎸 add openlogin params ([ae07cfc](https://github.com/Portkey-Wallet/portkey-web/commit/ae07cfcdcaed3a5e0f8d672315bd1ec1361c75c3))
+
 ## [2.5.0-alpha.27](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.26...v2.5.0-alpha.27) (2024-04-17)
 
 ### Features
