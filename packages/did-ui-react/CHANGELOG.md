@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.28](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.27...v2.5.0-alpha.28) (2024-04-17)
+
+### Features
+
+- 🎸 add openlogin params ([ae07cfc](https://github.com/Portkey-Wallet/portkey-web/commit/ae07cfcdcaed3a5e0f8d672315bd1ec1361c75c3))
+
+## [2.5.0-alpha.27](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.26...v2.5.0-alpha.27) (2024-04-17)
+
+### Features
+
+- 🎸 add openlogin-testnet ([8265e93](https://github.com/Portkey-Wallet/portkey-web/commit/8265e93632bfc74151c9fdf603de221e3bbccbbd))
+
+### Bug Fixes
+
+- socialAuth dependency list ([ba8bebf](https://github.com/Portkey-Wallet/portkey-web/commit/ba8bebf2f00c82a8fc748a5941bc1fcc74a086b2))
+
 ## [2.5.0-alpha.26](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.25...v2.5.0-alpha.26) (2024-04-16)
 
 ### Features
