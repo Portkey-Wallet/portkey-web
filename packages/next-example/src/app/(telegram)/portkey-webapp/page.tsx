@@ -30,12 +30,12 @@ export default function PortkeyWebapp() {
       if (!TelegramRef.current) return;
 
       TelegramRef.current.WebApp.ready();
-      console.log('🌈 🌈 🌈 🌈 🌈 🌈 TelegramRef.current', TelegramRef.current);
+      console.log(' TelegramRef.current', TelegramRef.current);
     }
   }, []);
 
   const onBeforeBack = useCallback(async () => {
-    console.log('🌈 🌈 🌈 🌈 🌈 🌈 ', '');
+    console.log('TelegramLoginButton onBeforeBack');
   }, []);
 
   useEffectOnce(() => {

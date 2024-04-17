@@ -1,3 +1,4 @@
+import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '.';
 import { NetworkType, TCustomNetworkType } from '../types';
 import { TOpenLoginBridgeURL } from '../types/openlogin';
 
@@ -27,18 +28,48 @@ export enum Telegram_Link_Params {
 }
 
 export const Open_Login_Bridge: TOpenLoginBridgeURL = {
-  online: 'https://openlogin.portkey.finance',
-  offline: 'https://openlogin-test.portkey.finance',
-  local: 'http://localhost:3002',
+  online: {
+    MAINNET: WEB_PAGE,
+    TESTNET: WEB_PAGE_TESTNET,
+  },
+  offline: {
+    MAINNET: WEB_PAGE_TEST,
+    TESTNET: WEB_PAGE_TESTNET,
+  },
+  local: {
+    MAINNET: 'http://localhost:3002',
+    TESTNET: 'http://localhost:3002',
+  },
 };
 
+export const Guardian_Bridge_Pathname = '/guardian';
+export const Guardian_Approval_Bridge_Pathname = '/guardian/approval';
+
 export const Open_Login_Guardian_Bridge: TOpenLoginBridgeURL = {
-  online: Open_Login_Bridge.online + '/guardian',
-  offline: Open_Login_Bridge.offline + '/guardian',
-  local: Open_Login_Bridge.local + '/guardian',
+  online: {
+    MAINNET: Open_Login_Bridge.online.MAINNET + Guardian_Bridge_Pathname,
+    TESTNET: Open_Login_Bridge.online.TESTNET + Guardian_Bridge_Pathname,
+  },
+  offline: {
+    MAINNET: Open_Login_Bridge.offline.MAINNET + Guardian_Bridge_Pathname,
+    TESTNET: Open_Login_Bridge.offline.TESTNET + Guardian_Bridge_Pathname,
+  },
+  local: {
+    MAINNET: Open_Login_Bridge.local.MAINNET + Guardian_Bridge_Pathname,
+    TESTNET: Open_Login_Bridge.local.TESTNET + Guardian_Bridge_Pathname,
+  },
 };
 export const Open_Login_Guardian_Approval_Bridge: TOpenLoginBridgeURL = {
-  online: Open_Login_Bridge.online + '/guardian/approval',
-  offline: Open_Login_Bridge.offline + '/guardian/approval',
-  local: Open_Login_Bridge.local + '/guardian/approval',
+  online: {
+    MAINNET: Open_Login_Bridge.online.MAINNET + Guardian_Approval_Bridge_Pathname,
+    TESTNET: Open_Login_Bridge.online.TESTNET + Guardian_Approval_Bridge_Pathname,
+  },
+  offline: {
+    MAINNET: Open_Login_Bridge.offline.MAINNET + Guardian_Approval_Bridge_Pathname,
+    TESTNET: Open_Login_Bridge.offline.TESTNET + Guardian_Approval_Bridge_Pathname,
+  },
+  local: {
+    MAINNET: Open_Login_Bridge.local.MAINNET + Guardian_Approval_Bridge_Pathname,
+    TESTNET: Open_Login_Bridge.local.TESTNET + Guardian_Approval_Bridge_Pathname,
+  },
 };

@@ -8,7 +8,7 @@ ConfigProvider.setGlobalConfig({
   // https://test3-applesign-v2.portkey.finance
   // serviceUrl: 'https://test4-applesign-v2.portkey.finance',
   graphQLUrl: '/graphql',
-  customNetworkType: 'offline',
+  customNetworkType: 'online',
 });
 
 export default function Portkey({ children }: { children?: ReactNode }) {
@@ -36,7 +36,7 @@ export default function Portkey({ children }: { children?: ReactNode }) {
           onClick={async () => {
             setNetworkType(v => (v === 'MAINNET' ? 'TESTNET' : 'MAINNET'));
           }}>
-          Only change networkType
+          Only change networkType: {networkType}
         </Button>
         {children}
       </div>

@@ -343,7 +343,15 @@ function GuardianAdd({
         );
       }
     },
-    [isErrorTip, networkType, onError, socialBasic, socialUserInfo, telegramInfo?.accessToken],
+    [
+      hasCurrentTelegramUserGuardian,
+      isErrorTip,
+      networkType,
+      onError,
+      socialBasic,
+      socialUserInfo,
+      telegramInfo?.accessToken,
+    ],
   );
 
   const socialVerify = useCallback(
