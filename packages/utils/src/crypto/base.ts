@@ -5,7 +5,10 @@ export abstract class BaseCryptoManager implements ICryptoManager {
   abstract generateKeyPair(): Promise<KeyPairJSON>;
   abstract encrypt(cryptoKey: string, data: string): Promise<string>;
   abstract decrypt(cryptoKey: string, data: string): Promise<string>;
-  public encryptLong = async (cryptoKey: string, data: string): Promise<string> => {
+  public encryptLong = async (cryptoKey: string, data: string, isHex: boolean = true): Promise<string> => {
+    if (isHex) {
+      data = Buffer.from(data).toString('hex');
+    }
     const list = sliceCryptoStr(data, 64);
     const num = list.length;
     let str = '';
@@ -17,13 +20,14 @@ export abstract class BaseCryptoManager implements ICryptoManager {
     if (str.length > 0) str = str.slice(0, str.length - 1);
     return str;
   };
-  public decryptLong = async (cryptoKey: string, data: string): Promise<string> => {
+  public decryptLong = async (cryptoKey: string, data: string, isHex: boolean = true): Promise<string> => {
     const list = data.split(';');
     let str = '';
     for (let i = 0; i < list.length; i++) {
       const element = list[i];
       str += await this.decrypt(cryptoKey, element);
     }
+    if (isHex) return Buffer.from(str, 'hex').toString();
     return str;
   };
 }
