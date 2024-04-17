@@ -50,6 +50,7 @@ export function useVerifyGoogleToken() {
           type: 'Google',
           clientId: params.clientId,
           redirectURI: params.redirectURI,
+          network: params.networkType,
         });
       }
       const _token = googleInfo?.token || (googleInfo as any)?.accessToken;
@@ -85,6 +86,7 @@ export function useVerifyAppleToken() {
           type: 'Apple',
           clientId: params.clientId,
           redirectURI: params.redirectURI,
+          network: params.networkType,
         });
         if (!authRes) throw new Error('Missing Response');
         accessToken = authRes?.token;

@@ -304,12 +304,12 @@ export default function TransferSettingsEditMain({
           socketMethod: CrossTabPushMessageType.onTransferSettingApproval,
           telegramAuth: data?.accessToken,
           telegramUserId: getTelegramUserId(),
-          needConfirm: true,
         };
         await getDataFromOpenLogin({
           params,
           socketMethod: [CrossTabPushMessageType.onTransferSettingApproval],
           openLoginBridgeURLMap: Open_Login_Guardian_Approval_Bridge,
+          needConfirm: true,
           isRemoveLocalStorage: true,
           removeLocalStorageKey: TransferSettingBusinessKey,
           callback: (result) => approvalSuccess((result.data as IOpenLoginGuardianApprovalResponse).approvalInfo),

@@ -38,7 +38,9 @@ export interface IOpenLoginGuardianApprovalResponse {
 }
 
 export type TOpenLoginBridgeURL = {
-  [key in TCustomNetworkType]: string;
+  [key in TCustomNetworkType]: {
+    [key in NetworkType]: string;
+  };
 };
 
 export type TOpenLoginQueryParams =

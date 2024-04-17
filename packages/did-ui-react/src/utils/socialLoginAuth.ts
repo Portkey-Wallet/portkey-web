@@ -6,7 +6,7 @@ import {
   getServiceUrl,
   getStorageInstance,
 } from '../components/config-provider/utils';
-import { WEB_PAGE, WEB_PAGE_TEST } from '../constants';
+import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '../constants';
 import { ISocialLogin, NetworkType } from '../types';
 import { stringify } from 'query-string';
 import { dealURLLastChar } from './lib';
@@ -92,7 +92,7 @@ export const socialLoginAuthOpener = ({
         thirdPage = WEB_PAGE_TEST;
         break;
       case 'online':
-        thirdPage = WEB_PAGE;
+        thirdPage = network === 'TESTNET' ? WEB_PAGE_TESTNET : WEB_PAGE;
         break;
 
       case 'local':
@@ -185,7 +185,8 @@ export const socialLoginAuthBySocket = async ({
   const socketURI = getCommunicationSocketUrl();
   const ctw = getCustomNetworkType();
   const openlogin = new OpenLogin({
-    network: ctw,
+    customNetworkType: ctw,
+    networkType: network || 'MAINNET',
     serviceURI: serviceURI,
     clientId,
     socketURI,
