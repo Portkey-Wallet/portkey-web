@@ -9,11 +9,11 @@ export const Portkey_Bot_Webapp: {
 } = {
   online: {
     MAINNET: '',
-    TESTNET: 'https://t.me/Lucky_V5_Bot/lucky666',
+    TESTNET: 'https://t.me/PortkeyTestnetBot/PortkeyWallet',
   },
   offline: {
     MAINNET: 'https://t.me/sTestABot/aelf', //test4
-    TESTNET: 'https://t.me/Lucky_V5_Bot/lucky666',
+    TESTNET: 'https://t.me/PortkeyTestnetBot/PortkeyWallet',
   },
   local: {
     MAINNET: 'https://t.me/sTestABot/aelf',
