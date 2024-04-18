@@ -21,11 +21,14 @@ const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
 
 ConfigProvider.setGlobalConfig({
-  connectUrl: 'http://192.168.66.117:8080',
+  connectUrl: 'https://auth-aa-portkey-test.portkey.finance',
   socialLogin: {
     Portkey: {
       websiteName: 'website demo',
       websiteIcon: '',
+    },
+    Telegram: {
+      dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappv5',
     },
   },
   loginConfig: {
@@ -34,15 +37,15 @@ ConfigProvider.setGlobalConfig({
   },
   requestDefaults: {
     timeout: 30000,
-    baseURL: 'https://test4-applesign-v2.portkey.finance',
+    baseURL: 'https://aa-portkey-test.portkey.finance',
   },
-  serviceUrl: 'https://test4-applesign-v2.portkey.finance',
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
   // },
   graphQLUrl: '/graphql',
-  customNetworkType: 'offline',
+  customNetworkType: 'online',
 });
 
 export default function Sign() {

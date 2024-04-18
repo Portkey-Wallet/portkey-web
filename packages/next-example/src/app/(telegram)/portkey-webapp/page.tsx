@@ -9,9 +9,9 @@ ConfigProvider.setGlobalConfig({
   // storageMethod: myStore,
   requestDefaults: {
     timeout: 30000,
-    baseURL: 'https://test4-applesign-v2.portkey.finance',
+    baseURL: 'https://aa-portkey-test.portkey.finance',
   },
-  serviceUrl: 'https://test4-applesign-v2.portkey.finance',
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
 
   // loginConfig: {
   //   loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],

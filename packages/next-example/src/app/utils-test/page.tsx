@@ -88,6 +88,7 @@ export default function AppleAuth() {
               caHash: did.didWallet.caInfo['AELF'].caHash,
               amount: '999',
               targetChainId: 'AELF',
+              networkType: 'TESTNET',
             });
             console.log(result, 'result===');
           } catch (error) {
@@ -107,6 +108,7 @@ export default function AppleAuth() {
                 originChainId: 'AELF',
                 targetChainId: 'tDVV',
                 caHash: did.didWallet.caInfo['AELF'].caHash,
+                networkType: 'TESTNET',
               });
               console.log(result, 'result===');
             } catch (error) {

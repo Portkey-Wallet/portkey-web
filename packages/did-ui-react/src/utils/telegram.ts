@@ -206,7 +206,7 @@ export async function saveDataAndOpenPortkeyWebapp(
 }
 
 // usage: second step - get accessToken in portkey-webapp
-export async function getAccessTokenAndOpenPortkeyWebapp({
+export async function getAccessTokenAndOpenDappWebapp({
   loginId,
   telegramUserInfo,
   onBeforeBack,
@@ -261,12 +261,6 @@ export async function getAccessTokenInDappTelegram(loginId: string) {
   } catch (error) {
     throw Error(handleErrorMessage(error));
   }
-}
-
-export async function decodeDataWithInTelegram(storageKey: string, encodeData: string) {
-  const storage = await did.config.storageMethod.getItem(storageKey);
-  const { rsaKey } = JSON.parse(storage);
-  return decodeMessageByRsaKey(rsaKey, encodeData);
 }
 
 export async function getDataFromOpenLogin({

@@ -3,6 +3,7 @@
   "version": "2.5.0-alpha.31",
   "private": true,
   "scripts": {
+    "dev-https": "next dev --experimental-https",
     "dev": "next dev",
     "start": "next start",
     "lint": "next lint"

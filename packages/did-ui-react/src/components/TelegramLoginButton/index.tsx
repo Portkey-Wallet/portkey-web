@@ -7,7 +7,7 @@ import { TelegramWebappInitData } from '@portkey/types';
 import './index.less';
 import { handleErrorMessage, setLoading } from '../../utils';
 import { singleMessage } from '../CustomAnt';
-import { getAccessTokenAndOpenPortkeyWebapp, getTelegramStartParam } from '../../utils/telegram';
+import { getAccessTokenAndOpenDappWebapp, getTelegramStartParam } from '../../utils/telegram';
 import clsx from 'clsx';
 
 export interface TelegramWebappInitUserData {
@@ -69,7 +69,7 @@ export default function TelegramLoginButton({ className, onBeforeBack }: Telegra
       // const startParam = '1712049223890_986012';
       if (!startParam) throw Error('No loginId');
 
-      await getAccessTokenAndOpenPortkeyWebapp({
+      await getAccessTokenAndOpenDappWebapp({
         loginId: startParam,
         telegramUserInfo: telegramInitData.current,
         onBeforeBack,
