@@ -1,6 +1,6 @@
 import ConfigProvider from './';
 import { dealURLLastChar, did } from '../../utils';
-import { NetworkType, TCustomNetworkType } from '../../types';
+import { ISocialLoginConfig, NetworkType, TCustomNetworkType } from '../../types';
 import { Portkey_Bot_Webapp } from '../../constants/telegram';
 
 export const getServiceUrl = () => {
@@ -30,9 +30,9 @@ export const getStorageInstance = () => {
 };
 
 export const getDappTelegramLink = () => {
-  const dappTelegramLink = ConfigProvider.getConfig('dappTelegramLink') as string;
-  if (!dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
-  return dappTelegramLink;
+  const socialLogin = ConfigProvider.getConfig('socialLogin') as ISocialLoginConfig;
+  if (!socialLogin?.Telegram?.dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
+  return socialLogin.Telegram.dappTelegramLink;
 };
 
 export const getPortkeyBotWebappLink = (ctw: TCustomNetworkType, network?: NetworkType) => {
