@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.30](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.29...v2.5.0-alpha.30) (2024-04-18)
+
+### Bug Fixes
+
+- fail to log in when using a telegram account other than the current telegram account ([fb25d60](https://github.com/Portkey-Wallet/portkey-web/commit/fb25d60d79777b9a2768ec793c00c4aec91d8c86))
+
 ## [2.5.0-alpha.29](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.28...v2.5.0-alpha.29) (2024-04-17)
 
 **Note:** Version bump only for package @portkey/did-ui-react
