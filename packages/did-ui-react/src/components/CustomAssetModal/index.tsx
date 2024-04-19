@@ -73,9 +73,19 @@ export default function CustomAssetModal({
           ) : (
             allAsset.list.map((token: IAssetItemType) => {
               return token.nftInfo?.tokenId ? (
-                <AssetsNFTItem isMainnet={isMainnet} token={token} onSelect={onSelect} />
+                <AssetsNFTItem
+                  key={`${token.chainId}_${token.nftInfo?.alias}_${token.nftInfo?.tokenId}`}
+                  isMainnet={isMainnet}
+                  token={token}
+                  onSelect={onSelect}
+                />
               ) : (
-                <AssetsTokenItem isMainnet={isMainnet} token={token} onSelect={onSelect} />
+                <AssetsTokenItem
+                  key={`${token.symbol}_${token.chainId}`}
+                  isMainnet={isMainnet}
+                  token={token}
+                  onSelect={onSelect}
+                />
               );
             })
           )}
