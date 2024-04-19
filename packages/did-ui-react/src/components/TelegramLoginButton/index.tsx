@@ -57,7 +57,6 @@ export default function TelegramLoginButton({ className, onBeforeBack }: Telegra
   });
 
   const handleTGAuth = useCallback(async () => {
-    // TODO tg test
     if (!telegramInitData.current?.user || !telegramInitData.current?.auth_date || !telegramInitData.current?.hash) {
       return singleMessage.info('Please wait');
     }
@@ -66,7 +65,6 @@ export default function TelegramLoginButton({ className, onBeforeBack }: Telegra
       setLoading(true);
 
       const { startParam } = getTelegramStartParam();
-      // const startParam = '1712049223890_986012';
       if (!startParam) throw Error('No loginId');
 
       await getAccessTokenAndOpenDappWebapp({

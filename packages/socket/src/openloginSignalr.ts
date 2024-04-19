@@ -116,6 +116,20 @@ export class OpenloginSignalr extends BaseSignalr implements IOpenloginSignalr {
     });
   }
 
+  public onSendOneTimeApproval<T>(
+    { requestId }: { requestId: string },
+    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
+  ) {
+    return this.listen(CrossTabPushMessageType.onSendOneTimeApproval, (data: { body: T; requestId: string }) => {
+      console.log(CrossTabPushMessageType.onSendOneTimeApproval, data, requestId);
+      if (data?.requestId === requestId) {
+        callback(data.body, CrossTabPushMessageType.onSendOneTimeApproval);
+      } else {
+        callback(null);
+      }
+    });
+  }
+
   public onSavePublicKey<T>(
     { requestId }: { requestId: string },
     callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,

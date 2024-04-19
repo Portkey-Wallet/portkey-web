@@ -195,8 +195,6 @@ export async function saveDataAndOpenPortkeyWebapp(
     console.log('=== loginId', loginId);
     if (targetTelegramLink) {
       const Telegram = getTelegram();
-      // TODO tg test
-      // window.open(`${targetTelegramLink}?startapp=${loginId}`);
       Telegram?.WebApp.openTelegramLink(`${targetTelegramLink}?startapp=${loginId}`);
     }
     return;
@@ -225,9 +223,7 @@ export async function getAccessTokenAndOpenDappWebapp({
 
     if (!dataParse?.publicKey) throw Error('No publicKey');
 
-    // TODO tg test
     const accessToken = await generateAccessTokenByPortkeyServer(telegramUserInfo);
-    // const accessToken = { token: '21345yutgmhnfgbdvfsadfsgdhfjgkhkjghfnbgdvfc' };
     console.log('=== accessToken', accessToken);
     await saveAccessTokenToPortkeyDatabase(
       loginId,

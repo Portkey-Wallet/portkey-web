@@ -8,3 +8,5 @@ export const PortkeyAssetLiftCycle = 'PortkeyAssetLiftCycle';
 export const StorageKeyPrefix = 'Portkey';
 
 export const TransferSettingBusinessKey = StorageKeyPrefix + AssetStep.transferSettingsEdit;
+
+export const SendBusinessKey = StorageKeyPrefix + AssetStep.send;

@@ -2,7 +2,7 @@ import { ChainId, ChainType } from '@portkey/types';
 import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { GuardianStep } from '../components/Guardian/index.component';
 import { NetworkType } from './wallet';
-import { UserGuardianStatus } from './guardian';
+import { GuardianApprovedItem, UserGuardianStatus } from './guardian';
 import { ITelegramInfo, TCustomNetworkType } from '.';
 import { OpenloginParamConfig, PopupResponse } from '../utils/openlogin/types';
 
@@ -35,6 +35,7 @@ export type TOpenLoginGuardianApprovalLocationState = {
 
 export interface IOpenLoginGuardianApprovalResponse {
   approvalInfo: GuardiansApproved[];
+  formatGuardiansApproved: GuardianApprovedItem[];
 }
 
 export type TOpenLoginBridgeURL = {
