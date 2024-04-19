@@ -3,15 +3,15 @@ import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
+import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
-import { AddressCheckError } from '../../types';
+import { AddressCheckError, GuardianApprovedItem } from '../../types';
 import { ChainId, SeedTypeEnum } from '@portkey/types';
 import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
 import AddressSelector from './components/AddressSelector';
 import AmountInput from './components/AmountInput';
-import { WalletError, handleErrorMessage, modalMethod, setLoading } from '../../utils';
+import { WalletError, did, errorTip, handleErrorMessage, modalMethod, setLoading } from '../../utils';
 import { timesDecimals } from '../../utils/converter';
 import { ZERO } from '../../constants/misc';
 import SendPreview from './components/SendPreview';
@@ -34,8 +34,21 @@ import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
 import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
-import { GuardianApprovedItem } from '../Guardian/utils/type';
 import ThrottleButton from '../ThrottleButton';
+import { SendBusinessKey } from '../../constants/storage';
+import {
+  getDataFromOpenLogin,
+  getTelegramUserId,
+  hasCurrentTelegramGuardian,
+  isTelegramPlatform,
+  saveDataAndOpenPortkeyWebapp,
+} from '../../utils/telegram';
+import { getCustomNetworkType, getDappTelegramLink, getPortkeyBotWebappLink } from '../config-provider/utils';
+import { useGetTelegramAccessToken } from '../../hooks/telegram';
+import { CrossTabPushMessageType } from '@portkey/socket';
+import { Open_Login_Guardian_Approval_Bridge } from '../../constants/telegram';
+import { IOpenLoginGuardianApprovalResponse } from '../../types/openlogin';
+import { getGuardianList } from '../SignStep/utils/getGuardians';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -71,6 +84,12 @@ type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
 };
 
+type TSendStorageValue = {
+  assetItem: IAssetItemType;
+  extraConfig: Required<SendExtraConfig>;
+  needGoToOpenLoginApproval: boolean;
+};
+
 function SendContent({
   assetItem,
   className,
@@ -82,29 +101,31 @@ function SendContent({
   onModifyLimit,
   onModifyGuardians,
 }: SendProps) {
+  const [assetItemNew, setAssetItemNew] = useState(assetItem);
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
-  const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
+  const isNFT = useMemo(() => Boolean(assetItemNew.nftInfo), [assetItemNew]);
   const [txFee, setTxFee] = useState<string>();
 
   const tokenInfo: AssetTokenExpand = useMemo(
     () => ({
-      chainId: assetItem.chainId as ChainId,
-      decimals: isNFT ? assetItem.nftInfo?.decimals || '0' : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
-      address: (isNFT ? assetItem?.nftInfo?.tokenContractAddress : assetItem?.tokenInfo?.tokenContractAddress) || '',
-      symbol: assetItem.symbol,
-      name: assetItem.symbol,
-      imageUrl: isNFT ? assetItem.nftInfo?.imageUrl : '',
-      alias: isNFT ? assetItem.nftInfo?.alias : '',
-      tokenId: isNFT ? assetItem.nftInfo?.tokenId : '',
-      balance: isNFT ? assetItem.nftInfo?.balance : assetItem.tokenInfo?.balance,
-      balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
-      isSeed: assetItem.nftInfo?.isSeed,
-      seedType: assetItem.nftInfo?.seedType,
+      chainId: assetItemNew.chainId as ChainId,
+      decimals: isNFT ? assetItemNew.nftInfo?.decimals || '0' : assetItemNew.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
+      address:
+        (isNFT ? assetItemNew?.nftInfo?.tokenContractAddress : assetItemNew?.tokenInfo?.tokenContractAddress) || '',
+      symbol: assetItemNew.symbol,
+      name: assetItemNew.symbol,
+      imageUrl: isNFT ? assetItemNew.nftInfo?.imageUrl : '',
+      alias: isNFT ? assetItemNew.nftInfo?.alias : '',
+      tokenId: isNFT ? assetItemNew.nftInfo?.tokenId : '',
+      balance: isNFT ? assetItemNew.nftInfo?.balance : assetItemNew.tokenInfo?.balance,
+      balanceInUsd: isNFT ? '' : assetItemNew.tokenInfo?.balanceInUsd,
+      isSeed: assetItemNew.nftInfo?.isSeed,
+      seedType: assetItemNew.nftInfo?.seedType,
     }),
-    [assetItem, isNFT],
+    [assetItemNew, isNFT],
   );
 
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
@@ -217,6 +238,203 @@ function SendContent({
     [retryCrossChain],
   );
 
+  const btnOutOfFocus = useCallback(() => {
+    // fixed - button focus style when mobile
+    if (typeof document !== 'undefined') document.body.focus();
+  }, []);
+
+  const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
+  const { onApprovalSuccess, handleWithinTelegram, sendTransfer } = useMemo(() => {
+    const onApprovalSuccess = async (approveList: GuardianApprovedItem[]) => {
+      try {
+        oneTimeApprovalList.current = approveList;
+        if (Array.isArray(approveList) && approveList.length > 0) {
+          setApprovalVisible(false);
+          if (stage === Stage.Amount) {
+            setStage(Stage.Preview);
+          } else if (stage === Stage.Preview) {
+            await sendTransfer();
+          }
+        } else {
+          throw Error('approve failed, please try again');
+        }
+      } catch (error) {
+        throw Error('approve failed, please try again');
+      }
+    };
+
+    const handleWithinTelegram = async (data?: { accessToken?: string }) => {
+      try {
+        setLoading(true);
+
+        const params = {
+          networkType,
+          originChainId,
+          targetChainId: tokenInfo.chainId,
+          caHash,
+          operationType: OperationTypeEnum.transferApprove,
+          isErrorTip,
+          socketMethod: CrossTabPushMessageType.onSendOneTimeApproval,
+          telegramAuth: data?.accessToken,
+          telegramUserId: getTelegramUserId(),
+        };
+        await getDataFromOpenLogin({
+          params,
+          socketMethod: [CrossTabPushMessageType.onSendOneTimeApproval],
+          openLoginBridgeURLMap: Open_Login_Guardian_Approval_Bridge,
+          needConfirm: true,
+          isRemoveLocalStorage: true,
+          removeLocalStorageKey: SendBusinessKey,
+          callback: (result) =>
+            onApprovalSuccess((result.data as IOpenLoginGuardianApprovalResponse).formatGuardiansApproved),
+        });
+      } catch (error) {
+        throw new Error(handleErrorMessage(error));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const sendTransfer = async () => {
+      try {
+        if (!managementAccount?.privateKey || !caHash) return;
+
+        setLoading(true);
+
+        if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
+          await crossChainTransfer({
+            sandboxId,
+            chainType,
+            privateKey: managementAccount?.privateKey,
+            managerAddress: managementAccount?.address,
+            tokenInfo,
+            caHash: caHash || '',
+            amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
+            toAddress: toAccount.address,
+            crossChainFee: defaultFee.crossChain,
+            guardiansApproved: oneTimeApprovalList.current,
+          });
+        } else {
+          console.log('sameChainTransfers==sendHandler');
+          await sameChainTransfer({
+            sandboxId,
+            chainId: tokenInfo.chainId,
+            chainType,
+            privateKey: managementAccount?.privateKey,
+            tokenInfo,
+            caHash: caHash || '',
+            amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
+            toAddress: toAccount.address,
+            guardiansApproved: oneTimeApprovalList.current,
+          });
+        }
+        singleMessage.success('success');
+        onSuccess?.();
+      } catch (error: any) {
+        console.log('sendHandler==error', error);
+        if (!error?.type) return singleMessage.error(handleErrorMessage(error));
+        if (error.type === 'managerTransfer') {
+          return singleMessage.error(handleErrorMessage(error));
+        } else if (error.type === 'crossChainTransfer') {
+          console.log('addFailedActivity', error);
+
+          showErrorModal(error.data);
+          singleMessage.error(handleErrorMessage(error));
+        } else {
+          singleMessage.error(handleErrorMessage(error));
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return { onApprovalSuccess, handleWithinTelegram, sendTransfer };
+  }, [
+    amount,
+    caHash,
+    chainType,
+    defaultFee.crossChain,
+    isErrorTip,
+    managementAccount?.address,
+    managementAccount?.privateKey,
+    networkType,
+    onSuccess,
+    originChainId,
+    sandboxId,
+    showErrorModal,
+    stage,
+    toAccount.address,
+    tokenInfo,
+  ]);
+
+  useGetTelegramAccessToken({ callback: handleWithinTelegram });
+
+  const getGuardianListInTelegram = useCallback(async () => {
+    const _guardianList = await getGuardianList({
+      caHash,
+      originChainId,
+      sandboxId,
+    });
+    _guardianList.reverse();
+    return _guardianList;
+  }, [caHash, originChainId, sandboxId]);
+
+  const handleOneTimeApproval = useCallback(async () => {
+    // Check Platform
+    if (isTelegramPlatform()) {
+      // inside the telegram app
+      // guardian list include current telegram account
+      try {
+        setLoading(true);
+        const guardianList = await getGuardianListInTelegram();
+        const hasTelegramGuardian = hasCurrentTelegramGuardian(guardianList);
+        if (hasTelegramGuardian) {
+          const ctw = getCustomNetworkType();
+          const dappTelegramLink = getDappTelegramLink();
+          const portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, networkType);
+          const storageValue: TSendStorageValue = {
+            assetItem: { ...assetItemNew },
+            extraConfig: {
+              toAccount,
+              amount,
+              balance,
+              stage,
+            },
+            needGoToOpenLoginApproval: true,
+          };
+          await did.config.storageMethod.setItem(SendBusinessKey, JSON.stringify(storageValue));
+          await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink);
+        } else {
+          // guardian list don not include current telegram account
+          await handleWithinTelegram();
+        }
+      } catch (error) {
+        errorTip(
+          {
+            errorFields: 'GetGuardianList',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+        );
+      } finally {
+        setLoading(false);
+      }
+    } else {
+      // not inside telegram app
+      setApprovalVisible(true);
+    }
+  }, [
+    amount,
+    assetItemNew,
+    balance,
+    getGuardianListInTelegram,
+    handleWithinTelegram,
+    isErrorTip,
+    networkType,
+    stage,
+    toAccount,
+  ]);
+
   const handleCheckTransferLimit = useCallback(async () => {
     const chainInfo = await getChain(tokenInfo.chainId);
     const privateKey = managementAccount?.privateKey;
@@ -244,9 +462,7 @@ function SendContent({
       chainType,
       tokenContractAddress: tokenInfo?.address || '',
       ownerCaAddress: caInfo?.[tokenInfo.chainId]?.caAddress || '',
-      onOneTimeApproval: () => {
-        setApprovalVisible(true);
-      },
+      onOneTimeApproval: handleOneTimeApproval,
       onModifyTransferLimit: onModifyLimit,
     });
 
@@ -257,6 +473,7 @@ function SendContent({
     caHash,
     caInfo,
     chainType,
+    handleOneTimeApproval,
     managementAccount?.privateKey,
     onModifyLimit,
     stage,
@@ -267,74 +484,23 @@ function SendContent({
     tokenInfo.symbol,
   ]);
 
-  const sendTransfer = useCallback(async () => {
-    try {
-      if (!managementAccount?.privateKey || !caHash) return;
-
-      setLoading(true);
-
-      if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
-        await crossChainTransfer({
-          sandboxId,
-          chainType,
-          privateKey: managementAccount?.privateKey,
-          managerAddress: managementAccount?.address,
-          tokenInfo,
-          caHash: caHash || '',
-          amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
-          toAddress: toAccount.address,
-          crossChainFee: defaultFee.crossChain,
-          guardiansApproved: oneTimeApprovalList.current,
-        });
-      } else {
-        console.log('sameChainTransfers==sendHandler');
-        await sameChainTransfer({
-          sandboxId,
-          chainId: tokenInfo.chainId,
-          chainType,
-          privateKey: managementAccount?.privateKey,
-          tokenInfo,
-          caHash: caHash || '',
-          amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
-          toAddress: toAccount.address,
-          guardiansApproved: oneTimeApprovalList.current,
-        });
+  const recoverPageDataAfterTelegramAuth = useCallback(async () => {
+    const storageValue = await did.config.storageMethod.getItem(SendBusinessKey);
+    if (storageValue && typeof storageValue === 'string') {
+      const storageValueParsed: TSendStorageValue = JSON.parse(storageValue);
+      if (storageValueParsed.needGoToOpenLoginApproval) {
+        setAssetItemNew(storageValueParsed.assetItem);
+        setStage(storageValueParsed.extraConfig.stage);
+        setToAccount(storageValueParsed.extraConfig.toAccount);
+        setAmount(storageValueParsed.extraConfig.amount);
+        setBalance(storageValueParsed.extraConfig.balance);
       }
-      singleMessage.success('success');
-      onSuccess?.();
-    } catch (error: any) {
-      console.log('sendHandler==error', error);
-      if (!error?.type) return singleMessage.error(handleErrorMessage(error));
-      if (error.type === 'managerTransfer') {
-        return singleMessage.error(handleErrorMessage(error));
-      } else if (error.type === 'crossChainTransfer') {
-        // dispatch(addFailedActivity(error.data));
-        // TODO
-        console.log('addFailedActivity', error);
-
-        showErrorModal(error.data);
-        singleMessage.error(handleErrorMessage(error));
-
-        // return;
-      } else {
-        singleMessage.error(handleErrorMessage(error));
-      }
-    } finally {
-      setLoading(false);
     }
-  }, [
-    amount,
-    caHash,
-    chainType,
-    defaultFee.crossChain,
-    managementAccount?.address,
-    managementAccount?.privateKey,
-    onSuccess,
-    sandboxId,
-    showErrorModal,
-    toAccount.address,
-    tokenInfo,
-  ]);
+  }, []);
+
+  useEffect(() => {
+    if (isTelegramPlatform()) recoverPageDataAfterTelegramAuth();
+  }, [recoverPageDataAfterTelegramAuth]);
 
   const sendHandler = useCallback(async () => {
     if (!oneTimeApprovalList.current || oneTimeApprovalList.current.length === 0) {
@@ -354,35 +520,7 @@ function SendContent({
     await sendTransfer();
   }, [caHash, handleCheckTransferLimit, managementAccount?.privateKey, sendTransfer, tokenInfo]);
 
-  const btnOutOfFocus = useCallback(() => {
-    // fixed - button focus style when mobile
-    if (typeof document !== 'undefined') document.body.focus();
-  }, []);
-
   const checkManagerSyncState = useCheckManagerSyncState();
-
-  const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
-  const onApprovalSuccess = useCallback(
-    async (approveList: GuardianApprovedItem[]) => {
-      try {
-        oneTimeApprovalList.current = approveList;
-        if (Array.isArray(approveList) && approveList.length > 0) {
-          setApprovalVisible(false);
-          if (stage === Stage.Amount) {
-            setStage(Stage.Preview);
-          } else if (stage === Stage.Preview) {
-            await sendTransfer();
-          }
-        } else {
-          throw Error('approve failed, please try again');
-        }
-      } catch (error) {
-        throw Error('approve failed, please try again');
-      }
-    },
-    [sendTransfer, stage],
-  );
-
   const handleCheckPreview = useCallback(async () => {
     try {
       setLoading(true);

@@ -19,7 +19,6 @@ export const Portkey_Bot_Webapp: {
     MAINNET: 'https://t.me/sTestABot/aelf',
     TESTNET: 'https://t.me/sTestABot/aelf',
   },
-  // TODO tg
 };
 
 export enum Telegram_Link_Params {
