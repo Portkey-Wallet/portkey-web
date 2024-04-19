@@ -37,10 +37,8 @@ import { mixRampShow } from '../Ramp/utils';
 import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
-import { IStorageData } from '../Guardian/index.component';
 import { AssetStep } from '../../constants/assets';
 import { PortkeyAssetLiftCycle } from '../../constants/storage';
-import { useGetTelegramAccessToken } from '../../hooks/telegram';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -170,22 +168,6 @@ function AssetMain({
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
-
-  const [storageData, setStorageData] = useState<IStorageData>({});
-
-  const handleAuthWithInTelegram = useCallback(async (decodeResult?: IStorageData) => {
-    setStorageData(decodeResult || {});
-    // setAssetStep(AssetStep.guardians);
-  }, []);
-
-  useGetTelegramAccessToken({
-    canGetAuthToken: !!caHash,
-    callback: handleAuthWithInTelegram,
-  });
-
-  const clearStorageData = useCallback(() => {
-    setStorageData({});
-  }, []);
 
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);
@@ -587,14 +569,12 @@ function AssetMain({
 
           {assetStep === AssetStep.guardians && (
             <Guardian
-              storageData={storageData}
               sandboxId={sandboxId}
               caHash={caHash || ''}
               networkType={networkType}
               originChainId={originChainId}
               accelerateChainId={accelerateChainId}
               onBack={() => setAssetStep(AssetStep.my)}
-              onClearStorageData={clearStorageData}
             />
           )}
 

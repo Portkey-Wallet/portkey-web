@@ -39,6 +39,7 @@ import {
 import { Open_Login_Guardian_Bridge } from '../../constants/telegram';
 import { CrossTabPushMessageType } from '@portkey/socket';
 import { IOpenLoginGuardianResponse } from '../../types/openlogin';
+import { useGetTelegramAccessToken } from '../../hooks/telegram';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -51,14 +52,7 @@ export interface IAddGuardianFinishCbParams {
   syncStatus: boolean;
 }
 
-export interface IStorageData {
-  accessToken?: string;
-  guardianStep?: GuardianStep;
-  item?: UserGuardianStatus;
-}
-
 export interface GuardianProps {
-  storageData?: IStorageData;
   caHash: string;
   className?: string;
   sandboxId?: string;
@@ -70,11 +64,9 @@ export interface GuardianProps {
   onError?: OnErrorFunc;
   onBack?: () => void;
   onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
-  onClearStorageData?: () => void;
 }
 
 function GuardianMain({
-  storageData,
   caHash,
   className,
   originChainId = 'AELF',
@@ -86,7 +78,6 @@ function GuardianMain({
   onError,
   onBack,
   onAddGuardianFinish,
-  onClearStorageData,
 }: GuardianProps) {
   const [step, setStep] = useState<GuardianStep>(GuardianStep.guardianList);
   const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
@@ -487,34 +478,28 @@ function GuardianMain({
   }, [currentGuardian]);
 
   const handleGuardianOperationAfterAuthWithInTelegram = useCallback(
-    ({
+    async ({
       guardianStep,
       item,
-      telegramAccessToken,
+      accessToken,
     }: {
       guardianStep: GuardianStep;
       item?: UserGuardianStatus;
-      telegramAccessToken: string;
+      accessToken: string;
     }) => {
       if (guardianStep === GuardianStep.guardianAdd) {
-        onAddGuardian(telegramAccessToken);
+        onAddGuardian(accessToken);
       } else if (guardianStep === GuardianStep.guardianView && item) {
-        onViewGuardian(item, telegramAccessToken);
+        onViewGuardian(item, accessToken);
       }
     },
     [onAddGuardian, onViewGuardian],
   );
 
-  useEffect(() => {
-    if (storageData?.accessToken && storageData?.guardianStep && guardianList) {
-      onClearStorageData?.();
-      handleGuardianOperationAfterAuthWithInTelegram({
-        guardianStep: storageData.guardianStep,
-        item: storageData.item,
-        telegramAccessToken: storageData.accessToken,
-      });
-    }
-  }, [storageData, handleGuardianOperationAfterAuthWithInTelegram, guardianList, onClearStorageData]);
+  useGetTelegramAccessToken({
+    canGetAuthToken: !!guardianList,
+    callback: handleGuardianOperationAfterAuthWithInTelegram,
+  });
 
   const renderBackHeaderLeftEle = useCallback(
     (goBack?: () => void) => (
