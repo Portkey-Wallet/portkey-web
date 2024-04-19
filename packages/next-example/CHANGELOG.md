@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.33](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.32...v2.5.0-alpha.33) (2024-04-19)
+
+### Features
+
+- 🎸 send one-time approval ([b3631e6](https://github.com/Portkey-Wallet/portkey-web/commit/b3631e64aa88510f4c0ab169fcbf51d4c1cf4eb6))
+
 ## [2.5.0-alpha.32](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.31...v2.5.0-alpha.32) (2024-04-18)
 
 ### Features
