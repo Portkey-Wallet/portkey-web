@@ -66,6 +66,7 @@ export function isEmpty(o: any) {
 }
 
 export const decodeMessageByRsaKey = async (rsaKey: string, encodeData: string) => {
+  if (!rsaKey) return;
   const cryptoManager = new forgeWeb.ForgeCryptoManager();
   const decodeResult = await cryptoManager.decryptLong(rsaKey, encodeData);
   console.log('=== decodeMessageByRsaKey decodeResult 1', decodeResult);

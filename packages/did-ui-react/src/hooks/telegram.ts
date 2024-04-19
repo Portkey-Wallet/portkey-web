@@ -2,6 +2,7 @@ import { did } from '@portkey/did';
 import { handleErrorMessage, setLoading } from '../utils';
 import { getTelegramStartParam, getAccessTokenInDappTelegram } from '../utils/telegram';
 import { useCallback, useEffect, useRef } from 'react';
+import { singleMessage } from '../components';
 
 export function useGetTelegramAccessToken({
   canGetAuthToken = true,
@@ -17,6 +18,7 @@ export function useGetTelegramAccessToken({
     if (startParam) {
       setLoading(true);
       clearInterval(timerRef.current);
+      timerRef.current = undefined;
       try {
         const decodeResult = await getAccessTokenInDappTelegram(startParam);
         console.log('===res.data', decodeResult);
@@ -25,7 +27,7 @@ export function useGetTelegramAccessToken({
         await did.config.storageMethod.removeItem(startParam);
         await callback(decodeResult);
       } catch (error) {
-        throw new Error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
       } finally {
         setLoading(false);
       }

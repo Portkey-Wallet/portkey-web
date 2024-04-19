@@ -44,6 +44,10 @@ export default function DappWebapp() {
   const setCurrentLifeCycle = useCallback(async () => {
     signInRef.current?.setCurrentLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') || '{}'));
   }, []);
+
+  const resetCurrentLifeCycle = useCallback(async () => {
+    signInRef.current?.setCurrentLifeCycle(JSON.parse('{}'));
+  }, []);
   useEffect(() => {
     typeof window !== 'undefined' && setCurrentLifeCycle();
   }, [setCurrentLifeCycle]);
@@ -61,8 +65,8 @@ export default function DappWebapp() {
         <Button>Go to assets</Button>
       </a>
 
-      <Button onClick={setCurrentLifeCycle}>setCurrentLifeCycle</Button>
-
+      <Button onClick={setCurrentLifeCycle}>SetCurrentLifeCycle</Button>
+      <Button onClick={resetCurrentLifeCycle}>ResetLoginLocalStorage</Button>
       <SignIn
         className="dapp-bot-sign"
         termsOfService={termsOfService}
