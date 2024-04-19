@@ -11,10 +11,6 @@
   "dependencies": {
     "@portkey/did-ui-react": "^2.5.0-alpha.33",
     "@portkey/onboarding": "^2.5.0-alpha.33",
-    "aelf-sdk": "^3.4.7",
-    "antd": "4.24.14",
-    "next": "14.0.3",
-    "next-transpile-modules": "^10.0.0",
     "node-telegram-bot-api": "^0.65.1",
     "query-string": "^7.1.1",
     "react": "18.2.0",

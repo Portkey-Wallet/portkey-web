@@ -15,7 +15,6 @@ export interface GlobalConfigProps extends IConfig {
   socialLogin?: ISocialLoginConfig;
   reCaptchaConfig?: BaseReCaptcha;
   socketUrl?: string;
-  apiUrl?: string;
   serviceUrl?: string;
   loginConfig?: ILoginConfig;
   customNetworkType?: TCustomNetworkType;
