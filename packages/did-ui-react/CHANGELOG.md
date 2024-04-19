@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.34](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.33...v2.5.0-alpha.34) (2024-04-19)
+
+## [2.4.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.32...v2.4.5) (2024-04-19)
+
+### Features
+
+- 🎸 set ramp baseURL and delete useless type ([50bb23f](https://github.com/Portkey-Wallet/portkey-web/commit/50bb23fdd93e3713cc65fbbedff1f207c3a4047b))
+
 ## [2.5.0-alpha.33](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.32...v2.5.0-alpha.33) (2024-04-19)
 
 ### Features
