@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.36](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.35...v2.5.0-alpha.36) (2024-04-22)
+
+### Features
+
+- deal email guardians ([6745ab4](https://github.com/Portkey-Wallet/portkey-web/commit/6745ab4705d8e4b3c3dbfe526f3f2bec257552b9))
+
 ## [2.5.0-alpha.35](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.34...v2.5.0-alpha.35) (2024-04-19)
 
 ### Features
