@@ -12,7 +12,7 @@ import { isValidInteger } from '../../utils/reg';
 import { NetworkType, OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
-import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { did, errorTip, handleErrorMessage, hasSocialGuardian, setLoading } from '../../utils';
 import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
 import { ELF_SYMBOL } from '../../constants/assets';
 import { getChainInfo } from '../../hooks';
@@ -329,8 +329,9 @@ export default function TransferSettingsEditMain({
     if (errorCount > 0) return;
     console.log('====== initData.singleLimit', initData.singleLimit);
 
+    const isHasSocialGuardian = hasSocialGuardian(guardianList);
     // Check Platform
-    if (isTelegramPlatform()) {
+    if (isTelegramPlatform() && !!isHasSocialGuardian) {
       // inside the telegram app
       // guardian list include current telegram account
       if (hasTelegramGuardian) {
