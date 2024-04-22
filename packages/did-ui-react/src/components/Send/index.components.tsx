@@ -11,7 +11,15 @@ import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
 import AddressSelector from './components/AddressSelector';
 import AmountInput from './components/AmountInput';
-import { WalletError, did, errorTip, handleErrorMessage, modalMethod, setLoading } from '../../utils';
+import {
+  WalletError,
+  did,
+  errorTip,
+  handleErrorMessage,
+  hasSocialGuardian,
+  modalMethod,
+  setLoading,
+} from '../../utils';
 import { timesDecimals } from '../../utils/converter';
 import { ZERO } from '../../constants/misc';
 import SendPreview from './components/SendPreview';
@@ -381,14 +389,16 @@ function SendContent({
 
   const handleOneTimeApproval = useCallback(async () => {
     // Check Platform
-    if (isTelegramPlatform()) {
-      // inside the telegram app
-      // guardian list include current telegram account
-      try {
-        setLoading(true);
-        const guardianList = await getGuardianListInTelegram();
-        const hasTelegramGuardian = hasCurrentTelegramGuardian(guardianList);
-        if (hasTelegramGuardian) {
+    try {
+      setLoading(true);
+
+      const guardianList = await getGuardianListInTelegram();
+      const isHasSocialGuardian = hasSocialGuardian(guardianList);
+      if (isTelegramPlatform() && !!isHasSocialGuardian) {
+        // inside the telegram app
+        // guardian list include current telegram account
+        const isHasCurrentTelegramGuardian = hasCurrentTelegramGuardian(guardianList);
+        if (isHasCurrentTelegramGuardian) {
           const ctw = getCustomNetworkType();
           const dappTelegramLink = getDappTelegramLink();
           const portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, networkType);
@@ -408,20 +418,20 @@ function SendContent({
           // guardian list don not include current telegram account
           await handleWithinTelegram();
         }
-      } catch (error) {
-        errorTip(
-          {
-            errorFields: 'GetGuardianList',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-        );
-      } finally {
-        setLoading(false);
+      } else {
+        // not inside telegram app
+        setApprovalVisible(true);
       }
-    } else {
-      // not inside telegram app
-      setApprovalVisible(true);
+    } catch (error) {
+      errorTip(
+        {
+          errorFields: 'GetGuardianList',
+          error: handleErrorMessage(error),
+        },
+        isErrorTip,
+      );
+    } finally {
+      setLoading(false);
     }
   }, [
     amount,
@@ -744,6 +754,7 @@ function SendContent({
         className="page-title"
         title={`Send ${!isNFT ? tokenInfo.symbol : ''}`}
         leftCallBack={() => {
+          did.config.storageMethod.removeItem(SendBusinessKey);
           StageObj[stage].backFun();
         }}
       />
