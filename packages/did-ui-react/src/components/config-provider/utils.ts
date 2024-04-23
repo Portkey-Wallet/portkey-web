@@ -1,7 +1,7 @@
 import ConfigProvider from './';
 import { dealURLLastChar, did } from '../../utils';
 import { ISocialLoginConfig, NetworkType, TCustomNetworkType } from '../../types';
-import { Portkey_Bot_Webapp } from '../../constants/telegram';
+import { Portkey_Bot_Auto_Auth_Webapp, Portkey_Bot_Webapp } from '../../constants/telegram';
 
 export const getServiceUrl = () => {
   if (!ConfigProvider.config.serviceUrl) throw Error('Please config serviceUrl');
@@ -37,4 +37,8 @@ export const getDappTelegramLink = () => {
 
 export const getPortkeyBotWebappLink = (ctw: TCustomNetworkType, network?: NetworkType) => {
   return network ? Portkey_Bot_Webapp[ctw][network] : Portkey_Bot_Webapp[ctw].MAINNET;
+};
+
+export const getPortkeyBotAutoAuthWebappLink = (ctw: TCustomNetworkType, network?: NetworkType) => {
+  return network ? Portkey_Bot_Auto_Auth_Webapp[ctw][network] : Portkey_Bot_Auto_Auth_Webapp[ctw].MAINNET;
 };

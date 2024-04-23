@@ -47,6 +47,7 @@ export function useGetTelegramAccessToken({
       timerRef.current = undefined;
       await telegramLoginAuth({
         network,
+        autoTelegramAuth,
       });
       return;
     }

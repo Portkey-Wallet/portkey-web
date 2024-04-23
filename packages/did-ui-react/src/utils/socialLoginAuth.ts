@@ -2,6 +2,7 @@ import {
   getCommunicationSocketUrl,
   getCustomNetworkType,
   getDappTelegramLink,
+  getPortkeyBotAutoAuthWebappLink,
   getPortkeyBotWebappLink,
   getServiceUrl,
   getStorageInstance,
@@ -155,13 +156,20 @@ export const socialLoginAuthOpener = ({
 export const telegramLoginAuth = async ({
   network,
   extraStorageData,
+  autoTelegramAuth,
 }: {
   network?: NetworkType;
   extraStorageData?: Record<string, any>;
+  autoTelegramAuth?: boolean;
 }) => {
   const ctw = getCustomNetworkType();
   const dappTelegramLink = getDappTelegramLink();
-  const portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, network);
+  let portkeyBotWebappLink = '';
+  if (autoTelegramAuth) {
+    portkeyBotWebappLink = getPortkeyBotAutoAuthWebappLink(ctw, network);
+  } else {
+    portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, network);
+  }
   await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink, extraStorageData);
 };
 
@@ -214,7 +222,7 @@ export const socialLoginAuthBySocket = async ({
   });
   if (!result) throw 'Not result';
   if (result?.code) throw result.message;
-  console.log(result, 'result===');
+  console.log(result, 'socialLoginAuthBySocket result===');
   return result;
 };
 
