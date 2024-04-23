@@ -168,7 +168,7 @@ export async function getDataFromLocalStorage(loginId: string) {
   if (storage && typeof storage === 'string') {
     return JSON.parse(storage);
   }
-  return null;
+  return {};
 }
 
 // usage: back to dapp-webapp

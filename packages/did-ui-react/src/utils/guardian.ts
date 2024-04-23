@@ -2,6 +2,7 @@ import BigNumber from 'bignumber.js';
 import { ZERO } from '../constants/misc';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus } from '../types';
 import { VerifierItem } from '@portkey/did';
+import { SocialLoginList } from '../constants/guardian';
 
 const APPROVAL_COUNT = ZERO.plus(3).div(5);
 
@@ -39,6 +40,10 @@ export const getVerifierStatusMap = (
   });
   return verifierStatusMap;
 };
+
+export function hasSocialGuardian(guardianList?: UserGuardianStatus[]) {
+  return guardianList?.some((item) => SocialLoginList.includes(item?.guardianType));
+}
 
 // export function handleUserGuardiansList(
 //   holderInfo: GuardiansInfo,
