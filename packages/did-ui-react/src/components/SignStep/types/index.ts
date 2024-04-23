@@ -74,6 +74,7 @@ export type TSignUpContinueHandler = (identifierInfo: {
 }) => Promise<SignUpValue>;
 
 export interface SignInProps {
+  autoTelegramAuth?: boolean;
   defaultChainId?: ChainId;
   /**
    * You can configure the default pin

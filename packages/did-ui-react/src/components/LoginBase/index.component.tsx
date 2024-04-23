@@ -28,6 +28,7 @@ export interface LoginBaseProps {
   networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
+  autoTelegramAuth?: boolean;
   onLoginByPortkey?: LoginFinishWithoutPin;
   onInputFinish?: (data: GuardianInputInfo) => void;
   validateEmail?: ValidatorHandler;
@@ -54,6 +55,7 @@ export default function LoginCard({
   privacyPolicy,
   loginMethodsOrder,
   recommendIndexes,
+  autoTelegramAuth,
   onStep,
   onError,
   onInputFinish,
@@ -101,6 +103,7 @@ export default function LoginCard({
           privacyPolicy={privacyPolicy}
           loginMethodsOrder={loginMethodsOrder}
           recommendIndexes={recommendIndexes}
+          autoTelegramAuth={autoTelegramAuth}
           onLoginByPortkey={onLoginByPortkey}
           onError={onError}
         />
