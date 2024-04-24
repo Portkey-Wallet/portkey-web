@@ -68,7 +68,7 @@ export function useGetTelegramAccessToken({
         setLoading(false);
       }
     }
-  }, [callback, checkNeedAutoTelegramAuth, network]);
+  }, [autoTelegramAuth, callback, checkNeedAutoTelegramAuth, network]);
 
   useEffect(() => {
     if (canGetAuthToken) {
