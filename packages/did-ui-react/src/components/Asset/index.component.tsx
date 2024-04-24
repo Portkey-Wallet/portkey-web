@@ -85,7 +85,7 @@ function AssetMain({
   className,
   isShowRampBuy = true,
   isShowRampSell = true,
-  isShowDeleteAccount = true,
+  isShowDeleteAccount = false,
   onOverviewBack,
   onDeleteAccount,
   onLifeCycleChange,
