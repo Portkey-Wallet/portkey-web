@@ -20,6 +20,7 @@ export type OnSignInFinishedFun = (values: {
 interface Step1Props extends CryptoDesignProps {
   size?: TSize;
   design?: TDesign;
+  autoTelegramAuth?: boolean;
   onSignInFinished: OnSignInFinishedFun;
   onSignUpHandler?: TSignUpContinueHandler;
   onStepChange?: (v: SignInLifeCycleType) => void;

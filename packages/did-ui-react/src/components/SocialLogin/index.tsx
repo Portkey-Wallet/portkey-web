@@ -39,6 +39,7 @@ interface SocialLoginProps {
   networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
+  autoTelegramAuth?: boolean;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
   switchGuardianType?: (type: IWeb2Login) => void;
@@ -64,6 +65,7 @@ export default function SocialLogin({
   isErrorTip,
   loginMethodsOrder,
   recommendIndexes,
+  autoTelegramAuth,
   onBack,
   onFinish,
   onError,
@@ -123,7 +125,8 @@ export default function SocialLogin({
     console.log('=== result', result);
     onFinishRef.current?.(result);
   }, []);
-  useGetTelegramAccessToken({ callback: handleLoginAfterAuthWithInTelegram });
+  console.log('&&&&&&&&');
+  useGetTelegramAccessToken({ autoTelegramAuth, network: networkType, callback: handleLoginAfterAuthWithInTelegram });
 
   const recommendList = useMemo(() => {
     if (Array.isArray(recommendIndexes)) {

@@ -69,6 +69,7 @@ const SignIn = forwardRef(
       uiType = 'Modal',
       className,
       getContainer,
+      autoTelegramAuth,
       onLifeCycleChange,
       onChainIdChange,
       onCreatePending,
@@ -595,6 +596,7 @@ const SignIn = forwardRef(
             privacyPolicy={privacyPolicy}
             loginMethodsOrder={loginMethodsOrder}
             recommendIndexes={recommendIndexes}
+            autoTelegramAuth={autoTelegramAuth}
           />
         );
       if (LifeCycleMap['Step2OfSignUp'].includes(lifeCycle)) {

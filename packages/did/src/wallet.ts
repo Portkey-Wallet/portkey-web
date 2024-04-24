@@ -387,4 +387,10 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public async checkManagerIsExist(params: CheckManagerParams) {
     return (await this.checkManagerIsExistByGQL(params)) || (await this.checkManagerIsExistByContract(params));
   }
+
+  public async checkStorageAesStrIsExist(keyName?: string): Promise<boolean> {
+    if (!this._storage) throw new Error('Please set storage first');
+    const aesStr = await this._storage.getItem(keyName ?? this._defaultKeyName);
+    return Boolean(aesStr);
+  }
 }
