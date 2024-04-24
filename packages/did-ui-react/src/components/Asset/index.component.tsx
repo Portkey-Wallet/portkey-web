@@ -63,6 +63,7 @@ export interface AssetMainProps
   className?: string;
   isShowRampBuy?: boolean;
   isShowRampSell?: boolean;
+  isShowDeleteAccount?: boolean;
   onDeleteAccount?: () => void;
   onLifeCycleChange?(liftCycle: `${AssetStep}`): void;
 }
@@ -84,6 +85,7 @@ function AssetMain({
   className,
   isShowRampBuy = true,
   isShowRampSell = true,
+  isShowDeleteAccount = true,
   onOverviewBack,
   onDeleteAccount,
   onLifeCycleChange,
@@ -168,10 +170,10 @@ function AssetMain({
 
   useEffect(() => {
     console.log(initialized, 'initialized==');
-    if (initialized) {
+    if (initialized && isShowDeleteAccount) {
       getShowDeletion().then(setShowDeletion);
     }
-  }, [getShowDeletion, initialized]);
+  }, [getShowDeletion, initialized, isShowDeleteAccount]);
 
   useDebounce(getAssetInfo, 300);
 
