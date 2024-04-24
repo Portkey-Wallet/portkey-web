@@ -1,6 +1,6 @@
 {
   "name": "@portkey/validator",
-  "version": "2.5.0-alpha.37",
+  "version": "2.5.0-alpha.38",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
