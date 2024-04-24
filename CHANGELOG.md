@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.39](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.38...v2.5.0-alpha.39) (2024-04-24)
+
+### Features
+
+- dapp auto telegram auth ([0f7ffbf](https://github.com/Portkey-Wallet/portkey-web/commit/0f7ffbf971c416d562c6ae8c90a92318f2a28387))
+
+### Bug Fixes
+
+- add autoTelegramAuth to dependency list ([a251cb3](https://github.com/Portkey-Wallet/portkey-web/commit/a251cb3acaf3d1622ab6537c134eaefc3b8f9274))
+
 ## [2.5.0-alpha.38](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.37...v2.5.0-alpha.38) (2024-04-24)
 
 ### Features
