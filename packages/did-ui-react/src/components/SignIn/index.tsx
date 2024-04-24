@@ -650,6 +650,7 @@ const SignIn = forwardRef(
       privacyPolicy,
       loginMethodsOrder,
       recommendIndexes,
+      autoTelegramAuth,
       keyboard,
       guardianIdentifierInfo,
       walletWithoutPin,
