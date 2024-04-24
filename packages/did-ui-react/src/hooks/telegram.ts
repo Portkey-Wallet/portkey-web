@@ -1,5 +1,4 @@
-import { did } from '@portkey/did';
-import { handleErrorMessage, setLoading, telegramLoginAuth } from '../utils';
+import { did, handleErrorMessage, setLoading, telegramLoginAuth } from '../utils';
 import { getTelegramStartParam, getAccessTokenInDappTelegram, isTelegramPlatform } from '../utils/telegram';
 import { useCallback, useEffect, useRef } from 'react';
 import { singleMessage } from '../components';
@@ -9,11 +8,13 @@ export function useGetTelegramAccessToken({
   canGetAuthToken = true,
   autoTelegramAuth = false,
   network,
+  storageKeyName,
   callback,
 }: {
   canGetAuthToken?: boolean;
   autoTelegramAuth?: boolean;
   network?: NetworkType;
+  storageKeyName?: string;
   callback: (decodeResult: any) => Promise<void>;
 }) {
   console.log('****** autoTelegramAuth: ', autoTelegramAuth);
@@ -24,14 +25,17 @@ export function useGetTelegramAccessToken({
     if (!autoTelegramAuth) {
       return false;
     }
-    const hasStorageAesStr = await did.checkStorageAesStrIsExist();
+    const hasStorageAesStr = await did.checkStorageAesStrIsExist(storageKeyName);
+    console.log('hasStorageAesStr: ', hasStorageAesStr);
+    console.log('isTelegramPlatform(): ', isTelegramPlatform());
     return !hasStorageAesStr && isTelegramPlatform();
-  }, [autoTelegramAuth]);
+  }, [autoTelegramAuth, storageKeyName]);
 
   const getAccessToken = useCallback(async () => {
     const { startParam } = getTelegramStartParam();
     console.log('??? startParam: ', startParam);
     const needAutoTelegramAuth = await checkNeedAutoTelegramAuth();
+    console.log('needAutoTelegramAuth: ', needAutoTelegramAuth);
     if (needAutoTelegramAuth) {
       setLoading(true);
     }
