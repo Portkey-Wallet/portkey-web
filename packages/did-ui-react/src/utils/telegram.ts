@@ -196,6 +196,7 @@ export async function saveDataAndOpenPortkeyWebapp(
     if (targetTelegramLink) {
       const Telegram = getTelegram();
       Telegram?.WebApp.openTelegramLink(`${targetTelegramLink}?startapp=${loginId}`);
+      Telegram?.WebApp.close();
     }
     return;
   } catch (error) {
@@ -237,6 +238,7 @@ export async function getAccessTokenAndOpenDappWebapp({
     if (dataParse?.yourTelegramLink) {
       const Telegram = getTelegram();
       Telegram?.WebApp.openTelegramLink(`${dataParse.yourTelegramLink}?startapp=${loginId}`);
+      Telegram?.WebApp.close();
     }
   } catch (error) {
     throw Error(handleErrorMessage(error));
