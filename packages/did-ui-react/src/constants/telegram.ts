@@ -92,3 +92,5 @@ export const Open_Login_Guardian_Approval_Bridge: TOpenLoginBridgeURL = {
     TESTNET: Open_Login_Bridge.local.TESTNET + Guardian_Approval_Bridge_Pathname,
   },
 };
+
+export const PORTKEY_SDK_TELEGRAM_USER_ID = 'portkey_sdk_telegram_user_id';
