@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.43](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.42...v2.5.0-alpha.43) (2024-04-26)
+
+### Features
+
+- update telegramPlatform to handle Telegram initialization and so on ([6562d88](https://github.com/Portkey-Wallet/portkey-web/commit/6562d88231e43c90b5c4d9dfc50882b909366aff))
+
 ## [2.5.0-alpha.42](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.41...v2.5.0-alpha.42) (2024-04-25)
 
 ### Features
