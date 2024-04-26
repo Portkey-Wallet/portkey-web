@@ -1,4 +1,7 @@
 import { parse } from 'query-string';
+import { sleep } from '@portkey/utils';
+import { TelegramWebappInitData } from '@portkey/types';
+import { PORTKEY_SDK_TELEGRAM_USER_ID } from '../constants/telegram';
 
 declare const window: Window &
   typeof globalThis & {
@@ -28,14 +31,57 @@ export class TelegramPlatform {
     TelegramPlatform.getWebApp()?.close();
   }
 
-  static getStartParam(): { startParam?: string } {
-    let startParam;
-    const initData = TelegramPlatform.getWebApp()?.initData;
+  static getInitData() {
+    let parsedInitData;
     try {
-      if (initData) startParam = parse(initData)?.start_param as string;
+      const initData = TelegramPlatform.getWebApp()?.initData;
+      if (initData) {
+        parsedInitData = parse(initData) as unknown as TelegramWebappInitData;
+      }
     } catch (error) {
-      startParam = initData;
+      console.error('getInitData error: ', error);
     }
-    return { startParam };
+    return parsedInitData;
+  }
+
+  static getStartParam(): string | undefined {
+    let startParam;
+    try {
+      const initData = TelegramPlatform.getInitData();
+      startParam = initData?.start_param;
+    } catch (error) {
+      console.error('getStartParam error: ', error);
+    }
+    return startParam;
+  }
+
+  static getTelegramUserId(): string | undefined {
+    let userId;
+    try {
+      const initData = TelegramPlatform.getInitData();
+      if (initData?.user) {
+        const userInfo = JSON.parse(initData.user);
+        userId = String(userInfo.id);
+      }
+    } catch (error) {
+      console.error('getTelegramUserId error: ', error);
+    }
+    return userId;
+  }
+
+  static async initializeTelegramWebApp(handleLogout: () => Promise<void>, initialDelay = 1000) {
+    if (typeof window !== 'undefined') {
+      await sleep(initialDelay);
+      const Telegram = TelegramPlatform.getTelegram();
+      if (!Telegram) return;
+
+      const currentTelegramUserId = TelegramPlatform.getTelegramUserId();
+      const preTelegramUserId = window.localStorage.getItem(PORTKEY_SDK_TELEGRAM_USER_ID);
+      if (currentTelegramUserId && currentTelegramUserId !== preTelegramUserId) {
+        await handleLogout();
+        window.localStorage.setItem(PORTKEY_SDK_TELEGRAM_USER_ID, currentTelegramUserId);
+      }
+      Telegram.WebApp.ready();
+    }
   }
 }
