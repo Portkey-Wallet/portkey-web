@@ -69,11 +69,22 @@ export class TelegramPlatform {
     return userId;
   }
 
-  static async initializeTelegramWebApp(handleLogout: () => Promise<void>, initialDelay = 1000) {
+  static async initializeTelegramWebApp({
+    handleLogout,
+    initialDelay = 1000,
+    needExpand = true,
+  }: {
+    handleLogout: () => Promise<void>;
+    initialDelay?: number;
+    needExpand?: boolean;
+  }) {
     if (typeof window !== 'undefined') {
       await sleep(initialDelay);
       const Telegram = TelegramPlatform.getTelegram();
       if (!Telegram) return;
+      if (needExpand) {
+        Telegram.WebApp.expand();
+      }
 
       const currentTelegramUserId = TelegramPlatform.getTelegramUserId();
       const preTelegramUserId = window.localStorage.getItem(PORTKEY_SDK_TELEGRAM_USER_ID);
