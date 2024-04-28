@@ -15,6 +15,7 @@ import { NetworkType, UserGuardianStatus } from '../types';
 import { Open_Login_Guardian_Approval_Bridge, Open_Login_Guardian_Bridge } from '../constants/telegram';
 import OpenLogin from './openlogin';
 import { IOpenloginHandlerResult, TOpenLoginQueryParams } from '../types/openlogin';
+import PopupHandler from './openlogin/PopupHandler';
 
 export function getTelegram() {
   if (window != undefined) {
@@ -147,16 +148,23 @@ export async function generateAccessTokenByPortkeyServer(telegramUserInfo: Teleg
 }
 
 // usage: jump to portkey-webapp
-export async function saveAccessTokenToPortkeyDatabase(
-  loginId: string,
-  publicKey: string,
-  methodName: CrossTabPushMessageType,
-  token: string,
-) {
+export async function saveAccessTokenToPortkeyDatabase({
+  loginId,
+  publicKey,
+  methodName,
+  token,
+  needPersist,
+}: {
+  loginId: string;
+  publicKey: string;
+  methodName: CrossTabPushMessageType;
+  token: string;
+  needPersist: boolean;
+}) {
   const sessionAuth = JSON.stringify({
-    loginId: loginId,
-    publicKey: publicKey,
-    needPersist: true,
+    loginId,
+    publicKey,
+    needPersist,
   });
   await pushEncodeMessage(sessionAuth, methodName, token);
 }
@@ -178,17 +186,55 @@ export async function getAndDecodeAccessToken(loginId: string, methodName: Cross
   return decodeMessageByRsaKey(rsaKey, encodeData);
 }
 
+export async function listenOnChannel({
+  loginId,
+  getTelegramAuthTokenClientId,
+  popupTimeout = 1000,
+}: {
+  loginId: string;
+  getTelegramAuthTokenClientId: string;
+  popupTimeout?: number;
+}): Promise<{ accessToken: string }> {
+  const serviceURI = getServiceUrl();
+  const currentWindow = new PopupHandler({
+    socketURI: `${serviceURI}/communication`,
+    timeout: popupTimeout,
+  });
+  return new Promise((resolve, reject) => {
+    currentWindow
+      .listenOnChannel(getTelegramAuthTokenClientId, [CrossTabPushMessageType.onGetTelegramAuth])
+      .then(async (encodeData) => {
+        const { rsaKey } = await getDataFromLocalStorage(loginId);
+        if (!rsaKey) throw Error('No rsaKey');
+        const accessToken = await decodeMessageByRsaKey(rsaKey, encodeData);
+        if (!accessToken) throw Error('No accessToken');
+        resolve({ accessToken });
+      })
+      .catch(reject);
+  });
+}
+
 // usage: first step - attach telegram login in dapp-webapp
-export async function saveDataAndOpenPortkeyWebapp(
-  yourTelegramLink: string,
-  targetTelegramLink: string,
-  extraStorageData?: Record<string, any>,
-) {
+export async function saveDataAndOpenPortkeyWebapp({
+  yourTelegramLink,
+  targetTelegramLink,
+  extraStorageData,
+  notCloseDappWebapp = false,
+}: {
+  yourTelegramLink: string;
+  targetTelegramLink: string;
+  extraStorageData?: Record<string, any>;
+  notCloseDappWebapp?: boolean;
+}) {
   try {
+    const getTelegramAuthTokenClientId = randomId();
+    console.log('=== getTelegramAuthTokenClientId: ', getTelegramAuthTokenClientId);
     const { loginId } = await saveEncodeInfoToStorageAndPortkeyDatabase(
       CrossTabPushMessageType.onSavePublicKey,
       {
         yourTelegramLink,
+        notCloseDappWebapp,
+        getTelegramAuthTokenClientId,
       },
       extraStorageData,
     );
@@ -196,7 +242,11 @@ export async function saveDataAndOpenPortkeyWebapp(
     if (targetTelegramLink) {
       const Telegram = getTelegram();
       Telegram?.WebApp.openTelegramLink(`${targetTelegramLink}?startapp=${loginId}`);
-      Telegram?.WebApp.close();
+      if (notCloseDappWebapp) {
+        return await listenOnChannel({ loginId, getTelegramAuthTokenClientId });
+      } else {
+        Telegram?.WebApp.close();
+      }
     }
     return;
   } catch (error) {
@@ -226,18 +276,23 @@ export async function getAccessTokenAndOpenDappWebapp({
 
     const accessToken = await generateAccessTokenByPortkeyServer(telegramUserInfo);
     console.log('=== accessToken', accessToken);
-    await saveAccessTokenToPortkeyDatabase(
-      loginId,
-      dataParse.publicKey,
-      CrossTabPushMessageType.onAuthStatusChanged,
-      accessToken.token,
-    );
+    await saveAccessTokenToPortkeyDatabase({
+      loginId: dataParse.notCloseDappWebapp ? dataParse.getTelegramAuthTokenClientId : loginId,
+      publicKey: dataParse.publicKey,
+      methodName: dataParse.notCloseDappWebapp
+        ? CrossTabPushMessageType.onGetTelegramAuth
+        : CrossTabPushMessageType.onAuthStatusChanged,
+      token: accessToken.token,
+      needPersist: !dataParse.notCloseDappWebapp,
+    });
 
     await onBeforeBack?.(loginId);
 
     if (dataParse?.yourTelegramLink) {
       const Telegram = getTelegram();
-      Telegram?.WebApp.openTelegramLink(`${dataParse.yourTelegramLink}?startapp=${loginId}`);
+      if (!dataParse.notCloseDappWebapp) {
+        Telegram?.WebApp.openTelegramLink(`${dataParse.yourTelegramLink}?startapp=${loginId}`);
+      }
       Telegram?.WebApp.close();
     }
   } catch (error) {

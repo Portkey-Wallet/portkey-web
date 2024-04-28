@@ -9,12 +9,14 @@ export function useGetTelegramAccessToken({
   autoTelegramAuth = false,
   network,
   storageKeyName,
+  isMobileDevice = false,
   callback,
 }: {
   canGetAuthToken?: boolean;
   autoTelegramAuth?: boolean;
   network?: NetworkType;
   storageKeyName?: string;
+  isMobileDevice?: boolean;
   callback: (decodeResult: any) => Promise<void>;
 }) {
   console.log('****** autoTelegramAuth: ', autoTelegramAuth);
@@ -74,20 +76,39 @@ export function useGetTelegramAccessToken({
     }
   }, [autoTelegramAuth, callback, checkNeedAutoTelegramAuth, network]);
 
+  const getAccessTokenInMobile = useCallback(async () => {
+    const needAutoTelegramAuth = await checkNeedAutoTelegramAuth();
+    if (needAutoTelegramAuth) {
+      setLoading(true);
+    }
+    if (needAutoTelegramAuth) {
+      const data = await telegramLoginAuth({
+        network,
+        autoTelegramAuth,
+        notCloseDappWebapp: true,
+      });
+      setLoading(false);
+      if (!data) return;
+      await callback(data);
+    }
+  }, [autoTelegramAuth, callback, checkNeedAutoTelegramAuth, network]);
+
   useEffect(() => {
     if (canGetAuthToken) {
-      console.log('=== useEffect setInterval', '');
-      startTimeRef.current = new Date();
-      // TODO tg
-      timerRef.current = setInterval(() => {
-        getAccessToken();
-      }, 2000);
+      console.log('=== useEffect setInterval');
+      if (isMobileDevice) {
+        getAccessTokenInMobile();
+      } else {
+        startTimeRef.current = new Date();
+        timerRef.current = setInterval(() => {
+          getAccessToken();
+        }, 2000);
+        return () => {
+          clearInterval(timerRef.current);
+          timerRef.current = undefined;
+          startTimeRef.current = undefined;
+        };
+      }
     }
-
-    return () => {
-      clearInterval(timerRef.current);
-      timerRef.current = undefined;
-      startTimeRef.current = undefined;
-    };
-  }, [canGetAuthToken, getAccessToken]);
+  }, [canGetAuthToken, getAccessToken, getAccessTokenInMobile, isMobileDevice]);
 }

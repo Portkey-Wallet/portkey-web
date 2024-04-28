@@ -7,7 +7,7 @@ import { modalMethod } from '../modalMethod';
 import PortkeyOpener from '../portkeyWindow/opener';
 
 class PopupHandler extends EventEmitter {
-  url: string;
+  url?: string;
 
   target: string;
   socketURI: string;
@@ -31,7 +31,7 @@ class PopupHandler extends EventEmitter {
     timeout = 1000,
     socketURI,
   }: {
-    url: string;
+    url?: string;
 
     target?: string;
     features?: string;
@@ -69,6 +69,7 @@ class PopupHandler extends EventEmitter {
   }
 
   open({ needConfirm = false }: { needConfirm?: boolean } = {}): void {
+    if (!this.url) return;
     if (isTelegramPlatform() && needConfirm) {
       modalMethod({
         zIndex: 10030,
@@ -93,6 +94,7 @@ class PopupHandler extends EventEmitter {
   }
 
   redirect(locationReplaceOnRedirect: boolean): void {
+    if (!this.url) return;
     if (locationReplaceOnRedirect) {
       window.location.replace(this.url);
     } else {
@@ -109,7 +111,7 @@ class PopupHandler extends EventEmitter {
             requestId: clientId,
             methodName: methodName as any,
           });
-          console.log(result, 'result===');
+          console.log(result, 'getResultByInvoke result===');
           result?.data && resolve(result.data);
         }, 1000),
       );
@@ -119,7 +121,7 @@ class PopupHandler extends EventEmitter {
   async getResultByListener(clientId: string, methodName: keyof IOpenloginSignalr): Promise<any> {
     return new Promise((resolve) => {
       openloginSignal[methodName]({ requestId: clientId }, (result: any) => {
-        console.log(result);
+        console.log(result, 'getResultByListener result===');
         const message = result;
         resolve(message);
       });
