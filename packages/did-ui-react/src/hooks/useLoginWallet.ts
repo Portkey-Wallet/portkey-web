@@ -18,15 +18,17 @@ interface CreateWalletParams {
   guardianApprovedList: GuardiansApproved[];
 }
 
-export default function useLoginWallet({
+export function useLoginWallet({
   isErrorTip = true,
   onError,
   onCreatePending,
-}: {
-  isErrorTip?: boolean;
-  onCreatePending?: onCreatePendingType;
-  onError?: OnErrorFunc;
-}) {
+}:
+  | {
+      isErrorTip?: boolean;
+      onCreatePending?: onCreatePendingType;
+      onError?: OnErrorFunc;
+    }
+  | undefined = {}) {
   const onErrorRef = useRef<OnErrorFunc | undefined>(onError);
   const onCreatePendingRef = useRef<onCreatePendingType | undefined>(onCreatePending);
 
