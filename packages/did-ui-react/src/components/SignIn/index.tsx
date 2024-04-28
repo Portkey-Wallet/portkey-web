@@ -34,7 +34,7 @@ import CommonBaseModal from '../CommonBaseModal';
 import { PORTKEY_ROOT_ID } from '../../constants';
 import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
-import useLoginWallet from '../../hooks/useLoginWallet';
+import { useLoginWallet } from '../../hooks/useLoginWallet';
 import './index.less';
 import { SocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
 import ConfigProvider from '../config-provider';
