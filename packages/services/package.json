@@ -1,6 +1,6 @@
 {
   "name": "@portkey/services",
-  "version": "2.5.0-alpha.48",
+  "version": "2.5.0-alpha.49",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,9 +41,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey/graphql": "^2.5.0-alpha.48",
-    "@portkey/request": "^2.5.0-alpha.48",
-    "@portkey/types": "^2.5.0-alpha.48"
+    "@portkey/graphql": "^2.5.0-alpha.49",
+    "@portkey/request": "^2.5.0-alpha.49",
+    "@portkey/types": "^2.5.0-alpha.49"
   },
   "devDependencies": {
     "@jest/globals": "^29.3.1",
