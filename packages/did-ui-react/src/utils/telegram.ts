@@ -183,6 +183,7 @@ export async function saveDataAndOpenPortkeyWebapp(
   yourTelegramLink: string,
   targetTelegramLink: string,
   extraStorageData?: Record<string, any>,
+  closeCurrentTab = true,
 ) {
   try {
     const { loginId } = await saveEncodeInfoToStorageAndPortkeyDatabase(
@@ -196,7 +197,7 @@ export async function saveDataAndOpenPortkeyWebapp(
     if (targetTelegramLink) {
       const Telegram = getTelegram();
       Telegram?.WebApp.openTelegramLink(`${targetTelegramLink}?startapp=${loginId}`);
-      Telegram?.WebApp.close();
+      closeCurrentTab && Telegram?.WebApp.close();
     }
     return;
   } catch (error) {
@@ -209,8 +210,10 @@ export async function getAccessTokenAndOpenDappWebapp({
   loginId,
   telegramUserInfo,
   onBeforeBack,
+  closeCurrentTab = true,
 }: {
   loginId: string;
+  closeCurrentTab?: boolean;
   telegramUserInfo: TelegramWebappInitData;
   onBeforeBack?: (loginId: string) => Promise<void> | void;
 }) {
@@ -238,7 +241,7 @@ export async function getAccessTokenAndOpenDappWebapp({
     if (dataParse?.yourTelegramLink) {
       const Telegram = getTelegram();
       Telegram?.WebApp.openTelegramLink(`${dataParse.yourTelegramLink}?startapp=${loginId}`);
-      Telegram?.WebApp.close();
+      closeCurrentTab && Telegram?.WebApp.close();
     }
   } catch (error) {
     throw Error(handleErrorMessage(error));
