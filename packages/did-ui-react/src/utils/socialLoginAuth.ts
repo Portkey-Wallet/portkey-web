@@ -1,9 +1,6 @@
 import {
   getCommunicationSocketUrl,
   getCustomNetworkType,
-  getDappTelegramLink,
-  getPortkeyBotAutoAuthWebappLink,
-  getPortkeyBotWebappLink,
   getServiceUrl,
   getStorageInstance,
 } from '../components/config-provider/utils';
@@ -14,7 +11,8 @@ import { dealURLLastChar } from './lib';
 import { devicesEnv } from '@portkey/utils';
 import OpenLogin from './openlogin';
 import { facebookAuthPath, twitterAuthPath } from './openlogin/constants';
-import { getTelegramUserId, isTelegramPlatform, saveDataAndOpenPortkeyWebapp } from './telegram';
+import { generateAccessTokenByPortkeyServer } from './telegram';
+import { TelegramPlatform } from './telegramPlatform';
 
 export const socialLoginInPortkeyApp = async (
   app: devicesEnv.IPortkeyShellClient,
@@ -153,31 +151,11 @@ export const socialLoginAuthOpener = ({
     }, 1600);
   });
 
-export const telegramLoginAuth = async ({
-  network,
-  extraStorageData,
-  autoTelegramAuth,
-  notCloseDappWebapp = false,
-}: {
-  network?: NetworkType;
-  extraStorageData?: Record<string, any>;
-  autoTelegramAuth?: boolean;
-  notCloseDappWebapp?: boolean;
-}) => {
-  const ctw = getCustomNetworkType();
-  const dappTelegramLink = getDappTelegramLink();
-  let portkeyBotWebappLink = '';
-  if (autoTelegramAuth) {
-    portkeyBotWebappLink = getPortkeyBotAutoAuthWebappLink(ctw, network);
-  } else {
-    portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, network);
-  }
-  return await saveDataAndOpenPortkeyWebapp({
-    yourTelegramLink: dappTelegramLink,
-    targetTelegramLink: portkeyBotWebappLink,
-    extraStorageData,
-    notCloseDappWebapp,
-  });
+export const telegramLoginAuth = async () => {
+  const telegramUserInfo = TelegramPlatform.getInitData();
+  if (!telegramUserInfo) throw new Error('Telegram user info is not found');
+  const accessToken = await generateAccessTokenByPortkeyServer(telegramUserInfo);
+  return accessToken.token;
 };
 
 export const socialLoginAuthBySocket = async ({
@@ -185,7 +163,6 @@ export const socialLoginAuthBySocket = async ({
   clientId,
   network,
   guardianIdentifier,
-  autoTelegramAuth,
 }: {
   type: ISocialLogin;
   guardianIdentifier?: string;
@@ -218,11 +195,11 @@ export const socialLoginAuthBySocket = async ({
 
   if (
     type === 'Telegram' &&
-    isTelegramPlatform() &&
-    ((guardianIdentifier && guardianIdentifier === getTelegramUserId()) || !guardianIdentifier)
+    TelegramPlatform.isTelegramPlatform() &&
+    ((guardianIdentifier && guardianIdentifier === TelegramPlatform.getTelegramUserId()) || !guardianIdentifier)
   ) {
-    telegramLoginAuth({ network, autoTelegramAuth });
-    return;
+    const token = await telegramLoginAuth();
+    return { token, provider: 'Telegram' };
   }
 
   const result = await openlogin.login({

@@ -1,45 +1,5 @@
 import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '.';
-import { NetworkType, TCustomNetworkType } from '../types';
 import { TOpenLoginBridgeURL } from '../types/openlogin';
-
-export const Portkey_Bot_Webapp: {
-  [key in TCustomNetworkType]: {
-    [key in NetworkType]: string;
-  };
-} = {
-  online: {
-    MAINNET: '',
-    TESTNET: 'https://t.me/PortkeyTestnetBot/PortkeyWallet',
-  },
-  offline: {
-    MAINNET: 'https://t.me/sTestABot/aelf', //test4
-    TESTNET: 'https://t.me/PortkeyTestnetBot/PortkeyWallet',
-  },
-  local: {
-    MAINNET: 'https://t.me/sTestABot/aelf',
-    TESTNET: 'https://t.me/sTestABot/aelf',
-  },
-};
-
-// TODO: adjust the link
-export const Portkey_Bot_Auto_Auth_Webapp: {
-  [key in TCustomNetworkType]: {
-    [key in NetworkType]: string;
-  };
-} = {
-  online: {
-    MAINNET: 'https://t.me/PortkeyTestnetBot/PortkeyWalletAutoAuth',
-    TESTNET: 'https://t.me/PortkeyTestnetBot/PortkeyWalletAutoAuth',
-  },
-  offline: {
-    MAINNET: 'https://t.me/sTestABot/aelf',
-    TESTNET: 'https://t.me/PortkeyTestnetBot/PortkeyWalletAutoAuth',
-  },
-  local: {
-    MAINNET: 'https://t.me/sTestABot/aelf',
-    TESTNET: 'https://t.me/sTestABot/aelf',
-  },
-};
 
 export enum Telegram_Link_Params {
   GetAuthToken = 'GetAuthToken',
