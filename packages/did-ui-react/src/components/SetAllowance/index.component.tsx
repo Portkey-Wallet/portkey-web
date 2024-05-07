@@ -1,11 +1,12 @@
-import { Input } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
+import { Checkbox, Input } from 'antd';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { parseInputNumberChange } from '../../utils/input';
 import BigNumber from 'bignumber.js';
 import './index.less';
 import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
+import { CheckboxChangeEvent } from 'antd/lib/checkbox';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
@@ -19,6 +20,7 @@ export interface BaseSetAllowanceProps {
 
 export interface IAllowance {
   allowance: string;
+  batchApproveToken: boolean;
 }
 
 export interface SetAllowanceHandlerProps {
@@ -43,6 +45,7 @@ export default function SetAllowanceMain({
   onAllowanceChange,
   onConfirm,
 }: SetAllowanceProps) {
+  const batchApproveToken = useRef<boolean>(false);
   const formatAllowanceInput = useCallback(
     (value: number | string) =>
       parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined, decimals),
@@ -65,6 +68,13 @@ export default function SetAllowanceMain({
     [formatAllowanceInput, onAllowanceChange],
   );
 
+  const onAllowAllTokenChange = useCallback(
+    (e: CheckboxChangeEvent) => {
+      batchApproveToken.current = e.target.checked;
+    },
+    [batchApproveToken],
+  );
+
   return (
     <div className={clsx(`${PrefixCls}-wrapper`, className)}>
       <div className={clsx('portkey-ui-flex-center', `${PrefixCls}-dapp-info`)}>
@@ -76,16 +86,17 @@ export default function SetAllowanceMain({
         )}
       </div>
       <div className={`${PrefixCls}-header`}>
-        <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{`Request for access to your ${symbol}`}</h1>
+        <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{`Request for access to your token`}</h1>
         <div className={`portkey-ui-text-center ${PrefixCls}-description`}>
-          To ensure your assets&rsquo; security while interacting with the DApp, please set a token allowance for this
-          DApp. The DApp will notify you when its allowance is used up and you can modify the settings again.
+          To ensure asset security, please customise an allowance for this dApp. Until this allowance is exhausted, the
+          dApp will not request your approval to utilise the specified token. You have the option to adjust these
+          settings once the allowance is depleted.
         </div>
       </div>
 
       <div className={`${PrefixCls}-body`}>
         <div className={`portkey-ui-flex-between-center ${PrefixCls}-body-title`}>
-          <span className={`${PrefixCls}-set`}>{`Set Allowance (${symbol})`}</span>
+          <span className={`${PrefixCls}-set`}>{`Set Allowance`}</span>
           <span className={`${PrefixCls}-use-recommended`} onClick={() => inputChange(recommendedAmount)}>
             Use Recommended Value
           </span>
@@ -100,8 +111,14 @@ export default function SetAllowanceMain({
           />
           {typeof error !== 'undefined' && <div className="error-text">{error}</div>}
         </div>
+        <div className={`${PrefixCls}-confirm-line`}>
+          <Checkbox className={`${PrefixCls}-confirm-line-checkbox`} onChange={onAllowAllTokenChange} />
+          <div className={`${PrefixCls}-confirm-line-text`}>Approve multiple tokens at the same time</div>
+        </div>
         <div className={`${PrefixCls}-notice`}>
-          Within this allowance limit, the Dapp does not require reconfirmation from you when a transaction occurs.
+          The allowance you set will apply to all selected tokens, allowing the dApp to utilise them as long as the
+          combined total doesn&rsquo;t exceed the limit. It&rsquo;s crucial to assess potential risks carefully and set
+          a reasonable allowance value, taking into account both token price and quantity.
         </div>
       </div>
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
@@ -113,7 +130,10 @@ export default function SetAllowanceMain({
             onClick={() => {
               if (!isValidNumber(allowance)) return setError('Please enter a positive whole number');
               if (BigNumber(allowance).lte(0)) return setError('Please enter a non-zero value');
-              onConfirm?.({ allowance });
+              onConfirm?.({
+                allowance,
+                batchApproveToken: batchApproveToken.current,
+              });
             }}>
             Authorize
           </ThrottleButton>

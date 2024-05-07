@@ -1,5 +1,5 @@
 import GuardianApprovalMain from '../GuardianApproval/index.component';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { ChainId } from '@portkey/types';
 import SetAllowanceMain, { BaseSetAllowanceProps, IAllowance } from '../SetAllowance/index.component';
 import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } from '../../utils';
@@ -31,7 +31,7 @@ export interface IManagerApproveResult {
 export interface ManagerApproveInnerProps extends BaseManagerApproveInnerProps {
   onCancel?: () => void;
   onError?: (error: Error) => void;
-  onFinish?: (res: { amount: string; guardiansApproved: IGuardiansApproved[] }) => void;
+  onFinish?: (res: { amount: string; batchApproveToken: boolean; guardiansApproved: IGuardiansApproved[] }) => void;
 }
 export enum ManagerApproveStep {
   SetAllowance = 'SetAllowance',
@@ -70,6 +70,7 @@ export default function ManagerApproveInner({
   const DEFAULT_SYMBOL_DECIMAL = useMemo(() => (isNFT(symbol) ? DEFAULT_NFT_DECIMAL : DEFAULT_DECIMAL), [symbol]);
 
   const [allowance, setAllowance] = useState<string>(divDecimals(amount, DEFAULT_SYMBOL_DECIMAL).toFixed());
+  const batchApproveToken = useRef<boolean>(false);
 
   const [guardianList, setGuardianList] = useState<BaseGuardianItem[]>();
 
@@ -121,6 +122,7 @@ export default function ManagerApproveInner({
     async (allowanceInfo: IAllowance) => {
       try {
         setAllowance(allowanceInfo.allowance);
+        batchApproveToken.current = allowanceInfo.batchApproveToken;
         setLoading(true);
 
         const guardianList = await getGuardianList();
@@ -207,7 +209,10 @@ export default function ManagerApproveInner({
               }));
 
               await onFinish?.({
-                amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
+                amount: batchApproveToken.current
+                  ? allowance
+                  : timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
+                batchApproveToken: batchApproveToken.current,
                 guardiansApproved: approved,
               });
             }}
