@@ -1,6 +1,7 @@
 import { useCallback } from 'react';
 import { ISocialLogin, NetworkType, VerifyTokenParams } from '../types';
 import {
+  TelegramPlatform,
   did,
   getGoogleUserInfo,
   parseAppleIdentityToken,
@@ -11,7 +12,6 @@ import {
 } from '../utils';
 import { OperationTypeEnum, VerifyVerificationCodeResult } from '@portkey/services';
 import type { ChainId, TStringJSON } from '@portkey/types';
-import { getTelegramUserId, isTelegramPlatform } from '../utils/telegram';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
@@ -121,7 +121,8 @@ export function useVerifyTelegram() {
           network: params.networkType,
           guardianIdentifier: params.id,
         });
-        if (isTelegramPlatform() && (params.id === getTelegramUserId() || !params.id)) return;
+        if (TelegramPlatform.isTelegramPlatform() && (params.id === TelegramPlatform.getTelegramUserId() || !params.id))
+          return;
         if (!authRes) throw new Error('Missing Response');
         accessToken = authRes?.token;
       }

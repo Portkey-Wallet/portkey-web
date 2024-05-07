@@ -12,6 +12,7 @@ import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedAct
 import AddressSelector from './components/AddressSelector';
 import AmountInput from './components/AmountInput';
 import {
+  TelegramPlatform,
   WalletError,
   did,
   errorTip,
@@ -19,6 +20,7 @@ import {
   hasSocialGuardian,
   modalMethod,
   setLoading,
+  telegramLoginAuth,
 } from '../../utils';
 import { timesDecimals } from '../../utils/converter';
 import { ZERO } from '../../constants/misc';
@@ -44,15 +46,7 @@ import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import ThrottleButton from '../ThrottleButton';
 import { SendBusinessKey } from '../../constants/storage';
-import {
-  getDataFromOpenLogin,
-  getTelegramUserId,
-  hasCurrentTelegramGuardian,
-  isTelegramPlatform,
-  saveDataAndOpenPortkeyWebapp,
-} from '../../utils/telegram';
-import { getCustomNetworkType, getDappTelegramLink, getPortkeyBotWebappLink } from '../config-provider/utils';
-import { useGetTelegramAccessToken } from '../../hooks/telegram';
+import { getDataFromOpenLogin, hasCurrentTelegramGuardian } from '../../utils/telegram';
 import { CrossTabPushMessageType } from '@portkey/socket';
 import { Open_Login_Guardian_Approval_Bridge } from '../../constants/telegram';
 import { IOpenLoginGuardianApprovalResponse } from '../../types/openlogin';
@@ -284,7 +278,7 @@ function SendContent({
           isErrorTip,
           socketMethod: CrossTabPushMessageType.onSendOneTimeApproval,
           telegramAuth: data?.accessToken,
-          telegramUserId: getTelegramUserId(),
+          telegramUserId: TelegramPlatform.getTelegramUserId(),
         };
         await getDataFromOpenLogin({
           params,
@@ -375,8 +369,6 @@ function SendContent({
     tokenInfo,
   ]);
 
-  useGetTelegramAccessToken({ callback: handleWithinTelegram });
-
   const getGuardianListInTelegram = useCallback(async () => {
     const _guardianList = await getGuardianList({
       caHash,
@@ -394,29 +386,13 @@ function SendContent({
 
       const guardianList = await getGuardianListInTelegram();
       const isHasSocialGuardian = hasSocialGuardian(guardianList);
-      if (isTelegramPlatform() && !!isHasSocialGuardian) {
+      if (TelegramPlatform.isTelegramPlatform() && !!isHasSocialGuardian) {
         // inside the telegram app
         // guardian list include current telegram account
         const isHasCurrentTelegramGuardian = hasCurrentTelegramGuardian(guardianList);
         if (isHasCurrentTelegramGuardian) {
-          const ctw = getCustomNetworkType();
-          const dappTelegramLink = getDappTelegramLink();
-          const portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, networkType);
-          const storageValue: TSendStorageValue = {
-            assetItem: { ...assetItemNew },
-            extraConfig: {
-              toAccount,
-              amount,
-              balance,
-              stage,
-            },
-            needGoToOpenLoginApproval: true,
-          };
-          await did.config.storageMethod.setItem(SendBusinessKey, JSON.stringify(storageValue));
-          await saveDataAndOpenPortkeyWebapp({
-            yourTelegramLink: dappTelegramLink,
-            targetTelegramLink: portkeyBotWebappLink,
-          });
+          const telegramAccessToken = await telegramLoginAuth();
+          await handleWithinTelegram({ accessToken: telegramAccessToken });
         } else {
           // guardian list don not include current telegram account
           await handleWithinTelegram();
@@ -436,17 +412,7 @@ function SendContent({
     } finally {
       setLoading(false);
     }
-  }, [
-    amount,
-    assetItemNew,
-    balance,
-    getGuardianListInTelegram,
-    handleWithinTelegram,
-    isErrorTip,
-    networkType,
-    stage,
-    toAccount,
-  ]);
+  }, [getGuardianListInTelegram, handleWithinTelegram, isErrorTip]);
 
   const handleCheckTransferLimit = useCallback(async () => {
     const chainInfo = await getChain(tokenInfo.chainId);
@@ -512,7 +478,7 @@ function SendContent({
   }, []);
 
   useEffect(() => {
-    if (isTelegramPlatform()) recoverPageDataAfterTelegramAuth();
+    if (TelegramPlatform.isTelegramPlatform()) recoverPageDataAfterTelegramAuth();
   }, [recoverPageDataAfterTelegramAuth]);
 
   const sendHandler = useCallback(async () => {

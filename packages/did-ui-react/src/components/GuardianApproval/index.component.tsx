@@ -14,7 +14,6 @@ import clsx from 'clsx';
 import GuardianList from '../GuardianList/index.component';
 import VerifierPage from './components/VerifierPage';
 import {
-  did,
   errorTip,
   getAlreadyApprovalLength,
   getApprovalCount,
@@ -37,12 +36,11 @@ import {
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
-import { useEffectOnce, useUpdateEffect } from 'react-use';
+import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
 import { SocialLoginList } from '../../constants/guardian';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
-import { getTelegramStartParam, getAccessTokenInDappTelegram } from '../../utils/telegram';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -296,51 +294,6 @@ const GuardianApprovalMain = forwardRef(
         onConfirmHandler();
       }
     }, [approvalLength, alreadyApprovalLength]);
-
-    const handleAfterAuthWithInTelegram = useCallback(async () => {
-      const { startParam } = getTelegramStartParam();
-      console.log('====startParam', startParam);
-      if (startParam) {
-        clearInterval(timerRef.current);
-        try {
-          setLoading(true);
-
-          defaultGuardianList?.forEach(async (item, index) => {
-            if (item.guardianType === 'Telegram' && item.accessToken) {
-              await socialVerifyHandler(item, index);
-              return;
-            }
-            if (item.guardianType === 'Telegram' && !item.accessToken) {
-              const decodeResult = await getAccessTokenInDappTelegram(startParam);
-              console.log('===res.data', decodeResult);
-              if (!decodeResult) return;
-              await did.config.storageMethod.removeItem(startParam);
-              item.accessToken = decodeResult?.accessToken || '';
-              await socialVerifyHandler({ ...item, accessToken: decodeResult?.accessToken || '' }, index);
-              return;
-            }
-          });
-        } catch (error) {
-          throw new Error(handleErrorMessage(error));
-        } finally {
-          setLoading(false);
-        }
-      }
-    }, [defaultGuardianList, socialVerifyHandler]);
-
-    const timerRef = useRef<NodeJS.Timer | number>();
-    useEffectOnce(() => {
-      console.log('=== useEffect setInterval', '');
-      // TODO tg
-      timerRef.current = setInterval(() => {
-        handleAfterAuthWithInTelegram();
-      }, 2000);
-
-      return () => {
-        clearInterval(timerRef.current);
-        timerRef.current = undefined;
-      };
-    });
 
     return (
       <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>

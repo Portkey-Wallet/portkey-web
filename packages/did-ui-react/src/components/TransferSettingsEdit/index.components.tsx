@@ -12,7 +12,15 @@ import { isValidInteger } from '../../utils/reg';
 import { NetworkType, OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
-import { did, errorTip, handleErrorMessage, hasSocialGuardian, setLoading } from '../../utils';
+import {
+  TelegramPlatform,
+  did,
+  errorTip,
+  handleErrorMessage,
+  hasSocialGuardian,
+  setLoading,
+  telegramLoginAuth,
+} from '../../utils';
 import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
 import { ELF_SYMBOL } from '../../constants/assets';
 import { getChainInfo } from '../../hooks';
@@ -24,16 +32,8 @@ import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
-import {
-  getDataFromOpenLogin,
-  getTelegramUserId,
-  hasCurrentTelegramGuardian,
-  isTelegramPlatform,
-  saveDataAndOpenPortkeyWebapp,
-} from '../../utils/telegram';
-import { getCustomNetworkType, getDappTelegramLink, getPortkeyBotWebappLink } from '../config-provider/utils';
+import { getDataFromOpenLogin, hasCurrentTelegramGuardian } from '../../utils/telegram';
 import { TransferSettingBusinessKey } from '../../constants/storage';
-import { useGetTelegramAccessToken } from '../../hooks/telegram';
 import { Open_Login_Guardian_Approval_Bridge } from '../../constants/telegram';
 import { CrossTabPushMessageType } from '@portkey/socket';
 import { IOpenLoginGuardianApprovalResponse } from '../../types/openlogin';
@@ -303,7 +303,7 @@ export default function TransferSettingsEditMain({
           isErrorTip,
           socketMethod: CrossTabPushMessageType.onTransferSettingApproval,
           telegramAuth: data?.accessToken,
-          telegramUserId: getTelegramUserId(),
+          telegramUserId: TelegramPlatform.getTelegramUserId(),
         };
         await getDataFromOpenLogin({
           params,
@@ -322,7 +322,6 @@ export default function TransferSettingsEditMain({
     },
     [approvalSuccess, caHash, isErrorTip, networkType, originChainId, targetChainId],
   );
-  useGetTelegramAccessToken({ callback: handleWithinTelegram });
   const hasTelegramGuardian = useMemo(() => hasCurrentTelegramGuardian(guardianList), [guardianList]);
   const onFinish = async () => {
     const errorCount = handleFormChange();
@@ -331,26 +330,12 @@ export default function TransferSettingsEditMain({
 
     const isHasSocialGuardian = hasSocialGuardian(guardianList);
     // Check Platform
-    if (isTelegramPlatform() && !!isHasSocialGuardian) {
+    if (TelegramPlatform.isTelegramPlatform() && !!isHasSocialGuardian) {
       // inside the telegram app
       // guardian list include current telegram account
       if (hasTelegramGuardian) {
-        const ctw = getCustomNetworkType();
-        const dappTelegramLink = getDappTelegramLink();
-        const portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, networkType);
-        const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
-        const storageValue = JSON.stringify({
-          ...initData,
-          singleLimit: timesDecimals(singleLimit, initData.decimals).toFixed(),
-          dailyLimit: timesDecimals(dailyLimit, initData.decimals).toFixed(),
-          restricted: restricted,
-          needGoToOpenLoginApproval: true,
-        });
-        await did.config.storageMethod.setItem(TransferSettingBusinessKey, storageValue);
-        await saveDataAndOpenPortkeyWebapp({
-          yourTelegramLink: dappTelegramLink,
-          targetTelegramLink: portkeyBotWebappLink,
-        });
+        const telegramAccessToken = await telegramLoginAuth();
+        await handleWithinTelegram({ accessToken: telegramAccessToken });
       } else {
         // guardian list don not include current telegram account
         await handleWithinTelegram();
@@ -397,7 +382,7 @@ export default function TransferSettingsEditMain({
     }
     handleDisableCheck();
 
-    if (isTelegramPlatform()) recoverPageDataAfterTelegramAuth();
+    if (TelegramPlatform.isTelegramPlatform()) recoverPageDataAfterTelegramAuth();
   });
 
   return (

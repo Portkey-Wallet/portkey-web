@@ -2,9 +2,9 @@ import { EventEmitter } from 'events';
 
 import { getPopupFeatures } from './utils';
 import { openloginSignal, TIOpenloginSignalrHandler, IOpenloginSignalr } from '@portkey/socket';
-import { isTelegramPlatform } from '../telegram';
 import { modalMethod } from '../modalMethod';
 import PortkeyOpener from '../portkeyWindow/opener';
+import { TelegramPlatform } from '../telegramPlatform';
 
 class PopupHandler extends EventEmitter {
   url?: string;
@@ -70,7 +70,7 @@ class PopupHandler extends EventEmitter {
 
   open({ needConfirm = false }: { needConfirm?: boolean } = {}): void {
     if (!this.url) return;
-    if (isTelegramPlatform() && needConfirm) {
+    if (TelegramPlatform.isTelegramPlatform() && needConfirm) {
       modalMethod({
         zIndex: 10030,
         wrapClassName: 'portkey-ui-open-link-confirm-modal',
@@ -82,7 +82,7 @@ class PopupHandler extends EventEmitter {
     } else {
       this.window = window.open(this.url, this.target, this.features);
     }
-    if (isTelegramPlatform()) return;
+    if (TelegramPlatform.isTelegramPlatform()) return;
     this._setupTimer();
     if (!this.window) throw 'Popup was blocked. Please check your browser settings.';
     if (this.window?.focus) this.window.focus();

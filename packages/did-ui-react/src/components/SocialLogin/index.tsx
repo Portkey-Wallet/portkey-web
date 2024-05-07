@@ -24,7 +24,6 @@ import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constant
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
-import { useGetTelegramAccessToken } from '../../hooks/telegram';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -65,7 +64,6 @@ export default function SocialLogin({
   isErrorTip,
   loginMethodsOrder,
   recommendIndexes,
-  autoTelegramAuth,
   onBack,
   onFinish,
   onError,
@@ -114,19 +112,6 @@ export default function SocialLogin({
     },
     [isErrorTip, socialLoginHandler],
   );
-
-  const handleLoginAfterAuthWithInTelegram = useCallback(async (data?: { accessToken?: string }) => {
-    const result = {
-      type: 'Telegram' as ISocialLogin,
-      data: {
-        accessToken: data?.accessToken || '',
-      },
-    };
-    console.log('=== result', result);
-    onFinishRef.current?.(result);
-  }, []);
-  console.log('&&&&&&&&');
-  useGetTelegramAccessToken({ autoTelegramAuth, network: networkType, callback: handleLoginAfterAuthWithInTelegram });
 
   const recommendList = useMemo(() => {
     if (Array.isArray(recommendIndexes)) {
