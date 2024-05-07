@@ -347,7 +347,10 @@ export default function TransferSettingsEditMain({
           needGoToOpenLoginApproval: true,
         });
         await did.config.storageMethod.setItem(TransferSettingBusinessKey, storageValue);
-        await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink);
+        await saveDataAndOpenPortkeyWebapp({
+          yourTelegramLink: dappTelegramLink,
+          targetTelegramLink: portkeyBotWebappLink,
+        });
       } else {
         // guardian list don not include current telegram account
         await handleWithinTelegram();

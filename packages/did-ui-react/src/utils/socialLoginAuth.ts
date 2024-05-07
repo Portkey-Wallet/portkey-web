@@ -157,10 +157,12 @@ export const telegramLoginAuth = async ({
   network,
   extraStorageData,
   autoTelegramAuth,
+  notCloseDappWebapp = false,
 }: {
   network?: NetworkType;
   extraStorageData?: Record<string, any>;
   autoTelegramAuth?: boolean;
+  notCloseDappWebapp?: boolean;
 }) => {
   const ctw = getCustomNetworkType();
   const dappTelegramLink = getDappTelegramLink();
@@ -170,7 +172,12 @@ export const telegramLoginAuth = async ({
   } else {
     portkeyBotWebappLink = getPortkeyBotWebappLink(ctw, network);
   }
-  await saveDataAndOpenPortkeyWebapp(dappTelegramLink, portkeyBotWebappLink, extraStorageData);
+  return await saveDataAndOpenPortkeyWebapp({
+    yourTelegramLink: dappTelegramLink,
+    targetTelegramLink: portkeyBotWebappLink,
+    extraStorageData,
+    notCloseDappWebapp,
+  });
 };
 
 export const socialLoginAuthBySocket = async ({
