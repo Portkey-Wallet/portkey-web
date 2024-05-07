@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.50](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.48...v2.5.0-alpha.50) (2024-05-07)
+
+### Features
+
+- not close dapp webapp in mobile ([a074dbc](https://github.com/Portkey-Wallet/portkey-web/commit/a074dbc957f657c47432840386fa5bba3e755df4))
+
 ## [2.5.0-alpha.48](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.47...v2.5.0-alpha.48) (2024-04-28)
 
 ### Features
