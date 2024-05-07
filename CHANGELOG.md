@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.0-alpha.0](https://github.com/FrankFeng1116/portkey-web/compare/v2.4.5...v2.6.0-alpha.0) (2024-05-07)
+
+### Features
+
+- add version ([db442e1](https://github.com/FrankFeng1116/portkey-web/commit/db442e1518998ed329572f51635af929a7e2b5b1))
+- batch approve token ([fa13f5a](https://github.com/FrankFeng1116/portkey-web/commit/fa13f5afa4b216d575e0a045d96ecba10109f279))
+
 ## [2.4.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.4...v2.4.5) (2024-04-19)
 
 ### Features
