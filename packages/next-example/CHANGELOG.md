@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.51](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.50...v2.5.0-alpha.51) (2024-05-07)
+
+### Features
+
+- get telegram auth in dapp webapp ([e6828c6](https://github.com/Portkey-Wallet/portkey-web/commit/e6828c65be571b385cd039fd28b28ba35cbd74f9))
+
 ## [2.5.0-alpha.50](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.48...v2.5.0-alpha.50) (2024-05-07)
 
 **Note:** Version bump only for package @portkey/next-example
