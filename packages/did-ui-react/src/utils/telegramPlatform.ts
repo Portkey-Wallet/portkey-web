@@ -81,7 +81,7 @@ export class TelegramPlatform {
     if (typeof window !== 'undefined') {
       await sleep(initialDelay);
       const Telegram = TelegramPlatform.getTelegram();
-      if (!Telegram) return;
+      if (!Telegram || !TelegramPlatform.isTelegramPlatform()) return;
       if (needExpand) {
         Telegram.WebApp.expand();
       }
