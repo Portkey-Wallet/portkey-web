@@ -15,6 +15,9 @@ export interface GuardianApprovalModalProps {
   operationType: OperationTypeEnum;
   isErrorTip?: boolean;
   sandboxId?: string;
+  symbol?: string;
+  amount?: string;
+  toAddress?: string;
   onClose: () => void;
   onBack: () => void;
   onApprovalSuccess: (approveList: GuardianApprovedItem[]) => void | Promise<void>;

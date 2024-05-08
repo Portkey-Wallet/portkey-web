@@ -81,8 +81,6 @@ function GuardianView({
     [currentGuardian.isLoginGuardian],
   );
 
-  const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
-
   const reCaptchaHandler = useReCaptchaModal();
   const verifyToken = useVerifyToken();
   const socialBasic = useCallback(
@@ -142,7 +140,7 @@ function GuardianView({
         redirectURI,
         networkType,
         operationType,
-        operationDetails,
+        operationDetails: getOperationDetails(operationType, curGuardian.current),
         customLoginHandler,
       });
       if (!rst) return;
@@ -150,7 +148,7 @@ function GuardianView({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, networkType, verifyToken, originChainId, operationType, operationDetails],
+    [socialBasic, networkType, verifyToken, originChainId, operationType],
   );
 
   const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
@@ -200,6 +198,7 @@ function GuardianView({
             verifierId: currentGuardian?.verifier?.id || '',
             chainId: originChainId,
             operationType,
+            operationDetails: getOperationDetails(operationType, curGuardian.current),
           },
         },
         reCaptchaHandler,
@@ -419,6 +418,7 @@ function GuardianView({
         <VerifierPage
           originChainId={originChainId}
           operationType={operationType}
+          operationDetails={getOperationDetails(operationType, curGuardian.current)}
           onBack={handleBackView}
           guardianIdentifier={currentGuardian.guardianIdentifier || ''}
           verifierSessionId={curGuardian.current?.verifierInfo?.sessionId || ''}
@@ -439,7 +439,6 @@ function GuardianView({
         onClose={onCloseApproval}>
         <GuardianApproval
           header={<BackHeader onBack={onCloseApproval} />}
-          operationDetails={operationDetails}
           originChainId={originChainId}
           guardianList={guardianList?.filter((item) => item.key !== currentGuardian.key)}
           networkType={networkType}

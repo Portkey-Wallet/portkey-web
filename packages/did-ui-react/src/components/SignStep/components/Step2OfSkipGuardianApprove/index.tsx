@@ -5,7 +5,6 @@ import GuardianApproval, { IGuardianApprovalInstance } from '../../../GuardianAp
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../../../types';
 import { IGuardianIdentifierInfo } from '../../../types';
 import { useEffectOnce } from 'react-use';
-import { getOperationDetails } from '../../../utils/operation.util';
 
 interface Step2OfSkipGuardianApproveProps {
   isErrorTip?: boolean;
@@ -39,13 +38,10 @@ function Step2OfSkipGuardianApprove({
     }
   });
 
-  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.communityRecovery), []);
-
   return (
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
         ref={ref}
-        operationDetails={operationDetails}
         operationType={OperationTypeEnum.communityRecovery}
         originChainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}

@@ -14,13 +14,13 @@ import { divDecimals, timesDecimals } from '../../utils/converter';
 import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL, DEFAULT_NFT_DECIMAL } from '../../constants';
 import { isNFT } from '../../utils/assets';
 import './index.less';
-import { getOperationDetails } from '../utils/operation.util';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
   targetChainId: ChainId;
   caHash: string;
   networkType: NetworkType;
+  spender?: string;
 }
 
 export interface IManagerApproveResult {
@@ -31,7 +31,12 @@ export interface IManagerApproveResult {
 export interface ManagerApproveInnerProps extends BaseManagerApproveInnerProps {
   onCancel?: () => void;
   onError?: (error: Error) => void;
-  onFinish?: (res: { amount: string; batchApproveToken: boolean; guardiansApproved: IGuardiansApproved[] }) => void;
+  onFinish?: (res: {
+    amount: string;
+    symbol: string;
+    batchApproveToken: boolean;
+    guardiansApproved: IGuardiansApproved[];
+  }) => void;
 }
 export enum ManagerApproveStep {
   SetAllowance = 'SetAllowance',
@@ -49,6 +54,8 @@ export default function ManagerApproveInner({
   amount,
   dappInfo,
   symbol,
+  spender,
+  showBatchApproveToken,
   onCancel,
   onFinish,
   onError,
@@ -169,8 +176,6 @@ export default function ManagerApproveInner({
     getTokenInfo();
   }, [getTokenInfo]);
 
-  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.managerApprove), []);
-
   return (
     <PortkeyStyleProvider>
       <div className="portkey-ui-flex-column portkey-ui-manager-approval-wrapper">
@@ -183,6 +188,7 @@ export default function ManagerApproveInner({
             recommendedAmount={divDecimals(amount, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed()}
             max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0)}
             dappInfo={dappInfo}
+            showBatchApproveToken={showBatchApproveToken}
             onCancel={onCancel}
             onAllowanceChange={setAllowance}
             onConfirm={allowanceConfirm}
@@ -214,11 +220,14 @@ export default function ManagerApproveInner({
                   : timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
                 batchApproveToken: batchApproveToken.current,
                 guardiansApproved: approved,
+                symbol: batchApproveToken.current ? '*' : symbol,
               });
             }}
             // onError={(error) => onError?.(Error(handleErrorMessage(error.error)))}
             operationType={OperationTypeEnum.managerApprove}
-            operationDetails={operationDetails}
+            symbol={batchApproveToken.current ? '*' : symbol}
+            amount={allowance}
+            spender={spender}
           />
         )}
       </div>

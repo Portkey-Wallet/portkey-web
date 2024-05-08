@@ -23,7 +23,6 @@ import { sleep } from '@portkey/utils';
 import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
-import { getOperationDetails } from '../utils/operation.util';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -274,8 +273,6 @@ export default function TransferSettingsEditMain({
     ],
   );
 
-  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.modifyTransferLimit), []);
-
   const onFinish = () => {
     const errorCount = handleFormChange();
     if (errorCount > 0) return;
@@ -299,7 +296,12 @@ export default function TransferSettingsEditMain({
     }
     handleDisableCheck();
   });
-
+  const limit = useMemo(() => {
+    const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
+    const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
+    const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData.decimals)) : '-1';
+    return { transDailyLimit, transSingleLimit };
+  }, [form, initData.decimals]);
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
       <BackHeaderForPage title={`Transfer Settings`} leftCallBack={() => onBack?.(initData)} />
@@ -373,7 +375,9 @@ export default function TransferSettingsEditMain({
           onConfirm={approvalSuccess}
           onError={onGuardiansApproveError}
           operationType={OperationTypeEnum.modifyTransferLimit}
-          operationDetails={operationDetails}
+          symbol={symbol}
+          singleLimit={limit.transSingleLimit}
+          dailyLimit={limit.transDailyLimit}
         />
       </CommonBaseModal>
     </div>
