@@ -129,7 +129,7 @@ export default function AppleAuth() {
 
             const allowanceRes = await Promise.all(
               ['ELF', 'ETH', 'SGRTEST-1', '*'].map(item =>
-                tokenContract.callViewMethod('GetAllowance', {
+                tokenContract.callViewMethod('GetAvailableAllowance', {
                   symbol: item,
                   owner: did.didWallet.aaInfo.accountInfo?.caAddress,
                   spender,
