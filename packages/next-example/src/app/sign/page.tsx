@@ -24,7 +24,7 @@ const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
 
 ConfigProvider.setGlobalConfig({
-  connectUrl: 'http://192.168.66.117:8080',
+  // connectUrl: 'http://192.168.66.117:8080',
   socialLogin: {
     Portkey: {
       websiteName: 'website demo',

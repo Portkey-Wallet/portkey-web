@@ -14,12 +14,12 @@ module.exports = [
   // { source: '/graphql/:path*', destination: 'http://192.168.64.202:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*' },
 
   // test4-v2
-  { source: '/api/:path*', destination: 'http://192.168.66.117:5577/api/:path*' },
-  { source: '/connect/:path*', destination: 'http://192.168.66.117:8080/connect/:path*' },
-  {
-    source: '/graphql/:path*',
-    destination: 'http://192.168.67.214:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*',
-  },
+  // { source: '/api/:path*', destination: 'http://192.168.66.117:5577/api/:path*' },
+  // { source: '/connect/:path*', destination: 'http://192.168.66.117:8080/connect/:path*' },
+  // {
+  //   source: '/graphql/:path*',
+  //   destination: 'http://192.168.67.214:8083/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql/:path*',
+  // },
 
   // mainnet
   // { source: '/api/:path*', destination: 'https://aa-portkey.portkey.finance/api/:path*' },
