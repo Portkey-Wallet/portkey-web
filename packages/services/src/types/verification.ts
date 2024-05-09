@@ -8,6 +8,7 @@ export type SendVerificationCodeParams = {
   chainId: ChainId;
   targetChainId?: ChainId;
   operationType: OperationTypeEnum;
+  operationDetails?: TStringJSON;
 };
 
 export type SendVerificationCodeRequestParams = {
