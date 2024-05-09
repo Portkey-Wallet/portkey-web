@@ -73,7 +73,16 @@ export default function SetAllowanceMain({
   const onAllowAllTokenChange = useCallback(() => {
     setBatchApproveToken((prev) => !prev);
   }, []);
-
+  const noticeText = useMemo(() => {
+    return showBatchApproveToken
+      ? `The allowance you set will apply to all tokens, allowing the dApp to utilise them as long as the combined
+      total doesn&rsquo;t exceed the limit. It&rsquo;s crucial to assess potential risks carefully and set a
+      reasonable allowance value, taking into account both token price and quantity.`
+      : 'Within this allowance limit, the Dapp does not require reconfirmation from you when a transaction occurs.';
+  }, [showBatchApproveToken]);
+  const titleText = useMemo(() => {
+    return dappInfo?.name ? `${dappInfo?.name} is requesting access to your token` : `Request for access to your token`;
+  }, [dappInfo?.name]);
   return (
     <div className={clsx(`${PrefixCls}-wrapper`, className)}>
       <div className={clsx('portkey-ui-flex-center', `${PrefixCls}-dapp-info`)}>
@@ -85,7 +94,7 @@ export default function SetAllowanceMain({
         )}
       </div>
       <div className={`${PrefixCls}-header`}>
-        <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{`Request for access to your token`}</h1>
+        <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{titleText}</h1>
         <div className={`portkey-ui-text-center ${PrefixCls}-description`}>
           To ensure asset security, please customise an allowance for this dApp. Until this allowance is exhausted, the
           dApp will not request your approval to utilise the specified token. You have the option to adjust these
@@ -120,11 +129,7 @@ export default function SetAllowanceMain({
             <div className={`${PrefixCls}-confirm-line-text`}>Approve multiple tokens at the same time</div>
           </div>
         )}
-        <div className={`${PrefixCls}-notice`}>
-          The allowance you set will apply to all selected tokens, allowing the dApp to utilise them as long as the
-          combined total doesn&rsquo;t exceed the limit. It&rsquo;s crucial to assess potential risks carefully and set
-          a reasonable allowance value, taking into account both token price and quantity.
-        </div>
+        <div className={`${PrefixCls}-notice`}>{noticeText}</div>
       </div>
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
         <div className="btn-wrapper">
