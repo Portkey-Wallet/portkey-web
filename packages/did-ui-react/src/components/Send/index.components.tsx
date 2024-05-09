@@ -11,17 +11,7 @@ import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
 import AddressSelector from './components/AddressSelector';
 import AmountInput from './components/AmountInput';
-import {
-  TelegramPlatform,
-  WalletError,
-  did,
-  errorTip,
-  handleErrorMessage,
-  hasSocialGuardian,
-  modalMethod,
-  setLoading,
-  telegramLoginAuth,
-} from '../../utils';
+import { TelegramPlatform, WalletError, did, handleErrorMessage, modalMethod, setLoading } from '../../utils';
 import { timesDecimals } from '../../utils/converter';
 import { ZERO } from '../../constants/misc';
 import SendPreview from './components/SendPreview';
@@ -46,11 +36,6 @@ import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import ThrottleButton from '../ThrottleButton';
 import { SendBusinessKey } from '../../constants/storage';
-import { getDataFromOpenLogin, hasCurrentTelegramGuardian } from '../../utils/telegram';
-import { CrossTabPushMessageType } from '@portkey/socket';
-import { Open_Login_Guardian_Approval_Bridge } from '../../constants/telegram';
-import { IOpenLoginGuardianApprovalResponse } from '../../types/openlogin';
-import { getGuardianList } from '../SignStep/utils/getGuardians';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -246,7 +231,7 @@ function SendContent({
   }, []);
 
   const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
-  const { onApprovalSuccess, handleWithinTelegram, sendTransfer } = useMemo(() => {
+  const { onApprovalSuccess, sendTransfer } = useMemo(() => {
     const onApprovalSuccess = async (approveList: GuardianApprovedItem[]) => {
       try {
         oneTimeApprovalList.current = approveList;
@@ -262,38 +247,6 @@ function SendContent({
         }
       } catch (error) {
         throw Error('approve failed, please try again');
-      }
-    };
-
-    const handleWithinTelegram = async (data?: { accessToken?: string }) => {
-      try {
-        setLoading(true);
-
-        const params = {
-          networkType,
-          originChainId,
-          targetChainId: tokenInfo.chainId,
-          caHash,
-          operationType: OperationTypeEnum.transferApprove,
-          isErrorTip,
-          socketMethod: CrossTabPushMessageType.onSendOneTimeApproval,
-          telegramAuth: data?.accessToken,
-          telegramUserId: TelegramPlatform.getTelegramUserId(),
-        };
-        await getDataFromOpenLogin({
-          params,
-          socketMethod: [CrossTabPushMessageType.onSendOneTimeApproval],
-          openLoginBridgeURLMap: Open_Login_Guardian_Approval_Bridge,
-          needConfirm: true,
-          isRemoveLocalStorage: true,
-          removeLocalStorageKey: SendBusinessKey,
-          callback: (result) =>
-            onApprovalSuccess((result.data as IOpenLoginGuardianApprovalResponse).formatGuardiansApproved),
-        });
-      } catch (error) {
-        throw new Error(handleErrorMessage(error));
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -350,18 +303,15 @@ function SendContent({
       }
     };
 
-    return { onApprovalSuccess, handleWithinTelegram, sendTransfer };
+    return { onApprovalSuccess, sendTransfer };
   }, [
     amount,
     caHash,
     chainType,
     defaultFee.crossChain,
-    isErrorTip,
     managementAccount?.address,
     managementAccount?.privateKey,
-    networkType,
     onSuccess,
-    originChainId,
     sandboxId,
     showErrorModal,
     stage,
@@ -369,50 +319,9 @@ function SendContent({
     tokenInfo,
   ]);
 
-  const getGuardianListInTelegram = useCallback(async () => {
-    const _guardianList = await getGuardianList({
-      caHash,
-      originChainId,
-      sandboxId,
-    });
-    _guardianList.reverse();
-    return _guardianList;
-  }, [caHash, originChainId, sandboxId]);
-
   const handleOneTimeApproval = useCallback(async () => {
-    // Check Platform
-    try {
-      setLoading(true);
-
-      const guardianList = await getGuardianListInTelegram();
-      const isHasSocialGuardian = hasSocialGuardian(guardianList);
-      if (TelegramPlatform.isTelegramPlatform() && !!isHasSocialGuardian) {
-        // inside the telegram app
-        // guardian list include current telegram account
-        const isHasCurrentTelegramGuardian = hasCurrentTelegramGuardian(guardianList);
-        if (isHasCurrentTelegramGuardian) {
-          const telegramAccessToken = await telegramLoginAuth();
-          await handleWithinTelegram({ accessToken: telegramAccessToken });
-        } else {
-          // guardian list don not include current telegram account
-          await handleWithinTelegram();
-        }
-      } else {
-        // not inside telegram app
-        setApprovalVisible(true);
-      }
-    } catch (error) {
-      errorTip(
-        {
-          errorFields: 'GetGuardianList',
-          error: handleErrorMessage(error),
-        },
-        isErrorTip,
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [getGuardianListInTelegram, handleWithinTelegram, isErrorTip]);
+    setApprovalVisible(true);
+  }, []);
 
   const handleCheckTransferLimit = useCallback(async () => {
     const chainInfo = await getChain(tokenInfo.chainId);

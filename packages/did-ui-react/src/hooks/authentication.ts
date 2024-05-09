@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { ISocialLogin, NetworkType, VerifyTokenParams } from '../types';
 import {
-  TelegramPlatform,
   did,
   getGoogleUserInfo,
   parseAppleIdentityToken,
@@ -121,8 +120,6 @@ export function useVerifyTelegram() {
           network: params.networkType,
           guardianIdentifier: params.id,
         });
-        if (TelegramPlatform.isTelegramPlatform() && (params.id === TelegramPlatform.getTelegramUserId() || !params.id))
-          return;
         if (!authRes) throw new Error('Missing Response');
         accessToken = authRes?.token;
       }

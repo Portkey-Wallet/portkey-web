@@ -163,14 +163,15 @@ export const socialLoginAuthBySocket = async ({
   clientId,
   network,
   guardianIdentifier,
+  useCurrentTelegramAuth = true,
 }: {
   type: ISocialLogin;
-  guardianIdentifier?: string;
   clientId?: string;
   redirectURI?: string;
   network?: NetworkType;
   serviceUrl?: string;
-  autoTelegramAuth?: boolean;
+  guardianIdentifier?: string;
+  useCurrentTelegramAuth?: boolean;
 }): Promise<{
   token: string;
   provider: ISocialLogin;
@@ -196,7 +197,8 @@ export const socialLoginAuthBySocket = async ({
   if (
     type === 'Telegram' &&
     TelegramPlatform.isTelegramPlatform() &&
-    ((guardianIdentifier && guardianIdentifier === TelegramPlatform.getTelegramUserId()) || !guardianIdentifier)
+    ((guardianIdentifier && guardianIdentifier === TelegramPlatform.getTelegramUserId()) || !guardianIdentifier) &&
+    useCurrentTelegramAuth
   ) {
     const token = await telegramLoginAuth();
     return { token, provider: 'Telegram' };
