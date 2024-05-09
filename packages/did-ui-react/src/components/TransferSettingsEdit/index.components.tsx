@@ -12,7 +12,7 @@ import { isValidInteger } from '../../utils/reg';
 import { NetworkType, OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
-import { TelegramPlatform, did, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
 import { ELF_SYMBOL } from '../../constants/assets';
 import { getChainInfo } from '../../hooks';
@@ -24,7 +24,6 @@ import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
-import { TransferSettingBusinessKey } from '../../constants/storage';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -291,25 +290,6 @@ export default function TransferSettingsEditMain({
     setLoading(false);
   }, [getGuardianList, getVerifierInfo]);
 
-  const recoverPageDataAfterTelegramAuth = useCallback(async () => {
-    const storageValue = await did.config.storageMethod.getItem(TransferSettingBusinessKey);
-    if (storageValue && typeof storageValue === 'string') {
-      const storageValueParsed = JSON.parse(storageValue);
-      if (storageValueParsed.needGoToOpenLoginApproval) {
-        form.setFieldValue(
-          'singleLimit',
-          divDecimals(storageValueParsed.singleLimit, storageValueParsed.decimals).toFixed(),
-        );
-        form.setFieldValue(
-          'dailyLimit',
-          divDecimals(storageValueParsed.dailyLimit, storageValueParsed.decimals).toFixed(),
-        );
-        form.setFieldValue('restricted', storageValueParsed.restricted);
-        setRestrictedValue(storageValueParsed.restricted);
-      }
-    }
-  }, [form]);
-
   useEffectOnce(() => {
     getData();
 
@@ -318,8 +298,6 @@ export default function TransferSettingsEditMain({
       form.setFieldValue('dailyLimit', divDecimals(initData.defaultDailyLimit, initData.decimals).toFixed());
     }
     handleDisableCheck();
-
-    if (TelegramPlatform.isTelegramPlatform()) recoverPageDataAfterTelegramAuth();
   });
 
   return (
@@ -327,7 +305,6 @@ export default function TransferSettingsEditMain({
       <BackHeaderForPage
         title={`Transfer Settings`}
         leftCallBack={async () => {
-          did.config.storageMethod.removeItem(TransferSettingBusinessKey);
           onBack?.(initData);
         }}
       />

@@ -3,7 +3,7 @@ import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError, GuardianApprovedItem } from '../../types';
 import { ChainId, SeedTypeEnum } from '@portkey/types';
@@ -11,7 +11,7 @@ import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
 import AddressSelector from './components/AddressSelector';
 import AmountInput from './components/AmountInput';
-import { TelegramPlatform, WalletError, did, handleErrorMessage, modalMethod, setLoading } from '../../utils';
+import { WalletError, handleErrorMessage, modalMethod, setLoading } from '../../utils';
 import { timesDecimals } from '../../utils/converter';
 import { ZERO } from '../../constants/misc';
 import SendPreview from './components/SendPreview';
@@ -35,7 +35,6 @@ import singleMessage from '../CustomAnt/message';
 import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import ThrottleButton from '../ThrottleButton';
-import { SendBusinessKey } from '../../constants/storage';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -71,12 +70,6 @@ type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
 };
 
-type TSendStorageValue = {
-  assetItem: IAssetItemType;
-  extraConfig: Required<SendExtraConfig>;
-  needGoToOpenLoginApproval: boolean;
-};
-
 function SendContent({
   assetItem,
   className,
@@ -88,31 +81,29 @@ function SendContent({
   onModifyLimit,
   onModifyGuardians,
 }: SendProps) {
-  const [assetItemNew, setAssetItemNew] = useState(assetItem);
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
-  const isNFT = useMemo(() => Boolean(assetItemNew.nftInfo), [assetItemNew]);
+  const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
 
   const tokenInfo: AssetTokenExpand = useMemo(
     () => ({
-      chainId: assetItemNew.chainId as ChainId,
-      decimals: isNFT ? assetItemNew.nftInfo?.decimals || '0' : assetItemNew.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
-      address:
-        (isNFT ? assetItemNew?.nftInfo?.tokenContractAddress : assetItemNew?.tokenInfo?.tokenContractAddress) || '',
-      symbol: assetItemNew.symbol,
-      name: assetItemNew.symbol,
-      imageUrl: isNFT ? assetItemNew.nftInfo?.imageUrl : '',
-      alias: isNFT ? assetItemNew.nftInfo?.alias : '',
-      tokenId: isNFT ? assetItemNew.nftInfo?.tokenId : '',
-      balance: isNFT ? assetItemNew.nftInfo?.balance : assetItemNew.tokenInfo?.balance,
-      balanceInUsd: isNFT ? '' : assetItemNew.tokenInfo?.balanceInUsd,
-      isSeed: assetItemNew.nftInfo?.isSeed,
-      seedType: assetItemNew.nftInfo?.seedType,
+      chainId: assetItem.chainId as ChainId,
+      decimals: isNFT ? assetItem.nftInfo?.decimals || '0' : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
+      address: (isNFT ? assetItem?.nftInfo?.tokenContractAddress : assetItem?.tokenInfo?.tokenContractAddress) || '',
+      symbol: assetItem.symbol,
+      name: assetItem.symbol,
+      imageUrl: isNFT ? assetItem.nftInfo?.imageUrl : '',
+      alias: isNFT ? assetItem.nftInfo?.alias : '',
+      tokenId: isNFT ? assetItem.nftInfo?.tokenId : '',
+      balance: isNFT ? assetItem.nftInfo?.balance : assetItem.tokenInfo?.balance,
+      balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
+      isSeed: assetItem.nftInfo?.isSeed,
+      seedType: assetItem.nftInfo?.seedType,
     }),
-    [assetItemNew, isNFT],
+    [assetItem, isNFT],
   );
 
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
@@ -372,24 +363,6 @@ function SendContent({
     tokenInfo.symbol,
   ]);
 
-  const recoverPageDataAfterTelegramAuth = useCallback(async () => {
-    const storageValue = await did.config.storageMethod.getItem(SendBusinessKey);
-    if (storageValue && typeof storageValue === 'string') {
-      const storageValueParsed: TSendStorageValue = JSON.parse(storageValue);
-      if (storageValueParsed.needGoToOpenLoginApproval) {
-        setAssetItemNew(storageValueParsed.assetItem);
-        setStage(storageValueParsed.extraConfig.stage);
-        setToAccount(storageValueParsed.extraConfig.toAccount);
-        setAmount(storageValueParsed.extraConfig.amount);
-        setBalance(storageValueParsed.extraConfig.balance);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (TelegramPlatform.isTelegramPlatform()) recoverPageDataAfterTelegramAuth();
-  }, [recoverPageDataAfterTelegramAuth]);
-
   const sendHandler = useCallback(async () => {
     if (!oneTimeApprovalList.current || oneTimeApprovalList.current.length === 0) {
       try {
@@ -632,7 +605,6 @@ function SendContent({
         className="page-title"
         title={`Send ${!isNFT ? tokenInfo.symbol : ''}`}
         leftCallBack={() => {
-          did.config.storageMethod.removeItem(SendBusinessKey);
           StageObj[stage].backFun();
         }}
       />
