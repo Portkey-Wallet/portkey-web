@@ -197,6 +197,7 @@ function AssetMain({
         break;
       case AssetStep.ramp:
         storageValue = Object.assign(storageValue, {
+          selectToken,
           rampExtraConfig,
           viewPaymentSecurity,
         });
