@@ -297,7 +297,7 @@ export default function TransferSettingsEditMain({
     }
     handleDisableCheck();
   });
-  const limit = useMemo(() => {
+  const limitCalFunc = useCallback(() => {
     const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
     const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
     const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData.decimals)) : '-1';
@@ -377,8 +377,8 @@ export default function TransferSettingsEditMain({
           onError={onGuardiansApproveError}
           operationType={OperationTypeEnum.modifyTransferLimit}
           symbol={symbol}
-          singleLimit={limit.transSingleLimit}
-          dailyLimit={limit.transDailyLimit}
+          singleLimit={limitCalFunc().transSingleLimit}
+          dailyLimit={limitCalFunc().transDailyLimit}
         />
       </CommonBaseModal>
     </div>
