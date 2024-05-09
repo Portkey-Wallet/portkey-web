@@ -27,9 +27,3 @@ export const getStorageInstance = () => {
   if (!storageMethod) throw Error('Please config storageMethod');
   return storageMethod;
 };
-
-export const getDappTelegramLink = () => {
-  const socialLogin = ConfigProvider.getConfig('socialLogin') as ISocialLoginConfig;
-  if (!socialLogin?.Telegram?.dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
-  return socialLogin.Telegram.dappTelegramLink;
-};

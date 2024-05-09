@@ -55,7 +55,6 @@ interface ICustomLoginConfigHandler extends BaseAppleLoginConfig {
 }
 
 export interface ITelegramLoginConfig {
-  dappTelegramLink?: string;
   customLoginHandler?: TSocialLoginHandler;
 }
 
