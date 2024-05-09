@@ -247,6 +247,7 @@ export default function TransferSettingsEditMain({
 
         onSuccess?.(params);
       } catch (e) {
+        console.error('setTransferLimit===', e);
         errorTip(
           {
             errorFields: 'Handle Add Guardian',

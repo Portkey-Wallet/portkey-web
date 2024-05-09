@@ -110,17 +110,16 @@ export default function SetAllowanceMain({
           />
           {typeof error !== 'undefined' && <div className="error-text">{error}</div>}
         </div>
-        <div className={`${PrefixCls}-confirm-line`}>
-          {showBatchApproveToken && (
+        {showBatchApproveToken && (
+          <div className={`${PrefixCls}-confirm-line`}>
             <CustomSvg
               type={batchApproveToken ? 'Checked' : 'Unchecked'}
               style={{ width: 18, height: 18 }}
               onClick={onAllowAllTokenChange}
             />
-          )}
-          {/* <Checkbox className={`${PrefixCls}-confirm-line-checkbox`} onChange={onAllowAllTokenChange} /> */}
-          <div className={`${PrefixCls}-confirm-line-text`}>Approve multiple tokens at the same time</div>
-        </div>
+            <div className={`${PrefixCls}-confirm-line-text`}>Approve multiple tokens at the same time</div>
+          </div>
+        )}
         <div className={`${PrefixCls}-notice`}>
           The allowance you set will apply to all selected tokens, allowing the dApp to utilise them as long as the
           combined total doesn&rsquo;t exceed the limit. It&rsquo;s crucial to assess potential risks carefully and set
