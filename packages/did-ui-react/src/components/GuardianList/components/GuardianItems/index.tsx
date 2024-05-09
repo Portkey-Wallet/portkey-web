@@ -3,7 +3,7 @@ import { useCallback, memo, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { setLoading, verification, errorTip, handleErrorMessage } from '../../../../utils';
 import clsx from 'clsx';
-import { ChainId } from '@portkey/types';
+import { ChainId, TStringJSON } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
 import { OperationTypeEnum } from '@portkey/services';
@@ -18,6 +18,7 @@ interface GuardianItemProps {
   item: UserGuardianStatus;
   isErrorTip?: boolean;
   operationType?: OperationTypeEnum;
+  operationDetails?: TStringJSON;
   onError?: OnErrorFunc;
   onSend?: (item: UserGuardianItem) => void;
   onVerifying?: (item: UserGuardianItem) => void;
@@ -31,6 +32,7 @@ function GuardianItems({
   isExpired,
   isErrorTip = true,
   operationType = OperationTypeEnum.communityRecovery,
+  operationDetails,
   onError,
   onSend,
   onVerifying,
@@ -75,6 +77,7 @@ function GuardianItems({
               chainId: originChainId,
               targetChainId,
               operationType,
+              operationDetails,
             },
           },
           reCaptchaHandler,

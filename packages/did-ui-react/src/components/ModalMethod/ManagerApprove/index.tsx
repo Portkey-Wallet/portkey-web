@@ -14,6 +14,8 @@ const managerApprove = async ({
   ...props
 }: ManagerApproveProps): Promise<{
   amount: string;
+  batchApproveToken: boolean;
+  symbol: string;
   guardiansApproved: IGuardiansApproved[];
 }> =>
   new Promise((resolve, reject) => {

@@ -3543,9 +3543,9 @@
     "@types/readable-stream" "^2.3.15"
 
 "@portkey/types@^2.0.0-alpha.0":
-  version "2.4.3"
-  resolved "https://registry.npmmirror.com/@portkey/types/-/types-2.4.3.tgz#ebab0bf57d8db4ca6471a5ff7decfa74f98c5511"
-  integrity sha512-nudZvPrkeEDVZzixMfvqqrgsFoyovHFrjV2XAFXCiOtv6Jf9phQbLz1OaSnOrWwY1QUMp7wndIGqnNf/vAzZ0A==
+  version "2.4.5"
+  resolved "https://registry.npmmirror.com/@portkey/types/-/types-2.4.5.tgz#93ceedd06881a6114866eed8d5bdf4fad5911b35"
+  integrity sha512-zxKWXXDBNEWv19/uDK9gf2ctQ+pZAWJCpdPId+6+/R3hZF1FPReWotZLF0itFaQypuagsev7Ela+82Ocwr5R3w==
 
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"

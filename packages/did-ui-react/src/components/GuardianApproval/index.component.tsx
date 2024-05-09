@@ -31,14 +31,19 @@ import {
   IVerificationInfo,
   NetworkType,
 } from '../../types';
-import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import { OperationTypeEnum, GuardiansApproved, VerifyVerificationCodeResult } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { SocialLoginList } from '../../constants/guardian';
+import { SocialLoginList, OfficialWebsite, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
 import './index.less';
+import CommonModal from '../CommonModal';
+import { Button } from 'antd';
+import officialWebsiteCheck from '../../utils/officialWebsiteCheck';
+import { did } from '@portkey/did';
+import { getOperationDetails } from '../utils/operation.util';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -51,8 +56,15 @@ export interface GuardianApprovalProps {
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
   operationType: OperationTypeEnum;
-  operationDetails: TStringJSON;
   networkType: NetworkType;
+  symbol?: string;
+  amount?: number | string;
+  spender?: string;
+  toAddress?: string;
+  preVerifierId?: string;
+  newVerifierId?: string;
+  singleLimit?: string;
+  dailyLimit?: string;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -74,7 +86,14 @@ const GuardianApprovalMain = forwardRef(
       isErrorTip = true,
       wrapperStyle,
       operationType,
-      operationDetails,
+      symbol,
+      amount,
+      toAddress,
+      preVerifierId,
+      newVerifierId,
+      singleLimit,
+      dailyLimit,
+      spender,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -86,6 +105,8 @@ const GuardianApprovalMain = forwardRef(
     const [expiredTime, setExpiredTime] = useState<number>();
     const onErrorRef = useRef<GuardianApprovalProps['onError']>(onError);
     const onConfirmRef = useRef<GuardianApprovalProps['onConfirm']>(onConfirm);
+    const [isShowWarning, setShowWarning] = useState<boolean>(false);
+    const currentVerifyingGuardian = useRef<any>();
 
     useEffect(() => {
       onErrorRef.current = onError;
@@ -133,6 +154,41 @@ const GuardianApprovalMain = forwardRef(
 
     const verifyToken = useVerifyToken();
 
+    const verifyResultHandler = useCallback(
+      async (item: UserGuardianStatus, index: number, rst: VerifyVerificationCodeResult) => {
+        try {
+          setLoading(true);
+          if (!rst || !rst.verificationDoc) return;
+
+          const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
+          const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+
+          setGuardianList((v) => {
+            v[index] = {
+              ...v[index],
+              status: VerifyStatus.Verified,
+              verificationDoc: verifierInfo.verificationDoc,
+              signature: verifierInfo.signature,
+              identifierHash: guardianIdentifier,
+            };
+            return [...v];
+          });
+          setVerifyAccountIndex(undefined);
+        } catch (error) {
+          return errorTip(
+            {
+              errorFields: 'GuardianApproval',
+              error: handleErrorMessage(error),
+            },
+            isErrorTip,
+            onError,
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [isErrorTip, onError],
+    );
     const socialVerifyHandler = useCallback(
       async (item: UserGuardianStatus, index: number) => {
         try {
@@ -172,7 +228,16 @@ const GuardianApprovalMain = forwardRef(
             redirectURI,
             operationType,
             networkType,
-            operationDetails,
+            operationDetails: getOperationDetails(operationType, item, {
+              preVerifierId,
+              newVerifierId,
+              symbol,
+              amount,
+              toAddress,
+              singleLimit,
+              dailyLimit,
+              spender,
+            }),
             customLoginHandler,
           });
           if (!rst || !rst.verificationDoc) return;
@@ -204,13 +269,71 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [verifyToken, originChainId, targetChainId, operationType, networkType, operationDetails, isErrorTip, onError],
+      [
+        verifyToken,
+        originChainId,
+        targetChainId,
+        operationType,
+        networkType,
+        preVerifierId,
+        newVerifierId,
+        symbol,
+        amount,
+        toAddress,
+        singleLimit,
+        dailyLimit,
+        spender,
+        isErrorTip,
+        onError,
+      ],
     );
 
     const onVerifyingHandler = useCallback(
       async (_item: UserGuardianStatus, index: number) => {
         const isSocialLogin = SocialLoginList.includes(_item.guardianType);
-        if (isSocialLogin) return socialVerifyHandler(_item, index);
+        if (isSocialLogin) {
+          const isFirstShowWarning = await did.config.storageMethod.getItem(KEY_SHOW_WARNING);
+          if (isFirstShowWarning !== SHOW_WARNING_DIALOG) {
+            currentVerifyingGuardian.current = {
+              item: _item,
+              index: index,
+            };
+            await did.config.storageMethod.setItem(KEY_SHOW_WARNING, SHOW_WARNING_DIALOG);
+            return setShowWarning(true);
+          } else {
+            try {
+              const operationDetails = getOperationDetails(operationType, _item, {
+                preVerifierId,
+                newVerifierId,
+                symbol,
+                amount,
+                toAddress,
+                singleLimit,
+                dailyLimit,
+                spender,
+              });
+              const rst = await officialWebsiteCheck(
+                _item,
+                originChainId,
+                operationType,
+                symbol,
+                amount,
+                operationDetails,
+              );
+              console.log('rst===', rst);
+              return verifyResultHandler(_item, index, rst as VerifyVerificationCodeResult);
+            } catch (error) {
+              return errorTip(
+                {
+                  errorFields: 'GuardianApproval',
+                  error: handleErrorMessage(error),
+                },
+                isErrorTip,
+                onError,
+              );
+            }
+          }
+        }
 
         try {
           setVerifyAccountIndex(index);
@@ -229,7 +352,21 @@ const GuardianApprovalMain = forwardRef(
           );
         }
       },
-      [isErrorTip, onError, socialVerifyHandler],
+      [
+        amount,
+        dailyLimit,
+        isErrorTip,
+        newVerifierId,
+        onError,
+        operationType,
+        originChainId,
+        preVerifierId,
+        singleLimit,
+        spender,
+        symbol,
+        toAddress,
+        verifyResultHandler,
+      ],
     );
 
     const onCodeVerifyHandler = useCallback(
@@ -297,44 +434,125 @@ const GuardianApprovalMain = forwardRef(
     }, [approvalLength, alreadyApprovalLength]);
 
     return (
-      <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
-        {typeof verifyAccountIndex === 'number' ? (
-          <VerifierPage
-            targetChainId={targetChainId}
-            originChainId={originChainId}
-            operationType={operationType}
-            onBack={() => setVerifyAccountIndex(undefined)}
-            guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
-            verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
-            isLoginGuardian={guardianList[verifyAccountIndex].isLoginGuardian}
-            isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
-            accountType={guardianList[verifyAccountIndex].guardianType}
-            isErrorTip={isErrorTip}
-            verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
-            onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
-            onError={onError}
-            onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}
-          />
-        ) : (
-          <>
-            {header}
-            <GuardianList
-              originChainId={originChainId}
+      <div>
+        <CommonModal
+          type="modal"
+          closable={false}
+          open={isShowWarning}
+          className="confirm-return-modal"
+          title={<div className="security-notice">Security Notice</div>}
+          width={320}
+          getContainer={'#set-pin-wrapper'}>
+          <p className="modal-content-v2">
+            You&rsquo;ll be directed to <span className="official-website">{OfficialWebsite}</span> for verification. If
+            the site you land on doesn&rsquo;t match this link,please exercise caution and refrain from taking any
+            actions.
+          </p>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Button
+              type="primary"
+              className="go-to-verify"
+              onClick={async () => {
+                try {
+                  const currentGuardian = currentVerifyingGuardian.current;
+                  currentVerifyingGuardian.current = undefined;
+                  const operationDetails = getOperationDetails(operationType, currentGuardian, {
+                    preVerifierId,
+                    newVerifierId,
+                    symbol,
+                    amount,
+                    toAddress,
+                    singleLimit,
+                    dailyLimit,
+                    spender,
+                  });
+                  const rst = await officialWebsiteCheck(
+                    currentGuardian?.item,
+                    originChainId,
+                    operationType,
+                    symbol,
+                    amount,
+                    operationDetails,
+                  );
+                  setShowWarning(false);
+                  console.log('rst===', rst);
+                  return verifyResultHandler(
+                    currentGuardian?.item,
+                    currentGuardian?.index,
+                    rst as VerifyVerificationCodeResult,
+                  );
+                } catch (error) {
+                  return errorTip(
+                    {
+                      errorFields: 'GuardianApproval',
+                      error: handleErrorMessage(error),
+                    },
+                    isErrorTip,
+                    onError,
+                  );
+                }
+              }}>
+              Go to Verify
+            </Button>
+          </div>
+        </CommonModal>
+        <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
+          {typeof verifyAccountIndex === 'number' ? (
+            <VerifierPage
               targetChainId={targetChainId}
-              expiredTime={expiredTime}
+              originChainId={originChainId}
               operationType={operationType}
-              isFetching={isFetching}
-              approvalLength={approvalLength}
-              alreadyApprovalLength={alreadyApprovalLength}
-              guardianList={guardianList}
+              operationDetails={getOperationDetails(operationType, guardianList[verifyAccountIndex], {
+                preVerifierId,
+                newVerifierId,
+                symbol,
+                amount,
+                toAddress,
+                singleLimit,
+                dailyLimit,
+                spender,
+              })}
+              onBack={() => setVerifyAccountIndex(undefined)}
+              guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
+              verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
+              isLoginGuardian={guardianList[verifyAccountIndex].isLoginGuardian}
+              isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
+              accountType={guardianList[verifyAccountIndex].guardianType}
               isErrorTip={isErrorTip}
-              onSend={onSendCodeHandler}
-              onVerifying={onVerifyingHandler}
-              onConfirm={onConfirmHandler}
+              verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
+              onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
               onError={onError}
+              onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}
             />
-          </>
-        )}
+          ) : (
+            <>
+              {header}
+              <GuardianList
+                originChainId={originChainId}
+                targetChainId={targetChainId}
+                expiredTime={expiredTime}
+                operationType={operationType}
+                isFetching={isFetching}
+                approvalLength={approvalLength}
+                alreadyApprovalLength={alreadyApprovalLength}
+                guardianList={guardianList}
+                isErrorTip={isErrorTip}
+                preVerifierId={preVerifierId}
+                newVerifierId={newVerifierId}
+                symbol={symbol}
+                amount={amount}
+                toAddress={toAddress}
+                singleLimit={singleLimit}
+                dailyLimit={dailyLimit}
+                spender={spender}
+                onSend={onSendCodeHandler}
+                onVerifying={onVerifyingHandler}
+                onConfirm={onConfirmHandler}
+                onError={onError}
+              />
+            </>
+          )}
+        </div>
       </div>
     );
   },

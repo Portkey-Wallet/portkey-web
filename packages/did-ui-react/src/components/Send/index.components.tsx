@@ -654,6 +654,9 @@ function SendContent({
         onClose={() => setApprovalVisible(false)}
         onBack={() => setApprovalVisible(false)}
         onApprovalSuccess={onApprovalSuccess}
+        symbol={tokenInfo.symbol}
+        amount={amount}
+        toAddress={toAccount.address}
       />
     </div>
   );

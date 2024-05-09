@@ -23,6 +23,10 @@ export const verifierExistTip = 'This verifier has already been used. Please sel
 
 export const MaxVerifierNumber = 100;
 
+export const OfficialWebsite = 'https://test.portkey.finance/entry';
+export const KEY_SHOW_WARNING = 'KEY_SHOW_WARNING';
+export const SHOW_WARNING_DIALOG = '1';
+
 type AddGuardiansType = {
   value: string;
   label: string;
