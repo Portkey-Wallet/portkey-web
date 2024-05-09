@@ -215,9 +215,7 @@ export default function ManagerApproveInner({
               }));
 
               await onFinish?.({
-                amount: batchApproveToken.current
-                  ? allowance
-                  : timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
+                amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
                 batchApproveToken: batchApproveToken.current,
                 guardiansApproved: approved,
                 symbol: batchApproveToken.current ? '*' : symbol,
