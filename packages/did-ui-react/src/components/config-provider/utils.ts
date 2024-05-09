@@ -27,3 +27,9 @@ export const getStorageInstance = () => {
   if (!storageMethod) throw Error('Please config storageMethod');
   return storageMethod;
 };
+
+export const getTelegramBotId = () => {
+  const socialLogin = ConfigProvider.getConfig('socialLogin') as ISocialLoginConfig;
+  if (!socialLogin?.Telegram?.botId) throw Error('Please set Telegram botId in GlobalConfig');
+  return socialLogin.Telegram.botId;
+};

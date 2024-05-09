@@ -1,4 +1,4 @@
-import { TelegramWebappInitData } from '@portkey/types';
+import { TGetTelegramAuthTokenParams } from '@portkey/types';
 import { UserGuardianStatus } from '../types';
 import { TelegramPlatform, did } from '.';
 
@@ -8,6 +8,6 @@ export function hasCurrentTelegramGuardian(guardianList?: UserGuardianStatus[]) 
   );
 }
 
-export async function generateAccessTokenByPortkeyServer(telegramUserInfo: TelegramWebappInitData) {
-  return await did.services.getTelegramAuthToken(telegramUserInfo);
+export async function generateAccessTokenByPortkeyServer(params: TGetTelegramAuthTokenParams) {
+  return await did.services.getTelegramAuthToken(params);
 }

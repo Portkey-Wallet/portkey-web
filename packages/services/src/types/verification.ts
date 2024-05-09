@@ -95,6 +95,10 @@ export type VerifyTwitterTokenHeader = {
   [x: string]: string;
 };
 
+export type TGetTelegramAuthTokenParams = TelegramWebappInitData & {
+  bot_id: string;
+};
+
 export type TGetTelegramAuthTokenResult = {
   token: string;
 };
@@ -114,5 +118,5 @@ export interface IVerificationService {
   verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
-  getTelegramAuthToken(params: TelegramWebappInitData): Promise<TGetTelegramAuthTokenResult>;
+  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult>;
 }

@@ -15,6 +15,11 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     baseURL: 'https://aa-portkey-test.portkey.finance',
   },
+  socialLogin: {
+    Telegram: {
+      botId: 'Dapp_V5_Bot',
+    },
+  },
 });
 
 export default function DappWebapp() {

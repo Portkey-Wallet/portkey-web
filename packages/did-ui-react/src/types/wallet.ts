@@ -55,6 +55,7 @@ interface ICustomLoginConfigHandler extends BaseAppleLoginConfig {
 }
 
 export interface ITelegramLoginConfig {
+  botId?: string;
   customLoginHandler?: TSocialLoginHandler;
 }
 
