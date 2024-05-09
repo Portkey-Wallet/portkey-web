@@ -38,7 +38,6 @@ interface SocialLoginProps {
   networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
-  autoTelegramAuth?: boolean;
   onBack?: () => void;
   onFinish?: SocialLoginFinishHandler;
   switchGuardianType?: (type: IWeb2Login) => void;
