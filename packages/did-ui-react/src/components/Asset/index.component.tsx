@@ -25,6 +25,7 @@ import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
 import Guardian from '../Guardian';
 import MenuListMain from '../MenuList/index.components';
+import TokenAllowanceDetail from '../TokenAllowanceDetail';
 import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
@@ -56,6 +57,7 @@ export enum AssetStep {
   transferSettingsEdit = 'transferSettingsEdit',
   deleteAccount = 'deleteAccount',
   tokenAllowance = 'tokenAllowance',
+  tokenAllowanceDetail = 'tokenAllowanceDetail',
 }
 
 export interface AssetMainProps
@@ -536,6 +538,17 @@ function AssetMain({
             />
           )}
 
+          {assetStep === AssetStep.tokenAllowanceDetail && (
+            // todo_wade: change back to tokenAllowance
+            <TokenAllowanceDetail
+              contractAddress={'2f1ByvZjLfFFsPYJdR3yuH5hLJeTeSdx2cMziHmyUYjrScMCkw'}
+              url={'https://schrodingernft.ai'}
+              icon={'https://schrodingernft.ai/_next/static/media/schrodinger.2cd50b91.jpeg'}
+              name={'SchrodingerNFT'}
+              allowance={100000000}
+              onBack={() => setAssetStep(AssetStep.walletSecurity)}
+          }
+          
           {assetStep === AssetStep.tokenAllowance && (
             <TokenAllowance
               onClickItem={() => {
