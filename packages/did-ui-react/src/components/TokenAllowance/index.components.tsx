@@ -25,18 +25,7 @@ export default function TokenAllowanceMain(props: TokenAllowanceProps) {
     updateAllowanceList();
   }, [updateAllowanceList]);
 
-  const { totalRecordCount } = allowanceList;
-
-  const list: AllowanceItem[] = [
-    {
-      icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_VTsTN947wxfPvR6azPju20BotT7BNvh_VZLnjduuNQ&s',
-      name: 'meme',
-      allowance: 100,
-      chainId: 'AELF',
-      contractAddress: '0x123',
-      url: 'https://encrypted-tbn0.gstatic.com/',
-    },
-  ];
+  const { data: list, totalRecordCount } = allowanceList;
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-payment-security-wrapper', className)}>

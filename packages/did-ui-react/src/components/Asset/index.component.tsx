@@ -7,7 +7,7 @@ import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
-import { IAssetItemType, ITransferLimitItem, IUserTokenItem } from '@portkey/services';
+import { IAssetItemType, ITransferLimitItem, IUserTokenItem, AllowanceItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
@@ -101,6 +101,7 @@ function AssetMain({
   const [isMixShowRamp, setIsMixShowRamp] = useState<boolean>(isShowRamp);
   const [isMixShowBuy, setIsMixShowBuy] = useState<boolean>(isShowRampBuy);
   const [isMixShowSell, setIsMixShowSell] = useState<boolean>(isShowRampSell);
+  const [originalAllowanceItem, setOriginalAllowanceItem] = useState<AllowanceItem | undefined>();
   const getRampEntry = useCallback(async () => {
     try {
       const { isRampShow, isBuyShow, isSellShow } = await mixRampShow({
@@ -538,21 +539,22 @@ function AssetMain({
             />
           )}
 
-          {assetStep === AssetStep.tokenAllowanceDetail && (
-            // todo_wade: change back to tokenAllowance
+          {assetStep === AssetStep.tokenAllowanceDetail && originalAllowanceItem && (
             <TokenAllowanceDetail
-              contractAddress={'2f1ByvZjLfFFsPYJdR3yuH5hLJeTeSdx2cMziHmyUYjrScMCkw'}
-              url={'https://schrodingernft.ai'}
-              icon={'https://schrodingernft.ai/_next/static/media/schrodinger.2cd50b91.jpeg'}
-              name={'SchrodingerNFT'}
-              allowance={100000000}
+              contractAddress={originalAllowanceItem.contractAddress}
+              url={originalAllowanceItem.url}
+              icon={originalAllowanceItem.icon}
+              name={originalAllowanceItem.name}
+              allowance={originalAllowanceItem.allowance}
               onBack={() => setAssetStep(AssetStep.walletSecurity)}
-          }
-          
+            />
+          )}
+
           {assetStep === AssetStep.tokenAllowance && (
             <TokenAllowance
-              onClickItem={() => {
-                alert(111);
+              onClickItem={(item) => {
+                setOriginalAllowanceItem(item);
+                setAssetStep(AssetStep.tokenAllowanceDetail);
               }}
               onBack={() => {
                 setAssetStep(AssetStep.walletSecurity);
