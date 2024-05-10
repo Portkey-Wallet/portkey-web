@@ -24,6 +24,7 @@ export default function TokenAllowanceMain(props: TokenAllowanceProps) {
   console.log(allowanceList);
 
   const loadMore = useCallback(async () => {
+    if (loadingRef.current) return;
     setLoading(true);
     loadingRef.current = true;
     try {
