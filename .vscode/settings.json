@@ -1,5 +1,8 @@
 {
     "cSpell.enableFiletypes": [
         "typescriptreact"
+    ],
+    "cSpell.words": [
+        "clsx"
     ]
 }

@@ -1,5 +1,6 @@
 import {
   IActivityService,
+  IAllowanceService,
   IAssetsService,
   ICommunityRecoveryService,
   IRampService,
@@ -16,4 +17,5 @@ export interface IServices extends ICommunityRecoveryService {
   readonly transaction: ITransactionService;
   readonly activity: IActivityService;
   readonly security: ISecurityService;
+  readonly allowance: IAllowanceService;
 }

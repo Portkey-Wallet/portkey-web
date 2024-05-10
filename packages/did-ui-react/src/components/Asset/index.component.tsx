@@ -7,7 +7,7 @@ import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
-import { IAssetItemType, ITransferLimitItem, IUserTokenItem } from '@portkey/services';
+import { IAssetItemType, ITransferLimitItem, IUserTokenItem, AllowanceItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
@@ -25,6 +25,7 @@ import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
 import Guardian from '../Guardian';
 import MenuListMain from '../MenuList/index.components';
+import TokenAllowanceDetail from '../TokenAllowanceDetail';
 import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
@@ -37,6 +38,7 @@ import { mixRampShow } from '../Ramp/utils';
 import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
+import TokenAllowance from '../TokenAllowance';
 
 export enum AssetStep {
   overview = 'overview',
@@ -54,6 +56,8 @@ export enum AssetStep {
   transferSettings = 'transferSettings',
   transferSettingsEdit = 'transferSettingsEdit',
   deleteAccount = 'deleteAccount',
+  tokenAllowance = 'tokenAllowance',
+  tokenAllowanceDetail = 'tokenAllowanceDetail',
 }
 
 export interface AssetMainProps
@@ -97,6 +101,7 @@ function AssetMain({
   const [isMixShowRamp, setIsMixShowRamp] = useState<boolean>(isShowRamp);
   const [isMixShowBuy, setIsMixShowBuy] = useState<boolean>(isShowRampBuy);
   const [isMixShowSell, setIsMixShowSell] = useState<boolean>(isShowRampSell);
+  const [originalAllowanceItem, setOriginalAllowanceItem] = useState<AllowanceItem | undefined>();
   const getRampEntry = useCallback(async () => {
     try {
       const { isRampShow, isBuyShow, isSellShow } = await mixRampShow({
@@ -234,6 +239,7 @@ function AssetMain({
 
   const WalletSecurityMenuList = useWalletSecurityMenuList({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
+    onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
   });
 
   const getLimitFromContract = useCallback(
@@ -529,6 +535,29 @@ function AssetMain({
                 const res = await getLimitFromContract(data);
                 setViewPaymentSecurity({ ...data, ...res });
                 setAssetStep(AssetStep.transferSettings);
+              }}
+            />
+          )}
+
+          {assetStep === AssetStep.tokenAllowanceDetail && originalAllowanceItem && (
+            <TokenAllowanceDetail
+              contractAddress={originalAllowanceItem.contractAddress}
+              url={originalAllowanceItem.url}
+              icon={originalAllowanceItem.icon}
+              name={originalAllowanceItem.name}
+              allowance={originalAllowanceItem.allowance}
+              onBack={() => setAssetStep(AssetStep.walletSecurity)}
+            />
+          )}
+
+          {assetStep === AssetStep.tokenAllowance && (
+            <TokenAllowance
+              onClickItem={(item) => {
+                setOriginalAllowanceItem(item);
+                setAssetStep(AssetStep.tokenAllowanceDetail);
+              }}
+              onBack={() => {
+                setAssetStep(AssetStep.walletSecurity);
               }}
             />
           )}

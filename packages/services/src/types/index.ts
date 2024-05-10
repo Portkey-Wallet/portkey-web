@@ -47,4 +47,5 @@ export * from './assets';
 export * from './token';
 export * from './transaction';
 export * from './activity';
+export * from './allowance';
 export * from './security';
