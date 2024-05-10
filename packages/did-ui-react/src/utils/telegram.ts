@@ -1,4 +1,4 @@
-import { TGetTelegramAuthTokenParams } from '@portkey/types';
+import { TGetTelegramAuthTokenParams } from '@portkey/services';
 import { UserGuardianStatus } from '../types';
 import { TelegramPlatform, did } from '.';
 
