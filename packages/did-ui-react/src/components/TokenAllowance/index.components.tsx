@@ -1,13 +1,14 @@
 import { AllowanceItem } from '@portkey/services';
 import clsx from 'clsx';
 import { useAllowanceList } from '../../hooks/allowance';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { List } from 'antd-mobile';
 import '../PaymentSecurity/index.less';
 import LoadingMore from '../LoadingMore';
 import MenuItem from '../MenuItem';
 import TokenImageDisplay from '../TokenImageDisplay';
 import BackHeaderForPage from '../BackHeaderForPage';
+import { setLoading } from '../../utils';
 
 export interface TokenAllowanceProps {
   onClickItem: (item: AllowanceItem) => void;
@@ -18,12 +19,26 @@ export interface TokenAllowanceProps {
 
 export default function TokenAllowanceMain(props: TokenAllowanceProps) {
   const { onClickItem, className, onBack, wrapperStyle } = props;
-  const { allowanceList, updateAllowanceList } = useAllowanceList({ step: 10 });
+  const { allowanceList, fetchMoreAllowanceList } = useAllowanceList({ step: 10 });
+  const loadingRef = useRef<boolean>(false);
   console.log(allowanceList);
 
+  const loadMore = useCallback(async () => {
+    setLoading(true);
+    loadingRef.current = true;
+    try {
+      await fetchMoreAllowanceList();
+    } catch (e) {
+      console.error('fetchMoreAllowanceList fail', e);
+    } finally {
+      setLoading(false);
+      loadingRef.current = false;
+    }
+  }, [fetchMoreAllowanceList]);
+
   useEffect(() => {
-    updateAllowanceList();
-  }, [updateAllowanceList]);
+    loadMore();
+  }, [fetchMoreAllowanceList, loadMore]);
 
   const { data: list, totalRecordCount } = allowanceList;
 
@@ -50,7 +65,7 @@ export default function TokenAllowanceMain(props: TokenAllowanceProps) {
               </List.Item>
             ))}
           </List>
-          <LoadingMore hasMore={list?.length < totalRecordCount} loadMore={updateAllowanceList} className="load-more" />
+          <LoadingMore hasMore={list?.length < totalRecordCount} loadMore={loadMore} className="load-more" />
         </>
       )}
       {list?.length === 0 && <div className="no-data-text">{`No allowance`}</div>}

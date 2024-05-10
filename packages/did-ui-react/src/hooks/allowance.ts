@@ -9,7 +9,7 @@ export const useAllowanceList = ({ step = 10 }: { step?: number }) => {
     data: [],
   });
   const [{ caAddressInfos }] = usePortkeyAsset();
-  const updateAllowanceList = useCallback(async () => {
+  const fetchMoreAllowanceList = useCallback(async () => {
     if (!caAddressInfos) throw new Error('caAddressInfos null');
     const { data } = allowanceList;
     const res: GetAllowanceResult | undefined = await did.services.allowance.getAllowanceList({
@@ -26,6 +26,6 @@ export const useAllowanceList = ({ step = 10 }: { step?: number }) => {
   }, [allowanceList, caAddressInfos, step]);
   return {
     allowanceList,
-    updateAllowanceList,
+    fetchMoreAllowanceList,
   };
 };
