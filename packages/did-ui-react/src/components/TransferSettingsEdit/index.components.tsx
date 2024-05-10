@@ -303,7 +303,7 @@ export default function TransferSettingsEditMain({
     const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
     const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData.decimals)) : '-1';
     return { transDailyLimit, transSingleLimit };
-  };
+  }, [form, initData.decimals]);
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
       <BackHeaderForPage title={`Transfer Settings`} leftCallBack={() => onBack?.(initData)} />
