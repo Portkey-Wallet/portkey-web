@@ -14,7 +14,6 @@ import './index.less';
 
 export interface CryptoDesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
-  autoTelegramAuth?: boolean;
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
@@ -31,7 +30,6 @@ export default function CryptoDesignBaseCom({
   privacyPolicy,
   loginMethodsOrder,
   recommendIndexes,
-  autoTelegramAuth,
   onError,
   onSuccess,
   validateEmail,
@@ -142,7 +140,6 @@ export default function CryptoDesignBaseCom({
           networkType={networkType}
           loginMethodsOrder={loginMethodsOrder}
           recommendIndexes={recommendIndexes}
-          autoTelegramAuth={autoTelegramAuth}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={onFinish}
           validatePhone={_validatePhone}

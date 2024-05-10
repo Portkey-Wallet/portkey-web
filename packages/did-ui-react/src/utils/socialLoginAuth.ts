@@ -3,6 +3,7 @@ import {
   getCustomNetworkType,
   getServiceUrl,
   getStorageInstance,
+  getTelegramBotId,
 } from '../components/config-provider/utils';
 import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '../constants';
 import { ISocialLogin, NetworkType } from '../types';
@@ -154,7 +155,8 @@ export const socialLoginAuthOpener = ({
 export const telegramLoginAuth = async () => {
   const telegramUserInfo = TelegramPlatform.getInitData();
   if (!telegramUserInfo) throw new Error('Telegram user info is not found');
-  const accessToken = await generateAccessTokenByPortkeyServer(telegramUserInfo);
+  const telegramBotId = getTelegramBotId();
+  const accessToken = await generateAccessTokenByPortkeyServer({ ...telegramUserInfo, bot_id: telegramBotId });
   return accessToken.token;
 };
 
@@ -163,14 +165,15 @@ export const socialLoginAuthBySocket = async ({
   clientId,
   network,
   guardianIdentifier,
+  useCurrentTelegramAuth = true,
 }: {
   type: ISocialLogin;
-  guardianIdentifier?: string;
   clientId?: string;
   redirectURI?: string;
   network?: NetworkType;
   serviceUrl?: string;
-  autoTelegramAuth?: boolean;
+  guardianIdentifier?: string;
+  useCurrentTelegramAuth?: boolean;
 }): Promise<{
   token: string;
   provider: ISocialLogin;
@@ -196,7 +199,8 @@ export const socialLoginAuthBySocket = async ({
   if (
     type === 'Telegram' &&
     TelegramPlatform.isTelegramPlatform() &&
-    ((guardianIdentifier && guardianIdentifier === TelegramPlatform.getTelegramUserId()) || !guardianIdentifier)
+    ((guardianIdentifier && guardianIdentifier === TelegramPlatform.getTelegramUserId()) || !guardianIdentifier) &&
+    useCurrentTelegramAuth
   ) {
     const token = await telegramLoginAuth();
     return { token, provider: 'Telegram' };

@@ -17,7 +17,7 @@ ConfigProvider.setGlobalConfig({
   },
   socialLogin: {
     Telegram: {
-      dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappv5',
+      botId: 'Dapp_V5_Bot',
     },
   },
 });

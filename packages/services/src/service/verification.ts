@@ -13,10 +13,10 @@ import {
   VerifierSocialTokenParams,
   VerifyTwitterTokenHeader,
   TGetTelegramAuthTokenResult,
+  TGetTelegramAuthTokenParams,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
-import { TelegramWebappInitData } from '@portkey/types';
 
 export class Verification<T extends IBaseRequest = IBaseRequest>
   extends BaseService<T>
@@ -105,7 +105,7 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
-  getTelegramAuthToken(params: TelegramWebappInitData): Promise<TGetTelegramAuthTokenResult> {
+  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult> {
     return this._request.send({
       method: 'GET',
       url: '/api/app/telegramAuth/token',

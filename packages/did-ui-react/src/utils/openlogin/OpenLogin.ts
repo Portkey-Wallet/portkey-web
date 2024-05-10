@@ -64,13 +64,8 @@ class OpenLogin {
       url: `${this.baseUrl}/social-start`,
       queryParams: dataObject,
       socketMethod: [CrossTabPushMessageType.onAuthStatusChanged],
+      needConfirm: true,
     });
-
-    // const result = {
-    //   token:
-    //     'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI1OTkwODQ4MDM3IiwiYXV0aERhdGUiOiIxNzEyNTI4NjEwIiwiZmlyc3ROYW1lIjoiQXVyb3JhIiwiaGFzaCI6ImE5NjhhNDBiMmY0MTJhMzE3ZWQxM2IwODE0ZTY4MmNlMDM0OThlNzgxZTk3MTllMWI2NzRiZTg4ZWJjMWNiMGYiLCJuYmYiOjE3MTE1MTgzOTEsImV4cCI6MTcxMTUyMTk5MSwiaXNzIjoiUG9ydEtleSIsImF1ZCI6IlBvcnRLZXkifQ.GMUVh2ZoWH0fL13sDwSKdA9Z1zcqgOKph5VZP37JmqAiUfW9gCxmpsWUhcG-ZysBhfAOG5UoP7JR8yFcgCVBT37YXF-RtA0dBl65k1W7mse1e1fUmvOgWJQY2Jdz4VMtT_JY7T6fF7SB63vNwBSNKo1GGanJPLMy4ZGVupF6TNHIiBYzvrKH-j32BS5EJ1rEB4yEsH49Y2eBpTmKDZd_mlisfM2lc5VOe5zv2cLBuUVMdAsQHYI-Dh0GZV2xbYcA_EqtHfkO7Gwjs0T-K5LCsc5EInCiScpe0lQPCMTML_4y1T-fKPMY0MTG0r6dZwq7rKDbLCMFTxS-EUDTGvuKEA',
-    //   provider: 'Telegram' as ISocialLogin,
-    // };
 
     if (!result) return null;
     if (this.options.uxMode === UX_MODE.REDIRECT) return null;

@@ -2,7 +2,6 @@ import { IListen } from './signalr';
 
 export enum CrossTabPushMessageType {
   onAuthStatusChanged = 'onAuthStatusChanged',
-  onSavePublicKey = 'onSavePublicKey',
   onSetLoginGuardianResult = 'onSetLoginGuardianResult',
   onAddGuardianResult = 'onAddGuardianResult',
   onRemoveGuardianResult = 'onRemoveGuardianResult',
@@ -11,7 +10,6 @@ export enum CrossTabPushMessageType {
   onCheckSellResult = 'onCheckSellResult',
   onTransferSettingApproval = 'onTransferSettingApproval',
   onSendOneTimeApproval = 'onSendOneTimeApproval',
-  onGetTelegramAuth = 'onGetTelegramAuth',
 }
 
 export type TAuthFinishResult = {
@@ -21,13 +19,6 @@ export type TAuthFinishResult = {
 };
 
 export interface IOpenloginSignalr {
-  onSavePublicKey<T>(
-    params: {
-      requestId: string;
-    },
-    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
-  ): IListen;
-
   onAuthStatusChanged(
     params: {
       requestId: string;
@@ -89,13 +80,6 @@ export interface IOpenloginSignalr {
       requestId: string;
     },
     callback: (data: string | null, methodName?: CrossTabPushMessageType) => void,
-  ): IListen;
-
-  onGetTelegramAuth<T>(
-    params: {
-      requestId: string;
-    },
-    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
   ): IListen;
 }
 

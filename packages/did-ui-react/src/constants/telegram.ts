@@ -1,11 +1,6 @@
 import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '.';
 import { TOpenLoginBridgeURL } from '../types/openlogin';
 
-export enum Telegram_Link_Params {
-  GetAuthToken = 'GetAuthToken',
-  CanGetAuthToken = 'CanGetAuthToken',
-}
-
 export const Open_Login_Bridge: TOpenLoginBridgeURL = {
   online: {
     MAINNET: WEB_PAGE,
@@ -54,3 +49,7 @@ export const Open_Login_Guardian_Approval_Bridge: TOpenLoginBridgeURL = {
 };
 
 export const PORTKEY_SDK_TELEGRAM_USER_ID = 'portkey_sdk_telegram_user_id';
+
+export const TELEGRAM_API_SRC = 'https://telegram.org/js/telegram-web-app.js';
+
+export const TELEGRAM_API_SCRIPT_ID = 'telegram-web-app';

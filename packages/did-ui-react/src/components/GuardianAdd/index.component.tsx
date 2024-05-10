@@ -12,6 +12,7 @@ import {
   getGoogleUserInfo,
   handleErrorMessage,
   handleVerificationDoc,
+  hasCurrentTelegramGuardian,
   parseAppleIdentityToken,
   parseFacebookToken,
   parseTelegramToken,
@@ -305,19 +306,11 @@ function GuardianAdd({
     return info;
   }, []);
 
-  const hasCurrentTelegramUserGuardian = useMemo(() => {
-    return guardianList?.some(
-      (item) =>
-        item.guardianType === AccountTypeEnum[AccountTypeEnum.Telegram] &&
-        item.guardianIdentifier === telegramInfo?.userId,
-    );
-  }, [guardianList, telegramInfo?.userId]);
-
   const socialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
         let token = '';
-        if (v === 'Telegram' && telegramInfo?.accessToken && !hasCurrentTelegramUserGuardian) {
+        if (v === 'Telegram' && telegramInfo?.accessToken && !hasCurrentTelegramGuardian(guardianList)) {
           token = telegramInfo.accessToken;
         } else {
           const { clientId, redirectURI } = socialBasic(v) || {};
@@ -343,15 +336,7 @@ function GuardianAdd({
         );
       }
     },
-    [
-      hasCurrentTelegramUserGuardian,
-      isErrorTip,
-      networkType,
-      onError,
-      socialBasic,
-      socialUserInfo,
-      telegramInfo?.accessToken,
-    ],
+    [guardianList, isErrorTip, networkType, onError, socialBasic, socialUserInfo, telegramInfo?.accessToken],
   );
 
   const socialVerify = useCallback(

@@ -1,5 +1,5 @@
 import { CrossTabPushMessageType } from '@portkey/socket';
-import { TelegramWebappInitData } from '@portkey/types';
+import { TGetTelegramAuthTokenParams } from '@portkey/services';
 import {
   getCommunicationSocketUrl,
   getCustomNetworkType,
@@ -18,8 +18,8 @@ export function hasCurrentTelegramGuardian(guardianList?: UserGuardianStatus[]) 
   );
 }
 
-export async function generateAccessTokenByPortkeyServer(telegramUserInfo: TelegramWebappInitData) {
-  return await did.services.getTelegramAuthToken(telegramUserInfo);
+export async function generateAccessTokenByPortkeyServer(params: TGetTelegramAuthTokenParams) {
+  return await did.services.getTelegramAuthToken(params);
 }
 
 export async function getDataFromOpenLogin({
@@ -53,18 +53,14 @@ export async function getDataFromOpenLogin({
     serviceURI: serviceURI,
     socketURI,
     currentStorage: getStorageInstance(),
-    // sdkUrl: Open_Login_Bridge.local,
   });
-  console.log('=== openlogin', openlogin);
 
-  console.log('=== params', params);
   const result = await openlogin.openloginHandler({
     url: openLoginBridgeURLMap[ctw][networkType],
     queryParams: params,
     socketMethod,
     needConfirm,
   });
-  console.log('====== result', result);
   if (!result?.data) return null;
   if (isRemoveLocalStorage && removeLocalStorageKey) await did.config.storageMethod.removeItem(removeLocalStorageKey);
   await callback(result as Parameters<typeof callback>[0]);

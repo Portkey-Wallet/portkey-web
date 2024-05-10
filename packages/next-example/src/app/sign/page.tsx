@@ -27,9 +27,6 @@ ConfigProvider.setGlobalConfig({
       websiteName: 'website demo',
       websiteIcon: '',
     },
-    Telegram: {
-      dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappv5',
-    },
   },
   loginConfig: {
     loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Apple', 'Scan'],

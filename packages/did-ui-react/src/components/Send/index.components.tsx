@@ -3,7 +3,7 @@ import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { ReactElement, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError, GuardianApprovedItem } from '../../types';
 import { ChainId, SeedTypeEnum } from '@portkey/types';
@@ -11,17 +11,7 @@ import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
 import AddressSelector from './components/AddressSelector';
 import AmountInput from './components/AmountInput';
-import {
-  TelegramPlatform,
-  WalletError,
-  did,
-  errorTip,
-  handleErrorMessage,
-  hasSocialGuardian,
-  modalMethod,
-  setLoading,
-  telegramLoginAuth,
-} from '../../utils';
+import { WalletError, handleErrorMessage, modalMethod, setLoading } from '../../utils';
 import { timesDecimals } from '../../utils/converter';
 import { ZERO } from '../../constants/misc';
 import SendPreview from './components/SendPreview';
@@ -45,12 +35,6 @@ import singleMessage from '../CustomAnt/message';
 import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import ThrottleButton from '../ThrottleButton';
-import { SendBusinessKey } from '../../constants/storage';
-import { getDataFromOpenLogin, hasCurrentTelegramGuardian } from '../../utils/telegram';
-import { CrossTabPushMessageType } from '@portkey/socket';
-import { Open_Login_Guardian_Approval_Bridge } from '../../constants/telegram';
-import { IOpenLoginGuardianApprovalResponse } from '../../types/openlogin';
-import { getGuardianList } from '../SignStep/utils/getGuardians';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -86,12 +70,6 @@ type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
 };
 
-type TSendStorageValue = {
-  assetItem: IAssetItemType;
-  extraConfig: Required<SendExtraConfig>;
-  needGoToOpenLoginApproval: boolean;
-};
-
 function SendContent({
   assetItem,
   className,
@@ -103,31 +81,29 @@ function SendContent({
   onModifyLimit,
   onModifyGuardians,
 }: SendProps) {
-  const [assetItemNew, setAssetItemNew] = useState(assetItem);
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
-  const isNFT = useMemo(() => Boolean(assetItemNew.nftInfo), [assetItemNew]);
+  const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
 
   const tokenInfo: AssetTokenExpand = useMemo(
     () => ({
-      chainId: assetItemNew.chainId as ChainId,
-      decimals: isNFT ? assetItemNew.nftInfo?.decimals || '0' : assetItemNew.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
-      address:
-        (isNFT ? assetItemNew?.nftInfo?.tokenContractAddress : assetItemNew?.tokenInfo?.tokenContractAddress) || '',
-      symbol: assetItemNew.symbol,
-      name: assetItemNew.symbol,
-      imageUrl: isNFT ? assetItemNew.nftInfo?.imageUrl : '',
-      alias: isNFT ? assetItemNew.nftInfo?.alias : '',
-      tokenId: isNFT ? assetItemNew.nftInfo?.tokenId : '',
-      balance: isNFT ? assetItemNew.nftInfo?.balance : assetItemNew.tokenInfo?.balance,
-      balanceInUsd: isNFT ? '' : assetItemNew.tokenInfo?.balanceInUsd,
-      isSeed: assetItemNew.nftInfo?.isSeed,
-      seedType: assetItemNew.nftInfo?.seedType,
+      chainId: assetItem.chainId as ChainId,
+      decimals: isNFT ? assetItem.nftInfo?.decimals || '0' : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
+      address: (isNFT ? assetItem?.nftInfo?.tokenContractAddress : assetItem?.tokenInfo?.tokenContractAddress) || '',
+      symbol: assetItem.symbol,
+      name: assetItem.symbol,
+      imageUrl: isNFT ? assetItem.nftInfo?.imageUrl : '',
+      alias: isNFT ? assetItem.nftInfo?.alias : '',
+      tokenId: isNFT ? assetItem.nftInfo?.tokenId : '',
+      balance: isNFT ? assetItem.nftInfo?.balance : assetItem.tokenInfo?.balance,
+      balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
+      isSeed: assetItem.nftInfo?.isSeed,
+      seedType: assetItem.nftInfo?.seedType,
     }),
-    [assetItemNew, isNFT],
+    [assetItem, isNFT],
   );
 
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
@@ -246,7 +222,7 @@ function SendContent({
   }, []);
 
   const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
-  const { onApprovalSuccess, handleWithinTelegram, sendTransfer } = useMemo(() => {
+  const { onApprovalSuccess, sendTransfer } = useMemo(() => {
     const onApprovalSuccess = async (approveList: GuardianApprovedItem[]) => {
       try {
         oneTimeApprovalList.current = approveList;
@@ -262,38 +238,6 @@ function SendContent({
         }
       } catch (error) {
         throw Error('approve failed, please try again');
-      }
-    };
-
-    const handleWithinTelegram = async (data?: { accessToken?: string }) => {
-      try {
-        setLoading(true);
-
-        const params = {
-          networkType,
-          originChainId,
-          targetChainId: tokenInfo.chainId,
-          caHash,
-          operationType: OperationTypeEnum.transferApprove,
-          isErrorTip,
-          socketMethod: CrossTabPushMessageType.onSendOneTimeApproval,
-          telegramAuth: data?.accessToken,
-          telegramUserId: TelegramPlatform.getTelegramUserId(),
-        };
-        await getDataFromOpenLogin({
-          params,
-          socketMethod: [CrossTabPushMessageType.onSendOneTimeApproval],
-          openLoginBridgeURLMap: Open_Login_Guardian_Approval_Bridge,
-          needConfirm: true,
-          isRemoveLocalStorage: true,
-          removeLocalStorageKey: SendBusinessKey,
-          callback: (result) =>
-            onApprovalSuccess((result.data as IOpenLoginGuardianApprovalResponse).formatGuardiansApproved),
-        });
-      } catch (error) {
-        throw new Error(handleErrorMessage(error));
-      } finally {
-        setLoading(false);
       }
     };
 
@@ -350,18 +294,15 @@ function SendContent({
       }
     };
 
-    return { onApprovalSuccess, handleWithinTelegram, sendTransfer };
+    return { onApprovalSuccess, sendTransfer };
   }, [
     amount,
     caHash,
     chainType,
     defaultFee.crossChain,
-    isErrorTip,
     managementAccount?.address,
     managementAccount?.privateKey,
-    networkType,
     onSuccess,
-    originChainId,
     sandboxId,
     showErrorModal,
     stage,
@@ -369,50 +310,9 @@ function SendContent({
     tokenInfo,
   ]);
 
-  const getGuardianListInTelegram = useCallback(async () => {
-    const _guardianList = await getGuardianList({
-      caHash,
-      originChainId,
-      sandboxId,
-    });
-    _guardianList.reverse();
-    return _guardianList;
-  }, [caHash, originChainId, sandboxId]);
-
   const handleOneTimeApproval = useCallback(async () => {
-    // Check Platform
-    try {
-      setLoading(true);
-
-      const guardianList = await getGuardianListInTelegram();
-      const isHasSocialGuardian = hasSocialGuardian(guardianList);
-      if (TelegramPlatform.isTelegramPlatform() && !!isHasSocialGuardian) {
-        // inside the telegram app
-        // guardian list include current telegram account
-        const isHasCurrentTelegramGuardian = hasCurrentTelegramGuardian(guardianList);
-        if (isHasCurrentTelegramGuardian) {
-          const telegramAccessToken = await telegramLoginAuth();
-          await handleWithinTelegram({ accessToken: telegramAccessToken });
-        } else {
-          // guardian list don not include current telegram account
-          await handleWithinTelegram();
-        }
-      } else {
-        // not inside telegram app
-        setApprovalVisible(true);
-      }
-    } catch (error) {
-      errorTip(
-        {
-          errorFields: 'GetGuardianList',
-          error: handleErrorMessage(error),
-        },
-        isErrorTip,
-      );
-    } finally {
-      setLoading(false);
-    }
-  }, [getGuardianListInTelegram, handleWithinTelegram, isErrorTip]);
+    setApprovalVisible(true);
+  }, []);
 
   const handleCheckTransferLimit = useCallback(async () => {
     const chainInfo = await getChain(tokenInfo.chainId);
@@ -462,24 +362,6 @@ function SendContent({
     tokenInfo.decimals,
     tokenInfo.symbol,
   ]);
-
-  const recoverPageDataAfterTelegramAuth = useCallback(async () => {
-    const storageValue = await did.config.storageMethod.getItem(SendBusinessKey);
-    if (storageValue && typeof storageValue === 'string') {
-      const storageValueParsed: TSendStorageValue = JSON.parse(storageValue);
-      if (storageValueParsed.needGoToOpenLoginApproval) {
-        setAssetItemNew(storageValueParsed.assetItem);
-        setStage(storageValueParsed.extraConfig.stage);
-        setToAccount(storageValueParsed.extraConfig.toAccount);
-        setAmount(storageValueParsed.extraConfig.amount);
-        setBalance(storageValueParsed.extraConfig.balance);
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    if (TelegramPlatform.isTelegramPlatform()) recoverPageDataAfterTelegramAuth();
-  }, [recoverPageDataAfterTelegramAuth]);
 
   const sendHandler = useCallback(async () => {
     if (!oneTimeApprovalList.current || oneTimeApprovalList.current.length === 0) {
@@ -723,7 +605,6 @@ function SendContent({
         className="page-title"
         title={`Send ${!isNFT ? tokenInfo.symbol : ''}`}
         leftCallBack={() => {
-          did.config.storageMethod.removeItem(SendBusinessKey);
           StageObj[stage].backFun();
         }}
       />

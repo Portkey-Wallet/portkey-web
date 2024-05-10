@@ -10,11 +10,6 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
-  socialLogin: {
-    Telegram: {
-      dappTelegramLink: 'https://t.me/Dapp_V5_Bot/dappAssets',
-    },
-  },
   serviceUrl: 'https://aa-portkey-test.portkey.finance',
   // serviceUrl: 'https://aa-portkey-test.portkey.finance',
   // loginConfig: {

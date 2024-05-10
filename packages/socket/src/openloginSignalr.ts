@@ -130,34 +130,6 @@ export class OpenloginSignalr extends BaseSignalr implements IOpenloginSignalr {
     });
   }
 
-  public onSavePublicKey<T>(
-    { requestId }: { requestId: string },
-    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
-  ) {
-    return this.listen(CrossTabPushMessageType.onSavePublicKey, (data: { body: T; requestId: string }) => {
-      console.log(CrossTabPushMessageType.onSavePublicKey, data, requestId);
-      if (data?.requestId === requestId) {
-        callback(data.body, CrossTabPushMessageType.onSavePublicKey);
-      } else {
-        callback(null);
-      }
-    });
-  }
-
-  public onGetTelegramAuth<T>(
-    { requestId }: { requestId: string },
-    callback: (data: T | null, methodName?: CrossTabPushMessageType) => void,
-  ) {
-    return this.listen(CrossTabPushMessageType.onGetTelegramAuth, (data: { body: T; requestId: string }) => {
-      console.log(CrossTabPushMessageType.onGetTelegramAuth, data, requestId);
-      if (data?.requestId === requestId) {
-        callback(data.body, CrossTabPushMessageType.onGetTelegramAuth);
-      } else {
-        callback(null);
-      }
-    });
-  }
-
   public GetTabDataAsync({ requestId, methodName }: { requestId: string; methodName: CrossTabPushMessageType }) {
     return this.invoke('GetTabDataAsync', {
       clientId: requestId,
@@ -175,7 +147,6 @@ export const openloginListenList = [
   CrossTabPushMessageType.onSetLoginGuardianResult,
   CrossTabPushMessageType.onAuthStatusChanged,
   CrossTabPushMessageType.onCheckSellResult,
-  CrossTabPushMessageType.onGetTelegramAuth,
 ] as const;
 export type TOpenloginListenList = (typeof openloginListenList)[number];
 

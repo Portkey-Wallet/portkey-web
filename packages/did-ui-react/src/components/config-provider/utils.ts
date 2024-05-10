@@ -28,8 +28,8 @@ export const getStorageInstance = () => {
   return storageMethod;
 };
 
-export const getDappTelegramLink = () => {
+export const getTelegramBotId = () => {
   const socialLogin = ConfigProvider.getConfig('socialLogin') as ISocialLoginConfig;
-  if (!socialLogin?.Telegram?.dappTelegramLink) throw Error('Please set dappTelegramLink in GlobalConfig');
-  return socialLogin.Telegram.dappTelegramLink;
+  if (!socialLogin?.Telegram?.botId) throw Error('Please set Telegram botId in GlobalConfig');
+  return socialLogin.Telegram.botId;
 };
