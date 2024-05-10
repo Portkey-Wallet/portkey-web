@@ -1,7 +1,7 @@
 import { parse } from 'query-string';
 import { sleep } from '@portkey/utils';
 import { TelegramWebappInitData } from '@portkey/types';
-import { PORTKEY_SDK_TELEGRAM_USER_ID } from '../constants/telegram';
+import { PORTKEY_SDK_TELEGRAM_USER_ID, TELEGRAM_API_SCRIPT_ID, TELEGRAM_API_SRC } from '../constants/telegram';
 
 declare const window: Window &
   typeof globalThis & {
@@ -69,6 +69,31 @@ export class TelegramPlatform {
     return userId;
   }
 
+  private static async insertScript(_document: Document, id: string, scriptSrc: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        let script = _document.getElementById(id) as HTMLScriptElement | null;
+        if (script) {
+          if (script.src === scriptSrc) {
+            resolve();
+            return;
+          } else {
+            script.remove();
+          }
+        }
+        script = _document.createElement('script') as HTMLScriptElement;
+        script.id = id;
+        script.src = scriptSrc;
+        script.defer = true;
+        script.onload = () => resolve();
+        script.onerror = (e) => reject(e);
+        _document.head.appendChild(script);
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   static async initializeTelegramWebApp({
     handleLogout,
     initialDelay = 1000,
@@ -79,6 +104,7 @@ export class TelegramPlatform {
     needExpand?: boolean;
   }) {
     if (typeof window !== 'undefined') {
+      await TelegramPlatform.insertScript(document, TELEGRAM_API_SCRIPT_ID, TELEGRAM_API_SRC);
       await sleep(initialDelay);
       const Telegram = TelegramPlatform.getTelegram();
       if (!Telegram || !TelegramPlatform.isTelegramPlatform()) return;
