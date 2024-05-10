@@ -127,8 +127,6 @@ function GuardianAdd({
     [loginConfig?.loginMethodsOrder],
   );
 
-  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.addGuardian), []);
-
   const guardianTypeSelectItems = useMemo(() => {
     if (Array.isArray(loginMethodsOrder)) {
       const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) =>
@@ -336,7 +334,7 @@ function GuardianAdd({
           clientId,
           redirectURI,
           networkType,
-          operationDetails,
+          operationDetails: getOperationDetails(OperationTypeEnum.addGuardian, curGuardian.current),
           operationType,
           customLoginHandler,
         });
@@ -357,7 +355,7 @@ function GuardianAdd({
         setLoading(false);
       }
     },
-    [socialBasic, socialUserInfo, verifyToken, originChainId, networkType, operationDetails, isErrorTip, onError],
+    [socialBasic, socialUserInfo, verifyToken, originChainId, networkType, isErrorTip, onError],
   );
 
   const checkValid = useCallback(async () => {
@@ -537,6 +535,7 @@ function GuardianAdd({
     };
     setApprovalVisible(true);
   }, []);
+
   const sendCode = useCallback(async () => {
     try {
       setLoading(true);
@@ -549,6 +548,7 @@ function GuardianAdd({
             verifierId: _guardian?.verifier?.id || '',
             chainId: originChainId,
             operationType: OperationTypeEnum.addGuardian,
+            operationDetails: getOperationDetails(OperationTypeEnum.addGuardian, curGuardian.current),
           },
         },
         reCaptchaHandler,
@@ -717,6 +717,7 @@ function GuardianAdd({
         <VerifierPage
           originChainId={originChainId}
           operationType={OperationTypeEnum.addGuardian}
+          operationDetails={getOperationDetails(OperationTypeEnum.addGuardian, curGuardian.current)}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
           verifierSessionId={curGuardian?.current?.verifierInfo?.sessionId || ''}
@@ -743,7 +744,6 @@ function GuardianAdd({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}
-          operationDetails={operationDetails}
         />
       </CommonBaseModal>
     </div>

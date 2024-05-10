@@ -8,6 +8,7 @@ import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
 import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 
 export interface GuardianListProps {
   originChainId: ChainId;
@@ -20,6 +21,14 @@ export interface GuardianListProps {
   alreadyApprovalLength: number;
   operationType?: OperationTypeEnum;
   isFetching: boolean;
+  preVerifierId?: string;
+  newVerifierId?: string;
+  symbol?: string;
+  amount?: string | number;
+  toAddress?: string;
+  singleLimit?: string;
+  dailyLimit?: string;
+  spender?: string;
   onError?: OnErrorFunc;
   onConfirm?: () => void;
   onSend?: (item: UserGuardianStatus, index: number) => void;
@@ -37,6 +46,14 @@ function GuardianList({
   approvalLength,
   isFetching,
   alreadyApprovalLength,
+  preVerifierId,
+  newVerifierId,
+  symbol,
+  amount,
+  toAddress,
+  singleLimit,
+  dailyLimit,
+  spender,
   onError,
   onConfirm,
   onSend,
@@ -98,6 +115,16 @@ function GuardianList({
               targetChainId={targetChainId}
               key={item.key}
               operationType={operationType}
+              operationDetails={getOperationDetails(operationType, item, {
+                preVerifierId,
+                newVerifierId,
+                symbol,
+                amount,
+                toAddress,
+                singleLimit,
+                dailyLimit,
+                spender,
+              })}
               disabled={alreadyApprovalLength >= approvalLength && item.status !== VerifyStatus.Verified}
               isExpired={isExpired}
               item={item}

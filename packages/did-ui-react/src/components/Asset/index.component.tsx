@@ -38,6 +38,7 @@ import { mixRampShow } from '../Ramp/utils';
 import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
+import TokenAllowance from '../TokenAllowance';
 
 export enum AssetStep {
   overview = 'overview',
@@ -237,7 +238,7 @@ function AssetMain({
 
   const WalletSecurityMenuList = useWalletSecurityMenuList({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
-    onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowanceDetail), // todo_wade: change to tokenAllowance
+    onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
   });
 
   const getLimitFromContract = useCallback(
@@ -546,6 +547,16 @@ function AssetMain({
               name={'SchrodingerNFT'}
               allowance={100000000}
               onBack={() => setAssetStep(AssetStep.walletSecurity)}
+          }
+          
+          {assetStep === AssetStep.tokenAllowance && (
+            <TokenAllowance
+              onClickItem={() => {
+                alert(111);
+              }}
+              onBack={() => {
+                setAssetStep(AssetStep.walletSecurity);
+              }}
             />
           )}
 

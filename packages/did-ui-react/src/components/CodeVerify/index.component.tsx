@@ -1,13 +1,12 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
 import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verification } from '../../utils';
-import type { ChainId } from '@portkey/types';
+import type { ChainId, TStringJSON } from '@portkey/types';
 import { OperationTypeEnum } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
 import { sleep } from '@portkey/utils';
-import { getOperationDetails } from '../utils/operation.util';
 
 const MAX_TIMER = 60;
 
@@ -17,6 +16,7 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
   verifierSessionId: string;
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
+  operationDetails: TStringJSON;
   onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
   onReSend?: (result: TVerifyCodeInfo) => void;
 }
@@ -29,6 +29,7 @@ export default function CodeVerify({
   tipExtra,
   isErrorTip = true,
   operationType,
+  operationDetails,
   isCountdownNow,
   isLoginGuardian,
   guardianIdentifier,
@@ -56,7 +57,6 @@ export default function CodeVerify({
         if (code && code.length === 6) {
           if (!verifierSessionId) throw Error(`VerifierSessionId(${verifierSessionId}) is invalid`);
           setLoading(true);
-          const operationDetails = getOperationDetails(operationType);
 
           const result = await verification.checkVerificationCode({
             verifierSessionId,
@@ -103,6 +103,7 @@ export default function CodeVerify({
       originChainId,
       targetChainId,
       operationType,
+      operationDetails,
       onSuccess,
       setInputError,
       isErrorTip,
@@ -124,6 +125,7 @@ export default function CodeVerify({
             chainId: originChainId,
             targetChainId,
             operationType,
+            operationDetails,
           },
         },
         reCaptchaHandler,

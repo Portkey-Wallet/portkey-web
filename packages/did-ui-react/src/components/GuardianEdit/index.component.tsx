@@ -241,8 +241,6 @@ function GuardianEdit({
     [isErrorTip, onError],
   );
 
-  const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
-
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
@@ -261,7 +259,7 @@ function GuardianEdit({
         clientId,
         redirectURI,
         networkType,
-        operationDetails,
+        operationDetails: getOperationDetails(operationType, curGuardian.current),
         operationType: OperationTypeEnum.unsetLoginAccount,
         customLoginHandler,
       });
@@ -270,7 +268,7 @@ function GuardianEdit({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, networkType, verifyToken, originChainId, operationDetails],
+    [socialBasic, networkType, verifyToken, originChainId, operationType],
   );
   const sendCode = useCallback(async () => {
     try {
@@ -284,6 +282,7 @@ function GuardianEdit({
             verifierId: _guardian?.verifier?.id || '',
             chainId: originChainId,
             operationType: OperationTypeEnum.unsetLoginAccount,
+            operationDetails: getOperationDetails(operationType, curGuardian.current),
           },
         },
         reCaptchaHandler,
@@ -312,7 +311,7 @@ function GuardianEdit({
     } finally {
       setLoading(false);
     }
-  }, [originChainId, reCaptchaHandler, isErrorTip, onError]);
+  }, [originChainId, operationType, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
     preGuardianRef.current = {
       ...(preGuardianRef.current as UserGuardianStatus),
@@ -518,6 +517,7 @@ function GuardianEdit({
         <VerifierPage
           originChainId={originChainId}
           operationType={OperationTypeEnum.unsetLoginAccount}
+          operationDetails={getOperationDetails(operationType, curGuardian.current)}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={preGuardian?.guardianIdentifier || ''}
           verifierSessionId={preGuardianRef.current?.verifierInfo?.sessionId || ''}
@@ -538,9 +538,10 @@ function GuardianEdit({
         onClose={() => setApprovalVisible(false)}>
         <GuardianApproval
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
-          operationDetails={operationDetails}
           originChainId={originChainId}
           guardianList={approvalGuardianList}
+          preVerifierId={preGuardian?.verifierId}
+          newVerifierId={curGuardian.current?.verifierId}
           networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}

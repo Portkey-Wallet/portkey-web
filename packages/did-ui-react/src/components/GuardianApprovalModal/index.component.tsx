@@ -8,7 +8,6 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { UserGuardianStatus } from '../../types';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
-import { getOperationDetails } from '../utils/operation.util';
 
 const GuardianApprovalModalMain = forwardRef(
   (
@@ -26,6 +25,9 @@ const GuardianApprovalModalMain = forwardRef(
       onApprovalSuccess,
       onApprovalError,
       operationType,
+      symbol,
+      amount,
+      toAddress,
     }: GuardianApprovalModalProps,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
@@ -61,13 +63,10 @@ const GuardianApprovalModalMain = forwardRef(
       getData();
     }, [getData]);
 
-    const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
-
     return (
       <CommonBaseModal className={clsx('portkey-ui-modal-approval', className)} open={open} onClose={onClose}>
         <GuardianApproval
           header={<BackHeader onBack={onBack} />}
-          operationDetails={operationDetails}
           originChainId={originChainId}
           targetChainId={targetChainId}
           guardianList={guardianList}
@@ -78,6 +77,9 @@ const GuardianApprovalModalMain = forwardRef(
           onError={onApprovalError}
           networkType={networkType}
           operationType={operationType}
+          symbol={symbol}
+          amount={amount}
+          toAddress={toAddress}
         />
       </CommonBaseModal>
     );

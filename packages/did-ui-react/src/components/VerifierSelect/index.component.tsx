@@ -162,6 +162,7 @@ export default function VerifierSelect({
             verifierId: selectItem.id,
             chainId,
             operationType,
+            operationDetails: getOperationDetails(operationType),
           },
         },
         reCaptchaHandler,

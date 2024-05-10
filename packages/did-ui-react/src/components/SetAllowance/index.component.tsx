@@ -1,12 +1,12 @@
-import { Checkbox, Input } from 'antd';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { Input } from 'antd';
+import { useCallback, useMemo, useState } from 'react';
 import { parseInputNumberChange } from '../../utils/input';
 import BigNumber from 'bignumber.js';
 import './index.less';
 import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
-import { CheckboxChangeEvent } from 'antd/lib/checkbox';
+import CustomSvg from '../CustomSvg';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
@@ -16,6 +16,7 @@ export interface BaseSetAllowanceProps {
   className?: string;
   max?: string | number;
   dappInfo?: { icon?: string; href?: string; name?: string };
+  showBatchApproveToken?: boolean;
 }
 
 export interface IAllowance {
@@ -38,6 +39,7 @@ export default function SetAllowanceMain({
   amount,
   decimals,
   dappInfo,
+  showBatchApproveToken,
   symbol,
   className,
   recommendedAmount = 0,
@@ -45,7 +47,7 @@ export default function SetAllowanceMain({
   onAllowanceChange,
   onConfirm,
 }: SetAllowanceProps) {
-  const batchApproveToken = useRef<boolean>(false);
+  const [batchApproveToken, setBatchApproveToken] = useState<boolean>(false);
   const formatAllowanceInput = useCallback(
     (value: number | string) =>
       parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined, decimals),
@@ -68,13 +70,19 @@ export default function SetAllowanceMain({
     [formatAllowanceInput, onAllowanceChange],
   );
 
-  const onAllowAllTokenChange = useCallback(
-    (e: CheckboxChangeEvent) => {
-      batchApproveToken.current = e.target.checked;
-    },
-    [batchApproveToken],
-  );
-
+  const onAllowAllTokenChange = useCallback(() => {
+    setBatchApproveToken((prev) => !prev);
+  }, []);
+  const noticeText = useMemo(() => {
+    return showBatchApproveToken
+      ? `The allowance you set will apply to all tokens, allowing the dApp to utilise them as long as the combined
+      total doesn&rsquo;t exceed the limit. It&rsquo;s crucial to assess potential risks carefully and set a
+      reasonable allowance value, taking into account both token price and quantity.`
+      : 'Within this allowance limit, the Dapp does not require reconfirmation from you when a transaction occurs.';
+  }, [showBatchApproveToken]);
+  const titleText = useMemo(() => {
+    return dappInfo?.name ? `${dappInfo?.name} is requesting access to your token` : `Request for access to your token`;
+  }, [dappInfo?.name]);
   return (
     <div className={clsx(`${PrefixCls}-wrapper`, className)}>
       <div className={clsx('portkey-ui-flex-center', `${PrefixCls}-dapp-info`)}>
@@ -86,7 +94,7 @@ export default function SetAllowanceMain({
         )}
       </div>
       <div className={`${PrefixCls}-header`}>
-        <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{`Request for access to your token`}</h1>
+        <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{titleText}</h1>
         <div className={`portkey-ui-text-center ${PrefixCls}-description`}>
           To ensure asset security, please customise an allowance for this dApp. Until this allowance is exhausted, the
           dApp will not request your approval to utilise the specified token. You have the option to adjust these
@@ -111,15 +119,17 @@ export default function SetAllowanceMain({
           />
           {typeof error !== 'undefined' && <div className="error-text">{error}</div>}
         </div>
-        <div className={`${PrefixCls}-confirm-line`}>
-          <Checkbox className={`${PrefixCls}-confirm-line-checkbox`} onChange={onAllowAllTokenChange} />
-          <div className={`${PrefixCls}-confirm-line-text`}>Approve multiple tokens at the same time</div>
-        </div>
-        <div className={`${PrefixCls}-notice`}>
-          The allowance you set will apply to all selected tokens, allowing the dApp to utilise them as long as the
-          combined total doesn&rsquo;t exceed the limit. It&rsquo;s crucial to assess potential risks carefully and set
-          a reasonable allowance value, taking into account both token price and quantity.
-        </div>
+        {showBatchApproveToken && (
+          <div className={`${PrefixCls}-confirm-line`}>
+            <CustomSvg
+              type={batchApproveToken ? 'Checked' : 'Unchecked'}
+              style={{ width: 18, height: 18 }}
+              onClick={onAllowAllTokenChange}
+            />
+            <div className={`${PrefixCls}-confirm-line-text`}>Approve multiple tokens at the same time</div>
+          </div>
+        )}
+        <div className={`${PrefixCls}-notice`}>{noticeText}</div>
       </div>
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
         <div className="btn-wrapper">
@@ -132,7 +142,7 @@ export default function SetAllowanceMain({
               if (BigNumber(allowance).lte(0)) return setError('Please enter a non-zero value');
               onConfirm?.({
                 allowance,
-                batchApproveToken: batchApproveToken.current,
+                batchApproveToken,
               });
             }}>
             Authorize
