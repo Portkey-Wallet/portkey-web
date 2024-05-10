@@ -69,3 +69,8 @@ export type ValidData = {
 };
 
 export type TCustomNetworkType = 'offline' | 'online' | 'local';
+
+export interface ITelegramInfo {
+  accessToken?: string;
+  userId: string;
+}

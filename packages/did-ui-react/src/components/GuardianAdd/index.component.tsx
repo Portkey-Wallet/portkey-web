@@ -24,6 +24,7 @@ import {
 import {
   ICountryItem,
   ISocialLogin,
+  ITelegramInfo,
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
@@ -72,6 +73,7 @@ export interface GuardianAddProps {
   networkType: NetworkType;
   sandboxId?: string;
   isErrorTip?: boolean;
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   handleAddGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
 }
@@ -96,6 +98,7 @@ function GuardianAdd({
   guardianList,
   networkType,
   sandboxId,
+  telegramInfo,
   onError,
   handleAddGuardian,
 }: GuardianAddProps) {
@@ -306,16 +309,21 @@ function GuardianAdd({
   const socialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
-        const { clientId, redirectURI } = socialBasic(v) || {};
-        const response = await socialLoginAuth({
-          type: v,
-          clientId,
-          redirectURI,
-          network: networkType,
-          useCurrentTelegramAuth: !hasCurrentTelegramGuardian(guardianList),
-        });
-        if (!response?.token) throw new Error('add guardian failed');
-        const info = await socialUserInfo(v, response.token);
+        let token = '';
+        if (v === 'Telegram' && telegramInfo?.accessToken && !hasCurrentTelegramGuardian(guardianList)) {
+          token = telegramInfo.accessToken;
+        } else {
+          const { clientId, redirectURI } = socialBasic(v) || {};
+          const response = await socialLoginAuth({
+            type: v,
+            clientId,
+            redirectURI,
+            network: networkType,
+          });
+          if (!response?.token) throw new Error('add guardian failed');
+          token = response.token;
+        }
+        const info = await socialUserInfo(v, token);
         return info;
       } catch (error) {
         errorTip(
@@ -328,7 +336,7 @@ function GuardianAdd({
         );
       }
     },
-    [guardianList, isErrorTip, networkType, onError, socialBasic, socialUserInfo],
+    [guardianList, isErrorTip, networkType, onError, socialBasic, socialUserInfo, telegramInfo?.accessToken],
   );
 
   const socialVerify = useCallback(
@@ -759,6 +767,7 @@ function GuardianAdd({
           originChainId={originChainId}
           guardianList={guardianList}
           networkType={networkType}
+          telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}

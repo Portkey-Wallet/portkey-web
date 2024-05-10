@@ -14,6 +14,7 @@ import {
 } from '../../utils';
 import {
   ISocialLogin,
+  ITelegramInfo,
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
@@ -59,6 +60,7 @@ export interface GuardianEditProps {
   networkType: NetworkType;
   chainType?: ChainType;
   sandboxId?: string;
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   handleEditGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
   handleRemoveGuardian?: (approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -85,6 +87,7 @@ function GuardianEdit({
   networkType,
   chainType = 'aelf',
   sandboxId,
+  telegramInfo,
   onError,
   handleEditGuardian,
   handleRemoveGuardian,
@@ -219,16 +222,26 @@ function GuardianEdit({
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
-      const response = await socialLoginAuth({
-        type: _guardian?.guardianType as ISocialLogin,
-        clientId,
-        redirectURI,
-        network: networkType,
-        guardianIdentifier: _guardian.guardianIdentifier,
-      });
-      if (!response?.token) throw new Error('auth failed');
+      let token = '';
+      if (
+        _guardian?.guardianType === 'Telegram' &&
+        telegramInfo?.userId === _guardian?.guardianIdentifier &&
+        telegramInfo?.accessToken
+      ) {
+        token = telegramInfo.accessToken;
+      } else {
+        const response = await socialLoginAuth({
+          type: _guardian?.guardianType as ISocialLogin,
+          clientId,
+          redirectURI,
+          network: networkType,
+          guardianIdentifier: _guardian.guardianIdentifier,
+        });
+        if (!response?.token) throw new Error('auth failed');
+        token = response.token;
+      }
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
-        accessToken: response.token,
+        accessToken: token,
         id: _guardian.guardianIdentifier || '',
         verifierId: _guardian?.verifier?.id || '',
         chainId: originChainId,
@@ -244,7 +257,15 @@ function GuardianEdit({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, verifyToken, originChainId, networkType, operationDetails],
+    [
+      socialBasic,
+      telegramInfo?.userId,
+      telegramInfo?.accessToken,
+      verifyToken,
+      originChainId,
+      networkType,
+      operationDetails,
+    ],
   );
   const sendCode = useCallback(async () => {
     try {
@@ -516,6 +537,7 @@ function GuardianEdit({
           originChainId={originChainId}
           guardianList={approvalGuardianList}
           networkType={networkType}
+          telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
