@@ -546,7 +546,7 @@ function AssetMain({
               icon={originalAllowanceItem.icon}
               name={originalAllowanceItem.name}
               allowance={originalAllowanceItem.allowance}
-              onBack={() => setAssetStep(AssetStep.walletSecurity)}
+              onBack={() => setAssetStep(AssetStep.tokenAllowance)}
             />
           )}
 

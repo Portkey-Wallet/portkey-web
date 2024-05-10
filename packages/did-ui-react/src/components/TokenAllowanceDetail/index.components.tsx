@@ -38,7 +38,7 @@ export default function TokenAllowanceDetailMain({
         await unapproveTokenAllowance({
           targetChainId: chainId,
           contractAddress,
-          allownance: allowance,
+          amount: Number.MAX_SAFE_INTEGER,
         });
         setOpen(false);
       } catch (e) {
@@ -52,7 +52,7 @@ export default function TokenAllowanceDetailMain({
     } else {
       singleMessage.error('Please interact with the dApp and initiate transaction again to enable this function.');
     }
-  }, [allowance, chainId, contractAddress, isOpen]);
+  }, [chainId, contractAddress, isOpen]);
 
   return (
     <div className={clsx('portkey-ui-token-allowance-detail-wrapper')}>
