@@ -7,6 +7,7 @@ export default async function officialWebsiteCheck(
   currentGuardians: any,
   originChainId: ChainId,
   operationType: OperationTypeEnum,
+  targetChainId?: ChainId,
   symbol?: string,
   amount?: string | number,
   operationDetails?: string,
@@ -35,6 +36,7 @@ export default async function officialWebsiteCheck(
     const data = {
       currentGuardians,
       originChainId,
+      targetChainId,
       symbol,
       amount,
       serviceUrl: getServiceUrl(),
