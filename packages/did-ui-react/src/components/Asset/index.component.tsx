@@ -37,6 +37,7 @@ import { mixRampShow } from '../Ramp/utils';
 import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
+import TokenAllowance from '../TokenAllowance';
 
 export enum AssetStep {
   overview = 'overview',
@@ -54,6 +55,7 @@ export enum AssetStep {
   transferSettings = 'transferSettings',
   transferSettingsEdit = 'transferSettingsEdit',
   deleteAccount = 'deleteAccount',
+  tokenAllowance = 'tokenAllowance',
 }
 
 export interface AssetMainProps
@@ -234,6 +236,7 @@ function AssetMain({
 
   const WalletSecurityMenuList = useWalletSecurityMenuList({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
+    onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
   });
 
   const getLimitFromContract = useCallback(
@@ -529,6 +532,17 @@ function AssetMain({
                 const res = await getLimitFromContract(data);
                 setViewPaymentSecurity({ ...data, ...res });
                 setAssetStep(AssetStep.transferSettings);
+              }}
+            />
+          )}
+
+          {assetStep === AssetStep.tokenAllowance && (
+            <TokenAllowance
+              onClickItem={() => {
+                alert(111);
+              }}
+              onBack={() => {
+                setAssetStep(AssetStep.walletSecurity);
               }}
             />
           )}
