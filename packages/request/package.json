@@ -1,6 +1,6 @@
 {
   "name": "@portkey/request",
-  "version": "2.5.0-alpha.51",
+  "version": "2.5.0-alpha.52",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -40,7 +40,7 @@
     "start": "tsc --watch"
   },
   "dependencies": {
-    "@portkey/types": "^2.5.0-alpha.51",
+    "@portkey/types": "^2.5.0-alpha.52",
     "query-string": "^7.1.1"
   },
   "gitHead": "13acdc07aeac8dc6ee5ca61d8b6699328ac55b03"

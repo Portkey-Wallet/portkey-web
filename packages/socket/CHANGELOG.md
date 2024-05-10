@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.52](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.51...v2.5.0-alpha.52) (2024-05-10)
+
+### Features
+
+- guardian actions and approval in the Telegram webapp ([bb750ee](https://github.com/Portkey-Wallet/portkey-web/commit/bb750ee4a01f89098935bbab4b3020e6b42ae6df))
+- recover open login guardians, etc ([4abf67a](https://github.com/Portkey-Wallet/portkey-web/commit/4abf67a63eff05dc65f783a4bedcf4fe41931507))
+
 ## [2.5.0-alpha.51](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.50...v2.5.0-alpha.51) (2024-05-07)
 
 **Note:** Version bump only for package @portkey/socket

@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.52](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.51...v2.5.0-alpha.52) (2024-05-10)
+
+### Features
+
+- automatically insert Telegram API script during initialization of the Telegram Web App ([47463a0](https://github.com/Portkey-Wallet/portkey-web/commit/47463a042455df523de41299031eab15763bbc23))
+- getTelegramAuthToken adds the botId param ([83c7598](https://github.com/Portkey-Wallet/portkey-web/commit/83c75987d639360f9b4c5d8df26764027a798e05))
+- remove autoTelegramAuth param ([c593a72](https://github.com/Portkey-Wallet/portkey-web/commit/c593a728aa1a9e5e303e9e7707ba361e1eaef28f))
+- remove dappTelegramLink param ([5bca2dc](https://github.com/Portkey-Wallet/portkey-web/commit/5bca2dc01177f15187574d6368c1ff2eedfef6a1))
+
+### Bug Fixes
+
+- white screen after reload on sell page ([8527f92](https://github.com/Portkey-Wallet/portkey-web/commit/8527f92327677547a2a7dac6aa415cd0eab5db57))
+
 ## [2.5.0-alpha.51](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.50...v2.5.0-alpha.51) (2024-05-07)
 
 ### Features

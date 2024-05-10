@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0-alpha.52](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.51...v2.5.0-alpha.52) (2024-05-10)
+
+### Features
+
+- getTelegramAuthToken adds the botId param ([83c7598](https://github.com/Portkey-Wallet/portkey-web/commit/83c75987d639360f9b4c5d8df26764027a798e05))
+
 ## [2.5.0-alpha.51](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.50...v2.5.0-alpha.51) (2024-05-07)
 
 **Note:** Version bump only for package @portkey/services
