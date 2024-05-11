@@ -51,7 +51,7 @@ export default function TokenAllowanceMain(props: ITokenAllowanceProps) {
       {list?.length > 0 && (
         <>
           <List className="portkey-ui-payment-security-list">
-            {list?.map((item, index) => (
+            {list?.map((item: AllowanceItem, index: number) => (
               <List.Item
                 key={`paymentSecurity_${item.chainId}_${index}`}
                 className="portkey-ui-payment-security-item-wrap">
