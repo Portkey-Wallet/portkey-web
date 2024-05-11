@@ -10,14 +10,14 @@ import TokenImageDisplay from '../TokenImageDisplay';
 import BackHeaderForPage from '../BackHeaderForPage';
 import { setLoading } from '../../utils';
 
-export interface TokenAllowanceProps {
+export interface ITokenAllowanceProps {
   onClickItem: (item: AllowanceItem) => void;
   className?: string;
   onBack: () => void;
   wrapperStyle?: React.CSSProperties;
 }
 
-export default function TokenAllowanceMain(props: TokenAllowanceProps) {
+export default function TokenAllowanceMain(props: ITokenAllowanceProps) {
   const { onClickItem, className, onBack, wrapperStyle } = props;
   const { allowanceList, fetchMoreAllowanceList } = useAllowanceList({ step: 10 });
   const loadingRef = useRef<boolean>(false);
@@ -55,7 +55,7 @@ export default function TokenAllowanceMain(props: TokenAllowanceProps) {
                 className="portkey-ui-payment-security-item-wrap">
                 <MenuItem
                   key={item.chainId + index}
-                  icon={<TokenImageDisplay src={item.icon} symbol={item.name} />}
+                  icon={<TokenImageDisplay src={item.icon} symbol={item.name || 'Unknown'} />}
                   height={92}
                   onClick={() => onClickItem?.(item)}>
                   <div className="token-info">
@@ -69,7 +69,7 @@ export default function TokenAllowanceMain(props: TokenAllowanceProps) {
           <LoadingMore hasMore={list?.length < totalRecordCount} loadMore={loadMore} className="load-more" />
         </>
       )}
-      {list?.length === 0 && <div className="no-data-text">{`No allowance`}</div>}
+      {list?.length === 0 && <div className="no-data-text">{`No data`}</div>}
     </div>
   );
 }

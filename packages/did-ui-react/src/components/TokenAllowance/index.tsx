@@ -1,8 +1,8 @@
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import { PortkeyProvider } from '../config-provider';
-import TokenAllowanceMain, { TokenAllowanceProps } from './index.components';
+import TokenAllowanceMain, { ITokenAllowanceProps } from './index.components';
 
-export default function TokenAllowance(props: TokenAllowanceProps) {
+export default function TokenAllowance(props: ITokenAllowanceProps) {
   return (
     <PortkeyStyleProvider>
       <PortkeyProvider networkType={'MAINNET'}>
