@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.52...v2.5.0) (2024-05-11)
+
+### Bug Fixes
+
+- improve retry logic when inserting the Telegram API script ([98b96af](https://github.com/Portkey-Wallet/portkey-web/commit/98b96af6009ae37a3b976b205356f8b347e1d8e3))
+
 ## [2.5.0-alpha.52](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0-alpha.51...v2.5.0-alpha.52) (2024-05-10)
 
 ### Features
