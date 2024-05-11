@@ -21,6 +21,9 @@ export interface GuardianListProps {
   alreadyApprovalLength: number;
   operationType?: OperationTypeEnum;
   isFetching: boolean;
+  identifierHash?: string;
+  guardianType?: string;
+  verifierId?: string;
   preVerifierId?: string;
   newVerifierId?: string;
   symbol?: string;
@@ -46,6 +49,9 @@ function GuardianList({
   approvalLength,
   isFetching,
   alreadyApprovalLength,
+  identifierHash,
+  guardianType,
+  verifierId,
   preVerifierId,
   newVerifierId,
   symbol,
@@ -115,7 +121,10 @@ function GuardianList({
               targetChainId={targetChainId}
               key={item.key}
               operationType={operationType}
-              operationDetails={getOperationDetails(operationType, item, {
+              operationDetails={getOperationDetails(operationType, {
+                identifierHash,
+                guardianType,
+                verifierId,
                 preVerifierId,
                 newVerifierId,
                 symbol,

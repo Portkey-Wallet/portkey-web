@@ -104,7 +104,7 @@ function GuardianItems({
         );
       }
     },
-    [originChainId, targetChainId, operationType, reCaptchaHandler, onSend, isErrorTip, onError],
+    [originChainId, targetChainId, operationType, operationDetails, reCaptchaHandler, onSend, isErrorTip, onError],
   );
 
   const verifyingHandler = useCallback(

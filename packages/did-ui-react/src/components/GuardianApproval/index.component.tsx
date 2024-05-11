@@ -57,6 +57,9 @@ export interface GuardianApprovalProps {
   wrapperStyle?: React.CSSProperties;
   operationType: OperationTypeEnum;
   networkType: NetworkType;
+  identifierHash?: string;
+  guardianType?: string;
+  verifierId?: string;
   symbol?: string;
   amount?: number | string;
   spender?: string;
@@ -65,6 +68,8 @@ export interface GuardianApprovalProps {
   newVerifierId?: string;
   singleLimit?: string;
   dailyLimit?: string;
+  // guardianIdentifier?: string; // for show (email)
+  // firstName?: string; // for show (social)
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -86,6 +91,9 @@ const GuardianApprovalMain = forwardRef(
       isErrorTip = true,
       wrapperStyle,
       operationType,
+      identifierHash,
+      guardianType,
+      verifierId,
       symbol,
       amount,
       toAddress,
@@ -94,6 +102,8 @@ const GuardianApprovalMain = forwardRef(
       singleLimit,
       dailyLimit,
       spender,
+      // guardianIdentifier,
+      // firstName,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -228,7 +238,10 @@ const GuardianApprovalMain = forwardRef(
             redirectURI,
             operationType,
             networkType,
-            operationDetails: getOperationDetails(operationType, item, {
+            operationDetails: getOperationDetails(operationType, {
+              identifierHash,
+              guardianType,
+              verifierId,
               preVerifierId,
               newVerifierId,
               symbol,
@@ -275,6 +288,9 @@ const GuardianApprovalMain = forwardRef(
         targetChainId,
         operationType,
         networkType,
+        identifierHash,
+        guardianType,
+        verifierId,
         preVerifierId,
         newVerifierId,
         symbol,
@@ -302,7 +318,10 @@ const GuardianApprovalMain = forwardRef(
             return setShowWarning(true);
           } else {
             try {
-              const operationDetails = getOperationDetails(operationType, _item, {
+              const operationDetails = getOperationDetails(operationType, {
+                identifierHash,
+                guardianType,
+                verifierId,
                 preVerifierId,
                 newVerifierId,
                 symbol,
@@ -316,6 +335,7 @@ const GuardianApprovalMain = forwardRef(
                 _item,
                 originChainId,
                 operationType,
+                // guardianType,
                 targetChainId,
                 symbol,
                 amount,
@@ -361,10 +381,14 @@ const GuardianApprovalMain = forwardRef(
         onError,
         operationType,
         originChainId,
+        identifierHash,
+        guardianType,
+        verifierId,
         preVerifierId,
         singleLimit,
         spender,
         symbol,
+        targetChainId,
         toAddress,
         verifyResultHandler,
       ],
@@ -457,7 +481,10 @@ const GuardianApprovalMain = forwardRef(
                 try {
                   const currentGuardian = currentVerifyingGuardian.current;
                   currentVerifyingGuardian.current = undefined;
-                  const operationDetails = getOperationDetails(operationType, currentGuardian, {
+                  const operationDetails = getOperationDetails(operationType, {
+                    identifierHash,
+                    guardianType,
+                    verifierId,
                     preVerifierId,
                     newVerifierId,
                     symbol,
@@ -471,10 +498,13 @@ const GuardianApprovalMain = forwardRef(
                     currentGuardian?.item,
                     originChainId,
                     operationType,
+                    // guardianType,
                     targetChainId,
                     symbol,
                     amount,
                     operationDetails,
+                    // guardianIdentifier,
+                    // firstName,
                   );
                   setShowWarning(false);
                   console.log('rst===', rst);
@@ -504,7 +534,10 @@ const GuardianApprovalMain = forwardRef(
               targetChainId={targetChainId}
               originChainId={originChainId}
               operationType={operationType}
-              operationDetails={getOperationDetails(operationType, guardianList[verifyAccountIndex], {
+              operationDetails={getOperationDetails(operationType, {
+                identifierHash,
+                guardianType,
+                verifierId,
                 preVerifierId,
                 newVerifierId,
                 symbol,
@@ -539,6 +572,9 @@ const GuardianApprovalMain = forwardRef(
                 alreadyApprovalLength={alreadyApprovalLength}
                 guardianList={guardianList}
                 isErrorTip={isErrorTip}
+                identifierHash={identifierHash}
+                guardianType={guardianType}
+                verifierId={verifierId}
                 preVerifierId={preVerifierId}
                 newVerifierId={newVerifierId}
                 symbol={symbol}

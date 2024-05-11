@@ -259,7 +259,11 @@ function GuardianEdit({
         clientId,
         redirectURI,
         networkType,
-        operationDetails: getOperationDetails(operationType, curGuardian.current),
+        operationDetails: getOperationDetails(operationType, {
+          identifierHash: curGuardian.current?.identifierHash,
+          guardianType: curGuardian.current?.guardianType,
+          verifierId: curGuardian.current?.verifierId,
+        }),
         operationType: OperationTypeEnum.unsetLoginAccount,
         customLoginHandler,
       });
@@ -282,7 +286,11 @@ function GuardianEdit({
             verifierId: _guardian?.verifier?.id || '',
             chainId: originChainId,
             operationType: OperationTypeEnum.unsetLoginAccount,
-            operationDetails: getOperationDetails(operationType, curGuardian.current),
+            operationDetails: getOperationDetails(operationType, {
+              identifierHash: curGuardian.current?.identifierHash,
+              guardianType: curGuardian.current?.guardianType,
+              verifierId: curGuardian.current?.verifierId,
+            }),
           },
         },
         reCaptchaHandler,
@@ -517,7 +525,11 @@ function GuardianEdit({
         <VerifierPage
           originChainId={originChainId}
           operationType={OperationTypeEnum.unsetLoginAccount}
-          operationDetails={getOperationDetails(operationType, curGuardian.current)}
+          operationDetails={getOperationDetails(operationType, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+          })}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={preGuardian?.guardianIdentifier || ''}
           verifierSessionId={preGuardianRef.current?.verifierInfo?.sessionId || ''}
@@ -540,12 +552,17 @@ function GuardianEdit({
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
           guardianList={approvalGuardianList}
+          identifierHash={curGuardian.current?.identifierHash}
+          guardianType={curGuardian.current?.guardianType}
+          verifierId={curGuardian.current?.verifierId}
           preVerifierId={preGuardian?.verifierId}
           newVerifierId={curGuardian.current?.verifierId}
           networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
+          // guardianIdentifier={curGuardian.current?.guardianIdentifier}
+          // firstName={curGuardian.current?.firstName}
         />
       </CommonBaseModal>
     </div>

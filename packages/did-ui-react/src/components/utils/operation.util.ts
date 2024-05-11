@@ -5,8 +5,10 @@ import { AccountType } from '@portkey/services';
 
 export function getOperationDetails(
   operationType: OperationTypeEnum,
-  guardian?: UserGuardianStatus,
   extra?: {
+    identifierHash?: string;
+    guardianType?: string;
+    verifierId?: string;
     preVerifierId?: string;
     newVerifierId?: string;
     symbol?: string;
@@ -20,18 +22,18 @@ export function getOperationDetails(
   if (operationType === OperationTypeEnum.register || operationType === OperationTypeEnum.communityRecovery) {
     return JSON.stringify({ manager: getManagementAccount().address });
   }
-  if (!guardian) return '{}';
+  // if (!guardian) return '{}';
   if (
     operationType === OperationTypeEnum.addGuardian ||
     operationType === OperationTypeEnum.deleteGuardian ||
     operationType === OperationTypeEnum.setLoginAccount ||
     operationType === OperationTypeEnum.unsetLoginAccount
   ) {
-    const { identifierHash, guardianType, verifierId } = guardian;
+    const { identifierHash, guardianType, verifierId } = extra || {};
     return JSON.stringify({ identifierHash, guardianType: getGuardianTypeValue(guardianType), verifierId });
   }
   if (operationType === OperationTypeEnum.editGuardian) {
-    const { identifierHash, guardianType } = guardian;
+    const { identifierHash, guardianType } = extra || {};
     const { preVerifierId, newVerifierId } = extra || {};
     return JSON.stringify({
       identifierHash,
@@ -54,7 +56,7 @@ export function getOperationDetails(
   }
   return '{}';
 }
-function getGuardianTypeValue(guardianType: AccountType) {
+function getGuardianTypeValue(guardianType?: string) {
   if (guardianType === 'Email') {
     return 0;
   } else if (guardianType === 'Google') {

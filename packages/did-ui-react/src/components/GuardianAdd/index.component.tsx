@@ -334,7 +334,11 @@ function GuardianAdd({
           clientId,
           redirectURI,
           networkType,
-          operationDetails: getOperationDetails(OperationTypeEnum.addGuardian, curGuardian.current),
+          operationDetails: getOperationDetails(OperationTypeEnum.addGuardian, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+          }),
           operationType,
           customLoginHandler,
         });
@@ -548,7 +552,11 @@ function GuardianAdd({
             verifierId: _guardian?.verifier?.id || '',
             chainId: originChainId,
             operationType: OperationTypeEnum.addGuardian,
-            operationDetails: getOperationDetails(OperationTypeEnum.addGuardian, curGuardian.current),
+            operationDetails: getOperationDetails(OperationTypeEnum.addGuardian, {
+              identifierHash: curGuardian.current?.identifierHash,
+              guardianType: curGuardian.current?.guardianType,
+              verifierId: curGuardian.current?.verifierId,
+            }),
           },
         },
         reCaptchaHandler,
@@ -717,7 +725,11 @@ function GuardianAdd({
         <VerifierPage
           originChainId={originChainId}
           operationType={OperationTypeEnum.addGuardian}
-          operationDetails={getOperationDetails(OperationTypeEnum.addGuardian, curGuardian.current)}
+          operationDetails={getOperationDetails(OperationTypeEnum.addGuardian, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+          })}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={curGuardian?.current?.guardianIdentifier || ''}
           verifierSessionId={curGuardian?.current?.verifierInfo?.sessionId || ''}
@@ -744,6 +756,11 @@ function GuardianAdd({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}
+          identifierHash={curGuardian.current?.identifierHash}
+          guardianType={curGuardian.current?.guardianType}
+          verifierId={curGuardian.current?.verifierId}
+          // guardianIdentifier={curGuardian.current?.guardianIdentifier}
+          // firstName={curGuardian.current?.firstName}
         />
       </CommonBaseModal>
     </div>

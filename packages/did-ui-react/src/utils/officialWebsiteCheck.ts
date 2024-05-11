@@ -7,10 +7,13 @@ export default async function officialWebsiteCheck(
   currentGuardians: any,
   originChainId: ChainId,
   operationType: OperationTypeEnum,
+  // guardianType: AccountType,
   targetChainId?: ChainId,
   symbol?: string,
   amount?: string | number,
   operationDetails?: string,
+  // guardianIdentifier?: string,
+  // firstName?: string,
 ) {
   return new Promise(async (resolve, reject) => {
     let timer: any = null;
@@ -43,6 +46,9 @@ export default async function officialWebsiteCheck(
       operationType,
       onlineType: getCustomNetworkType(),
       operationDetails,
+      // todo add to official website
+      // guardianType,
+      // guardianAccount: guardianType === 'Email' ? guardianIdentifier : firstName,
     };
     const encodeData = Buffer.from(JSON.stringify(data), 'utf8').toString('base64');
     const windowOpener = window.open(`${OfficialWebsite}?data=${encodeData}`, '_blank');

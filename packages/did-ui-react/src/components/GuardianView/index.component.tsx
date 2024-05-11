@@ -80,7 +80,7 @@ function GuardianView({
     () => (currentGuardian.isLoginGuardian ? OperationTypeEnum.unsetLoginAccount : OperationTypeEnum.setLoginAccount),
     [currentGuardian.isLoginGuardian],
   );
-
+  console.log('curGuardian===', curGuardian);
   const reCaptchaHandler = useReCaptchaModal();
   const verifyToken = useVerifyToken();
   const socialBasic = useCallback(
@@ -140,7 +140,11 @@ function GuardianView({
         redirectURI,
         networkType,
         operationType,
-        operationDetails: getOperationDetails(operationType, curGuardian.current),
+        operationDetails: getOperationDetails(operationType, {
+          identifierHash: curGuardian.current?.identifierHash,
+          guardianType: curGuardian.current?.guardianType,
+          verifierId: curGuardian.current?.verifierId,
+        }),
         customLoginHandler,
       });
       if (!rst) return;
@@ -198,7 +202,11 @@ function GuardianView({
             verifierId: currentGuardian?.verifier?.id || '',
             chainId: originChainId,
             operationType,
-            operationDetails: getOperationDetails(operationType, curGuardian.current),
+            operationDetails: getOperationDetails(operationType, {
+              identifierHash: curGuardian.current?.identifierHash,
+              guardianType: curGuardian.current?.guardianType,
+              verifierId: curGuardian.current?.verifierId,
+            }),
           },
         },
         reCaptchaHandler,
@@ -418,7 +426,11 @@ function GuardianView({
         <VerifierPage
           originChainId={originChainId}
           operationType={operationType}
-          operationDetails={getOperationDetails(operationType, curGuardian.current)}
+          operationDetails={getOperationDetails(operationType, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+          })}
           onBack={handleBackView}
           guardianIdentifier={currentGuardian.guardianIdentifier || ''}
           verifierSessionId={curGuardian.current?.verifierInfo?.sessionId || ''}
@@ -445,6 +457,11 @@ function GuardianView({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
+          identifierHash={curGuardian.current?.identifierHash}
+          guardianType={curGuardian.current?.guardianType}
+          verifierId={curGuardian.current?.verifierId}
+          // guardianIdentifier={curGuardian?.current?.guardianIdentifier}
+          // firstName={curGuardian?.current?.firstName}
         />
       </CommonBaseModal>
     </div>
