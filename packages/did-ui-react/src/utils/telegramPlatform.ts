@@ -96,16 +96,19 @@ export class TelegramPlatform {
 
   static async initializeTelegramWebApp({
     handleLogout,
-    initialDelay = 1000,
     needExpand = true,
   }: {
     handleLogout: () => Promise<void>;
-    initialDelay?: number;
     needExpand?: boolean;
   }) {
     if (typeof window !== 'undefined') {
       await TelegramPlatform.insertScript(document, TELEGRAM_API_SCRIPT_ID, TELEGRAM_API_SRC);
-      await sleep(initialDelay);
+      const maxAttempts = 10;
+      let attempts = 0;
+      while (!TelegramPlatform.getTelegram() && attempts < maxAttempts) {
+        await sleep(200);
+        attempts++;
+      }
       const Telegram = TelegramPlatform.getTelegram();
       if (!Telegram || !TelegramPlatform.isTelegramPlatform()) return;
       if (needExpand) {
