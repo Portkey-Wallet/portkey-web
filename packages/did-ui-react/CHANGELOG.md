@@ -3,6 +3,25 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.1...v2.6.2) (2024-05-11)
+
+### Features
+
+- add loading state ([9665989](https://github.com/Portkey-Wallet/portkey-web/commit/9665989f266b93e37f0753774144ff6885a699c8))
+- use Loading component ([49ff612](https://github.com/Portkey-Wallet/portkey-web/commit/49ff6123c223f335a3d8fdea5a692c0d425c6a1f))
+
+### Bug Fixes
+
+- 🐛 TokenAllowanceDetail fix contract call fail ([a590d50](https://github.com/Portkey-Wallet/portkey-web/commit/a590d50515547544ee7329ef557c7d9aa726d3f4))
+- add/remove/edit/setlogin/unsetlogin guardians ([114321c](https://github.com/Portkey-Wallet/portkey-web/commit/114321c5cf4f550d9b2bbf78e825f01c4792f0d6))
+- code review ([d102e63](https://github.com/Portkey-Wallet/portkey-web/commit/d102e63cc54be78b2da7eda35dd52a943097c7a9))
+- guardian type param ([a7500c9](https://github.com/Portkey-Wallet/portkey-web/commit/a7500c9753df977f9844f2118330ab22db414cf4))
+- prevent multi click ([63a5836](https://github.com/Portkey-Wallet/portkey-web/commit/63a5836801c26e631a6f5c73c3ceda3da1358295))
+- show loading ([e602292](https://github.com/Portkey-Wallet/portkey-web/commit/e60229276c27136954a3924cf5e1864d10736518))
+- type fix ([05e562a](https://github.com/Portkey-Wallet/portkey-web/commit/05e562aebc53e72a466ac9d62fed2cf86bf87e60))
+- ui fix ([fe8ffc5](https://github.com/Portkey-Wallet/portkey-web/commit/fe8ffc598935696fe29d197e5aabfd7aa1b27383))
+- ui pattern ([3366442](https://github.com/Portkey-Wallet/portkey-web/commit/336644288cd6368384e8b948cc238a0353e0cd0d))
+
 ## [2.6.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.0...v2.6.1) (2024-05-11)
 
 ### Features

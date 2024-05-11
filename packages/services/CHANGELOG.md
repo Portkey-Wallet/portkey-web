@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.1...v2.6.2) (2024-05-11)
+
+### Bug Fixes
+
+- ui pattern ([3366442](https://github.com/Portkey-Wallet/portkey-web/commit/336644288cd6368384e8b948cc238a0353e0cd0d))
+
 ## [2.6.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.0...v2.6.1) (2024-05-11)
 
 **Note:** Version bump only for package @portkey/services
