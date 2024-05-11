@@ -10,6 +10,7 @@ import TokenImageDisplay from '../TokenImageDisplay';
 import BackHeaderForPage from '../BackHeaderForPage';
 import { setLoading } from '../../utils';
 import { useEffectOnce } from 'react-use';
+import CustomSvg from '../CustomSvg';
 
 export interface ITokenAllowanceProps {
   onClickItem: (item: AllowanceItem) => void;
@@ -60,7 +61,10 @@ export default function TokenAllowanceMain(props: ITokenAllowanceProps) {
                   height={92}
                   onClick={() => onClickItem?.(item)}>
                   <div className="token-info">
-                    <div className="token-symbol">{item.name || 'Unknown'}</div>
+                    <div className="token-symbol-line">
+                      <div className="token-symbol-text">{item.name || 'Unknown'}</div>
+                      <CustomSvg type={item.name ? 'protected' : 'dangerous'} className={'token-symbol-icon'} />
+                    </div>
                     <div className="token-network">{`Contract Address: ${item.contractAddress}`}</div>
                   </div>
                 </MenuItem>
