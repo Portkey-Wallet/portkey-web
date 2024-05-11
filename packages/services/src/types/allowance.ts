@@ -8,9 +8,9 @@ export interface IAllowanceService {
 export interface AllowanceItem {
   chainId: ChainId;
   contractAddress: string;
-  url: string;
-  icon: string;
-  name: string;
+  url?: string;
+  icon?: string;
+  name?: string;
   allowance: number;
 }
 

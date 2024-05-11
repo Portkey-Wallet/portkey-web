@@ -1,7 +1,7 @@
 import { AllowanceItem } from '@portkey/services';
 import clsx from 'clsx';
 import { useAllowanceList } from '../../hooks/allowance';
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
 import { List } from 'antd-mobile';
 import '../PaymentSecurity/index.less';
 import LoadingMore from '../LoadingMore';
@@ -9,6 +9,7 @@ import MenuItem from '../MenuItem';
 import TokenImageDisplay from '../TokenImageDisplay';
 import BackHeaderForPage from '../BackHeaderForPage';
 import { setLoading } from '../../utils';
+import { useEffectOnce } from 'react-use';
 
 export interface ITokenAllowanceProps {
   onClickItem: (item: AllowanceItem) => void;
@@ -37,9 +38,9 @@ export default function TokenAllowanceMain(props: ITokenAllowanceProps) {
     }
   }, [fetchMoreAllowanceList]);
 
-  useEffect(() => {
+  useEffectOnce(() => {
     loadMore();
-  }, [fetchMoreAllowanceList, loadMore]);
+  });
 
   const { data: list, totalRecordCount } = allowanceList;
 
@@ -59,8 +60,8 @@ export default function TokenAllowanceMain(props: ITokenAllowanceProps) {
                   height={92}
                   onClick={() => onClickItem?.(item)}>
                   <div className="token-info">
-                    <div className="token-symbol">{item.name}</div>
-                    <div className="token-network">{`Contract Address:${item.contractAddress}`}</div>
+                    <div className="token-symbol">{item.name || 'Unknown'}</div>
+                    <div className="token-network">{`Contract Address: ${item.contractAddress}`}</div>
                   </div>
                 </MenuItem>
               </List.Item>

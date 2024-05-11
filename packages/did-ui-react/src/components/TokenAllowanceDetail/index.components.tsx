@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import BackHeaderForPage from '../BackHeaderForPage';
 import SwitchComponent from '../SwitchComponent';
 import Copy from '../Copy';
@@ -9,6 +9,7 @@ import { unapproveTokenAllowance } from '../../utils/sandboxUtil/unapproveTokenA
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
 import { AllowanceItem } from '@portkey/services';
+import TokenImageDisplay from '../TokenImageDisplay';
 
 export type ITokenAllowanceDetailProps = AllowanceItem & {
   onBack?: () => void;
@@ -41,6 +42,7 @@ export default function TokenAllowanceDetailMain({
           error: handleErrorMessage(e),
         });
       } finally {
+        singleMessage.success('Approve multiple token disabled');
         setLoading(false);
       }
     } else {
@@ -48,12 +50,14 @@ export default function TokenAllowanceDetailMain({
     }
   }, [chainId, contractAddress, isOpen]);
 
+  const providedName = useMemo(() => name || 'Unknown', [name]);
+
   return (
     <div className={clsx('portkey-ui-token-allowance-detail-wrapper')}>
       <BackHeaderForPage title={`Token Allowance`} leftCallBack={onBack} />
       <div className="portkey-ui-flex-column portkey-ui-flex-center token-info-header-wrapper">
-        <img src={icon} className="token-image" />
-        <div className="token-name">{name}</div>
+        <TokenImageDisplay src={icon} symbol={providedName} width={64} />
+        <div className="token-name">{providedName}</div>
         <a href={url} target="_blank" rel="noopener noreferrer" className="token-url-wrapper">
           {url}
         </a>
