@@ -17,7 +17,7 @@ export const useAllowanceList = ({ step = 10 }: { step?: number }) => {
       skipCount: data.length,
       caAddressInfos,
     });
-    if (!res || !(res.data?.length > 0)) throw new Error('network error');
+    if (!res) throw new Error('network error');
 
     setAllowanceList({
       totalRecordCount: res.totalRecordCount,

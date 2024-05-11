@@ -1,10 +1,13 @@
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
+import { PortkeyProvider } from '../config-provider';
 import TokenAllowanceMain, { TokenAllowanceProps } from './index.components';
 
 export default function TokenAllowance(props: TokenAllowanceProps) {
   return (
     <PortkeyStyleProvider>
-      <TokenAllowanceMain {...props} />
+      <PortkeyProvider networkType={'MAINNET'}>
+        <TokenAllowanceMain {...props} />
+      </PortkeyProvider>
     </PortkeyStyleProvider>
   );
 }
