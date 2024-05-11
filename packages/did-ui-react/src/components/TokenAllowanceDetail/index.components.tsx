@@ -7,6 +7,7 @@ import { formatAmountShow } from '../../utils/converter';
 import singleMessage from '../CustomAnt/message';
 import { unapproveTokenAllowance } from '../../utils/sandboxUtil/unapproveTokenAllowance';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
 import { AllowanceItem } from '@portkey/services';
 import TokenImageDisplay from '../TokenImageDisplay';
@@ -25,12 +26,14 @@ export default function TokenAllowanceDetailMain({
   onBack,
 }: ITokenAllowanceDetailProps) {
   const [isOpen, setOpen] = useState(allowance > 0);
+  const [{ caHash }] = usePortkeyAsset();
 
   const handleSwitchChange = useCallback(async () => {
     if (isOpen) {
       try {
         setLoading(true);
         await unapproveTokenAllowance({
+          caHash: caHash || '',
           targetChainId: chainId,
           contractAddress,
           amount: Number.MAX_SAFE_INTEGER,
