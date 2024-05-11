@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.0-alpha.4...v2.6.0) (2024-05-11)
+
+### Features
+
+- dapp approve security ([3a2ed28](https://github.com/Portkey-Wallet/portkey-web/commit/3a2ed280f789575bfc3af3e7e7f7626125e8962e))
+
 ## [2.6.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.5...v2.6.0-alpha.4) (2024-05-09)
 
 **Note:** Version bump only for package @portkey/next-example

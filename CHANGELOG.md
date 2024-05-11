@@ -3,6 +3,27 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.0-alpha.4...v2.6.0) (2024-05-11)
+
+### Features
+
+- 🎸 implement token allowance detail ([82e0572](https://github.com/Portkey-Wallet/portkey-web/commit/82e05729a73034bae9a1c2e9eb16b29a8c45142b))
+- 🎸 TokenAllowanceDetail establish the process of contract ([6c89b83](https://github.com/Portkey-Wallet/portkey-web/commit/6c89b8343297d1fb954fe39bfba72badeeb4dc8f))
+- change batch token amount ([e8f7749](https://github.com/Portkey-Wallet/portkey-web/commit/e8f774979fe217e3360cdebcd72960cfd722856a))
+- dapp approve security ([3a2ed28](https://github.com/Portkey-Wallet/portkey-web/commit/3a2ed280f789575bfc3af3e7e7f7626125e8962e))
+- different notice and title text ([008dbc1](https://github.com/Portkey-Wallet/portkey-web/commit/008dbc11896619e63e12a5b35aaa65b6e79de311))
+- interface adaption ([9d7424f](https://github.com/Portkey-Wallet/portkey-web/commit/9d7424fc89946f08e3b24c20a3210698360402f4))
+- token allowance page ([5212d0d](https://github.com/Portkey-Wallet/portkey-web/commit/5212d0de90fe28d9df4278da5bd3d15841605942))
+
+### Bug Fixes
+
+- build error ([cd10c1e](https://github.com/Portkey-Wallet/portkey-web/commit/cd10c1e331e1d8ce718c744d96451d05c22a420d))
+- code review issue ([42a3c93](https://github.com/Portkey-Wallet/portkey-web/commit/42a3c93761e7d5d0fb63d5cd3f73fe8e716bcf70))
+- setAllowance dialog UI ([8bc93b5](https://github.com/Portkey-Wallet/portkey-web/commit/8bc93b5f1aa8afa6a71fc1661346ffc79e3dba80))
+- transfer limit operationDetails params ([9acb973](https://github.com/Portkey-Wallet/portkey-web/commit/9acb9730f4b521ed65d138ec00ed7a16f2511745))
+- transfer limit operationDetails params ([6130c59](https://github.com/Portkey-Wallet/portkey-web/commit/6130c591a134ea14bac048a0480daeea62571c63))
+- verify api add targetChainId param ([498019e](https://github.com/Portkey-Wallet/portkey-web/commit/498019ead8cfd42e1ee79614dd48b20dcb4b744c))
+
 ## [2.6.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.5...v2.6.0-alpha.4) (2024-05-09)
 
 ### Features

@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.0-alpha.4...v2.6.0) (2024-05-11)
+
+### Features
+
+- token allowance page ([5212d0d](https://github.com/Portkey-Wallet/portkey-web/commit/5212d0de90fe28d9df4278da5bd3d15841605942))
+
+### Bug Fixes
+
+- code review issue ([42a3c93](https://github.com/Portkey-Wallet/portkey-web/commit/42a3c93761e7d5d0fb63d5cd3f73fe8e716bcf70))
+
 ## [2.6.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.4.5...v2.6.0-alpha.4) (2024-05-09)
 
 **Note:** Version bump only for package @portkey/services
