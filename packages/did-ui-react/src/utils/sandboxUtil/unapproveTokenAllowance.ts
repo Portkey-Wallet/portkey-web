@@ -9,7 +9,7 @@ export const unapproveTokenAllowance = async ({
   contractAddress,
   amount,
 }: {
-  targetChainId?: ChainId;
+  targetChainId: ChainId;
   contractAddress: string;
   amount: number;
 }) => {

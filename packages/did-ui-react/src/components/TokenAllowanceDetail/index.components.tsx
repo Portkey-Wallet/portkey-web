@@ -1,6 +1,5 @@
 import clsx from 'clsx';
-import { ChainId } from '@portkey/types';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import BackHeaderForPage from '../BackHeaderForPage';
 import SwitchComponent from '../SwitchComponent';
 import Copy from '../Copy';
@@ -9,16 +8,12 @@ import singleMessage from '../CustomAnt/message';
 import { unapproveTokenAllowance } from '../../utils/sandboxUtil/unapproveTokenAllowance';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import './index.less';
+import { AllowanceItem } from '@portkey/services';
+import TokenImageDisplay from '../TokenImageDisplay';
 
-export interface ITokenAllowanceDetailProps {
-  chainId?: ChainId;
-  contractAddress: string;
-  url: string;
-  icon: string;
-  name: string;
-  allowance: number;
+export type ITokenAllowanceDetailProps = AllowanceItem & {
   onBack?: () => void;
-}
+};
 
 export default function TokenAllowanceDetailMain({
   chainId = 'AELF',
@@ -47,6 +42,7 @@ export default function TokenAllowanceDetailMain({
           error: handleErrorMessage(e),
         });
       } finally {
+        singleMessage.success('Approve multiple token disabled');
         setLoading(false);
       }
     } else {
@@ -54,12 +50,14 @@ export default function TokenAllowanceDetailMain({
     }
   }, [chainId, contractAddress, isOpen]);
 
+  const providedName = useMemo(() => name || 'Unknown', [name]);
+
   return (
     <div className={clsx('portkey-ui-token-allowance-detail-wrapper')}>
-      <BackHeaderForPage title={`Details`} leftCallBack={onBack} />
+      <BackHeaderForPage title={`Token Allowance`} leftCallBack={onBack} />
       <div className="portkey-ui-flex-column portkey-ui-flex-center token-info-header-wrapper">
-        <img src={icon} className="token-image" />
-        <div className="token-name">{name}</div>
+        <TokenImageDisplay src={icon} symbol={providedName} width={64} />
+        <div className="token-name">{providedName}</div>
         <a href={url} target="_blank" rel="noopener noreferrer" className="token-url-wrapper">
           {url}
         </a>
@@ -74,11 +72,14 @@ export default function TokenAllowanceDetailMain({
       <div className="token-info-divide" />
       <div className="approve-token-wrapper">
         <div className="approve-token-title">Approve multiple tokens</div>
-        <div className="approve-token-desc">Skip guradians approve after enabled enough amount</div>
+        <div className="approve-token-desc">
+          This will approve access to all tokens and the dApp will not request your approval until the allowance is
+          exhausted.
+        </div>
         <SwitchComponent text={isOpen ? 'Open' : 'Close'} onChange={handleSwitchChange} checked={isOpen} />
         {isOpen && (
           <div className="approve-amount-wrapper">
-            <div className="approve-amount-title">Approve Amount</div>
+            <div className="approve-amount-title">Amount approved</div>
             <div className="approve-amount-text-wrapper portkey-ui-flex-row-center">
               <div className="approve-amount-text">{formatAmountShow(allowance)}</div>
             </div>
