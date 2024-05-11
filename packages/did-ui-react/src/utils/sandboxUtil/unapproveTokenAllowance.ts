@@ -1,29 +1,28 @@
 import { ChainId } from '@portkey/types';
-import { CustomContractBasic, did } from '..';
+import { did } from '..';
+import { getContractBasic } from '@portkey/contracts';
 import { getChainInfo } from '../../hooks/useChainInfo';
+import { aelf } from '@portkey/utils';
 
 export const unapproveTokenAllowance = async ({
   targetChainId,
   contractAddress,
-  allownance,
+  amount,
 }: {
   targetChainId?: ChainId;
   contractAddress: string;
-  allownance: number;
+  amount: number;
 }) => {
   const chainInfo = await getChainInfo(targetChainId);
-  const res = await CustomContractBasic.callSendMethod({
-    privateKey: did?.didWallet?.managementAccount?.privateKey || '',
-    contractOptions: {
-      rpcUrl: chainInfo?.endPoint,
-      contractAddress: chainInfo?.caContractAddress || '',
-    },
-    functionName: 'Unapprove',
-    paramsOption: {
-      symbol: '*',
-      spender: contractAddress,
-      allownance,
-    },
+  const contract = await getContractBasic({
+    contractAddress: chainInfo.defaultToken.address,
+    account: aelf.getWallet(did?.didWallet?.managementAccount?.privateKey || ''),
+    rpcUrl: chainInfo?.endPoint,
+  });
+  const res = await contract.callSendMethod('UnApprove', '', {
+    symbol: '*',
+    spender: contractAddress,
+    amount,
   });
   console.log('===unapproveTokenAllowance result', res);
 };
