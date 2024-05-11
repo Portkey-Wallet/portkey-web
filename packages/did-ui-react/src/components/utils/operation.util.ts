@@ -1,6 +1,7 @@
 import { OperationTypeEnum } from '@portkey/services';
 import { getManagementAccount } from '../checkManagerCreate';
 import { UserGuardianStatus } from '../../types';
+import { AccountType } from '@portkey/services';
 
 export function getOperationDetails(
   operationType: OperationTypeEnum,
@@ -27,12 +28,17 @@ export function getOperationDetails(
     operationType === OperationTypeEnum.unsetLoginAccount
   ) {
     const { identifierHash, guardianType, verifierId } = guardian;
-    return JSON.stringify({ identifierHash, guardianType, verifierId });
+    return JSON.stringify({ identifierHash, guardianType: getGuardianTypeValue(guardianType), verifierId });
   }
   if (operationType === OperationTypeEnum.editGuardian) {
     const { identifierHash, guardianType } = guardian;
     const { preVerifierId, newVerifierId } = extra || {};
-    return JSON.stringify({ identifierHash, guardianType, preVerifierId, newVerifierId });
+    return JSON.stringify({
+      identifierHash,
+      guardianType: getGuardianTypeValue(guardianType),
+      preVerifierId,
+      newVerifierId,
+    });
   }
   if (operationType === OperationTypeEnum.transferApprove) {
     const { symbol, amount, toAddress } = extra || {};
@@ -48,22 +54,14 @@ export function getOperationDetails(
   }
   return '{}';
 }
-export function getOperationDetailsByGuardian(operationType: OperationTypeEnum, guardian?: UserGuardianStatus) {
-  // if (operationType === OperationTypeEnum.register || operationType === OperationTypeEnum.communityRecovery) {
-  //   return JSON.stringify({ manager: getManagementAccount().address });
-  // }
-  if (!guardian) return '{}';
-  if (
-    operationType === OperationTypeEnum.addGuardian ||
-    operationType === OperationTypeEnum.deleteGuardian ||
-    operationType === OperationTypeEnum.setLoginAccount ||
-    operationType === OperationTypeEnum.unsetLoginAccount
-  ) {
-    const { identifierHash, guardianType, verifierId } = guardian;
-    return JSON.stringify({ identifierHash, guardianType, verifierId });
+function getGuardianTypeValue(guardianType: AccountType) {
+  if (guardianType === 'Email') {
+    return 0;
+  } else if (guardianType === 'Google') {
+    return 2;
+  } else if (guardianType === 'Apple') {
+    return 3;
+  } else if (guardianType === 'Telegram') {
+    return 4;
   }
-  if (operationType === OperationTypeEnum.editGuardian) {
-    const { identifierHash, guardianType } = guardian;
-  }
-  return '{}';
 }
