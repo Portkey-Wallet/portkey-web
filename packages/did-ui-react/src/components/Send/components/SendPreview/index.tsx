@@ -65,7 +65,8 @@ export default function SendPreview({
     if (ZERO.plus(amount).isLessThanOrEqualTo(crossChainFee)) {
       return (
         <>
-          <span className="usd">{isMainnet && '$0'}</span>0
+          <span className="usd">{isMainnet && '$0 '}</span>
+          {`0 ${defaultToken.symbol}`}
         </>
       );
     } else {
@@ -78,12 +79,13 @@ export default function SendPreview({
                 decimal: 0,
                 price: defaultTokenPrice,
               })}
+            &nbsp;
           </span>
-          {formatAmountShow(ZERO.plus(amount).minus(crossChainFee))}
+          {`${formatAmountShow(ZERO.plus(amount).minus(crossChainFee))} ${symbol}`}
         </>
       );
     }
-  }, [amount, crossChainFee, defaultTokenPrice, isMainnet]);
+  }, [amount, crossChainFee, defaultTokenPrice, isMainnet, symbol, defaultToken]);
 
   return (
     <div className="portkey-ui-send-preview">
@@ -152,31 +154,31 @@ export default function SendPreview({
           </span>
         </p>
       </div>
-      {isCross && symbol === defaultToken.symbol && (
-        <>
-          <div className="fee-preview">
-            <span className="label">Cross-chain Transaction fee</span>
-            <p className="value">
-              <span className="symbol">
-                <span className="usd">
-                  {isMainnet &&
-                    amountInUsdShow({
-                      balance: crossChainFee,
-                      decimal: 0,
-                      price: symbolPrice,
-                    })}
-                </span>
-                {` ${formatAmountShow(crossChainFee)} ${defaultToken.symbol}`}
+      {isCross && (
+        <div className="fee-preview">
+          <span className="label">Estimated CrossChain Transfer</span>
+          <p className="value">
+            <span className="symbol">
+              <span className="usd">
+                {isMainnet &&
+                  amountInUsdShow({
+                    balance: crossChainFee,
+                    decimal: 0,
+                    price: symbolPrice,
+                  })}
               </span>
-            </p>
-          </div>
-          <div className="fee-preview">
-            <span className="label">Estimated amount received</span>
-            <p className="value">
-              <span className="symbol">{renderEstimateAmount}</span>
-            </p>
-          </div>
-        </>
+              {` ${formatAmountShow(crossChainFee)} ${defaultToken.symbol}`}
+            </span>
+          </p>
+        </div>
+      )}
+      {isCross && symbol === defaultToken.symbol && (
+        <div className="fee-preview">
+          <span className="label">Estimated amount received</span>
+          <p className="value">
+            <span className="symbol">{renderEstimateAmount}</span>
+          </p>
+        </div>
       )}
     </div>
   );

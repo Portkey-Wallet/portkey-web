@@ -1,9 +1,9 @@
-import { Button, Input, message } from 'antd';
+import { Input, message } from 'antd';
 import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { useState, useMemo, useCallback, useEffect, memo, ReactNode, useRef } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
-import { ChainId } from '@portkey/types';
+import { ChainId, ChainType } from '@portkey/types';
 import {
   EmailError,
   EmailReg,
@@ -13,6 +13,7 @@ import {
   handleErrorMessage,
   handleVerificationDoc,
   parseAppleIdentityToken,
+  parseTelegramToken,
   setLoading,
   socialLoginAuth,
   verification,
@@ -21,7 +22,9 @@ import {
   ICountryItem,
   ISocialLogin,
   IVerificationInfo,
+  NetworkType,
   OnErrorFunc,
+  TSupportAccountType,
   UserGuardianStatus,
   VerifyStatus,
 } from '../../types';
@@ -40,15 +43,29 @@ import { useVerifyToken } from '../../hooks';
 import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
+import {
+  AccountLoginList,
+  AddGuardiansType,
+  guardianAccountExistTip,
+  verifierExistTip,
+  verifierUsedTip,
+} from '../../constants/guardian';
+import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
+import { ILoginConfig } from '../config-provider/types';
+import ThrottleButton from '../ThrottleButton';
 
 export interface GuardianAddProps {
   header?: ReactNode;
   className?: string;
+  caHash: string;
   originChainId: ChainId;
+  chainType?: ChainType;
   phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
   verifierList?: VerifierItem[];
+  networkType: NetworkType;
+  sandboxId?: string;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   handleAddGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -66,10 +83,14 @@ function GuardianAdd({
   header,
   className,
   originChainId,
+  caHash,
+  chainType = 'aelf',
   isErrorTip = true,
   phoneCountry: customPhoneCountry,
   verifierList,
   guardianList,
+  networkType,
+  sandboxId,
   onError,
   handleAddGuardian,
 }: GuardianAddProps) {
@@ -81,47 +102,59 @@ function GuardianAdd({
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [socialValue, setSocialValue] = useState<ISocialInput | undefined>();
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
-  const [isExist, setIsExist] = useState<boolean>(false);
-  const [error, setError] = useState<string | undefined>('');
+  const [accountErr, setAccountErr] = useState<string>();
+  const [verifierExist, setVerifierExist] = useState<boolean>(false);
   const reCaptchaHandler = useReCaptchaModal();
   const curGuardian = useRef<UserGuardianStatus | undefined>();
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(customPhoneCountry);
   const verifyToken = useVerifyToken();
+  const [addBtnLoading, setAddBtnLoading] = useState<boolean>(false);
   const guardianAccount = useMemo(
     () => emailValue || socialValue?.id || (countryCode && phoneNumber ? `+${countryCode.code}${phoneNumber}` : ''),
     [countryCode, emailValue, phoneNumber, socialValue?.id],
   );
   const addBtnDisable = useMemo(
-    () => isExist || error || !selectVerifierId || !guardianAccount,
-    [error, guardianAccount, isExist, selectVerifierId],
+    () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
+    [accountErr, guardianAccount, selectVerifierId, verifierExist],
   );
-  const guardianTypeSelectItems = useMemo(
+
+  const loginConfig = ConfigProvider.getConfig('loginConfig') as ILoginConfig;
+  const loginMethodsOrder = useMemo(
+    () => (loginConfig?.loginMethodsOrder as AccountType[]) || AccountLoginList,
+    [loginConfig?.loginMethodsOrder],
+  );
+
+  const guardianTypeSelectItems = useMemo(() => {
+    if (Array.isArray(loginMethodsOrder)) {
+      const filterLoginMethodsOrder = loginMethodsOrder?.filter((item: AccountType) =>
+        AccountLoginList.includes(item as TSupportAccountType),
+      );
+      return filterLoginMethodsOrder?.map((item: AccountType) => {
+        return {
+          value: AddGuardiansType[item]?.value,
+          label: AddGuardiansType[item]?.label,
+          icon: <CustomSvg type={AddGuardiansType[item]?.icon} />,
+          id: AddGuardiansType[item]?.id,
+        };
+      });
+    }
+    return [];
+  }, [loginMethodsOrder]);
+
+  const customSelectOption = useMemo(
     () => [
       {
-        value: AccountTypeEnum[AccountTypeEnum.Email],
-        label: AccountTypeEnum[AccountTypeEnum.Email],
-        icon: <CustomSvg type="Email" />,
-        id: AccountTypeEnum.Email,
-      },
-      {
-        value: AccountTypeEnum[AccountTypeEnum.Phone],
-        label: AccountTypeEnum[AccountTypeEnum.Phone],
-        icon: <CustomSvg type="GuardianPhone" />,
-        id: AccountTypeEnum.Phone,
-      },
-      {
-        value: AccountTypeEnum[AccountTypeEnum.Google],
-        label: AccountTypeEnum[AccountTypeEnum.Google],
-        icon: <CustomSvg type="GuardianGoogle" />,
-        id: AccountTypeEnum.Google,
-      },
-      {
-        value: AccountTypeEnum[AccountTypeEnum.Apple],
-        label: AccountTypeEnum[AccountTypeEnum.Apple],
-        icon: <CustomSvg type="GuardianApple" />,
-        id: AccountTypeEnum.Apple,
+        value: 'tip',
+        disabled: true,
+        className: 'portkey-option-tip',
+        label: (
+          <div className="portkey-ui-flex label-item">
+            <CustomSvg type="Warning" />
+            <div className="tip">{verifierUsedTip}</div>
+          </div>
+        ),
       },
     ],
     [],
@@ -134,8 +167,9 @@ function GuardianAdd({
         label: item?.name,
         icon: <img src={item?.imageUrl} />,
         id: item?.id,
+        disabled: !!guardianList?.find((_guardian) => _guardian.verifierId === item.id),
       })),
-    [verifierList],
+    [guardianList, verifierList],
   );
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
@@ -150,12 +184,12 @@ function GuardianAdd({
     setCountryCode(undefined);
     setPhoneNumber('');
     setSocialValue(undefined);
-    setIsExist(false);
-    setError('');
+    setVerifierExist(false);
+    setAccountErr('');
   }, []);
   const handleVerifierChange = useCallback((id: string) => {
     setSelectVerifierId(id);
-    setIsExist(false);
+    setVerifierExist(false);
   }, []);
   const getPhoneCountry = useCallback(async () => {
     try {
@@ -190,6 +224,9 @@ function GuardianAdd({
             clientId = socialLogin?.Google?.clientId;
             customLoginHandler = socialLogin?.Google?.customLoginHandler;
             break;
+          case 'Telegram':
+            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
+            break;
           default:
             throw 'accountType is not supported';
         }
@@ -222,8 +259,10 @@ function GuardianAdd({
     } else if (v === 'Apple') {
       const userInfo = parseAppleIdentityToken(accessToken);
       const appleUserExtraInfo = await did.services.getAppleUserExtraInfo({
-        userId: userInfo?.userId,
+        userId: userInfo?.userId || '',
       });
+      if (!appleUserExtraInfo) return;
+
       const { firstName, isPrivate } = appleUserExtraInfo;
       if (userInfo) {
         info = {
@@ -234,9 +273,23 @@ function GuardianAdd({
           isPrivate,
         };
       }
+    } else if (v === 'Telegram') {
+      const userInfo = parseTelegramToken(accessToken);
+      if (!userInfo) return;
+      const { firstName, isPrivate, userId } = userInfo;
+      if (userInfo) {
+        info = {
+          id: userId,
+          firstName,
+          thirdPartyEmail: undefined,
+          accessToken,
+          isPrivate,
+        };
+      }
     }
     return info;
   }, []);
+
   const socialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
@@ -245,6 +298,7 @@ function GuardianAdd({
           type: v,
           clientId,
           redirectURI,
+          network: networkType,
         });
         if (!response?.token) throw new Error('add guardian failed');
         const info = await socialUserInfo(v, response.token);
@@ -260,7 +314,7 @@ function GuardianAdd({
         );
       }
     },
-    [isErrorTip, onError, socialBasic, socialUserInfo],
+    [isErrorTip, networkType, onError, socialBasic, socialUserInfo],
   );
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
@@ -275,6 +329,7 @@ function GuardianAdd({
           chainId: originChainId,
           clientId,
           redirectURI,
+          networkType,
           operationType: OperationTypeEnum.addGuardian,
           customLoginHandler,
         });
@@ -295,26 +350,45 @@ function GuardianAdd({
         setLoading(false);
       }
     },
-    [socialBasic, socialUserInfo, verifyToken, originChainId, isErrorTip, onError],
+    [socialBasic, socialUserInfo, verifyToken, originChainId, networkType, isErrorTip, onError],
   );
-  const checkValid = useCallback(() => {
+
+  const checkValid = useCallback(async () => {
+    // 1. check email valid
     if (selectGuardianType === AccountTypeEnum[AccountTypeEnum.Email]) {
       if (!EmailReg.test(emailValue as string)) {
-        setError(EmailError.invalidEmail);
+        setAccountErr(EmailError.invalidEmail);
         return false;
       }
     }
+    // fetch latest guardianList
+    const _guardianList = await getGuardianList({
+      caHash,
+      originChainId,
+      chainType,
+      sandboxId,
+    });
+
+    // 2. check guardian account exist
+    const _guardianExist = _guardianList?.some((temp) => temp.guardianIdentifier === guardianAccount);
+    if (_guardianExist) {
+      setAccountErr(guardianAccountExistTip);
+      return false;
+    }
+    // 3. check verifier valid
     const verifier = verifierMap.current?.[selectVerifierId!];
     if (!verifier) {
       message.error('Can not get the current verifier message');
       return false;
     }
-    const _key = `${guardianAccount}&${verifier.id}`;
-    const _isExist = guardianList?.some((item) => item.key === _key);
-    if (_isExist) {
-      setIsExist(true);
+    // 4. check verifier exist
+    const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
+    if (_verifierExist) {
+      setVerifierExist(true);
       return false;
     }
+
+    const _key = `${guardianAccount}&${verifier.id}`;
     const _guardian: UserGuardianStatus = {
       isLoginGuardian: false,
       key: _key,
@@ -327,7 +401,17 @@ function GuardianAdd({
     };
     curGuardian.current = _guardian;
     return true;
-  }, [emailValue, guardianAccount, guardianList, selectGuardianType, selectVerifierId, socialValue]);
+  }, [
+    caHash,
+    chainType,
+    emailValue,
+    guardianAccount,
+    originChainId,
+    sandboxId,
+    selectGuardianType,
+    selectVerifierId,
+    socialValue,
+  ]);
   const handleSocialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
@@ -349,6 +433,12 @@ function GuardianAdd({
     },
     [isErrorTip, onError, socialAuth],
   );
+
+  const handleClearSocialAccount = useCallback(() => {
+    setSocialValue(undefined);
+    setAccountErr('');
+  }, []);
+
   const renderSocialGuardianAccount = useCallback(
     (v: ISocialLogin) => (
       <div className="social input">
@@ -356,6 +446,7 @@ function GuardianAdd({
           <div className="portkey-ui-flex-column social-input detail">
             <span className="social-name">{socialValue?.firstName}</span>
             <span className="social-email">{socialValue?.isPrivate ? '******' : socialValue?.thirdPartyEmail}</span>
+            <CustomSvg type="Close2" onClick={handleClearSocialAccount} />
           </div>
         ) : (
           <div className="portkey-ui-flex social-input click" onClick={() => handleSocialAuth(v)}>
@@ -364,7 +455,7 @@ function GuardianAdd({
         )}
       </div>
     ),
-    [handleSocialAuth, socialValue?.firstName, socialValue?.id, socialValue?.isPrivate, socialValue?.thirdPartyEmail],
+    [handleClearSocialAccount, handleSocialAuth, socialValue],
   );
   const guardianAccountInput = useMemo(
     () => ({
@@ -376,8 +467,8 @@ function GuardianAdd({
             placeholder={t('Enter email')}
             onChange={(e) => {
               setEmailValue(e.target.value);
-              setError('');
-              setIsExist(false);
+              setAccountErr('');
+              setVerifierExist(false);
             }}
           />
         ),
@@ -391,13 +482,13 @@ function GuardianAdd({
             phoneNumber={phoneNumber}
             onAreaChange={(v) => {
               setCountryCode(v);
-              setError('');
-              setIsExist(false);
+              setAccountErr('');
+              setVerifierExist(false);
             }}
             onPhoneNumberChange={(v) => {
               setPhoneNumber(v);
-              setError('');
-              setIsExist(false);
+              setAccountErr('');
+              setVerifierExist(false);
             }}
           />
         ),
@@ -410,6 +501,10 @@ function GuardianAdd({
       [AccountTypeEnum[AccountTypeEnum.Apple]]: {
         element: renderSocialGuardianAccount('Apple'),
         label: t('Guardian Apple'),
+      },
+      [AccountTypeEnum[AccountTypeEnum.Telegram]]: {
+        element: renderSocialGuardianAccount('Telegram'),
+        label: t('Guardian Telegram'),
       },
     }),
     [
@@ -505,7 +600,16 @@ function GuardianAdd({
     [handleAddGuardian, isErrorTip, onError],
   );
   const onConfirm = useCallback(async () => {
-    if (checkValid()) {
+    let _valid = true;
+    try {
+      setAddBtnLoading(true);
+      _valid = await checkValid();
+      setAddBtnLoading(false);
+    } catch (error) {
+      _valid = false;
+      setAddBtnLoading(false);
+    }
+    if (_valid) {
       if (socialValue?.id) {
         try {
           setLoading(true);
@@ -576,27 +680,33 @@ function GuardianAdd({
           <div className="input-item">
             <p className="guardian-add-input-item-label">{guardianAccountInput[selectGuardianType].label}</p>
             {guardianAccountInput[selectGuardianType].element}
-            {error && <div className="guardian-error-tip">{error}</div>}
+            {accountErr && <span className="guardian-error-tip">{accountErr}</span>}
           </div>
         )}
         <div className="input-item">
           <p className="guardian-add-input-item-label">{t('Verifier')}</p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
-            className="verifier-select"
+            className="verifier-select, portkey-select-verifier-option-tip"
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
+            customOptions={customSelectOption}
           />
-          {isExist && <div className="guardian-error-tip">{t('This guardian already exists')}</div>}
+          {verifierExist && <div className="guardian-error-tip">{verifierExistTip}</div>}
         </div>
       </div>
       <div className="guardian-edit-footer">
-        <Button type="primary" className="guardian-btn" onClick={onConfirm} disabled={!!addBtnDisable}>
+        <ThrottleButton
+          type="primary"
+          className="guardian-btn"
+          onClick={onConfirm}
+          disabled={!!addBtnDisable}
+          loading={addBtnLoading}>
           {t('Confirm')}
-        </Button>
+        </ThrottleButton>
       </div>
-      <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)}>
+      <CommonBaseModal destroyOnClose open={verifierVisible} onClose={() => setVerifierVisible(false)}>
         <VerifierPage
           originChainId={originChainId}
           operationType={OperationTypeEnum.addGuardian}
@@ -613,11 +723,16 @@ function GuardianAdd({
           onReSend={reSendCode}
         />
       </CommonBaseModal>
-      <CommonBaseModal className="portkey-ui-modal-approval" open={approvalVisible} onClose={onCloseApproval}>
+      <CommonBaseModal
+        className="portkey-ui-modal-approval"
+        open={approvalVisible}
+        destroyOnClose
+        onClose={onCloseApproval}>
         <GuardianApproval
           header={<BackHeader onBack={onCloseApproval} />}
           originChainId={originChainId}
           guardianList={guardianList}
+          networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}

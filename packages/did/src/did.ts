@@ -1,11 +1,13 @@
 import { portkey } from '@portkey/accounts';
 import {
   AccountLoginParams,
+  CheckManagerParams,
   EditManagerParams,
   GetHolderInfoParams,
   IDID,
   IDIDAccountMethods,
   LoginResult,
+  LogoutResult,
   RegisterResult,
   ScanLoginParams,
   VerifierItem,
@@ -25,7 +27,7 @@ import {
 } from '@portkey/services';
 import { FetchRequest } from '@portkey/request';
 import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
-import { ISignature, IKeyStore, IDIDBaseWallet, IConfig, IBaseRequest, ChainId } from '@portkey/types';
+import { ISignature, IKeyStore, IDIDBaseWallet, IConfig, IBaseRequest, ChainId, SendOptions } from '@portkey/types';
 import { DIDConfig } from './config';
 export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public didWallet: DIDWallet<portkey.WalletAccount>;
@@ -44,7 +46,7 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
     this.connectRequest = new FetchRequest(this.config.connectRequestConfig);
     this.didGraphQL = new DIDGraphQL({ config: this.config });
     this.connectServices = new Connect(this.connectRequest);
-    this.services = new Services(this.fetchRequest, this.didGraphQL);
+    this.services = new Services(this.fetchRequest, this.didGraphQL, this.config.referralConfig);
 
     this.didWallet = new DIDWallet({
       accountProvider: this.accountProvider,
@@ -86,8 +88,8 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public async login(type: any, params: any): Promise<any> {
     return this.didWallet.login(type, params);
   }
-  public async logout(params: EditManagerParams): Promise<boolean> {
-    return this.didWallet.logout(params);
+  public async logout(params: EditManagerParams, sendOption?: SendOptions): Promise<LogoutResult> {
+    return this.didWallet.logout(params, sendOption);
   }
   register(params: Omit<RegisterParams, 'manager'>): Promise<RegisterResult> {
     return this.didWallet.register(params);
@@ -111,5 +113,8 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   }
   reset() {
     this.didWallet.reset();
+  }
+  checkManagerIsExist(params: CheckManagerParams): Promise<boolean> {
+    return this.didWallet.checkManagerIsExist(params);
   }
 }

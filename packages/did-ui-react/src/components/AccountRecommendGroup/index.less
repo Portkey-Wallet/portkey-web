@@ -1,0 +1,33 @@
+.social-content-wrapper {
+  .portkey-ant-btn-default.recommend-login-btn {
+    border: 1px solid var(--portkey-ui-border-1);
+    border-radius: var(--portkey-ui-primary-border-radius);
+    line-height: var(--portkey-ui-default-btn-h);
+    color: var(--portkey-ui-text-primary);
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    padding: 0 12px;
+    align-items: center;
+    margin-bottom: 12px;
+    position: relative;
+    .portkey-ui-custom-svg,
+    .portkey-ui-custom-svg svg {
+      height: 24px;
+      width: 24px;
+      line-height: 1;
+      font-size: 24px;
+    }
+    .portkey-ui-custom-svg {
+      position: absolute;
+      left: 12px;
+    }
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+  .social-login-disabled-button {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}

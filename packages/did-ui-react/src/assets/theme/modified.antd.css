@@ -4101,6 +4101,7 @@ a.portkey-ant-btn-sm {
   position: absolute;
   z-index: 1000;
   transition: all 0.3s;
+  min-width: 360px;
 }
 .portkey-ant-drawer-content-wrapper-hidden {
   display: none;

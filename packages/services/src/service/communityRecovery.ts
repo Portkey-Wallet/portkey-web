@@ -1,5 +1,5 @@
 import { IDIDGraphQL } from '@portkey/graphql';
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest, IReferralConfig } from '@portkey/types';
 import {
   GetCAHolderByManagerParams,
   GetCAHolderByManagerResult,
@@ -27,17 +27,20 @@ import {
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
+  VerifyTelegramTokenParams,
 } from '../types/verification';
 import { Search } from './search';
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   extends Search<T>
   implements ICommunityRecoveryService
 {
+  public referralConfig: IReferralConfig;
   private readonly _didGraphQL: IDIDGraphQL;
 
-  constructor(request: T, didGraphQL: IDIDGraphQL) {
+  constructor(request: T, didGraphQL: IDIDGraphQL, referralConfig: IReferralConfig) {
     super(request);
     this._didGraphQL = didGraphQL;
+    this.referralConfig = referralConfig;
   }
   async getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult> {
     return this._request.send({
@@ -81,17 +84,21 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     });
   }
   register(params: RegisterParams): Promise<RegisterResult> {
+    const _params = { ...params };
+    if (this.referralConfig.referralInfo) _params.referralInfo = this.referralConfig.referralInfo;
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/register/request',
-      params,
+      params: _params,
     });
   }
   recovery(params: RecoveryParams): Promise<RecoveryResult> {
+    const _params = { ...params };
+    if (this.referralConfig.referralInfo) _params.referralInfo = this.referralConfig.referralInfo;
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/recovery/request',
-      params,
+      params: _params,
     });
   }
 
@@ -130,6 +137,13 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
         ...params,
         accessToken: params.identityToken,
       },
+    });
+  }
+  verifyTelegramToken(params: VerifyTelegramTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTelegramToken',
+      params,
     });
   }
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {

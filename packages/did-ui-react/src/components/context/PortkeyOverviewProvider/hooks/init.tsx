@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { SET_SERVICE_CONFIG } from '../../../../constants/events';
 import { did, eventBus } from '../../../../utils';
-import { useThrottleEffect } from '../../../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 
 export default function Init() {
   const setHandler = useCallback(() => {
@@ -9,7 +9,7 @@ export default function Init() {
   }, []);
 
   // Listen service change
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     eventBus.addListener(SET_SERVICE_CONFIG, setHandler);
     return () => {
       eventBus.removeListener(SET_SERVICE_CONFIG, setHandler);

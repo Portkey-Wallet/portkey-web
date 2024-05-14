@@ -1,5 +1,4 @@
 import { portkey } from '@portkey/accounts';
-import { Button, message } from 'antd';
 import clsx from 'clsx';
 import { useCallback, useState, useEffect, useMemo } from 'react';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
@@ -11,6 +10,8 @@ import { DIDWalletInfo } from '../types';
 import { randomId } from '@portkey/utils';
 import { evokePortkey } from '@portkey/onboarding';
 import './index.less';
+import singleMessage from '../CustomAnt/message';
+import ThrottleButton from '../ThrottleButton';
 
 export default function WakeUpPortkey({
   type,
@@ -37,6 +38,7 @@ export default function WakeUpPortkey({
         caInfo: caWallet.info,
         accountInfo: caWallet.accountInfo,
         walletInfo: managementAccount.wallet,
+        createType: 'addManager',
       });
       setLoading(false);
     }
@@ -65,7 +67,7 @@ export default function WakeUpPortkey({
         type: 'login',
         address: managementAccount?.wallet.address as string,
         id: randomId(),
-        netWorkType: networkType,
+        networkType: networkType,
         chainType: 'aelf',
         extraData: {
           deviceInfo,
@@ -82,21 +84,21 @@ export default function WakeUpPortkey({
         onStatusChange: (status) => {
           if (status === 'failure') {
             setLoading(false);
-            message.error('Evoke portkey app timeout');
+            singleMessage.error('Evoke portkey app timeout');
           }
         },
       });
     } catch (error) {
-      message.error(handleErrorMessage(error));
+      singleMessage.error(handleErrorMessage(error));
     } finally {
       // setLoading(false);
     }
   }, [deviceInfo, generateKeystore, intervalHandler, networkType, websiteInfo]);
 
   return (
-    <Button className={clsx('social-login-btn')} onClick={onPortkeySuccess}>
+    <ThrottleButton className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
       <CustomSvg type="Portkey-login" />
       {`${type} with Portkey`}
-    </Button>
+    </ThrottleButton>
   );
 }

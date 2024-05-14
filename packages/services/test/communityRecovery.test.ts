@@ -8,7 +8,7 @@ const request = new FetchRequestMock({});
 const didGraphQL = new DIDGraphQLMock({
   client: {} as any,
 });
-const communityRecovery = new CommunityRecovery(request, didGraphQL);
+const communityRecovery = new CommunityRecovery(request, didGraphQL, {} as any);
 
 describe('communityRecovery describe', () => {
   test('test getHolderInfo', async () => {

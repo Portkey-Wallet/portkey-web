@@ -3,7 +3,7 @@ import { AccountType } from '@portkey/services';
 import { ChainId, IBlockchainWallet } from '@portkey/types';
 import { CSSProperties, ReactNode } from 'react';
 import { IGuardianIdentifierInfo, IPhoneCountry } from './signIn';
-import { OnErrorFunc, ValidatorHandler } from '../../types';
+import { OnErrorFunc, TotalAccountType, ValidatorHandler } from '../../types';
 export * from './verify';
 export * from './signIn';
 export * from './reCaptcha';
@@ -23,6 +23,7 @@ export interface DIDWalletInfo {
   caInfo: CAInfo;
   pin: string;
   chainId: ChainId;
+  createType: AddManagerType;
   walletInfo: IBlockchainWallet;
   accountInfo: ManagerInfoType;
 }
@@ -40,6 +41,7 @@ export interface CreatePendingInfo {
   sessionId: string;
   requestId: string;
   clientId: string;
+  createType: AddManagerType;
   pin: string;
   walletInfo: IBlockchainWallet;
 }
@@ -69,8 +71,11 @@ export interface IBaseGetGuardianProps {
   isErrorTip?: boolean;
   isShowScan?: boolean; // show scan button
   termsOfService?: ReactNode;
+  privacyPolicy?: string;
   phoneCountry?: IPhoneCountry; // phone country code info
-  extraElement?: ReactNode; // extra element
+  extraElementList?: ReactNode[]; // extra element
+  loginMethodsOrder?: TotalAccountType[];
+  recommendIndexes?: number[];
   onError?: OnErrorFunc;
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone

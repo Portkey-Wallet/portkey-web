@@ -12,6 +12,7 @@ interface PhoneNumberInputProps {
   iso?: IPhoneCountry['iso'];
   countryList?: IPhoneCountry['countryList'];
   phoneNumber?: string;
+  areaCodeShowType?: 'modal' | 'drawer';
   onAreaChange?: (v: ICountryItem) => void;
   onPhoneNumberChange?: (v: string) => void;
   onCancel?: () => void;
@@ -21,6 +22,7 @@ export default function PhoneNumberInput({
   iso,
   countryList,
   phoneNumber,
+  areaCodeShowType,
   onAreaChange,
   onCancel,
   onPhoneNumberChange,
@@ -42,7 +44,7 @@ export default function PhoneNumberInput({
               setOpen((v) => !v);
             }}>
             <div>{currentArea?.code ? `+ ${currentArea.code}` : '--'}</div>
-            <CustomSvg className={clsx('input-arrow', open && 'open-input-arrow')} type="BackLeft" />
+            <CustomSvg className={clsx('input-arrow', open && 'open-input-arrow')} type="ArrowDown" />
           </div>
         </div>
 
@@ -54,6 +56,7 @@ export default function PhoneNumberInput({
         />
       </div>
       <AreaCode
+        type={areaCodeShowType}
         open={open}
         value={iso}
         areaList={countryList}

@@ -1,4 +1,6 @@
-import { ModalFuncProps, Modal } from 'antd';
+import { ModalFuncProps } from 'antd';
+import { Modal } from '../../CustomAnt';
+import { PORTKEY_PREFIX_CLS } from '../../../constants';
 
 export function modalMethod({
   type = 'confirm',
@@ -8,23 +10,16 @@ export function modalMethod({
   onCancel,
   ...props
 }: ModalFuncProps) {
-  return new Promise((resolve) => {
-    Modal[type]({
-      width: 320,
-      icon: null,
-      centered: true,
-      okText: 'Confirm',
-      ...props,
-      wrapClassName: 'portkey-ui-wrapper portkey-ui-modal-method-wrapper ' + wrapClassName,
-      className: 'portkey-ui-modal-method ' + className,
-      onOk: () => {
-        onOk?.();
-        resolve(true);
-      },
-      onCancel: () => {
-        onCancel?.();
-        resolve(false);
-      },
-    });
+  return Modal[type]({
+    width: 320,
+    icon: null,
+    centered: true,
+    okText: 'Confirm',
+    ...props,
+    wrapClassName: 'portkey-ui-wrapper portkey-ui-modal-method-wrapper ' + wrapClassName,
+    className: 'portkey-ui-modal-method ' + className,
+    prefixCls: `${PORTKEY_PREFIX_CLS}-modal`,
+    onOk: onOk,
+    onCancel: onCancel,
   });
 }

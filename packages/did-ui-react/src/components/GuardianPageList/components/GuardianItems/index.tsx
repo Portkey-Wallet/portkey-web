@@ -26,10 +26,11 @@ function GuardianItems({ item, onClick }: GuardianItemProps) {
           </div>
         );
       case 'Apple':
+      case 'Telegram':
         return (
           <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
-            <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail}</div>
+            <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail || '******'}</div>
           </div>
         );
     }
