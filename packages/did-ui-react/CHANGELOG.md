@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.3-alpha.0...v2.6.3-alpha.1) (2024-05-14)
+
+### Bug Fixes
+
+- ui bug ([e60841a](https://github.com/Portkey-Wallet/portkey-web/commit/e60841a13165471c4b5a898f731594ca059e9785))
+
 ## [2.6.3-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.2...v2.6.3-alpha.0) (2024-05-14)
 
 ### Bug Fixes

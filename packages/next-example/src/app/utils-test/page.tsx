@@ -107,13 +107,6 @@ export default function AppleAuth() {
                 name: 'localhost',
               },
             });
-            /**
- * {
-  amount: string; 
-  symbol: string; // symbol为 * 代表批量Approve， 否则返回具体的symbol名
-  guardiansApproved: IGuardiansApproved[];
-}
-*/
             console.log(result, 'result===');
             const chainInfo = await getChainInfo(originChainId);
             const [portkeyContract, tokenContract] = await Promise.all(
