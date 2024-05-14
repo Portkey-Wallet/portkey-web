@@ -5,7 +5,6 @@ import { openloginSignal, TIOpenloginSignalrHandler, IOpenloginSignalr } from '@
 import { modalMethod } from '../modalMethod';
 import PortkeyOpener from '../portkeyWindow/opener';
 import { TelegramPlatform } from '../telegramPlatform';
-import { sleep } from '@portkey/utils';
 
 class PopupHandler extends EventEmitter {
   url?: string;
@@ -104,7 +103,6 @@ class PopupHandler extends EventEmitter {
   }
 
   async getResultByInvoke(clientId: string, methodName: string) {
-    await sleep(2000);
     return new Promise(async (resolve) => {
       if (this.invokeTimer) clearInterval(this.invokeTimer);
       this.invokeTimer = Number(
