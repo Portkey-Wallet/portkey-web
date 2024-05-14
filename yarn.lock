@@ -3542,6 +3542,11 @@
     "@portkey/types" "^2.0.0-alpha.0"
     "@types/readable-stream" "^2.3.15"
 
+"@portkey/types@^2.0.0-alpha.0":
+  version "2.6.2"
+  resolved "https://registry.npmmirror.com/@portkey/types/-/types-2.6.2.tgz#2dde1ab7a7bc7cad30ff6088bcd7d59b1a84e683"
+  integrity sha512-949D6Ft9l4eGL8TkOfAB26J4zPsTYeBDkxp9ZMJ+qmLrM3nsxahbjF1qoEAXuKosOoeG9BsLK6vtva+ZY8Pbbg==
+
 "@protobufjs/aspromise@^1.1.1", "@protobufjs/aspromise@^1.1.2":
   version "1.1.2"
   resolved "https://registry.npmjs.org/@protobufjs/aspromise/-/aspromise-1.1.2.tgz#9b8b0cc663d669a7d8f6f5d0893a14d348f30fbf"

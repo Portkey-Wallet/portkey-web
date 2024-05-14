@@ -62,6 +62,7 @@ export interface GuardianApprovalProps {
   verifierId?: string;
   symbol?: string;
   amount?: number | string;
+  amountShow?: number | string;
   spender?: string;
   toAddress?: string;
   preVerifierId?: string;
@@ -96,6 +97,7 @@ const GuardianApprovalMain = forwardRef(
       verifierId,
       symbol,
       amount,
+      amountShow,
       toAddress,
       preVerifierId,
       newVerifierId,
@@ -338,7 +340,7 @@ const GuardianApprovalMain = forwardRef(
                 // guardianType,
                 targetChainId,
                 symbol,
-                amount,
+                amountShow,
                 operationDetails,
               );
               console.log('rst===', rst);
@@ -501,7 +503,7 @@ const GuardianApprovalMain = forwardRef(
                     // guardianType,
                     targetChainId,
                     symbol,
-                    amount,
+                    amountShow,
                     operationDetails,
                     // guardianIdentifier,
                     // firstName,

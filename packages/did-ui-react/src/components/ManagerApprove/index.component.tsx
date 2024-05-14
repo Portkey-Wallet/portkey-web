@@ -225,6 +225,7 @@ export default function ManagerApproveInner({
             operationType={OperationTypeEnum.managerApprove}
             symbol={batchApproveToken.current ? '*' : symbol}
             amount={timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0)}
+            amountShow={allowance}
             spender={spender}
           />
         )}

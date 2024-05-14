@@ -100,8 +100,20 @@ export default function AppleAuth() {
               amount: 1e8 * 67,
               targetChainId: originChainId,
               networkType: 'TESTNET',
+              showBatchApproveToken: true,
+              dappInfo: {
+                icon: 'https://icon.horse/icon/localhost:3000/50',
+                href: 'http://localhost:3000',
+                name: 'localhost',
+              },
             });
-
+            /**
+ * {
+  amount: string; 
+  symbol: string; // symbol为 * 代表批量Approve， 否则返回具体的symbol名
+  guardiansApproved: IGuardiansApproved[];
+}
+*/
             console.log(result, 'result===');
             const chainInfo = await getChainInfo(originChainId);
             const [portkeyContract, tokenContract] = await Promise.all(

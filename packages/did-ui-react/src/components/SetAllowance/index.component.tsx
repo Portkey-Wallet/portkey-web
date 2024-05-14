@@ -76,7 +76,7 @@ export default function SetAllowanceMain({
   const noticeText = useMemo(() => {
     return showBatchApproveToken
       ? `The allowance you set will apply to all tokens, allowing the dApp to utilise them as long as the combined
-      total doesn&rsquo;t exceed the limit. It&rsquo;s crucial to assess potential risks carefully and set a
+      total doesn't exceed the limit. It's crucial to assess potential risks carefully and set a
       reasonable allowance value, taking into account both token price and quantity.`
       : 'Within this allowance limit, the Dapp does not require reconfirmation from you when a transaction occurs.';
   }, [showBatchApproveToken]);
