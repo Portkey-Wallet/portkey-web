@@ -395,6 +395,7 @@ const GuardianApprovalMain = forwardRef(
       <div>
         <CommonModal
           type="modal"
+          wrapClassName="warning-modal-wrapper"
           closable={false}
           open={isShowWarning}
           className="confirm-return-modal"
