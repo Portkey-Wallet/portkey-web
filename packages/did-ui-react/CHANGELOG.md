@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.2...v2.6.3) (2024-05-15)
+
+### Bug Fixes
+
+- operationDetails param logic ([9cad71c](https://github.com/Portkey-Wallet/portkey-web/commit/9cad71cc1ba2e3166fcb102ece5aaf3689aef7bd))
+- review issue ([b403d33](https://github.com/Portkey-Wallet/portkey-web/commit/b403d3330fc88218e333535309e43ce7001e8043))
+- setallowance param ([f6d5bb0](https://github.com/Portkey-Wallet/portkey-web/commit/f6d5bb0526103b26fe83b9731e20a5cdcb1d97e6))
+- ui bug ([e60841a](https://github.com/Portkey-Wallet/portkey-web/commit/e60841a13165471c4b5a898f731594ca059e9785))
+- warning dialog border ([dab1fb7](https://github.com/Portkey-Wallet/portkey-web/commit/dab1fb74e15a933073172182ea3e3a26d90097b3))
+- warning dialog UI ([d841eb3](https://github.com/Portkey-Wallet/portkey-web/commit/d841eb34f60408bb4116f8eec16fdfb83c741fb1))
+- warning dialogui ([506b1c0](https://github.com/Portkey-Wallet/portkey-web/commit/506b1c0577102970beedd109f72f461a4f57382e))
+
 ## [2.6.3-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.3-alpha.0...v2.6.3-alpha.2) (2024-05-15)
 
 ### Bug Fixes
