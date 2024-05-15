@@ -14,6 +14,7 @@ import { divDecimals, timesDecimals } from '../../utils/converter';
 import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL, DEFAULT_NFT_DECIMAL } from '../../constants';
 import { isNFT } from '../../utils/assets';
 import './index.less';
+import { getOperationDetails } from '../utils/operation.util';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
@@ -221,12 +222,13 @@ export default function ManagerApproveInner({
                 symbol: batchApproveToken.current ? '*' : symbol,
               });
             }}
-            // onError={(error) => onError?.(Error(handleErrorMessage(error.error)))}
             operationType={OperationTypeEnum.managerApprove}
-            symbol={batchApproveToken.current ? '*' : symbol}
-            amount={timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0)}
-            amountShow={allowance}
-            spender={spender}
+            operationDetails={getOperationDetails(OperationTypeEnum.managerApprove, {
+              symbol: batchApproveToken.current ? '*' : symbol,
+              amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
+              spender,
+            })}
+            officialWebsiteShow={{ amount: allowance, symbol: batchApproveToken.current ? '*' : symbol }}
           />
         )}
       </div>

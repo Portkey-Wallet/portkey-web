@@ -36,6 +36,7 @@ import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import { GuardianApprovedItem } from '../Guardian/utils/type';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -654,9 +655,12 @@ function SendContent({
         onClose={() => setApprovalVisible(false)}
         onBack={() => setApprovalVisible(false)}
         onApprovalSuccess={onApprovalSuccess}
-        symbol={tokenInfo.symbol}
-        amount={amount}
-        toAddress={toAccount.address}
+        operationDetails={getOperationDetails(OperationTypeEnum.transferApprove, {
+          symbol: tokenInfo.symbol,
+          amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
+          toAddress: toAccount.address,
+        })}
+        officialWebsiteShow={{ amount: amount, symbol: tokenInfo.symbol }}
       />
     </div>
   );

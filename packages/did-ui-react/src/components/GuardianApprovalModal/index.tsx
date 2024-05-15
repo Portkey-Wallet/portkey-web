@@ -4,6 +4,7 @@ import GuardianApprovalModalCom from './index.component';
 import { OperationTypeEnum } from '@portkey/services';
 import { GuardianApprovedItem } from '../Guardian/utils/type';
 import { NetworkType } from '../../types';
+import { TStringJSON } from '@portkey/types';
 
 export interface GuardianApprovalModalProps {
   className?: string;
@@ -13,10 +14,13 @@ export interface GuardianApprovalModalProps {
   targetChainId: ChainId;
   networkType: NetworkType;
   operationType: OperationTypeEnum;
+  operationDetails?: TStringJSON;
+  officialWebsiteShow?: {
+    amount?: string;
+    symbol?: string;
+  };
   isErrorTip?: boolean;
   sandboxId?: string;
-  symbol?: string;
-  amount?: string;
   toAddress?: string;
   onClose: () => void;
   onBack: () => void;

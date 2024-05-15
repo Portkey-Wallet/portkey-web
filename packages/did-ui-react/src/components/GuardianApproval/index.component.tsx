@@ -43,7 +43,6 @@ import CommonModal from '../CommonModal';
 import { Button } from 'antd';
 import officialWebsiteCheck from '../../utils/officialWebsiteCheck';
 import { did } from '@portkey/did';
-import { getOperationDetails } from '../utils/operation.util';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -56,19 +55,12 @@ export interface GuardianApprovalProps {
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
   operationType: OperationTypeEnum;
+  operationDetails?: TStringJSON;
+  officialWebsiteShow?: {
+    amount?: string;
+    symbol?: string;
+  };
   networkType: NetworkType;
-  identifierHash?: string;
-  guardianType?: string;
-  verifierId?: string;
-  symbol?: string;
-  amount?: number | string;
-  amountShow?: number | string;
-  spender?: string;
-  toAddress?: string;
-  preVerifierId?: string;
-  newVerifierId?: string;
-  singleLimit?: string;
-  dailyLimit?: string;
   // guardianIdentifier?: string; // for show (email)
   // firstName?: string; // for show (social)
   onError?: OnErrorFunc;
@@ -92,18 +84,8 @@ const GuardianApprovalMain = forwardRef(
       isErrorTip = true,
       wrapperStyle,
       operationType,
-      identifierHash,
-      guardianType,
-      verifierId,
-      symbol,
-      amount,
-      amountShow,
-      toAddress,
-      preVerifierId,
-      newVerifierId,
-      singleLimit,
-      dailyLimit,
-      spender,
+      operationDetails = '{}',
+      officialWebsiteShow,
       // guardianIdentifier,
       // firstName,
       onError,
@@ -240,19 +222,7 @@ const GuardianApprovalMain = forwardRef(
             redirectURI,
             operationType,
             networkType,
-            operationDetails: getOperationDetails(operationType, {
-              identifierHash,
-              guardianType,
-              verifierId,
-              preVerifierId,
-              newVerifierId,
-              symbol,
-              amount,
-              toAddress,
-              singleLimit,
-              dailyLimit,
-              spender,
-            }),
+            operationDetails,
             customLoginHandler,
           });
           if (!rst || !rst.verificationDoc) return;
@@ -284,26 +254,7 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [
-        verifyToken,
-        originChainId,
-        targetChainId,
-        operationType,
-        networkType,
-        identifierHash,
-        guardianType,
-        verifierId,
-        preVerifierId,
-        newVerifierId,
-        symbol,
-        amount,
-        toAddress,
-        singleLimit,
-        dailyLimit,
-        spender,
-        isErrorTip,
-        onError,
-      ],
+      [verifyToken, originChainId, targetChainId, operationType, networkType, operationDetails, isErrorTip, onError],
     );
 
     const onVerifyingHandler = useCallback(
@@ -320,27 +271,14 @@ const GuardianApprovalMain = forwardRef(
             return setShowWarning(true);
           } else {
             try {
-              const operationDetails = getOperationDetails(operationType, {
-                identifierHash,
-                guardianType,
-                verifierId,
-                preVerifierId,
-                newVerifierId,
-                symbol,
-                amount,
-                toAddress,
-                singleLimit,
-                dailyLimit,
-                spender,
-              });
               const rst = await officialWebsiteCheck(
                 _item,
                 originChainId,
                 operationType,
                 // guardianType,
                 targetChainId,
-                symbol,
-                amountShow,
+                officialWebsiteShow?.symbol,
+                officialWebsiteShow?.amount,
                 operationDetails,
               );
               console.log('rst===', rst);
@@ -376,23 +314,15 @@ const GuardianApprovalMain = forwardRef(
         }
       },
       [
-        amount,
-        dailyLimit,
-        isErrorTip,
-        newVerifierId,
-        onError,
-        operationType,
         originChainId,
-        identifierHash,
-        guardianType,
-        verifierId,
-        preVerifierId,
-        singleLimit,
-        spender,
-        symbol,
+        operationType,
         targetChainId,
-        toAddress,
+        officialWebsiteShow?.symbol,
+        officialWebsiteShow?.amount,
+        operationDetails,
         verifyResultHandler,
+        isErrorTip,
+        onError,
       ],
     );
 
@@ -483,27 +413,14 @@ const GuardianApprovalMain = forwardRef(
                 try {
                   const currentGuardian = currentVerifyingGuardian.current;
                   currentVerifyingGuardian.current = undefined;
-                  const operationDetails = getOperationDetails(operationType, {
-                    identifierHash,
-                    guardianType,
-                    verifierId,
-                    preVerifierId,
-                    newVerifierId,
-                    symbol,
-                    amount,
-                    toAddress,
-                    singleLimit,
-                    dailyLimit,
-                    spender,
-                  });
                   const rst = await officialWebsiteCheck(
                     currentGuardian?.item,
                     originChainId,
                     operationType,
                     // guardianType,
                     targetChainId,
-                    symbol,
-                    amountShow,
+                    officialWebsiteShow?.symbol,
+                    officialWebsiteShow?.amount,
                     operationDetails,
                     // guardianIdentifier,
                     // firstName,
@@ -536,19 +453,7 @@ const GuardianApprovalMain = forwardRef(
               targetChainId={targetChainId}
               originChainId={originChainId}
               operationType={operationType}
-              operationDetails={getOperationDetails(operationType, {
-                identifierHash,
-                guardianType,
-                verifierId,
-                preVerifierId,
-                newVerifierId,
-                symbol,
-                amount,
-                toAddress,
-                singleLimit,
-                dailyLimit,
-                spender,
-              })}
+              operationDetails={operationDetails}
               onBack={() => setVerifyAccountIndex(undefined)}
               guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
               verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
@@ -574,17 +479,7 @@ const GuardianApprovalMain = forwardRef(
                 alreadyApprovalLength={alreadyApprovalLength}
                 guardianList={guardianList}
                 isErrorTip={isErrorTip}
-                identifierHash={identifierHash}
-                guardianType={guardianType}
-                verifierId={verifierId}
-                preVerifierId={preVerifierId}
-                newVerifierId={newVerifierId}
-                symbol={symbol}
-                amount={amount}
-                toAddress={toAddress}
-                singleLimit={singleLimit}
-                dailyLimit={dailyLimit}
-                spender={spender}
+                operationDetails={operationDetails}
                 onSend={onSendCodeHandler}
                 onVerifying={onVerifyingHandler}
                 onConfirm={onConfirmHandler}

@@ -552,17 +552,17 @@ function GuardianEdit({
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
           guardianList={approvalGuardianList}
-          identifierHash={curGuardian.current?.identifierHash}
-          guardianType={curGuardian.current?.guardianType}
-          verifierId={curGuardian.current?.verifierId}
-          preVerifierId={preGuardian?.verifierId}
-          newVerifierId={curGuardian.current?.verifierId}
           networkType={networkType}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
-          // guardianIdentifier={curGuardian.current?.guardianIdentifier}
-          // firstName={curGuardian.current?.firstName}
+          operationDetails={getOperationDetails(operationType, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+            preVerifierId: preGuardian?.verifierId,
+            newVerifierId: curGuardian.current?.verifierId,
+          })}
         />
       </CommonBaseModal>
     </div>

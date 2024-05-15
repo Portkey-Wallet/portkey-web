@@ -35,7 +35,7 @@ ConfigProvider.setGlobalConfig({
   serviceUrl: 'https://aa-portkey-test.portkey.finance',
 });
 
-const originChainId = 'tDVW';
+const originChainId = 'AELF';
 
 export default function AppleAuth() {
   const [status, setStatus] = useState<string>();
@@ -91,7 +91,8 @@ export default function AppleAuth() {
           try {
             const wallet = await did.load('111111');
             console.log(wallet, 'wallet==');
-
+            const chainInfo = await getChainInfo(originChainId);
+            const spender = chainInfo.defaultToken.address;
             const caHash = did.didWallet.caInfo[originChainId].caHash;
             const result = await managerApprove({
               originChainId: originChainId,
@@ -106,9 +107,9 @@ export default function AppleAuth() {
                 href: 'http://localhost:3000',
                 name: 'localhost',
               },
+              spender: chainInfo.defaultToken.address,
             });
             console.log(result, 'result===');
-            const chainInfo = await getChainInfo(originChainId);
             const [portkeyContract, tokenContract] = await Promise.all(
               [chainInfo.caContractAddress, chainInfo.defaultToken.address].map(ca =>
                 getContractBasic({
@@ -118,7 +119,6 @@ export default function AppleAuth() {
                 }),
               ),
             );
-            const spender = chainInfo.defaultToken.address;
 
             const approveResult = await portkeyContract.callSendMethod('ManagerApprove', '', {
               caHash,
