@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.2...v2.5.3) (2024-05-15)
+
+### Bug Fixes
+
+- sell open login compatible ([974995e](https://github.com/Portkey-Wallet/portkey-web/commit/974995e890fad611955ab03266fcccc14e016880))
+
 ## [2.5.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.1...v2.5.2) (2024-05-15)
 
 ### Bug Fixes
