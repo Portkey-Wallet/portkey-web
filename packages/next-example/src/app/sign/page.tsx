@@ -37,9 +37,9 @@ ConfigProvider.setGlobalConfig({
   },
   requestDefaults: {
     timeout: 30000,
-    baseURL: 'https://aa-portkey.portkey.finance',
+    baseURL: 'https://aa-portkey-test.portkey.finance',
   },
-  serviceUrl: 'https://aa-portkey.portkey.finance',
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',

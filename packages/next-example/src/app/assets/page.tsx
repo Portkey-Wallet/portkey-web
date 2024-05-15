@@ -6,7 +6,7 @@ import React from 'react';
 
 ConfigProvider.setGlobalConfig({
   // storageMethod: myStore,
-  serviceUrl: 'https://aa-portkey.portkey.finance',
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
 
   requestDefaults: {
     timeout: 30000,
@@ -20,7 +20,7 @@ ConfigProvider.setGlobalConfig({
 export default function Assets() {
   const router = useRouter();
   return (
-    <PortkeyAssetProvider pin="111111" originChainId="tDVV">
+    <PortkeyAssetProvider pin="111111" originChainId="tDVW">
       <Asset
         faucet={{
           faucetContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',

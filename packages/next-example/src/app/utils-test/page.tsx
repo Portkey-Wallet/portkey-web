@@ -35,7 +35,7 @@ ConfigProvider.setGlobalConfig({
   serviceUrl: 'https://aa-portkey-test.portkey.finance',
 });
 
-const originChainId = 'AELF';
+const originChainId = 'tDVV';
 
 export default function AppleAuth() {
   const [status, setStatus] = useState<string>();

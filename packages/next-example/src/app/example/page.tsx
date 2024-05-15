@@ -19,6 +19,7 @@ import {
   Unlock,
   SetPinMobileBase,
   PortkeyBaseNumberKeyboard,
+  ThrottleButton,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
 import { OperationTypeEnum } from '@portkey/services';
@@ -105,15 +106,13 @@ function Example() {
           the site you land on doesn&rsquo;t match this link,please exercise caution and refrain from taking any
           actions.
         </p>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Button
-            type="primary"
-            className="my-button"
-            onClick={() => {
-              window.open(OfficialWebsite, '_blank');
-            }}>
-            Go to Verify
-          </Button>
+        <div className="btn-warning-wrapper">
+          <ThrottleButton className="btn-cancel" onClick={() => setLoading(false)}>
+            Cancel
+          </ThrottleButton>
+          <ThrottleButton className="btn-confirm" type="primary">
+            Proceed
+          </ThrottleButton>
         </div>
       </CommonModal>
       <Button

@@ -43,6 +43,7 @@ import CommonModal from '../CommonModal';
 import { Button } from 'antd';
 import officialWebsiteCheck from '../../utils/officialWebsiteCheck';
 import { did } from '@portkey/did';
+import ThrottleButton from '../ThrottleButton';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -405,10 +406,14 @@ const GuardianApprovalMain = forwardRef(
             the site you land on doesn&rsquo;t match this link,please exercise caution and refrain from taking any
             actions.
           </p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Button
+          {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}> */}
+          <div className="btn-warning-wrapper">
+            <ThrottleButton className="btn-cancel" onClick={() => setShowWarning(false)}>
+              Cancel
+            </ThrottleButton>
+            <ThrottleButton
+              className="btn-confirm"
               type="primary"
-              className="go-to-verify"
               onClick={async () => {
                 try {
                   const currentGuardian = currentVerifyingGuardian.current;
@@ -443,9 +448,10 @@ const GuardianApprovalMain = forwardRef(
                   );
                 }
               }}>
-              Go to Verify
-            </Button>
+              Proceed
+            </ThrottleButton>
           </div>
+          {/* </div> */}
         </CommonModal>
         <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
           {typeof verifyAccountIndex === 'number' ? (
