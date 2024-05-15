@@ -5,11 +5,11 @@ import { useMemo, useState, useCallback, useRef } from 'react';
 import { divDecimals, timesDecimals } from '../../utils/converter';
 import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { ITransferSettingsFormInit } from '../TransferSettings/index.components';
-import { Button, Form, FormProps, Input } from 'antd';
+import { Form, FormProps, Input } from 'antd';
 import SwitchComponent from '../SwitchComponent';
 import { LimitFormatTip, NoLimit, SetLimitExplain, SingleExceedDaily } from '../../constants/security';
 import { isValidInteger } from '../../utils/reg';
-import { OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
+import { NetworkType, OnErrorFunc, UserGuardianStatus, ValidData } from '../../types';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
 import { did, errorTip, handleErrorMessage, setLoading } from '../../utils';
@@ -22,6 +22,7 @@ import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
+import ThrottleButton from '../ThrottleButton';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -31,13 +32,17 @@ export interface ITransferSettingsEditProps extends FormProps {
   initData: ITransferLimitItemWithRoute;
   isErrorTip?: boolean;
   sandboxId?: string;
-  onBack?: () => void;
+  networkType: NetworkType;
+  onBack?: (data: ITransferLimitItemWithRoute) => void;
   onSuccess?: (data: ITransferLimitItemWithRoute) => void;
   onGuardiansApproveError?: OnErrorFunc;
 }
 
 export interface ITransferLimitItemWithRoute extends ITransferLimitItem {
-  businessFrom?: IBusinessFrom;
+  businessFrom?: {
+    module: IBusinessFrom;
+    extraConfig?: any;
+  };
 }
 
 export type IBusinessFrom = 'ramp-sell' | 'send';
@@ -52,6 +57,7 @@ export default function TransferSettingsEditMain({
   initData,
   isErrorTip = true,
   sandboxId = '',
+  networkType,
   onBack,
   onSuccess,
   onGuardiansApproveError,
@@ -241,6 +247,7 @@ export default function TransferSettingsEditMain({
 
         onSuccess?.(params);
       } catch (e) {
+        console.error('setTransferLimit===', e);
         errorTip(
           {
             errorFields: 'Handle Add Guardian',
@@ -291,9 +298,15 @@ export default function TransferSettingsEditMain({
     handleDisableCheck();
   });
 
+  const limitCalFunc = useCallback(() => {
+    const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
+    const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
+    const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData.decimals)) : '-1';
+    return { transDailyLimit, transSingleLimit };
+  }, [form, initData.decimals]);
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
-      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={onBack} />
+      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={() => onBack?.(initData)} />
       <Form
         form={form}
         autoComplete="off"
@@ -346,9 +359,9 @@ export default function TransferSettingsEditMain({
         </div>
 
         <FormItem className="portkey-ui-footer-btn-wrap">
-          <Button className="portkey-ui-footer-btn" type="primary" htmlType="submit" disabled={disable}>
+          <ThrottleButton className="portkey-ui-footer-btn" type="primary" htmlType="submit" disabled={disable}>
             {'Send Request'}
-          </Button>
+          </ThrottleButton>
         </FormItem>
       </Form>
       <CommonBaseModal
@@ -358,11 +371,15 @@ export default function TransferSettingsEditMain({
         <GuardianApproval
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
           originChainId={originChainId}
+          networkType={networkType}
           targetChainId={targetChainId}
           guardianList={guardianList}
           onConfirm={approvalSuccess}
           onError={onGuardiansApproveError}
           operationType={OperationTypeEnum.modifyTransferLimit}
+          symbol={symbol}
+          singleLimit={limitCalFunc().transSingleLimit}
+          dailyLimit={limitCalFunc().transDailyLimit}
         />
       </CommonBaseModal>
     </div>

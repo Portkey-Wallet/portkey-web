@@ -10,17 +10,27 @@ import {
   RegisterParams,
   RegisterStatusResult,
 } from '@portkey/services';
-import { IBaseWalletAccount, IKeyStore, ISignature, IAccountProvider, IStorageSuite, ChainId } from '@portkey/types';
+import {
+  IBaseWalletAccount,
+  IKeyStore,
+  ISignature,
+  IAccountProvider,
+  IStorageSuite,
+  ChainId,
+  SendOptions,
+} from '@portkey/types';
 import { aes } from '@portkey/utils';
 import {
   AccountLoginParams,
   BaseDIDWallet,
   CAInfo,
+  CheckManagerParams,
   EditManagerParams,
   GetHolderInfoParams,
   IDIDWallet,
   LoginResult,
   LoginType,
+  LogoutResult,
   RegisterResult,
   ScanLoginParams,
   VerifierItem,
@@ -28,14 +38,17 @@ import {
 import AElf from 'aelf-sdk';
 
 export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> implements IDIDWallet {
-  private readonly _defaultKeyName = 'portkey_sdk_did_wallet';
+  private readonly _defaultKeyName = 'portkey_sdk_did_wallet_v2';
   public managementAccount?: T;
   public services: ICommunityRecoveryService;
   public connectServices?: IConnectService;
   public contracts: { [key: string]: IPortkeyContract };
   public chainsInfo?: { [key: string]: ChainInfo };
+  /** @deprecated Please use aaInfo instead  */
   public caInfo: { [key: string]: CAInfo };
+  /** @deprecated Please use aaInfo instead  */
   public accountInfo: { loginAccount?: string; nickName?: string };
+  public aaInfo: { accountInfo?: CAInfo; nickName?: string };
   constructor({
     accountProvider,
     storage,
@@ -53,6 +66,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.contracts = {};
     this.caInfo = {};
     this.accountInfo = {};
+    this.aaInfo = {};
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -97,19 +111,9 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }): Promise<RecoverStatusResult> {
     const status = await this.services.getRecoverStatus(sessionId);
     if (status?.recoveryStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
-      try {
-        const info = await this.getHolderInfo({ caHash: status.caHash, chainId });
-        const address = this.managementAccount.address;
-        const currentInfo = info.managerInfos.find(i => i.address === address);
-        if (currentInfo) {
-          this.accountInfo = {
-            loginAccount: info.guardianList.guardians[0].guardianIdentifier,
-          };
-          this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
-        }
-      } catch (error) {
-        console.log(error, '=====error');
-      }
+      this.accountInfo = { loginAccount: status.caHash };
+      this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
+      this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
     }
     return status;
   }
@@ -144,19 +148,9 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }): Promise<RegisterStatusResult> {
     const status = await this.services.getRegisterStatus(sessionId);
     if (status?.registerStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
-      try {
-        const info = await this.getHolderInfo({ caHash: status.caHash, chainId });
-        const address = this.managementAccount.address;
-        const currentInfo = info.managerInfos.find(i => i.address === address);
-        if (currentInfo) {
-          this.accountInfo = {
-            loginAccount: info.guardianList.guardians[0].guardianIdentifier,
-          };
-          this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
-        }
-      } catch (error) {
-        console.log(error, '=====error');
-      }
+      this.accountInfo = { loginAccount: status.caHash };
+      this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
+      this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
     }
     return status;
   }
@@ -195,11 +189,16 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (req.error) throw req.error;
     return req.data;
   }
-  public async removeManager(params: EditManagerParams) {
+  public async removeManager(params: EditManagerParams, sendOption?: SendOptions) {
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
     const { chainId, ...contractParams } = params;
     const contract = await this.getContractByChainInfo(chainId);
-    const req = await contract.callSendMethod('RemoveManagerInfo', this.managementAccount.address, contractParams);
+    const req = await contract.callSendMethod(
+      'RemoveManagerInfo',
+      this.managementAccount.address,
+      contractParams,
+      sendOption,
+    );
     if (req.error) throw req.error;
     // delete current manager
     if (
@@ -209,6 +208,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.caInfo = {};
       this.accountInfo = {};
     }
+    if (sendOption?.onMethod === 'transactionHash') return req;
     return req.data;
   }
   getHolderInfo(params: Partial<Pick<GetHolderInfoParams, 'manager' | 'chainId'>>): Promise<GetCAHolderByManagerResult>;
@@ -234,7 +234,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
         guardianIdentifier: params.loginGuardianIdentifier,
       });
       // get current account info
-      if (result && managerInfo.loginGuardianIdentifier === this.accountInfo?.loginAccount) {
+      if (result && result?.caHash === this.aaInfo?.accountInfo?.caHash) {
         const { caAddress, caHash } = result;
         this.caInfo[chainId] = { caAddress, caHash };
       }
@@ -256,8 +256,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.chainsInfo = chainsInfo;
     return this.chainsInfo;
   }
-  async logout(params: EditManagerParams): Promise<boolean> {
-    if (!this.managementAccount) throw new Error('managerAccount does not exist');
+  async logout(params: EditManagerParams, sendOption?: SendOptions): Promise<LogoutResult> {
+    if (!this.managementAccount) throw new Error('ManagerAccount does not exist, please login.');
     if (!this.chainsInfo) await this.getChainsInfo();
     if (!params.caHash && this.caInfo[params.chainId]) params.caHash = this.caInfo[params.chainId].caHash;
     if (!params.managerInfo)
@@ -266,9 +266,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
         extraData: 'extraData',
       };
     if (!params.caHash) throw new Error('caHash does not exist');
-    const req = await this.removeManager(params);
-    if (req.error) throw req.error;
-    return true;
+    const req = await this.removeManager(params, sendOption);
+    return { status: req?.Status, transactionId: req?.transactionId || req?.TransactionId };
   }
   public async getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo> {
     if (!this.connectServices) throw new Error('connectServices does not exist');
@@ -292,7 +291,10 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const info = await this.connectServices.getConnectToken(config);
 
     const caHolderInfo = await this.services.getCAHolderInfo(`Bearer ${info.access_token}`, caHash);
-    if (caHolderInfo.nickName) this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
+    if (caHolderInfo.nickName) {
+      this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
+      this.aaInfo = { ...this.aaInfo, nickName: caHolderInfo.nickName };
+    }
     return caHolderInfo;
   }
   public async signTransaction<T extends Record<string, unknown>>(
@@ -324,7 +326,12 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public async save(password: string, keyName?: string | undefined): Promise<boolean> {
     if (!this._storage) throw new Error('Please set storage first');
     const aesPrivateKey = await this.aesEncrypt(password);
-    const data = JSON.stringify({ aesPrivateKey, caInfo: this.caInfo, accountInfo: this.accountInfo });
+    const data = JSON.stringify({
+      aesPrivateKey,
+      caInfo: this.caInfo,
+      accountInfo: this.accountInfo,
+      aaInfo: this.aaInfo,
+    });
     const aesStr = aes.encrypt(data, password);
     await this._storage.setItem(keyName ?? this._defaultKeyName, aesStr);
     return true;
@@ -335,12 +342,13 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (aesStr) {
       const data = aes.decrypt(aesStr, password);
       if (data) {
-        const { aesPrivateKey, caInfo, accountInfo } = JSON.parse(data);
+        const { aesPrivateKey, caInfo, accountInfo, aaInfo } = JSON.parse(data);
         const privateKey = aes.decrypt(aesPrivateKey, password);
         if (aesPrivateKey && privateKey) {
           this.managementAccount = await this._accountProvider.privateKeyToAccount(privateKey);
           this.caInfo = caInfo || {};
           this.accountInfo = accountInfo || {};
+          this.aaInfo = aaInfo || {};
         }
       }
     }
@@ -350,6 +358,33 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.contracts = {};
     this.caInfo = {};
     this.accountInfo = {};
+    this.aaInfo = {};
     this.managementAccount = undefined;
+  }
+
+  public async checkManagerIsExistByGQL(params: CheckManagerParams) {
+    // Check if manager exists via GQL
+    const resultByQGL = await this.services.getHolderInfoByManager({
+      manager: params.managementAddress,
+      chainId: params.chainId,
+      caHash: params.caHash,
+    });
+    const info = resultByQGL[0];
+    return Boolean(info && info.caAddress);
+  }
+
+  public async checkManagerIsExistByContract(params: CheckManagerParams) {
+    // Check if manager exists via Contract
+    const resultByContract = await this.getHolderInfoByContract({
+      caHash: params.caHash,
+      chainId: params.chainId,
+    });
+    const managerInfos = resultByContract.managerInfos;
+    const isExist = managerInfos?.some(manager => manager?.address === params.managementAddress);
+    return Boolean(isExist);
+  }
+
+  public async checkManagerIsExist(params: CheckManagerParams) {
+    return (await this.checkManagerIsExistByGQL(params)) || (await this.checkManagerIsExistByContract(params));
   }
 }

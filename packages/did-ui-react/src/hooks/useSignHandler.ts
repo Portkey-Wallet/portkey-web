@@ -1,6 +1,5 @@
 import { ChainId } from '@portkey/types';
 import { useRef, useCallback, useMemo } from 'react';
-import { AccountType, AccountTypeEnum } from '@portkey/services';
 import { GuardianInputInfo, IBaseGetGuardianProps } from '../components';
 import {
   did,
@@ -8,9 +7,11 @@ import {
   handleErrorCode,
   handleErrorMessage,
   parseAppleIdentityToken,
+  parseTelegramToken,
   setLoading,
 } from '../utils';
 import { SocialLoginFinishHandler } from '../types';
+import { useThrottleFirstCallback } from './throttle';
 
 export const useSignHandler = ({
   defaultChainId,
@@ -44,7 +45,8 @@ export const useSignHandler = ({
         isLoginGuardian = true;
       }
     } catch (error: any) {
-      if (handleErrorCode(error) === '3002') {
+      const errorCode = handleErrorCode(error);
+      if (errorCode === '3002') {
         isLoginGuardian = false;
       } else {
         throw handleErrorMessage(error || 'GetHolderInfo error');
@@ -56,7 +58,7 @@ export const useSignHandler = ({
 
   const validateEmail = useCallback(
     async (email?: string) => {
-      setLoading(true, 'Checking account on the chain...');
+      setLoading(true, 'Checking account info on the blockchain');
       await validateIdentifier(email);
       return customValidateEmail?.(email);
     },
@@ -65,7 +67,7 @@ export const useSignHandler = ({
 
   const validatePhone = useCallback(
     async (phone?: string) => {
-      setLoading(true, 'Checking account on the chain...');
+      setLoading(true, 'Checking account info on the blockchain');
       await validateIdentifier(phone?.replaceAll(/\s/g, ''));
       return customValidatePhone?.(phone);
     },
@@ -89,7 +91,7 @@ export const useSignHandler = ({
     [defaultChainId],
   );
 
-  const onFinish = useCallback(
+  const onFinish = useThrottleFirstCallback(
     async (value: GuardianInputInfo) => {
       setLoading(true);
       const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
@@ -103,32 +105,32 @@ export const useSignHandler = ({
   const onSocialFinish: SocialLoginFinishHandler = useCallback(
     async ({ type, data }) => {
       try {
-        setLoading(true, 'Checking account on the chain...');
+        setLoading(true, 'Checking account info on the blockchain');
         if (!data) throw 'Action error';
+
+        let userId = undefined;
         if (type === 'Google') {
           const userInfo = await getGoogleUserInfo(data?.accessToken);
-          if (!userInfo?.id) throw userInfo;
-          await validateIdentifier(userInfo.id);
-          onFinish({
-            identifier: userInfo.id,
-            accountType: AccountTypeEnum[AccountTypeEnum.Google] as AccountType,
-            authenticationInfo: { googleAccessToken: data?.accessToken },
-          });
+          userId = userInfo?.id;
+          if (!userId) throw 'Authorization failed';
         } else if (type === 'Apple') {
           const userInfo = parseAppleIdentityToken(data?.accessToken);
-          if (userInfo) {
-            await validateIdentifier(userInfo.userId);
-            onFinish({
-              identifier: userInfo.userId,
-              accountType: AccountTypeEnum[AccountTypeEnum.Apple] as AccountType,
-              authenticationInfo: { appleIdToken: data?.accessToken },
-            });
-          } else {
-            throw 'Authorization failed';
-          }
+          userId = userInfo?.userId;
+          if (!userId) throw 'Authorization failed';
+        } else if (type === 'Telegram') {
+          const userInfo = parseTelegramToken(data?.accessToken);
+          userId = userInfo?.userId;
+          if (!userId) throw 'Authorization failed';
         } else {
           throw Error(`AccountType:${type} is not support`);
         }
+
+        await validateIdentifier(userId);
+        onFinish({
+          identifier: userId,
+          accountType: type,
+          authenticationInfo: { authToken: data?.accessToken },
+        });
       } catch (error) {
         setLoading(false);
 

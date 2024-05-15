@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import { forwardRef, useCallback, useImperativeHandle, useState, useRef, useEffect } from 'react';
 import { ICountryItem, ValidatorHandler } from '../../types';
 import { handleErrorMessage, setLoading } from '../../utils';
@@ -6,6 +5,8 @@ import PhoneNumberInput from '../PhoneNumberInput';
 import { IPhoneCountry } from '../types';
 import './index.less';
 import clsx from 'clsx';
+import useMobile from '../../hooks/useMobile';
+import ThrottleButton from '../ThrottleButton';
 
 interface PhoneTabProps {
   className?: string;
@@ -26,9 +27,9 @@ const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, o
     validateRef.current = validate;
     onFinishRef.current = onFinish;
   });
-
+  const isMobile = useMobile();
   const validatePhone = useCallback((phone?: string) => validateRef.current?.(phone), []);
-
+  console.log(isMobile, 'isMobile===');
   useImperativeHandle(ref, () => ({ validatePhone }));
 
   const [phoneNumber, setPhoneNumber] = useState<string>('');
@@ -36,6 +37,7 @@ const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, o
   return (
     <div className={clsx('phone-tab-wrapper', className)}>
       <PhoneNumberInput
+        areaCodeShowType={isMobile ? 'drawer' : 'modal'}
         iso={countryCode?.iso ?? phoneCountry?.iso}
         countryList={phoneCountry?.countryList}
         phoneNumber={phoneNumber}
@@ -50,7 +52,7 @@ const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, o
       />
       {error && <span className="error-text">{error}</span>}
 
-      <Button
+      <ThrottleButton
         disabled={!phoneNumber}
         className="login-btn"
         type="primary"
@@ -71,7 +73,7 @@ const PhoneTab = forwardRef(({ className, phoneCountry, confirmText, validate, o
           }
         }}>
         {confirmText}
-      </Button>
+      </ThrottleButton>
     </div>
   );
 });

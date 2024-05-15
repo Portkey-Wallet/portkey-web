@@ -15,6 +15,10 @@ describe('config describe', () => {
     connectUrl: 'https://auth-portkey-test.portkey.finance',
     graphQLUrl: 'https://dapp-portkey-test.portkey.finance/Portkey_DID/PortKeyIndexerCASchema/graphql',
     storageMethod: new StorageMock('mock1'),
+    referralInfo: {
+      referralCode: 'xxx',
+      projectCode: '1000',
+    },
   };
   config.setConfig(configOptions);
 
@@ -35,6 +39,12 @@ describe('config describe', () => {
 
   test('test connectUrl', () => {
     expect(config.connectRequestConfig.baseURL).toEqual(configOptions.connectUrl);
+  });
+  test('test referralInfo', () => {
+    expect(config.referralConfig.referralInfo).toEqual(configOptions.referralInfo);
+  });
+  test('test get referralInfo', () => {
+    expect(config.referralConfig.getReferralInfo()).toEqual(configOptions.referralInfo);
   });
   test('test connect timeout', () => {
     expect(config.connectRequestConfig.timeout).toEqual(configOptions.requestDefaults?.timeout);

@@ -1,8 +1,8 @@
 @import '../../assets/theme/constants.less';
 
-.portkey-ui-guardian-edit {
+.portkey-ui-guardian-add {
   height: 100%;
-  .guardian-add-body{
+  .guardian-add-body {
     padding: 24px;
     font-size: 14px;
     line-height: 20px;
@@ -28,9 +28,22 @@
         color: var(--portkey-ui-font-13);
         cursor: pointer;
       }
+      &.detail {
+        position: relative;
+        height: 56px;
+        .close2-icon {
+          position: absolute;
+          right: 16px;
+          top: 20px;
+          cursor: pointer;
+          path {
+            fill: var(--portkey-ui-icon-fill);
+          }
+        }
+      }
     }
   }
-  .guardian-edit-footer {
+  .guardian-add-footer {
     margin-top: 16px;
     padding: 16px;
     border-top: 1px solid var(--portkey-ui-default-border);
@@ -63,10 +76,8 @@
     color: var(--portkey-ui-text-primary);
   }
 }
-.portkey-ui-modal-approval {
-  .portkey-ant-modal-content {
-    .guardian-list-wrapper {
-      margin: 0 24px;
-    }
+.portkey-ui-base-modal.portkey-ui-modal-approval {
+  .guardian-list-wrapper {
+    margin: 0 24px;
   }
 }

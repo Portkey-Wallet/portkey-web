@@ -1,2 +1,68 @@
-import { AccountType } from '@portkey/services';
+import { AccountType, AccountTypeEnum, AccountTypeKeyEnum } from '@portkey/services';
+import svgsList from '../assets/svgs';
+import { TotalAccountType } from '../types';
+
 export type TAccountType = AccountType;
+
+export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple'];
+
+export const Web2LoginList: string[] = ['Email'];
+
+export const AccountLoginList = [...SocialLoginList, ...Web2LoginList] as TotalAccountType[];
+
+export const TotalAccountTypeList: Array<TotalAccountType> = [...AccountLoginList, 'Scan'];
+
+export const guardiansExceedTip =
+  'The number of guardians has reached the maximum limit. Please delete some before trying to add new ones.';
+
+export const verifierUsedTip = 'Used verifiers cannot be selected.';
+
+export const guardianAccountExistTip = 'This account already exists. Please use others.';
+
+export const verifierExistTip = 'This verifier has already been used. Please select from others.';
+
+export const MaxVerifierNumber = 100;
+
+export const OfficialWebsite = 'https://portkey.finance/entry';
+export const KEY_SHOW_WARNING = 'KEY_SHOW_WARNING';
+export const SHOW_WARNING_DIALOG = '1';
+
+type AddGuardiansType = {
+  value: string;
+  label: string;
+  icon: keyof typeof svgsList;
+  id: AccountTypeEnum;
+};
+
+export const AddGuardiansType: Record<AccountType, AddGuardiansType> = {
+  Email: {
+    value: AccountTypeKeyEnum.Email,
+    label: AccountTypeKeyEnum.Email,
+    icon: 'Email',
+    id: AccountTypeEnum.Email,
+  },
+  Phone: {
+    value: AccountTypeKeyEnum.Phone,
+    label: AccountTypeKeyEnum.Phone,
+    icon: 'GuardianPhone',
+    id: AccountTypeEnum.Phone,
+  },
+  Google: {
+    value: AccountTypeKeyEnum.Google,
+    label: AccountTypeKeyEnum.Google,
+    icon: 'GuardianGoogle',
+    id: AccountTypeEnum.Google,
+  },
+  Apple: {
+    value: AccountTypeKeyEnum.Apple,
+    label: AccountTypeKeyEnum.Apple,
+    icon: 'GuardianApple',
+    id: AccountTypeEnum.Apple,
+  },
+  Telegram: {
+    value: AccountTypeKeyEnum.Telegram,
+    label: AccountTypeKeyEnum.Telegram,
+    icon: 'GuardianTelegram',
+    id: AccountTypeEnum.Telegram,
+  },
+};

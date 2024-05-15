@@ -1,12 +1,12 @@
-import { useCallback, useState, useRef } from 'react';
+import { useCallback, useState, useRef, useEffect } from 'react';
 import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verification } from '../../utils';
-import type { ChainId } from '@portkey/types';
+import type { ChainId, TStringJSON } from '@portkey/types';
 import { OperationTypeEnum } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
-import './index.less';
+import { sleep } from '@portkey/utils';
 
 const MAX_TIMER = 60;
 
@@ -16,6 +16,7 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
   verifierSessionId: string;
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
+  operationDetails: TStringJSON;
   onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
   onReSend?: (result: TVerifyCodeInfo) => void;
 }
@@ -28,6 +29,7 @@ export default function CodeVerify({
   tipExtra,
   isErrorTip = true,
   operationType,
+  operationDetails,
   isCountdownNow,
   isLoginGuardian,
   guardianIdentifier,
@@ -40,12 +42,22 @@ export default function CodeVerify({
   const [pinVal, setPinVal] = useState<string>();
   const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
   const uiRef = useRef<ICodeVerifyUIInterface>();
+  const [codeError, setCodeError] = useState<boolean>();
+
+  const setInputError = useCallback(async (isError?: boolean) => {
+    if (!isError) return setCodeError(isError);
+    setCodeError(true);
+    await sleep(2000);
+    setCodeError(false);
+  }, []);
+
   const onFinish = useCallback(
     async (code: string) => {
       try {
         if (code && code.length === 6) {
           if (!verifierSessionId) throw Error(`VerifierSessionId(${verifierSessionId}) is invalid`);
           setLoading(true);
+
           const result = await verification.checkVerificationCode({
             verifierSessionId,
             verificationCode: code,
@@ -54,10 +66,15 @@ export default function CodeVerify({
             chainId: originChainId,
             targetChainId,
             operationType,
+            operationDetails,
           });
           setLoading(false);
+          console.log(result, 'verifyErrorHandler==');
 
-          if (result.signature) return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
+          if (result.signature) {
+            if (typeof document !== undefined) document.body.focus();
+            return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
+          }
           setPinVal('');
         } else {
           throw Error('Please check if the PIN code is entered correctly');
@@ -66,6 +83,8 @@ export default function CodeVerify({
         setLoading(false);
         setPinVal('');
         const _error = verifyErrorHandler(error);
+        console.log(error, _error, 'error==verifyErrorHandler=');
+        if (_error.includes('Invalid code')) return setInputError(true);
         errorTip(
           {
             errorFields: 'CodeVerify',
@@ -82,11 +101,13 @@ export default function CodeVerify({
       guardianIdentifier,
       verifier.id,
       originChainId,
+      targetChainId,
       operationType,
+      operationDetails,
       onSuccess,
+      setInputError,
       isErrorTip,
       onError,
-      targetChainId,
     ],
   );
 
@@ -104,6 +125,7 @@ export default function CodeVerify({
             chainId: originChainId,
             targetChainId,
             operationType,
+            operationDetails,
           },
         },
         reCaptchaHandler,
@@ -137,10 +159,22 @@ export default function CodeVerify({
     verifier,
   ]);
 
+  useEffect(() => {
+    return () => {
+      setPinVal('');
+    };
+  }, []);
+
+  const onCodeChange = useCallback((pin: string) => {
+    setPinVal(pin);
+    setCodeError(false);
+  }, []);
+
   return (
     <CodeVerifyUI
       ref={uiRef}
       code={pinVal}
+      error={codeError}
       tipExtra={tipExtra}
       verifier={verifier}
       className={className}
@@ -148,7 +182,7 @@ export default function CodeVerify({
       isLoginGuardian={isLoginGuardian}
       guardianIdentifier={guardianIdentifier}
       accountType={accountType}
-      onCodeChange={setPinVal}
+      onCodeChange={onCodeChange}
       onReSend={resendCode}
       onCodeFinish={onFinish}
     />

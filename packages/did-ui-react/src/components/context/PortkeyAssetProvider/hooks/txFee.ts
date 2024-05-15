@@ -3,7 +3,7 @@ import { useMemo, useCallback } from 'react';
 import { InitialTxFee } from '../../../../constants/assets';
 import { usePortkeyAsset } from '..';
 import { basicAssetViewAsync } from '../actions';
-import useDebounce from '../../../../hooks/useDebounce';
+import { useDebounce } from '../../../../hooks/debounce';
 
 export const useTxFeeInit = () => {
   const [{ caAddressInfos }, { dispatch }] = usePortkeyAsset();

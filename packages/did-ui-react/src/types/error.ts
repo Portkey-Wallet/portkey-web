@@ -1,6 +1,6 @@
-export interface ErrorInfo {
+export interface ErrorInfo<T = any> {
   errorFields: string;
-  error: any;
+  error: T;
 }
 
-export type OnErrorFunc = (error: ErrorInfo) => void;
+export type OnErrorFunc<T = any> = (error: ErrorInfo<T>) => void;

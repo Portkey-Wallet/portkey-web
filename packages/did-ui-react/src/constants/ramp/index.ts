@@ -1,60 +1,43 @@
-import { IAchConfig, ICurToken, ICurrencyItem, PartialFiatType, RampTypeEnum } from '../../types';
 import { ChainId } from '@portkey/types';
-import { countryCodeJson } from './countryCodeJson';
 import { WEB_PAGE } from '..';
-
-const getCountryCodeMap = (list: ICurrencyItem[]) => {
-  const country: { [key: string]: ICurrencyItem } = {};
-  list.forEach((item) => {
-    country[item.iso] = item;
-  });
-  return country;
-};
-
-export const countryCodeList = countryCodeJson.countryCode;
-
-export const countryCodeMap = getCountryCodeMap(countryCodeList);
-
-export const DefaultCountry: ICurrencyItem = {
-  country: 'United States',
-  iso: 'US',
-  icon: 'https://static.alchemypay.org/alchemypay/flag/US.png',
-};
+import { ELF_SYMBOL } from '../assets';
+import { MAIN_CHAIN_ID } from '../network';
+import { IRampCryptoDefault, IRampFiatDefault, IRampProviderType, RampType } from '@portkey/ramp';
+import { IGetBuyDetail, IGetSellDetail } from '../../components/Ramp/utils/api';
 
 export const TOKEN_CLAIM_CONTRACT_CHAIN_ID = 'AELF' as ChainId;
 
-export enum TransDirectEnum {
-  TOKEN_BUY = 'TokenBuy',
-  TOKEN_SELL = 'TokenSell',
+export enum NFTTransDirectEnum {
+  NFT_BUY = 'NFTBuy',
+  NFT_SELL = 'NFTSell',
 }
 
-// testnet
-// export const AchConfig: IAchConfig = {
-//   appId: 'f83Is2y7L425rxl8',
-//   baseUrl: 'https://ramptest.alchemypay.org',
-//   updateAchOrder: '/api/app/thirdPart/order/alchemy',
-// };
+export enum NFTCheckoutByACH {
+  MARKET = 'MARKET',
+  MINT = 'MINT',
+}
 
-// mainnet
-export const AchConfig: IAchConfig = {
-  appId: 'P0e0l39jipsNYT46',
-  baseUrl: 'https://ramp.alchemypay.org',
-  updateAchOrder: '/api/app/thirdPart/order/alchemy',
+export const ACH_NFT_CONFIG = {
+  TESTNET: {
+    appId: 'f83Is2y7L425rxl8', // TODO
+    baseUrl: 'https://nft-sbx.alchemytech.cc',
+  },
+  MAINNET: {
+    appId: 'P0e0l39jipsNYT46', // TODO
+    baseUrl: 'https://nftcheckout.alchemypay.org',
+  },
 };
 
-export const DEFAULT_CHAIN_ID = 'AELF';
-
 export const DEFAULT_SYMBOL = 'ELF';
+export const MAX_UPDATE_TIME = 15;
+export const initFiatAmount = '200';
+export const initCryptoAmount = '400';
 
 export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge/';
 
-export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK';
+export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK&version=v2';
 
-export const ACH_MERCHANT_NAME = 'Alchemy';
-
-export const FAUCET_URL = 'https://testnet-faucet.aelf.io/';
-
-export const SELL_SOCKET_TIMEOUT = 20 * 1000;
+export const OUR_PRODUCT_NAME = 'Portkey';
 
 export const BUY_SOON_TEXT = 'On-ramp is currently not supported. It will be launched in the coming weeks.';
 
@@ -63,60 +46,73 @@ export const SELL_SOON_TEXT = 'Off-ramp is currently not supported. It will be l
 export const SERVICE_UNAVAILABLE_TEXT = 'Sorry, the service you are using is temporarily unavailable.';
 
 export const DISCLAIMER_TEXT =
-  'AlchemyPay is a fiat-to-crypto platform independently operated by a third-party entity. Portkey shall not be held liable for any losses or damages suffered as a result of using AlchemyPay services.';
+  ' is a fiat-to-crypto platform independently operated by a third-party entity. Portkey shall not be held liable for any losses or damages suffered as a result of using ';
 
 export const INSUFFICIENT_FUNDS_TEXT = 'Insufficient funds';
 
 export const SYNCHRONIZING_CHAIN_TEXT = 'Synchronizing on-chain account information...';
 
-export const initToken: ICurToken = {
-  crypto: 'ELF',
-  network: 'ELF',
+export const SHOW_RAMP_SYMBOL_LIST = [DEFAULT_SYMBOL, 'USDT'];
+
+export const SHOW_RAMP_CHAIN_ID_LIST = [MAIN_CHAIN_ID];
+
+export const initCrypto: IRampCryptoDefault = {
+  symbol: DEFAULT_SYMBOL,
+  chainId: MAIN_CHAIN_ID,
+  network: '',
+  icon: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin-ELF.png',
+  amount: initCryptoAmount,
+  decimals: 8,
+  address: '',
 };
 
-export const initFiat: PartialFiatType = {
+export const initFiat: IRampFiatDefault = {
   country: 'US',
-  currency: 'USD',
-};
-
-export const MAX_UPDATE_TIME = 15;
-export const initCurrency = '200';
-export const initCrypto = '400';
-export const initValueSave: {
-  amount: string;
-  currency: string;
-  country: string;
-  crypto: string;
-  network: string;
-  min: number | null;
-  max: number | null;
-  side: RampTypeEnum;
-  receive: string;
-  isShowErrMsg: boolean;
-} = {
-  amount: initCurrency,
-  currency: 'USD',
-  country: 'US',
-  crypto: 'ELF',
-  network: 'ELF',
-  min: null,
-  max: null,
-  side: RampTypeEnum.BUY,
-  receive: '',
-  isShowErrMsg: false,
+  symbol: 'USD',
+  countryName: 'United States',
+  icon: 'https://static.alchemypay.org/alchemypay/flag/US.png',
+  amount: initFiatAmount,
 };
 
 export const initPreviewData = {
-  crypto: 'ELF',
-  network: 'ELF',
+  crypto: ELF_SYMBOL,
+  network: MAIN_CHAIN_ID,
   fiat: 'USD',
   country: 'US',
-  amount: '200',
-  side: RampTypeEnum.BUY,
+  amount: initCryptoAmount,
+  side: RampType.BUY,
 };
 
-export enum STAGE {
-  ACHTXADS, // onAchTxAddressReceived
-  TRANSACTION, // transaction
-  ORDER, // onRequestOrderTransferred
-}
+export const InitProviderSelected: IGetBuyDetail | IGetSellDetail = {
+  cryptoAmount: '',
+  exchange: '',
+  fiatAmount: '',
+  amount: '',
+  providerNetwork: '',
+  providerSymbol: '',
+  feeInfo: {
+    networkFee: {
+      amount: '',
+      symbol: '',
+      type: 'FIAT',
+    },
+    rampFee: {
+      amount: '',
+      symbol: '',
+      type: 'FIAT',
+    },
+  },
+  providerInfo: {
+    appId: '',
+    baseUrl: '',
+    coverage: {
+      buy: true,
+      sell: true,
+    },
+    key: IRampProviderType.AlchemyPay,
+    logo: '',
+    name: '',
+    paymentTags: [],
+  },
+  thirdPart: IRampProviderType.AlchemyPay,
+};

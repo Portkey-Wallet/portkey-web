@@ -1,6 +1,7 @@
 import { getGraphQLClientProvider, IGraphQLClient } from '@portkey/graphql';
-import { HTTPHeaders, HTTPMethod, IConfig, IRequestDefaults, IStorageSuite } from '@portkey/types';
+import { HTTPHeaders, HTTPMethod, IConfig, IReferralInfo, IRequestDefaults, IStorageSuite } from '@portkey/types';
 import { IDIDConfig } from './types';
+import { IReferralConfig } from '@portkey/types';
 
 export class StorageConfig implements IStorageSuite {
   public storage?: IStorageSuite;
@@ -21,6 +22,16 @@ export class StorageConfig implements IStorageSuite {
   }
   setStorage(storage: IStorageSuite) {
     this.storage = storage;
+  }
+}
+
+export class ReferralConfig implements IReferralConfig {
+  public referralInfo?: IReferralInfo;
+  setReferralInfo(info: IReferralInfo) {
+    this.referralInfo = info;
+  }
+  getReferralInfo() {
+    return this.referralInfo;
   }
 }
 
@@ -51,10 +62,12 @@ export class DIDConfig implements IDIDConfig {
   public graphQLUrl?: string;
   public connectUrl?: string;
   public storageMethod: StorageConfig;
+  public referralConfig: IReferralConfig;
   constructor(options?: IConfig) {
     this.storageMethod = new StorageConfig();
     this.requestConfig = new RequestDefaultsConfig();
     this.connectRequestConfig = new RequestDefaultsConfig();
+    this.referralConfig = new ReferralConfig();
     if (options) this.setConfig(options);
   }
   setConfig(options: IConfig) {
@@ -77,6 +90,9 @@ export class DIDConfig implements IDIDConfig {
             ...(options.requestDefaults || {}),
             baseURL: value,
           });
+          break;
+        case 'referralInfo':
+          this.referralConfig.setReferralInfo(value);
           break;
         default:
           if (key === 'graphQLUrl' && typeof value === 'string') {

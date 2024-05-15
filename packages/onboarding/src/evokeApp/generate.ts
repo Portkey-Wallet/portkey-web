@@ -1,4 +1,4 @@
-import { stringifyUrl } from 'query-string';
+import queryString from 'query-string';
 import { EvokeAppConfig, EvokeAppOptions, Intent } from './types';
 
 // Generate basic url scheme
@@ -12,7 +12,7 @@ export function buildScheme(config: EvokeAppConfig, options: EvokeAppOptions): s
 
   const { domain, protocol } = scheme;
 
-  return stringifyUrl(
+  return queryString.stringifyUrl(
     {
       url: `${protocol}://${domain}/${path}`,
       query: param,
@@ -65,7 +65,7 @@ export function generateUniversalLink(config: EvokeAppConfig, options: EvokeAppO
 
   const protocol = 'https';
 
-  const newUniversalLink = stringifyUrl(
+  const newUniversalLink = queryString.stringifyUrl(
     {
       url: `${protocol}://${domain}/${path}`,
       query: param,
@@ -73,7 +73,7 @@ export function generateUniversalLink(config: EvokeAppConfig, options: EvokeAppO
     { encode: true },
   );
 
-  const oldUniversalLink = stringifyUrl(
+  const oldUniversalLink = queryString.stringifyUrl(
     {
       url: `${protocol}://${domain}/${path}`,
       query: pathKey ? { [pathKey]: path, ...param } : param,

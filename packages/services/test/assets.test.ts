@@ -10,7 +10,6 @@ const assetsService = new Assets(request);
 describe('assetsService describe', () => {
   test('test fetchAccountTokenList', async () => {
     const result = await assetsService.fetchAccountTokenList({
-      caAddresses: ['caAddresses_mock'],
       caAddressInfos: [{ caAddress: 'caAddress_mock', chainId: 'AELF' }],
       skipCount: 0,
       maxResultCount: 10,

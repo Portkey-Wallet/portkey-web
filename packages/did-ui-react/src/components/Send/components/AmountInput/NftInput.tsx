@@ -1,11 +1,12 @@
 import { Input } from 'antd';
 import { useCallback, useState } from 'react';
 import { AssetTokenExpand } from '../../../types/assets';
-import { divDecimals, formatAmountShow } from '../../../../utils/converter';
-import { handleKeyDownInt } from '../../utils/handlerKey';
-import { useThrottleEffect } from '../../../../hooks/throttle';
+import { divDecimalsStr } from '../../../../utils/converter';
+import { handleDecimalInput, handleKeyDown, handleKeyDownInt } from '../../utils/handlerKey';
+import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import { getBalanceByContract } from '../../../../utils/sandboxUtil/getBalance';
 import { usePortkey } from '../../../context';
+import NFTImage from '../../../NFTImage';
 
 export default function NftInput({
   fromAccount,
@@ -45,20 +46,20 @@ export default function NftInput({
     console.log(result, 'balances==getTokenBalance=');
   }, [chainType, fromAccount.address, sandboxId, token]);
 
-  useThrottleEffect(() => {
+  useThrottleFirstEffect(() => {
     getTokenBalance();
   }, [getTokenBalance]);
   return (
     <div className="amount-wrap">
       <div className="item asset nft">
-        <div className="avatar">{token.imageUrl ? <img src={token.imageUrl} /> : <p>{token.symbol[0]}</p>}</div>
+        <NFTImage name={token.symbol} imageUrl={token.imageUrl} isSeed={token?.isSeed} seedType={token?.seedType} />
         <div className="info">
           <div className="index">
             <p className="alias">{token.alias}</p>
             <p className="token-id">#{token.tokenId}</p>
           </div>
           <p className="quantity">
-            Balance: <span>{`${formatAmountShow(divDecimals(balance, token.decimals))}`}</span>
+            Balance: <span>{`${divDecimalsStr(balance, token.decimals)}`}</span>
           </p>
         </div>
       </div>
@@ -71,7 +72,8 @@ export default function NftInput({
               maxLength={18}
               placeholder={`0`}
               value={amount}
-              onKeyDown={handleKeyDownInt}
+              onInput={(event: any) => handleDecimalInput(event, token.decimals)}
+              onKeyDown={Number(token.decimals) > 0 ? handleKeyDown : handleKeyDownInt}
               onBlur={handleAmountBlur}
               onChange={(e) => {
                 setAmount(e.target.value);

@@ -23,7 +23,7 @@ export const PortkeyAssetActions = {
   setCAInfo: 'setCAInfo',
   setTokenList: 'setTokenList',
   setNFTCollections: 'setNFTCollections',
-  setNFTItem: 'setNFTItem',
+  setNFTItemList: 'setNFTItemList',
   setTokenPrice: 'setTokenPrice',
   setAllAssets: 'setAllAssets',
   setTxFee: 'setTxFee',
@@ -122,7 +122,6 @@ const fetchTokenList = async ({
     skipCount,
     maxResultCount,
     caAddressInfos,
-    caAddresses: caAddressInfos.map((info) => info.caAddress),
   });
   let data;
   // mock data for new account
@@ -161,7 +160,7 @@ const fetchNFTCollections = async ({
   });
 };
 
-const fetchNFTItem = async ({
+const fetchNFTItemList = async ({
   chainId,
   symbol,
   caAddressInfos,
@@ -176,7 +175,7 @@ const fetchNFTItem = async ({
     width: NFT_SMALL_SIZE,
     height: -1,
   });
-  return basicActions(PortkeyAssetActions['setNFTItem'], {
+  return basicActions(PortkeyAssetActions['setNFTItemList'], {
     symbol,
     chainId,
     list: response.data,
@@ -236,7 +235,6 @@ const fetchActivityList = async ({
     height: -1,
     maxResultCount,
     skipCount,
-    caAddresses: caAddressInfos?.map((info) => info.caAddress),
     caAddressInfos,
     managerAddresses,
     transactionTypes,
@@ -258,7 +256,7 @@ const fetchActivityList = async ({
 export const basicAssetViewAsync = {
   setTokenList: fetchTokenList,
   setNFTCollections: fetchNFTCollections,
-  setNFTItem: fetchNFTItem,
+  setNFTItemList: fetchNFTItemList,
   setTokenPrices: fetchTokenPrices,
   setAllAssetInfo: fetchAllAsset,
   setTxFee: fetchTxFee,

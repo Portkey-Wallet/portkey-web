@@ -1,5 +1,5 @@
 import { IDIDGraphQL } from '@portkey/graphql';
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest, IReferralConfig } from '@portkey/types';
 import {
   GetCAHolderByManagerParams,
   GetCAHolderByManagerResult,
@@ -14,6 +14,9 @@ import {
   RegisterInfo,
   IPhoneCountryCodeResult,
   CheckGoogleRecaptchaParams,
+  TDeletionAccountParams,
+  TCheckDeletionResult,
+  TDeletionEntranceResult,
 } from '../types/communityRecovery';
 import {
   GetRecommendationVerifierParams,
@@ -23,21 +26,23 @@ import {
   SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
-  VerifyGoogleTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
+  VerifierSocialTokenParams,
 } from '../types/verification';
 import { Search } from './search';
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   extends Search<T>
   implements ICommunityRecoveryService
 {
+  public referralConfig: IReferralConfig;
   private readonly _didGraphQL: IDIDGraphQL;
 
-  constructor(request: T, didGraphQL: IDIDGraphQL) {
+  constructor(request: T, didGraphQL: IDIDGraphQL, referralConfig: IReferralConfig) {
     super(request);
     this._didGraphQL = didGraphQL;
+    this.referralConfig = referralConfig;
   }
   async getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult> {
     return this._request.send({
@@ -81,17 +86,21 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     });
   }
   register(params: RegisterParams): Promise<RegisterResult> {
+    const _params = { ...params };
+    if (this.referralConfig.referralInfo) _params.referralInfo = this.referralConfig.referralInfo;
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/register/request',
-      params,
+      params: _params,
     });
   }
   recovery(params: RecoveryParams): Promise<RecoveryResult> {
+    const _params = { ...params };
+    if (this.referralConfig.referralInfo) _params.referralInfo = this.referralConfig.referralInfo;
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/recovery/request',
-      params,
+      params: _params,
     });
   }
 
@@ -115,7 +124,7 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     });
   }
 
-  verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyGoogleToken',
@@ -132,10 +141,39 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
+  verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTelegramToken',
+      params,
+    });
+  }
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/getVerifierServer',
+      params,
+    });
+  }
+
+  getShowDeletionEntrance(): Promise<TDeletionEntranceResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/account/revoke/entrance',
+    });
+  }
+
+  checkDeletion(): Promise<TCheckDeletionResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/account/revoke/check',
+    });
+  }
+
+  deletionAccount(params: TDeletionAccountParams): Promise<any> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/revoke/request',
       params,
     });
   }

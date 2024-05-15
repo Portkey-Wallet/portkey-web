@@ -1,4 +1,4 @@
-import { ChainId, INftInfoType, ITokenInfoType } from '@portkey/types';
+import { ChainId, INftInfoType, ITokenInfoType, SeedTypeEnum } from '@portkey/types';
 
 export type ITokenItemResponse = {
   decimals: number;
@@ -16,9 +16,9 @@ export type CaAddressInfosType = { chainId: ChainId; caAddress: string }[];
 export type FetchAccountTokenListParams = {
   skipCount?: number;
   maxResultCount?: number;
-  caAddresses: string[];
   caAddressInfos: CaAddressInfosType;
 };
+
 export type FetchAccountTokenListResult = {
   data: ITokenItemResponse[];
   totalRecordCount: number;
@@ -35,6 +35,8 @@ export type INftCollection = {
   imageUrl: string;
   itemCount: number;
   symbol: string;
+  isSeed: boolean;
+  decimals: number;
 };
 export type FetchAccountNftCollectionListParams = {
   skipCount: number;
@@ -58,7 +60,21 @@ export type INftCollectionItem = {
   tokenContractAddress: string;
   tokenId: string;
   totalSupply: string;
+  decimals: number;
+  isSeed: boolean;
+  seedType: SeedTypeEnum;
+  inscriptionName?: string;
+  limitPerMint?: number;
+  expires?: string;
+  seedOwnedSymbol?: string;
+  recommendedRefreshSeconds?: number;
+  generation?: string;
+  traits?: string;
+  traitsPercentages?: TTraitsPercentage[];
 };
+
+export type TTraitsPercentage = { traitType: string; value: string; percent: string };
+
 export type FetchAccountNftCollectionItemListParams = {
   symbol: string;
   caAddressInfos: CaAddressInfosType;
@@ -71,6 +87,15 @@ export type FetchAccountNftCollectionItemListResult = {
   data: INftCollectionItem[];
   totalRecordCount: number;
 };
+
+export type TFetchAccountNftItemParams = {
+  symbol: string;
+  caAddressInfos: CaAddressInfosType;
+  width: number;
+  height: number;
+};
+
+export type TFetchAccountNftItemResult = INftCollectionItem;
 
 export type FetchTokenPriceParams = {
   symbols: string[];
@@ -130,6 +155,7 @@ export interface IAssetsService {
   fetchAccountNftCollectionItemList(
     params: FetchAccountNftCollectionItemListParams,
   ): Promise<FetchAccountNftCollectionItemListResult>;
+  fetchAccountNftItem(params: TFetchAccountNftItemParams): Promise<TFetchAccountNftItemResult>;
   fetchTokenPrice(params: FetchTokenPriceParams): Promise<FetchTokenPriceResult>;
   getUserTokenList(params: GetUserTokenListParams): Promise<GetUserTokenListResult>;
   getAccountAssetsByKeywords(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsResult>;

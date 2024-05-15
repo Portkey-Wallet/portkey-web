@@ -1,6 +1,5 @@
 import { RecentContactItemType } from '@portkey/services';
 import { IClickAddressProps } from '../../../types/assets';
-import ContactCard from './ContactCard';
 import clsx from 'clsx';
 import { formatStr2EllipsisStr } from '../../../../utils';
 import { transNetworkText } from '../../../../utils/converter';
@@ -26,7 +25,7 @@ export default function RecentItem({
   // };
 
   return (
-    <div className={clsx(['flex-between-center', 'recent-item'])}>
+    <div className={clsx(['portkey-ui-flex-between-center', 'recent-item'])}>
       <div
         className="main-info"
         onClick={() => {

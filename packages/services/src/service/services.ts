@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { IBaseRequest, IReferralConfig } from '@portkey/types';
 import { IServices } from '../types/services';
 import {
   ICommunityRecoveryService,
@@ -8,6 +8,7 @@ import {
   ITransactionService,
   IActivityService,
   ISecurityService,
+  IAllowanceService,
 } from '../types';
 import { IDIDGraphQL } from '@portkey/graphql';
 import { CommunityRecovery } from './communityRecovery';
@@ -17,6 +18,7 @@ import { Token } from './token';
 import { Transaction } from './transaction';
 import { Activity } from './activity';
 import { Security } from './security';
+import { Allowance } from './allowance';
 
 export class Services<T extends IBaseRequest = IBaseRequest> extends CommunityRecovery<T> implements IServices {
   readonly communityRecovery: ICommunityRecoveryService;
@@ -26,15 +28,17 @@ export class Services<T extends IBaseRequest = IBaseRequest> extends CommunityRe
   readonly transaction: ITransactionService;
   readonly activity: IActivityService;
   readonly security: ISecurityService;
+  readonly allowance: IAllowanceService;
 
-  constructor(request: T, didGraphQL: IDIDGraphQL) {
-    super(request, didGraphQL);
-    this.communityRecovery = new CommunityRecovery(request, didGraphQL);
+  constructor(request: T, didGraphQL: IDIDGraphQL, referralConfig: IReferralConfig) {
+    super(request, didGraphQL, referralConfig);
+    this.communityRecovery = new CommunityRecovery(request, didGraphQL, referralConfig);
     this.ramp = new Ramp(request);
     this.assets = new Assets(request);
     this.token = new Token(request);
     this.transaction = new Transaction(request);
     this.activity = new Activity(request);
     this.security = new Security(request);
+    this.allowance = new Allowance(request);
   }
 }

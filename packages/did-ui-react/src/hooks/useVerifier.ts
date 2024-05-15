@@ -1,9 +1,9 @@
 import { useCallback, useMemo } from 'react';
 import { did, verification } from '../utils';
-import { ChainId } from '@portkey/types';
+import { ChainId, TStringJSON } from '@portkey/types';
 import { AccountType, OperationTypeEnum } from '@portkey/services';
 import { useVerifyToken } from './authentication';
-import { ISocialLoginConfig } from '../types';
+import { ISocialLoginConfig, NetworkType } from '../types';
 import ConfigProvider from '../components/config-provider';
 import { IVerifier } from '../components';
 import useReCaptchaModal from './useReCaptchaModal';
@@ -30,13 +30,17 @@ const useVerifier = () => {
       verifier,
       chainId,
       operationType,
+      networkType,
+      operationDetails,
     }: {
       guardianIdentifier: string;
       accountType: AccountType;
       token?: string;
       verifier: IVerifier;
       chainId: ChainId;
+      networkType?: NetworkType;
       operationType: OperationTypeEnum;
+      operationDetails: TStringJSON;
     }) => {
       let accessToken;
       let clientId;
@@ -54,6 +58,10 @@ const useVerifier = () => {
           clientId = socialLogin?.Google?.clientId;
           customLoginHandler = socialLogin?.Google?.customLoginHandler;
           break;
+        case 'Telegram':
+          accessToken = token;
+          customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
+          break;
         default:
           throw 'accountType is not supported';
       }
@@ -66,6 +74,8 @@ const useVerifier = () => {
         clientId: clientId ?? '',
         redirectURI,
         operationType,
+        networkType,
+        operationDetails,
         customLoginHandler,
       });
     },

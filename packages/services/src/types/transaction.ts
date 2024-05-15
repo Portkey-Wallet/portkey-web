@@ -8,7 +8,6 @@ export interface AddressItem {
 }
 
 export type GetRecentTransactionParams = {
-  //   caAddresses?: string[];
   caAddressInfos: CaAddressInfosType;
   skipCount?: number;
   maxResultCount?: number;

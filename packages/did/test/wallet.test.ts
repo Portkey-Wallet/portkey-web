@@ -42,7 +42,7 @@ const request = new FetchRequestMock({});
 const didGraphQL = new DIDGraphQLMock({
   client: {} as any,
 });
-const service = new CommunityRecovery(request, didGraphQL);
+const service = new CommunityRecovery(request, didGraphQL, {} as any);
 const connectService = new Connect(request);
 
 const privateKey = '03bd0cea9730bcfc8045248fd7f4841ea19315995c44801a3dfede0ca872f808';
@@ -286,6 +286,55 @@ describe('DIDWallet describe', () => {
       caHash: 'caHash_mock',
     });
     expect(result).toBeTruthy();
+  });
+
+  test('test logout sendOptions', async () => {
+    await wallet.login('loginAccount', {
+      loginGuardianIdentifier: 'loginGuardianIdentifier_mock',
+      guardiansApproved: [],
+      extraData: 'extraData_mock',
+      chainId: 'AELF',
+      context: {
+        clientId: 'clientId_mock',
+        requestId: 'requestId_mock',
+      },
+    });
+    const result = await wallet.logout(
+      {
+        chainId: 'AELF',
+        caHash: 'caHash_mock',
+      },
+      {
+        onMethod: 'transactionHash',
+      },
+    );
+    expect(result).toBeTruthy();
+  });
+
+  test('test logout checkResult', async () => {
+    await wallet.login('loginAccount', {
+      loginGuardianIdentifier: 'loginGuardianIdentifier_mock',
+      guardiansApproved: [],
+      extraData: 'extraData_mock',
+      chainId: 'AELF',
+      context: {
+        clientId: 'clientId_mock',
+        requestId: 'requestId_mock',
+      },
+    });
+    wallet.removeManager = async () => null;
+    const result = await wallet.logout(
+      {
+        chainId: 'AELF',
+        caHash: 'caHash_mock',
+      },
+      {
+        onMethod: 'transactionHash',
+      },
+    );
+    console.log('removeManager', result);
+    expect(result.status).toBeUndefined();
+    expect(result.transactionId).toBeUndefined();
   });
 
   test('test signTransaction', async () => {
@@ -679,7 +728,7 @@ describe('DIDWallet error describe', () => {
 
   test('test getRegisterStatus branch', async () => {
     const wallet = await getLoggedInWallet();
-    wallet.caInfo = undefined as any;
+    wallet.caInfo = {} as any;
     const result = await wallet.getRegisterStatus({
       chainId: 'tDVW',
       sessionId: 'sessionId_mock',
@@ -725,7 +774,7 @@ describe('DIDWallet error describe', () => {
 
   test('test getLoginStatus branch', async () => {
     const wallet = await getLoggedInWallet();
-    wallet.caInfo = undefined as any;
+    wallet.caInfo = {} as any;
     const result = await wallet.getLoginStatus({
       chainId: 'tDVW',
       sessionId: 'sessionId_mock',
@@ -795,5 +844,105 @@ describe('DIDWallet error describe', () => {
       },
     });
     expect(result).toBeTruthy();
+  });
+
+  test('test checkManagerIsExistByGQL', async () => {
+    const wallet = getWallet();
+    try {
+      await wallet.checkManagerIsExistByGQL({
+        managementAddress: 'managementAddress',
+        chainId: 'AELF',
+        caHash: 'caHash',
+      });
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test checkManagerIsExistByContract', async () => {
+    const wallet = getWallet();
+    try {
+      await wallet.checkManagerIsExistByContract({
+        managementAddress: 'managementAddress',
+        chainId: 'AELF',
+        caHash: 'caHash',
+      });
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test checkManagerIsExistByContract1', async () => {
+    const wallet = getWallet();
+    try {
+      wallet.getHolderInfoByContract = () => ({} as any);
+
+      await wallet.checkManagerIsExistByContract({
+        managementAddress: 'managementAddress',
+        chainId: 'AELF',
+        caHash: 'caHash',
+      });
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test checkManagerIsExistByContract managerInfos is exist', async () => {
+    const wallet = getWallet();
+    wallet.getHolderInfoByContract = () =>
+      ({
+        managerInfos: [
+          {
+            address: 'mock_management_Address',
+          },
+        ],
+      } as any);
+
+    const res = await wallet.checkManagerIsExistByContract({
+      managementAddress: 'mock_management_Address',
+      chainId: 'AELF',
+      caHash: 'caHash',
+    });
+    expect(res).toBeTruthy();
+  });
+
+  test('test checkManagerIsExistByContract managerInfos is empty', async () => {
+    const wallet = getWallet();
+    wallet.getHolderInfoByContract = () =>
+      ({
+        managerInfos: [{ address: '' }, null],
+      } as any);
+
+    const res = await wallet.checkManagerIsExistByContract({
+      managementAddress: 'mock_management_Address',
+      chainId: 'AELF',
+      caHash: 'caHash',
+    });
+    expect(res).toBeFalsy();
+  });
+
+  test('test checkManagerIsExist by checkManagerIsExistByGQL', async () => {
+    const wallet = getWallet();
+    try {
+      await wallet.checkManagerIsExist({
+        managementAddress: 'managementAddress',
+        chainId: 'AELF',
+        caHash: 'caHash',
+      });
+    } catch (error) {
+      expect(error).toBeTruthy();
+    }
+  });
+
+  test('test checkManagerIsExist by checkManagerIsExistByContract', async () => {
+    const wallet = getWallet();
+    wallet.checkManagerIsExistByGQL = async () => false;
+    wallet.checkManagerIsExistByContract = async () => true;
+    const res = await wallet.checkManagerIsExist({
+      managementAddress: 'managementAddress',
+      chainId: 'AELF',
+      caHash: 'caHash',
+    });
+    expect(res).toBeTruthy();
   });
 });

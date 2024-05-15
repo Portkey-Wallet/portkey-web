@@ -1,7 +1,7 @@
 import { GlobalConfigProps } from './types';
 import { setVerification, did, setServiceConfig, setReCaptchaConfig, BaseAsyncStorage } from '../../utils';
 
-const apiVersion = 'v1.3.2';
+export const apiVersion = 'v1.5.1';
 
 did.setConfig({
   requestDefaults: {
@@ -60,6 +60,11 @@ class LocalConfigProvider {
     }
     if ('reCaptchaConfig' in _config) {
       _config['reCaptchaConfig'] && setReCaptchaConfig(_config['reCaptchaConfig']);
+    }
+    if ('referralInfo' in _config) {
+      did.setConfig({
+        referralInfo: _config['referralInfo'],
+      });
     }
 
     this.config = { ...this.config, ..._config };

@@ -1,13 +1,12 @@
-import { IAssetItemType } from '@portkey/services';
+import { IAssetItemType, OperationTypeEnum } from '@portkey/services';
 import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
-import { Button, Modal, message } from 'antd';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { ReactElement, ReactNode, useCallback, useMemo, useState } from 'react';
+import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError } from '../../types';
-import { ChainId } from '@portkey/types';
+import { ChainId, SeedTypeEnum } from '@portkey/types';
 import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
 import AddressSelector from './components/AddressSelector';
@@ -29,21 +28,35 @@ import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
-import { getChain } from '../../hooks/useChainInfo';
 import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import { getChain } from '../../hooks/useChainInfo';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
+import singleMessage from '../CustomAnt/message';
+import { Modal } from '../CustomAnt';
+import GuardianApprovalModal from '../GuardianApprovalModal';
+import { GuardianApprovedItem } from '../Guardian/utils/type';
+import ThrottleButton from '../ThrottleButton';
 
 export interface SendProps {
   assetItem: IAssetItemType;
-  closeIcon?: ReactNode;
+  extraConfig?: SendExtraConfig;
   className?: string;
   wrapperStyle?: React.CSSProperties;
+  isErrorTip?: boolean;
   onCancel?: () => void;
-  onClose?: () => void;
   onSuccess?: () => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
   onModifyGuardians?: () => void;
 }
+
+export type SendExtraConfig = {
+  toAccount?: ToAccount;
+  amount?: string;
+  balance?: string;
+  stage?: Stage;
+};
+
+type ToAccount = { name?: string; address: string };
 
 enum Stage {
   'Address',
@@ -60,26 +73,26 @@ type TypeStageObj = {
 
 function SendContent({
   assetItem,
-  closeIcon,
   className,
   wrapperStyle,
+  isErrorTip = true,
+  extraConfig,
   onCancel,
-  onClose,
   onSuccess,
   onModifyLimit,
   onModifyGuardians,
 }: SendProps) {
-  const [{ accountInfo, managementAccount, caInfo, caHash, originChainId }] = usePortkeyAsset();
+  const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
-  const [stage, setStage] = useState<Stage>(Stage.Address);
-
+  const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
+  const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
 
   const tokenInfo: AssetTokenExpand = useMemo(
     () => ({
       chainId: assetItem.chainId as ChainId,
-      decimals: isNFT ? 0 : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
+      decimals: isNFT ? assetItem.nftInfo?.decimals || '0' : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
       address: (isNFT ? assetItem?.nftInfo?.tokenContractAddress : assetItem?.tokenInfo?.tokenContractAddress) || '',
       symbol: assetItem.symbol,
       name: assetItem.symbol,
@@ -88,18 +101,20 @@ function SendContent({
       tokenId: isNFT ? assetItem.nftInfo?.tokenId : '',
       balance: isNFT ? assetItem.nftInfo?.balance : assetItem.tokenInfo?.balance,
       balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
+      isSeed: assetItem.nftInfo?.isSeed,
+      seedType: assetItem.nftInfo?.seedType,
     }),
     [assetItem, isNFT],
   );
 
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
 
-  const [toAccount, setToAccount] = useState<{ name?: string; address: string }>({ address: '' });
+  const [toAccount, setToAccount] = useState<ToAccount>(extraConfig?.toAccount || { address: '' });
   const [errorMsg, setErrorMsg] = useState('');
   const [tipMsg, setTipMsg] = useState('');
 
-  const [amount, setAmount] = useState('');
-  const [balance, setBalance] = useState('');
+  const [amount, setAmount] = useState(extraConfig?.amount || '');
+  const [balance, setBalance] = useState(extraConfig?.balance || '');
 
   const defaultToken = useDefaultToken(tokenInfo.chainId);
 
@@ -136,7 +151,9 @@ function SendContent({
         const privateKey = managementAccount?.privateKey;
         if (!privateKey) throw WalletError.invalidPrivateKey;
         if (!caHash) throw 'Please login';
+        const _caAddress = caAddressInfos?.filter((caAdd) => caAdd.chainId === tokenInfo?.chainId)?.[0];
         const feeRes = await getTransferFee({
+          caAddress: _caAddress?.caAddress || '',
           chainId: tokenInfo.chainId,
           managerAddress: managementAccount.address,
           toAddress: toAccount?.address,
@@ -152,7 +169,7 @@ function SendContent({
         console.log('getFee===error', _error);
       }
     },
-    [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo],
+    [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo, caAddressInfos],
   );
 
   const retryCrossChain = useCallback(
@@ -214,42 +231,60 @@ function SendContent({
       symbol: tokenInfo.symbol,
       amount: amount,
       decimals: tokenInfo.decimals,
-      businessFrom: 'send',
-      onOk: onModifyLimit,
+      businessFrom: {
+        module: 'send',
+        extraConfig: {
+          toAccount,
+          amount,
+          balance,
+          stage,
+        },
+      },
+      balance,
+      chainType,
+      tokenContractAddress: tokenInfo?.address || '',
+      ownerCaAddress: caInfo?.[tokenInfo.chainId]?.caAddress || '',
+      onOneTimeApproval: () => {
+        setApprovalVisible(true);
+      },
+      onModifyTransferLimit: onModifyLimit,
     });
 
     return res;
   }, [
     amount,
+    balance,
     caHash,
+    caInfo,
+    chainType,
     managementAccount?.privateKey,
     onModifyLimit,
+    stage,
+    toAccount,
+    tokenInfo?.address,
     tokenInfo.chainId,
     tokenInfo.decimals,
     tokenInfo.symbol,
   ]);
 
-  const sendHandler = useCallback(async () => {
+  const sendTransfer = useCallback(async () => {
     try {
       if (!managementAccount?.privateKey || !caHash) return;
-      if (!tokenInfo) throw 'No Symbol info';
-      setLoading(true);
 
-      // transfer limit check
-      const limitRes = await handleCheckTransferLimit();
-      if (!limitRes) return;
+      setLoading(true);
 
       if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
         await crossChainTransfer({
           sandboxId,
           chainType,
-          privateKey: managementAccount.privateKey,
-          managerAddress: managementAccount.address,
+          privateKey: managementAccount?.privateKey,
+          managerAddress: managementAccount?.address,
           tokenInfo,
           caHash: caHash || '',
           amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
           toAddress: toAccount.address,
           crossChainFee: defaultFee.crossChain,
+          guardiansApproved: oneTimeApprovalList.current,
         });
       } else {
         console.log('sameChainTransfers==sendHandler');
@@ -257,31 +292,32 @@ function SendContent({
           sandboxId,
           chainId: tokenInfo.chainId,
           chainType,
-          privateKey: managementAccount.privateKey,
+          privateKey: managementAccount?.privateKey,
           tokenInfo,
           caHash: caHash || '',
           amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
           toAddress: toAccount.address,
+          guardiansApproved: oneTimeApprovalList.current,
         });
       }
-      message.success('success');
+      singleMessage.success('success');
       onSuccess?.();
     } catch (error: any) {
       console.log('sendHandler==error', error);
-      if (!error?.type) return message.error(handleErrorMessage(error));
+      if (!error?.type) return singleMessage.error(handleErrorMessage(error));
       if (error.type === 'managerTransfer') {
-        return message.error(handleErrorMessage(error));
+        return singleMessage.error(handleErrorMessage(error));
       } else if (error.type === 'crossChainTransfer') {
         // dispatch(addFailedActivity(error.data));
         // TODO
         console.log('addFailedActivity', error);
 
         showErrorModal(error.data);
-        message.error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
 
         // return;
       } else {
-        message.error(handleErrorMessage(error));
+        singleMessage.error(handleErrorMessage(error));
       }
     } finally {
       setLoading(false);
@@ -291,7 +327,6 @@ function SendContent({
     caHash,
     chainType,
     defaultFee.crossChain,
-    handleCheckTransferLimit,
     managementAccount?.address,
     managementAccount?.privateKey,
     onSuccess,
@@ -301,19 +336,66 @@ function SendContent({
     tokenInfo,
   ]);
 
+  const sendHandler = useCallback(async () => {
+    if (!oneTimeApprovalList.current || oneTimeApprovalList.current.length === 0) {
+      try {
+        if (!managementAccount?.privateKey || !caHash) return;
+        if (!tokenInfo) throw 'No Symbol info';
+        setLoading(true);
+
+        // transfer limit check
+        const limitRes = await handleCheckTransferLimit();
+        if (!limitRes) return setLoading(false);
+      } catch (error: any) {
+        setLoading(false);
+        singleMessage.error(handleErrorMessage(error));
+      }
+    }
+    await sendTransfer();
+  }, [caHash, handleCheckTransferLimit, managementAccount?.privateKey, sendTransfer, tokenInfo]);
+
+  const btnOutOfFocus = useCallback(() => {
+    // fixed - button focus style when mobile
+    if (typeof document !== 'undefined') document.body.focus();
+  }, []);
+
   const checkManagerSyncState = useCheckManagerSyncState();
+
+  const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
+  const onApprovalSuccess = useCallback(
+    async (approveList: GuardianApprovedItem[]) => {
+      try {
+        oneTimeApprovalList.current = approveList;
+        if (Array.isArray(approveList) && approveList.length > 0) {
+          setApprovalVisible(false);
+          if (stage === Stage.Amount) {
+            setStage(Stage.Preview);
+          } else if (stage === Stage.Preview) {
+            await sendTransfer();
+          }
+        } else {
+          throw Error('approve failed, please try again');
+        }
+      } catch (error) {
+        throw Error('approve failed, please try again');
+      }
+    },
+    [sendTransfer, stage],
+  );
 
   const handleCheckPreview = useCallback(async () => {
     try {
       setLoading(true);
       if (!ZERO.plus(amount).toNumber()) return 'Please input amount';
       if (!caHash || !managementAccount?.address) return 'Please Login';
+
+      // CHECK 1: manager sync
       const _isManagerSynced = await checkManagerSyncState(tokenInfo.chainId, caHash, managementAccount?.address);
       if (!_isManagerSynced) {
         return 'Synchronizing on-chain account information...';
       }
 
-      // wallet security check
+      // CHECK 2: wallet security
       const res = await walletSecurityCheck({
         originChainId: originChainId,
         targetChainId: tokenInfo.chainId,
@@ -322,12 +404,8 @@ function SendContent({
       });
       if (!res) return WalletIsNotSecure;
 
-      // transfer limit check
-      const limitRes = await handleCheckTransferLimit();
-      if (!limitRes) return ExceedLimit;
-
+      // CHECK 3: insufficient balance
       if (!isNFT) {
-        // insufficient balance check
         if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
           return TransactionError.TOKEN_NOT_ENOUGH;
         }
@@ -343,6 +421,12 @@ function SendContent({
       } else {
         return 'input error';
       }
+
+      // CHECK 4: transfer limit
+      const limitRes = await handleCheckTransferLimit();
+      if (!limitRes) return ExceedLimit;
+
+      // CHECK 5: tx fee
       const fee = await getTranslationInfo();
       console.log(fee, 'fee===getTranslationInfo');
       if (fee) {
@@ -398,6 +482,7 @@ function SendContent({
               onOk: () => setStage(Stage.Amount),
             });
           }
+          btnOutOfFocus();
           setStage(Stage.Amount);
         },
         backFun: () => {
@@ -431,11 +516,13 @@ function SendContent({
           } else {
             setTipMsg(res);
           }
+          btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Address);
           setAmount('');
           setTipMsg('');
+          oneTimeApprovalList.current = [];
         },
         element: (
           <AmountInput
@@ -463,6 +550,7 @@ function SendContent({
         btnText: 'Send',
         handler: () => {
           sendHandler();
+          btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Amount);
@@ -479,6 +567,9 @@ function SendContent({
             symbol={tokenInfo?.symbol || ''}
             alias={tokenInfo.alias || ''}
             imageUrl={tokenInfo.imageUrl || ''}
+            decimals={tokenInfo.decimals}
+            isSeed={tokenInfo.isSeed || false}
+            seedType={tokenInfo.seedType || SeedTypeEnum.NULL}
             chainId={tokenInfo.chainId || ''}
             transactionFee={txFee || ''}
             isCross={isCrossChain(toAccount.address, tokenInfo.chainId)}
@@ -500,6 +591,7 @@ function SendContent({
       networkType,
       onCancel,
       sendHandler,
+      btnOutOfFocus,
       tipMsg,
       toAccount,
       tokenInfo,
@@ -516,8 +608,6 @@ function SendContent({
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}
-        rightElement={closeIcon ? closeIcon : <CustomSvg type="Close2" onClick={() => onClose?.()} />}
-        rightCallback={closeIcon ? onClose : undefined}
       />
       {stage !== Stage.Preview && (
         <div className="address-wrap">
@@ -547,10 +637,27 @@ function SendContent({
       )}
       <div className="stage-ele">{StageObj[stage].element}</div>
       <div className="btn-wrap">
-        <Button disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
+        <ThrottleButton disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
           {StageObj[stage].btnText}
-        </Button>
+        </ThrottleButton>
       </div>
+
+      <GuardianApprovalModal
+        open={approvalVisible}
+        caHash={caHash || ''}
+        originChainId={originChainId}
+        targetChainId={tokenInfo.chainId}
+        operationType={OperationTypeEnum.transferApprove}
+        isErrorTip={isErrorTip}
+        sandboxId={sandboxId}
+        networkType={networkType}
+        onClose={() => setApprovalVisible(false)}
+        onBack={() => setApprovalVisible(false)}
+        onApprovalSuccess={onApprovalSuccess}
+        symbol={tokenInfo.symbol}
+        amount={amount}
+        toAddress={toAccount.address}
+      />
     </div>
   );
 }

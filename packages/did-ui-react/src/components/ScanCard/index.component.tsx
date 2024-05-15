@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useEffectOnce } from 'react-use';
 import { useIntervalQueryCAInfo } from '../../hooks/useIntervalQueryCAInfo';
 import { ReactNode } from 'react';
@@ -17,6 +17,7 @@ export interface ScanCardProps {
   chainId?: ChainId;
   backIcon?: ReactNode;
   networkType?: string;
+  isMobile?: boolean;
   chainType?: ChainType;
   isErrorTip?: boolean;
   wrapperClassName?: string;
@@ -30,6 +31,7 @@ export interface ScanCardProps {
 export default function ScanCard({
   chainId = 'AELF',
   backIcon,
+  isMobile = false,
   isErrorTip = true,
   gridType,
   chainType,
@@ -42,6 +44,8 @@ export default function ScanCard({
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
   const [isWaitingAuth] = useState<boolean>();
+
+  const onFinishRef = useRef<LoginFinishWithoutPin | undefined>(onFinish);
 
   const [caWallet] = useIntervalQueryCAInfo({
     address: managementAccount?.address,
@@ -82,7 +86,7 @@ export default function ScanCard({
       type: 'login',
       address: managementAccount.address,
       id: randomId(),
-      netWorkType: networkType,
+      networkType: networkType,
       chainType: chainType ?? 'aelf',
       extraData: {
         deviceInfo,
@@ -115,17 +119,25 @@ export default function ScanCard({
   useEffect(() => {
     caWallet &&
       managementAccount &&
-      onFinish?.({
+      onFinishRef.current?.({
         chainId: caWallet.chainId,
         caInfo: caWallet.info,
         walletInfo: managementAccount.wallet,
         accountInfo: caWallet.accountInfo,
+        createType: 'addManager',
       });
-  }, [caWallet, managementAccount, onFinish]);
+  }, [caWallet, managementAccount]);
 
   return (
     <div className={clsx('scan-base-wrapper', wrapperClassName)}>
-      <ScanBase gridType={gridType} isWaitingAuth={isWaitingAuth} backIcon={backIcon} onBack={onBack} qrData={qrData} />
+      <ScanBase
+        isMobile={isMobile}
+        gridType={gridType}
+        isWaitingAuth={isWaitingAuth}
+        backIcon={backIcon}
+        onBack={onBack}
+        qrData={qrData}
+      />
     </div>
   );
 }

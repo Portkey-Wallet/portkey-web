@@ -1,4 +1,4 @@
-import { ChainId } from '@portkey/types';
+import { ChainId, TStringJSON } from '@portkey/types';
 import { AccountType, CheckGoogleRecaptchaParams, OperationTypeEnum } from '.';
 
 export type SendVerificationCodeParams = {
@@ -8,6 +8,7 @@ export type SendVerificationCodeParams = {
   chainId: ChainId;
   targetChainId?: ChainId;
   operationType: OperationTypeEnum;
+  operationDetails?: TStringJSON;
 };
 
 export type SendVerificationCodeRequestParams = {
@@ -30,6 +31,7 @@ export type VerifyVerificationCodeParams = {
   chainId: ChainId;
   targetChainId?: ChainId;
   operationType: OperationTypeEnum;
+  operationDetails: TStringJSON;
 };
 
 export type VerifyVerificationCodeResult = {
@@ -48,21 +50,21 @@ export type SendAppleUserExtraInfoParams = {
   };
 };
 
-export type VerifyGoogleTokenParams = {
-  accessToken: string;
+export type BaseVerifyTokenParams = {
   verifierId: string;
   chainId: ChainId;
   operationType: OperationTypeEnum;
   targetChainId?: ChainId;
+  operationDetails: TStringJSON;
 };
 
-export type VerifyAppleTokenParams = {
+export interface VerifierSocialTokenParams extends BaseVerifyTokenParams {
+  accessToken: string;
+}
+
+export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
   identityToken: string;
-  verifierId: string;
-  chainId: ChainId;
-  operationType: OperationTypeEnum;
-  targetChainId?: ChainId;
-};
+}
 
 export type SendAppleUserExtraInfoResult = { userId: string };
 
@@ -92,8 +94,9 @@ export interface IVerificationService {
   verifyVerificationCode(params: VerifyVerificationCodeParams): Promise<VerifyVerificationCodeResult>;
   sendAppleUserExtraInfo(params: SendAppleUserExtraInfoParams): Promise<SendAppleUserExtraInfoResult>;
   getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<getAppleUserExtraInfoResult>;
-  verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
 }

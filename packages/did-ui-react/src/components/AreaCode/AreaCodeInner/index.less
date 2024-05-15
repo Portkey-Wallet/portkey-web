@@ -1,0 +1,48 @@
+.area-code-inner-wrapper {
+  width: 100%;
+  background: var(--portkey-ui-default-bg);
+  display: flex;
+  flex-direction: column;
+
+  .area-code-content {
+    flex: 1;
+    overflow-y: auto;
+    &::-webkit-scrollbar {
+      width: 6px;
+      height: 10px;
+      border-radius: var(--portkey-ui-border-radius-1);
+    }
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--portkey-ui-bg-8);
+      border-radius: var(--portkey-ui-border-radius-2);
+    }
+  }
+  .area-code-item {
+    padding: 13px 16px;
+    padding-right: 10px;
+    cursor: pointer;
+    & > span:first-child {
+      color: var(--portkey-ui-text-primary);
+      font-size: 16px;
+      line-height: 22px;
+    }
+    & > span:last-child {
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--portkey-ui-text-secondary);
+      text-align: right;
+    }
+    &:hover {
+      & > span {
+        color: var(--portkey-ui-font-4);
+      }
+    }
+  }
+
+  .no-search-result {
+    margin-top: 72px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--portkey-ui-text-tip);
+  }
+}

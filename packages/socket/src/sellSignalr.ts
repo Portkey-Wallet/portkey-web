@@ -1,5 +1,5 @@
 import { BaseSignalr } from './signalr';
-import { AchTxAddressReceivedType, RequestOrderTransferredType } from './types/sell';
+import { AchTxAddressReceivedType, NFTOrderChangedData, RequestOrderTransferredType } from './types/sell';
 
 export class SignalrSell extends BaseSignalr {
   public requestAchTxAddress(clientId: string, orderId: string) {
@@ -43,9 +43,32 @@ export class SignalrSell extends BaseSignalr {
       }
     });
   }
+
+  public requestNFTOrderStatus(clientId: string, orderId: string) {
+    console.log('invoke RequestNFTOrderStatus', clientId, orderId);
+
+    return this.invoke('RequestNFTOrderStatus', {
+      targetClientId: clientId,
+      orderId: orderId,
+    });
+  }
+
+  public OnNFTOrderChanged(
+    { orderId }: { clientId: string; orderId: string },
+    callback: (data: NFTOrderChangedData | null) => void,
+  ) {
+    return this.listen('OnNFTOrderChanged', (data: { body: NFTOrderChangedData }) => {
+      console.log('OnNFTOrderChanged:', data, orderId);
+      if (data?.body?.orderId === orderId) {
+        callback(data.body);
+      } else {
+        callback(null);
+      }
+    });
+  }
 }
 
-export const sellListenList = ['onAchTxAddressReceived', 'onOrderTransferredReceived'] as const;
+export const sellListenList = ['onAchTxAddressReceived', 'onOrderTransferredReceived', 'OnNFTOrderChanged'] as const;
 
 export const signalrSell = new SignalrSell({
   listenList: sellListenList,

@@ -41,14 +41,15 @@ export class AElfContract extends BaseContract implements IPortkeyContract {
   ): Promise<SendResult<T>> {
     if (!this.aelfContract) return { error: { code: 401, message: 'Contract init error' } };
     try {
-      const { onMethod = 'receipt' } = sendOptions || {};
+      const { onMethod = 'receipt', refBlockNumberStrategy } = sendOptions || {};
       const _functionName = handleFunctionName(functionName);
       const _params = await handleContractParams({
         instance: this.aelfInstance,
         paramsOption,
         functionName: _functionName,
       });
-      const req = await this.aelfContract[_functionName](_params);
+      const contractSendOption = { refBlockNumberStrategy };
+      const req = await this.aelfContract[_functionName](_params, contractSendOption);
 
       const { TransactionId } = req.result || req;
       if (req.error) return { error: handleContractError(undefined, req), transactionId: TransactionId };
@@ -74,7 +75,7 @@ export class AElfContract extends BaseContract implements IPortkeyContract {
   public async encodedTx<T = any>(
     functionName: string,
     paramsOption?: any,
-    _callOptions?: CallOptions,
+    callOptions?: CallOptions,
   ): Promise<ViewResult<T>> {
     if (!this.aelfContract) return { error: { code: 401, message: 'Contract init error' } };
     if (!this.aelfInstance) return { error: { code: 401, message: 'instance init error' } };
@@ -82,7 +83,10 @@ export class AElfContract extends BaseContract implements IPortkeyContract {
       const _functionName = handleFunctionName(functionName);
       const _params = await handleContractParams({
         instance: this.aelfInstance,
-        paramsOption,
+        paramsOption: {
+          ...paramsOption,
+          ...callOptions?.appendParams,
+        },
         functionName: _functionName,
       });
       const data = await aelf.encodedTx({

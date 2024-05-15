@@ -9,6 +9,7 @@ import { useUpdateEffect } from 'react-use';
 import ConfigProvider from '../config-provider';
 import { usePortkey } from '../context';
 import { useSignHandler } from '../../hooks/useSignHandler';
+import useMobile from '../../hooks/useMobile';
 import './index.less';
 
 export interface CryptoDesignProps extends IBaseGetGuardianProps {
@@ -24,8 +25,11 @@ export default function CryptoDesignBaseCom({
   isErrorTip = true,
   isShowScan: showScan = true,
   phoneCountry,
-  extraElement,
+  extraElementList,
   termsOfService,
+  privacyPolicy,
+  loginMethodsOrder,
+  recommendIndexes,
   onError,
   onSuccess,
   validateEmail,
@@ -42,6 +46,8 @@ export default function CryptoDesignBaseCom({
   const _socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
   const [{ theme }] = usePortkey();
 
+  const isMobile = useMobile();
+
   useEffect(() => {
     validateEmailRef.current = validateEmail;
     validatePhoneRef.current = validatePhone;
@@ -50,10 +56,6 @@ export default function CryptoDesignBaseCom({
   });
 
   const [_type, setType] = useState<CreateWalletType>(type ?? 'Login');
-
-  useUpdateEffect(() => {
-    type && setType(type);
-  }, [type]);
 
   const [{ networkType, chainType }] = usePortkey();
 
@@ -86,16 +88,22 @@ export default function CryptoDesignBaseCom({
     onSocialFinish,
   } = useSignHandler(handlerParam);
 
+  const extra = useMemo(() => <>{extraElementList?.map((item) => item) ?? null}</>, [extraElementList]);
+  const extraFirst = useMemo(() => <>{extraElementList?.[0] ?? null}</>, [extraElementList]);
   return (
     <div className={clsx('signup-login-content', className)} style={style}>
       {_type === 'SignUp' && (
         <SignUpBase
           isErrorTip={isErrorTip}
+          isMobile={isMobile}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
-          extraElement={extraElement}
+          extraElement={extraFirst}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
           networkType={networkType}
+          loginMethodsOrder={loginMethodsOrder}
+          recommendIndexes={recommendIndexes}
           onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
@@ -108,6 +116,7 @@ export default function CryptoDesignBaseCom({
       {_type === 'LoginByScan' && (
         <ScanCard
           chainId={defaultChainId}
+          isMobile={isMobile}
           backIcon={<CustomSvg type="PC" />}
           chainType={chainType}
           networkType={networkType}
@@ -120,13 +129,17 @@ export default function CryptoDesignBaseCom({
       {_type === 'Login' && (
         <LoginCard
           theme={theme}
+          isMobile={isMobile}
           isErrorTip={isErrorTip}
           phoneCountry={phoneCountry}
           socialLogin={_socialLogin}
           isShowScan={isShowScan}
-          extraElement={extraElement}
+          extraElement={extra}
           termsOfService={termsOfService}
+          privacyPolicy={privacyPolicy}
           networkType={networkType}
+          loginMethodsOrder={loginMethodsOrder}
+          recommendIndexes={recommendIndexes}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={onFinish}
           validatePhone={_validatePhone}

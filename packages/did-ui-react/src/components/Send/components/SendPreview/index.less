@@ -1,5 +1,5 @@
 .portkey-ui-send-preview {
-  max-height: 423px;
+  // max-height: 423px;
   overflow-y: overlay;
   background-color: var(--portkey-ui-default-bg);
   display: flex;
@@ -17,8 +17,8 @@
     color: var(--portkey-ui-text-primary);
     gap: 4px;
     .amount {
-      line-height: 28px;
-      font-size: 24px;
+      line-height: 36px;
+      font-size: 28px;
       font-weight: 500;
     }
     .convert {
@@ -33,24 +33,21 @@
     display: flex;
     gap: 16px;
     margin-bottom: 40px;
-    .avatar {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 64px;
-      height: 64px;
-      border-radius: 6px;
-      background: var(--portkey-ui-bg-14);
-      left: 48px;
-      font-size: 24px;
-      color: var(--portkey-ui-text-tip);
-      img {
-        width: 64px;
-        height: 64px;
-        border-radius: 6px;
-        object-fit: cover;
+
+    .portkey-ui-seed-badge {
+      right: 4px;
+      width: 32px;
+      height: 16px;
+      .portkey-ui-custom-svg {
+        width: 32px;
+        height: 16px;
+        svg {
+          width: 32px;
+          height: 16px;
+        }
       }
     }
+
     .info {
       flex: 1;
       display: flex;
@@ -70,8 +67,8 @@
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 1;
           text-overflow: ellipsis;
-          max-width: 200px;
           white-space: nowrap;
+          max-width: 200px;
         }
         .token-id {
           font-weight: 400;
@@ -148,7 +145,6 @@
     color: var(--portkey-ui-text-primary);
     /* stylelint-disable-next-line no-descending-specificity */
     .label {
-      width: 120px;
       font-size: 14px;
       line-height: 20px;
     }
@@ -159,6 +155,7 @@
       justify-content: flex-end;
       align-items: flex-end;
       gap: 4px;
+      white-space: nowrap;
       .symbol {
         line-height: 20px;
         font-size: 14px;

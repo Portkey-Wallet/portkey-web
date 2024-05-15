@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { useCallback, useMemo, useState } from 'react';
+import { SetStateAction, useCallback, useMemo, useState } from 'react';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { useDefaultToken } from '../../hooks/assets';
 import { AmountSign, TransactionStatus } from '../../types/activity';
@@ -7,6 +7,7 @@ import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
 import {
   addressFormat,
   dateFormatTransTo13,
+  divDecimalsStr,
   formatAmountShow,
   formatWithCommas,
   transNetworkText,
@@ -18,9 +19,10 @@ import { did, formatStr2EllipsisStr, getExploreLink, handleErrorMessage } from '
 import Copy from '../Copy';
 import CustomSvg from '../CustomSvg';
 import { getChain } from '../../hooks/useChainInfo';
-import { useThrottleEffect } from '../../hooks/throttle';
+import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { CaAddressInfosType } from '@portkey/services';
 import './index.less';
+import NFTImage from '../NFTImage';
 
 export interface TransactionProps {
   transactionDetail: ActivityItemType;
@@ -46,25 +48,24 @@ export default function TransactionMain({
 
   // Obtain data through api to ensure data integrity.
   // Because some data is not returned in the Activities API. Such as from, to.
-  useThrottleEffect(() => {
-    let caAddresses;
+  useThrottleFirstEffect(() => {
+    let _caAddressInfos = caAddressInfos;
     if (chainId) {
-      caAddresses = caAddressInfos?.filter((info) => info.chainId === chainId, []).map((info) => info.caAddress);
-    } else {
-      caAddresses = caAddressInfos?.map((info) => info.caAddress, []);
+      _caAddressInfos = caAddressInfos?.filter((info) => info.chainId === chainId, []);
     }
 
     const params = {
-      caAddresses: caAddresses,
+      caAddressInfos: _caAddressInfos,
       transactionId: activityItem.transactionId,
       blockHash: activityItem.blockHash,
     };
+
     did.services.activity
       .getActivityDetail(params)
-      .then((res) => {
+      .then((res: SetStateAction<ActivityItemType>) => {
         setActivityItem(res);
       })
-      .catch((err) => {
+      .catch((err: any) => {
         console.error('getActivityDetail:' + handleErrorMessage(err));
       });
   }, [caAddressInfos, chainId]);
@@ -84,22 +85,21 @@ export default function TransactionMain({
   const isNft = useMemo(() => !!activityItem?.nftInfo?.nftId, [activityItem?.nftInfo?.nftId]);
 
   const nftHeaderUI = useCallback(() => {
-    const { nftInfo, amount } = activityItem;
+    const { nftInfo, amount, decimals } = activityItem;
     return (
       <div className="nft-amount">
-        <div className="assets">
-          {nftInfo?.imageUrl ? (
-            <img className="assets-img" src={nftInfo?.imageUrl} />
-          ) : (
-            <p>{nftInfo?.alias?.slice(0, 1)}</p>
-          )}
-        </div>
+        <NFTImage
+          name={nftInfo?.alias}
+          imageUrl={nftInfo?.imageUrl}
+          isSeed={nftInfo?.isSeed}
+          seedType={nftInfo?.seedType}
+        />
         <div className="info">
           <p className="index">
             <span>{nftInfo?.alias}</span>
             <span className="token-id">#{nftInfo?.nftId}</span>
           </p>
-          <p className="quantity">{`Amount: ${amount}`}</p>
+          <p className="quantity">{`Amount: ${divDecimalsStr(amount, decimals)}`}</p>
         </div>
       </div>
     );

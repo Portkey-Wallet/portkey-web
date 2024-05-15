@@ -7,10 +7,10 @@ import {
   SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
-  VerifyGoogleTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
+  VerifierSocialTokenParams,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
@@ -53,7 +53,7 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       url: `/api/app/userExtraInfo/${params.userId}`,
     });
   }
-  verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyGoogleToken',
@@ -68,6 +68,13 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
         ...params,
         accessToken: params.identityToken,
       },
+    });
+  }
+  verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTelegramToken',
+      params,
     });
   }
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {

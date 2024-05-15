@@ -97,7 +97,7 @@ export class ExtensionContractBasic extends ContractBasic {
         paramsOption,
       });
       if (resMessage.code === SandboxErrorCode.error) throw resMessage.error;
-      return { data: { TransactionFee: resMessage.message } };
+      return { data: resMessage.message };
     }
 
     // TODO WEB3 Contract

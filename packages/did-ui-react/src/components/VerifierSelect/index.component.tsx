@@ -1,4 +1,3 @@
-import { Button } from 'antd';
 import CommonModal from '../CommonModal';
 import { useCallback, useMemo, useState, useEffect, MouseEventHandler, useRef } from 'react';
 import BaseVerifierIcon from '../BaseVerifierIcon';
@@ -19,6 +18,8 @@ import { getChainInfo } from '../../hooks/useChainInfo';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { usePortkey } from '../context';
 import './index.less';
+import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 
 type SelectVerifierStorageInfo = {
   verifier: VerifierItem;
@@ -26,9 +27,9 @@ type SelectVerifierStorageInfo = {
 const SelectVerifierInfoStr = `${portkeyDidUIPrefix}SelectVerifierInfo`;
 export interface VerifierSelectConfirmResult {
   verifier: VerifierItem;
-  // accountType === 'Email' || accountType === 'Phone' is required;
+  // accountType === 'Email' 'Phone' 'Telegram'  is required;
   verifierSessionId?: string;
-  // accountType === 'Google' || accountType === 'Apple' is required;
+  // accountType === 'Google' 'Apple' 'Telegram' is required;
   verificationDoc?: string;
   signature?: string;
   //
@@ -44,14 +45,16 @@ export interface VerifierSelectProps {
   isErrorTip?: boolean;
   operationType?: OperationTypeEnum;
   chainType?: ChainType;
-  // socialLogin porps
-  appleIdToken?: string; // apple authorized
-  googleAccessToken?: string; // google authorized
+  // socialLogin props
+  authToken?: string; // apple、google、telegram authorized token
   //
   onError?: OnErrorFunc;
   onConfirm?: (result: VerifierSelectConfirmResult) => void;
 }
 
+/**
+ * @deprecated use `did.services.communityRecovery.getRecommendationVerifier` get default verifier
+ */
 export default function VerifierSelect({
   chainId = 'AELF',
   className,
@@ -61,8 +64,7 @@ export default function VerifierSelect({
   chainType = 'aelf',
   accountType = 'Email',
   defaultVerifier,
-  appleIdToken,
-  googleAccessToken,
+  authToken,
   operationType = OperationTypeEnum.register,
   onError,
   onConfirm,
@@ -78,7 +80,7 @@ export default function VerifierSelect({
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>(defaultVerifierList);
 
   const socialLogin = useMemo<ISocialLoginConfig | undefined>(() => ConfigProvider.getSocialLoginConfig(), []);
-  const [{ sandboxId }] = usePortkey();
+  const [{ sandboxId, networkType }] = usePortkey();
 
   const getVerifierInfo = useCallback(async () => {
     try {
@@ -160,6 +162,7 @@ export default function VerifierSelect({
             verifierId: selectItem.id,
             chainId,
             operationType,
+            operationDetails: getOperationDetails(operationType),
           },
         },
         reCaptchaHandler,
@@ -193,13 +196,17 @@ export default function VerifierSelect({
       let customLoginHandler;
       switch (accountType) {
         case 'Apple':
-          accessToken = appleIdToken;
+          accessToken = authToken;
           clientId = socialLogin?.Apple?.clientId;
           redirectURI = socialLogin?.Apple?.redirectURI;
           customLoginHandler = socialLogin?.Apple?.customLoginHandler;
           break;
+        case 'Telegram':
+          accessToken = authToken;
+          customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
+          break;
         case 'Google':
-          accessToken = googleAccessToken;
+          accessToken = authToken;
           clientId = socialLogin?.Google?.clientId;
           customLoginHandler = socialLogin?.Google?.customLoginHandler;
           break;
@@ -207,6 +214,7 @@ export default function VerifierSelect({
           throw 'accountType is not supported';
       }
       if (!selectItem?.id) throw 'Verifier is not missing';
+      const operationDetails = getOperationDetails(OperationTypeEnum.register);
       const rst = await verifyToken(accountType, {
         accessToken,
         id: guardianIdentifier,
@@ -215,6 +223,8 @@ export default function VerifierSelect({
         clientId: clientId ?? '',
         redirectURI,
         operationType: OperationTypeEnum.register,
+        networkType,
+        operationDetails,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);
@@ -236,14 +246,19 @@ export default function VerifierSelect({
     }
   }, [
     accountType,
-    appleIdToken,
+    authToken,
     chainId,
-    googleAccessToken,
     guardianIdentifier,
     isErrorTip,
+    networkType,
     onError,
     selectItem,
-    socialLogin,
+    socialLogin?.Apple?.clientId,
+    socialLogin?.Apple?.customLoginHandler,
+    socialLogin?.Apple?.redirectURI,
+    socialLogin?.Google?.clientId,
+    socialLogin?.Google?.customLoginHandler,
+    socialLogin?.Telegram?.customLoginHandler,
     verifyToken,
   ]);
 
@@ -266,6 +281,7 @@ export default function VerifierSelect({
       switch (accountType) {
         case 'Apple':
         case 'Google':
+        case 'Telegram':
           info = {
             verifier: selectItem,
           };
@@ -311,7 +327,7 @@ export default function VerifierSelect({
                 </li>
               ))}
             </ul>
-            <Button
+            <ThrottleButton
               className="confirm-btn"
               type="primary"
               onClick={() => {
@@ -327,28 +343,29 @@ export default function VerifierSelect({
                 onButtonConfirm?.();
               }}>
               {t('Confirm')}
-            </Button>
+            </ThrottleButton>
           </div>
         </div>
       </div>
       <CommonModal
+        type="modal"
         getContainer={'#select-verifier-content'}
         className="verify-confirm-modal"
         closable={false}
         maskClosable={false}
         open={open}
         width={320}
-        onCancel={() => setOpen(false)}>
+        onClose={() => setOpen(false)}>
         <p className="modal-content">
           {`${selectItem?.name ?? ''} will send a verification code to `}
           <span className="bold">{guardianIdentifier}</span>
           {` to verify your ${accountType} address.`}
         </p>
         <div className="btn-wrapper">
-          <Button onClick={() => setOpen(false)}>{t('Cancel')}</Button>
-          <Button type="primary" onClick={verifyHandler}>
+          <ThrottleButton onClick={() => setOpen(false)}>{t('Cancel')}</ThrottleButton>
+          <ThrottleButton type="primary" onClick={verifyHandler}>
             {t('Confirm')}
-          </Button>
+          </ThrottleButton>
         </div>
       </CommonModal>
     </div>

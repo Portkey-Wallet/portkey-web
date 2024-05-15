@@ -7,13 +7,13 @@ export default function BackHeader({
   title,
   onBack,
   rightElement,
+  leftElement,
   ...props
 }: TitleWrapperProps & { onBack?: TitleWrapperProps['leftCallBack'] }) {
   const defaultLeftEle = useMemo(
     () => (
       <div className="portkey-ui-flex-row-center default-left-ele">
         <CustomSvg type="BackLeft" className="left-arrow" />
-        <span>Back</span>
       </div>
     ),
     [],
@@ -25,7 +25,7 @@ export default function BackHeader({
       title={title}
       leftCallBack={onBack}
       rightElement={rightElement}
-      leftElement={defaultLeftEle}
+      leftElement={typeof leftElement === 'undefined' ? defaultLeftEle : leftElement}
       {...props}
     />
   );

@@ -2,7 +2,7 @@
   height: 100%;
 
   .back-header-page-wrapper {
-    background-color: #fff;
+    background-color: var(--portkey-ui-default-bg);
     border-bottom: 1px solid var(--portkey-ui-border-2);
   }
 
@@ -13,7 +13,7 @@
       flex: 1;
       padding: 24px 0;
 
-      .portkey-ant-form-item{
+      .portkey-ant-form-item {
         padding: 0 24px;
       }
 
@@ -37,7 +37,6 @@
         border: 1px solid var(--portkey-ui-border-1);
         color: var(--portkey-ui-font-6);
       }
-      
 
       .portkey-ui-hidden-form {
         display: none;
@@ -61,6 +60,15 @@
 }
 
 .portkey-ui-common-base-modal {
+  &.portkey-ant-drawer-wrapper-body {
+    .guardian-list-wrapper {
+      .guardian-list-content {
+        .verifier-content {
+          max-height: 100%;
+        }
+      }
+    }
+  }
   .guardian-list-wrapper {
     .guardian-list-content {
       .verifier-content {

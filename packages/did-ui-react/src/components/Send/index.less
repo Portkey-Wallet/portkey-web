@@ -67,7 +67,7 @@
       gap: 16px;
       .label {
         padding: 0;
-        width: 62px;
+        width: 52px;
         line-height: 22px;
         // max-height: 22px;
         font-size: 16px;
@@ -99,7 +99,7 @@
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
-          color: var(--portkey-ui-text-secondary);
+          color: var(--portkey-ui-text-primary);
         }
         .portkey-ui-custom-svg {
           display: flex;
@@ -183,7 +183,7 @@
         .symbol {
           line-height: 22px;
           font-size: 16px;
-          color: var(--portkey-ui-text-secondary);
+          color: var(--portkey-ui-text-primary);
         }
         .amount {
           line-height: 16px;
@@ -201,24 +201,21 @@
       margin-right: -16px;
       border-bottom: 1px solid var(--portkey-ui-default-border);
       margin-bottom: 15px;
-      .avatar {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 64px;
-        height: 64px;
-        border-radius: 6px;
-        background: var(--portkey-ui-bg-14);
-        left: 48px;
-        font-size: 24px;
-        color: var(--portkey-ui-text-tip);
-        img {
-          width: 64px;
-          height: 64px;
-          border-radius: 6px;
-          object-fit: cover;
+
+      .portkey-ui-seed-badge {
+        right: 4px;
+        width: 32px;
+        height: 16px;
+        .portkey-ui-custom-svg {
+          width: 32px;
+          height: 16px;
+          svg {
+            width: 32px;
+            height: 16px;
+          }
         }
       }
+
       .info {
         flex: 1;
         display: flex;
@@ -273,6 +270,10 @@
         font-size: 16px;
         color: var(--portkey-ui-text-secondary) !important;
       }
+      input {
+        color: var(--portkey-ui-text-primary) !important;
+      }
+
       &:focus-within,
       &:focus {
         input {
@@ -352,5 +353,15 @@
     color: var(--portkey-ui-text-secondary);
     font-size: 14px;
     line-height: 20px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .portkey-ui-send-wrapper .page-title {
+    padding-left: 16px;
+    padding-right: 16px;
+    .title-center {
+      font-size: 20px;
+    }
   }
 }

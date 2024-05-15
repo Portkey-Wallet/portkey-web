@@ -1,7 +1,7 @@
 import { AccountType } from '.';
 import { ISearchService } from './search';
 import { IVerificationService } from './verification';
-import { ChainId } from '@portkey/types';
+import { ChainId, IReferralInfo } from '@portkey/types';
 import { CaHolderWithGuardian } from '@portkey/graphql';
 export interface Context {
   clientId: string;
@@ -27,6 +27,7 @@ export interface RegisterParams {
   verificationDoc: string;
   signature: string;
   context: Context;
+  referralInfo?: IReferralInfo;
 }
 
 export type RegisterResult = {
@@ -40,6 +41,7 @@ export type RecoveryParams = {
   extraData: string;
   chainId: ChainId;
   context: Context;
+  referralInfo?: IReferralInfo;
 };
 
 export type RecoveryResult = {
@@ -49,6 +51,8 @@ export type RecoveryResult = {
 export type GetCAHolderByManagerParams = {
   manager: string;
   chainId: string;
+  caHash?: string;
+  caAddresses?: string[];
 };
 
 export type Maybe<T> = T | null;
@@ -57,7 +61,7 @@ export type GetCAHolderByManagerResult = Array<CaHolderWithGuardian>;
 export interface Guardian {
   guardianIdentifier: string;
   identifierHash: string;
-  isLoginGuardian: true;
+  isLoginGuardian: boolean;
   salt: string;
   type: AccountType;
   verifierId: string;
@@ -102,6 +106,8 @@ export enum OperationTypeEnum {
   setLoginAccount = 7,
   managerApprove = 8,
   modifyTransferLimit = 9,
+  transferApprove = 10,
+  unsetLoginAccount = 11,
 }
 
 export type CheckGoogleRecaptchaParams = {
@@ -121,6 +127,16 @@ export interface IPhoneCountryCodeResult {
   locateData?: ICountryItem;
 }
 
+export type TDeletionEntranceResult = {
+  entranceDisplay: boolean;
+};
+
+export type TCheckDeletionResult = { validatedAssets: false; validatedGuardian: true; validatedDevice: false };
+
+export type TDeletionAccountParams = {
+  appleToken: string;
+};
+
 export interface ICommunityRecoveryService extends IVerificationService, ISearchService {
   register(params: RegisterParams): Promise<RegisterResult>;
   recovery(params: RecoveryParams): Promise<RecoveryResult>;
@@ -129,4 +145,7 @@ export interface ICommunityRecoveryService extends IVerificationService, ISearch
   getRegisterInfo(params: GetRegisterInfoParams): Promise<RegisterInfo>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult>;
+  getShowDeletionEntrance(): Promise<TDeletionEntranceResult>;
+  checkDeletion(): Promise<TCheckDeletionResult>;
+  deletionAccount(params: TDeletionAccountParams): Promise<any>;
 }

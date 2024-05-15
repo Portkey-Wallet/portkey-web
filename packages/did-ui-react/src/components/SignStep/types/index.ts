@@ -5,13 +5,12 @@ import {
   CreateWalletType,
   DIDWalletInfo,
   IGuardianIdentifierInfo,
-  IPhoneCountry,
   TDesign,
   TVerifierItem,
 } from '../../types';
 import { ChainId } from '@portkey/types';
 import { ReactNode } from 'react';
-import { GuardiansApproved } from '@portkey/services';
+import { AccountType, GuardiansApproved } from '@portkey/services';
 export type SIGN_IN_STEP = 'SignIn' | 'Step2OfSignUp' | 'Step2OfLogin' | 'Step3';
 
 export type SignInLifeCycleType = CreateWalletType;
@@ -20,11 +19,13 @@ export type Step2SignUpLifeCycleType = 'SignUpCodeVerify';
 export type Step2SignInLifeCycleType = 'GuardianApproval';
 
 export type SetPinAndAddManagerCycleType = 'SetPinAndAddManager';
+export type Step2OfSkipGuardianApprove = 'Step2OfSkipGuardianApprove';
 
 export type LifeCycleType =
   | SignInLifeCycleType
   | Step2SignUpLifeCycleType
   | Step2SignInLifeCycleType
+  | Step2OfSkipGuardianApprove
   | SetPinAndAddManagerCycleType;
 
 export type UI_TYPE = 'Modal' | 'Full';
@@ -60,21 +61,45 @@ export type TStep3LifeCycle = {
   };
 };
 
+export enum SignUpValue {
+  cancelRegister,
+  otherSeverRegisterButContinue,
+  continue,
+}
+
+export type TSignUpContinueHandler = (identifierInfo: {
+  identifier: string;
+  accountType: AccountType;
+  authToken?: string;
+}) => Promise<SignUpValue>;
+
 export interface SignInProps {
   defaultChainId?: ChainId;
+  /**
+   * You can configure the default pin
+   */
+  pin?: string;
+  /** When on mobile, use the numeric keypad  */
+  keyboard?: boolean;
 
   defaultLifeCycle?: Partial<TStep1LifeCycle | TStep2SignUpLifeCycle | TStep2SignInLifeCycle | TStep3LifeCycle>;
   isErrorTip?: boolean;
 
   // Login
   isShowScan?: boolean;
-  phoneCountry?: IPhoneCountry;
+  /** @deprecated Please use `extraElementList` */
   extraElement?: ReactNode; // extra element
+  extraElementList?: ReactNode[]; // extra element
   termsOfService?: ReactNode;
+  privacyPolicy?: string;
   design?: TDesign;
   validateEmail?: ValidatorHandler;
-  validatePhone?: ValidatorHandler;
   onChainIdChange?(chainId?: ChainId): void;
+  /**
+   * Fired when it is detected that the user is not registered.
+   * You can control whether to continue the subsequent process to complete user registration by returning a Boolean value.
+   */
+  onSignUp?: TSignUpContinueHandler;
   onFinish?(didWallet: DIDWalletInfo): void;
   onCreatePending?(createPendingInfo: CreatePendingInfo): void;
 

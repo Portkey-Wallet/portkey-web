@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import { useMemo } from 'react';
-import { ChainId } from '@portkey/types';
+import { ChainId, SeedTypeEnum } from '@portkey/types';
 import { formatAmountShow } from '../../../../utils/converter';
 import { supplementAllAelfAddress, isAelfAddress } from '../../../../utils/aelf';
 import { amountInUsdShow, chainShowText } from '../../../../utils/assets';
@@ -9,6 +9,7 @@ import { ZERO } from '../../../../constants/misc';
 import { useTokenPrice } from '../../../context/PortkeyAssetProvider/hooks';
 import { formatStr2EllipsisStr } from '../../../../utils';
 import './index.less';
+import NFTImage from '../../../NFTImage';
 
 export interface SendPreviewProps {
   nickname?: string;
@@ -18,6 +19,9 @@ export interface SendPreviewProps {
   alias: string;
   balanceInUsd?: string;
   imageUrl: string;
+  decimals: string | number;
+  isSeed: boolean;
+  seedType: SeedTypeEnum;
   toAccount: { name?: string; address: string };
   transactionFee: string | number;
   type: 'nft' | 'token';
@@ -37,6 +41,9 @@ export default function SendPreview({
   transactionFee,
   type,
   imageUrl,
+  decimals,
+  isSeed,
+  seedType,
   chainId,
   isCross,
   tokenId,
@@ -65,7 +72,8 @@ export default function SendPreview({
     if (ZERO.plus(amount).isLessThanOrEqualTo(crossChainFee)) {
       return (
         <>
-          <span className="usd">{isMainnet && '$0'}</span>0
+          <span className="usd">{isMainnet && '$0 '}</span>
+          {`0 ${defaultToken.symbol}`}
         </>
       );
     } else {
@@ -78,12 +86,13 @@ export default function SendPreview({
                 decimal: 0,
                 price: defaultTokenPrice,
               })}
+            &nbsp;
           </span>
-          {formatAmountShow(ZERO.plus(amount).minus(crossChainFee))}
+          {`${formatAmountShow(ZERO.plus(amount).minus(crossChainFee))} ${symbol}`}
         </>
       );
     }
-  }, [amount, crossChainFee, defaultTokenPrice, isMainnet]);
+  }, [amount, crossChainFee, defaultTokenPrice, isMainnet, symbol, defaultToken]);
 
   return (
     <div className="portkey-ui-send-preview">
@@ -96,14 +105,14 @@ export default function SendPreview({
         </div>
       ) : (
         <div className="amount-preview nft">
-          <div className="avatar">{imageUrl ? <img src={imageUrl} /> : <p>{symbol?.slice(0, 1)}</p>}</div>
+          <NFTImage name={symbol} imageUrl={imageUrl} isSeed={isSeed} seedType={seedType} />
           <div className="info">
-            <p className="index flex">
+            <p className="portkey-ui-flex index">
               <p className="alias">{alias}</p>
               <p className="token-id">{`#${tokenId}`}</p>
             </p>
             <p className="quantity">
-              Amount: <span>{formatAmountShow(amount)}</span>
+              Amount: <span>{formatAmountShow(amount, decimals)}</span>
             </p>
           </div>
         </div>
@@ -152,31 +161,31 @@ export default function SendPreview({
           </span>
         </p>
       </div>
-      {isCross && symbol === defaultToken.symbol && (
-        <>
-          <div className="fee-preview">
-            <span className="label">Cross-chain Transaction fee</span>
-            <p className="value">
-              <span className="symbol">
-                <span className="usd">
-                  {isMainnet &&
-                    amountInUsdShow({
-                      balance: crossChainFee,
-                      decimal: 0,
-                      price: symbolPrice,
-                    })}
-                </span>
-                {` ${formatAmountShow(crossChainFee)} ${defaultToken.symbol}`}
+      {isCross && (
+        <div className="fee-preview">
+          <span className="label">Estimated CrossChain Transfer</span>
+          <p className="value">
+            <span className="symbol">
+              <span className="usd">
+                {isMainnet &&
+                  amountInUsdShow({
+                    balance: crossChainFee,
+                    decimal: 0,
+                    price: symbolPrice,
+                  })}
               </span>
-            </p>
-          </div>
-          <div className="fee-preview">
-            <span className="label">Estimated amount received</span>
-            <p className="value">
-              <span className="symbol">{renderEstimateAmount}</span>
-            </p>
-          </div>
-        </>
+              {` ${formatAmountShow(crossChainFee)} ${defaultToken.symbol}`}
+            </span>
+          </p>
+        </div>
+      )}
+      {isCross && symbol === defaultToken.symbol && (
+        <div className="fee-preview">
+          <span className="label">Estimated amount received</span>
+          <p className="value">
+            <span className="symbol">{renderEstimateAmount}</span>
+          </p>
+        </div>
       )}
     </div>
   );

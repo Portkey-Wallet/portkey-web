@@ -7,9 +7,9 @@ import CustomSvg from '../../../CustomSvg';
 import { ChainId } from '@portkey/types';
 import useNFTMaxCount from '../../../../hooks/useNFTMaxCount';
 import { INftCollectionItem } from '@portkey/services';
-import './index.less';
-import CircleLoading from '../../../CircleLoading';
 import CheckFetchLoading from '../../../CheckFetchLoading';
+import './index.less';
+import NFTImage from '../../../NFTImage';
 
 export interface NFTTabProps {
   isMainnet?: boolean;
@@ -117,16 +117,16 @@ const NFTTab = forwardRef(
                 const curNftNum = nftNum[nftColKey] ?? 0;
                 return (
                   index < curNftNum * maxNftNum && (
-                    <div
+                    <NFTImage
                       key={`${nft.symbol}-${nftItem.symbol}-${nftItem.chainId}`}
-                      style={{
-                        backgroundImage: `url('${nftItem.imageUrl}')`,
-                      }}
                       className={clsx(['item', nftItem.imageUrl ? 'item-img' : ''])}
+                      name=""
+                      imageUrl={nftItem.imageUrl}
+                      isSeed={nftItem.isSeed}
+                      seedType={nftItem.seedType}
                       onClick={() =>
                         onNFTView?.({
                           ...nftItem,
-                          decimals: 0,
                           collectionName: nft.collectionName,
                           collectionImageUrl: nft.imageUrl,
                         })
@@ -135,7 +135,7 @@ const NFTTab = forwardRef(
                         <p className="alias">{nftItem.alias}</p>
                         <p className="token-id">#{nftItem.tokenId}</p>
                       </div>
-                    </div>
+                    </NFTImage>
                   )
                 );
               })}

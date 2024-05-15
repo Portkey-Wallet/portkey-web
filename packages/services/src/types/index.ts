@@ -5,7 +5,16 @@ export enum AccountTypeEnum {
   Phone,
   Google,
   Apple,
+  Telegram,
 }
+
+export const AccountTypeKeyEnum = {
+  Email: 'Email',
+  Phone: 'Phone',
+  Google: 'Google',
+  Apple: 'Apple',
+  Telegram: 'Telegram',
+};
 
 export type AccountType = keyof typeof AccountTypeEnum;
 
@@ -22,6 +31,12 @@ export type BaseListResponse<T = any> = {
   totalRecordCount: number;
 };
 
+export type BaseApiResponse<T = any> = {
+  code: string;
+  message?: string;
+  data: BaseListResponse<T>;
+};
+
 export * from './services';
 export * from './communityRecovery';
 export * from './search';
@@ -32,4 +47,5 @@ export * from './assets';
 export * from './token';
 export * from './transaction';
 export * from './activity';
+export * from './allowance';
 export * from './security';
