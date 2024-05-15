@@ -756,11 +756,11 @@ function GuardianAdd({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={OperationTypeEnum.addGuardian}
-          identifierHash={curGuardian.current?.identifierHash}
-          guardianType={curGuardian.current?.guardianType}
-          verifierId={curGuardian.current?.verifierId}
-          // guardianIdentifier={curGuardian.current?.guardianIdentifier}
-          // firstName={curGuardian.current?.firstName}
+          operationDetails={getOperationDetails(OperationTypeEnum.addGuardian, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+          })}
         />
       </CommonBaseModal>
     </div>

@@ -12,7 +12,7 @@ import { IRampCryptoDefault, IRampCryptoItem, IRampFiatItem, RampType } from '@p
 import { ZERO } from '../../../../constants/misc';
 import { SERVICE_UNAVAILABLE_TEXT, initCrypto, initFiat } from '../../../../constants/ramp';
 import { TRampInitState, TRampPreviewInitState } from '../../../../types';
-import { divDecimals } from '../../../../utils/converter';
+import { divDecimals, timesDecimals } from '../../../../utils/converter';
 import { singleMessage } from '../../../CustomAnt';
 import { getSellFiat } from '../../utils/api';
 import ExchangeRate from '../ExchangeRate';
@@ -30,6 +30,7 @@ import { getChain } from '../../../../hooks/useChainInfo';
 import transferLimitCheck from '../../../ModalMethod/TransferLimitCheck';
 import { getSellData } from '../../utils/sell';
 import { MAIN_CHAIN_ID } from '../../../../constants/network';
+import { getOperationDetails } from '../../../utils/operation.util';
 
 interface ISellFormProps extends TRampInitState {
   isMainnet: boolean;
@@ -437,6 +438,12 @@ export default function SellFrom({
         originChainId={originChainId}
         targetChainId={chainId}
         operationType={OperationTypeEnum.transferApprove}
+        operationDetails={getOperationDetails(OperationTypeEnum.transferApprove, {
+          symbol: cryptoSelectedRef.current.symbol,
+          amount: timesDecimals(cryptoAmountRef.current, cryptoSelectedRef.current.decimals).toNumber(),
+          toAddress: cryptoSelectedRef.current.address,
+        })}
+        officialWebsiteShow={{ amount: cryptoAmount, symbol: cryptoSelectedRef.current.symbol }}
         isErrorTip={isErrorTip}
         sandboxId={sandboxId}
         onClose={() => setApprovalVisible(false)}

@@ -6,7 +6,7 @@ import React from 'react';
 
 ConfigProvider.setGlobalConfig({
   // storageMethod: myStore,
-  serviceUrl: 'https://test4-applesign-v2.portkey.finance',
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
 
   requestDefaults: {
     timeout: 30000,

@@ -9,6 +9,7 @@ import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
+import { TStringJSON } from '@portkey/types';
 
 export interface GuardianListProps {
   originChainId: ChainId;
@@ -20,18 +21,8 @@ export interface GuardianListProps {
   approvalLength: number;
   alreadyApprovalLength: number;
   operationType?: OperationTypeEnum;
+  operationDetails?: TStringJSON;
   isFetching: boolean;
-  identifierHash?: string;
-  guardianType?: string;
-  verifierId?: string;
-  preVerifierId?: string;
-  newVerifierId?: string;
-  symbol?: string;
-  amount?: string | number;
-  toAddress?: string;
-  singleLimit?: string;
-  dailyLimit?: string;
-  spender?: string;
   onError?: OnErrorFunc;
   onConfirm?: () => void;
   onSend?: (item: UserGuardianStatus, index: number) => void;
@@ -49,17 +40,7 @@ function GuardianList({
   approvalLength,
   isFetching,
   alreadyApprovalLength,
-  identifierHash,
-  guardianType,
-  verifierId,
-  preVerifierId,
-  newVerifierId,
-  symbol,
-  amount,
-  toAddress,
-  singleLimit,
-  dailyLimit,
-  spender,
+  operationDetails,
   onError,
   onConfirm,
   onSend,
@@ -121,19 +102,7 @@ function GuardianList({
               targetChainId={targetChainId}
               key={item.key}
               operationType={operationType}
-              operationDetails={getOperationDetails(operationType, {
-                identifierHash,
-                guardianType,
-                verifierId,
-                preVerifierId,
-                newVerifierId,
-                symbol,
-                amount,
-                toAddress,
-                singleLimit,
-                dailyLimit,
-                spender,
-              })}
+              operationDetails={operationDetails}
               disabled={alreadyApprovalLength >= approvalLength && item.status !== VerifyStatus.Verified}
               isExpired={isExpired}
               item={item}
