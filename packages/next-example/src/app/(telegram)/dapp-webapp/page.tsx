@@ -17,7 +17,7 @@ ConfigProvider.setGlobalConfig({
   },
   socialLogin: {
     Telegram: {
-      botId: 'Dapp_V5_Bot',
+      botId: '7013879783',
     },
   },
 });
