@@ -1,4 +1,4 @@
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
 import { randomId } from '@portkey/utils';
 import { IListen, IMessageMap, ISignalr, ISignalrOptions, Receive, SocketError } from './types';
 
@@ -17,7 +17,7 @@ export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {
 
   public doOpen = async ({ url, clientId }: { url: string; clientId: string }) => {
     const signalr = new HubConnectionBuilder()
-      .withUrl(url, { withCredentials: false })
+      .withUrl(url, { withCredentials: false, skipNegotiation: true, transport: HttpTransportType.WebSockets })
       .withAutomaticReconnect()
       .build();
     this._listener(signalr);
