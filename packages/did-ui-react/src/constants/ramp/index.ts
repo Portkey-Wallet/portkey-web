@@ -35,7 +35,7 @@ export const initCryptoAmount = '400';
 
 export const RAMP_WEB_PAGE_ROUTE = WEB_PAGE + '/third-part-bridge/';
 
-export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK&version=v2';
+export const RAMP_WITH_DRAW_URL = RAMP_WEB_PAGE_ROUTE + '?portkeyMethod=ACH_SELL_BACK&version=v2&v=2.7.0';
 
 export const OUR_PRODUCT_NAME = 'Portkey';
 
