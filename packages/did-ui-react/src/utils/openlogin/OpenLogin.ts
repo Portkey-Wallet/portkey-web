@@ -8,6 +8,7 @@ import { ISocialLogin } from '../../types';
 import { forgeWeb } from '@portkey/utils';
 import { IOpenloginHandlerResult, TOpenLoginQueryParams } from '../../types/openlogin';
 import { CrossTabPushMessageType } from '@portkey/socket';
+import { TelegramPlatform } from '../telegramPlatform';
 
 class OpenLogin {
   options: OpenLoginOptions;
@@ -95,6 +96,7 @@ class OpenLogin {
 
     queryParams.loginId = loginId;
     queryParams.network = this.options.customNetworkType;
+    queryParams.isFromTelegram = TelegramPlatform.isTelegramPlatform();
 
     if (this.options.uxMode === UX_MODE.REDIRECT) {
       const loginUrl = constructURL({
