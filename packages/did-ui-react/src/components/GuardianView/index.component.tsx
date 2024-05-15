@@ -457,9 +457,12 @@ function GuardianView({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
-          identifierHash={curGuardian.current?.identifierHash}
-          guardianType={curGuardian.current?.guardianType}
-          verifierId={curGuardian.current?.verifierId}
+          operationDetails={getOperationDetails(operationType, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+          })}
+
           // guardianIdentifier={curGuardian?.current?.guardianIdentifier}
           // firstName={curGuardian?.current?.firstName}
         />
