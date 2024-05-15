@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.1...v2.5.2) (2024-05-15)
+
+### Bug Fixes
+
+- socket 404 ([1bd4157](https://github.com/Portkey-Wallet/portkey-web/commit/1bd41577961a934b45c738e468dfcc728025e5c4))
+
 ## [2.5.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0...v2.5.1) (2024-05-11)
 
 **Note:** Version bump only for package @portkey/socket

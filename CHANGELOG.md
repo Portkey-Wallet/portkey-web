@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.1...v2.5.2) (2024-05-15)
+
+### Bug Fixes
+
+- communication 404 ([9b549c6](https://github.com/Portkey-Wallet/portkey-web/commit/9b549c6c6d0595b12b5c042b46f4b6c29ccd8c0d))
+- show prompt for open login pushEncodeMessage only when opened from Telegram ([3d1d654](https://github.com/Portkey-Wallet/portkey-web/commit/3d1d6541781a9735010128dbb3a8086d1df0dc18))
+- socket 404 ([1bd4157](https://github.com/Portkey-Wallet/portkey-web/commit/1bd41577961a934b45c738e468dfcc728025e5c4))
+
 ## [2.5.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.0...v2.5.1) (2024-05-11)
 
 ### Bug Fixes
