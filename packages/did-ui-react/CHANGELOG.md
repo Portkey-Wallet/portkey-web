@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.3...v2.6.4) (2024-05-16)
+
+### Bug Fixes
+
+- offical website param encode ([afb78af](https://github.com/Portkey-Wallet/portkey-web/commit/afb78af16e843c9f1e929f043b751b30c1a20d55))
+
 ## [2.6.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.2...v2.6.3) (2024-05-15)
 
 ### Bug Fixes
