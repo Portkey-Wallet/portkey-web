@@ -46,14 +46,11 @@ export default async function officialWebsiteCheck(
       operationType,
       onlineType: getCustomNetworkType(),
       operationDetails,
-      // todo add to official website
-      // guardianType,
-      // guardianAccount: guardianType === 'Email' ? guardianIdentifier : firstName,
     };
-    const dataString = JSON.stringify(data);
-    const windowOpener = window.open(`${OfficialWebsite}?data=${encodeURIComponent(dataString)}`, '_blank');
+    const encodeData = Buffer.from(JSON.stringify(data), 'utf8').toString('base64');
+    const windowOpener = window.open(`${OfficialWebsite}?data=${encodeURIComponent(encodeData)}`, '_blank');
     console.log('originData===', data);
-    console.log('officialWebsite===', `${OfficialWebsite}?data=${encodeURIComponent(dataString)}`);
+    console.log('officialWebsite===', `${OfficialWebsite}?data=${encodeURIComponent(encodeData)}`);
     timer = setInterval(() => {
       if (windowOpener?.closed) {
         clearInterval(timer);
