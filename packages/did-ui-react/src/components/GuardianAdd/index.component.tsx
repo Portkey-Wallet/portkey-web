@@ -22,7 +22,6 @@ import {
   verification,
 } from '../../utils';
 import {
-  ICountryItem,
   ISocialLogin,
   ITelegramInfo,
   IVerificationInfo,
@@ -33,8 +32,6 @@ import {
 } from '../../types';
 import CustomSvg from '../CustomSvg';
 import { useTranslation } from 'react-i18next';
-import PhoneNumberInput from '../PhoneNumberInput';
-import { IPhoneCountry } from '../types';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import GuardianApproval from '../GuardianApproval';
@@ -43,7 +40,6 @@ import CustomModal from '../CustomModal';
 import CommonBaseModal from '../CommonBaseModal';
 import ConfigProvider from '../config-provider';
 import { useVerifyToken } from '../../hooks';
-import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
 import {
@@ -67,7 +63,6 @@ export interface GuardianAddProps {
   caHash: string;
   originChainId: ChainId;
   chainType?: ChainType;
-  phoneCountry?: IPhoneCountry;
   guardianList?: UserGuardianStatus[];
   verifierList?: VerifierItem[];
   networkType: NetworkType;
@@ -93,7 +88,6 @@ function GuardianAdd({
   caHash,
   chainType = 'aelf',
   isErrorTip = true,
-  phoneCountry: customPhoneCountry,
   verifierList,
   guardianList,
   networkType,
@@ -106,8 +100,6 @@ function GuardianAdd({
   const [selectGuardianType, setSelectGuardianType] = useState<AccountType | undefined>();
   const [selectVerifierId, setSelectVerifierId] = useState<string | undefined>();
   const [emailValue, setEmailValue] = useState<string>('');
-  const [countryCode, setCountryCode] = useState<ICountryItem | undefined>();
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [socialValue, setSocialValue] = useState<ISocialInput | undefined>();
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
   const [accountErr, setAccountErr] = useState<string>();
@@ -116,13 +108,9 @@ function GuardianAdd({
   const curGuardian = useRef<UserGuardianStatus | undefined>();
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
-  const [phoneCountry, setPhoneCountry] = useState<IPhoneCountry | undefined>(customPhoneCountry);
   const verifyToken = useVerifyToken();
   const [addBtnLoading, setAddBtnLoading] = useState<boolean>(false);
-  const guardianAccount = useMemo(
-    () => emailValue || socialValue?.id || (countryCode && phoneNumber ? `+${countryCode.code}${phoneNumber}` : ''),
-    [countryCode, emailValue, phoneNumber, socialValue?.id],
-  );
+  const guardianAccount = useMemo(() => emailValue || socialValue?.id, [emailValue, socialValue?.id]);
   const addBtnDisable = useMemo(
     () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
     [accountErr, guardianAccount, selectVerifierId, verifierExist],
@@ -191,8 +179,6 @@ function GuardianAdd({
   const handleGuardianTypeChange = useCallback((value: AccountType) => {
     setSelectGuardianType(value);
     setEmailValue('');
-    setCountryCode(undefined);
-    setPhoneNumber('');
     setSocialValue(undefined);
     setVerifierExist(false);
     setAccountErr('');
@@ -200,22 +186,6 @@ function GuardianAdd({
   const handleVerifierChange = useCallback((id: string) => {
     setSelectVerifierId(id);
     setVerifierExist(false);
-  }, []);
-  const getPhoneCountry = useCallback(async () => {
-    try {
-      const countryData = await did.services.getPhoneCountryCodeWithLocal();
-      setPhoneCountry({ iso: countryData.locateData?.iso || '', countryList: countryData.data || [] });
-    } catch (error) {
-      errorTip(
-        {
-          errorFields: 'getPhoneCountry',
-          error: handleErrorMessage(error),
-        },
-        isErrorTip,
-        onError,
-      );
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   const socialBasic = useCallback(
     (v: ISocialLogin) => {
@@ -500,26 +470,6 @@ function GuardianAdd({
         ),
         label: t('Guardian Email'),
       },
-      [AccountTypeEnum[AccountTypeEnum.Phone]]: {
-        element: (
-          <PhoneNumberInput
-            iso={countryCode?.iso ?? phoneCountry?.iso}
-            countryList={phoneCountry?.countryList}
-            phoneNumber={phoneNumber}
-            onAreaChange={(v) => {
-              setCountryCode(v);
-              setAccountErr('');
-              setVerifierExist(false);
-            }}
-            onPhoneNumberChange={(v) => {
-              setPhoneNumber(v);
-              setAccountErr('');
-              setVerifierExist(false);
-            }}
-          />
-        ),
-        label: t('Guardian Phone'),
-      },
       [AccountTypeEnum[AccountTypeEnum.Google]]: {
         element: renderSocialGuardianAccount('Google'),
         label: t('Guardian Google'),
@@ -541,16 +491,7 @@ function GuardianAdd({
         label: t('Guardian Twitter'),
       },
     }),
-    [
-      countryCode?.iso,
-      emailValue,
-      setEmailValue,
-      phoneCountry?.countryList,
-      phoneCountry?.iso,
-      phoneNumber,
-      renderSocialGuardianAccount,
-      t,
-    ],
+    [emailValue, setEmailValue, renderSocialGuardianAccount, t],
   );
   const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
     const { guardianIdentifier } = handleVerificationDoc(res.verificationDoc);
@@ -677,11 +618,7 @@ function GuardianAdd({
             <p>
               {`${curGuardian?.current?.verifier?.name ?? ''} will send a verification code to `}
               <strong>{curGuardian?.current?.guardianIdentifier}</strong>
-              {` to verify your ${
-                curGuardian?.current?.guardianType === AccountTypeEnum[AccountTypeEnum.Phone]
-                  ? 'phone number'
-                  : 'email address'
-              }.`}
+              {` to verify your email address.`}
             </p>
           ),
           onOk: sendCode,
@@ -693,9 +630,6 @@ function GuardianAdd({
     setVerifierVisible(false);
     setApprovalVisible(false);
   }, []);
-  useEffectOnce(() => {
-    !customPhoneCountry && getPhoneCountry();
-  });
   return (
     <div className={clsx('portkey-ui-guardian-add', 'portkey-ui-flex-column', className)}>
       {header}
