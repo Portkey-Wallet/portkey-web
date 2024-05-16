@@ -50,10 +50,10 @@ export default async function officialWebsiteCheck(
       // guardianType,
       // guardianAccount: guardianType === 'Email' ? guardianIdentifier : firstName,
     };
-    const encodeData = Buffer.from(JSON.stringify(data), 'utf8').toString('base64');
-    const windowOpener = window.open(`${OfficialWebsite}?data=${encodeData}`, '_blank');
+    const dataString = JSON.stringify(data);
+    const windowOpener = window.open(`${OfficialWebsite}?data=${encodeURIComponent(dataString)}`, '_blank');
     console.log('originData===', data);
-    console.log('officialWebsite===', `${OfficialWebsite}?data=${encodeData}`);
+    console.log('officialWebsite===', `${OfficialWebsite}?data=${encodeURIComponent(dataString)}`);
     timer = setInterval(() => {
       if (windowOpener?.closed) {
         clearInterval(timer);
