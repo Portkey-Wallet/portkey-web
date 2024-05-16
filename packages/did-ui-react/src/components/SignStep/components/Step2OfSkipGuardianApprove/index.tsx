@@ -1,5 +1,5 @@
 import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
-import { memo, useMemo, useRef } from 'react';
+import { memo, useRef } from 'react';
 import BackHeader from '../../../BackHeader';
 import GuardianApproval, { IGuardianApprovalInstance } from '../../../GuardianApproval/index.component';
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../../../types';

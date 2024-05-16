@@ -147,16 +147,17 @@ export default function CodeVerify({
       );
     }
   }, [
+    guardianIdentifier,
     accountType,
+    verifier,
     originChainId,
     targetChainId,
-    guardianIdentifier,
+    operationType,
+    operationDetails,
+    reCaptchaHandler,
+    onReSend,
     isErrorTip,
     onError,
-    onReSend,
-    operationType,
-    reCaptchaHandler,
-    verifier,
   ]);
 
   useEffect(() => {

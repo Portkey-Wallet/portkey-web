@@ -51,7 +51,7 @@ export default function TokenAllowanceDetailMain({
     } else {
       singleMessage.error('Please interact with the dApp and initiate transaction again to enable this function.');
     }
-  }, [chainId, contractAddress, isOpen]);
+  }, [caHash, chainId, contractAddress, isOpen]);
 
   const providedName = useMemo(() => name || 'Unknown', [name]);
 

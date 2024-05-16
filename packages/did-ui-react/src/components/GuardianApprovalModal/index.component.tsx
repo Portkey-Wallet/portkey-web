@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useState } from 'react';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';

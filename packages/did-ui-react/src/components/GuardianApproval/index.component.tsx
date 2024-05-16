@@ -34,13 +34,11 @@ import {
 import { OperationTypeEnum, GuardiansApproved, VerifyVerificationCodeResult } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
-import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
 import { SocialLoginList, OfficialWebsite, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
 import './index.less';
 import CommonModal from '../CommonModal';
-import { Button } from 'antd';
 import officialWebsiteCheck from '../../utils/officialWebsiteCheck';
 import { did } from '@portkey/did';
 import ThrottleButton from '../ThrottleButton';
@@ -183,79 +181,6 @@ const GuardianApprovalMain = forwardRef(
         }
       },
       [isErrorTip, onError],
-    );
-    const socialVerifyHandler = useCallback(
-      async (item: UserGuardianStatus, index: number) => {
-        try {
-          setLoading(true);
-          const accessToken = item?.accessToken;
-          const socialLogin = ConfigProvider.config.socialLogin;
-          let clientId;
-          let redirectURI;
-          let customLoginHandler;
-          switch (item.guardianType) {
-            case 'Apple':
-              clientId = socialLogin?.Apple?.clientId;
-              redirectURI = socialLogin?.Apple?.redirectURI;
-              customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-
-              break;
-            case 'Google':
-              clientId = socialLogin?.Google?.clientId;
-              customLoginHandler = socialLogin?.Google?.customLoginHandler;
-              break;
-            case 'Telegram':
-              customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-              break;
-            default:
-              throw 'accountType is not supported';
-          }
-          if (!item.verifier?.id) throw 'verifier id is not exist';
-          const id = item.identifier || item.identifierHash;
-          if (!id) throw 'identifier is not exist';
-          const rst = await verifyToken(item.guardianType, {
-            accessToken,
-            id,
-            verifierId: item.verifier?.id,
-            chainId: originChainId,
-            targetChainId,
-            clientId,
-            redirectURI,
-            operationType,
-            networkType,
-            operationDetails,
-            customLoginHandler,
-          });
-          if (!rst || !rst.verificationDoc) return;
-
-          const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
-          const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
-
-          setGuardianList((v) => {
-            v[index] = {
-              ...v[index],
-              status: VerifyStatus.Verified,
-              verificationDoc: verifierInfo.verificationDoc,
-              signature: verifierInfo.signature,
-              identifierHash: guardianIdentifier,
-            };
-            return [...v];
-          });
-          setVerifyAccountIndex(undefined);
-        } catch (error) {
-          return errorTip(
-            {
-              errorFields: 'GuardianApproval',
-              error: handleErrorMessage(error),
-            },
-            isErrorTip,
-            onError,
-          );
-        } finally {
-          setLoading(false);
-        }
-      },
-      [verifyToken, originChainId, targetChainId, operationType, networkType, operationDetails, isErrorTip, onError],
     );
 
     const onVerifyingHandler = useCallback(

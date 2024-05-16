@@ -1,7 +1,5 @@
 import { OperationTypeEnum } from '@portkey/services';
 import { getManagementAccount } from '../checkManagerCreate';
-import { UserGuardianStatus } from '../../types';
-import { AccountType } from '@portkey/services';
 
 export function getOperationDetails(
   operationType: OperationTypeEnum,

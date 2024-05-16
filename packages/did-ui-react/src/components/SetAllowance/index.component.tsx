@@ -40,7 +40,6 @@ export default function SetAllowanceMain({
   decimals,
   dappInfo,
   showBatchApproveToken,
-  symbol,
   className,
   recommendedAmount = 0,
   onCancel,
