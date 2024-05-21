@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.5.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.5...v2.5.6) (2024-05-21)
+
+### Bug Fixes
+
+- 🐛 remove save asset storage ([fcf7ad8](https://github.com/Portkey-Wallet/portkey-web/commit/fcf7ad83ff597ea92c327fa542e7f552a635118d))
+
 ## [2.5.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.5.4...v2.5.5) (2024-05-16)
 
 **Note:** Version bump only for package @portkey/next-example
