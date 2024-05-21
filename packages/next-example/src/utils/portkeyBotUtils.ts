@@ -15,6 +15,7 @@ export function handleApproveCommand(msg: TelegramBot.Message) {
 }
 
 const url = process.env.NEXT_PUBLIC_PORTKEY_WEB_APP_URL || '';
+console.log(url, 'url==');
 
 export function handleLoginCommand(msg: TelegramBot.Message) {
   portkeyTelegramBot.sendMessage(msg.chat.id, 'Please select:', {

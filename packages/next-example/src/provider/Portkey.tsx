@@ -18,6 +18,7 @@ export default function Portkey({ children }: { children?: ReactNode }) {
   const [networkType, setNetworkType] = useState<NetworkType>('TESTNET');
 
   useEffect(() => {
+    if (typeof document === 'undefined') return;
     if (dark) {
       document.body.classList.add('dark');
     } else {

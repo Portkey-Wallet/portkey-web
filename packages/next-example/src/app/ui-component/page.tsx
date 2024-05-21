@@ -10,7 +10,6 @@ import {
 } from '@portkey/did-ui-react';
 import { message, ConfigProvider, Modal, notification } from 'antd';
 import { useState } from 'react';
-import ExclamationCircleOutlined from '@ant-design/icons/ExclamationCircleOutlined';
 import { Button } from 'antd';
 
 ConfigProvider.config({
@@ -23,7 +22,6 @@ export default function UI() {
   console.log(openModal, 'openModal===');
   return (
     <div>
-      <ExclamationCircleOutlined />
       <div>-----</div>
       <Button
         onClick={async () => {

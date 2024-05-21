@@ -73,7 +73,7 @@ function Example() {
           console.log(error, 'onError====error');
         }}
         onCancel={() => {
-          ref?.current.setOpen(false);
+          ref.current?.setOpen(false);
         }}
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
