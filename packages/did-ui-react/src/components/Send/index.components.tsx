@@ -527,7 +527,7 @@ function SendContent({
           <AmountInput
             type={isNFT ? 'nft' : 'token'}
             fromAccount={{
-              address: caInfo?.[tokenInfo.chainId].caAddress || '',
+              address: caInfo?.[tokenInfo.chainId]?.caAddress || '',
               AESEncryptPrivateKey: managementAccount?.privateKey || '',
             }}
             toAccount={{
