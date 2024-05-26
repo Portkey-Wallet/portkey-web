@@ -94,22 +94,7 @@ export default function AppleAuth() {
             const chainInfo = await getChainInfo(originChainId);
             const spender = chainInfo.defaultToken.address;
             const caHash = did.didWallet.caInfo[originChainId].caHash;
-            const result = await managerApprove({
-              originChainId: originChainId,
-              symbol: 'ELF',
-              caHash,
-              amount: 1e8 * 67,
-              targetChainId: originChainId,
-              networkType: 'TESTNET',
-              showBatchApproveToken: true,
-              dappInfo: {
-                icon: 'https://icon.horse/icon/localhost:3000/50',
-                href: 'http://localhost:3000',
-                name: 'localhost',
-              },
-              spender: chainInfo.defaultToken.address,
-            });
-            console.log(result, 'result===');
+
             const [portkeyContract, tokenContract] = await Promise.all(
               [chainInfo.caContractAddress, chainInfo.defaultToken.address].map(ca =>
                 getContractBasic({
@@ -120,10 +105,27 @@ export default function AppleAuth() {
               ),
             );
 
+            const result = await managerApprove({
+              originChainId: originChainId,
+              symbol: 'SGRTEST-0',
+              caHash,
+              amount: 1e8 * 67,
+              targetChainId: originChainId,
+              networkType: 'TESTNET',
+              batchApproveNFT: true,
+              dappInfo: {
+                icon: 'https://icon.horse/icon/localhost:3000/50',
+                href: 'http://localhost:3000',
+                name: 'localhost',
+              },
+              spender: chainInfo.defaultToken.address,
+            });
+            console.log(result, 'result===');
+
             const approveResult = await portkeyContract.callSendMethod('ManagerApprove', '', {
               caHash,
               spender,
-              symbol: (result as any).batchApproveToken ? '*' : 'ELF',
+              symbol: result.symbol,
               amount: result.amount,
               guardiansApproved: result.guardiansApproved,
             });
@@ -132,15 +134,17 @@ export default function AppleAuth() {
               return;
             }
 
-            const allowanceRes = await Promise.all(
-              ['ELF', 'ETH', 'SGRTEST-1', '*'].map(item =>
-                tokenContract.callViewMethod('GetAvailableAllowance', {
-                  symbol: item,
-                  owner: did.didWallet.aaInfo.accountInfo?.caAddress,
-                  spender,
-                }),
-              ),
-            );
+            const allowanceRes = (
+              await Promise.all(
+                ['ELF', 'ETH', 'SGRTEST-1', '*', 'SGRTEST-23', 'SGRTEST-0'].map(item =>
+                  tokenContract.callViewMethod('GetAvailableAllowance', {
+                    symbol: item,
+                    owner: did.didWallet.aaInfo.accountInfo?.caAddress,
+                    spender,
+                  }),
+                ),
+              )
+            ).map(res => res.data || res.error);
             console.log(allowanceRes, 'allowanceRes===');
           } catch (error) {
             message.error(handleErrorMessage(error));

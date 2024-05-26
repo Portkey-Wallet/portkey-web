@@ -5,13 +5,19 @@ export interface IAllowanceService {
   getAllowanceList: (params: GetAllowanceParams) => Promise<GetAllowanceResult>;
 }
 
+export interface ISymbolApprovedItem {
+  symbol: string;
+  amount: number;
+  decimals: number;
+}
+
 export interface AllowanceItem {
   chainId: ChainId;
   contractAddress: string;
   url?: string;
   icon?: string;
   name?: string;
-  allowance: number;
+  symbolApproveList?: ISymbolApprovedItem[];
 }
 
 export interface GetAllowanceParams {

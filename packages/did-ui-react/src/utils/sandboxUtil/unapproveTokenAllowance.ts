@@ -4,16 +4,18 @@ import { getContractBasic } from '@portkey/contracts';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { aelf } from '@portkey/utils';
 
-export const unapproveTokenAllowance = async ({
+export const unApproveTokenAllowance = async ({
   caHash,
   targetChainId,
   contractAddress,
   amount,
+  symbol,
 }: {
   caHash: string;
   targetChainId?: ChainId;
   contractAddress: string;
   amount: number;
+  symbol: string;
 }) => {
   const chainInfo = await getChainInfo(targetChainId);
   const contract = await getContractBasic({
@@ -26,7 +28,7 @@ export const unapproveTokenAllowance = async ({
     methodName: 'UnApprove',
     contractAddress: chainInfo.defaultToken.address,
     args: {
-      symbol: '*',
+      symbol,
       spender: contractAddress,
       amount,
     },

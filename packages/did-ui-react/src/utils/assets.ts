@@ -18,6 +18,11 @@ export const isNFT = (symbol: string) => {
   if (!symbol) return false;
   if (!symbol.includes('-')) return false;
   const lastStr = symbol.split('-').splice(-1)[0];
-  console.log(lastStr, BigNumber(lastStr).isNaN(), !BigNumber(lastStr).isNaN(), Number(lastStr));
   return !BigNumber(lastStr).isNaN();
+};
+
+export const isNFTCollection = (symbol: string) => {
+  if (!isNFT(symbol)) return false;
+  const lastStr = symbol.split('-').splice(-1)[0];
+  return BigNumber(lastStr).isZero();
 };

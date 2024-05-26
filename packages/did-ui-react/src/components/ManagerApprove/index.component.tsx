@@ -1,5 +1,5 @@
 import GuardianApprovalMain from '../GuardianApproval/index.component';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChainId } from '@portkey/types';
 import SetAllowanceMain, { BaseSetAllowanceProps, IAllowance } from '../SetAllowance/index.component';
 import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } from '../../utils';
@@ -12,7 +12,7 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import BackHeader from '../BackHeader';
 import { divDecimals, timesDecimals } from '../../utils/converter';
 import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL, DEFAULT_NFT_DECIMAL } from '../../constants';
-import { isNFT } from '../../utils/assets';
+import { isNFT, isNFTCollection } from '../../utils/assets';
 import './index.less';
 import { getOperationDetails } from '../utils/operation.util';
 
@@ -32,12 +32,7 @@ export interface IManagerApproveResult {
 export interface ManagerApproveInnerProps extends BaseManagerApproveInnerProps {
   onCancel?: () => void;
   onError?: (error: Error) => void;
-  onFinish?: (res: {
-    amount: string;
-    symbol: string;
-    batchApproveToken: boolean;
-    guardiansApproved: IGuardiansApproved[];
-  }) => void;
+  onFinish?: (res: { amount: string; symbol: string; guardiansApproved: IGuardiansApproved[] }) => void;
 }
 export enum ManagerApproveStep {
   SetAllowance = 'SetAllowance',
@@ -56,7 +51,7 @@ export default function ManagerApproveInner({
   dappInfo,
   symbol,
   spender,
-  showBatchApproveToken,
+  batchApproveNFT,
   onCancel,
   onFinish,
   onError,
@@ -75,10 +70,17 @@ export default function ManagerApproveInner({
     issued: string;
   }>();
 
-  const DEFAULT_SYMBOL_DECIMAL = useMemo(() => (isNFT(symbol) ? DEFAULT_NFT_DECIMAL : DEFAULT_DECIMAL), [symbol]);
+  const [DEFAULT_SYMBOL_DECIMAL, approveSymbol] = useMemo(() => {
+    const defaultDecimals = isNFT(symbol) ? DEFAULT_NFT_DECIMAL : DEFAULT_DECIMAL;
+
+    if (!batchApproveNFT || isNFTCollection(symbol) || !isNFT(symbol)) return [defaultDecimals, symbol];
+
+    const collection = symbol.split('-')[0];
+
+    return [defaultDecimals, `${collection}-*`];
+  }, [batchApproveNFT, symbol]);
 
   const [allowance, setAllowance] = useState<string>(divDecimals(amount, DEFAULT_SYMBOL_DECIMAL).toFixed());
-  const batchApproveToken = useRef<boolean>(false);
 
   const [guardianList, setGuardianList] = useState<BaseGuardianItem[]>();
 
@@ -130,7 +132,6 @@ export default function ManagerApproveInner({
     async (allowanceInfo: IAllowance) => {
       try {
         setAllowance(allowanceInfo.allowance);
-        batchApproveToken.current = allowanceInfo.batchApproveToken;
         setLoading(true);
 
         const guardianList = await getGuardianList();
@@ -189,7 +190,6 @@ export default function ManagerApproveInner({
             recommendedAmount={divDecimals(amount, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed()}
             max={divDecimals(max || ALLOWANCE_MAX_LIMIT, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0)}
             dappInfo={dappInfo}
-            showBatchApproveToken={showBatchApproveToken}
             onCancel={onCancel}
             onAllowanceChange={setAllowance}
             onConfirm={allowanceConfirm}
@@ -217,18 +217,17 @@ export default function ManagerApproveInner({
 
               await onFinish?.({
                 amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
-                batchApproveToken: batchApproveToken.current,
                 guardiansApproved: approved,
-                symbol: batchApproveToken.current ? '*' : symbol,
+                symbol: approveSymbol,
               });
             }}
             operationType={OperationTypeEnum.managerApprove}
             operationDetails={getOperationDetails(OperationTypeEnum.managerApprove, {
-              symbol: batchApproveToken.current ? '*' : symbol,
+              symbol: approveSymbol,
               amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
               spender,
             })}
-            officialWebsiteShow={{ amount: allowance, symbol: batchApproveToken.current ? '*' : symbol }}
+            officialWebsiteShow={{ amount: allowance, symbol: approveSymbol }}
           />
         )}
       </div>
