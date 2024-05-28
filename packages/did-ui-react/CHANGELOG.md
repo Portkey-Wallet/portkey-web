@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.5...v2.6.6-alpha.0) (2024-05-28)
+
+### Features
+
+- 🎸 batch approve collection ([65a698c](https://github.com/Portkey-Wallet/portkey-web/commit/65a698c6a44043a3e59cac4414a9a1c064b8b37c))
+
+### Bug Fixes
+
+- lint ([50dcf0a](https://github.com/Portkey-Wallet/portkey-web/commit/50dcf0a304b1e9b68d850a7ba93e0b0de70f37c1))
+
 ## [2.6.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.4...v2.6.5) (2024-05-16)
 
 ### Bug Fixes
