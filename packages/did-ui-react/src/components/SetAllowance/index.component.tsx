@@ -124,7 +124,7 @@ export default function SetAllowanceMain({
       </div>
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
         <div className="btn-wrapper">
-          <ThrottleButton onClick={onCancel}>Reject</ThrottleButton>
+          <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton>
           <ThrottleButton
             type="primary"
             disabled={BigNumber(allowance).isNaN()}
@@ -135,7 +135,7 @@ export default function SetAllowanceMain({
                 allowance,
               });
             }}>
-            Authorize
+            Pre-authorize
           </ThrottleButton>
         </div>
       </div>
