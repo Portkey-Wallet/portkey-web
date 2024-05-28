@@ -110,7 +110,12 @@ export default function SetAllowanceMain({
             onChange={(e) => {
               inputChange(e.target.value);
             }}
-            suffix={<span onClick={() => inputChange(max)}>Max</span>}
+            suffix={
+              <span>
+                <span className={`${PrefixCls}-approveSymbol`}>{approveSymbol}</span>
+                <span onClick={() => inputChange(max)}>Max</span>
+              </span>
+            }
           />
           {typeof error !== 'undefined' && <div className="error-text">{error}</div>}
         </div>
