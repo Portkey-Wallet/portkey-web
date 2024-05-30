@@ -6,7 +6,7 @@ import './index.less';
 import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
-import CustomSvg from '../CustomSvg';
+import { isNFT } from '../../utils/assets';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
@@ -16,12 +16,11 @@ export interface BaseSetAllowanceProps {
   className?: string;
   max?: string | number;
   dappInfo?: { icon?: string; href?: string; name?: string };
-  showBatchApproveToken?: boolean;
+  batchApproveNFT?: boolean;
 }
 
 export interface IAllowance {
   allowance: string;
-  batchApproveToken: boolean;
 }
 
 export interface SetAllowanceHandlerProps {
@@ -36,22 +35,23 @@ export type SetAllowanceProps = BaseSetAllowanceProps & {
 
 export default function SetAllowanceMain({
   max = Infinity,
+  symbol,
   amount,
   decimals,
   dappInfo,
-  showBatchApproveToken,
   className,
   recommendedAmount = 0,
   onCancel,
   onAllowanceChange,
   onConfirm,
 }: SetAllowanceProps) {
-  const [batchApproveToken, setBatchApproveToken] = useState<boolean>(false);
   const formatAllowanceInput = useCallback(
     (value: number | string) =>
       parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined, decimals),
     [decimals, max],
   );
+
+  const approveSymbol = useMemo(() => (isNFT(symbol) ? symbol.split('-')[0] : symbol), [symbol]);
 
   const allowance = useMemo(() => formatAllowanceInput(amount), [amount, formatAllowanceInput]);
 
@@ -69,19 +69,16 @@ export default function SetAllowanceMain({
     [formatAllowanceInput, onAllowanceChange],
   );
 
-  const onAllowAllTokenChange = useCallback(() => {
-    setBatchApproveToken((prev) => !prev);
-  }, []);
   const noticeText = useMemo(() => {
-    return showBatchApproveToken
-      ? `The allowance you set will apply to all tokens, allowing the dApp to utilise them as long as the combined
-      total doesn't exceed the limit. It's crucial to assess potential risks carefully and set a
-      reasonable allowance value, taking into account both token price and quantity.`
-      : 'Within this allowance limit, the Dapp does not require reconfirmation from you when a transaction occurs.';
-  }, [showBatchApproveToken]);
+    return `It's crucial to set a reasonable allowance value, taking into account both token price and quantity. You have the option to adjust the settings once the allowance is depleted.`;
+  }, []);
+
   const titleText = useMemo(() => {
-    return dappInfo?.name ? `${dappInfo?.name} is requesting access to your token` : `Request for access to your token`;
-  }, [dappInfo?.name]);
+    return dappInfo?.name
+      ? `${dappInfo?.name} is requesting access to your ${approveSymbol}`
+      : `Request for access to your ${approveSymbol}`;
+  }, [approveSymbol, dappInfo?.name]);
+
   return (
     <div className={clsx(`${PrefixCls}-wrapper`, className)}>
       <div className={clsx('portkey-ui-flex-center', `${PrefixCls}-dapp-info`)}>
@@ -96,8 +93,7 @@ export default function SetAllowanceMain({
         <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{titleText}</h1>
         <div className={`portkey-ui-text-center ${PrefixCls}-description`}>
           To ensure asset security, please customise an allowance for this dApp. Until this allowance is exhausted, the
-          dApp will not request your approval to utilise the specified token. You have the option to adjust these
-          settings once the allowance is depleted.
+          dApp will not request your approval to utilise&nbsp;{approveSymbol}
         </div>
       </div>
 
@@ -114,25 +110,21 @@ export default function SetAllowanceMain({
             onChange={(e) => {
               inputChange(e.target.value);
             }}
-            suffix={<span onClick={() => inputChange(max)}>Max</span>}
+            suffix={
+              <span>
+                <span className={`${PrefixCls}-approveSymbol`}>{approveSymbol}</span>
+                <span onClick={() => inputChange(max)}>Max</span>
+              </span>
+            }
           />
           {typeof error !== 'undefined' && <div className="error-text">{error}</div>}
         </div>
-        {showBatchApproveToken && (
-          <div className={`${PrefixCls}-confirm-line`}>
-            <CustomSvg
-              type={batchApproveToken ? 'Checked' : 'Unchecked'}
-              style={{ width: 18, height: 18 }}
-              onClick={onAllowAllTokenChange}
-            />
-            <div className={`${PrefixCls}-confirm-line-text`}>Approve multiple tokens at the same time</div>
-          </div>
-        )}
+
         <div className={`${PrefixCls}-notice`}>{noticeText}</div>
       </div>
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
         <div className="btn-wrapper">
-          <ThrottleButton onClick={onCancel}>Reject</ThrottleButton>
+          <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton>
           <ThrottleButton
             type="primary"
             disabled={BigNumber(allowance).isNaN()}
@@ -141,10 +133,9 @@ export default function SetAllowanceMain({
               if (BigNumber(allowance).lte(0)) return setError('Please enter a non-zero value');
               onConfirm?.({
                 allowance,
-                batchApproveToken,
               });
             }}>
-            Authorize
+            Pre-authorize
           </ThrottleButton>
         </div>
       </div>

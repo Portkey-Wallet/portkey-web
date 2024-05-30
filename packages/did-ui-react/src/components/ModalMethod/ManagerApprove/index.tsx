@@ -14,7 +14,6 @@ const managerApprove = async ({
   ...props
 }: ManagerApproveProps): Promise<{
   amount: string;
-  batchApproveToken: boolean;
   symbol: string;
   guardiansApproved: IGuardiansApproved[];
 }> =>
@@ -26,9 +25,7 @@ const managerApprove = async ({
     const modal = BaseModalFunc({
       ...props,
       wrapClassName: 'portkey-ui-manager-approve-modal-wrapper ' + wrapClassName,
-      className:
-        `${props.showBatchApproveToken ? 'portkey-ui-h-644' : 'portkey-ui-h-566'} portkey-ui-manager-approve-modal ` +
-        className,
+      className: `portkey-ui-h-644 portkey-ui-manager-approve-modal ` + className,
       onCancel,
       content: (
         <ManagerApproveContent

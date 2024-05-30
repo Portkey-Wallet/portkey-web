@@ -3,14 +3,15 @@ import { useCallback, useMemo, useState } from 'react';
 import BackHeaderForPage from '../BackHeaderForPage';
 import SwitchComponent from '../SwitchComponent';
 import Copy from '../Copy';
-import { formatAmountShow } from '../../utils/converter';
+import { divDecimals, formatAmountShow } from '../../utils/converter';
 import singleMessage from '../CustomAnt/message';
-import { unapproveTokenAllowance } from '../../utils/sandboxUtil/unapproveTokenAllowance';
-import { errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { unApproveTokenAllowance } from '../../utils/sandboxUtil/unapproveTokenAllowance';
+import { handleErrorMessage, setLoading } from '../../utils';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
-import { AllowanceItem } from '@portkey/services';
+import { AllowanceItem, ISymbolApprovedItem } from '@portkey/services';
 import TokenImageDisplay from '../TokenImageDisplay';
+import { ZERO } from '../../constants/misc';
 
 export type ITokenAllowanceDetailProps = AllowanceItem & {
   onBack?: () => void;
@@ -22,38 +23,52 @@ export default function TokenAllowanceDetailMain({
   url,
   icon,
   name,
-  allowance,
+  symbolApproveList,
   onBack,
 }: ITokenAllowanceDetailProps) {
-  const [isOpen, setOpen] = useState(allowance > 0);
   const [{ caHash }] = usePortkeyAsset();
 
-  const handleSwitchChange = useCallback(async () => {
-    if (isOpen) {
-      try {
-        setLoading(true);
-        await unapproveTokenAllowance({
-          caHash: caHash || '',
-          targetChainId: chainId,
-          contractAddress,
-          amount: Number.MAX_SAFE_INTEGER,
-        });
-        setOpen(false);
-      } catch (e) {
-        errorTip({
-          errorFields: 'Handle Unapprove Token Allowance Error',
-          error: handleErrorMessage(e),
-        });
-      } finally {
-        singleMessage.success('Approve multiple token disabled');
-        setLoading(false);
+  const [cancelApproveMap, setCancelApproveMap] = useState<{ [x in string]: boolean }>({});
+
+  const handleSwitchChange = useCallback(
+    async (checked: boolean, symbol: string) => {
+      if (!checked) {
+        try {
+          setLoading(true);
+          await unApproveTokenAllowance({
+            caHash: caHash || '',
+            targetChainId: chainId,
+            contractAddress,
+            amount: Number.MAX_SAFE_INTEGER,
+            symbol,
+          });
+          setCancelApproveMap((v) => {
+            v[symbol] = true;
+            return { ...v };
+          });
+          singleMessage.success('Approve multiple token disabled');
+        } catch (e) {
+          singleMessage.error(handleErrorMessage(e, 'Handle unapproved Token Allowance Error'));
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        singleMessage.error('Please interact with the dApp and initiate transaction again to enable this function.');
       }
-    } else {
-      singleMessage.error('Please interact with the dApp and initiate transaction again to enable this function.');
-    }
-  }, [caHash, chainId, contractAddress, isOpen]);
+    },
+    [caHash, chainId, contractAddress],
+  );
 
   const providedName = useMemo(() => name || 'Unknown', [name]);
+
+  const checkCanClose = useCallback(
+    (symbolAllowance: ISymbolApprovedItem) => {
+      const symbol = symbolAllowance.symbol;
+      if (cancelApproveMap[symbol]) return false;
+      return ZERO.plus(symbolAllowance.amount).gt(0);
+    },
+    [cancelApproveMap],
+  );
 
   return (
     <div className={clsx('portkey-ui-token-allowance-detail-wrapper')}>
@@ -73,22 +88,32 @@ export default function TokenAllowanceDetailMain({
         </div>
       </div>
       <div className="token-info-divide" />
-      <div className="approve-token-wrapper">
-        <div className="approve-token-title">Approve multiple tokens</div>
-        <div className="approve-token-desc">
-          This will approve access to all tokens and the dApp will not request your approval until the allowance is
-          exhausted.
-        </div>
-        <SwitchComponent text={isOpen ? 'Open' : 'Close'} onChange={handleSwitchChange} checked={isOpen} />
-        {isOpen && (
-          <div className="approve-amount-wrapper">
-            <div className="approve-amount-title">Amount approved</div>
-            <div className="approve-amount-text-wrapper portkey-ui-flex-row-center">
-              <div className="approve-amount-text">{formatAmountShow(allowance)}</div>
-            </div>
+
+      {symbolApproveList?.map((item) => (
+        <div className="approve-token-wrapper" key={item.symbol}>
+          <div className="approve-token-title portkey-ui-flex-between-center">
+            <div>{`Approve ${item.symbol}`}</div>
+
+            <SwitchComponent
+              onChange={(checked: boolean) => handleSwitchChange(checked, item.symbol)}
+              checked={checkCanClose(item)}
+            />
           </div>
-        )}
-      </div>
+
+          <div className="approve-token-desc">
+            The dApp will not request your approval until the allowance is exhausted.
+          </div>
+
+          {checkCanClose(item) && (
+            <div className="approve-amount-wrapper">
+              <div className="approve-amount-title">Amount approved</div>
+              <div className="approve-amount-text-wrapper portkey-ui-flex-row-center">
+                <div className="approve-amount-text">{formatAmountShow(divDecimals(item.amount, item.decimals))}</div>
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 }

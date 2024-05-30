@@ -546,7 +546,7 @@ function AssetMain({
               url={originalAllowanceItem.url}
               icon={originalAllowanceItem.icon}
               name={originalAllowanceItem.name}
-              allowance={originalAllowanceItem.allowance}
+              symbolApproveList={originalAllowanceItem.symbolApproveList}
               onBack={() => setAssetStep(AssetStep.tokenAllowance)}
             />
           )}
