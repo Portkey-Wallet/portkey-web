@@ -94,7 +94,9 @@ export default function SocialLogin({
         setLoading(true);
         const result = await socialLoginHandler(type);
         setLoading(false);
-        onFinishRef.current?.(result);
+        if (result) {
+          onFinishRef.current?.(result);
+        }
       } catch (error) {
         setLoading(false);
         errorTip(

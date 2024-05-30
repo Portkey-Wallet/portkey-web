@@ -3,23 +3,42 @@ import { ConfigProvider, NetworkType, PortkeyProvider } from '@portkey/did-ui-re
 import { ReactNode, useEffect, useState } from 'react';
 import '@portkey/did-ui-react/dist/assets/index.css';
 import { Button } from 'antd';
+import '@portkey/did-ui-react/dist/assets/index.css';
+
 ConfigProvider.setGlobalConfig({
   // https://test3-applesign-v2.portkey.finance
   // serviceUrl: 'https://test4-applesign-v2.portkey.finance',
   graphQLUrl: '/graphql',
-  customNetworkType: 'onLine',
+  customNetworkType: 'online',
 });
+
+const EXAMPLE_NETWORK_TYPE = 'exampleNetworkType';
+
 export default function Portkey({ children }: { children?: ReactNode }) {
   const [dark, setDark] = useState<boolean>(false);
   const [networkType, setNetworkType] = useState<NetworkType>('TESTNET');
 
   useEffect(() => {
+    if (typeof document === 'undefined') return;
     if (dark) {
       document.body.classList.add('dark');
     } else {
       document.body.classList.remove('dark');
     }
   }, [dark]);
+
+  useEffect(() => {
+    const storedNetworkType = localStorage.getItem(EXAMPLE_NETWORK_TYPE);
+    if (storedNetworkType) {
+      setNetworkType(storedNetworkType as NetworkType);
+    }
+  }, []);
+
+  const handleNetworkTypeChange = () => {
+    const newNetworkType = networkType === 'MAINNET' ? 'TESTNET' : 'MAINNET';
+    setNetworkType(newNetworkType);
+    localStorage.setItem(EXAMPLE_NETWORK_TYPE, newNetworkType);
+  };
 
   return (
     <PortkeyProvider networkType={networkType} theme={dark ? 'dark' : 'light'}>
@@ -30,12 +49,7 @@ export default function Portkey({ children }: { children?: ReactNode }) {
           }}>
           change theme
         </Button>
-        <Button
-          onClick={async () => {
-            setNetworkType(v => (v === 'MAINNET' ? 'TESTNET' : 'MAINNET'));
-          }}>
-          Only change networkType
-        </Button>
+        <Button onClick={handleNetworkTypeChange}>Only change networkType: {networkType}</Button>
         {children}
       </div>
     </PortkeyProvider>

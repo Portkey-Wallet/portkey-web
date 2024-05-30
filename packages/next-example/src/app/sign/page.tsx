@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ConfigProvider,
   SignIn,
@@ -8,9 +8,7 @@ import {
   TDesign,
   UI_TYPE,
   modalMethod,
-  BaseModalMethod,
   TSignUpContinueHandler,
-  handleErrorCode,
   SignUpValue,
   TModalMethodRef,
 } from '@portkey/did-ui-react';
@@ -18,13 +16,12 @@ import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { Button } from 'antd';
 import { FetchRequest } from '@portkey/request';
-import { signalrSell } from '@portkey/socket';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
 
 ConfigProvider.setGlobalConfig({
-  // connectUrl: 'http://192.168.66.117:8080',
+  connectUrl: 'https://auth-aa-portkey-test.portkey.finance',
   socialLogin: {
     Portkey: {
       websiteName: 'website demo',
@@ -45,16 +42,14 @@ ConfigProvider.setGlobalConfig({
   //   siteKey: '',
   // },
   graphQLUrl: '/graphql',
+  customNetworkType: 'online',
 });
 
 export default function Sign() {
   const ref = useRef<ISignIn>();
-  const [defaultLifeCycle, setLifeCycle] = useState<any>();
+  const [, setLifeCycle] = useState<any>();
   const [design, setDesign] = useState<TDesign>('Web2Design');
   const [uiType, setUIType] = useState<UI_TYPE>('Modal');
-
-  const [lockOpen, setLockOpen] = useState<boolean>();
-  const [password, setPassword] = useState<string>();
 
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') ?? '{}'));
@@ -133,20 +128,20 @@ export default function Sign() {
         uiType={uiType}
         defaultChainId={CHAIN_ID}
         // extraElement={}
-        extraElementList={[
-          <div key="1" style={{ height: 300, background: 'red' }}></div>,
-          <div key="2" className="switch-old-portkey-wrapper">
-            Account registered in old Portkey? Log in&nbsp;
-            <span
-              className="switch-btn"
-              onClick={async () => {
-                const isOK = await switchToV1Modal();
-                console.log(isOK, 'isOK==');
-              }}>
-              here
-            </span>
-          </div>,
-        ]}
+        // extraElementList={[
+        //   <div key="1" style={{ height: 300, background: 'red' }}></div>,
+        //   <div key="2" className="switch-old-portkey-wrapper">
+        //     Account registered in old Portkey? Log in&nbsp;
+        //     <span
+        //       className="switch-btn"
+        //       onClick={async () => {
+        //         const isOK = await switchToV1Modal();
+        //         console.log(isOK, 'isOK==');
+        //       }}>
+        //       here
+        //     </span>
+        //   </div>,
+        // ]}
         getContainer="#wrapper"
         isShowScan={true}
         className="sign-in-wrapper"

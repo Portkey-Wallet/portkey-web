@@ -1,5 +1,5 @@
 import { ChainId } from '@portkey/types';
-import { GuardianApprovedItem } from '../components/Guardian/utils/type';
+import { GuardianApprovedItem } from './guardian';
 import { RampType } from '@portkey/ramp';
 import { TokenItemShowType } from '../components/types/assets';
 
@@ -31,6 +31,7 @@ export type TRampPreviewInitState = {
   tokenInfo?: TokenItemShowType;
   openGuardiansApprove?: boolean;
   approveList?: GuardianApprovedItem[];
+  openloginSignalClientId?: string;
 };
 
 export type IRampLimit = {

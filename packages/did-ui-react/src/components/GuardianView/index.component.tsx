@@ -1,10 +1,10 @@
 import { ChainId } from '@portkey/types';
 import { memo, useCallback, ReactNode, useState, useRef, useMemo } from 'react';
-import { AccountType, AccountTypeEnum, OperationTypeEnum, VerifierItem, GuardiansApproved } from '@portkey/services';
+import { AccountTypeEnum, OperationTypeEnum, VerifierItem, GuardiansApproved } from '@portkey/services';
 import { useTranslation } from 'react-i18next';
-import CustomSvg from '../CustomSvg';
 import {
   ISocialLogin,
+  ITelegramInfo,
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
@@ -29,14 +29,15 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
-import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
 import './index.less';
-import { SocialLoginList } from '../../constants/guardian';
+import { SocialLoginList, guardianIconMap } from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
+import { getSocialConfig } from '../utils/social.utils';
+import GuardianTypeIcon from '../GuardianTypeIcon';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -46,18 +47,11 @@ export interface GuardianViewProps {
   currentGuardian: UserGuardianStatus;
   guardianList?: UserGuardianStatus[];
   networkType: NetworkType;
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
 }
-
-const guardianIconMap: Record<AccountType, any> = {
-  Email: 'Email',
-  Phone: 'GuardianPhone',
-  Google: 'GuardianGoogle',
-  Apple: 'GuardianApple',
-  Telegram: 'GuardianTelegram',
-};
 
 function GuardianView({
   header,
@@ -68,6 +62,7 @@ function GuardianView({
   currentGuardian,
   guardianList,
   networkType,
+  telegramInfo,
   handleSetLoginGuardian,
   onError,
 }: GuardianViewProps) {
@@ -86,27 +81,7 @@ function GuardianView({
   const socialBasic = useCallback(
     (v: ISocialLogin) => {
       try {
-        const socialLogin = ConfigProvider.config.socialLogin;
-        let clientId;
-        let redirectURI;
-        let customLoginHandler;
-        switch (v) {
-          case 'Apple':
-            clientId = socialLogin?.Apple?.clientId;
-            redirectURI = socialLogin?.Apple?.redirectURI;
-            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-            break;
-          case 'Google':
-            clientId = socialLogin?.Google?.clientId;
-            customLoginHandler = socialLogin?.Google?.customLoginHandler;
-            break;
-          case 'Telegram':
-            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-            break;
-          default:
-            throw 'accountType is not supported';
-        }
-        return { clientId, redirectURI, customLoginHandler };
+        return getSocialConfig(v);
       } catch (error) {
         errorTip(
           {
@@ -123,16 +98,26 @@ function GuardianView({
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
-      const response = await socialLoginAuth({
-        type: _guardian?.guardianType as ISocialLogin,
-        clientId,
-        redirectURI,
-        network: networkType,
-      });
-      if (!response?.token) throw new Error('auth failed');
-
+      let token = '';
+      if (
+        _guardian?.guardianType === 'Telegram' &&
+        telegramInfo?.userId === _guardian?.guardianIdentifier &&
+        telegramInfo?.accessToken
+      ) {
+        token = telegramInfo.accessToken;
+      } else {
+        const response = await socialLoginAuth({
+          type: _guardian?.guardianType as ISocialLogin,
+          clientId,
+          redirectURI,
+          network: networkType,
+          guardianIdentifier: _guardian.guardianIdentifier,
+        });
+        if (!response?.token) throw new Error('auth failed');
+        token = response.token;
+      }
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
-        accessToken: response?.token,
+        accessToken: token,
         id: _guardian.guardianIdentifier || '',
         verifierId: _guardian?.verifier?.id || '',
         chainId: originChainId,
@@ -152,7 +137,15 @@ function GuardianView({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, networkType, verifyToken, originChainId, operationType],
+    [
+      socialBasic,
+      telegramInfo?.userId,
+      telegramInfo?.accessToken,
+      verifyToken,
+      originChainId,
+      networkType,
+      operationType,
+    ],
   );
 
   const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
@@ -383,7 +376,7 @@ function GuardianView({
             <div className="guardian-view-input-item">
               <div className="guardian-view-input-item-label">{`Guardian ${currentGuardian.guardianType}`}</div>
               <div className="guardian-view-input-item-control portkey-ui-flex">
-                <CustomSvg type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
+                <GuardianTypeIcon type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
                 <GuardianAccountShow guardian={currentGuardian} />
               </div>
             </div>
@@ -454,6 +447,7 @@ function GuardianView({
           originChainId={originChainId}
           guardianList={guardianList?.filter((item) => item.key !== currentGuardian.key)}
           networkType={networkType}
+          telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}

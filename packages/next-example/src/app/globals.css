@@ -22,6 +22,12 @@ body {
   background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
 }
 
+.page-container{
+  width: auto;
+  height: 100vh;
+  background: #fff;
+}
+
 .switch-old-portkey-wrapper {
   color: #515a62;
   font-size: 14px;

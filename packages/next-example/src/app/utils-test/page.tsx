@@ -12,7 +12,6 @@ import {
   NFTCheckout,
   did,
   PortkeyProvider,
-  PortkeyStyleProvider,
   singleMessage,
   PortkeyAssetProvider,
   getChainInfo,
@@ -161,10 +160,10 @@ export default function AppleAuth() {
               await did.load('111111');
 
               const result = await checkWalletSecurity({
-                originChainId: originChainId,
-                targetChainId: originChainId,
-                caHash: did.didWallet.caInfo[originChainId].caHash,
-                networkType: 'MAINNET',
+                originChainId: 'AELF',
+                targetChainId: 'tDVV',
+                caHash: did.didWallet.caInfo['AELF'].caHash,
+                networkType: 'TESTNET',
               });
               console.log(result, 'result===');
             } catch (error) {

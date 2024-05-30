@@ -8,7 +8,7 @@ import { getChain } from '../../hooks/useChainInfo';
 import { getContractBasic } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
 import { crossChainTransferToCa } from './crossChainTransferToCa';
-import { GuardianApprovedItem } from '../../components/Guardian/utils/type';
+import { GuardianApprovedItem } from '../../types';
 import sameChainTransfer from './sameChainTransfer';
 
 interface CrossChainTransferParams {

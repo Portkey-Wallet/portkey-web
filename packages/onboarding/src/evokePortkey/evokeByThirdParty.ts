@@ -4,6 +4,7 @@ import { scheme } from '@portkey/utils';
 
 type IBaseOption = {
   timeout?: number;
+  isEvokeApp?: boolean;
 };
 
 interface IEvokeByThirdParty {

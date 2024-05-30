@@ -278,7 +278,7 @@ export default function TransferSettingsEditMain({
   const onFinish = () => {
     const errorCount = handleFormChange();
     if (errorCount > 0) return;
-
+    console.log('====== initData.singleLimit', initData.singleLimit);
     setApprovalVisible(true);
   };
 
@@ -307,7 +307,12 @@ export default function TransferSettingsEditMain({
   }, [form, initData.decimals]);
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
-      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={() => onBack?.(initData)} />
+      <BackHeaderForPage
+        title={`Transfer Settings`}
+        leftCallBack={async () => {
+          onBack?.(initData);
+        }}
+      />
       <Form
         form={form}
         autoComplete="off"

@@ -3,31 +3,20 @@ import './index.css';
 
 import {
   ConfigProvider,
-  CryptoDesign,
-  SetPinAndAddManager,
-  VerifierSelect,
-  CodeVerify,
-  GuardianApproval,
-  PortkeyLoading,
-  SocialDesign,
   SignIn,
   Web2Design,
   ISignIn,
   CommonModal,
-  PortkeyStyleProvider,
   PortkeyNumberKeyboard,
   Unlock,
-  SetPinMobileBase,
-  PortkeyBaseNumberKeyboard,
   ThrottleButton,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
-import { OperationTypeEnum } from '@portkey/services';
 import { Button } from 'antd';
 import { OfficialWebsite } from '@portkey/did-ui-react/src/constants/guardian';
-ConfigProvider.setGlobalConfig({
-  graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
-});
+// ConfigProvider.setGlobalConfig({
+//   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
+// });
 
 function Example() {
   const [isLoading, setLoading] = useState<any>();
@@ -87,7 +76,7 @@ function Example() {
           console.log(error, 'onError====error');
         }}
         onCancel={() => {
-          ref?.current.setOpen(false);
+          ref.current?.setOpen(false);
         }}
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');

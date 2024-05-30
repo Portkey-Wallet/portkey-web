@@ -65,6 +65,7 @@ export default function AssetComponent() {
               tokenInfo: {
                 balance: '894586679959',
                 decimals: '8',
+                imageUrl: '',
                 balanceInUsd: '2676.59440057053',
                 tokenContractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
               },
@@ -75,9 +76,6 @@ export default function AssetComponent() {
             }}
             onSuccess={() => {
               singleMessage.success('Send success');
-            }}
-            onClose={() => {
-              console.log('Send onClose');
             }}
           />
           <ReceiveCard

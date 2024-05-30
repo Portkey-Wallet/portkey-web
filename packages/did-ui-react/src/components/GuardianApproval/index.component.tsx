@@ -30,6 +30,8 @@ import {
   OnErrorFunc,
   IVerificationInfo,
   NetworkType,
+  ISocialLogin,
+  ITelegramInfo,
 } from '../../types';
 import { OperationTypeEnum, GuardiansApproved, VerifyVerificationCodeResult } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
@@ -37,6 +39,7 @@ import { useVerifyToken } from '../../hooks/authentication';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
 import { SocialLoginList, OfficialWebsite, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
+import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 import CommonModal from '../CommonModal';
 import officialWebsiteCheck from '../../utils/officialWebsiteCheck';
@@ -62,6 +65,7 @@ export interface GuardianApprovalProps {
   networkType: NetworkType;
   // guardianIdentifier?: string; // for show (email)
   // firstName?: string; // for show (social)
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -87,6 +91,7 @@ const GuardianApprovalMain = forwardRef(
       officialWebsiteShow,
       // guardianIdentifier,
       // firstName,
+      telegramInfo,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -151,6 +156,28 @@ const GuardianApprovalMain = forwardRef(
       async (item: UserGuardianStatus, index: number, rst: VerifyVerificationCodeResult) => {
         try {
           setLoading(true);
+          const accountType = item.guardianType as ISocialLogin;
+          const accessToken =
+            accountType === 'Telegram' && telegramInfo?.userId === item.guardianIdentifier && telegramInfo?.accessToken
+              ? telegramInfo.accessToken
+              : item.accessToken;
+          const { clientId, redirectURI, customLoginHandler } = getSocialConfig(accountType);
+          if (!item.verifier?.id) throw 'verifier id is not exist';
+          const id = item.identifier || item.identifierHash;
+          if (!id) throw 'identifier is not exist';
+          const rst = await verifyToken(accountType, {
+            accessToken,
+            id,
+            verifierId: item.verifier?.id,
+            chainId: originChainId,
+            targetChainId,
+            clientId,
+            redirectURI,
+            operationType,
+            networkType,
+            operationDetails,
+            customLoginHandler,
+          });
           if (!rst || !rst.verificationDoc) return;
 
           const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
@@ -180,7 +207,18 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [isErrorTip, onError],
+      [
+        telegramInfo?.userId,
+        telegramInfo?.accessToken,
+        verifyToken,
+        originChainId,
+        targetChainId,
+        operationType,
+        networkType,
+        operationDetails,
+        isErrorTip,
+        onError,
+      ],
     );
 
     const onVerifyingHandler = useCallback(

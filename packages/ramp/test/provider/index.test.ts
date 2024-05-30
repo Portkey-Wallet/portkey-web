@@ -17,7 +17,9 @@ const createOrderCommonParams = {
   country: 'US',
   fiat: 'USD',
   amount: '200',
-};
+  clientId: '111',
+  networkType: 'MAINNET',
+} as const;
 
 const alchemyPayProvider = new AlchemyPayProvider({
   providerInfo: {
@@ -48,7 +50,7 @@ describe('AlchemyPayProvider', () => {
 
     expect(res.orderId).toBe('123abc');
     expect(res.url).toBe(
-      'https://xxx.alchemypay.com/?type=buy&crypto=ELF&network=AELF&country=US&fiat=USD&appId=xxxAlchemyPayAppid&callbackUrl=https%3A%2F%2Fxxx-alchemypay-callback.com&merchantOrderNo=123abc&withdrawUrl=withdrawUrl%26payload%3D%257B%2522orderNo%2522%253A%2522123abc%2522%257D&fiatAmount=200&token=accessToken&address=address&sign=signature',
+      'https://xxx.alchemypay.com/?type=buy&crypto=ELF&network=AELF&country=US&fiat=USD&appId=xxxAlchemyPayAppid&callbackUrl=https%3A%2F%2Fxxx-alchemypay-callback.com&merchantOrderNo=123abc&withdrawUrl=withdrawUrl%26payload%3D%257B%2522orderNo%2522%253A%2522123abc%2522%257D%26networkType%3DMAINNET%26clientId%3D111&fiatAmount=200&token=accessToken&address=address&sign=signature',
     );
   });
   test('SELL: execute createOrder, and get orderId and url successfully.', async () => {
@@ -61,7 +63,7 @@ describe('AlchemyPayProvider', () => {
 
     expect(res.orderId).toBe('123abc');
     expect(res.url).toBe(
-      'https://xxx.alchemypay.com/?type=sell&crypto=ELF&network=AELF&country=US&fiat=USD&appId=xxxAlchemyPayAppid&callbackUrl=https%3A%2F%2Fxxx-alchemypay-callback.com&merchantOrderNo=123abc&withdrawUrl=withdrawUrl%26payload%3D%257B%2522orderNo%2522%253A%2522123abc%2522%257D&cryptoAmount=200&source=3#/sell-formUserInfo',
+      'https://xxx.alchemypay.com/?type=sell&crypto=ELF&network=AELF&country=US&fiat=USD&appId=xxxAlchemyPayAppid&callbackUrl=https%3A%2F%2Fxxx-alchemypay-callback.com&merchantOrderNo=123abc&withdrawUrl=withdrawUrl%26payload%3D%257B%2522orderNo%2522%253A%2522123abc%2522%257D%26networkType%3DMAINNET%26clientId%3D111&cryptoAmount=200&source=3#/sell-formUserInfo',
     );
   });
 });

@@ -4,7 +4,7 @@ import { useCallback, useState, useEffect, useMemo } from 'react';
 import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants/device';
 import { useIntervalQueryCAInfo } from '../../hooks/useIntervalQueryCAInfo';
 import { LoginQRData, RegisterType } from '../../types';
-import { did, handleErrorMessage, setLoading } from '../../utils';
+import { TelegramPlatform, did, handleErrorMessage, setLoading } from '../../utils';
 import CustomSvg from '../CustomSvg';
 import { DIDWalletInfo } from '../types';
 import { randomId } from '@portkey/utils';
@@ -77,6 +77,11 @@ export default function WakeUpPortkey({
       const dataStr = JSON.stringify(data);
 
       const extraData = JSON.stringify(websiteInfo);
+
+      if (TelegramPlatform.isTelegramPlatform()) {
+        evokePortkey.thirdParty({ action: 'login', isEvokeApp: true, custom: { data: dataStr, extraData } });
+        return;
+      }
 
       evokePortkey.app({
         action: 'login',
