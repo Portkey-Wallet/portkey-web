@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.6.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.6-alpha.0...v2.6.6) (2024-05-30)
+
+### Bug Fixes
+
+- 🐛 show input approve symbol ([8e9b70e](https://github.com/Portkey-Wallet/portkey-web/commit/8e9b70e3bfb6a953b65391b8820ea5c140bbdf62))
+
 ## [2.6.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.6.5...v2.6.6-alpha.0) (2024-05-28)
 
 ### Features
