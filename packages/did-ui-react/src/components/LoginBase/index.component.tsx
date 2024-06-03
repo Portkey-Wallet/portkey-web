@@ -14,6 +14,7 @@ import { CreateWalletType, GuardianInputInfo, LoginFinishWithoutPin, Theme } fro
 import { IPhoneCountry } from '../types';
 import './index.less';
 import { AccountType } from '@portkey/services';
+import { TAllLoginKey } from '../../utils/googleAnalytics';
 
 export interface LoginBaseProps {
   theme?: Theme;
@@ -32,6 +33,7 @@ export interface LoginBaseProps {
   onInputFinish?: (data: GuardianInputInfo) => void;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
+  onSocialStart?: (type: TAllLoginKey) => void;
   onSocialLoginFinish?: SocialLoginFinishHandler;
   onStep?: (value: CreateWalletType) => void;
   onError?: OnErrorFunc;
@@ -58,6 +60,7 @@ export default function LoginCard({
   onError,
   onInputFinish,
   validateEmail,
+  onSocialStart,
   validatePhone,
   onLoginByPortkey,
   onSocialLoginFinish,
@@ -90,6 +93,7 @@ export default function LoginCard({
           socialLogin={socialLogin}
           isShowScan={isShowScan}
           isErrorTip={isErrorTip}
+          onSocialStart={onSocialStart}
           onFinish={onSocialLoginFinish}
           switchType={onStep}
           switchGuardianType={(type) => {

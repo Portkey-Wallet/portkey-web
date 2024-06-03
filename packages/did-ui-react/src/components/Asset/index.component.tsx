@@ -39,6 +39,7 @@ import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
 import TokenAllowance from '../TokenAllowance';
+import useGAReport from '../../hooks/useGAReport';
 
 export enum AssetStep {
   overview = 'overview',
@@ -135,6 +136,8 @@ function AssetMain({
     }));
   }, [caInfo]);
 
+  const { startReport, endReport } = useGAReport();
+
   const [allToken, setAllToken] = useState<IUserTokenItem[]>();
   const [accelerateChainId, setAccelerateChainId] = useState<ChainId>(originChainId);
   const getAllTokenList = useCallback(async () => {
@@ -146,7 +149,14 @@ function AssetMain({
     });
     if (!result?.items) return;
     setAllToken(result.items);
-  }, [caAddressInfos]);
+    endReport('All-TokenList');
+  }, [caAddressInfos, endReport]);
+
+  useEffect(() => {
+    startReport('Home-NFTsList');
+    startReport('Home-TokenList');
+    startReport('All-TokenList');
+  }, [startReport]);
 
   const getAssetInfo = useCallback(() => {
     if (initialized && caAddressInfos) {
@@ -155,30 +165,35 @@ function AssetMain({
         .setTokenList({
           caAddressInfos,
         })
-        .then(dispatch);
+        .then((res) => {
+          dispatch(res);
+          endReport('Home-TokenList');
+        });
 
       basicAssetViewAsync
         .setNFTCollections({
           caAddressInfos,
           maxNFTCount: maxNftNum,
         })
-        .then(dispatch);
+        .then((res) => {
+          dispatch(res);
+          endReport('Home-NFTsList');
+        });
 
       getAllTokenList();
       getRampEntry();
     }
-  }, [caAddressInfos, dispatch, getAllTokenList, getRampEntry, initialized, maxNftNum]);
+  }, [caAddressInfos, dispatch, endReport, getAllTokenList, getRampEntry, initialized, maxNftNum]);
 
   const [showDeletion, setShowDeletion] = useState<boolean>();
 
   useEffect(() => {
-    console.log(initialized, 'initialized==');
     if (initialized) {
       getShowDeletion().then(setShowDeletion);
     }
   }, [getShowDeletion, initialized]);
 
-  useDebounce(getAssetInfo, 300);
+  useDebounce(getAssetInfo, 500);
 
   const [selectToken, setSelectToken] = useState<BaseToken>();
 
@@ -314,6 +329,8 @@ function AssetMain({
               onBack={onOverviewBack}
               onReceive={onReceive}
               onBuy={onBuy}
+              onDataInit={() => startReport('Home-Activity')}
+              onDataInitEnd={() => endReport('Home-Activity')}
               onSend={(v) => {
                 preStepRef.current = AssetStep.overview;
 
@@ -434,6 +451,8 @@ function AssetMain({
               faucet={faucet}
               isShowRamp={isMixShowRamp}
               tokenInfo={tokenDetail}
+              onDataInit={() => startReport('Token-Activity')}
+              onDataInitEnd={() => endReport('Token-Activity')}
               onBack={() => {
                 setAssetStep(AssetStep.overview);
               }}

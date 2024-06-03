@@ -20,7 +20,7 @@ ConfigProvider.setGlobalConfig({
 export default function Assets() {
   const router = useRouter();
   return (
-    <PortkeyAssetProvider pin="111111" originChainId="tDVW">
+    <PortkeyAssetProvider pin="111111" originChainId="AELF">
       <Asset
         faucet={{
           faucetContractAddress: '2UM9eusxdRyCztbmMZadGXzwgwKfFdk8pF4ckw58D769ehaPSR',

@@ -19,6 +19,7 @@ import { getBuyCrypto } from '../../utils/api';
 import { usePortkey } from '../../../context';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
 import { MAIN_CHAIN_ID } from '../../../../constants/network';
+import useGAReport from '../../../../hooks/useGAReport';
 
 interface IBuyFormProps extends TRampInitState {
   isMainnet: boolean;
@@ -46,6 +47,7 @@ export default function BuyFrom({
   const chainId = useMemo(() => tokenInfo?.chainId || MAIN_CHAIN_ID, [tokenInfo?.chainId]);
   const [{ networkType }] = usePortkey();
   const [{ initialized }] = usePortkeyAsset();
+  const { startReport, endReport } = useGAReport();
 
   // init data
   const [defaultFiat, setDefaultFiat] = useState<IRampFiatDefault>({
@@ -199,12 +201,14 @@ export default function BuyFrom({
     }
 
     // compute receive
-    updateBuyReceive();
+    return updateBuyReceive();
   }, [country, crypto, fetchSpecifiedFiat, fiat, network, tokenInfo?.symbol, updateBuyReceive]);
 
   useEffectOnce(() => {
     if (initialized) {
-      fetchDefaultBuyData();
+      startReport('Buy-DataInit');
+
+      fetchDefaultBuyData().finally(() => endReport('Buy-DataInit'));
     }
   });
 

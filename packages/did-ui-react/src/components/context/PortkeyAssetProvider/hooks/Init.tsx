@@ -4,7 +4,6 @@ import { AuthServe, did, handleErrorMessage } from '../../../../utils';
 import { getHolderInfoByContract } from '../../../../utils/sandboxUtil/getHolderInfo';
 import { basicAssetView } from '../actions';
 import { usePortkeyAsset } from '..';
-import { ChainId } from '@portkey/types';
 import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import { useTxFeeInit } from './txFee';
 import singleMessage from '../../../CustomAnt/message';
@@ -13,31 +12,31 @@ export const useStateInit = () => {
   const [{ sandboxId, chainType }] = usePortkey();
   const [{ pin, caHash, originChainId, managerPrivateKey, didStorageKeyName }, { dispatch }] = usePortkeyAsset();
 
-  const fetchCAAddressByChainId = useCallback(
-    async (chainIdList: ChainId[], caHash: string) => {
-      const result = await Promise.all(
-        chainIdList.map(async (chainId: ChainId) =>
-          getHolderInfoByContract({
-            sandboxId,
-            chainId,
-            chainType,
-            paramsOption: {
-              caHash,
-            },
-          }),
-        ),
-      );
-      result.forEach((holderInfo, index) => {
-        did.didWallet.caInfo[chainIdList[index]] = {
-          caAddress: holderInfo.caAddress,
-          caHash: holderInfo.caHash,
-        };
-      });
+  // const fetchCAAddressByChainId = useCallback(
+  //   async (chainIdList: ChainId[], caHash: string) => {
+  //     const result = await Promise.all(
+  //       chainIdList.map(async (chainId: ChainId) =>
+  //         getHolderInfoByContract({
+  //           sandboxId,
+  //           chainId,
+  //           chainType,
+  //           paramsOption: {
+  //             caHash,
+  //           },
+  //         }),
+  //       ),
+  //     );
+  //     result.forEach((holderInfo, index) => {
+  //       did.didWallet.caInfo[chainIdList[index]] = {
+  //         caAddress: holderInfo.caAddress,
+  //         caHash: holderInfo.caHash,
+  //       };
+  //     });
 
-      dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
-    },
-    [chainType, dispatch, sandboxId],
-  );
+  //     dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
+  //   },
+  //   [chainType, dispatch, sandboxId],
+  // );
 
   const getAccountInfo = useCallback(async () => {
     try {
@@ -70,17 +69,23 @@ export const useStateInit = () => {
       const managerInfo = holderInfo.managerInfos;
       const isExist = managerInfo.some((value) => managerAddress === value.address);
       if (!isExist) throw Error('Manager is not exist, please check `managerPrivateKey` or `caHash`');
+      // fetch other caAddress on other chain
+      const chainIdList = Object.keys(chainsInfo).filter((chainId) => chainId !== originChainId);
       did.didWallet.caInfo = {
         [originChainId]: {
           caAddress: holderInfo.caAddress,
           caHash: holderInfo.caHash,
         },
       };
+      chainIdList.forEach((chainId) => {
+        did.didWallet.caInfo[chainId] = {
+          caAddress: holderInfo.caAddress,
+          caHash: holderInfo.caHash,
+        };
+      });
       dispatch(basicAssetView.setCAInfo.actions({ ...did.didWallet.caInfo }));
 
-      // fetch other caAddress on other chain
-      const chainIdList = Object.keys(chainsInfo).filter((chainId) => chainId !== originChainId);
-      fetchCAAddressByChainId(chainIdList as ChainId[], caHash);
+      // fetchCAAddressByChainId(chainIdList as ChainId[], caHash);
 
       const guardian = holderInfo.guardianList.guardians.find((guardian) => guardian.isLoginGuardian);
       did
@@ -97,7 +102,7 @@ export const useStateInit = () => {
 
       return did;
     },
-    [chainType, dispatch, fetchCAAddressByChainId, getAccountInfo, originChainId, sandboxId],
+    [chainType, dispatch, getAccountInfo, originChainId, sandboxId],
   );
 
   const loadManager = useCallback(async () => {

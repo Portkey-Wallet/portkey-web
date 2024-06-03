@@ -27,6 +27,8 @@ export interface AssetOverviewProps {
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
   onBack?: () => void;
+  onDataInit?: () => void;
+  onDataInitEnd?: () => void;
   onSend?: (selectToken: IAssetItemType, type: TokenType) => void;
   onViewActivityItem?: (item: ActivityItemType) => void;
   onViewTokenItem?: (v: TokenItemShowType) => void;
@@ -45,6 +47,8 @@ export function AssetOverviewContent({
   onNFTView,
   onReceive,
   onViewTokenItem,
+  onDataInit,
+  onDataInitEnd,
   onViewActivityItem,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
@@ -189,6 +193,8 @@ export function AssetOverviewContent({
               .finally(() => setIsGetNFTCollection(false));
           }
         }}
+        onDataInit={onDataInit}
+        onDataInitEnd={onDataInitEnd}
         onViewTokenItem={onViewTokenItem}
         onViewActivityItem={onViewActivityItem}
         onNFTView={onNFTView}
