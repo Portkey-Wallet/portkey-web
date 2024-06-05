@@ -15,3 +15,4 @@ export * as forgeWeb from './crypto/forge';
 export * from './crypto/utils';
 export * from './retry';
 export * from './devices.portkey';
+export * from './authentication';
