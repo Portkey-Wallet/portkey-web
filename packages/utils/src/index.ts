@@ -14,3 +14,4 @@ export * as cryptoWeb from './crypto/web';
 export * as forgeWeb from './crypto/forge';
 export * from './crypto/utils';
 export * from './retry';
+export * from './devices.portkey';
