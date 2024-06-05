@@ -33,17 +33,15 @@ import {
   ISocialLogin,
   ITelegramInfo,
 } from '../../types';
-import { OperationTypeEnum, GuardiansApproved, VerifyVerificationCodeResult } from '@portkey/services';
+import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { SocialLoginList, OfficialWebsite, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
+import { SocialLoginList, OfficialWebsite } from '../../constants/guardian';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 import CommonModal from '../CommonModal';
-import officialWebsiteCheck from '../../utils/officialWebsiteCheck';
-import { did } from '@portkey/did';
 import ThrottleButton from '../ThrottleButton';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
@@ -152,8 +150,8 @@ const GuardianApprovalMain = forwardRef(
 
     const verifyToken = useVerifyToken();
 
-    const verifyResultHandler = useCallback(
-      async (item: UserGuardianStatus, index: number, rst: VerifyVerificationCodeResult) => {
+    const socialVerifyHandler = useCallback(
+      async (item: UserGuardianStatus, index: number) => {
         try {
           setLoading(true);
           const accountType = item.guardianType as ISocialLogin;
@@ -224,41 +222,7 @@ const GuardianApprovalMain = forwardRef(
     const onVerifyingHandler = useCallback(
       async (_item: UserGuardianStatus, index: number) => {
         const isSocialLogin = SocialLoginList.includes(_item.guardianType);
-        if (isSocialLogin) {
-          const isFirstShowWarning = await did.config.storageMethod.getItem(KEY_SHOW_WARNING);
-          if (isFirstShowWarning !== SHOW_WARNING_DIALOG) {
-            currentVerifyingGuardian.current = {
-              item: _item,
-              index: index,
-            };
-            await did.config.storageMethod.setItem(KEY_SHOW_WARNING, SHOW_WARNING_DIALOG);
-            return setShowWarning(true);
-          } else {
-            try {
-              const rst = await officialWebsiteCheck(
-                _item,
-                originChainId,
-                operationType,
-                // guardianType,
-                targetChainId,
-                officialWebsiteShow?.symbol,
-                officialWebsiteShow?.amount,
-                operationDetails,
-              );
-              console.log('rst===', rst);
-              return verifyResultHandler(_item, index, rst as VerifyVerificationCodeResult);
-            } catch (error) {
-              return errorTip(
-                {
-                  errorFields: 'GuardianApproval',
-                  error: handleErrorMessage(error),
-                },
-                isErrorTip,
-                onError,
-              );
-            }
-          }
-        }
+        if (isSocialLogin) return socialVerifyHandler(_item, index);
 
         try {
           setVerifyAccountIndex(index);
@@ -277,17 +241,7 @@ const GuardianApprovalMain = forwardRef(
           );
         }
       },
-      [
-        originChainId,
-        operationType,
-        targetChainId,
-        officialWebsiteShow?.symbol,
-        officialWebsiteShow?.amount,
-        operationDetails,
-        verifyResultHandler,
-        isErrorTip,
-        onError,
-      ],
+      [socialVerifyHandler, isErrorTip, onError],
     );
 
     const onCodeVerifyHandler = useCallback(
@@ -382,25 +336,25 @@ const GuardianApprovalMain = forwardRef(
                 try {
                   const currentGuardian = currentVerifyingGuardian.current;
                   currentVerifyingGuardian.current = undefined;
-                  const rst = await officialWebsiteCheck(
-                    currentGuardian?.item,
-                    originChainId,
-                    operationType,
-                    // guardianType,
-                    targetChainId,
-                    officialWebsiteShow?.symbol,
-                    officialWebsiteShow?.amount,
-                    operationDetails,
-                    // guardianIdentifier,
-                    // firstName,
-                  );
-                  setShowWarning(false);
-                  console.log('rst===', rst);
-                  return verifyResultHandler(
-                    currentGuardian?.item,
-                    currentGuardian?.index,
-                    rst as VerifyVerificationCodeResult,
-                  );
+                  // const rst = await officialWebsiteCheck(
+                  //   currentGuardian?.item,
+                  //   originChainId,
+                  //   operationType,
+                  //   // guardianType,
+                  //   targetChainId,
+                  //   officialWebsiteShow?.symbol,
+                  //   officialWebsiteShow?.amount,
+                  //   operationDetails,
+                  //   // guardianIdentifier,
+                  //   // firstName,
+                  // );
+                  // setShowWarning(false);
+                  // console.log('rst===', rst);
+                  // return verifyResultHandler(
+                  //   currentGuardian?.item,
+                  //   currentGuardian?.index,
+                  //   rst as VerifyVerificationCodeResult,
+                  // );
                 } catch (error) {
                   return errorTip(
                     {

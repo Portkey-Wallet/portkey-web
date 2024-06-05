@@ -44,7 +44,8 @@
   },
   "peerDependencies": {
     "aelf-sdk": "^3.4.7",
-    "query-string": "^7.1.1"
+    "query-string": "^7.1.1",
+    "@portkey/request": "^2.6.6"
   },
   "devDependencies": {
     "@types/crypto-js": "^4.1.1",

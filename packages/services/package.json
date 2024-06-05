@@ -43,7 +43,8 @@
   "dependencies": {
     "@portkey/graphql": "^2.6.6",
     "@portkey/request": "^2.6.6",
-    "@portkey/types": "^2.6.6"
+    "@portkey/types": "^2.6.6",
+    "@portkey/utils": "^2.6.6"
   },
   "devDependencies": {
     "@jest/globals": "^29.3.1",
