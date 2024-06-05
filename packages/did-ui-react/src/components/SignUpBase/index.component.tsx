@@ -15,6 +15,7 @@ import clsx from 'clsx';
 import ConfigProvider from '../config-provider';
 import { AccountType } from '@portkey/services';
 import './index.less';
+import { TAllLoginKey } from '../../utils/googleAnalytics';
 
 enum STEP {
   socialLogin,
@@ -39,6 +40,7 @@ export interface SignUpBaseProps {
   onInputFinish?: (data: GuardianInputInfo) => void;
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler;
+  onSocialStart?: (type: TAllLoginKey) => void;
   onSocialSignFinish?: SocialLoginFinishHandler;
 }
 
@@ -61,6 +63,7 @@ export default function SignUpBase({
   validatePhone,
   onSocialSignFinish,
   onLoginByPortkey,
+  onSocialStart,
 }: SignUpBaseProps) {
   const [step, setStep] = useState<STEP>(STEP.socialLogin);
 
@@ -110,6 +113,7 @@ export default function SignUpBase({
           }}
           onBack={_onBack}
           onError={onError}
+          onSocialStart={onSocialStart}
           onLoginByPortkey={onLoginByPortkey}
         />
       )}

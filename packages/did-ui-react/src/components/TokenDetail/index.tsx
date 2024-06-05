@@ -27,6 +27,9 @@ export interface TokenDetailProps {
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
   onSend?: (selectToken: TokenItemShowType, type: TokenType) => void;
+  onDataInit?: () => void;
+  onDataInitEnd?: () => void;
+
   onViewActivityItem?: (item: ActivityItemType & { chainId: ChainId }) => void;
 }
 
@@ -38,6 +41,8 @@ function TokenDetailMain({
   onBuy,
   onSend,
   onReceive,
+  onDataInit,
+  onDataInitEnd,
   onViewActivityItem,
 }: TokenDetailProps) {
   const [{ networkType }] = usePortkey();
@@ -93,6 +98,8 @@ function TokenDetailMain({
         <Activity
           chainId={tokenInfo.chainId}
           symbol={tokenInfo.symbol}
+          onDataInit={onDataInit}
+          onDataInitEnd={onDataInitEnd}
           onViewActivityItem={(v) => onViewActivityItem?.({ ...v, chainId: tokenInfo.chainId })}
         />
       </div>

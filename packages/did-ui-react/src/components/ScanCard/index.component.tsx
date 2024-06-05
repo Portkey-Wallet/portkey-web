@@ -25,6 +25,7 @@ export interface ScanCardProps {
   onError?: OnErrorFunc;
   onBack?: () => void;
   onFinish?: LoginFinishWithoutPin;
+  onShowQrCode?: () => void;
   onFinishFailed?: (errorInfo: any) => void;
 }
 
@@ -40,6 +41,7 @@ export default function ScanCard({
   onError,
   onBack,
   onFinish,
+  onShowQrCode,
 }: ScanCardProps) {
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
@@ -93,9 +95,9 @@ export default function ScanCard({
         version: DEVICE_INFO_VERSION,
       },
     };
-
+    onShowQrCode?.();
     return JSON.stringify(data);
-  }, [chainType, deviceInfo, managementAccount, networkType]);
+  }, [chainType, deviceInfo, managementAccount, networkType, onShowQrCode]);
 
   // Listen whether the user is authorized
   // useEffect(() => {

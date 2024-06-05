@@ -4,6 +4,7 @@ import { ChainId, IBlockchainWallet } from '@portkey/types';
 import { CSSProperties, ReactNode } from 'react';
 import { IGuardianIdentifierInfo, IPhoneCountry } from './signIn';
 import { OnErrorFunc, TotalAccountType, ValidatorHandler } from '../../types';
+import { TAllLoginKey } from '../../utils/googleAnalytics';
 export * from './verify';
 export * from './signIn';
 export * from './reCaptcha';
@@ -80,6 +81,8 @@ export interface IBaseGetGuardianProps {
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone
   onSuccess?: (value: IGuardianIdentifierInfo) => void;
+  onInputConfirmStart?: () => void;
+  onSocialStart?: (type: TAllLoginKey) => void;
   onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
   onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
 }

@@ -12,7 +12,6 @@ ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
-  serviceUrl: 'https://aa-portkey-test.portkey.finance',
   // serviceUrl: 'https://aa-portkey-test.portkey.finance',
   // loginConfig: {
   //   loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],

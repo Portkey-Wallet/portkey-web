@@ -1,5 +1,5 @@
 import SegmentedInput from '../SegmentedInput';
-import { CreateWalletType, IBaseGetGuardianProps, TSize } from '../types';
+import { CreateWalletType, GuardianInputInfo, IBaseGetGuardianProps, TSize } from '../types';
 import { ISocialLogin, RegisterType } from '../../types';
 import DividerCenter from '../DividerCenter';
 import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
@@ -47,6 +47,8 @@ export default function Web2Design({
   validatePhone,
   onSignTypeChange,
   onChainIdChange,
+  onSocialStart,
+  onInputConfirmStart,
   onLoginFinishWithoutPin,
 }: Web2DesignProps) {
   const signType = useMemo(() => (mode === 'SignUp' ? 'Sign up' : 'Login'), [mode]);
@@ -117,6 +119,7 @@ export default function Web2Design({
   const onSocialChange = useCallback(
     async (type: ISocialLogin) => {
       try {
+        onSocialStart?.(type);
         if (Web2LoginList.includes(type)) throw Error('Please try social account');
 
         setLoading(true);
@@ -137,7 +140,15 @@ export default function Web2Design({
         );
       }
     },
-    [isErrorTip, onSocialFinish, socialLoginHandler],
+    [isErrorTip, onSocialFinish, onSocialStart, socialLoginHandler],
+  );
+
+  const onInputFinish = useCallback(
+    (data: GuardianInputInfo) => {
+      onInputConfirmStart?.();
+      onFinish(data);
+    },
+    [onFinish, onInputConfirmStart],
   );
 
   const extraElement = useMemo(
@@ -159,7 +170,7 @@ export default function Web2Design({
             validatePhone={_validatePhone}
             validateEmail={_validateEmail}
             confirmText={type}
-            onFinish={onFinish}
+            onFinish={onInputFinish}
           />
           <DividerCenter />
           <SocialLoginGroup supportAccounts={loginMethodsOrder} onAccountTypeChange={onSocialChange} />
@@ -194,7 +205,7 @@ export default function Web2Design({
       _validatePhone,
       extraElement,
       loginMethodsOrder,
-      onFinish,
+      onInputFinish,
       onSocialChange,
       onSwitch,
       phoneCountry,
@@ -214,6 +225,7 @@ export default function Web2Design({
             chainId={defaultChainId}
             chainType={chainType}
             networkType={networkType}
+            onShowQrCode={() => onSocialStart?.('Scan')}
             onBack={() => setType('Login')}
             onFinish={onLoginFinishWithoutPin}
             isErrorTip={isErrorTip}
@@ -222,7 +234,17 @@ export default function Web2Design({
         )}
       </div>
     ),
-    [chainType, defaultChainId, isErrorTip, isMobile, networkType, onError, onLoginFinishWithoutPin, showScan],
+    [
+      chainType,
+      defaultChainId,
+      isErrorTip,
+      isMobile,
+      networkType,
+      onError,
+      onLoginFinishWithoutPin,
+      onSocialStart,
+      showScan,
+    ],
   );
   const [showQRCode, setShowQRCode] = useState<boolean>();
 
