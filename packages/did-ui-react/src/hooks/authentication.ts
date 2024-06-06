@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { ISocialLogin, NetworkType, VerifyTokenParams } from '../types';
+import { IApproveDetail, ISocialLogin, NetworkType, VerifyTokenParams } from '../types';
 import {
   did,
   getGoogleUserInfo,
@@ -17,6 +17,7 @@ interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   targetChainId?: ChainId;
   networkType?: NetworkType;
   operationDetails: TStringJSON;
+  approveDetail?: IApproveDetail;
 }
 
 interface BaseAuthProps {
@@ -50,6 +51,7 @@ export function useVerifyGoogleToken() {
           clientId: params.clientId,
           redirectURI: params.redirectURI,
           network: params.networkType,
+          approveDetail: params.approveDetail,
         });
       }
       const _token = googleInfo?.token || (googleInfo as any)?.accessToken;
@@ -86,6 +88,7 @@ export function useVerifyAppleToken() {
           clientId: params.clientId,
           redirectURI: params.redirectURI,
           network: params.networkType,
+          approveDetail: params.approveDetail,
         });
         if (!authRes) throw new Error('Missing Response');
         accessToken = authRes?.token;
@@ -119,6 +122,7 @@ export function useVerifyTelegram() {
           type: 'Telegram',
           network: params.networkType,
           guardianIdentifier: params.id,
+          approveDetail: params.approveDetail,
         });
         if (!authRes) throw new Error('Missing Response');
         accessToken = authRes?.token;
@@ -151,6 +155,7 @@ export function useVerifyFacebook() {
         const authRes: any = await socialLoginAuth({
           type: 'Facebook',
           network: params.networkType,
+          approveDetail: params.approveDetail,
         });
         if (!authRes) throw new Error('Missing Response');
         tokenInfo = authRes?.token;
@@ -184,6 +189,7 @@ export function useVerifyTwitter() {
         const authRes: any = await socialLoginAuth({
           type: 'Twitter',
           network: params.networkType,
+          approveDetail: params.approveDetail,
         });
         if (!authRes) throw new Error('Missing Response');
         tokenInfo = authRes?.token;

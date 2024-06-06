@@ -106,7 +106,7 @@ export default function AppleAuth() {
 
             const result = await managerApprove({
               originChainId: originChainId,
-              symbol: 'SGRTEST-0',
+              symbol: 'SGRTEST-10',
               caHash,
               amount: 1e8 * 67,
               targetChainId: originChainId,

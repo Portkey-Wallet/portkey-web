@@ -19,6 +19,7 @@ import {
   getApprovalCount,
   handleErrorMessage,
   handleVerificationDoc,
+  modalMethod,
   setLoading,
 } from '../../utils';
 import type { ChainId, TStringJSON } from '@portkey/types';
@@ -32,17 +33,18 @@ import {
   NetworkType,
   ISocialLogin,
   ITelegramInfo,
+  IApproveDetail,
 } from '../../types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { SocialLoginList, OfficialWebsite } from '../../constants/guardian';
+import { SocialLoginList, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
-import CommonModal from '../CommonModal';
-import ThrottleButton from '../ThrottleButton';
+import { Open_Login_Bridge } from '../../constants/telegram';
+import { getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -101,8 +103,6 @@ const GuardianApprovalMain = forwardRef(
     const [expiredTime, setExpiredTime] = useState<number>();
     const onErrorRef = useRef<GuardianApprovalProps['onError']>(onError);
     const onConfirmRef = useRef<GuardianApprovalProps['onConfirm']>(onConfirm);
-    const [isShowWarning, setShowWarning] = useState<boolean>(false);
-    const currentVerifyingGuardian = useRef<any>();
 
     useEffect(() => {
       onErrorRef.current = onError;
@@ -153,7 +153,6 @@ const GuardianApprovalMain = forwardRef(
     const socialVerifyHandler = useCallback(
       async (item: UserGuardianStatus, index: number) => {
         try {
-          setLoading(true);
           const accountType = item.guardianType as ISocialLogin;
           const accessToken =
             accountType === 'Telegram' && telegramInfo?.userId === item.guardianIdentifier && telegramInfo?.accessToken
@@ -163,6 +162,42 @@ const GuardianApprovalMain = forwardRef(
           if (!item.verifier?.id) throw 'verifier id is not exist';
           const id = item.identifier || item.identifierHash;
           if (!id) throw 'identifier is not exist';
+          const isFirstShowWarning = await getStorageInstance().getItem(KEY_SHOW_WARNING);
+
+          if (isFirstShowWarning !== SHOW_WARNING_DIALOG && !accessToken) {
+            const isConfirm = await modalMethod({
+              width: 320,
+              title: <div className="security-notice">Security Notice</div>,
+              closable: false,
+              wrapClassName: 'warning-modal-wrapper',
+              className: `portkey-ui-common-modals ` + 'confirm-return-modal',
+              content: (
+                <p className="modal-content-v2">
+                  You&rsquo;ll be directed to{' '}
+                  <span className="official-website">{Open_Login_Bridge[getCustomNetworkType()][networkType]}</span> for
+                  verification. If the site you land on doesn&rsquo;t match this link,please exercise caution and
+                  refrain from taking any actions.
+                </p>
+              ),
+            });
+            if (!isConfirm) return;
+            getStorageInstance().setItem(KEY_SHOW_WARNING, SHOW_WARNING_DIALOG);
+          }
+          setLoading(true);
+
+          const approveDetail: IApproveDetail = {
+            guardian: {
+              guardianType: item.guardianType,
+              identifier: item.identifier,
+              thirdPartyEmail: item.thirdPartyEmail,
+            },
+            originChainId,
+            targetChainId,
+            symbol: officialWebsiteShow?.symbol,
+            amount: officialWebsiteShow?.amount,
+            operationType,
+          };
+
           const rst = await verifyToken(accountType, {
             accessToken,
             id,
@@ -175,7 +210,9 @@ const GuardianApprovalMain = forwardRef(
             networkType,
             operationDetails,
             customLoginHandler,
+            approveDetail: approveDetail,
           });
+
           if (!rst || !rst.verificationDoc) return;
 
           const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
@@ -214,6 +251,7 @@ const GuardianApprovalMain = forwardRef(
         operationType,
         networkType,
         operationDetails,
+        officialWebsiteShow,
         isErrorTip,
         onError,
       ],
@@ -310,67 +348,6 @@ const GuardianApprovalMain = forwardRef(
 
     return (
       <div>
-        <CommonModal
-          type="modal"
-          wrapClassName="warning-modal-wrapper"
-          closable={false}
-          open={isShowWarning}
-          className="confirm-return-modal"
-          title={<div className="security-notice">Security Notice</div>}
-          width={320}
-          getContainer={'#set-pin-wrapper'}>
-          <p className="modal-content-v2">
-            You&rsquo;ll be directed to <span className="official-website">{OfficialWebsite}</span> for verification. If
-            the site you land on doesn&rsquo;t match this link,please exercise caution and refrain from taking any
-            actions.
-          </p>
-          {/* <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}> */}
-          <div className="btn-warning-wrapper">
-            <ThrottleButton className="btn-cancel" onClick={() => setShowWarning(false)}>
-              Cancel
-            </ThrottleButton>
-            <ThrottleButton
-              className="btn-confirm"
-              type="primary"
-              onClick={async () => {
-                try {
-                  const currentGuardian = currentVerifyingGuardian.current;
-                  currentVerifyingGuardian.current = undefined;
-                  // const rst = await officialWebsiteCheck(
-                  //   currentGuardian?.item,
-                  //   originChainId,
-                  //   operationType,
-                  //   // guardianType,
-                  //   targetChainId,
-                  //   officialWebsiteShow?.symbol,
-                  //   officialWebsiteShow?.amount,
-                  //   operationDetails,
-                  //   // guardianIdentifier,
-                  //   // firstName,
-                  // );
-                  // setShowWarning(false);
-                  // console.log('rst===', rst);
-                  // return verifyResultHandler(
-                  //   currentGuardian?.item,
-                  //   currentGuardian?.index,
-                  //   rst as VerifyVerificationCodeResult,
-                  // );
-                } catch (error) {
-                  return errorTip(
-                    {
-                      errorFields: 'GuardianApproval',
-                      error: handleErrorMessage(error),
-                    },
-                    isErrorTip,
-                    onError,
-                  );
-                }
-              }}>
-              Proceed
-            </ThrottleButton>
-          </div>
-          {/* </div> */}
-        </CommonModal>
         <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
           {typeof verifyAccountIndex === 'number' ? (
             <VerifierPage

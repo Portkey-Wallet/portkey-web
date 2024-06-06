@@ -56,6 +56,8 @@ class PopupHandler extends EventEmitter {
         if (this.window && this.window.closed) {
           clearInterval(this.windowTimer);
           setTimeout(() => {
+            this.invokeTimer && clearInterval(this.invokeTimer);
+            this.invokeTimer = undefined;
             this.emit('close');
             this.iClosedWindow = false;
             this.window = undefined;

@@ -1,5 +1,5 @@
 import { VerifierItem } from '@portkey/did';
-import type { AccountType, AccountTypeEnum, Guardian, Manager } from '@portkey/services';
+import type { AccountType, AccountTypeEnum, Guardian, Manager, OperationTypeEnum } from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import { TSocialLoginHandler } from './wallet';
 
@@ -85,4 +85,17 @@ export interface GuardianApprovedItem {
   type: AccountTypeEnum;
   identifierHash?: string;
   verificationInfo: IVerification;
+}
+
+export interface IApproveDetail {
+  guardian: {
+    guardianType: string;
+    identifier?: string;
+    thirdPartyEmail?: string;
+  };
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
+  operationType: OperationTypeEnum;
+  symbol?: string;
+  amount?: string;
 }

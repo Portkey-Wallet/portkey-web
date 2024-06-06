@@ -6,7 +6,7 @@ import {
   getTelegramBotId,
 } from '../components/config-provider/utils';
 import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '../constants';
-import { ISocialLogin, NetworkType } from '../types';
+import { IApproveDetail, ISocialLogin, NetworkType } from '../types';
 import { stringify } from 'query-string';
 import { dealURLLastChar } from './lib';
 import { devicesEnv } from '@portkey/utils';
@@ -166,6 +166,7 @@ export const socialLoginAuthBySocket = async ({
   network,
   guardianIdentifier,
   useCurrentTelegramAuth = true,
+  approveDetail,
 }: {
   type: ISocialLogin;
   clientId?: string;
@@ -174,6 +175,7 @@ export const socialLoginAuthBySocket = async ({
   serviceUrl?: string;
   guardianIdentifier?: string;
   useCurrentTelegramAuth?: boolean;
+  approveDetail?: IApproveDetail;
 }): Promise<{
   token: string;
   provider: ISocialLogin;
@@ -209,6 +211,7 @@ export const socialLoginAuthBySocket = async ({
   const result = await openlogin.login({
     from: 'openlogin',
     loginProvider: type,
+    approveDetail,
   });
   if (!result) throw 'Not result';
   if (result?.code) throw result.message;
