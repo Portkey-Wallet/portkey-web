@@ -5,6 +5,7 @@ import GuardianApproval, { IGuardianApprovalInstance } from '../../../GuardianAp
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../../../types';
 import { IGuardianIdentifierInfo } from '../../../types';
 import { useEffectOnce } from 'react-use';
+import { getOperationDetails } from '../../../utils/operation.util';
 
 interface Step2OfSkipGuardianApproveProps {
   isErrorTip?: boolean;
@@ -43,6 +44,7 @@ function Step2OfSkipGuardianApprove({
       <GuardianApproval
         ref={ref}
         operationType={OperationTypeEnum.communityRecovery}
+        operationDetails={getOperationDetails(OperationTypeEnum.communityRecovery)}
         originChainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}

@@ -10,6 +10,7 @@ import { useEffectOnce } from 'react-use';
 import { usePortkey } from '../../../context';
 import { getGuardianList } from '../../utils/getGuardians';
 import './index.less';
+import { getOperationDetails } from '../../../utils/operation.util';
 
 interface Step2OfLoginProps {
   chainId?: ChainId;
@@ -107,6 +108,7 @@ function Step2OfLogin({
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
         operationType={OperationTypeEnum.communityRecovery}
+        operationDetails={getOperationDetails(OperationTypeEnum.communityRecovery)}
         originChainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}
