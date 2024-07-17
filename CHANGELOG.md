@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.1-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.0...v2.7.1-alpha.3) (2024-07-17)
+
+### Bug Fixes
+
+- 🐛 guardian approve add operation detail ([c126afb](https://github.com/Portkey-Wallet/portkey-web/commit/c126afb0e9b48486c4694f01ff497039bd88d4cc))
+
 ## [2.7.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.1.7-alpha.1...v2.7.1-alpha.0) (2024-06-06)
 
 ### Features
