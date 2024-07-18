@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.1-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.3...v2.7.1-alpha.4) (2024-07-18)
+
+### Bug Fixes
+
+- 🐛 Dealing with the problem of balanceInUsd === '' ([f4b7930](https://github.com/Portkey-Wallet/portkey-web/commit/f4b793053eff18dbc8c2897a7c26436efe163c38))
+
 ## [2.7.1-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.0...v2.7.1-alpha.3) (2024-07-17)
 
 ### Bug Fixes
