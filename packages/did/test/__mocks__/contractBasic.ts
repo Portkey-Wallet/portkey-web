@@ -33,7 +33,17 @@ export class ContractBasicMock {
           },
         };
         break;
-
+      case 'GetHolderInfo':
+        result = {
+          data: {
+            managerInfos: [
+              {
+                address: 'mock_management_Address',
+              },
+            ],
+          },
+        };
+        break;
       default:
         result = { data: true };
         break;

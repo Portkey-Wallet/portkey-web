@@ -7,11 +7,13 @@ import {
   SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
-  VerifyGoogleTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
-  VerifyTelegramTokenParams,
+  VerifierSocialTokenParams,
+  VerifyTwitterTokenHeader,
+  TGetTelegramAuthTokenResult,
+  TGetTelegramAuthTokenParams,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
@@ -54,7 +56,7 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       url: `/api/app/userExtraInfo/${params.userId}`,
     });
   }
-  verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyGoogleToken',
@@ -71,10 +73,28 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
-  verifyTelegramToken(params: VerifyTelegramTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTelegramToken',
+      params,
+    });
+  }
+  verifyTwitterToken(
+    params: VerifierSocialTokenParams,
+    headers: VerifyTwitterTokenHeader,
+  ): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTwitterToken',
+      params,
+      headers,
+    });
+  }
+  verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyFacebookToken',
       params,
     });
   }
@@ -82,6 +102,13 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/getVerifierServer',
+      params,
+    });
+  }
+  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/telegramAuth/token',
       params,
     });
   }

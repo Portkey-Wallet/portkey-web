@@ -1,9 +1,10 @@
-import { stringify } from 'query-string';
+import queryString from 'query-string';
 import { WEB_PAGE } from '../constants';
 import { scheme } from '@portkey/utils';
 
 type IBaseOption = {
   timeout?: number;
+  isEvokeApp?: boolean;
 };
 
 interface IEvokeByThirdParty {
@@ -22,6 +23,6 @@ interface IEvokeByThirdParty {
 }
 
 const evokeByThirdParty: IEvokeByThirdParty['evokeByThirdParty'] = params =>
-  Promise.resolve(window.open(`${WEB_PAGE}/portkey-download?${stringify(params)}`));
+  Promise.resolve(window.open(`${WEB_PAGE}/portkey-download?${queryString.stringify(params)}`));
 
 export default evokeByThirdParty;

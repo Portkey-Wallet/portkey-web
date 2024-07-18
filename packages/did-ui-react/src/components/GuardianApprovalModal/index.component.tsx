@@ -25,6 +25,8 @@ const GuardianApprovalModalMain = forwardRef(
       onApprovalSuccess,
       onApprovalError,
       operationType,
+      operationDetails,
+      officialWebsiteShow,
     }: GuardianApprovalModalProps,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
@@ -74,6 +76,8 @@ const GuardianApprovalModalMain = forwardRef(
           onError={onApprovalError}
           networkType={networkType}
           operationType={operationType}
+          operationDetails={operationDetails}
+          officialWebsiteShow={officialWebsiteShow}
         />
       </CommonBaseModal>
     );

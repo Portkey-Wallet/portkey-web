@@ -361,7 +361,7 @@ did.services.verifyVerificationCode({
 verify Google token.
 
 ```ts
-verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult>;
+verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
 ```
 
 Example

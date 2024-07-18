@@ -20,7 +20,7 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/did-ui-react"
   },
-  "version": "2.0.2",
+  "version": "2.7.1-alpha.4",
   "main": "dist/index.js",
   "types": "dist/_types/index.d.ts",
   "type": "module",
@@ -32,7 +32,7 @@
     "build:clean": "rm -rf dist",
     "build:types": "tsc --emitDeclarationOnly",
     "build:source": "rollup --silent --config rollup.config.js",
-    "build:svg": "cd ./src/assets && node getSvg1.cjs",
+    "build:svg": "cd ./src/assets && node getSvg.cjs",
     "build": "npm run build:clean && npm run build:types && npm run build:source",
     "dev": "rollup --config rollup.config.js --watch",
     "release": "yarn version && yarn build",
@@ -41,17 +41,18 @@
   },
   "dependencies": {
     "@matt-block/react-recaptcha-v2": "^2.0.0",
-    "@portkey/accounts": "^2.0.2",
-    "@portkey/contracts": "^2.0.2",
-    "@portkey/did": "^2.0.2",
-    "@portkey/graphql": "^2.0.2",
-    "@portkey/onboarding": "^2.0.2",
-    "@portkey/request": "^2.0.2",
-    "@portkey/services": "^2.0.2",
-    "@portkey/socket": "^2.0.2",
-    "@portkey/types": "^2.0.2",
-    "@portkey/utils": "^2.0.2",
-    "@portkey/validator": "^2.0.2",
+    "@portkey/accounts": "^2.7.1-alpha.4",
+    "@portkey/contracts": "^2.7.1-alpha.4",
+    "@portkey/did": "^2.7.1-alpha.4",
+    "@portkey/graphql": "^2.7.1-alpha.4",
+    "@portkey/onboarding": "^2.7.1-alpha.4",
+    "@portkey/ramp": "^2.7.1-alpha.4",
+    "@portkey/request": "^2.7.1-alpha.4",
+    "@portkey/services": "^2.7.1-alpha.4",
+    "@portkey/socket": "^2.7.1-alpha.4",
+    "@portkey/types": "^2.7.1-alpha.4",
+    "@portkey/utils": "^2.7.1-alpha.4",
+    "@portkey/validator": "^2.7.1-alpha.4",
     "@rc-component/portal": "1.0.2",
     "antd": "4.24.14",
     "antd-mobile": "5.33.0",
@@ -75,9 +76,9 @@
     "postcss": "^8.4.21"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.2.45-beta.0",
+    "aelf-sdk": "^3.4.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
-  "gitHead": "930f477122fbf541eb1372cae3b0aaaac120307d"
+  "gitHead": "9ba1306de72b5035883d7b102fe84beb36b5e258"
 }

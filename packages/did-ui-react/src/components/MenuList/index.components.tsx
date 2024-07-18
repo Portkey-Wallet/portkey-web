@@ -10,19 +10,23 @@ export interface MenuListProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   isShowHeader?: boolean;
+  isShowFooter?: boolean;
   headerConfig?: {
     title?: string;
     onBack?: () => void;
   } & TitleWrapperProps;
   menuList: IMenuItemType[];
+  footerElement?: React.ReactNode;
 }
 
 export default function MenuListMain({
   className,
   wrapperStyle,
   isShowHeader = true,
+  isShowFooter = false,
   headerConfig,
   menuList,
+  footerElement,
 }: MenuListProps) {
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-menu-list-wrapper', className)}>
@@ -39,6 +43,7 @@ export default function MenuListMain({
           </MenuItem>
         ))}
       </div>
+      {isShowFooter && footerElement}
     </div>
   );
 }

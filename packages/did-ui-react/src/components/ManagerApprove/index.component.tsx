@@ -12,14 +12,16 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import BackHeader from '../BackHeader';
 import { divDecimals, timesDecimals } from '../../utils/converter';
 import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL, DEFAULT_NFT_DECIMAL } from '../../constants';
-import { isNFT } from '../../utils/assets';
+import { isNFT, isNFTCollection } from '../../utils/assets';
 import './index.less';
+import { getOperationDetails } from '../utils/operation.util';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
   targetChainId: ChainId;
   caHash: string;
   networkType: NetworkType;
+  spender?: string;
 }
 
 export interface IManagerApproveResult {
@@ -30,7 +32,7 @@ export interface IManagerApproveResult {
 export interface ManagerApproveInnerProps extends BaseManagerApproveInnerProps {
   onCancel?: () => void;
   onError?: (error: Error) => void;
-  onFinish?: (res: { amount: string; guardiansApproved: IGuardiansApproved[] }) => void;
+  onFinish?: (res: { amount: string; symbol: string; guardiansApproved: IGuardiansApproved[] }) => void;
 }
 export enum ManagerApproveStep {
   SetAllowance = 'SetAllowance',
@@ -48,6 +50,8 @@ export default function ManagerApproveInner({
   amount,
   dappInfo,
   symbol,
+  spender,
+  batchApproveNFT,
   onCancel,
   onFinish,
   onError,
@@ -66,7 +70,15 @@ export default function ManagerApproveInner({
     issued: string;
   }>();
 
-  const DEFAULT_SYMBOL_DECIMAL = useMemo(() => (isNFT(symbol) ? DEFAULT_NFT_DECIMAL : DEFAULT_DECIMAL), [symbol]);
+  const [DEFAULT_SYMBOL_DECIMAL, approveSymbol] = useMemo(() => {
+    const defaultDecimals = isNFT(symbol) ? DEFAULT_NFT_DECIMAL : DEFAULT_DECIMAL;
+
+    if (!batchApproveNFT || isNFTCollection(symbol) || !isNFT(symbol)) return [defaultDecimals, symbol];
+
+    const collection = symbol.split('-')[0];
+
+    return [defaultDecimals, `${collection}-*`];
+  }, [batchApproveNFT, symbol]);
 
   const [allowance, setAllowance] = useState<string>(divDecimals(amount, DEFAULT_SYMBOL_DECIMAL).toFixed());
 
@@ -206,10 +218,16 @@ export default function ManagerApproveInner({
               await onFinish?.({
                 amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
                 guardiansApproved: approved,
+                symbol: approveSymbol,
               });
             }}
-            // onError={(error) => onError?.(Error(handleErrorMessage(error.error)))}
             operationType={OperationTypeEnum.managerApprove}
+            operationDetails={getOperationDetails(OperationTypeEnum.managerApprove, {
+              symbol: approveSymbol,
+              amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
+              spender,
+            })}
+            officialWebsiteShow={{ amount: allowance, symbol: approveSymbol }}
           />
         )}
       </div>

@@ -1,7 +1,10 @@
 import { ChainId } from '@portkey/types';
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import { getHolderInfoByContract } from '../utils/sandboxUtil/getHolderInfo';
 import { usePortkey } from '../components/context';
+import { useEffectOnce } from 'react-use';
+import { devices } from '@portkey/utils';
+import { did } from '../utils';
 
 export const useCheckManagerSyncState = () => {
   const [{ chainType }] = usePortkey();
@@ -35,4 +38,18 @@ export const useCheckManagerSyncState = () => {
     },
     [chainType],
   );
+};
+
+export const useIsShowDeletion = () => {
+  return useCallback(async () => {
+    const isIOS = devices.isMobile().apple.device;
+
+    if (!isIOS) return false;
+    try {
+      const req = await did.services.communityRecovery.getShowDeletionEntrance();
+      return !!req?.entranceDisplay;
+    } catch (error) {
+      console.log('GetShowDeletionEntrance error: ', error);
+    }
+  }, []);
 };

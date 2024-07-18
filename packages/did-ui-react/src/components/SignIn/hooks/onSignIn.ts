@@ -8,6 +8,7 @@ import useVerifier from '../../../hooks/useVerifier';
 import { GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import useSendCode from './useSendCode';
 import { SocialLoginList } from '../../../constants/guardian';
+import { getOperationDetails } from '../../utils/operation.util';
 
 interface Props {
   isErrorTip?: boolean;
@@ -62,6 +63,9 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
   const approveSocialLogin = useCallback(
     async (guardianIdentifierInfo: IGuardianIdentifierInfo, guardian: BaseGuardianItem) => {
       const verifier = guardian.verifier as VerifierItem;
+      const operationType = OperationTypeEnum.communityRecovery;
+      const operationDetails = getOperationDetails(operationType);
+
       const result = await verifySocialToken({
         accountType: guardian.guardianType,
         token: guardian.accessToken,
@@ -69,9 +73,10 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         verifier,
         networkType,
         chainId: guardianIdentifierInfo.chainId,
-        operationType: OperationTypeEnum.communityRecovery,
+        operationType,
+        operationDetails,
       });
-      if (!result.signature || !result.verificationDoc) throw 'Verify social login error';
+      if (!result?.signature || !result?.verificationDoc) throw 'Verify social login error';
       const approvedItem = {
         type: guardian.guardianType,
         identifier: guardian.identifier || guardian.identifierHash || '',
@@ -134,7 +139,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
 
                 if (!guardian) throw 'No match';
                 const accountType = guardian.guardianType;
-                if (!SocialLoginList.includes(accountType)) throw 'No match for Apple、 Google or Telegram';
+                if (!SocialLoginList.includes(accountType)) throw 'No match for Social Login';
                 try {
                   const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);
                   approvedList.push(approvedItem);
@@ -166,9 +171,9 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       }
       // guardianList.length === 1
       const guardian = guardianList[0];
-      console.log(guardian, 'guardian=getGuardians');
+
       const accountType = guardian.guardianType;
-      // Apple and Google approve;
+      // social approve;
       if (SocialLoginList.includes(accountType)) {
         try {
           const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);

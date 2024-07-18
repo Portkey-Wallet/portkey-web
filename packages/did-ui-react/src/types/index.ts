@@ -67,3 +67,10 @@ export type ValidData = {
   validateStatus: ValidateStatus;
   errorMsg: string;
 };
+
+export type TCustomNetworkType = 'offline' | 'online' | 'local';
+
+export interface ITelegramInfo {
+  accessToken?: string;
+  userId: string;
+}

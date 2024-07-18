@@ -17,3 +17,4 @@ export default function CustomSvg({ type, className, ...props }: CustomSvgProps)
       {...props}></div>
   );
 }
+export type CustomSvgType = keyof typeof svgsList;

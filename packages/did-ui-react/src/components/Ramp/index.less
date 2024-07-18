@@ -2,7 +2,6 @@
   height: 100%;
 
   .portkey-ui-ramp-content {
-    padding: 0 24px;
     flex: 1;
 
     .portkey-ui-ramp-radio {
@@ -36,6 +35,11 @@
           border-radius: 6px;
         }
       }
+    }
+    .portkey-ui-ramp-buy-form,
+    .portkey-ui-ramp-sell-form {
+      flex: 1;
+      padding: 0 24px;
     }
     .portkey-ui-ramp-input {
       margin-top: 16px;
@@ -100,28 +104,13 @@
     .portkey-ui-ramp-target {
       width: 100%;
     }
-    .portkey-ui-ramp-rate {
-      width: 100%;
-      margin-top: 24px;
-      font-size: 14px;
-      line-height: 20px;
-      color: var(--portkey-ui-text-secondary);
-      .timer {
-        .portkey-ui-custom-svg {
-          margin-right: 5px;
-        }
-        .timestamp {
-          font-size: 12px;
-          line-height: 16px;
-        }
-      }
-    }
   }
 
   .portkey-ui-ramp-footer {
     width: 100%;
     height: 80px;
     padding: 16px;
+    margin-top: 24px;
     border-top: 1px solid var(--portkey-ui-default-border);
 
     .portkey-ant-btn {

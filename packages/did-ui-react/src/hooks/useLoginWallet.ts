@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { AddManagerType, CreatePendingInfo } from '../components/types';
-import { did, errorTip, extraDataEncode, randomId, setLoading } from '../utils';
+import { did, errorTip, extraDataEncode, handlerErrorTipLevel, randomId, setLoading } from '../utils';
 import { LoginResult, RegisterResult } from '@portkey/did';
 import { OnErrorFunc } from '../types';
 import { ChainId } from '@portkey/types';
@@ -18,15 +18,17 @@ interface CreateWalletParams {
   guardianApprovedList: GuardiansApproved[];
 }
 
-export default function useLoginWallet({
+export function useLoginWallet({
   isErrorTip = true,
   onError,
   onCreatePending,
-}: {
-  isErrorTip?: boolean;
-  onCreatePending?: onCreatePendingType;
-  onError?: OnErrorFunc;
-}) {
+}:
+  | {
+      isErrorTip?: boolean;
+      onCreatePending?: onCreatePendingType;
+      onError?: OnErrorFunc;
+    }
+  | undefined = {}) {
   const onErrorRef = useRef<OnErrorFunc | undefined>(onError);
   const onCreatePendingRef = useRef<onCreatePendingType | undefined>(onCreatePending);
 
@@ -69,7 +71,10 @@ export default function useLoginWallet({
     async ({ pin, type, chainId, accountType, guardianIdentifier, guardianApprovedList }: CreateWalletParams) => {
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
       if (!guardianApprovedList?.length) throw 'Missing guardianApproved';
-      const wallet = did.didWallet.create();
+      const wallet = did.didWallet;
+
+      if (!wallet || !wallet.managementAccount?.address)
+        throw 'ManagementAccount information is not detected, please initialize management information `did.create`';
       const managerAddress = wallet.managementAccount!.address;
       const requestId = randomId();
 
@@ -117,7 +122,9 @@ export default function useLoginWallet({
     async ({ pin, chainId, accountType, guardianIdentifier, guardianApprovedList, type }: CreateWalletParams) => {
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
 
-      const wallet = did.didWallet.create();
+      const wallet = did.didWallet;
+      if (!wallet || !wallet.managementAccount?.address)
+        throw 'ManagementAccount information is not detected, please initialize management information `did.create`';
       const managerAddress = wallet.managementAccount!.address;
       const requestId = randomId();
 
@@ -166,10 +173,12 @@ export default function useLoginWallet({
     async ({ pin, type, chainId, accountType, guardianIdentifier, guardianApprovedList }: CreateWalletParams) => {
       try {
         if (!guardianIdentifier) throw 'Missing account!!!';
-        did.reset();
+
         const loadingText =
           type === 'recovery' ? 'Initiating social recovery...' : 'Creating a wallet address on the blockchain';
-
+        if (!did.didWallet.managementAccount) {
+          handlerErrorTipLevel(`Management information not detected, please "did.create" before`, 'throwError');
+        }
         setLoading(true, loadingText);
 
         let walletResult: RegisterResult | LoginResult;

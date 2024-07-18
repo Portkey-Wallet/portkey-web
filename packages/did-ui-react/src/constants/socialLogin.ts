@@ -11,14 +11,16 @@ type IAccountItem = {
 };
 
 export const SocialAccountsInfo: Record<ISocialLogin, IAccountItem> = {
-  Google: { type: 'Google', name: 'Google', icon: 'GoogleIcon' },
-  Apple: { type: 'Apple', name: 'Apple', icon: 'AppleIcon' },
-  Telegram: { type: 'Telegram', name: 'Telegram', icon: 'TelegramIcon' },
+  Google: { type: 'Google', name: 'Google', icon: 'Google' },
+  Apple: { type: 'Apple', name: 'Apple', icon: 'Apple' },
+  Telegram: { type: 'Telegram', name: 'Telegram', icon: 'Telegram' },
+  Facebook: { type: 'Facebook', name: 'Facebook', icon: 'Facebook' },
+  Twitter: { type: 'Twitter', name: 'Twitter', icon: 'Twitter' },
 };
 
 export const Web2AccountsInfo: Record<IWeb2Login, IAccountItem> = {
-  Email: { type: 'Email', name: 'Email', icon: 'EmailIcon2' },
-  Phone: { type: 'Phone', name: 'Phone', icon: 'PhoneIcon2' },
+  Email: { type: 'Email', name: 'Email', icon: 'Email' },
+  Phone: { type: 'Phone', name: 'Phone', icon: 'Phone' },
 };
 
 export const AccountsInfo: Record<AccountType, IAccountItem> = {

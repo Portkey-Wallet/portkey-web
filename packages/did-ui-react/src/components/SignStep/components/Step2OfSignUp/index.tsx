@@ -6,6 +6,7 @@ import BackHeader from '../../../BackHeader';
 import { OnErrorFunc } from '../../../../types/error';
 import { IGuardianIdentifierInfo } from '../../../types';
 import { TStep2SignUpLifeCycle, TVerifyCodeInfo } from '../../types';
+import { getOperationDetails } from '../../../utils/operation.util';
 
 type Step2FinishParams = { verifier: IVerifier } & IVerifyInfo;
 
@@ -76,6 +77,7 @@ function Step2WithSignUp({
           verifierSessionId={sendCodeInfo.verifierSessionId}
           isErrorTip={isErrorTip}
           operationType={OperationTypeEnum.register}
+          operationDetails={getOperationDetails(OperationTypeEnum.register)}
           onError={onError}
           onSuccess={onCodeVerifySuccess}
           onReSend={onReSend}

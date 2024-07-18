@@ -23,6 +23,7 @@ import { sleep } from '@portkey/utils';
 import { useEffectOnce } from 'react-use';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 
 export interface ITransferSettingsEditProps extends FormProps {
   className?: string;
@@ -247,6 +248,7 @@ export default function TransferSettingsEditMain({
 
         onSuccess?.(params);
       } catch (e) {
+        console.error('setTransferLimit===', e);
         errorTip(
           {
             errorFields: 'Handle Add Guardian',
@@ -276,7 +278,7 @@ export default function TransferSettingsEditMain({
   const onFinish = () => {
     const errorCount = handleFormChange();
     if (errorCount > 0) return;
-
+    console.log('====== initData.singleLimit', initData.singleLimit);
     setApprovalVisible(true);
   };
 
@@ -297,9 +299,20 @@ export default function TransferSettingsEditMain({
     handleDisableCheck();
   });
 
+  const limitCalFunc = useCallback(() => {
+    const { restricted, singleLimit, dailyLimit } = form.getFieldsValue();
+    const transDailyLimit = restricted ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
+    const transSingleLimit = restricted ? String(timesDecimals(singleLimit, initData.decimals)) : '-1';
+    return { transDailyLimit, transSingleLimit };
+  }, [form, initData.decimals]);
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-edit-wrapper', className)}>
-      <BackHeaderForPage title={`Transfer Settings`} leftCallBack={() => onBack?.(initData)} />
+      <BackHeaderForPage
+        title={`Transfer Settings`}
+        leftCallBack={async () => {
+          onBack?.(initData);
+        }}
+      />
       <Form
         form={form}
         autoComplete="off"
@@ -370,6 +383,11 @@ export default function TransferSettingsEditMain({
           onConfirm={approvalSuccess}
           onError={onGuardiansApproveError}
           operationType={OperationTypeEnum.modifyTransferLimit}
+          operationDetails={getOperationDetails(OperationTypeEnum.modifyTransferLimit, {
+            symbol,
+            singleLimit: limitCalFunc().transSingleLimit,
+            dailyLimit: limitCalFunc().transDailyLimit,
+          })}
         />
       </CommonBaseModal>
     </div>

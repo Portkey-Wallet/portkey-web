@@ -114,6 +114,7 @@ class FetchRequestMock {
       case '/api/app/account/verifyCode':
       case '/api/app/account/verifyGoogleToken':
       case '/api/app/account/verifyAppleToken':
+      case '/api/app/account/verifyTelegramToken':
         result = {
           verificationDoc: 'verificationDoc_mock',
           signature: 'signature_mock',
@@ -130,6 +131,7 @@ class FetchRequestMock {
         } as RecoveryResult;
         break;
       case '/api/app/userExtraInfo/appleUserExtraInfo':
+      case '/api/app/userExtraInfo/string':
         result = {
           userId: 'userId_mock',
         } as SendAppleUserExtraInfoResult;

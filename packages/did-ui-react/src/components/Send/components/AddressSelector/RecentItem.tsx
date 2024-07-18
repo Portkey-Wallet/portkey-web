@@ -25,7 +25,7 @@ export default function RecentItem({
   // };
 
   return (
-    <div className={clsx(['flex-between-center', 'recent-item'])}>
+    <div className={clsx(['portkey-ui-flex-between-center', 'recent-item'])}>
       <div
         className="main-info"
         onClick={() => {

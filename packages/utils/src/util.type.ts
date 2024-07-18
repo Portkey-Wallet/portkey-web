@@ -8,3 +8,7 @@ export interface IStorageSuite {
   setItem(key: string, value: any): Promise<any>;
   removeItem(key: string): Promise<any>;
 }
+
+export type ISocialLogin = 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter';
+
+export type TCustomNetworkType = 'offline' | 'online' | 'local';

@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ConfigProvider,
   SignIn,
@@ -8,9 +8,7 @@ import {
   TDesign,
   UI_TYPE,
   modalMethod,
-  BaseModalMethod,
   TSignUpContinueHandler,
-  handleErrorCode,
   SignUpValue,
   TModalMethodRef,
 } from '@portkey/did-ui-react';
@@ -23,7 +21,7 @@ const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
 
 ConfigProvider.setGlobalConfig({
-  connectUrl: 'https://auth-portkey-test.portkey.finance',
+  connectUrl: 'https://auth-aa-portkey-test.portkey.finance',
   socialLogin: {
     Portkey: {
       websiteName: 'website demo',
@@ -31,13 +29,14 @@ ConfigProvider.setGlobalConfig({
     },
   },
   loginConfig: {
-    loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Phone', 'Apple', 'Scan'],
+    loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Apple', 'Scan'],
     recommendIndexes: [0, 1],
   },
   requestDefaults: {
     timeout: 30000,
+    baseURL: 'https://aa-portkey-test.portkey.finance',
   },
-  serviceUrl: 'https://localtest-applesign2.portkey.finance',
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
   /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
   // reCaptchaConfig: {
   //   siteKey: '',
@@ -47,12 +46,9 @@ ConfigProvider.setGlobalConfig({
 
 export default function Sign() {
   const ref = useRef<ISignIn>();
-  const [defaultLifeCycle, setLifeCycle] = useState<any>();
+  const [, setLifeCycle] = useState<any>();
   const [design, setDesign] = useState<TDesign>('Web2Design');
   const [uiType, setUIType] = useState<UI_TYPE>('Modal');
-
-  const [lockOpen, setLockOpen] = useState<boolean>();
-  const [password, setPassword] = useState<string>();
 
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') ?? '{}'));
@@ -124,29 +120,29 @@ export default function Sign() {
     <div>
       <div>-----------</div>
       <SignIn
-        // pin={'23aa'}
+        pin={'111111'}
         ref={ref}
         keyboard={true}
         design={design}
         uiType={uiType}
         defaultChainId={CHAIN_ID}
         // extraElement={}
-        extraElementList={[
-          <div key="1" style={{ height: 300, background: 'red' }}></div>,
-          <div key="2" className="switch-old-portkey-wrapper">
-            Account registered in old Portkey? Log in&nbsp;
-            <span
-              className="switch-btn"
-              onClick={async () => {
-                const isOK = await switchToV1Modal();
-                console.log(isOK, 'isOK==');
-              }}>
-              here
-            </span>
-          </div>,
-        ]}
+        // extraElementList={[
+        //   <div key="1" style={{ height: 300, background: 'red' }}></div>,
+        //   <div key="2" className="switch-old-portkey-wrapper">
+        //     Account registered in old Portkey? Log in&nbsp;
+        //     <span
+        //       className="switch-btn"
+        //       onClick={async () => {
+        //         const isOK = await switchToV1Modal();
+        //         console.log(isOK, 'isOK==');
+        //       }}>
+        //       here
+        //     </span>
+        //   </div>,
+        // ]}
         getContainer="#wrapper"
-        isShowScan
+        isShowScan={true}
         className="sign-in-wrapper"
         termsOfService={'https://portkey.finance/terms-of-service'}
         privacyPolicy={'https://portkey.finance/privacy-policy'}
@@ -226,7 +222,7 @@ export default function Sign() {
           const wallet = await did.load(PIN);
           console.log('wallet:', wallet);
           // Mock chainId: 'AELF'
-          const result = await did.logout({ chainId: CHAIN_ID }, { onMethod: 'transactionHash' });
+          const result = await did.logout({ chainId: CHAIN_ID });
           console.log(result, 'logout====');
         }}>
         logout

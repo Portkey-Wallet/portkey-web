@@ -39,22 +39,3 @@ export const getVerifierStatusMap = (
   });
   return verifierStatusMap;
 };
-
-// export function handleUserGuardiansList(
-//   holderInfo: GuardiansInfo,
-//   verifierServers: VerifierItem[] | { [key: string]: VerifierItem },
-// ) {
-//   const { guardianList } = holderInfo;
-//   return guardianList.guardians.map((item) => {
-//     return {
-//       ...item,
-//       guardianAccount: item.guardianIdentifier || item.identifierHash,
-//       guardianType: LoginType[item.type as any],
-//       key: `${item.guardianIdentifier}&${item.verifierId}`,
-//       verifier: Array.isArray(verifierServers)
-//         ? verifierServers.find((verifierItem) => verifierItem.id === item.verifierId)
-//         : verifierServers[item.verifierId],
-//       isLoginAccount: item.isLoginGuardian,
-//     };
-//   });
-// }

@@ -14,6 +14,9 @@ export interface AssetTabsProps extends NFTTabProps {
   tokenList?: TokenItemShowType[];
   isGetNFTCollectionPending?: boolean;
   onChange?: (activeKey: BalanceTab) => void;
+  onDataInit?: () => void;
+  onDataInitEnd?: () => void;
+
   onViewActivityItem?: (item: ActivityItemType) => void;
   onViewTokenItem?: (v: TokenItemShowType) => void;
 }
@@ -26,6 +29,8 @@ export default function AssetTabs({
   onChange,
   loadMoreNFT,
   onNFTView,
+  onDataInit,
+  onDataInitEnd,
   onViewActivityItem,
   onViewTokenItem,
 }: AssetTabsProps) {
@@ -64,7 +69,9 @@ export default function AssetTabs({
         {
           label: 'Activity',
           key: BalanceTab.ACTIVITY,
-          children: <Activity onViewActivityItem={onViewActivityItem} />,
+          children: (
+            <Activity onDataInit={onDataInit} onDataInitEnd={onDataInitEnd} onViewActivityItem={onViewActivityItem} />
+          ),
         },
       ]}
     />

@@ -9,6 +9,8 @@ export default function AccountShow({ guardian }: { guardian: UserGuardianItem |
       return <div className="social-guardian-account account-text-one-row">{guardian?.guardianIdentifier}</div>;
     case AccountTypeEnum.Google:
     case AccountTypeEnum.Apple:
+    case AccountTypeEnum.Facebook:
+    case AccountTypeEnum.Twitter:
     case AccountTypeEnum.Telegram:
       return (
         <div className="social-guardian-account account-text-two-row portkey-ui-flex-column">

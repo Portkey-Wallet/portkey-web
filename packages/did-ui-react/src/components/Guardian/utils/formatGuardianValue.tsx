@@ -1,5 +1,5 @@
 import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey/services';
-import { GuardianApprovedItem } from './type';
+import { GuardianApprovedItem } from '../../../types';
 
 export const formatGuardianValue = (approvalInfo?: GuardiansApproved[]) => {
   const guardiansApproved: GuardianApprovedItem[] =

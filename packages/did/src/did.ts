@@ -117,4 +117,7 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   checkManagerIsExist(params: CheckManagerParams): Promise<boolean> {
     return this.didWallet.checkManagerIsExist(params);
   }
+  public async checkStorageAesStrIsExist(keyName?: string): Promise<boolean> {
+    return this.didWallet.checkStorageAesStrIsExist(keyName);
+  }
 }

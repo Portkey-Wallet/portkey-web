@@ -1,4 +1,5 @@
-import { stringifyUrl } from 'query-string';
+import queryString from 'query-string';
+const { stringifyUrl } = queryString;
 export const DID_APP_SCHEMA = 'portkey.finance';
 export const V1_DID_APP_SCHEMA = 'portkey.did';
 

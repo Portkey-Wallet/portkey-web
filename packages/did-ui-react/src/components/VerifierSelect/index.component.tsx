@@ -5,7 +5,7 @@ import CommonSelect from '../CommonSelect';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
 import { useEffectOnce, useUpdateEffect } from 'react-use';
-import { ISocialLoginConfig, OnErrorFunc } from '../../types';
+import { ISocialLogin, OnErrorFunc } from '../../types';
 import { ChainId, ChainType } from '@portkey/types';
 import { AccountType, OperationTypeEnum } from '@portkey/services';
 import { VerifierItem } from '@portkey/did';
@@ -17,8 +17,10 @@ import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { usePortkey } from '../context';
-import './index.less';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
+import { getSocialConfig } from '../utils/social.utils';
+import './index.less';
 
 type SelectVerifierStorageInfo = {
   verifier: VerifierItem;
@@ -26,9 +28,9 @@ type SelectVerifierStorageInfo = {
 const SelectVerifierInfoStr = `${portkeyDidUIPrefix}SelectVerifierInfo`;
 export interface VerifierSelectConfirmResult {
   verifier: VerifierItem;
-  // accountType === 'Email' 'Phone' 'Telegram'  is required;
+  // accountType === social login   is required;
   verifierSessionId?: string;
-  // accountType === 'Google' 'Apple' 'Telegram' is required;
+  // accountType === social login  is required;
   verificationDoc?: string;
   signature?: string;
   //
@@ -78,7 +80,6 @@ export default function VerifierSelect({
 
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>(defaultVerifierList);
 
-  const socialLogin = useMemo<ISocialLoginConfig | undefined>(() => ConfigProvider.getSocialLoginConfig(), []);
   const [{ sandboxId, networkType }] = usePortkey();
 
   const getVerifierInfo = useCallback(async () => {
@@ -161,6 +162,7 @@ export default function VerifierSelect({
             verifierId: selectItem.id,
             chainId,
             operationType,
+            operationDetails: getOperationDetails(operationType),
           },
         },
         reCaptchaHandler,
@@ -188,31 +190,13 @@ export default function VerifierSelect({
   const onConfirmAuth = useCallback(async () => {
     try {
       setLoading(true);
-      let accessToken;
-      let clientId;
-      let redirectURI;
-      let customLoginHandler;
-      switch (accountType) {
-        case 'Apple':
-          accessToken = authToken;
-          clientId = socialLogin?.Apple?.clientId;
-          redirectURI = socialLogin?.Apple?.redirectURI;
-          customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-          break;
-        case 'Telegram':
-          accessToken = authToken;
-          customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-          break;
-        case 'Google':
-          accessToken = authToken;
-          clientId = socialLogin?.Google?.clientId;
-          customLoginHandler = socialLogin?.Google?.customLoginHandler;
-          break;
-        default:
-          throw 'accountType is not supported';
-      }
+      const accessToken = authToken;
+      const _accountType = accountType as ISocialLogin;
+      const { clientId, redirectURI, customLoginHandler } = getSocialConfig(_accountType);
+
       if (!selectItem?.id) throw 'Verifier is not missing';
-      const rst = await verifyToken(accountType, {
+      const operationDetails = getOperationDetails(OperationTypeEnum.register);
+      const rst = await verifyToken(_accountType, {
         accessToken,
         id: guardianIdentifier,
         verifierId: selectItem.id,
@@ -221,6 +205,7 @@ export default function VerifierSelect({
         redirectURI,
         operationType: OperationTypeEnum.register,
         networkType,
+        operationDetails,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);
@@ -240,23 +225,7 @@ export default function VerifierSelect({
     } finally {
       setLoading(false);
     }
-  }, [
-    accountType,
-    authToken,
-    chainId,
-    guardianIdentifier,
-    isErrorTip,
-    networkType,
-    onError,
-    selectItem,
-    socialLogin?.Apple?.clientId,
-    socialLogin?.Apple?.customLoginHandler,
-    socialLogin?.Apple?.redirectURI,
-    socialLogin?.Google?.clientId,
-    socialLogin?.Google?.customLoginHandler,
-    socialLogin?.Telegram?.customLoginHandler,
-    verifyToken,
-  ]);
+  }, [accountType, authToken, chainId, guardianIdentifier, isErrorTip, networkType, onError, selectItem, verifyToken]);
 
   const checkInit = useCallback(async () => {
     const infoStorage = await ConfigProvider.config.storageMethod?.getItem(SelectVerifierInfoStr);
@@ -278,6 +247,8 @@ export default function VerifierSelect({
         case 'Apple':
         case 'Google':
         case 'Telegram':
+        case 'Facebook':
+        case 'Twitter':
           info = {
             verifier: selectItem,
           };

@@ -112,6 +112,13 @@ export type ExtensionInfo = {
 
 export type ChainMethodResult<T> = T & NightElfResult<T> & AElfSDKError;
 
+export interface IAELFContractOptions {
+  /**
+   * Set aelf transaction BestChainHeight, Must be less than 0
+   */
+  refBlockNumberStrategy?: number;
+}
+
 // aelf-bridge returns the result directly NightElf will return the result in the result
 export interface IAElfRPCMethods {
   /**
@@ -120,7 +127,7 @@ export interface IAElfRPCMethods {
    * It is different from the wallet created by Aelf.wallet.getWalletByPrivateKey();
    * There is only one value named address;
    */
-  contractAt(address: string, wallet: AElfWallet): Promise<ChainMethodResult<any>>;
+  contractAt(address: string, wallet: AElfWallet, option?: IAELFContractOptions): Promise<ChainMethodResult<any>>;
   /**
    * Get block information by block hash.
    */

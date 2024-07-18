@@ -11,6 +11,7 @@ import Activity from '../Activity';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { useFaucet } from '../../hooks/useFaucet';
 import SettingHeader from '../SettingHeader';
+import { SHOW_RAMP_CHAIN_ID_LIST, SHOW_RAMP_SYMBOL_LIST } from '../../constants/ramp';
 
 export enum TokenTransferStatus {
   CONFIRMED = 'Confirmed',
@@ -26,6 +27,9 @@ export interface TokenDetailProps {
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
   onSend?: (selectToken: TokenItemShowType, type: TokenType) => void;
+  onDataInit?: () => void;
+  onDataInitEnd?: () => void;
+
   onViewActivityItem?: (item: ActivityItemType & { chainId: ChainId }) => void;
 }
 
@@ -37,13 +41,18 @@ function TokenDetailMain({
   onBuy,
   onSend,
   onReceive,
+  onDataInit,
+  onDataInitEnd,
   onViewActivityItem,
 }: TokenDetailProps) {
   const [{ networkType }] = usePortkey();
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
 
   const isShowBuy = useMemo(
-    () => tokenInfo.symbol === 'ELF' && tokenInfo.chainId === 'AELF' && isShowRamp,
+    () =>
+      SHOW_RAMP_SYMBOL_LIST.includes(tokenInfo.symbol) &&
+      SHOW_RAMP_CHAIN_ID_LIST.includes(tokenInfo.chainId) &&
+      isShowRamp,
     [tokenInfo.chainId, tokenInfo.symbol, isShowRamp],
   );
   const onFaucet = useFaucet(faucet);
@@ -89,6 +98,8 @@ function TokenDetailMain({
         <Activity
           chainId={tokenInfo.chainId}
           symbol={tokenInfo.symbol}
+          onDataInit={onDataInit}
+          onDataInitEnd={onDataInitEnd}
           onViewActivityItem={(v) => onViewActivityItem?.({ ...v, chainId: tokenInfo.chainId })}
         />
       </div>

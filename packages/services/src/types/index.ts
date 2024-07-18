@@ -6,6 +6,8 @@ export enum AccountTypeEnum {
   Google,
   Apple,
   Telegram,
+  Facebook,
+  Twitter,
 }
 
 export const AccountTypeKeyEnum = {
@@ -14,6 +16,8 @@ export const AccountTypeKeyEnum = {
   Google: 'Google',
   Apple: 'Apple',
   Telegram: 'Telegram',
+  Facebook: 'Facebook',
+  Twitter: 'Twitter',
 };
 
 export type AccountType = keyof typeof AccountTypeEnum;
@@ -47,4 +51,6 @@ export * from './assets';
 export * from './token';
 export * from './transaction';
 export * from './activity';
+export * from './allowance';
 export * from './security';
+export * from './common';

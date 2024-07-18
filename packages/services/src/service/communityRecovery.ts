@@ -14,6 +14,9 @@ import {
   RegisterInfo,
   IPhoneCountryCodeResult,
   CheckGoogleRecaptchaParams,
+  TDeletionAccountParams,
+  TCheckDeletionResult,
+  TDeletionEntranceResult,
 } from '../types/communityRecovery';
 import {
   GetRecommendationVerifierParams,
@@ -23,13 +26,16 @@ import {
   SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
-  VerifyGoogleTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
-  VerifyTelegramTokenParams,
+  VerifierSocialTokenParams,
+  VerifyTwitterTokenHeader,
+  TGetTelegramAuthTokenResult,
+  TGetTelegramAuthTokenParams,
 } from '../types/verification';
 import { Search } from './search';
+
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   extends Search<T>
   implements ICommunityRecoveryService
@@ -106,7 +112,9 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     const result = await this._didGraphQL.getHolderInfoByManager(params);
     return result.caHolderManagerInfo;
   }
-
+  /**
+   * deprecated Please use `verification.sendAppleUserExtraInfo`
+   */
   sendAppleUserExtraInfo(params: SendAppleUserExtraInfoParams): Promise<SendAppleUserExtraInfoResult> {
     return this._request.send({
       method: 'POST',
@@ -114,21 +122,28 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
-
+  /**
+   * deprecated Please use `verification.getAppleUserExtraInfo`
+   */
   getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<any> {
     return this._request.send({
       method: 'GET',
       url: `/api/app/userExtraInfo/${params.userId}`,
     });
   }
-
-  verifyGoogleToken(params: VerifyGoogleTokenParams): Promise<VerifyVerificationCodeResult> {
+  /**
+   * deprecated Please use `verification.verifyGoogleToken`
+   */
+  verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyGoogleToken',
       params,
     });
   }
+  /**
+   * deprecated Please use `verification.verifyAppleToken`
+   */
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
@@ -139,17 +154,79 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
-  verifyTelegramToken(params: VerifyTelegramTokenParams): Promise<VerifyVerificationCodeResult> {
+  /**
+   * deprecated Please use `verification.verifyTelegramToken`
+   */
+  verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTelegramToken',
       params,
     });
   }
+  /**
+   * deprecated Please use `verification.verifyTwitterToken`
+   */
+  verifyTwitterToken(
+    params: VerifierSocialTokenParams,
+    headers: VerifyTwitterTokenHeader,
+  ): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTwitterToken',
+      params,
+      headers,
+    });
+  }
+  /**
+   * deprecated Please use `verification.verifyFacebookToken`
+   */
+  verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyFacebookToken',
+      params,
+    });
+  }
+  /**
+   * deprecated Please use `verification.getRecommendationVerifier`
+   */
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/getVerifierServer',
+      params,
+    });
+  }
+  /**
+   * deprecated Please use `verification.getTelegramAuthToken`
+   */
+  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/telegramAuth/token',
+      params,
+    });
+  }
+
+  getShowDeletionEntrance(): Promise<TDeletionEntranceResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/account/revoke/entrance',
+    });
+  }
+
+  checkDeletion(): Promise<TCheckDeletionResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/account/revoke/check',
+    });
+  }
+
+  deletionAccount(params: TDeletionAccountParams): Promise<any> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/revoke/request',
       params,
     });
   }

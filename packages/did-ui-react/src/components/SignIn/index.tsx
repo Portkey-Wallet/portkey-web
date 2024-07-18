@@ -34,11 +34,13 @@ import CommonBaseModal from '../CommonBaseModal';
 import { PORTKEY_ROOT_ID } from '../../constants';
 import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
-import useLoginWallet from '../../hooks/useLoginWallet';
+import { useLoginWallet } from '../../hooks/useLoginWallet';
 import './index.less';
 import { SocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
 import ConfigProvider from '../config-provider';
 import { ILoginConfig } from '../config-provider/types';
+import { getOperationDetails } from '../utils/operation.util';
+import googleAnalytics, { TAllLoginKey } from '../../utils/googleAnalytics';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -101,9 +103,17 @@ const SignIn = forwardRef(
 
     useMemo(() => getDefaultLifeCycleProps(), [getDefaultLifeCycleProps]);
 
+    const onFinishWrap: SignInProps['onFinish'] = useCallback(
+      (didWallet: DIDWalletInfo) => {
+        googleAnalytics.loginEndEvent(didWallet.createType);
+        onFinish?.(didWallet);
+      },
+      [onFinish],
+    );
+
     useEffect(() => {
       onErrorRef.current = onError;
-      onFinishRef.current = onFinish;
+      onFinishRef.current = onFinishWrap;
       onChainIdChangeRef.current = onChainIdChange;
       onLifeCycleChangeRef.current = onLifeCycleChange;
       onSignUpHandlerRef.current = onSignUpHandler;
@@ -282,6 +292,9 @@ const SignIn = forwardRef(
           const verifier = await getRecommendationVerifier(chainId);
           setLoading(false);
           const { accountType, authenticationInfo, identifier } = value;
+          const operationType = OperationTypeEnum.register;
+          const operationDetails = getOperationDetails(operationType);
+
           if (SocialLoginList.includes(accountType)) {
             setLoading(true);
             const result = await verifySocialToken({
@@ -291,10 +304,12 @@ const SignIn = forwardRef(
               verifier,
               chainId,
               networkType,
-              operationType: OperationTypeEnum.register,
+              operationType,
+              operationDetails,
             });
             setLoading(false);
 
+            if (!result?.signature || !result?.verificationDoc) throw 'Verify social login error';
             onStep2OfSignUpFinish(
               {
                 verifier,
@@ -562,6 +577,14 @@ const SignIn = forwardRef(
       [loginConfig?.recommendIndexes],
     );
 
+    const onSocialStart = useCallback((type: TAllLoginKey) => {
+      googleAnalytics.loginStartEvent(type);
+    }, []);
+
+    const onInputConfirmStart = useCallback(() => {
+      onSocialStart('Email');
+    }, [onSocialStart]);
+
     const extra = useMemo(
       () => (extraElement ? [extraElement, ...(extraElementList ?? [])] : extraElementList),
       [extraElement, extraElementList],
@@ -583,6 +606,8 @@ const SignIn = forwardRef(
             onSignUpHandler={onSignUpHandlerRef.current}
             onSignInFinished={onSignInFinished}
             onStepChange={onSignInStepChange}
+            onInputConfirmStart={onInputConfirmStart}
+            onSocialStart={onSocialStart}
             onChainIdChange={onOriginChainIdChange}
             onLoginFinishWithoutPin={onLoginFinishWithoutPin}
             termsOfService={termsOfService}
@@ -636,6 +661,8 @@ const SignIn = forwardRef(
       validateEmail,
       onSignInFinished,
       onSignInStepChange,
+      onInputConfirmStart,
+      onSocialStart,
       onOriginChainIdChange,
       onLoginFinishWithoutPin,
       termsOfService,

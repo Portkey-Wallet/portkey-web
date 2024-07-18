@@ -1,7 +1,7 @@
 import { ChainId } from '@portkey/types';
 import { CustomContractBasic, did } from '..';
 import { getChainInfo } from '../../hooks/useChainInfo';
-import { GuardianApprovedItem } from '../../components/Guardian/utils/type';
+import { GuardianApprovedItem } from '../../types';
 
 export const setTransferLimit = async ({
   params,

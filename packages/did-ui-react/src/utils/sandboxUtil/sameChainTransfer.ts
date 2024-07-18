@@ -1,7 +1,7 @@
 import { ChainId, ChainType } from '@portkey/types';
 import { BaseToken } from '../../components/types/assets';
 import { callCASendMethod } from './callCASendMethod';
-import { GuardianApprovedItem } from '../../components/Guardian/utils/type';
+import { GuardianApprovedItem } from '../../types';
 
 const sameChainTransfer = async ({
   chainId,

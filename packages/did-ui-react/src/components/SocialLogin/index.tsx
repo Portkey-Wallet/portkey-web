@@ -24,6 +24,7 @@ import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constant
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
+import { TAllLoginKey } from '../../utils/googleAnalytics';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -43,7 +44,7 @@ interface SocialLoginProps {
   switchGuardianType?: (type: IWeb2Login) => void;
   switchType?: (type: CreateWalletType) => void;
   onLoginByPortkey?: LoginFinishWithoutPin;
-
+  onSocialStart?: (type: TAllLoginKey) => void;
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
 }
@@ -68,6 +69,7 @@ export default function SocialLogin({
   onError,
   switchGuardianType,
   onLoginByPortkey,
+  onSocialStart,
   switchType,
 }: SocialLoginProps) {
   const { t } = useTranslation();
@@ -91,10 +93,14 @@ export default function SocialLogin({
   const onSocialChange = useCallback(
     async (type: ISocialLogin) => {
       try {
+        onSocialStart?.(type);
+
         setLoading(true);
         const result = await socialLoginHandler(type);
         setLoading(false);
-        onFinishRef.current?.(result);
+        if (result) {
+          onFinishRef.current?.(result);
+        }
       } catch (error) {
         setLoading(false);
         errorTip(
@@ -107,7 +113,7 @@ export default function SocialLogin({
         );
       }
     },
-    [isErrorTip, socialLoginHandler],
+    [isErrorTip, onSocialStart, socialLoginHandler],
   );
 
   const recommendList = useMemo(() => {

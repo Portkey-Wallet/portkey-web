@@ -2,7 +2,7 @@ import LoginCard from '../LoginBase/index.component';
 import ScanCard from '../ScanCard/index.component';
 import SignUpBase from '../SignUpBase/index.component';
 import { useState, useMemo, useRef, useCallback, useEffect } from 'react';
-import type { CreateWalletType, IBaseGetGuardianProps } from '../types';
+import type { CreateWalletType, GuardianInputInfo, IBaseGetGuardianProps } from '../types';
 import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
 import { useUpdateEffect } from 'react-use';
@@ -36,12 +36,13 @@ export default function CryptoDesignBaseCom({
   validatePhone,
   onSignTypeChange,
   onChainIdChange,
+  onInputConfirmStart,
+  onSocialStart,
   onLoginFinishWithoutPin,
 }: CryptoDesignProps) {
   const validateEmailRef = useRef<CryptoDesignProps['validateEmail']>(validateEmail);
   const validatePhoneRef = useRef<CryptoDesignProps['validatePhone']>(validatePhone);
   const onChainIdChangeRef = useRef<CryptoDesignProps['onChainIdChange']>(onChainIdChange);
-  const onSuccessRef = useRef<CryptoDesignProps['onSuccess']>(onSuccess);
   const onErrorRef = useRef<CryptoDesignProps['onError']>(onError);
 
   const _socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
@@ -54,7 +55,6 @@ export default function CryptoDesignBaseCom({
     validatePhoneRef.current = validatePhone;
     onChainIdChangeRef.current = onChainIdChange;
     onErrorRef.current = onError;
-    onSuccessRef.current = onSuccess;
   });
 
   const [_type, setType] = useState<CreateWalletType>(type ?? 'Login');
@@ -76,12 +76,12 @@ export default function CryptoDesignBaseCom({
     () => ({
       defaultChainId,
       onError: onErrorRef.current,
-      onSuccess: onSuccessRef.current,
+      onSuccess,
       customValidateEmail: validateEmailRef.current,
       customValidatePhone: validatePhoneRef.current,
       onChainIdChange: onChainIdChangeRef.current,
     }),
-    [defaultChainId],
+    [defaultChainId, onSuccess],
   );
   const {
     validateEmail: _validateEmail,
@@ -89,6 +89,14 @@ export default function CryptoDesignBaseCom({
     onFinish,
     onSocialFinish,
   } = useSignHandler(handlerParam);
+
+  const onInputFinish = useCallback(
+    (data: GuardianInputInfo) => {
+      onInputConfirmStart?.();
+      onFinish(data);
+    },
+    [onFinish, onInputConfirmStart],
+  );
 
   const extra = useMemo(() => <>{extraElementList?.map((item) => item) ?? null}</>, [extraElementList]);
   const extraFirst = useMemo(() => <>{extraElementList?.[0] ?? null}</>, [extraElementList]);
@@ -110,8 +118,9 @@ export default function CryptoDesignBaseCom({
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
           onBack={() => setType('Login')}
-          onInputFinish={onFinish}
+          onInputFinish={onInputFinish}
           onError={onError}
+          onSocialStart={onSocialStart}
           onSocialSignFinish={onSocialFinish}
         />
       )}
@@ -123,6 +132,7 @@ export default function CryptoDesignBaseCom({
           chainType={chainType}
           networkType={networkType}
           onBack={() => setType('Login')}
+          onShowQrCode={() => onSocialStart?.('Scan')}
           onFinish={onLoginFinishWithoutPin}
           isErrorTip={isErrorTip}
           onError={onError}
@@ -143,7 +153,8 @@ export default function CryptoDesignBaseCom({
           loginMethodsOrder={loginMethodsOrder}
           recommendIndexes={recommendIndexes}
           onLoginByPortkey={onLoginFinishWithoutPin}
-          onInputFinish={onFinish}
+          onInputFinish={onInputFinish}
+          onSocialStart={onSocialStart}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
           onStep={LoginCardOnStep}

@@ -1,5 +1,4 @@
 {
-    "cSpell.enableFiletypes": [
-        "typescriptreact"
-    ]
+  "cSpell.enableFiletypes": ["typescriptreact"],
+  "cSpell.words": ["clsx", "OPENLOGIN"]
 }
