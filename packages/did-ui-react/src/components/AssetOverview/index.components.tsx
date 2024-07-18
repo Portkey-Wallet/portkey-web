@@ -127,7 +127,8 @@ export function AssetOverviewContent({
     setTokenList(tokenListInfo.list);
 
     const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
-      return pre.plus(cur.balanceInUsd ?? ZERO);
+      // Dealing with the problem of balanceInUsd === ''
+      return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
     }, ZERO);
 
     setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
