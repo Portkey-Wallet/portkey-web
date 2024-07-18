@@ -1,30 +1,22 @@
 'use client';
+import './index.css';
+
 import {
   ConfigProvider,
-  CryptoDesign,
-  SetPinAndAddManager,
-  VerifierSelect,
-  CodeVerify,
-  GuardianApproval,
-  PortkeyLoading,
-  SocialDesign,
   SignIn,
   Web2Design,
   ISignIn,
   CommonModal,
-  PortkeyStyleProvider,
   PortkeyNumberKeyboard,
   Unlock,
-  SetPinMobileBase,
-  PortkeyBaseNumberKeyboard,
+  ThrottleButton,
 } from '@portkey/did-ui-react';
 import { useRef, useState } from 'react';
-import { OperationTypeEnum } from '@portkey/services';
 import { Button } from 'antd';
-
-ConfigProvider.setGlobalConfig({
-  graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
-});
+import { OfficialWebsite } from '@portkey/did-ui-react/src/constants/guardian';
+// ConfigProvider.setGlobalConfig({
+//   graphQLUrl: '/AElfIndexer_DApp/PortKeyIndexerCASchema/graphql',
+// });
 
 function Example() {
   const [isLoading, setLoading] = useState<any>();
@@ -84,7 +76,7 @@ function Example() {
           console.log(error, 'onError====error');
         }}
         onCancel={() => {
-          ref?.current.setOpen(false);
+          ref.current?.setOpen(false);
         }}
         onCreatePending={info => {
           console.log(info, 'onCreatePending====info');
@@ -95,15 +87,21 @@ function Example() {
         closable={false}
         open={isLoading}
         className="confirm-return-modal"
-        title={'Leave this page?'}
+        title={<div className="security-notice">Security Notice</div>}
         width={320}
         getContainer={'#set-pin-wrapper'}>
-        <p className="modal-content">Are you sure you want to leave this page? All changes will not be saved.</p>
-        <div className="btn-wrapper">
-          {/* <Button onClick={() => setReturnOpen(false)}>No</Button>
-          <Button type="primary" onClick={() => onCancel?.('register')}>
-            Yes
-          </Button> */}
+        <p className="modal-content">
+          You&rsquo;ll be directed to <span className="official-website">{OfficialWebsite}</span> for verification. If
+          the site you land on doesn&rsquo;t match this link,please exercise caution and refrain from taking any
+          actions.
+        </p>
+        <div className="btn-warning-wrapper">
+          <ThrottleButton className="btn-cancel" onClick={() => setLoading(false)}>
+            Cancel
+          </ThrottleButton>
+          <ThrottleButton className="btn-confirm" type="primary">
+            Proceed
+          </ThrottleButton>
         </div>
       </CommonModal>
       <Button

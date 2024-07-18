@@ -1,4 +1,4 @@
-import { HubConnection, HubConnectionBuilder } from '@microsoft/signalr';
+import { HubConnection, HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr';
 import { randomId } from '@portkey/utils';
 import { IListen, IMessageMap, ISignalr, ISignalrOptions, Receive, SocketError } from './types';
 
@@ -17,7 +17,7 @@ export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {
 
   public doOpen = async ({ url, clientId }: { url: string; clientId: string }) => {
     const signalr = new HubConnectionBuilder()
-      .withUrl(url, { withCredentials: false })
+      .withUrl(url, { withCredentials: false, skipNegotiation: true, transport: HttpTransportType.WebSockets })
       .withAutomaticReconnect()
       .build();
     this._listener(signalr);
@@ -27,6 +27,10 @@ export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {
     this.connectionId = signalr.connectionId ?? '';
     this.signalr = signalr;
     this.url = url;
+
+    this.onReconnected(async () => {
+      await signalr.invoke('Connect', clientId);
+    });
     return signalr;
   };
 
@@ -48,6 +52,10 @@ export class BaseSignalr<ListenList = any> implements ISignalr<ListenList> {
 
   public on: HubConnection['on'] = (...args) => {
     return this._checkSignalr().on(...args);
+  };
+
+  public onReconnected: HubConnection['onreconnected'] = (...args) => {
+    return this._checkSignalr().onreconnected(...args);
   };
 
   public invoke: HubConnection['invoke'] = (...args) => {

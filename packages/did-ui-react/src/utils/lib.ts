@@ -1,3 +1,4 @@
+import { forgeWeb } from '@portkey/utils';
 import EventEmitter from 'events';
 import * as uuid from 'uuid';
 
@@ -63,3 +64,12 @@ export function isEmpty(o: any) {
   if (!o) return true;
   return isEmptyObject(o);
 }
+
+export const decodeMessageByRsaKey = async (rsaKey: string, encodeData: string) => {
+  if (!rsaKey) return;
+  const cryptoManager = new forgeWeb.ForgeCryptoManager();
+  const decodeResult = await cryptoManager.decryptLong(rsaKey, encodeData);
+  console.log('=== decodeMessageByRsaKey decodeResult 1', decodeResult);
+
+  return decodeResult;
+};

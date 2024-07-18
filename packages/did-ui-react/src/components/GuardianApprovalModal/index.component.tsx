@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { forwardRef, memo, useCallback, useEffect, useState } from 'react';
 import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
@@ -8,7 +8,6 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { UserGuardianStatus } from '../../types';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
-import { getOperationDetails } from '../utils/operation.util';
 
 const GuardianApprovalModalMain = forwardRef(
   (
@@ -26,6 +25,8 @@ const GuardianApprovalModalMain = forwardRef(
       onApprovalSuccess,
       onApprovalError,
       operationType,
+      operationDetails,
+      officialWebsiteShow,
     }: GuardianApprovalModalProps,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
@@ -61,13 +62,10 @@ const GuardianApprovalModalMain = forwardRef(
       getData();
     }, [getData]);
 
-    const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
-
     return (
       <CommonBaseModal className={clsx('portkey-ui-modal-approval', className)} open={open} onClose={onClose}>
         <GuardianApproval
           header={<BackHeader onBack={onBack} />}
-          operationDetails={operationDetails}
           originChainId={originChainId}
           targetChainId={targetChainId}
           guardianList={guardianList}
@@ -78,6 +76,8 @@ const GuardianApprovalModalMain = forwardRef(
           onError={onApprovalError}
           networkType={networkType}
           operationType={operationType}
+          operationDetails={operationDetails}
+          officialWebsiteShow={officialWebsiteShow}
         />
       </CommonBaseModal>
     );

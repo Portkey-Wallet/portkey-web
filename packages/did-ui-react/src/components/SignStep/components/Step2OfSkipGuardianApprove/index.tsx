@@ -1,5 +1,5 @@
 import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
-import { memo, useMemo, useRef } from 'react';
+import { memo, useRef } from 'react';
 import BackHeader from '../../../BackHeader';
 import GuardianApproval, { IGuardianApprovalInstance } from '../../../GuardianApproval/index.component';
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../../../types';
@@ -39,14 +39,12 @@ function Step2OfSkipGuardianApprove({
     }
   });
 
-  const operationDetails = useMemo(() => getOperationDetails(OperationTypeEnum.communityRecovery), []);
-
   return (
     <div className="step-page-wrapper step2-sign-in-wrapper">
       <GuardianApproval
         ref={ref}
-        operationDetails={operationDetails}
         operationType={OperationTypeEnum.communityRecovery}
+        operationDetails={getOperationDetails(OperationTypeEnum.communityRecovery)}
         originChainId={guardianIdentifierInfo.chainId}
         header={<BackHeader onBack={onCancel} />}
         guardianList={guardianList}

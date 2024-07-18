@@ -1,6 +1,5 @@
 import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey/services';
-import { UserGuardianStatus } from '../../../types';
-import { GuardianApprovedItem } from './type';
+import { GuardianApprovedItem, UserGuardianStatus } from '../../../types';
 import { formatGuardianValue } from './formatGuardianValue';
 
 export const formatSetUnsetLoginGuardianValue = ({

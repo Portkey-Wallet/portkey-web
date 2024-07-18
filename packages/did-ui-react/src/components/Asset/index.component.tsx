@@ -7,7 +7,7 @@ import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
-import { IAssetItemType, ITransferLimitItem, IUserTokenItem } from '@portkey/services';
+import { IAssetItemType, ITransferLimitItem, IUserTokenItem, AllowanceItem } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
@@ -25,6 +25,7 @@ import TransferSettings from '../TransferSettings';
 import TransferSettingsEdit from '../TransferSettingsEdit';
 import Guardian from '../Guardian';
 import MenuListMain from '../MenuList/index.components';
+import TokenAllowanceDetail from '../TokenAllowanceDetail';
 import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
@@ -37,24 +38,10 @@ import { mixRampShow } from '../Ramp/utils';
 import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
+import TokenAllowance from '../TokenAllowance';
+import useGAReport from '../../hooks/useGAReport';
 
-export enum AssetStep {
-  overview = 'overview',
-  receive = 'receive',
-  ramp = 'ramp',
-  rampPreview = 'rampPreview',
-  send = 'send',
-  transactionDetail = 'transactionDetail',
-  tokenDetail = 'tokenDetail',
-  NFTDetail = 'NFTDetail',
-  my = 'my',
-  guardians = 'guardians',
-  walletSecurity = 'walletSecurity',
-  paymentSecurity = 'paymentSecurity',
-  transferSettings = 'transferSettings',
-  transferSettingsEdit = 'transferSettingsEdit',
-  deleteAccount = 'deleteAccount',
-}
+import { AssetStep } from '../../constants/assets';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -92,11 +79,13 @@ function AssetMain({
   const [{ caInfo, initialized, originChainId, caHash, managementAccount }, { dispatch }] = usePortkeyAsset();
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
+  const [, setPreStep] = useState<AssetStep>(AssetStep.overview);
   const preStepRef = useRef<AssetStep>(AssetStep.overview);
 
   const [isMixShowRamp, setIsMixShowRamp] = useState<boolean>(isShowRamp);
   const [isMixShowBuy, setIsMixShowBuy] = useState<boolean>(isShowRampBuy);
   const [isMixShowSell, setIsMixShowSell] = useState<boolean>(isShowRampSell);
+  const [originalAllowanceItem, setOriginalAllowanceItem] = useState<AllowanceItem | undefined>();
   const getRampEntry = useCallback(async () => {
     try {
       const { isRampShow, isBuyShow, isSellShow } = await mixRampShow({
@@ -114,10 +103,6 @@ function AssetMain({
     }
   }, [isShowRamp, isShowRampBuy, isShowRampSell, networkType]);
 
-  useUpdateEffect(() => {
-    onLifeCycleChange?.(assetStep || AssetStep.overview);
-  }, [assetStep]);
-
   const getShowDeletion = useIsShowDeletion();
 
   const maxNftNum = useNFTMaxCount();
@@ -130,6 +115,8 @@ function AssetMain({
     }));
   }, [caInfo]);
 
+  const { startReport, endReport } = useGAReport();
+
   const [allToken, setAllToken] = useState<IUserTokenItem[]>();
   const [accelerateChainId, setAccelerateChainId] = useState<ChainId>(originChainId);
   const getAllTokenList = useCallback(async () => {
@@ -141,7 +128,14 @@ function AssetMain({
     });
     if (!result?.items) return;
     setAllToken(result.items);
-  }, [caAddressInfos]);
+    endReport('All-TokenList');
+  }, [caAddressInfos, endReport]);
+
+  useEffect(() => {
+    startReport('Home-NFTsList');
+    startReport('Home-TokenList');
+    startReport('All-TokenList');
+  }, [startReport]);
 
   const getAssetInfo = useCallback(() => {
     if (initialized && caAddressInfos) {
@@ -150,30 +144,35 @@ function AssetMain({
         .setTokenList({
           caAddressInfos,
         })
-        .then(dispatch);
+        .then((res) => {
+          dispatch(res);
+          endReport('Home-TokenList');
+        });
 
       basicAssetViewAsync
         .setNFTCollections({
           caAddressInfos,
           maxNFTCount: maxNftNum,
         })
-        .then(dispatch);
+        .then((res) => {
+          dispatch(res);
+          endReport('Home-NFTsList');
+        });
 
       getAllTokenList();
       getRampEntry();
     }
-  }, [caAddressInfos, dispatch, getAllTokenList, getRampEntry, initialized, maxNftNum]);
+  }, [caAddressInfos, dispatch, endReport, getAllTokenList, getRampEntry, initialized, maxNftNum]);
 
   const [showDeletion, setShowDeletion] = useState<boolean>();
 
   useEffect(() => {
-    console.log(initialized, 'initialized==');
     if (initialized) {
       getShowDeletion().then(setShowDeletion);
     }
   }, [getShowDeletion, initialized]);
 
-  useDebounce(getAssetInfo, 300);
+  useDebounce(getAssetInfo, 500);
 
   const [selectToken, setSelectToken] = useState<BaseToken>();
 
@@ -191,6 +190,91 @@ function AssetMain({
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);
   }, []);
+
+  // const saveLiftCycleInfo = useCallback(async () => {
+  //   console.log('====== saveLiftCycleInfo', assetStep);
+  //   let storageValue = {
+  //     assetStep: assetStep || AssetStep.overview,
+  //     preStep: preStep || AssetStep.overview,
+  //     accelerateChainId,
+  //   };
+  //   switch (assetStep) {
+  //     case AssetStep.send:
+  //       storageValue = Object.assign(storageValue, {
+  //         selectToken,
+  //         sendToken,
+  //         sendExtraConfig,
+  //         viewPaymentSecurity,
+  //       });
+  //       break;
+
+  //     case AssetStep.transferSettingsEdit:
+  //       storageValue = Object.assign(storageValue, {
+  //         viewPaymentSecurity,
+  //       });
+  //       break;
+  //     case AssetStep.ramp:
+  //       storageValue = Object.assign(storageValue, {
+  //         selectToken,
+  //         rampExtraConfig,
+  //         viewPaymentSecurity,
+  //       });
+
+  //       break;
+
+  //     default:
+  //       storageValue = Object.assign(storageValue, {
+  //         rampExtraConfig: rampState,
+  //         viewPaymentSecurity: InitTransferLimitData,
+  //       });
+  //       break;
+  //   }
+
+  //   await did.config.storageMethod.setItem(PortkeyAssetLiftCycle, JSON.stringify(storageValue));
+  // }, [
+  //   accelerateChainId,
+  //   assetStep,
+  //   preStep,
+  //   rampExtraConfig,
+  //   rampState,
+  //   selectToken,
+  //   sendExtraConfig,
+  //   sendToken,
+  //   viewPaymentSecurity,
+  // ]);
+
+  // const setPageState = useCallback((pageState: TAssetPageState) => {
+  //   setAssetStep(pageState.assetStep);
+  //   setPreStep(pageState?.preStep || AssetStep.overview);
+  //   preStepRef.current = pageState?.preStep || AssetStep.overview;
+  //   pageState?.accelerateChainId && setAccelerateChainId(pageState.accelerateChainId);
+  //   pageState?.selectToken && setSelectToken(pageState.selectToken);
+  //   pageState?.sendToken && setSendToken(pageState.sendToken);
+  //   pageState?.sendExtraConfig && setSendExtraConfig(pageState.sendExtraConfig);
+  //   pageState?.rampExtraConfig && setRampExtraConfig(pageState.rampExtraConfig);
+  //   pageState?.viewPaymentSecurity && setViewPaymentSecurity(pageState.viewPaymentSecurity);
+  // }, []);
+
+  // const restorePageState = useCallback(async () => {
+  //   // get data from localStorage, for restore page form telegram auth
+  //   const storageValue = await did.config.storageMethod.getItem(PortkeyAssetLiftCycle);
+  //   if (storageValue && typeof storageValue === 'string') {
+  //     const storageValueParsed = JSON.parse(storageValue);
+  //     setPageState(storageValueParsed);
+  //   }
+  // }, [setPageState]);
+
+  // useEffect(() => {
+  //   if (initialized) {
+  //     restorePageState();
+  //   }
+  // }, [initialized, restorePageState]);
+
+  useUpdateEffect(() => {
+    onLifeCycleChange?.(assetStep || AssetStep.overview);
+
+    // saveLiftCycleInfo();
+  }, [assetStep]);
 
   const onReceive = useCallback(async (v: any) => {
     setSelectToken({
@@ -234,6 +318,7 @@ function AssetMain({
 
   const WalletSecurityMenuList = useWalletSecurityMenuList({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
+    onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
   });
 
   const getLimitFromContract = useCallback(
@@ -308,13 +393,16 @@ function AssetMain({
               onBack={onOverviewBack}
               onReceive={onReceive}
               onBuy={onBuy}
+              onDataInit={() => startReport('Home-Activity')}
+              onDataInitEnd={() => endReport('Home-Activity')}
               onSend={(v) => {
                 preStepRef.current = AssetStep.overview;
-
+                setPreStep(AssetStep.overview);
                 onSend(v);
               }}
               onViewActivityItem={(v) => {
                 preStepRef.current = AssetStep.overview;
+                setPreStep(AssetStep.overview);
                 onViewActivityItem(v);
               }}
               onViewTokenItem={(v) => {
@@ -428,6 +516,8 @@ function AssetMain({
               faucet={faucet}
               isShowRamp={isMixShowRamp}
               tokenInfo={tokenDetail}
+              onDataInit={() => startReport('Token-Activity')}
+              onDataInitEnd={() => endReport('Token-Activity')}
               onBack={() => {
                 setAssetStep(AssetStep.overview);
               }}
@@ -448,10 +538,12 @@ function AssetMain({
                   },
                 };
                 preStepRef.current = AssetStep.tokenDetail;
+                setPreStep(AssetStep.tokenDetail);
                 onSend(info);
               }}
               onViewActivityItem={(v) => {
                 preStepRef.current = AssetStep.tokenDetail;
+                setPreStep(AssetStep.tokenDetail);
                 onViewActivityItem(v);
               }}
             />
@@ -469,6 +561,7 @@ function AssetMain({
                   nftInfo: nft,
                 };
                 preStepRef.current = AssetStep.NFTDetail;
+                setPreStep(AssetStep.NFTDetail);
                 onSend(info);
               }}
             />
@@ -529,6 +622,30 @@ function AssetMain({
                 const res = await getLimitFromContract(data);
                 setViewPaymentSecurity({ ...data, ...res });
                 setAssetStep(AssetStep.transferSettings);
+              }}
+            />
+          )}
+
+          {assetStep === AssetStep.tokenAllowanceDetail && originalAllowanceItem && (
+            <TokenAllowanceDetail
+              chainId={originalAllowanceItem.chainId}
+              contractAddress={originalAllowanceItem.contractAddress}
+              url={originalAllowanceItem.url}
+              icon={originalAllowanceItem.icon}
+              name={originalAllowanceItem.name}
+              symbolApproveList={originalAllowanceItem.symbolApproveList}
+              onBack={() => setAssetStep(AssetStep.tokenAllowance)}
+            />
+          )}
+
+          {assetStep === AssetStep.tokenAllowance && (
+            <TokenAllowance
+              onClickItem={(item) => {
+                setOriginalAllowanceItem(item);
+                setAssetStep(AssetStep.tokenAllowanceDetail);
+              }}
+              onBack={() => {
+                setAssetStep(AssetStep.walletSecurity);
               }}
             />
           )}

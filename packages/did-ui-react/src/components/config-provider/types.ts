@@ -1,5 +1,5 @@
 import { IConfig } from '@portkey/types';
-import { ISocialLoginConfig, TSupportAccountType } from '../../types';
+import { ISocialLoginConfig, TCustomNetworkType, TSupportAccountType } from '../../types';
 import { BaseReCaptcha } from '../types';
 
 export interface ConfigProviderProps {
@@ -10,8 +10,6 @@ export interface ILoginConfig {
   loginMethodsOrder?: TSupportAccountType[];
   recommendIndexes?: number[];
 }
-
-export type TCustomNetworkType = 'Offline' | 'onLine';
 
 export interface GlobalConfigProps extends IConfig {
   socialLogin?: ISocialLoginConfig;

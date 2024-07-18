@@ -5,7 +5,7 @@ import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
-import { AddressCheckError } from '../../types';
+import { AddressCheckError, GuardianApprovedItem } from '../../types';
 import { ChainId, SeedTypeEnum } from '@portkey/types';
 import ToAccount from './components/ToAccount';
 import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
@@ -34,8 +34,8 @@ import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
 import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
-import { GuardianApprovedItem } from '../Guardian/utils/type';
 import ThrottleButton from '../ThrottleButton';
+import { getOperationDetails } from '../utils/operation.util';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -217,6 +217,104 @@ function SendContent({
     [retryCrossChain],
   );
 
+  const btnOutOfFocus = useCallback(() => {
+    // fixed - button focus style when mobile
+    if (typeof document !== 'undefined') document.body.focus();
+  }, []);
+
+  const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
+  const { onApprovalSuccess, sendTransfer } = useMemo(() => {
+    const onApprovalSuccess = async (approveList: GuardianApprovedItem[]) => {
+      try {
+        oneTimeApprovalList.current = approveList;
+        if (Array.isArray(approveList) && approveList.length > 0) {
+          setApprovalVisible(false);
+          if (stage === Stage.Amount) {
+            setStage(Stage.Preview);
+          } else if (stage === Stage.Preview) {
+            await sendTransfer();
+          }
+        } else {
+          throw Error('approve failed, please try again');
+        }
+      } catch (error) {
+        throw Error('approve failed, please try again');
+      }
+    };
+
+    const sendTransfer = async () => {
+      try {
+        if (!managementAccount?.privateKey || !caHash) return;
+
+        setLoading(true);
+
+        if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
+          await crossChainTransfer({
+            sandboxId,
+            chainType,
+            privateKey: managementAccount?.privateKey,
+            managerAddress: managementAccount?.address,
+            tokenInfo,
+            caHash: caHash || '',
+            amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
+            toAddress: toAccount.address,
+            crossChainFee: defaultFee.crossChain,
+            guardiansApproved: oneTimeApprovalList.current,
+          });
+        } else {
+          console.log('sameChainTransfers==sendHandler');
+          await sameChainTransfer({
+            sandboxId,
+            chainId: tokenInfo.chainId,
+            chainType,
+            privateKey: managementAccount?.privateKey,
+            tokenInfo,
+            caHash: caHash || '',
+            amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
+            toAddress: toAccount.address,
+            guardiansApproved: oneTimeApprovalList.current,
+          });
+        }
+        singleMessage.success('success');
+        onSuccess?.();
+      } catch (error: any) {
+        console.log('sendHandler==error', error);
+        if (!error?.type) return singleMessage.error(handleErrorMessage(error));
+        if (error.type === 'managerTransfer') {
+          return singleMessage.error(handleErrorMessage(error));
+        } else if (error.type === 'crossChainTransfer') {
+          console.log('addFailedActivity', error);
+
+          showErrorModal(error.data);
+          singleMessage.error(handleErrorMessage(error));
+        } else {
+          singleMessage.error(handleErrorMessage(error));
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    return { onApprovalSuccess, sendTransfer };
+  }, [
+    amount,
+    caHash,
+    chainType,
+    defaultFee.crossChain,
+    managementAccount?.address,
+    managementAccount?.privateKey,
+    onSuccess,
+    sandboxId,
+    showErrorModal,
+    stage,
+    toAccount.address,
+    tokenInfo,
+  ]);
+
+  const handleOneTimeApproval = useCallback(async () => {
+    setApprovalVisible(true);
+  }, []);
+
   const handleCheckTransferLimit = useCallback(async () => {
     const chainInfo = await getChain(tokenInfo.chainId);
     const privateKey = managementAccount?.privateKey;
@@ -244,9 +342,7 @@ function SendContent({
       chainType,
       tokenContractAddress: tokenInfo?.address || '',
       ownerCaAddress: caInfo?.[tokenInfo.chainId]?.caAddress || '',
-      onOneTimeApproval: () => {
-        setApprovalVisible(true);
-      },
+      onOneTimeApproval: handleOneTimeApproval,
       onModifyTransferLimit: onModifyLimit,
     });
 
@@ -257,6 +353,7 @@ function SendContent({
     caHash,
     caInfo,
     chainType,
+    handleOneTimeApproval,
     managementAccount?.privateKey,
     onModifyLimit,
     stage,
@@ -265,75 +362,6 @@ function SendContent({
     tokenInfo.chainId,
     tokenInfo.decimals,
     tokenInfo.symbol,
-  ]);
-
-  const sendTransfer = useCallback(async () => {
-    try {
-      if (!managementAccount?.privateKey || !caHash) return;
-
-      setLoading(true);
-
-      if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
-        await crossChainTransfer({
-          sandboxId,
-          chainType,
-          privateKey: managementAccount?.privateKey,
-          managerAddress: managementAccount?.address,
-          tokenInfo,
-          caHash: caHash || '',
-          amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
-          toAddress: toAccount.address,
-          crossChainFee: defaultFee.crossChain,
-          guardiansApproved: oneTimeApprovalList.current,
-        });
-      } else {
-        console.log('sameChainTransfers==sendHandler');
-        await sameChainTransfer({
-          sandboxId,
-          chainId: tokenInfo.chainId,
-          chainType,
-          privateKey: managementAccount?.privateKey,
-          tokenInfo,
-          caHash: caHash || '',
-          amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
-          toAddress: toAccount.address,
-          guardiansApproved: oneTimeApprovalList.current,
-        });
-      }
-      singleMessage.success('success');
-      onSuccess?.();
-    } catch (error: any) {
-      console.log('sendHandler==error', error);
-      if (!error?.type) return singleMessage.error(handleErrorMessage(error));
-      if (error.type === 'managerTransfer') {
-        return singleMessage.error(handleErrorMessage(error));
-      } else if (error.type === 'crossChainTransfer') {
-        // dispatch(addFailedActivity(error.data));
-        // TODO
-        console.log('addFailedActivity', error);
-
-        showErrorModal(error.data);
-        singleMessage.error(handleErrorMessage(error));
-
-        // return;
-      } else {
-        singleMessage.error(handleErrorMessage(error));
-      }
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    amount,
-    caHash,
-    chainType,
-    defaultFee.crossChain,
-    managementAccount?.address,
-    managementAccount?.privateKey,
-    onSuccess,
-    sandboxId,
-    showErrorModal,
-    toAccount.address,
-    tokenInfo,
   ]);
 
   const sendHandler = useCallback(async () => {
@@ -354,35 +382,7 @@ function SendContent({
     await sendTransfer();
   }, [caHash, handleCheckTransferLimit, managementAccount?.privateKey, sendTransfer, tokenInfo]);
 
-  const btnOutOfFocus = useCallback(() => {
-    // fixed - button focus style when mobile
-    if (typeof document !== 'undefined') document.body.focus();
-  }, []);
-
   const checkManagerSyncState = useCheckManagerSyncState();
-
-  const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
-  const onApprovalSuccess = useCallback(
-    async (approveList: GuardianApprovedItem[]) => {
-      try {
-        oneTimeApprovalList.current = approveList;
-        if (Array.isArray(approveList) && approveList.length > 0) {
-          setApprovalVisible(false);
-          if (stage === Stage.Amount) {
-            setStage(Stage.Preview);
-          } else if (stage === Stage.Preview) {
-            await sendTransfer();
-          }
-        } else {
-          throw Error('approve failed, please try again');
-        }
-      } catch (error) {
-        throw Error('approve failed, please try again');
-      }
-    },
-    [sendTransfer, stage],
-  );
-
   const handleCheckPreview = useCallback(async () => {
     try {
       setLoading(true);
@@ -528,7 +528,7 @@ function SendContent({
           <AmountInput
             type={isNFT ? 'nft' : 'token'}
             fromAccount={{
-              address: caInfo?.[tokenInfo.chainId].caAddress || '',
+              address: caInfo?.[tokenInfo.chainId]?.caAddress || '',
               AESEncryptPrivateKey: managementAccount?.privateKey || '',
             }}
             toAccount={{
@@ -654,6 +654,12 @@ function SendContent({
         onClose={() => setApprovalVisible(false)}
         onBack={() => setApprovalVisible(false)}
         onApprovalSuccess={onApprovalSuccess}
+        operationDetails={getOperationDetails(OperationTypeEnum.transferApprove, {
+          symbol: tokenInfo.symbol,
+          amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
+          toAddress: toAccount.address,
+        })}
+        officialWebsiteShow={{ amount: amount, symbol: tokenInfo.symbol }}
       />
     </div>
   );

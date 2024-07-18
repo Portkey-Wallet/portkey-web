@@ -19,6 +19,7 @@ import {
   getApprovalCount,
   handleErrorMessage,
   handleVerificationDoc,
+  modalMethod,
   setLoading,
 } from '../../utils';
 import type { ChainId, TStringJSON } from '@portkey/types';
@@ -30,15 +31,20 @@ import {
   OnErrorFunc,
   IVerificationInfo,
   NetworkType,
+  ISocialLogin,
+  ITelegramInfo,
+  IApproveDetail,
 } from '../../types';
 import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
-import ConfigProvider from '../config-provider';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { SocialLoginList } from '../../constants/guardian';
+import { SocialLoginList, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
+import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
+import { Open_Login_Bridge } from '../../constants/telegram';
+import { getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -51,8 +57,15 @@ export interface GuardianApprovalProps {
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
   operationType: OperationTypeEnum;
-  operationDetails: TStringJSON;
+  operationDetails?: TStringJSON;
+  officialWebsiteShow?: {
+    amount?: string;
+    symbol?: string;
+  };
   networkType: NetworkType;
+  // guardianIdentifier?: string; // for show (email)
+  // firstName?: string; // for show (social)
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -74,7 +87,11 @@ const GuardianApprovalMain = forwardRef(
       isErrorTip = true,
       wrapperStyle,
       operationType,
-      operationDetails,
+      operationDetails = '{}',
+      officialWebsiteShow,
+      // guardianIdentifier,
+      // firstName,
+      telegramInfo,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -136,33 +153,52 @@ const GuardianApprovalMain = forwardRef(
     const socialVerifyHandler = useCallback(
       async (item: UserGuardianStatus, index: number) => {
         try {
-          setLoading(true);
-          const accessToken = item?.accessToken;
-          const socialLogin = ConfigProvider.config.socialLogin;
-          let clientId;
-          let redirectURI;
-          let customLoginHandler;
-          switch (item.guardianType) {
-            case 'Apple':
-              clientId = socialLogin?.Apple?.clientId;
-              redirectURI = socialLogin?.Apple?.redirectURI;
-              customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-
-              break;
-            case 'Google':
-              clientId = socialLogin?.Google?.clientId;
-              customLoginHandler = socialLogin?.Google?.customLoginHandler;
-              break;
-            case 'Telegram':
-              customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-              break;
-            default:
-              throw 'accountType is not supported';
-          }
+          const accountType = item.guardianType as ISocialLogin;
+          const accessToken =
+            accountType === 'Telegram' && telegramInfo?.userId === item.guardianIdentifier && telegramInfo?.accessToken
+              ? telegramInfo.accessToken
+              : item.accessToken;
+          const { clientId, redirectURI, customLoginHandler } = getSocialConfig(accountType);
           if (!item.verifier?.id) throw 'verifier id is not exist';
           const id = item.identifier || item.identifierHash;
           if (!id) throw 'identifier is not exist';
-          const rst = await verifyToken(item.guardianType, {
+          const isFirstShowWarning = await getStorageInstance().getItem(KEY_SHOW_WARNING);
+
+          if (isFirstShowWarning !== SHOW_WARNING_DIALOG && !accessToken) {
+            const isConfirm = await modalMethod({
+              width: 320,
+              title: <div className="security-notice">Security Notice</div>,
+              closable: false,
+              wrapClassName: 'warning-modal-wrapper',
+              className: `portkey-ui-common-modals ` + 'confirm-return-modal',
+              content: (
+                <p className="modal-content-v2">
+                  You&rsquo;ll be directed to{' '}
+                  <span className="official-website">{Open_Login_Bridge[getCustomNetworkType()][networkType]}</span> for
+                  verification. If the site you land on doesn&rsquo;t match this link,please exercise caution and
+                  refrain from taking any actions.
+                </p>
+              ),
+            });
+            if (!isConfirm) return;
+            getStorageInstance().setItem(KEY_SHOW_WARNING, SHOW_WARNING_DIALOG);
+          }
+          setLoading(true);
+
+          const approveDetail: IApproveDetail = {
+            guardian: {
+              guardianType: item.guardianType,
+              identifier: item.identifier,
+              thirdPartyEmail: item.thirdPartyEmail,
+            },
+            originChainId,
+            targetChainId,
+            symbol: officialWebsiteShow?.symbol,
+            amount: officialWebsiteShow?.amount,
+            operationType,
+          };
+
+          const rst = await verifyToken(accountType, {
             accessToken,
             id,
             verifierId: item.verifier?.id,
@@ -174,7 +210,9 @@ const GuardianApprovalMain = forwardRef(
             networkType,
             operationDetails,
             customLoginHandler,
+            approveDetail: approveDetail,
           });
+
           if (!rst || !rst.verificationDoc) return;
 
           const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
@@ -204,7 +242,19 @@ const GuardianApprovalMain = forwardRef(
           setLoading(false);
         }
       },
-      [verifyToken, originChainId, targetChainId, operationType, networkType, operationDetails, isErrorTip, onError],
+      [
+        telegramInfo?.userId,
+        telegramInfo?.accessToken,
+        verifyToken,
+        originChainId,
+        targetChainId,
+        operationType,
+        networkType,
+        operationDetails,
+        officialWebsiteShow,
+        isErrorTip,
+        onError,
+      ],
     );
 
     const onVerifyingHandler = useCallback(
@@ -229,7 +279,7 @@ const GuardianApprovalMain = forwardRef(
           );
         }
       },
-      [isErrorTip, onError, socialVerifyHandler],
+      [socialVerifyHandler, isErrorTip, onError],
     );
 
     const onCodeVerifyHandler = useCallback(
@@ -297,44 +347,48 @@ const GuardianApprovalMain = forwardRef(
     }, [approvalLength, alreadyApprovalLength]);
 
     return (
-      <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
-        {typeof verifyAccountIndex === 'number' ? (
-          <VerifierPage
-            targetChainId={targetChainId}
-            originChainId={originChainId}
-            operationType={operationType}
-            onBack={() => setVerifyAccountIndex(undefined)}
-            guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
-            verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
-            isLoginGuardian={guardianList[verifyAccountIndex].isLoginGuardian}
-            isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
-            accountType={guardianList[verifyAccountIndex].guardianType}
-            isErrorTip={isErrorTip}
-            verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
-            onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
-            onError={onError}
-            onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}
-          />
-        ) : (
-          <>
-            {header}
-            <GuardianList
-              originChainId={originChainId}
+      <div>
+        <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
+          {typeof verifyAccountIndex === 'number' ? (
+            <VerifierPage
               targetChainId={targetChainId}
-              expiredTime={expiredTime}
+              originChainId={originChainId}
               operationType={operationType}
-              isFetching={isFetching}
-              approvalLength={approvalLength}
-              alreadyApprovalLength={alreadyApprovalLength}
-              guardianList={guardianList}
+              operationDetails={operationDetails}
+              onBack={() => setVerifyAccountIndex(undefined)}
+              guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
+              verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
+              isLoginGuardian={guardianList[verifyAccountIndex].isLoginGuardian}
+              isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
+              accountType={guardianList[verifyAccountIndex].guardianType}
               isErrorTip={isErrorTip}
-              onSend={onSendCodeHandler}
-              onVerifying={onVerifyingHandler}
-              onConfirm={onConfirmHandler}
+              verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
+              onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
               onError={onError}
+              onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}
             />
-          </>
-        )}
+          ) : (
+            <>
+              {header}
+              <GuardianList
+                originChainId={originChainId}
+                targetChainId={targetChainId}
+                expiredTime={expiredTime}
+                operationType={operationType}
+                isFetching={isFetching}
+                approvalLength={approvalLength}
+                alreadyApprovalLength={alreadyApprovalLength}
+                guardianList={guardianList}
+                isErrorTip={isErrorTip}
+                operationDetails={operationDetails}
+                onSend={onSendCodeHandler}
+                onVerifying={onVerifyingHandler}
+                onConfirm={onConfirmHandler}
+                onError={onError}
+              />
+            </>
+          )}
+        </div>
       </div>
     );
   },

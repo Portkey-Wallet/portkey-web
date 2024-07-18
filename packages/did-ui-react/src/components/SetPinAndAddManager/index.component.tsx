@@ -6,7 +6,7 @@ import { AddManagerType, CreatePendingInfo, DIDWalletInfo } from '../types';
 import { OnErrorFunc } from '../../types';
 import type { AccountType, GuardiansApproved } from '@portkey/services';
 import { ChainId } from '@portkey/types';
-import useLoginWallet from '../../hooks/useLoginWallet';
+import { useLoginWallet } from '../../hooks/useLoginWallet';
 import SetPinMobileBase from '../SetPinMobileBase';
 import { devices } from '@portkey/utils';
 import BackHeader from '../BackHeader';

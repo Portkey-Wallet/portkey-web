@@ -18,6 +18,8 @@ import { RampType } from '@portkey/ramp';
 import './index.less';
 import { TokenItemShowType } from '../types/assets';
 import { mixRampShow } from './utils';
+import { openloginSignal } from '@portkey/socket';
+import { getCommunicationSocketUrl } from '../config-provider/utils';
 
 export default function RampMain({
   className,
@@ -62,18 +64,39 @@ export default function RampMain({
         });
     }
 
-    window.onmessage = function (event) {
-      if (event.data.type === 'CHECK_SELL_RESULT') {
-        checkAchSell(event.data.data);
+    const clientId = initState?.openloginSignalClientId;
+    if (initState?.side === RampType.SELL && clientId) {
+      try {
+        openloginSignal
+          .doOpen({
+            url: getCommunicationSocketUrl(),
+            clientId,
+          })
+          .then(() => {
+            setLoading(true);
+            openloginSignal.onCheckSellResult({ requestId: clientId }, (result: any) => {
+              if (!result) return;
+              try {
+                const data = JSON.parse(result);
+                setLoading(false);
+                checkAchSell(data);
+              } catch (error) {
+                singleMessage.error(handleErrorMessage(error));
+              }
+              openloginSignal.destroy();
+            });
+          });
+      } catch (error) {
+        singleMessage.error(handleErrorMessage(error));
       }
-    };
-    const checkAchSell = async (data: any) => {
-      if (isSell.current === 0 && typeof data?.payload === 'string' && data?.payload?.length > 0) {
-        isSell.current = 1;
-        const orderNo = JSON.parse(data?.payload)?.orderNo;
-        await handleAchSell({ orderId: orderNo, isMainnet });
-      }
-    };
+      const checkAchSell = async (data: any) => {
+        if (isSell.current === 0 && typeof data?.payload === 'string' && data?.payload?.length > 0) {
+          isSell.current = 1;
+          const orderNo = JSON.parse(data?.payload)?.orderNo;
+          await handleAchSell({ orderId: orderNo, isMainnet });
+        }
+      };
+    }
   });
 
   const handlePageChange = useCallback(

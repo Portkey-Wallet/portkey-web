@@ -34,3 +34,23 @@ export const InitialTxFee = {
   crossChain: 0.35,
   max: 0.39,
 };
+
+export enum AssetStep {
+  overview = 'overview',
+  receive = 'receive',
+  ramp = 'ramp',
+  rampPreview = 'rampPreview',
+  send = 'send',
+  transactionDetail = 'transactionDetail',
+  tokenDetail = 'tokenDetail',
+  NFTDetail = 'NFTDetail',
+  my = 'my',
+  guardians = 'guardians',
+  walletSecurity = 'walletSecurity',
+  paymentSecurity = 'paymentSecurity',
+  transferSettings = 'transferSettings',
+  transferSettingsEdit = 'transferSettingsEdit',
+  deleteAccount = 'deleteAccount',
+  tokenAllowance = 'tokenAllowance',
+  tokenAllowanceDetail = 'tokenAllowanceDetail',
+}

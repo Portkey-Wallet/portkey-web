@@ -30,8 +30,12 @@ import {
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
   VerifierSocialTokenParams,
+  VerifyTwitterTokenHeader,
+  TGetTelegramAuthTokenResult,
+  TGetTelegramAuthTokenParams,
 } from '../types/verification';
 import { Search } from './search';
+
 export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   extends Search<T>
   implements ICommunityRecoveryService
@@ -108,7 +112,9 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     const result = await this._didGraphQL.getHolderInfoByManager(params);
     return result.caHolderManagerInfo;
   }
-
+  /**
+   * deprecated Please use `verification.sendAppleUserExtraInfo`
+   */
   sendAppleUserExtraInfo(params: SendAppleUserExtraInfoParams): Promise<SendAppleUserExtraInfoResult> {
     return this._request.send({
       method: 'POST',
@@ -116,14 +122,18 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
-
+  /**
+   * deprecated Please use `verification.getAppleUserExtraInfo`
+   */
   getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<any> {
     return this._request.send({
       method: 'GET',
       url: `/api/app/userExtraInfo/${params.userId}`,
     });
   }
-
+  /**
+   * deprecated Please use `verification.verifyGoogleToken`
+   */
   verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
@@ -131,6 +141,9 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
+  /**
+   * deprecated Please use `verification.verifyAppleToken`
+   */
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
@@ -141,6 +154,9 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       },
     });
   }
+  /**
+   * deprecated Please use `verification.verifyTelegramToken`
+   */
   verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
@@ -148,10 +164,47 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
+  /**
+   * deprecated Please use `verification.verifyTwitterToken`
+   */
+  verifyTwitterToken(
+    params: VerifierSocialTokenParams,
+    headers: VerifyTwitterTokenHeader,
+  ): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTwitterToken',
+      params,
+      headers,
+    });
+  }
+  /**
+   * deprecated Please use `verification.verifyFacebookToken`
+   */
+  verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyFacebookToken',
+      params,
+    });
+  }
+  /**
+   * deprecated Please use `verification.getRecommendationVerifier`
+   */
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/getVerifierServer',
+      params,
+    });
+  }
+  /**
+   * deprecated Please use `verification.getTelegramAuthToken`
+   */
+  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/telegramAuth/token',
       params,
     });
   }

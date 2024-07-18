@@ -18,6 +18,8 @@ import singleMessage from '../CustomAnt/message';
 export interface ActivityProps {
   chainId?: ChainId;
   symbol?: string;
+  onDataInit?: () => void;
+  onDataInitEnd?: () => void;
   onViewActivityItem?: (item: ActivityItemType) => void;
 }
 
@@ -26,7 +28,7 @@ export enum EmptyTipMessage {
   NETWORK_NO_TRANSACTIONS = 'No transaction records accessible from the current custom network',
 }
 
-export default function Activity({ chainId, symbol, onViewActivityItem }: ActivityProps) {
+export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd, onViewActivityItem }: ActivityProps) {
   const [{ caAddressInfos, activityMap }] = usePortkeyAsset();
   const [{ chainType, networkType }] = usePortkey();
   const dispatch = usePortkeyAssetDispatch();
@@ -43,7 +45,7 @@ export default function Activity({ chainId, symbol, onViewActivityItem }: Activi
   });
 
   const getList = useCallback(
-    (page = 1, pageSize = PAGESIZE_10, isUpdate?: boolean) => {
+    async (page = 1, pageSize = PAGESIZE_10, isUpdate?: boolean) => {
       if (!caAddressInfos) return;
 
       try {
@@ -51,19 +53,16 @@ export default function Activity({ chainId, symbol, onViewActivityItem }: Activi
         const skipCount = getSkipCount(pageSize, page - 1);
         if (skipCount > activityTotal) return;
         const _caAddressInfos = chainId ? caAddressInfos.filter((item) => item.chainId === chainId) : caAddressInfos;
-        basicAssetViewAsync
-          .setActivityList({
-            maxResultCount: pageSize,
-            skipCount,
-            isUpdate,
-            caAddressInfos: _caAddressInfos,
-            chainId,
-            symbol,
-          })
-          .then((res) => {
-            dispatch(res);
-            setPending(false);
-          });
+        const res = await basicAssetViewAsync.setActivityList({
+          maxResultCount: pageSize,
+          skipCount,
+          isUpdate,
+          caAddressInfos: _caAddressInfos,
+          chainId,
+          symbol,
+        });
+        dispatch(res);
+        setPending(false);
       } catch (error) {
         singleMessage.error(handleErrorMessage(error));
       } finally {
@@ -79,7 +78,8 @@ export default function Activity({ chainId, symbol, onViewActivityItem }: Activi
   // init State
   useThrottleFirstEffect(() => {
     if (!caAddressInfos || isOnce.current) return;
-    getList();
+    onDataInit?.();
+    getList().then(() => onDataInitEnd?.());
     isOnce.current = true;
   }, [caAddressInfos, getList]);
 

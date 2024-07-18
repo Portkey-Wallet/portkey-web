@@ -1,5 +1,5 @@
 import { memo, useMemo, useState, useCallback, useRef } from 'react';
-import { IBaseGetGuardianProps } from '../types';
+import { GuardianInputInfo, IBaseGetGuardianProps } from '../types';
 import { AccountType } from '@portkey/services';
 import Overview from './components/Overview';
 import ScanCard from '../ScanCard/index.component';
@@ -14,6 +14,7 @@ import { useSignHandler } from '../../hooks/useSignHandler';
 import './index.less';
 import useMobile from '../../hooks/useMobile';
 import { SocialLoginList } from '../../constants/guardian';
+import { TAllLoginKey } from '../../utils/googleAnalytics';
 
 type SocialDesignType = AccountType | 'Scan' | null;
 export interface SocialDesignProps extends IBaseGetGuardianProps {
@@ -36,6 +37,8 @@ function SocialDesign({
   onSuccess,
   validateEmail: defaultValidateEmail,
   validatePhone: defaultValidatePhone,
+  onInputConfirmStart,
+  onSocialStart,
   onChainIdChange,
   onLoginFinishWithoutPin,
 }: SocialDesignProps) {
@@ -66,22 +69,18 @@ function SocialDesign({
   const { validateEmail, validatePhone, onFinish, onSocialFinish } = useSignHandler(handlerParam);
 
   const onAccountTypeChange = useCallback(
-    async (type: AccountType | 'Scan') => {
+    async (type: TAllLoginKey) => {
       try {
+        onSocialStart?.(type);
         if (!SocialLoginList.includes(type)) return setAccountType(type);
-        let result;
         setLoading(true);
 
-        if (type === 'Google') {
-          result = await socialLoginHandler('Google');
-        } else if (type === 'Apple') {
-          result = await socialLoginHandler('Apple');
-        } else if (type === 'Telegram') {
-          result = await socialLoginHandler('Telegram');
-        } else throw Error('AccountType is not support');
-        setLoading(false);
+        const result = await socialLoginHandler(type as any);
 
-        await onSocialFinish(result);
+        setLoading(false);
+        if (result) {
+          await onSocialFinish(result);
+        }
       } catch (error) {
         setLoading(false);
         errorTip(
@@ -94,7 +93,15 @@ function SocialDesign({
         );
       }
     },
-    [isErrorTip, onSocialFinish, socialLoginHandler],
+    [isErrorTip, onSocialFinish, onSocialStart, socialLoginHandler],
+  );
+
+  const onInputFinish = useCallback(
+    (data: GuardianInputInfo) => {
+      onInputConfirmStart?.();
+      onFinish(data);
+    },
+    [onFinish, onInputConfirmStart],
   );
 
   return (
@@ -108,6 +115,7 @@ function SocialDesign({
           networkType={networkType}
           onBack={() => setAccountType(null)}
           onFinish={onLoginFinishWithoutPin}
+          onShowQrCode={() => onSocialStart?.('Scan')}
           isErrorTip={isErrorTip}
           onError={onError}
         />
@@ -120,7 +128,7 @@ function SocialDesign({
           phoneCountry={phoneCountry}
           validateEmail={validateEmail}
           validatePhone={validatePhone}
-          onFinish={onFinish}
+          onFinish={onInputFinish}
           onBack={() => setAccountType(null)}
         />
       )}

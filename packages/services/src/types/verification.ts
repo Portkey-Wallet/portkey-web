@@ -1,5 +1,6 @@
 import { ChainId, TStringJSON } from '@portkey/types';
 import { AccountType, CheckGoogleRecaptchaParams, OperationTypeEnum } from '.';
+import { TelegramWebappInitData } from '@portkey/types';
 
 export type SendVerificationCodeParams = {
   type: AccountType;
@@ -8,6 +9,7 @@ export type SendVerificationCodeParams = {
   chainId: ChainId;
   targetChainId?: ChainId;
   operationType: OperationTypeEnum;
+  operationDetails?: TStringJSON;
 };
 
 export type SendVerificationCodeRequestParams = {
@@ -88,6 +90,20 @@ export type VerifierItem = {
   name: string;
   imageUrl: string;
 };
+
+export type VerifyTwitterTokenHeader = {
+  'oauth-version': string;
+  [x: string]: string;
+};
+
+export type TGetTelegramAuthTokenParams = TelegramWebappInitData & {
+  bot_id: string;
+};
+
+export type TGetTelegramAuthTokenResult = {
+  token: string;
+};
+
 export interface IVerificationService {
   getVerificationCode(params: SendVerificationCodeRequestParams): Promise<SendVerificationCodeResult>;
   verifyVerificationCode(params: VerifyVerificationCodeParams): Promise<VerifyVerificationCodeResult>;
@@ -96,6 +112,12 @@ export interface IVerificationService {
   verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyTwitterToken(
+    params: VerifierSocialTokenParams,
+    headers?: VerifyTwitterTokenHeader,
+  ): Promise<VerifyVerificationCodeResult>;
+  verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
+  getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult>;
 }

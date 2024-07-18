@@ -78,7 +78,7 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
           redirectURI: Apple?.redirectURI,
           network: networkType,
         });
-        token = result.token;
+        token = result?.token;
       }
       const userInfo = parseAppleIdentityToken(token);
       const guardianList = await getGuardianList({

@@ -6,6 +6,7 @@ import './index.less';
 import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
+import { isNFT } from '../../utils/assets';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
@@ -15,6 +16,7 @@ export interface BaseSetAllowanceProps {
   className?: string;
   max?: string | number;
   dappInfo?: { icon?: string; href?: string; name?: string };
+  batchApproveNFT?: boolean;
 }
 
 export interface IAllowance {
@@ -33,10 +35,10 @@ export type SetAllowanceProps = BaseSetAllowanceProps & {
 
 export default function SetAllowanceMain({
   max = Infinity,
+  symbol,
   amount,
   decimals,
   dappInfo,
-  symbol,
   className,
   recommendedAmount = 0,
   onCancel,
@@ -48,6 +50,8 @@ export default function SetAllowanceMain({
       parseInputNumberChange(value.toString(), max ? new BigNumber(max) : undefined, decimals),
     [decimals, max],
   );
+
+  const approveSymbol = useMemo(() => (isNFT(symbol) ? symbol.split('-')[0] : symbol), [symbol]);
 
   const allowance = useMemo(() => formatAllowanceInput(amount), [amount, formatAllowanceInput]);
 
@@ -65,6 +69,16 @@ export default function SetAllowanceMain({
     [formatAllowanceInput, onAllowanceChange],
   );
 
+  const noticeText = useMemo(() => {
+    return `It's crucial to set a reasonable allowance value, taking into account both token price and quantity. You have the option to adjust the settings once the allowance is depleted.`;
+  }, []);
+
+  const titleText = useMemo(() => {
+    return dappInfo?.name
+      ? `${dappInfo?.name} is requesting access to your ${approveSymbol}`
+      : `Request for access to your ${approveSymbol}`;
+  }, [approveSymbol, dappInfo?.name]);
+
   return (
     <div className={clsx(`${PrefixCls}-wrapper`, className)}>
       <div className={clsx('portkey-ui-flex-center', `${PrefixCls}-dapp-info`)}>
@@ -76,16 +90,16 @@ export default function SetAllowanceMain({
         )}
       </div>
       <div className={`${PrefixCls}-header`}>
-        <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{`Request for access to your ${symbol}`}</h1>
+        <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{titleText}</h1>
         <div className={`portkey-ui-text-center ${PrefixCls}-description`}>
-          To ensure your assets&rsquo; security while interacting with the DApp, please set a token allowance for this
-          DApp. The DApp will notify you when its allowance is used up and you can modify the settings again.
+          To ensure asset security, please customise an allowance for this dApp. Until this allowance is exhausted, the
+          dApp will not request your approval to utilise&nbsp;{approveSymbol}
         </div>
       </div>
 
       <div className={`${PrefixCls}-body`}>
         <div className={`portkey-ui-flex-between-center ${PrefixCls}-body-title`}>
-          <span className={`${PrefixCls}-set`}>{`Set Allowance (${symbol})`}</span>
+          <span className={`${PrefixCls}-set`}>{`Set Allowance`}</span>
           <span className={`${PrefixCls}-use-recommended`} onClick={() => inputChange(recommendedAmount)}>
             Use Recommended Value
           </span>
@@ -96,26 +110,32 @@ export default function SetAllowanceMain({
             onChange={(e) => {
               inputChange(e.target.value);
             }}
-            suffix={<span onClick={() => inputChange(max)}>Max</span>}
+            suffix={
+              <span>
+                <span className={`${PrefixCls}-approveSymbol`}>{approveSymbol}</span>
+                <span onClick={() => inputChange(max)}>Max</span>
+              </span>
+            }
           />
           {typeof error !== 'undefined' && <div className="error-text">{error}</div>}
         </div>
-        <div className={`${PrefixCls}-notice`}>
-          Within this allowance limit, the Dapp does not require reconfirmation from you when a transaction occurs.
-        </div>
+
+        <div className={`${PrefixCls}-notice`}>{noticeText}</div>
       </div>
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
         <div className="btn-wrapper">
-          <ThrottleButton onClick={onCancel}>Reject</ThrottleButton>
+          <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton>
           <ThrottleButton
             type="primary"
             disabled={BigNumber(allowance).isNaN()}
             onClick={() => {
               if (!isValidNumber(allowance)) return setError('Please enter a positive whole number');
               if (BigNumber(allowance).lte(0)) return setError('Please enter a non-zero value');
-              onConfirm?.({ allowance });
+              onConfirm?.({
+                allowance,
+              });
             }}>
-            Authorize
+            Pre-authorize
           </ThrottleButton>
         </div>
       </div>

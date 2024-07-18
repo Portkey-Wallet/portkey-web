@@ -27,6 +27,8 @@ export interface AssetOverviewProps {
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
   onBack?: () => void;
+  onDataInit?: () => void;
+  onDataInitEnd?: () => void;
   onSend?: (selectToken: IAssetItemType, type: TokenType) => void;
   onViewActivityItem?: (item: ActivityItemType) => void;
   onViewTokenItem?: (v: TokenItemShowType) => void;
@@ -45,6 +47,8 @@ export function AssetOverviewContent({
   onNFTView,
   onReceive,
   onViewTokenItem,
+  onDataInit,
+  onDataInitEnd,
   onViewActivityItem,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
@@ -123,7 +127,8 @@ export function AssetOverviewContent({
     setTokenList(tokenListInfo.list);
 
     const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
-      return pre.plus(cur.balanceInUsd ?? ZERO);
+      // Dealing with the problem of balanceInUsd === ''
+      return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
     }, ZERO);
 
     setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
@@ -189,6 +194,8 @@ export function AssetOverviewContent({
               .finally(() => setIsGetNFTCollection(false));
           }
         }}
+        onDataInit={onDataInit}
+        onDataInitEnd={onDataInitEnd}
         onViewTokenItem={onViewTokenItem}
         onViewActivityItem={onViewActivityItem}
         onNFTView={onNFTView}

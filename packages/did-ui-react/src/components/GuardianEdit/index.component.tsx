@@ -1,5 +1,5 @@
 import { message } from 'antd';
-import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum, AccountType } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum, AccountTypeEnum } from '@portkey/services';
 import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
@@ -14,6 +14,7 @@ import {
 } from '../../utils';
 import {
   ISocialLogin,
+  ITelegramInfo,
   IVerificationInfo,
   NetworkType,
   OnErrorFunc,
@@ -28,24 +29,17 @@ import CommonBaseModal from '../CommonBaseModal';
 import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
-import { SocialLoginList, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
-import ConfigProvider from '../config-provider';
+import { SocialLoginList, guardianIconMap, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
-import './index.less';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
-
-const guardianIconMap: Record<AccountType, any> = {
-  Email: 'Email',
-  Phone: 'GuardianPhone',
-  Google: 'GuardianGoogle',
-  Apple: 'GuardianApple',
-  Telegram: 'GuardianTelegram',
-};
+import { getSocialConfig } from '../utils/social.utils';
+import GuardianTypeIcon from '../GuardianTypeIcon';
+import './index.less';
 
 enum GuardianEditStatus {
   UnsetLoginGuardian = 'UnsetLoginGuardian',
@@ -66,6 +60,7 @@ export interface GuardianEditProps {
   networkType: NetworkType;
   chainType?: ChainType;
   sandboxId?: string;
+  telegramInfo?: ITelegramInfo;
   onError?: OnErrorFunc;
   handleEditGuardian?: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
   handleRemoveGuardian?: (approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -92,6 +87,7 @@ function GuardianEdit({
   networkType,
   chainType = 'aelf',
   sandboxId,
+  telegramInfo,
   onError,
   handleEditGuardian,
   handleRemoveGuardian,
@@ -206,27 +202,7 @@ function GuardianEdit({
   const socialBasic = useCallback(
     (v: ISocialLogin) => {
       try {
-        const socialLogin = ConfigProvider.config.socialLogin;
-        let clientId;
-        let redirectURI;
-        let customLoginHandler;
-        switch (v) {
-          case 'Apple':
-            clientId = socialLogin?.Apple?.clientId;
-            redirectURI = socialLogin?.Apple?.redirectURI;
-            customLoginHandler = socialLogin?.Apple?.customLoginHandler;
-            break;
-          case 'Google':
-            clientId = socialLogin?.Google?.clientId;
-            customLoginHandler = socialLogin?.Google?.customLoginHandler;
-            break;
-          case 'Telegram':
-            customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
-            break;
-          default:
-            throw 'accountType is not supported';
-        }
-        return { clientId, redirectURI, customLoginHandler };
+        return getSocialConfig(v);
       } catch (error) {
         errorTip(
           {
@@ -241,27 +217,40 @@ function GuardianEdit({
     [isErrorTip, onError],
   );
 
-  const operationDetails = useMemo(() => getOperationDetails(operationType), [operationType]);
-
   const socialVerify = useCallback(
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
-      const response = await socialLoginAuth({
-        type: _guardian?.guardianType as ISocialLogin,
-        clientId,
-        redirectURI,
-        network: networkType,
-      });
-      if (!response?.token) throw new Error('auth failed');
+      let token = '';
+      if (
+        _guardian?.guardianType === 'Telegram' &&
+        telegramInfo?.userId === _guardian?.guardianIdentifier &&
+        telegramInfo?.accessToken
+      ) {
+        token = telegramInfo.accessToken;
+      } else {
+        const response = await socialLoginAuth({
+          type: _guardian?.guardianType as ISocialLogin,
+          clientId,
+          redirectURI,
+          network: networkType,
+          guardianIdentifier: _guardian.guardianIdentifier,
+        });
+        if (!response?.token) throw new Error('auth failed');
+        token = response.token;
+      }
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
-        accessToken: response?.token,
+        accessToken: token,
         id: _guardian.guardianIdentifier || '',
         verifierId: _guardian?.verifier?.id || '',
         chainId: originChainId,
         clientId,
         redirectURI,
         networkType,
-        operationDetails,
+        operationDetails: getOperationDetails(operationType, {
+          identifierHash: curGuardian.current?.identifierHash,
+          guardianType: curGuardian.current?.guardianType,
+          verifierId: curGuardian.current?.verifierId,
+        }),
         operationType: OperationTypeEnum.unsetLoginAccount,
         customLoginHandler,
       });
@@ -270,7 +259,15 @@ function GuardianEdit({
       const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
       return { verifierInfo, guardianIdentifier };
     },
-    [socialBasic, networkType, verifyToken, originChainId, operationDetails],
+    [
+      socialBasic,
+      telegramInfo?.userId,
+      telegramInfo?.accessToken,
+      verifyToken,
+      originChainId,
+      networkType,
+      operationType,
+    ],
   );
   const sendCode = useCallback(async () => {
     try {
@@ -284,6 +281,11 @@ function GuardianEdit({
             verifierId: _guardian?.verifier?.id || '',
             chainId: originChainId,
             operationType: OperationTypeEnum.unsetLoginAccount,
+            operationDetails: getOperationDetails(operationType, {
+              identifierHash: curGuardian.current?.identifierHash,
+              guardianType: curGuardian.current?.guardianType,
+              verifierId: curGuardian.current?.verifierId,
+            }),
           },
         },
         reCaptchaHandler,
@@ -312,7 +314,7 @@ function GuardianEdit({
     } finally {
       setLoading(false);
     }
-  }, [originChainId, reCaptchaHandler, isErrorTip, onError]);
+  }, [originChainId, operationType, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
     preGuardianRef.current = {
       ...(preGuardianRef.current as UserGuardianStatus),
@@ -482,7 +484,7 @@ function GuardianEdit({
         <div className="input-item">
           <div className="guardian-edit-input-item-label">{`Guardian ${currentGuardian?.guardianType}`}</div>
           <div className="guardian-account guardian-edit-input-item-value portkey-ui-flex">
-            <CustomSvg type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
+            <GuardianTypeIcon type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
             <GuardianAccountShow guardian={currentGuardian} />
           </div>
         </div>
@@ -518,6 +520,11 @@ function GuardianEdit({
         <VerifierPage
           originChainId={originChainId}
           operationType={OperationTypeEnum.unsetLoginAccount}
+          operationDetails={getOperationDetails(operationType, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+          })}
           onBack={() => setVerifierVisible(false)}
           guardianIdentifier={preGuardian?.guardianIdentifier || ''}
           verifierSessionId={preGuardianRef.current?.verifierInfo?.sessionId || ''}
@@ -538,13 +545,20 @@ function GuardianEdit({
         onClose={() => setApprovalVisible(false)}>
         <GuardianApproval
           header={<BackHeader onBack={() => setApprovalVisible(false)} />}
-          operationDetails={operationDetails}
           originChainId={originChainId}
           guardianList={approvalGuardianList}
           networkType={networkType}
+          telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
+          operationDetails={getOperationDetails(operationType, {
+            identifierHash: curGuardian.current?.identifierHash,
+            guardianType: curGuardian.current?.guardianType,
+            verifierId: curGuardian.current?.verifierId,
+            preVerifierId: preGuardian?.verifierId,
+            newVerifierId: curGuardian.current?.verifierId,
+          })}
         />
       </CommonBaseModal>
     </div>

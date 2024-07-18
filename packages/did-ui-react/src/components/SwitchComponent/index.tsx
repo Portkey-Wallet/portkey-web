@@ -16,7 +16,7 @@ export default function SwitchComponent({
   return (
     <div className="portkey-ui-flex-start-center portkey-ui-switch-component">
       <Switch checked={checked} disabled={disabled} {...props} />
-      <div className="portkey-ui-switch-text">{text}</div>
+      {text && <div className="portkey-ui-switch-text">{text}</div>}
     </div>
   );
 }

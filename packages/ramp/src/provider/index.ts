@@ -45,7 +45,7 @@ export class AlchemyPayProvider extends RampProvider implements IAlchemyPayProvi
 
   public async createOrder(params: IRampProviderCreateOrderParams): Promise<IRampProviderCreateOrderResult> {
     const { baseUrl, appId, key, callbackUrl } = this.providerInfo;
-    const { type, network, country, fiat, crypto, amount, address, email, withdrawUrl } = params;
+    const { type, network, country, fiat, crypto, amount, address, email, withdrawUrl, clientId, networkType } = params;
 
     let handleOrderUrl = `${baseUrl}/?type=${type.toLocaleLowerCase()}&crypto=${crypto}&network=${network}&country=${country}&fiat=${fiat}&appId=${appId}&callbackUrl=${encodeURIComponent(
       `${callbackUrl}`,
@@ -60,7 +60,10 @@ export class AlchemyPayProvider extends RampProvider implements IAlchemyPayProvi
 
     if (withdrawUrl) {
       const withdrawUrlTrans = encodeURIComponent(
-        withdrawUrl + `&payload=${encodeURIComponent(JSON.stringify({ orderNo: orderId }))}`,
+        withdrawUrl +
+          `&payload=${encodeURIComponent(
+            JSON.stringify({ orderNo: orderId }),
+          )}&networkType=${networkType}&clientId=${clientId}`,
       );
       handleOrderUrl += `&withdrawUrl=${withdrawUrlTrans}`;
     }

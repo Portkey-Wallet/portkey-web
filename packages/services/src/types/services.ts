@@ -1,11 +1,13 @@
 import {
   IActivityService,
+  IAllowanceService,
   IAssetsService,
   ICommunityRecoveryService,
   IRampService,
   ISecurityService,
   ITokenService,
   ITransactionService,
+  TCommonService,
 } from './index';
 
 export interface IServices extends ICommunityRecoveryService {
@@ -16,4 +18,6 @@ export interface IServices extends ICommunityRecoveryService {
   readonly transaction: ITransactionService;
   readonly activity: IActivityService;
   readonly security: ISecurityService;
+  readonly allowance: IAllowanceService;
+  readonly common: TCommonService;
 }

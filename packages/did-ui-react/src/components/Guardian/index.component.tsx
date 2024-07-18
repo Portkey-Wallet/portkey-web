@@ -231,10 +231,14 @@ function GuardianMain({
     ],
   );
   const handleEditGuardian = useCallback(
-    async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
+    async (
+      currentGuardian: UserGuardianStatus,
+      approvalInfo: GuardiansApproved[],
+      _preGuardian?: UserGuardianStatus,
+    ) => {
       const params = formatEditGuardianValue({
         currentGuardian,
-        preGuardian,
+        preGuardian: _preGuardian || preGuardian,
         approvalInfo,
       });
       try {
@@ -267,9 +271,9 @@ function GuardianMain({
     [preGuardian, sandboxId, originChainId, caHash, fetchGuardianList, getVerifierEnableNum, isErrorTip, onError],
   );
   const handleRemoveGuardian = useCallback(
-    async (approvalInfo: GuardiansApproved[]) => {
+    async (approvalInfo: GuardiansApproved[], _currentGuardian?: UserGuardianStatus) => {
       const params = formatDelGuardianValue({
-        currentGuardian,
+        currentGuardian: _currentGuardian || currentGuardian,
         approvalInfo,
       });
       try {
@@ -373,7 +377,7 @@ function GuardianMain({
               leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
                 verifierEnableNum > 0 ? (
-                  <ThrottleButton onClick={onAddGuardian} className="title-add-guardian-btn">
+                  <ThrottleButton onClick={() => onAddGuardian()} className="title-add-guardian-btn">
                     Add Guardians
                   </ThrottleButton>
                 ) : null
