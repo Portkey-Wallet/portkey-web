@@ -49,6 +49,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   /** @deprecated Please use aaInfo instead  */
   public accountInfo: { loginAccount?: string; nickName?: string };
   public aaInfo: { accountInfo?: CAInfo; nickName?: string };
+  public originChainId?: ChainId;
   constructor({
     accountProvider,
     storage,
@@ -114,6 +115,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.accountInfo = { loginAccount: status.caHash };
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
+      this.originChainId = chainId;
     }
     return status;
   }
@@ -150,6 +152,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (status?.registerStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
       this.accountInfo = { loginAccount: status.caHash };
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
+      this.originChainId = chainId;
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
     }
     return status;
@@ -331,6 +334,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       caInfo: this.caInfo,
       accountInfo: this.accountInfo,
       aaInfo: this.aaInfo,
+      originChainId: this.originChainId,
     });
     const aesStr = aes.encrypt(data, password);
     await this._storage.setItem(keyName ?? this._defaultKeyName, aesStr);
@@ -342,13 +346,14 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (aesStr) {
       const data = aes.decrypt(aesStr, password);
       if (data) {
-        const { aesPrivateKey, caInfo, accountInfo, aaInfo } = JSON.parse(data);
+        const { aesPrivateKey, caInfo, accountInfo, aaInfo, originChainId } = JSON.parse(data);
         const privateKey = aes.decrypt(aesPrivateKey, password);
         if (aesPrivateKey && privateKey) {
           this.managementAccount = await this._accountProvider.privateKeyToAccount(privateKey);
           this.caInfo = caInfo || {};
           this.accountInfo = accountInfo || {};
           this.aaInfo = aaInfo || {};
+          this.originChainId = originChainId;
         }
       }
     }
