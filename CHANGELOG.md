@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1...v2.7.2) (2024-07-31)
+
+### Bug Fixes
+
+- 🐛 allowance max ([4467393](https://github.com/Portkey-Wallet/portkey-web/commit/4467393888a1fe1d15cff399b450cd57c6e41f58))
+
+## [2.7.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.4...v2.7.1) (2024-07-31)
+
+### Bug Fixes
+
+- 🐛 change approve long max ([ed03dfd](https://github.com/Portkey-Wallet/portkey-web/commit/ed03dfd1b7b7ae60e7a136c14c781b3c45451968))
+
 ## [2.7.1-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.3...v2.7.1-alpha.4) (2024-07-18)
 
 ### Bug Fixes

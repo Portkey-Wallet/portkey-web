@@ -1,9 +1,5 @@
 'use client';
 
-ConfigProvider.setGlobalConfig({
-  // test3
-  serviceUrl: 'http://192.168.66.203:5001',
-});
 import {
   handleErrorMessage,
   managerApprove,
@@ -18,7 +14,7 @@ import {
 } from '@portkey/did-ui-react';
 import { evokePortkey } from '@portkey/onboarding';
 import { message, Button } from 'antd';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getContractBasic } from '@portkey/contracts';
 import { aelf } from '@portkey/utils';
 
