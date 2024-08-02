@@ -34,7 +34,7 @@ export default function TokenTab({
                 </div>
                 <div className="amount">
                   <p>{transNetworkText(item.chainId, isMainnet)}</p>
-                  {isMainnet && item.balanceInUsd && !BigNumber(item.balanceInUsd).isZero() && (
+                  {isMainnet && item.balanceInUsd && (
                     <p className="convert">{`$ ${formatAmountShow(item.balanceInUsd)}`}</p>
                   )}
                 </div>
