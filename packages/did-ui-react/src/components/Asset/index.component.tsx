@@ -406,6 +406,7 @@ function AssetMain({
                 onViewActivityItem(v);
               }}
               onViewTokenItem={(v) => {
+                preStepRef.current = AssetStep.tokenDetail;
                 setTokenDetail(v);
                 setAssetStep(AssetStep.tokenDetail);
               }}
@@ -431,7 +432,7 @@ function AssetMain({
               }}
               networkType={networkType}
               chainId={selectToken.chainId}
-              onBack={() => setAssetStep(AssetStep.overview)}
+              onBack={() => setAssetStep(AssetStep.tokenDetail)}
             />
           )}
 
