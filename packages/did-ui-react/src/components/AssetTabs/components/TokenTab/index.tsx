@@ -29,7 +29,7 @@ export default function TokenTab({
 
               <div className="desc">
                 <div className="info">
-                  <span>{item.symbol}</span>
+                  <span>{item?.label || item.symbol}</span>
                   <span>{formatAmountShow(divDecimals(item.balance, item.decimals))}</span>
                 </div>
                 <div className="amount">

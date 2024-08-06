@@ -117,6 +117,17 @@ export type IUserTokenItem = {
     id: string;
   };
 };
+export type IUserTokenItemNew = {
+  isDisplay: boolean;
+  isDefault: boolean;
+  id: string;
+  chainId: ChainId;
+  decimals: number;
+  address: string;
+  symbol: string;
+  imageUrl: string;
+  label?: string;
+};
 export type GetUserTokenListParams = {
   keyword: string;
   chainIdArray: string[];
@@ -124,6 +135,10 @@ export type GetUserTokenListParams = {
 export type GetUserTokenListResult = {
   items: IUserTokenItem[];
   totalRecordCount: number;
+};
+export type GetUserTokenListResultNew = {
+  items: IUserTokenItemNew[];
+  totalCount: number;
 };
 
 export type GetAccountAssetsByKeywordsParams = {
@@ -141,6 +156,7 @@ export type GetAccountAssetsByKeywordsResult = {
 export interface IAssetItemType {
   chainId: string;
   symbol: string;
+  label?: string;
   address: string;
   tokenInfo?: ITokenInfoType;
   nftInfo?: INftInfoType;
@@ -158,5 +174,6 @@ export interface IAssetsService {
   fetchAccountNftItem(params: TFetchAccountNftItemParams): Promise<TFetchAccountNftItemResult>;
   fetchTokenPrice(params: FetchTokenPriceParams): Promise<FetchTokenPriceResult>;
   getUserTokenList(params: GetUserTokenListParams): Promise<GetUserTokenListResult>;
+  getUserTokenListNew(params: GetUserTokenListParams): Promise<GetUserTokenListResultNew>;
   getAccountAssetsByKeywords(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsResult>;
 }

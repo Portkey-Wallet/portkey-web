@@ -64,7 +64,7 @@ function TokenDetailMain({
           // className="setting-header-wrapper"
           title={
             <div className="title">
-              <p className="symbol">{tokenInfo?.symbol}</p>
+              <p className="symbol">{tokenInfo?.label || tokenInfo?.symbol}</p>
               <p className="network">{transNetworkText(tokenInfo.chainId, isMainnet)}</p>
             </div>
           }
@@ -75,7 +75,8 @@ function TokenDetailMain({
         <div className="balance">
           <div className="balance-amount">
             <span className="amount">
-              {formatAmountShow(divDecimals(tokenInfo.balance, tokenInfo.decimals))} {tokenInfo.symbol}
+              {formatAmountShow(divDecimals(tokenInfo.balance, tokenInfo.decimals))}{' '}
+              {tokenInfo?.label || tokenInfo.symbol}
             </span>
             {isMainnet && <span className="convert">{`$ ${formatAmountShow(tokenInfo.balanceInUsd || 0)}`}</span>}
           </div>
