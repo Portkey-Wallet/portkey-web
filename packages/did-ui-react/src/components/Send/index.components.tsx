@@ -103,6 +103,7 @@ function SendContent({
       balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
       isSeed: assetItem.nftInfo?.isSeed,
       seedType: assetItem.nftInfo?.seedType,
+      label: assetItem?.label,
     }),
     [assetItem, isNFT],
   );
@@ -604,7 +605,7 @@ function SendContent({
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
         className="page-title"
-        title={`Send ${!isNFT ? tokenInfo.symbol : ''}`}
+        title={`Send ${!isNFT ? tokenInfo?.label || tokenInfo.symbol : ''}`}
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}

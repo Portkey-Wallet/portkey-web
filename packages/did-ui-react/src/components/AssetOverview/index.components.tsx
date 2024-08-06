@@ -10,7 +10,7 @@ import { BalanceTab, BaseToken, IFaucetConfig, NFTItemBaseExpand, TokenItemShowT
 import { formatAmountShow } from '../../utils/converter';
 import CustomTokenModal from '../CustomTokenModal';
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { IAssetItemType, IUserTokenItem } from '@portkey/services';
+import { IAssetItemType, IUserTokenItemNew } from '@portkey/services';
 import { ELF_SYMBOL } from '../../constants/assets';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import CustomAssetModal from '../CustomAssetModal';
@@ -19,7 +19,7 @@ import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
 
 export interface AssetOverviewProps {
-  allToken?: IUserTokenItem[];
+  allToken?: IUserTokenItemNew[];
   isShowRamp?: boolean;
   backIcon?: ReactNode;
   faucet?: IFaucetConfig;
@@ -134,7 +134,7 @@ export function AssetOverviewContent({
     setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
   }, [networkType, tokenListInfo?.list]);
 
-  const allTokenList = useMemo(() => allToken?.map((tokenItem) => tokenItem.token), [allToken]);
+  const allTokenList = useMemo(() => allToken?.map((tokenItem) => tokenItem), [allToken]);
 
   const supportToken = useMemo(() => {
     if (Array.isArray(allTokenList) && allTokenList?.length > 0) {
@@ -144,7 +144,6 @@ export function AssetOverviewContent({
   }, [allTokenList, tokenList]);
 
   const [isGetNFTCollectionPending, setIsGetNFTCollection] = useState<boolean>();
-
   return (
     <div className="portkey-ui-asset-overview">
       <AssetCard
