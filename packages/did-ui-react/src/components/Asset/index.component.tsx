@@ -276,23 +276,31 @@ function AssetMain({
     // saveLiftCycleInfo();
   }, [assetStep]);
 
-  const onReceive = useCallback(async (v: any) => {
-    setSelectToken({
-      ...v,
-      address: v.address || v.tokenContractAddress,
-    });
-    await sleep(50);
-    setAssetStep(AssetStep.receive);
-  }, []);
+  const onReceive = useCallback(
+    async (v: any) => {
+      preStepRef.current = assetStep;
+      setSelectToken({
+        ...v,
+        address: v.address || v.tokenContractAddress,
+      });
+      await sleep(50);
+      setAssetStep(AssetStep.receive);
+    },
+    [assetStep],
+  );
 
-  const onBuy = useCallback(async (v: any) => {
-    setSelectToken({
-      ...v,
-      address: v.address || v.tokenContractAddress,
-    });
-    await sleep(50);
-    setAssetStep(AssetStep.ramp);
-  }, []);
+  const onBuy = useCallback(
+    async (v: any) => {
+      preStepRef.current = assetStep;
+      setSelectToken({
+        ...v,
+        address: v.address || v.tokenContractAddress,
+      });
+      await sleep(50);
+      setAssetStep(AssetStep.ramp);
+    },
+    [assetStep],
+  );
 
   const onSend = useCallback(async (v: IAssetItemType) => {
     setSendToken(v);

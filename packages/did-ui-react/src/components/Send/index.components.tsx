@@ -565,7 +565,8 @@ function SendContent({
             toAccount={toAccount}
             amount={amount}
             balanceInUsd={tokenInfo.balanceInUsd}
-            symbol={tokenInfo?.symbol || ''}
+            symbol={tokenInfo?.label || tokenInfo?.symbol || ''}
+            label={tokenInfo?.label || ''}
             alias={tokenInfo.alias || ''}
             imageUrl={tokenInfo.imageUrl || ''}
             decimals={tokenInfo.decimals}
