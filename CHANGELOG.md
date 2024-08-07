@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.7.3](https://github.com/FrankFeng1116/portkey-web/compare/v2.7.2...v2.7.3) (2024-08-07)
+
+### Features
+
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/FrankFeng1116/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/FrankFeng1116/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/FrankFeng1116/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/FrankFeng1116/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
 ## [2.7.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1...v2.7.2) (2024-07-31)
 
 ### Bug Fixes
