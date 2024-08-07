@@ -1,6 +1,6 @@
 {
   "name": "@portkey/onboarding",
-  "version": "2.7.3",
+  "version": "2.7.4",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,8 +41,8 @@
   },
   "dependencies": {
     "@portkey/detect-provider": "^2.0.0-alpha.2",
-    "@portkey/types": "^2.7.3",
-    "@portkey/utils": "^2.7.3",
+    "@portkey/types": "^2.7.4",
+    "@portkey/utils": "^2.7.4",
     "bowser": "^2.11.0",
     "query-string": "^7.1.1"
   },
