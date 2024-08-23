@@ -27,11 +27,13 @@ export function useMyMenuList({ onClickGuardians, onClickWalletSecurity }: useMy
 interface useWalletSecurityMenuListProps {
   onClickPaymentSecurity: () => void;
   onClickTokenAllowance: () => void;
+  onClickSetSecondaryMailbox: () => void;
 }
 
 export function useWalletSecurityMenuList({
   onClickPaymentSecurity,
   onClickTokenAllowance,
+  onClickSetSecondaryMailbox,
 }: useWalletSecurityMenuListProps): IMenuItemType[] {
   return useMemo(
     () => [
@@ -43,7 +45,11 @@ export function useWalletSecurityMenuList({
         label: 'Token Allowance',
         onClick: onClickTokenAllowance,
       },
+      {
+        label: 'Set Secondary Mailbox',
+        onClick: onClickSetSecondaryMailbox,
+      },
     ],
-    [onClickPaymentSecurity, onClickTokenAllowance],
+    [onClickPaymentSecurity, onClickSetSecondaryMailbox, onClickTokenAllowance],
   );
 }

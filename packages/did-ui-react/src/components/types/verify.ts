@@ -17,7 +17,7 @@ export type IVerifier = {
 export type TVerifierItem = PartialOption<VerifierItem, 'endPoints' | 'verifierAddresses'>;
 
 export interface BaseCodeVerifyProps {
-  verifier: TVerifierItem;
+  verifier?: TVerifierItem;
   className?: string;
   tipExtra?: ReactNode;
   isCountdownNow?: boolean;

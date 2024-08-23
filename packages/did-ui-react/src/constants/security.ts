@@ -22,6 +22,8 @@ export const SecurityVulnerabilityTip =
   'You have too few guardians to protect your wallet. Please add at least one more guardian before proceeding.';
 
 export const SecurityAccelerateErrorTip = `Guardian failed to be added. Please wait a while for the addition to complete.`;
+export const SetSecondaryMailboxTip1 = `When you carry out the operation of authorization, signature, etc., the auxiliary mailbox you set will receive the corresponding notification email.`;
+export const SetSecondaryMailboxTip2 = `If your login account can get emails, you will also receive emails.`;
 
 export const MAX_TRANSACTION_FEE = 0.1;
 
