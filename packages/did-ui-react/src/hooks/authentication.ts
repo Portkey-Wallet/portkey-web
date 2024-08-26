@@ -15,7 +15,6 @@ import { OperationTypeEnum, VerifyVerificationCodeResult, VerifyZKLoginParams, Z
 import type { ChainId, TStringJSON } from '@portkey/types';
 import { FetchRequest } from '@portkey/request';
 import { VerifyTypeEnum } from '../constants/guardian';
-import { usePortkeyAsset } from '../components';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
@@ -36,7 +35,6 @@ interface BaseAuthProps {
 
 export function useVerifyGoogleToken() {
   const verifyZKLogin = useVerifyZKLogin();
-  const [{ managementAccount }] = usePortkeyAsset();
   return useCallback(
     async (params: VerifySocialLoginParams) => {
       let accessToken = params.accessToken;
@@ -68,7 +66,7 @@ export function useVerifyGoogleToken() {
             redirectURI: params.redirectURI,
             network: params.networkType,
             approveDetail: params.approveDetail,
-            managerAddress: managementAccount?.address,
+            managerAddress: managerAddress,
             verifyType: VerifyTypeEnum.zklogin,
           });
         }
@@ -104,13 +102,12 @@ export function useVerifyGoogleToken() {
       });
       return rst as any;
     },
-    [managementAccount?.address, verifyZKLogin],
+    [verifyZKLogin],
   );
 }
 
 export function useVerifyAppleToken() {
   const verifyZKLogin = useVerifyZKLogin();
-  const [{ managementAccount }] = usePortkeyAsset();
   return useCallback(
     async (params: VerifySocialLoginParams) => {
       let accessToken = params.accessToken;
@@ -132,7 +129,7 @@ export function useVerifyAppleToken() {
             redirectURI: params.redirectURI,
             network: params.networkType,
             approveDetail: params.approveDetail,
-            managerAddress: managementAccount?.address,
+            managerAddress: managerAddress,
             verifyType: VerifyTypeEnum.zklogin,
           });
           if (!authRes) throw new Error('Missing Response');
@@ -165,7 +162,7 @@ export function useVerifyAppleToken() {
       });
       return rst as any;
     },
-    [managementAccount?.address, verifyZKLogin],
+    [verifyZKLogin],
   );
 }
 

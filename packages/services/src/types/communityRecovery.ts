@@ -25,8 +25,8 @@ export interface RegisterParams {
   extraData: string;
   chainId: ChainId;
   verifierId: string;
-  verificationDoc: string;
-  signature: string;
+  verificationDoc?: string;
+  signature?: string;
   context: Context;
   referralInfo?: IReferralInfo;
 }

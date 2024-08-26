@@ -17,7 +17,7 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
   operationDetails: TStringJSON;
-  onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
+  onSuccess?: (res: { verificationDoc?: string; signature?: string; verifierId: string }) => void;
   onReSend?: (result: TVerifyCodeInfo) => void;
 }
 

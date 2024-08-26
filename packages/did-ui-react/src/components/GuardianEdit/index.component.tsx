@@ -347,7 +347,8 @@ function GuardianEdit({
     };
   }, []);
 
-  const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
+  const verifySuccess = useCallback((res: { verificationDoc?: string; signature?: string; verifierId: string }) => {
+    if (!res.verificationDoc || !res.signature) return; // todo_wade
     const { guardianIdentifier } = handleVerificationDoc(res.verificationDoc);
 
     preGuardianRef.current = {

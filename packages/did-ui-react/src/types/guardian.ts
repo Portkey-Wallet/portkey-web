@@ -87,7 +87,7 @@ export interface IGuardiansApproved {
   verificationInfo: {
     id: string;
     signature: string | number[];
-    verificationDoc: string;
+    verificationDoc?: string;
   };
 }
 

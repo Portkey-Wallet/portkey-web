@@ -4,8 +4,8 @@ import { OnErrorFunc, PartialOption } from '../../types';
 import { ReactNode } from 'react';
 
 export interface IVerifyInfo {
-  verificationDoc: string;
-  signature: string;
+  verificationDoc?: string;
+  signature?: string;
 }
 
 export type IVerifier = {

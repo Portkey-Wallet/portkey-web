@@ -287,7 +287,7 @@ const GuardianApprovalMain = forwardRef(
     );
 
     const onCodeVerifyHandler = useCallback(
-      (res: { verificationDoc: string; signature: string; verifierId: string }, index: number) => {
+      (res: { verificationDoc?: string; signature?: string; verifierId: string }, index: number) => {
         setGuardianList((v) => {
           v[index] = {
             ...v[index],
