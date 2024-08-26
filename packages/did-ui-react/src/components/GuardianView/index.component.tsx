@@ -38,6 +38,7 @@ import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -71,6 +72,7 @@ function GuardianView({
     () => currentGuardian?.verifiedByZk || currentGuardian?.manuallySupportForZk,
     [currentGuardian?.manuallySupportForZk, currentGuardian?.verifiedByZk],
   );
+  const [{ managementAccount }] = usePortkeyAsset();
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [switchDisable, setSwitchDisable] = useState<boolean>(false);
@@ -103,6 +105,9 @@ function GuardianView({
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
       let token = '';
+      let idToken;
+      let nonce;
+      let timestamp;
       if (
         _guardian?.guardianType === 'Telegram' &&
         telegramInfo?.userId === _guardian?.guardianIdentifier &&
@@ -116,13 +121,21 @@ function GuardianView({
           redirectURI,
           network: networkType,
           guardianIdentifier: _guardian.guardianIdentifier,
+          managerAddress: managementAccount?.address,
         });
+
         if (!response?.token) throw new Error('auth failed');
         token = response.token;
+        idToken = response.idToken;
+        nonce = response.nonce;
+        timestamp = response.timestamp;
       }
+
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
         accessToken: token,
-        // idToken: _guardian.a
+        idToken,
+        nonce,
+        timestamp,
         id: _guardian.guardianIdentifier || '',
         verifierId: _guardian?.verifier?.id || '',
         chainId: originChainId,
@@ -150,6 +163,7 @@ function GuardianView({
       originChainId,
       networkType,
       operationType,
+      managementAccount?.address,
     ],
   );
 

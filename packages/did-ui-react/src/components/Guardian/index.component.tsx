@@ -188,6 +188,7 @@ function GuardianMain({
             );
           }
         }
+        await fetchGuardianList();
         setStep(GuardianStep.guardianList);
         onAddGuardianFinish?.({ syncStatus });
       } catch (e) {
@@ -203,7 +204,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [sandboxId, originChainId, caHash, accelerateChainId, onAddGuardianFinish, onError, isErrorTip],
+    [sandboxId, originChainId, caHash, accelerateChainId, fetchGuardianList, onAddGuardianFinish, onError, isErrorTip],
   );
   const handleEditGuardian = useCallback(
     async (
@@ -224,6 +225,7 @@ function GuardianMain({
           chainId: originChainId,
           caHash,
         });
+        await fetchGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
         return errorTip(
@@ -238,7 +240,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [preGuardian, sandboxId, originChainId, caHash, isErrorTip, onError],
+    [preGuardian, sandboxId, originChainId, caHash, fetchGuardianList, isErrorTip, onError],
   );
   const handleRemoveGuardian = useCallback(
     async (approvalInfo: GuardiansApproved[], _currentGuardian?: UserGuardianStatus) => {
@@ -254,6 +256,7 @@ function GuardianMain({
           chainId: originChainId,
           caHash,
         });
+        await fetchGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
         return errorTip(
@@ -268,7 +271,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [currentGuardian, sandboxId, originChainId, caHash, isErrorTip, onError],
+    [currentGuardian, sandboxId, originChainId, caHash, fetchGuardianList, isErrorTip, onError],
   );
   const handleSetLoginGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {

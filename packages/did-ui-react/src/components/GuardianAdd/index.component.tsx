@@ -48,7 +48,6 @@ import BackHeader from '../BackHeader';
 import {
   AccountGuardianList,
   AddGuardiansType,
-  VerifyTypeEnum,
   guardianAccountExistTip,
   verifierExistTip,
   zkGuardianType,
@@ -177,8 +176,8 @@ function GuardianAdd({
       })),
     [guardianList, verifierList],
   );
-  const defaultSelectedVerifierId = useMemo(
-    () => verifierSelectItems?.find((item) => !item.disabled)?.id || verifierSelectItems?.[0].id,
+  const defaultSelectedVerifier = useMemo(
+    () => verifierSelectItems?.find((item) => !item.disabled) || verifierSelectItems?.[0],
     [verifierSelectItems],
   );
 
@@ -313,7 +312,6 @@ function GuardianAdd({
             redirectURI,
             network: networkType,
             managerAddress: managementAccount?.address,
-            verifyType: VerifyTypeEnum.zklogin,
           });
           if (!response?.token) throw new Error('add guardian failed');
           token = response.token;
@@ -367,7 +365,7 @@ function GuardianAdd({
             verifyToken: {
               type: curGuardian.current?.guardianType,
               accessToken: zkAuth.access_token,
-              verifierId: defaultSelectedVerifierId,
+              verifierId: defaultSelectedVerifier?.id,
               chainId: originChainId,
               operationType: OperationTypeEnum.addGuardian,
             },
@@ -423,7 +421,7 @@ function GuardianAdd({
       zkAuth.id_token,
       zkAuth.timestamp,
       verifyZKLogin,
-      defaultSelectedVerifierId,
+      defaultSelectedVerifier?.id,
       originChainId,
       managementAccount?.address,
       verifyToken,
@@ -462,10 +460,13 @@ function GuardianAdd({
       return false;
     }
     // 4. check verifier exist
-    const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
-    if (_verifierExist) {
-      setVerifierExist(true);
-      return false;
+
+    if (!(curGuardian.current?.guardianType && zkGuardianType.includes(curGuardian.current?.guardianType))) {
+      const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
+      if (_verifierExist) {
+        setVerifierExist(true);
+        return false;
+      }
     }
 
     const _key = `${guardianAccount}&${verifier.id}`;
@@ -648,9 +649,13 @@ function GuardianAdd({
   }, []);
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
+      let _cur = curGuardian.current;
+      if (_cur?.guardianType && zkGuardianType.includes(_cur?.guardianType)) {
+        _cur = Object.assign(_cur, { verifierId: defaultSelectedVerifier?.id, verifier: defaultSelectedVerifier });
+      }
       try {
         setLoading(true);
-        await handleAddGuardian?.(curGuardian.current!, approvalInfo);
+        await handleAddGuardian?.(_cur!, approvalInfo);
       } catch (e) {
         errorTip(
           {
@@ -664,7 +669,7 @@ function GuardianAdd({
         setLoading(false);
       }
     },
-    [handleAddGuardian, isErrorTip, onError],
+    [defaultSelectedVerifier, handleAddGuardian, isErrorTip, onError],
   );
   const onConfirm = useCallback(async () => {
     let _valid = true;
