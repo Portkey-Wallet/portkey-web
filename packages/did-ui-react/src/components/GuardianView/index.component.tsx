@@ -152,7 +152,12 @@ function GuardianView({
       });
       if (!rst) return;
       const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
-      const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+      let guardianIdentifier = '';
+      if (rst.zkLoginInfo) {
+        guardianIdentifier = rst.zkLoginInfo.identifierHash;
+      } else {
+        guardianIdentifier = handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
+      }
       return { verifierInfo, guardianIdentifier };
     },
     [
@@ -285,6 +290,7 @@ function GuardianView({
         verificationDoc: res?.verifierInfo.verificationDoc,
         signature: res?.verifierInfo.signature,
         identifierHash: res?.guardianIdentifier,
+        zkLoginInfo: res?.verifierInfo?.zkLoginInfo,
       };
       setApprovalVisible(true);
     } catch (error) {

@@ -39,6 +39,7 @@ export interface IVerificationInfo {
   signature?: string;
   verificationDoc?: string;
   verifierId?: string;
+  zkLoginInfo?: ZKLoginInfo;
 }
 export interface IVerifierInfo {
   sessionId: string;
