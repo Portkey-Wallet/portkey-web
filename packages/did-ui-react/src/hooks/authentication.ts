@@ -11,6 +11,7 @@ import {
 } from '../utils';
 import { OperationTypeEnum, VerifyVerificationCodeResult } from '@portkey/services';
 import type { ChainId, TStringJSON } from '@portkey/types';
+import { usePortkeyAsset } from '../components';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
@@ -18,6 +19,7 @@ interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   networkType?: NetworkType;
   operationDetails: TStringJSON;
   approveDetail?: IApproveDetail;
+  caHash?: string;
 }
 
 interface BaseAuthProps {
@@ -68,6 +70,7 @@ export function useVerifyGoogleToken() {
       accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      caHash: params.caHash || '',
       operationDetails: params.operationDetails,
     });
   }, []);
@@ -103,6 +106,7 @@ export function useVerifyAppleToken() {
       identityToken: accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      caHash: params.caHash || '',
       operationDetails: params.operationDetails,
     });
   }, []);
@@ -137,6 +141,7 @@ export function useVerifyTelegram() {
       accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      caHash: params.caHash || '',
       operationDetails: params.operationDetails,
     });
   }, []);
@@ -171,6 +176,7 @@ export function useVerifyFacebook() {
       accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      caHash: params.caHash || '',
       operationDetails: params.operationDetails,
     });
   }, []);
@@ -206,6 +212,7 @@ export function useVerifyTwitter() {
         accessToken,
         operationType: params.operationType,
         targetChainId: params.targetChainId,
+        caHash: params.caHash || '',
         operationDetails: params.operationDetails,
       },
       { 'oauth-version': '1.0A' },
@@ -219,6 +226,8 @@ export function useVerifyToken() {
   const verifyTelegram = useVerifyTelegram();
   const verifyFacebook = useVerifyFacebook();
   const verifyTwitter = useVerifyTwitter();
+  // const [{ caHash }] = usePortkeyAsset();
+  const assets = usePortkeyAsset();
 
   return useCallback(
     (type: ISocialLogin, params: VerifySocialLoginParams) => {
@@ -235,8 +244,10 @@ export function useVerifyToken() {
       } else if (type === 'Twitter') {
         func = verifyTwitter;
       }
-      return func?.(params);
+      const paramsWithCaHash = { ...params, caHash: assets?.initialized ? assets?.[0].caHash || '' : '' };
+
+      return func?.(paramsWithCaHash);
     },
-    [verifyAppleToken, verifyFacebook, verifyGoogleToken, verifyTelegram, verifyTwitter],
+    [assets, verifyAppleToken, verifyFacebook, verifyGoogleToken, verifyTelegram, verifyTwitter],
   );
 }
