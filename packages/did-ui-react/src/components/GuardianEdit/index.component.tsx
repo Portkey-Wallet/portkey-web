@@ -29,7 +29,13 @@ import CommonBaseModal from '../CommonBaseModal';
 import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
-import { SocialLoginList, guardianIconMap, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
+import {
+  SocialLoginList,
+  guardianIconMap,
+  verifierExistTip,
+  zkGuardianType,
+  zkLoginVerifierItem,
+} from '../../constants/guardian';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
@@ -95,9 +101,15 @@ function GuardianEdit({
 }: GuardianEditProps) {
   const { t } = useTranslation();
   const [isExist, setIsExist] = useState<boolean>(false);
+  const isZK = useMemo(
+    () => preGuardian?.verifiedByZk || preGuardian?.manuallySupportForZk,
+    [preGuardian?.manuallySupportForZk, preGuardian?.verifiedByZk],
+  );
   const preGuardianRef = useRef<UserGuardianStatus | undefined>(preGuardian);
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
-  const [selectVerifierId, setSelectVerifierId] = useState<string | undefined>(currentGuardian?.verifier?.id);
+  const [selectVerifierId, setSelectVerifierId] = useState<string | undefined>(
+    isZK ? zkLoginVerifierItem.id : currentGuardian?.verifier?.id,
+  );
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const verifyToken = useVerifyToken();
@@ -130,7 +142,7 @@ function GuardianEdit({
         label: (
           <div className="portkey-ui-flex label-item">
             <CustomSvg type="Warning" />
-            <div className="tip">{verifierUsedTip}</div>
+            <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
           </div>
         ),
       },
@@ -139,17 +151,28 @@ function GuardianEdit({
   );
   const verifierSelectItems = useMemo(
     () =>
-      verifierList?.map((item) => ({
-        value: item?.id,
-        iconUrl: item?.imageUrl ?? '',
-        label: item?.name,
-        icon: <img src={item?.imageUrl} />,
-        id: item?.id,
-        disabled: !!guardianList
+      verifierList?.map((item) => {
+        let disabled = false;
+        const isUsed = !!guardianList
           ?.filter((temp) => temp.key !== preGuardian?.key)
-          .find((_guardian) => _guardian.verifierId === item.id),
-      })),
-    [guardianList, preGuardian?.key, verifierList],
+          .find((_guardian) => _guardian.verifierId === item.id);
+
+        if (preGuardian?.guardianType && zkGuardianType.includes(preGuardian.guardianType)) {
+          const abled = item.id === preGuardian?.verifier?.id || item.name === zkLoginVerifierItem.name;
+          disabled = !abled;
+        } else {
+          disabled = (isUsed && item.id !== preGuardian?.verifier?.id) || item.name === zkLoginVerifierItem.name;
+        }
+        return {
+          value: item?.id,
+          iconUrl: item?.imageUrl ?? '',
+          label: item?.name,
+          icon: <img src={item?.imageUrl} />,
+          id: item?.id,
+          disabled,
+        };
+      }),
+    [guardianList, preGuardian?.guardianType, preGuardian?.key, preGuardian?.verifier?.id, verifierList],
   );
   const approvalGuardianList = useMemo(
     () => guardianList?.filter((item) => item.key !== preGuardian?.key),
@@ -492,7 +515,11 @@ function GuardianEdit({
           <p className="guardian-edit-input-item-label">{t('Verifier')}</p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
-            className="verifier-select, portkey-select-verifier-option-tip"
+            className={clsx(
+              'verifier-select',
+              'portkey-select-verifier-option-tip',
+              isZK && 'verifier-select-disabled',
+            )}
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
@@ -510,7 +537,7 @@ function GuardianEdit({
             type="primary"
             className="guardian-btn "
             onClick={onConfirm}
-            disabled={editBtnDisable}
+            disabled={editBtnDisable || isZK}
             loading={editBtnLoading}>
             {t('Send Request')}
           </ThrottleButton>

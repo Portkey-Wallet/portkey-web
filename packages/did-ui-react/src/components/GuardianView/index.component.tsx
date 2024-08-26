@@ -31,7 +31,7 @@ import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
 import clsx from 'clsx';
 import './index.less';
-import { SocialLoginList, guardianIconMap } from '../../constants/guardian';
+import { SocialLoginList, guardianIconMap, zkLoginVerifierItem } from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
@@ -67,6 +67,10 @@ function GuardianView({
   onError,
 }: GuardianViewProps) {
   const { t } = useTranslation();
+  const isZK = useMemo(
+    () => currentGuardian?.verifiedByZk || currentGuardian?.manuallySupportForZk,
+    [currentGuardian?.manuallySupportForZk, currentGuardian?.verifiedByZk],
+  );
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [switchDisable, setSwitchDisable] = useState<boolean>(false);
@@ -118,6 +122,7 @@ function GuardianView({
       }
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
         accessToken: token,
+        // idToken: _guardian.a
         id: _guardian.guardianIdentifier || '',
         verifierId: _guardian?.verifier?.id || '',
         chainId: originChainId,
@@ -384,10 +389,10 @@ function GuardianView({
               <div className="guardian-view-input-item-label">{t('Verifier')}</div>
               <div className="guardian-view-input-item-control portkey-ui-flex">
                 <BaseVerifierIcon
-                  src={currentGuardian?.verifier?.imageUrl}
-                  fallback={currentGuardian?.verifier?.name[0]}
+                  src={isZK ? zkLoginVerifierItem.imageUrl : currentGuardian?.verifier?.imageUrl}
+                  fallback={isZK ? zkLoginVerifierItem.name[0] : currentGuardian?.verifier?.name[0]}
                 />
-                <span className="name">{currentGuardian?.verifier?.name ?? ''}</span>
+                <span className="name">{isZK ? zkLoginVerifierItem.name : currentGuardian?.verifier?.name ?? ''}</span>
               </div>
             </div>
           </div>
