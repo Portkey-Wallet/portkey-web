@@ -60,29 +60,27 @@ class OpenLogin {
     let zkParams = {};
     let zkNonce = '';
     let zkTimestamp = 0;
-    if (params.verifyType === VerifyTypeEnum.zklogin) {
+
+    if (zkGuardianType.includes(params.loginProvider)) {
       if (!params?.managerAddress) {
         throw 'managerAddress is required';
       }
-
-      if (zkGuardianType.includes(params.loginProvider)) {
-        const { nonce, timestamp } = generateNonceAndTimestamp(params?.managerAddress);
-        if (params.loginProvider === 'Apple') {
-          /**
-           * on App, nonce is hashed by framework,
-           * so the server need to hash the data (timestamp+manager address) twice to verify the nonce.
-           * And also, the extension need to hash the nonce again to verify the nonce.
-           */
-          zkNonce = AElf.utils.sha256(nonce);
-        } else {
-          zkNonce = nonce;
-        }
-        zkTimestamp = timestamp;
-        zkParams = {
-          nonce: zkNonce,
-          socialType: VerifyTypeEnum.zklogin,
-        };
+      const { nonce, timestamp } = generateNonceAndTimestamp(params?.managerAddress);
+      if (params.loginProvider === 'Apple') {
+        /**
+         * on App, nonce is hashed by framework,
+         * so the server need to hash the data (timestamp+manager address) twice to verify the nonce.
+         * And also, the extension need to hash the nonce again to verify the nonce.
+         */
+        zkNonce = AElf.utils.sha256(nonce);
+      } else {
+        zkNonce = nonce;
       }
+      zkTimestamp = timestamp;
+      zkParams = {
+        nonce: zkNonce,
+        socialType: VerifyTypeEnum.zklogin,
+      };
     }
 
     const dataObject: OpenloginParamConfig = {

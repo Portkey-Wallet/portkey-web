@@ -67,11 +67,8 @@ export function useVerifyGoogleToken() {
             network: params.networkType,
             approveDetail: params.approveDetail,
             managerAddress: managerAddress,
-            verifyType: VerifyTypeEnum.zklogin,
           });
         }
-        console.log('googleInfo', googleInfo);
-
         idToken = googleInfo?.idToken;
         nonce = googleInfo?.nonce;
         timestamp = googleInfo?.timestamp;
@@ -83,7 +80,7 @@ export function useVerifyGoogleToken() {
       }
       if (!accessToken) throw new Error('accessToken is not defined');
       if (!idToken) {
-        throw new Error('Invalid idToken');
+        throw new Error('Invalid idToken 1');
       }
       const rst = await verifyZKLogin({
         verifyToken: {
@@ -130,7 +127,6 @@ export function useVerifyAppleToken() {
             network: params.networkType,
             approveDetail: params.approveDetail,
             managerAddress: managerAddress,
-            verifyType: VerifyTypeEnum.zklogin,
           });
           if (!authRes) throw new Error('Missing Response');
           accessToken = authRes?.token;

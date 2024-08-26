@@ -28,7 +28,12 @@ export function getOperationDetails(
     operationType === OperationTypeEnum.unsetLoginAccount
   ) {
     const { identifierHash, guardianType, verifierId } = extra || {};
-    return JSON.stringify({ identifierHash, guardianType: getGuardianTypeValue(guardianType), verifierId });
+    return JSON.stringify({
+      identifierHash,
+      guardianType: getGuardianTypeValue(guardianType),
+      verifierId,
+      manager: getManagementAccount().address,
+    });
   }
   if (operationType === OperationTypeEnum.editGuardian) {
     const { identifierHash, guardianType } = extra || {};
@@ -38,6 +43,7 @@ export function getOperationDetails(
       guardianType: getGuardianTypeValue(guardianType),
       preVerifierId,
       newVerifierId,
+      manager: getManagementAccount().address,
     });
   }
   if (operationType === OperationTypeEnum.transferApprove) {
