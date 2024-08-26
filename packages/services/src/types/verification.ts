@@ -62,12 +62,12 @@ export type BaseVerifyTokenParams = {
 
 export interface VerifierSocialTokenParams extends BaseVerifyTokenParams {
   accessToken: string;
-  caHash: string;
+  caHash?: string;
 }
 
 export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
   identityToken: string;
-  caHash: string;
+  caHash?: string;
 }
 
 export type SendAppleUserExtraInfoResult = { userId: string };
