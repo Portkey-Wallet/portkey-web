@@ -1,4 +1,5 @@
 import { FetchRequest } from '@portkey/request';
+import { ZKProofInfo } from '../types';
 
 export type AppleUserInfo = {
   isExpired: boolean;
@@ -195,4 +196,34 @@ export function parseTwitterToken(tokenStr?: string | null): TwitterUserInfo | u
   } catch (error) {
     return;
   }
+}
+
+export function parseKidFromJWTToken(token: string) {
+  const idTokenArr = token.split('.') ?? [];
+  const spilt1 = Buffer.from(idTokenArr[0], 'base64').toString('utf8');
+  const { kid } = JSON.parse(spilt1) || {};
+  return kid;
+}
+
+export function parseJWTToken(token: string) {
+  const idTokenArr = token.split('.') ?? [];
+  const spilt1 = Buffer.from(idTokenArr[0], 'base64').toString('utf8');
+  const { kid } = JSON.parse(spilt1) || {};
+
+  const spilt2 = Buffer.from(idTokenArr[1], 'base64').toString('utf8');
+  const { iss } = JSON.parse(spilt2) || {};
+  return { kid, issuer: iss };
+}
+
+export function parseZKProof(zkProof: string) {
+  const { pi_a, pi_b, pi_c } = JSON.parse(zkProof);
+  let zkProofPiB1 = '';
+  let zkProofPiB2 = '';
+  let zkProofPiB3 = '';
+  if (Array.isArray(pi_b) && pi_b.length) {
+    zkProofPiB1 = pi_b[0];
+    zkProofPiB2 = pi_b[1];
+    zkProofPiB3 = pi_b[2];
+  }
+  return { zkProofPiA: pi_a, zkProofPiB1, zkProofPiB2, zkProofPiB3, zkProofPiC: pi_c } as ZKProofInfo;
 }

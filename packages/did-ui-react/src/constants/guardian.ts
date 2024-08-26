@@ -1,4 +1,4 @@
-import { AccountType, AccountTypeEnum, AccountTypeKeyEnum } from '@portkey/services';
+import { AccountType, AccountTypeEnum, AccountTypeKeyEnum, VerifierItem } from '@portkey/services';
 import svgsList from '../assets/svgs';
 import { TotalAccountType } from '../types';
 
@@ -91,4 +91,17 @@ export const guardianIconMap: Record<AccountType, any> = {
   Telegram: 'Telegram',
   Facebook: 'Facebook',
   Twitter: 'Twitter',
+};
+
+export const zkGuardianType: AccountType[] = ['Apple', 'Google'];
+
+export enum VerifyTypeEnum {
+  zklogin = 'zklogin',
+}
+
+export const zkLoginVerifierItem: VerifierItem = {
+  // id: '53961cca496a1cfaa7bf2dda210afb4f6430283cce4239be099ade5647091928', // sha256('zkLogin')
+  id: 'zkLogin',
+  name: 'zkLogin',
+  imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/zklogin_verifier.png',
 };
