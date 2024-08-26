@@ -105,3 +105,6 @@ export const zkLoginVerifierItem: VerifierItem = {
   name: 'zkLogin',
   imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/zklogin_verifier.png',
 };
+
+export const zkLoginVerifyUrlTestnet = 'https://zklogin-prover-test.portkey.finance/v1/prove';
+export const zkLoginVerifyUrlMainnet = 'https://zklogin-prover.portkey.finance/v1/prove';

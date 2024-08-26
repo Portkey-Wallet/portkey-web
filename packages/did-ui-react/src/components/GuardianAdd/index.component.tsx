@@ -176,10 +176,14 @@ function GuardianAdd({
       })),
     [guardianList, verifierList],
   );
-  const defaultSelectedVerifier = useMemo(
-    () => verifierSelectItems?.find((item) => !item.disabled) || verifierSelectItems?.[0],
-    [verifierSelectItems],
-  );
+  const defaultSelectedVerifier = useMemo(() => {
+    const _v = verifierSelectItems?.find((item) => !item.disabled) || verifierSelectItems?.[0];
+    return {
+      id: _v?.id || '',
+      name: _v?.label || '',
+      imageUrl: verifierList?.find((item) => item.id === _v?.id)?.imageUrl || '',
+    };
+  }, [verifierList, verifierSelectItems]);
 
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
@@ -580,7 +584,7 @@ function GuardianAdd({
     [emailValue, setEmailValue, renderSocialGuardianAccount, t],
   );
   const verifySuccess = useCallback((res: { verificationDoc?: string; signature?: string; verifierId: string }) => {
-    if (!res.verificationDoc || !res.signature) return; // todo_wade
+    if (!res.verificationDoc || !res.signature) return;
     const { guardianIdentifier } = handleVerificationDoc(res.verificationDoc);
 
     curGuardian.current = {
@@ -687,13 +691,22 @@ function GuardianAdd({
           setLoading(true);
           const res = await socialVerify(curGuardian.current!);
           const { guardianIdentifier, verifierInfo, zkLoginInfo } = res || {};
-          if (guardianIdentifier && (verifierInfo || zkLoginInfo)) {
-            curGuardian.current = {
-              ...(curGuardian?.current as UserGuardianStatus),
-              identifierHash: guardianIdentifier,
-              ...verifierInfo,
-              zkLoginInfo,
-            };
+          if (guardianIdentifier) {
+            if (zkLoginInfo) {
+              curGuardian.current = {
+                ...(curGuardian?.current as UserGuardianStatus),
+                identifierHash: guardianIdentifier,
+                zkLoginInfo,
+                verifier: defaultSelectedVerifier,
+                verifierId: defaultSelectedVerifier?.id,
+              };
+            } else {
+              curGuardian.current = {
+                ...(curGuardian?.current as UserGuardianStatus),
+                identifierHash: guardianIdentifier,
+                ...verifierInfo,
+              };
+            }
             setApprovalVisible(true);
           }
         } catch (e) {
@@ -723,7 +736,7 @@ function GuardianAdd({
         });
       }
     }
-  }, [checkValid, isErrorTip, onError, sendCode, socialValue, socialVerify]);
+  }, [checkValid, defaultSelectedVerifier, isErrorTip, onError, sendCode, socialValue?.id, socialVerify]);
   const onCloseApproval = useCallback(() => {
     setVerifierVisible(false);
     setApprovalVisible(false);
