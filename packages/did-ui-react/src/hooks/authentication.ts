@@ -37,9 +37,11 @@ export function useVerifyGoogleToken() {
   const verifyZKLogin = useVerifyZKLogin();
   return useCallback(
     async (params: VerifySocialLoginParams) => {
+      console.log('aaaa useVerifyGoogleToken params', params);
       let accessToken = params.accessToken;
       let isRequest = !accessToken;
       let idToken = params.idToken;
+      console.log('aaaa useVerifyGoogleToken idToken', idToken);
       let nonce = params.nonce;
       let timestamp = params.timestamp;
       const managerAddress = params.operationDetails ? JSON.parse(params.operationDetails).manager : '';
@@ -79,6 +81,7 @@ export function useVerifyGoogleToken() {
         if (id !== params.id) throw new Error('Account does not match your guardian');
       }
       if (!accessToken) throw new Error('accessToken is not defined');
+      console.log('aaaa useVerifyGoogleToken after idToken', idToken);
       if (!idToken) {
         throw new Error('Invalid idToken 1');
       }

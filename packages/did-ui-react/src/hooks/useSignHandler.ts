@@ -139,7 +139,12 @@ export const useSignHandler = ({
         onFinish({
           identifier: userId,
           accountType: type,
-          authenticationInfo: { authToken: data?.accessToken },
+          authenticationInfo: {
+            authToken: data?.accessToken,
+            idToken: data?.idToken,
+            nonce: data?.nonce,
+            timestamp: data?.timestamp,
+          },
         });
       } catch (error) {
         setLoading(false);

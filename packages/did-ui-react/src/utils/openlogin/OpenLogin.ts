@@ -12,6 +12,8 @@ import { TelegramPlatform } from '../telegramPlatform';
 import { VerifyTypeEnum, zkGuardianType } from '../../constants/guardian';
 import { generateNonceAndTimestamp } from '../nonce';
 import AElf from 'aelf-sdk';
+import { getOperationDetails } from '../../components/utils/operation.util';
+import { OperationTypeEnum } from '@portkey/services';
 
 class OpenLogin {
   options: OpenLoginOptions;
@@ -62,10 +64,12 @@ class OpenLogin {
     let zkTimestamp = 0;
 
     if (zkGuardianType.includes(params.loginProvider)) {
-      if (!params?.managerAddress) {
+      const operationDetails = getOperationDetails(OperationTypeEnum.communityRecovery);
+      const managerAddress = JSON.parse(operationDetails).manager;
+      if (!managerAddress) {
         throw 'managerAddress is required';
       }
-      const { nonce, timestamp } = generateNonceAndTimestamp(params?.managerAddress);
+      const { nonce, timestamp } = generateNonceAndTimestamp(managerAddress);
       if (params.loginProvider === 'Apple') {
         /**
          * on App, nonce is hashed by framework,

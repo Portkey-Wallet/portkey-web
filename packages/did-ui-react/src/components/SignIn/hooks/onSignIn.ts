@@ -65,10 +65,12 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       const verifier = guardian.verifier as VerifierItem;
       const operationType = OperationTypeEnum.communityRecovery;
       const operationDetails = getOperationDetails(operationType);
-
       const result = await verifySocialToken({
         accountType: guardian.guardianType,
         token: guardian.accessToken,
+        idToken: guardianIdentifierInfo.authenticationInfo?.idToken,
+        nonce: guardianIdentifierInfo.authenticationInfo?.nonce,
+        timestamp: guardianIdentifierInfo.authenticationInfo?.timestamp,
         guardianIdentifier: guardian.identifier || '',
         verifier,
         networkType,
