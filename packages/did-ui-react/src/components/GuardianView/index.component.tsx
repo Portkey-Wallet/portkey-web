@@ -344,17 +344,14 @@ function GuardianView({
       if (error?.error?.code?.toString() === '3002') {
         handleSwitch();
       } else {
-        errorTip(
-          {
-            errorFields: 'GetHolderInfo',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-          onError,
-        );
+        CustomModal({
+          type: 'info',
+          okText: 'Close',
+          content: <>{t('This account address is already a login account and cannot be used')}</>,
+        });
       }
     }
-  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, isErrorTip, onError, originChainId, t]);
+  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, originChainId, t]);
 
   const checkUnsetLoginGuardian = useCallback(async () => {
     setSwitchDisable(true);
