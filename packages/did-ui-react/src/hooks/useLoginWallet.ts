@@ -90,6 +90,7 @@ export function useLoginWallet({
         verifierId: registerVerifier.verifierId,
         verificationDoc: registerVerifier.verificationDoc,
         signature: registerVerifier.signature,
+        zkLoginInfo: registerVerifier.zkLoginInfo,
         context: {
           clientId,
           requestId,
