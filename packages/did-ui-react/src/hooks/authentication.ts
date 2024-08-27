@@ -14,7 +14,8 @@ import {
 import { OperationTypeEnum, VerifyVerificationCodeResult, VerifyZKLoginParams, ZKLoginInfo } from '@portkey/services';
 import type { ChainId, TStringJSON } from '@portkey/types';
 import { FetchRequest } from '@portkey/request';
-import { VerifyTypeEnum } from '../constants/guardian';
+import { usePortkey } from '../components/context';
+import { zkLoginVerifyUrlMainnet, zkLoginVerifyUrlTestnet } from '../constants/guardian';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
@@ -83,7 +84,7 @@ export function useVerifyGoogleToken() {
       if (!accessToken) throw new Error('accessToken is not defined');
       console.log('aaaa useVerifyGoogleToken after idToken', idToken);
       if (!idToken) {
-        throw new Error('Invalid idToken 1');
+        throw new Error('Invalid idToken');
       }
       const rst = await verifyZKLogin({
         verifyToken: {
@@ -271,54 +272,56 @@ export function useVerifyTwitter() {
 }
 
 export function useVerifyZKLogin() {
-  // TODO-SA
-  const zkLoginVerifyUrl = 'https://zklogin-prover-test.portkey.finance/v1/prove';
-  return useCallback(async (params: VerifyZKLoginParams) => {
-    const customFetch = new FetchRequest({});
-    const { verifyToken, jwt, salt, kid, nonce, timestamp, managerAddress } = params;
-    const proofParams = { jwt, salt };
-    console.log('🌹🌹🌹useVerifyZKLogin params: ', proofParams);
-    const proofResult = await customFetch.send({
-      url: zkLoginVerifyUrl,
-      method: 'POST',
-      headers: {
-        Accept: 'text/plain;v=1.0',
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(proofParams),
-    });
+  const [{ networkType }] = usePortkey();
+  const zkLoginVerifyUrl = networkType === 'MAINNET' ? zkLoginVerifyUrlMainnet : zkLoginVerifyUrlTestnet;
+  return useCallback(
+    async (params: VerifyZKLoginParams) => {
+      const customFetch = new FetchRequest({});
+      const { verifyToken, jwt, salt, kid, nonce, timestamp, managerAddress } = params;
+      const proofParams = { jwt, salt };
+      const proofResult = await customFetch.send({
+        url: zkLoginVerifyUrl,
+        method: 'POST',
+        headers: {
+          Accept: 'text/plain;v=1.0',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(proofParams),
+      });
 
-    const verifyParams = {
-      identifierHash: proofResult.identifierHash,
-      salt,
-      nonce,
-      kid,
-      proof: proofResult.proof,
-    };
+      const verifyParams = {
+        identifierHash: proofResult.identifierHash,
+        salt,
+        nonce,
+        kid,
+        proof: proofResult.proof,
+      };
 
-    const portkeyVerifyResult = await did.services.verifyZKLogin({
-      ...verifyToken,
-      poseidonIdentifierHash: proofResult.identifierHash,
-      salt,
-    });
+      const portkeyVerifyResult = await did.services.verifyZKLogin({
+        ...verifyToken,
+        poseidonIdentifierHash: proofResult.identifierHash,
+        salt,
+      });
 
-    console.log('portkeyVerifyResult : ', portkeyVerifyResult);
+      console.log('portkeyVerifyResult : ', portkeyVerifyResult);
 
-    const zkProof = decodeURIComponent(verifyParams.proof);
-    const zkLoginInfo: ZKLoginInfo = {
-      identifierHash: portkeyVerifyResult.guardianIdentifierHash,
-      poseidonIdentifierHash: verifyParams.identifierHash,
-      identifierHashType: 1,
-      salt: verifyParams.salt,
-      zkProof,
-      jwt: jwt ?? '',
-      nonce: nonce ?? '',
-      circuitId: proofResult.circuitId,
-      timestamp,
-      managerAddress,
-    };
-    return { zkLoginInfo };
-  }, []);
+      const zkProof = decodeURIComponent(verifyParams.proof);
+      const zkLoginInfo: ZKLoginInfo = {
+        identifierHash: portkeyVerifyResult.guardianIdentifierHash,
+        poseidonIdentifierHash: verifyParams.identifierHash,
+        identifierHashType: 1,
+        salt: verifyParams.salt,
+        zkProof,
+        jwt: jwt ?? '',
+        nonce: nonce ?? '',
+        circuitId: proofResult.circuitId,
+        timestamp,
+        managerAddress,
+      };
+      return { zkLoginInfo };
+    },
+    [zkLoginVerifyUrl],
+  );
 }
 
 export function useVerifyToken() {
