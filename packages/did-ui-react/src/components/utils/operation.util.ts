@@ -48,15 +48,15 @@ export function getOperationDetails(
   }
   if (operationType === OperationTypeEnum.transferApprove) {
     const { symbol, amount, toAddress } = extra || {};
-    return JSON.stringify({ symbol, amount, toAddress });
+    return JSON.stringify({ symbol, amount, toAddress, manager: getManagementAccount().address });
   }
   if (operationType === OperationTypeEnum.managerApprove) {
     const { spender, amount, symbol } = extra || {};
-    return JSON.stringify({ spender, symbol, amount });
+    return JSON.stringify({ spender, symbol, amount, manager: getManagementAccount().address });
   }
   if (operationType === OperationTypeEnum.modifyTransferLimit) {
     const { symbol, singleLimit, dailyLimit } = extra || {};
-    return JSON.stringify({ symbol, singleLimit, dailyLimit });
+    return JSON.stringify({ symbol, singleLimit, dailyLimit, manager: getManagementAccount().address });
   }
   return '{}';
 }
