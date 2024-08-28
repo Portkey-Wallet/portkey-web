@@ -33,6 +33,7 @@ export type VerifyVerificationCodeParams = {
   targetChainId?: ChainId;
   operationType: OperationTypeEnum;
   operationDetails: TStringJSON;
+  caHash?: string;
 };
 
 export type VerifyVerificationCodeResult = {
@@ -61,10 +62,12 @@ export type BaseVerifyTokenParams = {
 
 export interface VerifierSocialTokenParams extends BaseVerifyTokenParams {
   accessToken: string;
+  caHash?: string;
 }
 
 export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
   identityToken: string;
+  caHash?: string;
 }
 
 export type SendAppleUserExtraInfoResult = { userId: string };

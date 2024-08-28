@@ -7,6 +7,7 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
 import { sleep } from '@portkey/utils';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 
 const MAX_TIMER = 60;
 
@@ -43,6 +44,7 @@ export default function CodeVerify({
   const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
   const uiRef = useRef<ICodeVerifyUIInterface>();
   const [codeError, setCodeError] = useState<boolean>();
+  const [{ caHash }] = usePortkeyAsset();
 
   const setInputError = useCallback(async (isError?: boolean) => {
     if (!isError) return setCodeError(isError);
@@ -66,6 +68,7 @@ export default function CodeVerify({
             chainId: originChainId,
             targetChainId,
             operationType,
+            caHash,
             operationDetails,
           });
           setLoading(false);
@@ -103,6 +106,7 @@ export default function CodeVerify({
       originChainId,
       targetChainId,
       operationType,
+      caHash,
       operationDetails,
       onSuccess,
       setInputError,
