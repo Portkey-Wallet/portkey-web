@@ -46,7 +46,7 @@ export function useWalletSecurityMenuList({
         onClick: onClickTokenAllowance,
       },
       {
-        label: 'Set Secondary Mailbox',
+        label: 'Set up Backup Mailbox',
         onClick: onClickSetSecondaryMailbox,
       },
     ],
