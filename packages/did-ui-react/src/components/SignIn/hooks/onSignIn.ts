@@ -65,10 +65,12 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       const verifier = guardian.verifier as VerifierItem;
       const operationType = OperationTypeEnum.communityRecovery;
       const operationDetails = getOperationDetails(operationType);
-
       const result = await verifySocialToken({
         accountType: guardian.guardianType,
         token: guardian.accessToken,
+        idToken: guardianIdentifierInfo.authenticationInfo?.idToken,
+        nonce: guardianIdentifierInfo.authenticationInfo?.nonce,
+        timestamp: guardianIdentifierInfo.authenticationInfo?.timestamp,
         guardianIdentifier: guardian.identifier || '',
         verifier,
         networkType,
@@ -76,13 +78,14 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         operationType,
         operationDetails,
       });
-      if (!result?.signature || !result?.verificationDoc) throw 'Verify social login error';
+      if (!result?.zkLoginInfo && (!result?.signature || !result?.verificationDoc)) throw 'Verify social login error';
       const approvedItem = {
         type: guardian.guardianType,
         identifier: guardian.identifier || guardian.identifierHash || '',
         verifierId: guardian.verifier?.id || '',
         verificationDoc: result.verificationDoc,
         signature: result.signature,
+        zkLoginInfo: result.zkLoginInfo,
       };
 
       return approvedItem;

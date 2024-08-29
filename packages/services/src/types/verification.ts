@@ -36,8 +36,13 @@ export type VerifyVerificationCodeParams = {
 };
 
 export type VerifyVerificationCodeResult = {
-  verificationDoc: string;
-  signature: string;
+  verificationDoc?: string;
+  signature?: string;
+  zkLoginInfo?: ZKLoginInfo;
+};
+
+export type VerifyZKLoginResult = {
+  guardianIdentifierHash: string;
 };
 
 export type SendAppleUserExtraInfoParams = {
@@ -65,6 +70,38 @@ export interface VerifierSocialTokenParams extends BaseVerifyTokenParams {
 
 export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
   identityToken: string;
+}
+
+export type VerifyZKPortkeyParams = {
+  type: string;
+  accessToken?: string;
+  jwt?: string;
+  verifierId?: string;
+  chainId: ChainId;
+  operationType: OperationTypeEnum;
+};
+
+export type VerifyZKLoginParams = {
+  verifyToken: VerifyZKPortkeyParams;
+  jwt?: string;
+  salt: string;
+  kid: string;
+  nonce?: string;
+  timestamp: number;
+  managerAddress: string;
+};
+
+export interface ZKLoginInfo {
+  identifierHash: string;
+  poseidonIdentifierHash: string;
+  identifierHashType: number;
+  salt: string;
+  zkProof: string;
+  jwt: string;
+  nonce: string;
+  timestamp: number;
+  managerAddress: string;
+  circuitId: string;
 }
 
 export type SendAppleUserExtraInfoResult = { userId: string };
@@ -111,6 +148,7 @@ export interface IVerificationService {
   getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<getAppleUserExtraInfoResult>;
   verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyZKLogin(params: any): Promise<VerifyZKLoginResult>;
   verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyTwitterToken(
     params: VerifierSocialTokenParams,

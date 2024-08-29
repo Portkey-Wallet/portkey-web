@@ -70,7 +70,9 @@ export enum SignUpValue {
 export type TSignUpContinueHandler = (identifierInfo: {
   identifier: string;
   accountType: AccountType;
-  authToken?: string;
+  authenticationInfo?: {
+    [key: string]: any;
+  };
 }) => Promise<SignUpValue>;
 
 export interface SignInProps {
