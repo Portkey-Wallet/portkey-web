@@ -43,7 +43,7 @@ export default function SetSecondaryMailboxMain(props: ISetSecondaryMailboxProps
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-set-secondary-mail-wrapper', className)}>
       <BackHeaderForPage
-        title={`${editable ? 'Set Secondary Mailbox' : 'Details'}`}
+        title={`${editable ? 'Set up Backup Mailbox' : 'Details'}`}
         leftCallBack={onWrapperBackClick}
       />
       <Form
@@ -54,10 +54,10 @@ export default function SetSecondaryMailboxMain(props: ISetSecondaryMailboxProps
         requiredMark={false}>
         <div className="portkey-ui-form-content">
           <div className="section-two">
-            <FormItem name="mailbox" label={'Set Secondary Mailbox'}>
+            <FormItem name="mailbox" label={'Backup Mailbox'}>
               <Input
                 ref={inputRef}
-                placeholder={'Not set'}
+                placeholder={'Not Set up'}
                 disabled={!editable}
                 value={value}
                 onChange={(e) => {

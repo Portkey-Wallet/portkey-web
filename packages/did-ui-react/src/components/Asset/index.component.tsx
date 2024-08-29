@@ -275,7 +275,9 @@ function AssetMain({
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);
-
+    // (async () => {
+    //   await getSecondaryMail();
+    // })();
     // saveLiftCycleInfo();
   }, [assetStep]);
 
@@ -331,12 +333,10 @@ function AssetMain({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
     onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
     onClickSetSecondaryMailbox: async () => {
-      if (!secondaryEmail) {
-        const res = await getSecondaryMail();
-        if (!res) {
-          singleMessage.error('Cannot fetch the secondary email');
-          return;
-        }
+      const res = await getSecondaryMail();
+      if (!res) {
+        singleMessage.error('Cannot fetch the secondary email');
+        return;
       }
       setAssetStep(AssetStep.setSecondaryMailbox);
     },

@@ -56,9 +56,9 @@ export function useSecondaryMail(defaultMail: string, onBack?: () => void, onSet
       verifierSessionId,
     });
     if (res.verifiedResult) {
-      await did.services.common.setSecondaryMail({
-        verifierSessionId,
-      });
+      // await did.services.common.setSecondaryMail({
+      //   verifierSessionId,
+      // });
       return true;
     }
   }, []);
@@ -127,13 +127,15 @@ export function useSecondaryMail(defaultMail: string, onBack?: () => void, onSet
           setLoading(true);
 
           const res = await checkVerifyCode(code, verifierSessionIdRef.current);
+          setCode('');
           if (res) {
             singleMessage.success('Save Success!');
             onSetSecondaryMailboxSuccess?.();
+          } else {
+            throw Error('Please check if the code is entered correctly');
           }
-          setCode('');
         } else {
-          throw Error('Please check if the PIN code is entered correctly');
+          throw Error('Please check if the code is entered correctly');
         }
       } catch (error: any) {
         setCode('');

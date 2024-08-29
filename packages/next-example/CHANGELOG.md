@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.9.0) (2024-08-29)
+
+### Features
+
+- sgr label show ([e4f90b3](https://github.com/Portkey-Wallet/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+
 ## [2.8.0](https://github.com/FrankFeng1116/portkey-web/compare/v2.7.2...v2.8.0) (2024-08-07)
 
 ### Features

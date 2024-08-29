@@ -213,10 +213,13 @@ const GuardianApprovalMain = forwardRef(
             approveDetail: approveDetail,
           });
 
-          if (!rst || !rst.verificationDoc) return;
+          if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return;
 
           const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
-          const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+
+          const guardianIdentifier = rst.zkLoginInfo
+            ? rst.zkLoginInfo.identifierHash
+            : handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
 
           setGuardianList((v) => {
             v[index] = {
@@ -225,6 +228,7 @@ const GuardianApprovalMain = forwardRef(
               verificationDoc: verifierInfo.verificationDoc,
               signature: verifierInfo.signature,
               identifierHash: guardianIdentifier,
+              zkLoginInfo: rst.zkLoginInfo,
             };
             return [...v];
           });
@@ -283,7 +287,7 @@ const GuardianApprovalMain = forwardRef(
     );
 
     const onCodeVerifyHandler = useCallback(
-      (res: { verificationDoc: string; signature: string; verifierId: string }, index: number) => {
+      (res: { verificationDoc?: string; signature?: string; verifierId: string }, index: number) => {
         setGuardianList((v) => {
           v[index] = {
             ...v[index],
@@ -302,7 +306,7 @@ const GuardianApprovalMain = forwardRef(
       setFetching(true);
       try {
         const verificationList = guardianList
-          .filter((item) => Boolean(item.signature && item.verificationDoc))
+          .filter((item) => Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo))
           .map((item) => ({
             type: item.guardianType,
             identifier: item.identifier || item.identifierHash || '',
@@ -310,6 +314,7 @@ const GuardianApprovalMain = forwardRef(
             verificationDoc: item.verificationDoc || '',
             signature: item.signature || '',
             identifierHash: item.identifierHash || '',
+            zkLoginInfo: item.zkLoginInfo,
           }));
         await onConfirmRef.current?.(verificationList);
         setFetching(false);

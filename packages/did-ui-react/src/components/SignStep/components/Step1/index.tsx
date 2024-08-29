@@ -68,7 +68,12 @@ function Step1({
         const isContinue = await onSignUpHandlerRef.current?.({
           identifier: value.identifier,
           accountType: value.accountType,
-          authToken: value.authenticationInfo?.authToken,
+          authenticationInfo: {
+            authToken: value.authenticationInfo?.authToken,
+            idToken: value.authenticationInfo?.idToken,
+            nonce: value.authenticationInfo?.nonce,
+            timestamp: value.authenticationInfo?.timestamp,
+          },
         });
         if (isContinue === SignUpValue.otherSeverRegisterButContinue) return onConfirm();
         if (isContinue === SignUpValue.cancelRegister) return;

@@ -14,6 +14,7 @@ import OpenLogin from './openlogin';
 import { facebookAuthPath, twitterAuthPath } from './openlogin/constants';
 import { generateAccessTokenByPortkeyServer } from './telegram';
 import { TelegramPlatform } from './telegramPlatform';
+import { VerifyTypeEnum } from '../constants/guardian';
 
 export const socialLoginInPortkeyApp = async (
   app: devicesEnv.IPortkeyShellClient,
@@ -167,6 +168,8 @@ export const socialLoginAuthBySocket = async ({
   guardianIdentifier,
   useCurrentTelegramAuth = true,
   approveDetail,
+  managerAddress,
+  verifyType,
 }: {
   type: ISocialLogin;
   clientId?: string;
@@ -176,8 +179,13 @@ export const socialLoginAuthBySocket = async ({
   guardianIdentifier?: string;
   useCurrentTelegramAuth?: boolean;
   approveDetail?: IApproveDetail;
+  managerAddress?: string;
+  verifyType?: VerifyTypeEnum;
 }): Promise<{
   token: string;
+  idToken?: string;
+  nonce?: string;
+  timestamp?: number;
   provider: ISocialLogin;
 } | void> => {
   const serviceURI = getServiceUrl();
@@ -212,6 +220,8 @@ export const socialLoginAuthBySocket = async ({
     from: 'openlogin',
     loginProvider: type,
     approveDetail,
+    managerAddress,
+    verifyType,
   });
   if (!result) throw 'Not result';
   if (result?.code) throw result.message;
