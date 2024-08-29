@@ -33,6 +33,7 @@ import {
   VerifyTwitterTokenHeader,
   TGetTelegramAuthTokenResult,
   TGetTelegramAuthTokenParams,
+  VerifyZKLoginResult,
 } from '../types/verification';
 import { Search } from './search';
 
@@ -119,6 +120,13 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: 'POST',
       url: '/api/app/userExtraInfo/appleUserExtraInfo',
+      params,
+    });
+  }
+  verifyZKLogin(params: any): Promise<VerifyZKLoginResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifiedzk',
       params,
     });
   }

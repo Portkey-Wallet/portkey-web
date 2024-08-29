@@ -3,6 +3,30 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.9.0) (2024-08-29)
+
+### Features
+
+- 🎸 update zk logic ([42bcb35](https://github.com/Portkey-Wallet/portkey-web/commit/42bcb353ccf1c191677228cafbcf8f80b36f7cc7))
+- 🎸 zklogin ([c089cfb](https://github.com/Portkey-Wallet/portkey-web/commit/c089cfb2a7bfd851d0b658a9f63ff8bf0b6ea71e))
+- 🎸 zklogin finish recovery ([daee4f3](https://github.com/Portkey-Wallet/portkey-web/commit/daee4f3d61cb3eaec55f564e5722d287b75d50eb))
+- 🎸 zklogin finish register ([13c619f](https://github.com/Portkey-Wallet/portkey-web/commit/13c619f8f26de96905023c574160306eb1e45cd6))
+- 🎸 zkLogin fix type error ([fbd4e02](https://github.com/Portkey-Wallet/portkey-web/commit/fbd4e023089bb94fc773a6ebc9220b93191d308e))
+- 🎸 zklogin signin logic ([f33631e](https://github.com/Portkey-Wallet/portkey-web/commit/f33631e36e63ab4f31c239090e2f46eee3a2bcf7))
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/Portkey-Wallet/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/Portkey-Wallet/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/Portkey-Wallet/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/Portkey-Wallet/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+### Bug Fixes
+
+- 🐛 guardian approve ([e0d49a0](https://github.com/Portkey-Wallet/portkey-web/commit/e0d49a0d393edad88293cf5c4a97db425f9add61))
+- 🐛 set login account error & set transfer limit ([338e126](https://github.com/Portkey-Wallet/portkey-web/commit/338e126a37fae6f6da10f8e5a2a950e795031d3d))
+
 ## [2.8.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.8.0) (2024-08-07)
 
 ### Features

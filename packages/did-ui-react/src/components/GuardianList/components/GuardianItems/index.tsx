@@ -121,6 +121,7 @@ function GuardianItems({
       {item.isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
       <div className="portkey-ui-w-100 portkey-ui-flex-between-center">
         <VerifierPair
+          guardian={item}
           guardianType={item.guardianType}
           verifierSrc={item.verifier?.imageUrl}
           verifierName={item.verifier?.name}

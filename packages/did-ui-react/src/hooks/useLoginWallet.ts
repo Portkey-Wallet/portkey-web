@@ -90,6 +90,7 @@ export function useLoginWallet({
         verifierId: registerVerifier.verifierId,
         verificationDoc: registerVerifier.verificationDoc,
         signature: registerVerifier.signature,
+        zkLoginInfo: registerVerifier.zkLoginInfo,
         context: {
           clientId,
           requestId,
@@ -133,7 +134,7 @@ export function useLoginWallet({
       const extraData = await extraDataEncode(getDeviceInfo(DEVICE_TYPE), '');
 
       const _guardianApprovedList = guardianApprovedList.filter((item) =>
-        Boolean(item.signature && item.verificationDoc),
+        Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo),
       );
 
       const params = {

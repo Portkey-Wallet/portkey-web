@@ -1,7 +1,15 @@
 import BigNumber from 'bignumber.js';
 import { ZERO } from '../constants/misc';
-import { UserGuardianItem, UserGuardianStatus, VerifyStatus } from '../types';
+import {
+  UserGuardianItem,
+  UserGuardianStatus,
+  VerifyStatus,
+  ZKLoginInfoInContract,
+  ZKLoginInfoNoncePayload,
+} from '../types';
 import { VerifierItem } from '@portkey/did';
+import { ZKLoginInfo } from '@portkey/services';
+import { parseJWTToken, parseZKProof } from './authentication';
 
 const APPROVAL_COUNT = ZERO.plus(3).div(5);
 
@@ -39,3 +47,42 @@ export const getVerifierStatusMap = (
   });
   return verifierStatusMap;
 };
+
+export function handleZKLoginInfo(zkLoginInfo?: ZKLoginInfo) {
+  if (zkLoginInfo) {
+    const {
+      identifierHash,
+      salt,
+      zkProof,
+      jwt,
+      nonce,
+      circuitId,
+      poseidonIdentifierHash,
+      identifierHashType,
+      timestamp,
+      managerAddress,
+    } = zkLoginInfo;
+    const { kid, issuer } = parseJWTToken(jwt);
+    const zkProofInfo = parseZKProof(zkProof);
+    const noncePayload: ZKLoginInfoNoncePayload = {
+      addManagerAddress: {
+        timestamp: { seconds: timestamp },
+        managerAddress,
+      },
+    };
+    return {
+      identifierHash,
+      salt,
+      zkProof,
+      kid,
+      issuer,
+      nonce,
+      circuitId,
+      zkProofInfo,
+      noncePayload,
+      poseidonIdentifierHash,
+      identifierHashType,
+    } as ZKLoginInfoInContract;
+  }
+  return {} as ZKLoginInfoInContract;
+}
