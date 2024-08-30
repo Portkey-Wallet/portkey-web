@@ -17,6 +17,7 @@ export function useIntervalQueryCAInfo({ address }: { address?: string; chainId?
           manager: address,
         });
         const { caAddress, caHash, originChainId, loginGuardianInfo } = result[0];
+        await did.getCAHolderInfo(originChainId as ChainId);
         if (caAddress && caHash && loginGuardianInfo[0])
           setInfo({
             info: {
