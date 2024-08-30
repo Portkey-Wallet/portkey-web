@@ -9,6 +9,6 @@ export interface IStorageSuite {
   removeItem(key: string): Promise<any>;
 }
 
-export type ISocialLogin = 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter';
+export type ISocialLogin = 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter' | 'TonWallet';
 
 export type TCustomNetworkType = 'offline' | 'online' | 'local';

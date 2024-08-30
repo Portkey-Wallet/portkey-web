@@ -1,5 +1,11 @@
 import { Input, message } from 'antd';
-import { AccountType, AccountTypeEnum, GuardiansApproved, OperationTypeEnum } from '@portkey/services';
+import {
+  AccountType,
+  AccountTypeEnum,
+  AccountTypeKeyEnum,
+  GuardiansApproved,
+  OperationTypeEnum,
+} from '@portkey/services';
 import { useState, useMemo, useCallback, useEffect, memo, ReactNode, useRef } from 'react';
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
@@ -48,6 +54,7 @@ import BackHeader from '../BackHeader';
 import {
   AccountGuardianList,
   AddGuardiansType,
+  eoaWalletGuardianType,
   guardianAccountExistTip,
   verifierExistTip,
   zkGuardianType,
@@ -184,6 +191,13 @@ function GuardianAdd({
       imageUrl: verifierList?.find((item) => item.id === _v?.id)?.imageUrl || '',
     };
   }, [verifierList, verifierSelectItems]);
+
+  const isEOAWalletGuardian = useMemo(() => {
+    if (selectGuardianType) {
+      return eoaWalletGuardianType.includes(selectGuardianType);
+    }
+    return false;
+  }, [selectGuardianType]);
 
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
@@ -536,7 +550,7 @@ function GuardianAdd({
           </div>
         ) : (
           <div className="portkey-ui-flex social-input click" onClick={() => handleSocialAuth(v)}>
-            <span className="social-click-text">{`Click Add ${v} Account`}</span>
+            <span className="social-click-text">{`Click Add ${AccountTypeKeyEnum[v]} Account`}</span>
           </div>
         )}
       </div>
@@ -579,6 +593,10 @@ function GuardianAdd({
       [AccountTypeEnum[AccountTypeEnum.Twitter]]: {
         element: renderSocialGuardianAccount('Twitter'),
         label: t('Guardian Twitter'),
+      },
+      [AccountTypeEnum[AccountTypeEnum.TonWallet]]: {
+        element: renderSocialGuardianAccount('TonWallet'),
+        label: t('Guardian Ton Wallet'),
       },
     }),
     [emailValue, setEmailValue, renderSocialGuardianAccount, t],
@@ -762,22 +780,24 @@ function GuardianAdd({
             {accountErr && <span className="guardian-error-tip">{accountErr}</span>}
           </div>
         )}
-        <div className="input-item">
-          <p className="guardian-add-input-item-label">{t('Verifier')}</p>
-          <CommonSelect
-            placeholder="Select Guardians Verifier"
-            className={clsx(
-              'verifier-select',
-              'portkey-select-verifier-option-tip',
-              selectVerifierId === zkLoginVerifierItem.id && 'verifier-select-disabled',
-            )}
-            value={selectVerifierId}
-            onChange={handleVerifierChange}
-            items={verifierSelectItems}
-            customOptions={customSelectOption}
-          />
-          {verifierExist && <div className="guardian-error-tip">{verifierExistTip}</div>}
-        </div>
+        {!isEOAWalletGuardian && (
+          <div className="input-item">
+            <p className="guardian-add-input-item-label">{t('Verifier')}</p>
+            <CommonSelect
+              placeholder="Select Guardians Verifier"
+              className={clsx(
+                'verifier-select',
+                'portkey-select-verifier-option-tip',
+                selectVerifierId === zkLoginVerifierItem.id && 'verifier-select-disabled',
+              )}
+              value={selectVerifierId}
+              onChange={handleVerifierChange}
+              items={verifierSelectItems}
+              customOptions={customSelectOption}
+            />
+            {verifierExist && <div className="guardian-error-tip">{verifierExistTip}</div>}
+          </div>
+        )}
       </div>
       <div className="guardian-add-footer">
         <ThrottleButton

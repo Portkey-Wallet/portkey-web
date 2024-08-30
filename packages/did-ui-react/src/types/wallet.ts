@@ -29,7 +29,7 @@ export interface AuthenticationInfo {
   [userId: string]: string;
 }
 
-export type ISocialLogin = 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter';
+export type ISocialLogin = 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter' | 'TonWallet';
 
 export type IWeb2Login = 'Email' | 'Phone';
 
@@ -71,6 +71,7 @@ export interface ISocialLoginConfig {
   Portkey?: IPortkeyLoginConfig;
   Twitter?: ICustomLoginConfigHandler;
   Facebook?: ICustomLoginConfigHandler;
+  TonWallet?: ICustomLoginConfigHandler;
 }
 
 export interface AppleAuthorized {

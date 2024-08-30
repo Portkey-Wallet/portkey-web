@@ -8,6 +8,7 @@ export enum AccountTypeEnum {
   Telegram,
   Facebook,
   Twitter,
+  TonWallet,
 }
 
 export const AccountTypeKeyEnum = {
@@ -18,6 +19,7 @@ export const AccountTypeKeyEnum = {
   Telegram: 'Telegram',
   Facebook: 'Facebook',
   Twitter: 'Twitter',
+  TonWallet: 'Ton Wallet',
 };
 
 export type AccountType = keyof typeof AccountTypeEnum;

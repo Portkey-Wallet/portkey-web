@@ -16,6 +16,7 @@ export const facebookAuthPath = '/api/app/facebookAuth/unifyReceive';
 export const appleAuthPath = '/api/app/appleAuth/unifyReceive';
 export const tgAuthPath = '/api/app/telegramAuth/receive/openlogin';
 export const googleAuthPath = '/api/app/googleAuth/receive/openlogin';
+export const TonWalletAuthPath = '/api/app/TonAuth/receive/openlogin'; // todo_wade: confirm this
 
 export const openLoginRedirectURI: { [x in ISocialLogin]: string } = {
   Apple: appleAuthPath,
@@ -23,4 +24,5 @@ export const openLoginRedirectURI: { [x in ISocialLogin]: string } = {
   Google: googleAuthPath,
   Telegram: tgAuthPath,
   Twitter: twitterAuthPath,
+  TonWallet: TonWalletAuthPath,
 };

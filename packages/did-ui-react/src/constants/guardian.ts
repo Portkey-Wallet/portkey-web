@@ -6,7 +6,7 @@ export type TAccountType = AccountType;
 
 // Hide Twitter and Facebook logins for now
 // export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple', 'Twitter', 'Facebook'];
-export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple'];
+export const SocialLoginList: string[] = ['Google', 'Telegram', 'Apple', 'TonWallet'];
 
 export const Web2LoginList: string[] = ['Email'];
 
@@ -40,46 +40,52 @@ type AddGuardiansType = {
 
 export const AddGuardiansType: Record<AccountType, AddGuardiansType> = {
   Email: {
-    value: AccountTypeKeyEnum.Email,
+    value: AccountTypeEnum[AccountTypeEnum.Email],
     label: AccountTypeKeyEnum.Email,
     icon: 'Email',
     id: AccountTypeEnum.Email,
   },
   Phone: {
-    value: AccountTypeKeyEnum.Phone,
+    value: AccountTypeEnum[AccountTypeEnum.Phone],
     label: AccountTypeKeyEnum.Phone,
     icon: 'Phone',
     id: AccountTypeEnum.Phone,
   },
   Google: {
-    value: AccountTypeKeyEnum.Google,
+    value: AccountTypeEnum[AccountTypeEnum.Google],
     label: AccountTypeKeyEnum.Google,
     icon: 'Google',
     id: AccountTypeEnum.Google,
   },
   Apple: {
-    value: AccountTypeKeyEnum.Apple,
+    value: AccountTypeEnum[AccountTypeEnum.Apple],
     label: AccountTypeKeyEnum.Apple,
     icon: 'Apple',
     id: AccountTypeEnum.Apple,
   },
   Telegram: {
-    value: AccountTypeKeyEnum.Telegram,
+    value: AccountTypeEnum[AccountTypeEnum.Telegram],
     label: AccountTypeKeyEnum.Telegram,
     icon: 'Telegram',
     id: AccountTypeEnum.Telegram,
   },
   Facebook: {
-    value: AccountTypeKeyEnum.Facebook,
+    value: AccountTypeEnum[AccountTypeEnum.Facebook],
     label: AccountTypeKeyEnum.Facebook,
     icon: 'Facebook',
     id: AccountTypeEnum.Facebook,
   },
   Twitter: {
-    value: AccountTypeKeyEnum.Twitter,
+    value: AccountTypeEnum[AccountTypeEnum.Twitter],
     label: AccountTypeKeyEnum.Twitter,
     icon: 'Twitter',
     id: AccountTypeEnum.Twitter,
+  },
+  TonWallet: {
+    value: AccountTypeEnum[AccountTypeEnum.TonWallet],
+    label: AccountTypeKeyEnum.TonWallet,
+    icon: 'TonWallet',
+    id: AccountTypeEnum.TonWallet,
   },
 };
 
@@ -91,7 +97,10 @@ export const guardianIconMap: Record<AccountType, any> = {
   Telegram: 'Telegram',
   Facebook: 'Facebook',
   Twitter: 'Twitter',
+  TonWallet: 'TonWallet',
 };
+
+export const eoaWalletGuardianType: AccountType[] = ['TonWallet'];
 
 export const zkGuardianType: AccountType[] = ['Apple', 'Google'];
 

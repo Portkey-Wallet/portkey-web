@@ -16,6 +16,7 @@ export const SocialAccountsInfo: Record<ISocialLogin, IAccountItem> = {
   Telegram: { type: 'Telegram', name: 'Telegram', icon: 'Telegram' },
   Facebook: { type: 'Facebook', name: 'Facebook', icon: 'Facebook' },
   Twitter: { type: 'Twitter', name: 'Twitter', icon: 'Twitter' },
+  TonWallet: { type: 'TonWallet', name: 'TonWallet', icon: 'TonWallet' },
 };
 
 export const Web2AccountsInfo: Record<IWeb2Login, IAccountItem> = {
