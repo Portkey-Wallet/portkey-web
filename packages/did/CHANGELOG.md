@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.8.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.8.1) (2024-08-30)
+
+### Bug Fixes
+
+- 🐛 aainfo null when scan login ([521dd45](https://github.com/Portkey-Wallet/portkey-web/commit/521dd455026d4320ff5065784f1a7517a15fc6a6))
+
 ## [2.8.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.8.0) (2024-08-07)
 
 **Note:** Version bump only for package @portkey/did
