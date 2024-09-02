@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.9.2) (2024-09-02)
+
+### Features
+
+- add caHash params ([52c48a2](https://github.com/Portkey-Wallet/portkey-web/commit/52c48a2b6e3ef94bed42bb52fe93ed756551831a))
+- add caHash params ([82eb609](https://github.com/Portkey-Wallet/portkey-web/commit/82eb6095402784bee712329e188764e896420031))
+- add secondary mailbox ([d5293c0](https://github.com/Portkey-Wallet/portkey-web/commit/d5293c0940ab2ceb1f35c868ad8c9532fdf2b071))
+- security ([73ecbeb](https://github.com/Portkey-Wallet/portkey-web/commit/73ecbeb5afb43b15122cfa5479c92da13b2fc662))
+
 ## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
 
 **Note:** Version bump only for package @portkey/services

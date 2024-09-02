@@ -3,6 +3,21 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.9.2) (2024-09-02)
+
+### Features
+
+- add caHash params ([82eb609](https://github.com/Portkey-Wallet/portkey-web/commit/82eb6095402784bee712329e188764e896420031))
+- add copywritting ([6e74a4c](https://github.com/Portkey-Wallet/portkey-web/commit/6e74a4cf12ad900ffb9228ea31d76b32bc7cadd2))
+- add secondary mailbox ([d5293c0](https://github.com/Portkey-Wallet/portkey-web/commit/d5293c0940ab2ceb1f35c868ad8c9532fdf2b071))
+- change check verify code logic ([94cd8da](https://github.com/Portkey-Wallet/portkey-web/commit/94cd8da2efd5a41b8d621bbbf350700e1c8d4f2f))
+- security ([73ecbeb](https://github.com/Portkey-Wallet/portkey-web/commit/73ecbeb5afb43b15122cfa5479c92da13b2fc662))
+
+### Bug Fixes
+
+- 🐛 social auth ([e191b1e](https://github.com/Portkey-Wallet/portkey-web/commit/e191b1e3d04d4e9bf859ab3f7e3515b33aa51552))
+- update secondary email ([21c392a](https://github.com/Portkey-Wallet/portkey-web/commit/21c392aa5a0438c440aa0151f7939c68cd3b80eb))
+
 ## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
 
 **Note:** Version bump only for package @portkey/did-ui-react
