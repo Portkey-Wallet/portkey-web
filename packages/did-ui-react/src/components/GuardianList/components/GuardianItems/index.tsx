@@ -7,7 +7,7 @@ import { ChainId, TStringJSON } from '@portkey/types';
 import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
 import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
 import { OperationTypeEnum } from '@portkey/services';
-import { SocialLoginList } from '../../../../constants/guardian';
+import { AllSocialLoginList } from '../../../../constants/guardian';
 import ThrottleButton from '../../../ThrottleButton';
 
 interface GuardianItemProps {
@@ -38,7 +38,7 @@ function GuardianItems({
   onVerifying,
 }: GuardianItemProps) {
   const { t } = useTranslation();
-  const isSocialLogin = useMemo(() => SocialLoginList.includes(item.guardianType), [item.guardianType]);
+  const isSocialLogin = useMemo(() => AllSocialLoginList.includes(item.guardianType), [item.guardianType]);
 
   const accountShow = useCallback((guardian: UserGuardianItem) => {
     switch (guardian.guardianType) {
