@@ -69,5 +69,7 @@ function getGuardianTypeValue(guardianType?: string) {
     return 3;
   } else if (guardianType === 'Telegram') {
     return 4;
+  } else {
+    return guardianType;
   }
 }
