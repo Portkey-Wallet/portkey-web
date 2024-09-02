@@ -17,7 +17,6 @@ import { usePortkeyAsset } from '../components';
 import { FetchRequest } from '@portkey/request';
 import { usePortkey } from '../components/context';
 import { zkLoginVerifyUrlMainnet, zkLoginVerifyUrlTestnet } from '../constants/guardian';
-import { getOperationDetails } from '../components/utils/operation.util';
 
 interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   operationType: OperationTypeEnum;
@@ -355,7 +354,7 @@ export function useVerifyToken() {
       } else if (type === 'Twitter') {
         func = verifyTwitter;
       }
-      const paramsWithCaHash = { ...params, caHash: assets?.initialized ? assets?.[0].caHash || '' : '' };
+      const paramsWithCaHash = { ...params, caHash: assets?.[0]?.caHash || '' };
 
       return func?.(paramsWithCaHash);
     },
