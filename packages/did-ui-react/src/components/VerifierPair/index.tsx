@@ -28,13 +28,16 @@ export default function VerifierPair({
     [guardian?.manuallySupportForZk, guardian?.verifiedByZk],
   );
   const isShowZkLoginTag = useMemo(() => !isZK && zkGuardianType.includes(guardianType), [guardianType, isZK]);
+
   return (
     <div className={clsx('portkey-ui-flex-row-center icon-pair xxx', wrapperClassName)}>
       <GuardianTypeIcon type={guardianIconMap[guardianType]} />
-      <BaseVerifierIcon
-        src={isZK ? zkLoginVerifierItem.imageUrl : verifierSrc}
-        fallback={isZK ? zkLoginVerifierItem.name[0] : verifierName?.[0]}
-      />
+      {!guardian?.verifiedByEoaWallet && (
+        <BaseVerifierIcon
+          src={isZK ? zkLoginVerifierItem.imageUrl : verifierSrc}
+          fallback={isZK ? zkLoginVerifierItem.name[0] : verifierName?.[0]}
+        />
+      )}
       {isShowZkLoginTag && <div className="zklogin-icon">{`zkLogin`}</div>}
     </div>
   );

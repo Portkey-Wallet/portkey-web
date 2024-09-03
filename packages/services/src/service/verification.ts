@@ -106,6 +106,13 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
+  verifyTonWalletToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTonWalletToken',
+      params,
+    });
+  }
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {
     return this._request.send({
       method: 'POST',

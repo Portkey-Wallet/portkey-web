@@ -198,6 +198,12 @@ export function parseTwitterToken(tokenStr?: string | null): TwitterUserInfo | u
   }
 }
 
+export function parseTonWalletToken(tokenStr?: string | null) {
+  if (!tokenStr) return { address: '' };
+  const result = JSON.parse(tokenStr);
+  return { address: result.address as string };
+}
+
 export function parseKidFromJWTToken(token: string) {
   const idTokenArr = token.split('.') ?? [];
   const spilt1 = Buffer.from(idTokenArr[0], 'base64').toString('utf8');

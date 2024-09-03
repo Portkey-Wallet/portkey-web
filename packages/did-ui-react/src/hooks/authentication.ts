@@ -11,7 +11,13 @@ import {
   randomId,
   socialLoginAuth,
 } from '../utils';
-import { OperationTypeEnum, VerifyVerificationCodeResult, VerifyZKLoginParams, ZKLoginInfo } from '@portkey/services';
+import {
+  OperationTypeEnum,
+  VerifyTokenDetails,
+  VerifyVerificationCodeResult,
+  VerifyZKLoginParams,
+  ZKLoginInfo,
+} from '@portkey/services';
 import type { ChainId, TStringJSON } from '@portkey/types';
 import { FetchRequest } from '@portkey/request';
 import { usePortkey } from '../components/context';
@@ -269,6 +275,25 @@ export function useVerifyTwitter() {
   }, []);
 }
 
+export function useVerifyTonWallet() {
+  return useCallback(async (params: VerifySocialLoginParams) => {
+    if (!params.accessToken) throw new Error('accessToken is required');
+    const verificationDetails = JSON.parse(params.accessToken) as VerifyTokenDetails;
+    await did.services.verifyTonWalletToken({
+      chainId: params.chainId,
+      operationType: params.operationType,
+      targetChainId: params.targetChainId,
+      operationDetails: params.operationDetails,
+      verificationDetails,
+    });
+    const verificationRequestInfo = {
+      verificationType: 1, // todo_wade: confirm type enum
+      verificationDetails,
+    };
+    return { verificationRequestInfo };
+  }, []);
+}
+
 export function useVerifyZKLogin() {
   const [{ networkType }] = usePortkey();
   const zkLoginVerifyUrl = networkType === 'MAINNET' ? zkLoginVerifyUrlMainnet : zkLoginVerifyUrlTestnet;
@@ -328,6 +353,7 @@ export function useVerifyToken() {
   const verifyTelegram = useVerifyTelegram();
   const verifyFacebook = useVerifyFacebook();
   const verifyTwitter = useVerifyTwitter();
+  const verifyTonWallet = useVerifyTonWallet();
 
   return useCallback(
     (type: ISocialLogin, params: VerifySocialLoginParams) => {
@@ -343,9 +369,11 @@ export function useVerifyToken() {
         func = verifyFacebook;
       } else if (type === 'Twitter') {
         func = verifyTwitter;
+      } else if (type === 'TonWallet') {
+        func = verifyTonWallet;
       }
       return func?.(params);
     },
-    [verifyAppleToken, verifyFacebook, verifyGoogleToken, verifyTelegram, verifyTwitter],
+    [verifyAppleToken, verifyFacebook, verifyGoogleToken, verifyTelegram, verifyTonWallet, verifyTwitter],
   );
 }

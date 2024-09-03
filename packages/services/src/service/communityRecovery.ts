@@ -197,6 +197,16 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     });
   }
   /**
+   * deprecated Please use `verification.verifyFacebookToken`
+   */
+  verifyTonWalletToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifyTonWalletToken',
+      params,
+    });
+  }
+  /**
    * deprecated Please use `verification.getRecommendationVerifier`
    */
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem> {

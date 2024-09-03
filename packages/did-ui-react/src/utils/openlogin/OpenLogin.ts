@@ -93,6 +93,7 @@ class OpenLogin {
       actionType: OPENLOGIN_ACTIONS.LOGIN,
       serviceURI: this.serviceURI,
       ...zkParams,
+      manifestUrl: 'https://raw.githubusercontent.com/alex-beango/ton-config/main/tonconnect-manifest.json', // todo_wade: confirm
     };
     console.log(dataObject, 'dataObject==');
     const result = await this.openloginHandler({

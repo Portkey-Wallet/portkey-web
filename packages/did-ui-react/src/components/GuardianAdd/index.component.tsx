@@ -23,6 +23,7 @@ import {
   parseFacebookToken,
   parseKidFromJWTToken,
   parseTelegramToken,
+  parseTonWalletToken,
   parseTwitterToken,
   randomId,
   setLoading,
@@ -310,6 +311,17 @@ function GuardianAdd({
           thirdPartyEmail: undefined,
           accessToken,
           isPrivate,
+        };
+      }
+    } else if (v === 'TonWallet') {
+      const { address } = parseTonWalletToken(accessToken);
+      if (address) {
+        info = {
+          id: address,
+          firstName: address,
+          thirdPartyEmail: '',
+          accessToken,
+          isPrivate: false,
         };
       }
     }

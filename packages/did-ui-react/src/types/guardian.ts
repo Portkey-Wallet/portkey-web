@@ -26,6 +26,7 @@ export interface BaseGuardianItem {
   accessToken?: string;
   verifiedByZk?: boolean;
   manuallySupportForZk?: boolean;
+  verifiedByEoaWallet?: boolean;
   zkLoginInfo?: ZKLoginInfo;
 }
 

@@ -35,10 +35,16 @@ export type VerifyVerificationCodeParams = {
   operationDetails: TStringJSON;
 };
 
+export type VerificationRequestInfo = {
+  verificationType: number;
+  verificationDetails: VerifyTokenDetails;
+};
+
 export type VerifyVerificationCodeResult = {
   verificationDoc?: string;
   signature?: string;
   zkLoginInfo?: ZKLoginInfo;
+  verificationRequestInfo?: VerificationRequestInfo;
 };
 
 export type VerifyZKLoginResult = {
@@ -57,15 +63,24 @@ export type SendAppleUserExtraInfoParams = {
 };
 
 export type BaseVerifyTokenParams = {
-  verifierId: string;
+  verifierId?: string;
   chainId: ChainId;
   operationType: OperationTypeEnum;
   targetChainId?: ChainId;
   operationDetails: TStringJSON;
 };
 
+export interface VerifyTokenDetails {
+  address: string;
+  publicKey: string;
+  signature: string;
+  timestamp: string;
+  extra?: string;
+}
+
 export interface VerifierSocialTokenParams extends BaseVerifyTokenParams {
-  accessToken: string;
+  accessToken?: string;
+  verificationDetails?: VerifyTokenDetails;
 }
 
 export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
@@ -155,6 +170,7 @@ export interface IVerificationService {
     headers?: VerifyTwitterTokenHeader,
   ): Promise<VerifyVerificationCodeResult>;
   verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyTonWalletToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
   getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult>;
