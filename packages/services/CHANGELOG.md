@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.4...v2.9.6-alpha.5) (2024-09-03)
+
+### Features
+
+- verify zk add targetChainId params ([87988c3](https://github.com/Portkey-Wallet/portkey-web/commit/87988c3cb0ff4afcca7f289365efe306b3c0a200))
+
 ## [2.9.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.3...v2.9.6-alpha.4) (2024-09-03)
 
 **Note:** Version bump only for package @portkey/services
