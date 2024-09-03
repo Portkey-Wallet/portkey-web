@@ -84,6 +84,7 @@ export type VerifyZKPortkeyParams = {
   operationType: OperationTypeEnum;
   caHash?: string;
   operationDetails?: string;
+  targetChainId?: string;
 };
 
 export type VerifyZKLoginParams = {
