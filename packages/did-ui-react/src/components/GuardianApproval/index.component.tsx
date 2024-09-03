@@ -40,7 +40,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { SocialLoginList, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
+import { KEY_SHOW_WARNING, SHOW_WARNING_DIALOG, AllSocialLoginList } from '../../constants/guardian';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 import { Open_Login_Bridge } from '../../constants/telegram';
@@ -263,7 +263,7 @@ const GuardianApprovalMain = forwardRef(
 
     const onVerifyingHandler = useCallback(
       async (_item: UserGuardianStatus, index: number) => {
-        const isSocialLogin = SocialLoginList.includes(_item.guardianType);
+        const isSocialLogin = AllSocialLoginList.includes(_item.guardianType);
         if (isSocialLogin) return socialVerifyHandler(_item, index);
 
         try {
