@@ -66,6 +66,7 @@ export interface GuardianApprovalProps {
   // guardianIdentifier?: string; // for show (email)
   // firstName?: string; // for show (social)
   telegramInfo?: ITelegramInfo;
+  caHash?: string;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -92,6 +93,7 @@ const GuardianApprovalMain = forwardRef(
       // guardianIdentifier,
       // firstName,
       telegramInfo,
+      caHash,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -211,6 +213,7 @@ const GuardianApprovalMain = forwardRef(
             operationDetails,
             customLoginHandler,
             approveDetail: approveDetail,
+            caHash,
           });
 
           if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return;
@@ -249,13 +252,15 @@ const GuardianApprovalMain = forwardRef(
       [
         telegramInfo?.userId,
         telegramInfo?.accessToken,
-        verifyToken,
         originChainId,
         targetChainId,
+        officialWebsiteShow?.symbol,
+        officialWebsiteShow?.amount,
         operationType,
+        verifyToken,
         networkType,
         operationDetails,
-        officialWebsiteShow,
+        caHash,
         isErrorTip,
         onError,
       ],
@@ -368,6 +373,7 @@ const GuardianApprovalMain = forwardRef(
               accountType={guardianList[verifyAccountIndex].guardianType}
               isErrorTip={isErrorTip}
               verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
+              caHash={caHash}
               onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
               onError={onError}
               onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}

@@ -294,6 +294,7 @@ function GuardianEdit({
         clientId,
         redirectURI,
         networkType,
+        caHash,
         operationDetails: getOperationDetails(operationType, {
           identifierHash: curGuardian.current?.identifierHash,
           guardianType: curGuardian.current?.guardianType,
@@ -317,6 +318,7 @@ function GuardianEdit({
       telegramInfo?.userId,
       telegramInfo?.accessToken,
       verifyToken,
+      caHash,
       originChainId,
       networkType,
       operationType,
@@ -611,6 +613,7 @@ function GuardianEdit({
           accountType={preGuardian?.guardianType}
           isErrorTip={isErrorTip}
           verifier={preGuardian?.verifier as VerifierItem}
+          caHash={caHash}
           onSuccess={verifySuccess}
           onError={onError}
           onReSend={reSendCode}
@@ -630,6 +633,7 @@ function GuardianEdit({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
+          caHash={caHash}
           operationDetails={getOperationDetails(operationType, {
             identifierHash: curGuardian.current?.identifierHash,
             guardianType: curGuardian.current?.guardianType,

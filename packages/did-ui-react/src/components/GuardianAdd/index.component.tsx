@@ -397,6 +397,7 @@ function GuardianAdd({
               verifierId: curGuardian.current?.verifierId,
             }),
             operationType,
+            caHash,
             customLoginHandler,
           });
           if (!rst) return;
@@ -431,6 +432,7 @@ function GuardianAdd({
       verifyToken,
       networkType,
       isErrorTip,
+      caHash,
       onError,
     ],
   );
@@ -805,6 +807,7 @@ function GuardianAdd({
           isCountdownNow={curGuardian?.current?.isInitStatus}
           accountType={curGuardian?.current?.guardianType}
           isErrorTip={isErrorTip}
+          caHash={caHash}
           verifier={(curGuardian?.current?.verifier as VerifierItem) || verifierList?.[0]}
           onSuccess={verifySuccess}
           onError={onError}
@@ -824,6 +827,7 @@ function GuardianAdd({
           telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
+          caHash={caHash}
           operationType={OperationTypeEnum.addGuardian}
           operationDetails={getOperationDetails(OperationTypeEnum.addGuardian, {
             identifierHash: curGuardian.current?.identifierHash,

@@ -7,7 +7,6 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
 import { sleep } from '@portkey/utils';
-import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 
 const MAX_TIMER = 60;
 
@@ -18,6 +17,7 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
   operationDetails: TStringJSON;
+  caHash?: string;
   onSuccess?: (res: { verificationDoc?: string; signature?: string; verifierId: string }) => void;
   onReSend?: (result: TVerifyCodeInfo) => void;
 }
@@ -36,6 +36,7 @@ export default function CodeVerify({
   guardianIdentifier,
   accountType = 'Email',
   verifierSessionId: defaultVerifierSessionId,
+  caHash,
   onError,
   onReSend,
   onSuccess,
@@ -44,7 +45,6 @@ export default function CodeVerify({
   const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
   const uiRef = useRef<ICodeVerifyUIInterface>();
   const [codeError, setCodeError] = useState<boolean>();
-  const [{ caHash }] = usePortkeyAsset();
 
   const setInputError = useCallback(async (isError?: boolean) => {
     if (!isError) return setCodeError(isError);

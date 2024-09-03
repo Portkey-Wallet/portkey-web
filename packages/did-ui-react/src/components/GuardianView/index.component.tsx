@@ -49,6 +49,7 @@ export interface GuardianViewProps {
   guardianList?: UserGuardianStatus[];
   networkType: NetworkType;
   telegramInfo?: ITelegramInfo;
+  caHash?: string;
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -64,6 +65,7 @@ function GuardianView({
   guardianList,
   networkType,
   telegramInfo,
+  caHash,
   handleSetLoginGuardian,
   onError,
 }: GuardianViewProps) {
@@ -143,6 +145,7 @@ function GuardianView({
         redirectURI,
         networkType,
         operationType,
+        caHash,
         operationDetails: getOperationDetails(operationType, {
           identifierHash: curGuardian.current?.identifierHash,
           guardianType: curGuardian.current?.guardianType,
@@ -165,6 +168,7 @@ function GuardianView({
       telegramInfo?.userId,
       telegramInfo?.accessToken,
       verifyToken,
+      caHash,
       originChainId,
       networkType,
       operationType,
@@ -455,6 +459,7 @@ function GuardianView({
           accountType={currentGuardian.guardianType}
           isErrorTip={isErrorTip}
           verifier={currentGuardian.verifier as VerifierItem}
+          caHash={caHash}
           onSuccess={verifySuccess}
           onError={onError}
           onReSend={reSendCode}
@@ -473,6 +478,7 @@ function GuardianView({
           telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
+          caHash={caHash}
           operationType={operationType}
           operationDetails={getOperationDetails(operationType, {
             identifierHash: curGuardian.current?.identifierHash,

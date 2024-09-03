@@ -354,7 +354,7 @@ export function useVerifyToken() {
       } else if (type === 'Twitter') {
         func = verifyTwitter;
       }
-      const paramsWithCaHash = { ...params, caHash: assets?.[0]?.caHash || '' };
+      const paramsWithCaHash = { caHash: assets?.[0]?.caHash || '', ...params };
 
       return func?.(paramsWithCaHash);
     },
