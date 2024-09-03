@@ -124,7 +124,7 @@ export function useVerifyAppleToken() {
           const result = await params?.customLoginHandler();
           if (result.error) throw result.error;
           accessToken = result.data?.accessToken;
-          idToken = result.data?.token;
+          idToken = result.data?.idToken;
         } else {
           const authRes: any = await socialLoginAuth({
             type: 'Apple',
