@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.4...v2.9.5-alpha.0) (2024-09-03)
+
+### Bug Fixes
+
+- caHash params ([63339e3](https://github.com/Portkey-Wallet/portkey-web/commit/63339e33ee37237eade1b9fac2cd3d2e80e4439b))
+
 ## [2.9.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.3...v2.9.4) (2024-09-02)
 
 **Note:** Version bump only for package root
