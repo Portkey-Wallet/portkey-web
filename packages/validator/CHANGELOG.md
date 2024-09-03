@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.3...v2.9.6-alpha.4) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/validator
+
 ## [2.9.6-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.2...v2.9.6-alpha.3) (2024-09-03)
 
 **Note:** Version bump only for package @portkey/validator
