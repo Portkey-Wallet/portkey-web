@@ -87,9 +87,10 @@ export interface IGuardiansApproved {
   identifierHash: string;
   verificationInfo: {
     id: string;
-    signature: string | number[];
+    signature?: string | number[];
     verificationDoc?: string;
   };
+  zkLoginInfo?: ZKLoginInfoInContract;
 }
 
 export interface IVerification {
