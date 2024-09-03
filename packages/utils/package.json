@@ -1,6 +1,6 @@
 {
   "name": "@portkey/utils",
-  "version": "2.9.5-alpha.0",
+  "version": "2.9.6-alpha.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -51,5 +51,5 @@
     "@types/crypto-js": "^4.1.1",
     "@types/node-forge": "^1.3.11"
   },
-  "gitHead": "cbcd11f229bd6d3a1e6c67c8e7a64a60c05d75fc"
+  "gitHead": "a2400f4a03bb8f06f081e2ee0d6740e56c0fa92f"
 }
