@@ -36,7 +36,7 @@ import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
 import { useLoginWallet } from '../../hooks/useLoginWallet';
 import './index.less';
-import { SocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
+import { AllSocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
 import ConfigProvider from '../config-provider';
 import { ILoginConfig } from '../config-provider/types';
 import { getOperationDetails } from '../utils/operation.util';
@@ -296,7 +296,7 @@ const SignIn = forwardRef(
           const operationType = OperationTypeEnum.register;
           const operationDetails = getOperationDetails(operationType);
 
-          if (SocialLoginList.includes(accountType)) {
+          if (AllSocialLoginList.includes(accountType)) {
             setLoading(true);
             const result = await verifySocialToken({
               accountType,

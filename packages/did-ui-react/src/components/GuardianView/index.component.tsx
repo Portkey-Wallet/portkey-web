@@ -31,7 +31,7 @@ import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
 import clsx from 'clsx';
 import './index.less';
-import { SocialLoginList, guardianIconMap, zkLoginVerifierItem } from '../../constants/guardian';
+import { AllSocialLoginList, guardianIconMap, zkLoginVerifierItem } from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
@@ -312,7 +312,7 @@ function GuardianView({
   }, [currentGuardian, isErrorTip, onError, socialVerify]);
 
   const handleSwitch = useCallback(() => {
-    if (SocialLoginList.includes(currentGuardian.guardianType)) {
+    if (AllSocialLoginList.includes(currentGuardian.guardianType)) {
       handleSocialVerify();
     } else {
       handleCommonVerify();

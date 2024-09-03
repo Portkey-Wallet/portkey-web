@@ -7,7 +7,7 @@ import { BaseGuardianItem, OnErrorFunc, UserGuardianStatus, VerifyStatus } from 
 import useVerifier from '../../../hooks/useVerifier';
 import { GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import useSendCode from './useSendCode';
-import { SocialLoginList } from '../../../constants/guardian';
+import { AllSocialLoginList, SocialLoginList } from '../../../constants/guardian';
 import { getOperationDetails } from '../../utils/operation.util';
 
 interface Props {
@@ -177,7 +177,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
 
       const accountType = guardian.guardianType;
       // social approve;
-      if (SocialLoginList.includes(accountType)) {
+      if (AllSocialLoginList.includes(accountType)) {
         try {
           const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);
           return {

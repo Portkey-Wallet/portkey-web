@@ -30,7 +30,7 @@ import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
 import {
-  SocialLoginList,
+  AllSocialLoginList,
   guardianIconMap,
   verifierExistTip,
   zkGuardianType,
@@ -489,7 +489,7 @@ function GuardianEdit({
   }, [isErrorTip, onError, preGuardian, socialVerify]);
 
   const handleUnsetLoginGuardian = useCallback(() => {
-    if (SocialLoginList.includes(`${preGuardian?.guardianType}`)) {
+    if (AllSocialLoginList.includes(`${preGuardian?.guardianType}`)) {
       handleSocialVerify();
     } else {
       handleCommonVerify();
