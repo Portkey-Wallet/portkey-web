@@ -126,6 +126,8 @@ export function useVerifyAppleToken() {
           if (result.error) throw result.error;
           accessToken = result.data?.accessToken;
           idToken = result.data?.idToken;
+          nonce = result.data?.nonce;
+          timestamp = result.data?.timestamp;
         } else {
           const authRes: any = await socialLoginAuth({
             type: 'Apple',
