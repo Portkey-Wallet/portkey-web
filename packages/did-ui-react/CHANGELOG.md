@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.5...v2.9.6-alpha.6) (2024-09-04)
+
+### Bug Fixes
+
+- 🐛 apple verify ([38b59c0](https://github.com/Portkey-Wallet/portkey-web/commit/38b59c076e7e5f9d340f8f98ab98511096c24fb2))
+
 ## [2.9.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.4...v2.9.6-alpha.5) (2024-09-03)
 
 ### Features
