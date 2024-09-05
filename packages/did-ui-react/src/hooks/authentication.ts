@@ -279,7 +279,7 @@ export function useVerifyTonWallet() {
   return useCallback(async (params: VerifySocialLoginParams) => {
     if (!params.accessToken) throw new Error('accessToken is required');
     const verificationDetails = JSON.parse(params.accessToken) as VerifyTokenDetails;
-    await did.services.verifyTonWalletToken({
+    const { guardianIdentifierHash, extra } = await did.services.verifyTonWalletToken({
       chainId: params.chainId,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
@@ -287,10 +287,10 @@ export function useVerifyTonWallet() {
       verificationDetails,
     });
     const verificationRequestInfo = {
-      verificationType: 1, // todo_wade: confirm type enum
-      verificationDetails,
+      verifierType: 1, // todo_wade: confirm type enum
+      verificationDetails: Object.assign(verificationDetails, { extra }),
     };
-    return { verificationRequestInfo };
+    return { verificationRequestInfo, guardianIdentifierHash };
   }, []);
 }
 

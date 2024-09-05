@@ -31,7 +31,7 @@ import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
 import clsx from 'clsx';
 import './index.less';
-import { SocialLoginList, guardianIconMap, zkLoginVerifierItem } from '../../constants/guardian';
+import { SocialLoginList, guardianIconMap, isEOAWalletGuardian, zkLoginVerifierItem } from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
@@ -291,6 +291,7 @@ function GuardianView({
         signature: res?.verifierInfo.signature,
         identifierHash: res?.guardianIdentifier,
         zkLoginInfo: res?.verifierInfo?.zkLoginInfo,
+        verificationRequestInfo: res?.verifierInfo?.verificationRequestInfo,
       };
       setApprovalVisible(true);
     } catch (error) {
@@ -403,16 +404,20 @@ function GuardianView({
                 <GuardianAccountShow guardian={currentGuardian} />
               </div>
             </div>
-            <div className="guardian-view-input-item">
-              <div className="guardian-view-input-item-label">{t('Verifier')}</div>
-              <div className="guardian-view-input-item-control portkey-ui-flex">
-                <BaseVerifierIcon
-                  src={isZK ? zkLoginVerifierItem.imageUrl : currentGuardian?.verifier?.imageUrl}
-                  fallback={isZK ? zkLoginVerifierItem.name[0] : currentGuardian?.verifier?.name[0]}
-                />
-                <span className="name">{isZK ? zkLoginVerifierItem.name : currentGuardian?.verifier?.name ?? ''}</span>
+            {!isEOAWalletGuardian(currentGuardian.guardianType) && (
+              <div className="guardian-view-input-item">
+                <div className="guardian-view-input-item-label">{t('Verifier')}</div>
+                <div className="guardian-view-input-item-control portkey-ui-flex">
+                  <BaseVerifierIcon
+                    src={isZK ? zkLoginVerifierItem.imageUrl : currentGuardian?.verifier?.imageUrl}
+                    fallback={isZK ? zkLoginVerifierItem.name[0] : currentGuardian?.verifier?.name[0]}
+                  />
+                  <span className="name">
+                    {isZK ? zkLoginVerifierItem.name : currentGuardian?.verifier?.name ?? ''}
+                  </span>
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div className="guardian-view-login-content portkey-ui-flex-column">
             <span className="guardian-view-login-content-label">{t('Login account')}</span>

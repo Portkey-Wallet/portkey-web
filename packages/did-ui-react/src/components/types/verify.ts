@@ -1,5 +1,5 @@
 import { VerifierItem } from '@portkey/did';
-import { AccountType, ZKLoginInfo } from '@portkey/services';
+import { AccountType, VerificationRequestInfo, ZKLoginInfo } from '@portkey/services';
 import { OnErrorFunc, PartialOption } from '../../types';
 import { ReactNode } from 'react';
 
@@ -7,6 +7,7 @@ export interface IVerifyInfo {
   verificationDoc?: string;
   signature?: string;
   zkLoginInfo?: ZKLoginInfo;
+  verificationRequestInfo?: VerificationRequestInfo;
 }
 
 export type IVerifier = {

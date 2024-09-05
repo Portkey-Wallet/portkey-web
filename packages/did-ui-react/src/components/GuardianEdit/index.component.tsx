@@ -32,6 +32,7 @@ import BackHeader from '../BackHeader';
 import {
   SocialLoginList,
   guardianIconMap,
+  isEOAWalletGuardian,
   verifierExistTip,
   zkGuardianType,
   zkLoginVerifierItem,
@@ -562,36 +563,40 @@ function GuardianEdit({
             <GuardianAccountShow guardian={currentGuardian} />
           </div>
         </div>
-        <div className="input-item">
-          <p className="guardian-edit-input-item-label">{t('Verifier')}</p>
-          <CommonSelect
-            placeholder="Select Guardians Verifier"
-            className={clsx(
-              'verifier-select',
-              'portkey-select-verifier-option-tip',
-              isZK && 'verifier-select-disabled',
-            )}
-            value={selectVerifierId}
-            onChange={handleVerifierChange}
-            items={verifierSelectItems}
-            customOptions={customSelectOption}
-          />
-          {isExist && <div className="guardian-edit-error-tip">{verifierExistTip}</div>}
-        </div>
+        {!isEOAWalletGuardian(currentGuardian?.guardianType) && (
+          <div className="input-item">
+            <p className="guardian-edit-input-item-label">{t('Verifier')}</p>
+            <CommonSelect
+              placeholder="Select Guardians Verifier"
+              className={clsx(
+                'verifier-select',
+                'portkey-select-verifier-option-tip',
+                isZK && 'verifier-select-disabled',
+              )}
+              value={selectVerifierId}
+              onChange={handleVerifierChange}
+              items={verifierSelectItems}
+              customOptions={customSelectOption}
+            />
+            {isExist && <div className="guardian-edit-error-tip">{verifierExistTip}</div>}
+          </div>
+        )}
       </div>
       <div className="guardian-edit-footer">
         <div className="portkey-ui-flex-between guardian-add-btn-wrap">
           <ThrottleButton className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
             {t('Remove')}
           </ThrottleButton>
-          <ThrottleButton
-            type="primary"
-            className="guardian-btn "
-            onClick={onConfirm}
-            disabled={editBtnDisable || isZK}
-            loading={editBtnLoading}>
-            {t('Send Request')}
-          </ThrottleButton>
+          {!isEOAWalletGuardian(currentGuardian?.guardianType) && (
+            <ThrottleButton
+              type="primary"
+              className="guardian-btn "
+              onClick={onConfirm}
+              disabled={editBtnDisable || isZK}
+              loading={editBtnLoading}>
+              {t('Send Request')}
+            </ThrottleButton>
+          )}
         </div>
       </div>
       <CommonBaseModal open={verifierVisible} onClose={() => setVerifierVisible(false)} destroyOnClose>

@@ -29,7 +29,7 @@ ConfigProvider.setGlobalConfig({
     },
   },
   loginConfig: {
-    loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Apple', 'Scan'],
+    loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Apple', 'TonWallet', 'Scan'],
     recommendIndexes: [0, 1],
   },
   requestDefaults: {

@@ -36,7 +36,7 @@ export type VerifyVerificationCodeParams = {
 };
 
 export type VerificationRequestInfo = {
-  verificationType: number;
+  verifierType: number;
   verificationDetails: VerifyTokenDetails;
 };
 
@@ -45,6 +45,8 @@ export type VerifyVerificationCodeResult = {
   signature?: string;
   zkLoginInfo?: ZKLoginInfo;
   verificationRequestInfo?: VerificationRequestInfo;
+  guardianIdentifierHash?: string;
+  extra?: string;
 };
 
 export type VerifyZKLoginResult = {
@@ -74,8 +76,12 @@ export interface VerifyTokenDetails {
   address: string;
   publicKey: string;
   signature: string;
-  timestamp: string;
+  timestamp: any;
   extra?: string;
+}
+
+export interface VerificationExt {
+  tonVerification: VerifyTokenDetails;
 }
 
 export interface VerifierSocialTokenParams extends BaseVerifyTokenParams {

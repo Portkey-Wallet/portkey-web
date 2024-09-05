@@ -124,9 +124,15 @@ function GuardianAdd({
   const verifyToken = useVerifyToken();
   const [addBtnLoading, setAddBtnLoading] = useState<boolean>(false);
   const guardianAccount = useMemo(() => emailValue || socialValue?.id, [emailValue, socialValue?.id]);
+  const isEOAWalletGuardian = useMemo(() => {
+    if (selectGuardianType) {
+      return eoaWalletGuardianType.includes(selectGuardianType);
+    }
+    return false;
+  }, [selectGuardianType]);
   const addBtnDisable = useMemo(
-    () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
-    [accountErr, guardianAccount, selectVerifierId, verifierExist],
+    () => verifierExist || accountErr || (!isEOAWalletGuardian && !selectVerifierId) || !guardianAccount,
+    [accountErr, guardianAccount, isEOAWalletGuardian, selectVerifierId, verifierExist],
   );
   const [zkAuth, setZKAuth] = useState<IZKAuth>({});
   const verifyZKLogin = useVerifyZKLogin();
@@ -192,13 +198,6 @@ function GuardianAdd({
       imageUrl: verifierList?.find((item) => item.id === _v?.id)?.imageUrl || '',
     };
   }, [verifierList, verifierSelectItems]);
-
-  const isEOAWalletGuardian = useMemo(() => {
-    if (selectGuardianType) {
-      return eoaWalletGuardianType.includes(selectGuardianType);
-    }
-    return false;
-  }, [selectGuardianType]);
 
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
@@ -345,6 +344,16 @@ function GuardianAdd({
           });
           if (!response?.token) throw new Error('add guardian failed');
           token = response.token;
+          if (isEOAWalletGuardian) {
+            try {
+              const eoaWalletToken = JSON.parse(response.token);
+              if (typeof eoaWalletToken.token === 'string') {
+                token = eoaWalletToken.token;
+              }
+            } catch (_) {
+              console.log('parse eoaWalletToken error');
+            }
+          }
           setZKAuth({
             id_token: response.idToken,
             access_token: response.token,
@@ -367,6 +376,7 @@ function GuardianAdd({
     },
     [
       guardianList,
+      isEOAWalletGuardian,
       isErrorTip,
       managementAccount?.address,
       networkType,
@@ -427,7 +437,12 @@ function GuardianAdd({
           });
           if (!rst) return;
           const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
-          const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+          let guardianIdentifier;
+          if (rst.verificationRequestInfo && rst.guardianIdentifierHash) {
+            guardianIdentifier = rst.guardianIdentifierHash;
+          } else {
+            guardianIdentifier = handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
+          }
           return { verifierInfo, guardianIdentifier };
         }
       } catch (error) {
@@ -483,40 +498,57 @@ function GuardianAdd({
       setAccountErr(guardianAccountExistTip);
       return false;
     }
-    // 3. check verifier valid
-    const verifier = verifierMap.current?.[selectVerifierId!];
-    if (!verifier) {
-      message.error('Can not get the current verifier message');
-      return false;
-    }
-    // 4. check verifier exist
-
-    if (!(curGuardian.current?.guardianType && zkGuardianType.includes(curGuardian.current?.guardianType))) {
-      const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
-      if (_verifierExist) {
-        setVerifierExist(true);
+    if (isEOAWalletGuardian) {
+      // There is no need to verify the verifier when adding a guardian of the EOA wallet type
+      const _guardian: UserGuardianStatus = {
+        isLoginGuardian: false,
+        key: guardianAccount ?? '',
+        guardianType: selectGuardianType as AccountType,
+        guardianIdentifier: guardianAccount,
+        identifier: guardianAccount,
+        verifierId: selectVerifierId,
+        ...socialValue,
+      };
+      console.log('aaaa _guardian', _guardian);
+      curGuardian.current = _guardian;
+      return true;
+    } else {
+      // 3. check verifier valid
+      const verifier = verifierMap.current?.[selectVerifierId!];
+      if (!verifier) {
+        message.error('Can not get the current verifier message');
         return false;
       }
-    }
+      // 4. check verifier exist
 
-    const _key = `${guardianAccount}&${verifier.id}`;
-    const _guardian: UserGuardianStatus = {
-      isLoginGuardian: false,
-      key: _key,
-      verifier,
-      guardianType: selectGuardianType as AccountType,
-      guardianIdentifier: guardianAccount,
-      identifier: guardianAccount,
-      verifierId: selectVerifierId,
-      ...socialValue,
-    };
-    curGuardian.current = _guardian;
-    return true;
+      if (!(curGuardian.current?.guardianType && zkGuardianType.includes(curGuardian.current?.guardianType))) {
+        const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
+        if (_verifierExist) {
+          setVerifierExist(true);
+          return false;
+        }
+      }
+
+      const _key = `${guardianAccount}&${verifier.id}`;
+      const _guardian: UserGuardianStatus = {
+        isLoginGuardian: false,
+        key: _key,
+        verifier,
+        guardianType: selectGuardianType as AccountType,
+        guardianIdentifier: guardianAccount,
+        identifier: guardianAccount,
+        verifierId: selectVerifierId,
+        ...socialValue,
+      };
+      curGuardian.current = _guardian;
+      return true;
+    }
   }, [
     caHash,
     chainType,
     emailValue,
     guardianAccount,
+    isEOAWalletGuardian,
     originChainId,
     sandboxId,
     selectGuardianType,

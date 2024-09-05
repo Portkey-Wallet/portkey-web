@@ -8,7 +8,7 @@ import {
   ZKLoginInfoNoncePayload,
 } from '../types';
 import { VerifierItem } from '@portkey/did';
-import { ZKLoginInfo } from '@portkey/services';
+import { VerificationRequestInfo, ZKLoginInfo } from '@portkey/services';
 import { parseJWTToken, parseZKProof } from './authentication';
 
 const APPROVAL_COUNT = ZERO.plus(3).div(5);
@@ -85,4 +85,15 @@ export function handleZKLoginInfo(zkLoginInfo?: ZKLoginInfo) {
     } as ZKLoginInfoInContract;
   }
   return {} as ZKLoginInfoInContract;
+}
+
+export function handleEOAWalletRequestInfo(requestInfo?: VerificationRequestInfo) {
+  if (!requestInfo) return undefined;
+  const verificationDetails = requestInfo.verificationDetails;
+  const timestampStr = verificationDetails?.timestamp;
+  const timestampSeconds = timestampStr ? Number(timestampStr) / 1000 : 0;
+  const timestamp = { seconds: timestampSeconds };
+  return {
+    tonVerification: { ...verificationDetails, timestamp },
+  };
 }

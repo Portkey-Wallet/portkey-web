@@ -86,6 +86,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         verificationDoc: result.verificationDoc,
         signature: result.signature,
         zkLoginInfo: result.zkLoginInfo,
+        verificationRequestInfo: result.verificationRequestInfo,
       };
 
       return approvedItem;

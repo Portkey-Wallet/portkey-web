@@ -21,6 +21,8 @@ export const getSocialConfig = (v: ISocialLogin) => {
     case 'Telegram':
       customLoginHandler = socialLogin?.Telegram?.customLoginHandler;
       break;
+    case 'TonWallet':
+      break;
     default:
       throw 'accountType is not supported';
   }

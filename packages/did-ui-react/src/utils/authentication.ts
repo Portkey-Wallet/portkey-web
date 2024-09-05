@@ -201,6 +201,13 @@ export function parseTwitterToken(tokenStr?: string | null): TwitterUserInfo | u
 export function parseTonWalletToken(tokenStr?: string | null) {
   if (!tokenStr) return { address: '' };
   const result = JSON.parse(tokenStr);
+  if (typeof result.token === 'string') {
+    // todo_wade: check token format
+    const token = JSON.parse(result.token);
+    if (token?.address) {
+      return { address: token.address as string };
+    }
+  }
   return { address: result.address as string };
 }
 

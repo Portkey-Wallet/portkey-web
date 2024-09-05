@@ -272,6 +272,7 @@ const SignIn = forwardRef(
             verificationDoc: res.verificationDoc,
             signature: res.signature,
             zkLoginInfo: res.zkLoginInfo,
+            verificationRequestInfo: res.verificationRequestInfo,
           },
         ];
         setApprovedList(list);
@@ -322,6 +323,7 @@ const SignIn = forwardRef(
                 verificationDoc: result.verificationDoc,
                 signature: result.signature,
                 zkLoginInfo: result.zkLoginInfo,
+                verificationRequestInfo: result.verificationRequestInfo,
               },
               value,
             );

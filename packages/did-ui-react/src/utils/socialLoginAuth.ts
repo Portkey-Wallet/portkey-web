@@ -198,7 +198,7 @@ export const socialLoginAuthBySocket = async ({
     clientId,
     socketURI,
     currentStorage: getStorageInstance(),
-    // sdkUrl: 'http://localhost:3000',
+    sdkUrl: 'http://localhost:3001', // todo_wade
   });
 
   // check platform

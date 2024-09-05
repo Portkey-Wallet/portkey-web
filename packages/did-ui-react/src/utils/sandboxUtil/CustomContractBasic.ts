@@ -25,6 +25,7 @@ export class CustomContractBasic {
     }
 
     if (privateKey) (contractOptions as IEOAInstanceOptions).account = aelf.getWallet(privateKey);
+    console.log('===paramsOption', paramsOption);
     return ContractByWeb.callSendMethod<P, R>(contractOptions, functionName, '', paramsOption, sendOptions);
   }
 

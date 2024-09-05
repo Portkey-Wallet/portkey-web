@@ -1,6 +1,6 @@
 import { AccountType } from '.';
 import { ISearchService } from './search';
-import { IVerificationService, ZKLoginInfo } from './verification';
+import { IVerificationService, VerificationRequestInfo, ZKLoginInfo } from './verification';
 import { ChainId, IReferralInfo } from '@portkey/types';
 import { CaHolderWithGuardian } from '@portkey/graphql';
 export interface Context {
@@ -16,6 +16,7 @@ export interface GuardiansApproved {
   signature?: string;
   identifierHash?: string;
   zkLoginInfo?: ZKLoginInfo;
+  verificationRequestInfo?: VerificationRequestInfo;
 }
 
 export interface RegisterParams {

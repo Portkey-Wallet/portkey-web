@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { AddManagerType, CreatePendingInfo } from '../components/types';
-import { did, errorTip, extraDataEncode, handlerErrorTipLevel, randomId, setLoading } from '../utils';
+import { did, errorTip, extraDataEncode, handlerErrorTipLevel, randomId, setLoading, verification } from '../utils';
 import { LoginResult, RegisterResult } from '@portkey/did';
 import { OnErrorFunc } from '../types';
 import { ChainId } from '@portkey/types';
@@ -91,6 +91,7 @@ export function useLoginWallet({
         verificationDoc: registerVerifier.verificationDoc,
         signature: registerVerifier.signature,
         zkLoginInfo: registerVerifier.zkLoginInfo,
+        verificationRequestInfo: registerVerifier.verificationRequestInfo,
         context: {
           clientId,
           requestId,

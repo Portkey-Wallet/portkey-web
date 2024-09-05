@@ -229,6 +229,7 @@ const GuardianApprovalMain = forwardRef(
               signature: verifierInfo.signature,
               identifierHash: guardianIdentifier,
               zkLoginInfo: rst.zkLoginInfo,
+              verificationRequestInfo: rst.verificationRequestInfo,
             };
             return [...v];
           });
@@ -315,6 +316,7 @@ const GuardianApprovalMain = forwardRef(
             signature: item.signature || '',
             identifierHash: item.identifierHash || '',
             zkLoginInfo: item.zkLoginInfo,
+            verificationRequestInfo: item.verificationRequestInfo,
           }));
         await onConfirmRef.current?.(verificationList);
         setFetching(false);

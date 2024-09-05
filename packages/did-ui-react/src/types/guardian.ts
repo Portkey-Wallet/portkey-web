@@ -5,6 +5,8 @@ import type {
   Guardian,
   Manager,
   OperationTypeEnum,
+  VerificationExt,
+  VerificationRequestInfo,
   ZKLoginInfo,
 } from '@portkey/services';
 import { ChainId } from '@portkey/types';
@@ -41,6 +43,7 @@ export interface IVerificationInfo {
   verificationDoc?: string;
   verifierId?: string;
   zkLoginInfo?: ZKLoginInfo;
+  verificationRequestInfo?: VerificationRequestInfo;
 }
 export interface IVerifierInfo {
   sessionId: string;
@@ -103,8 +106,9 @@ export interface GuardianApprovedItem {
   value?: string;
   type: AccountTypeEnum;
   identifierHash?: string;
-  verificationInfo: IVerification;
+  verificationInfo?: IVerification;
   zkLoginInfo?: ZKLoginInfoInContract;
+  verificationExt?: VerificationExt;
   updateSupportZk?: boolean;
 }
 

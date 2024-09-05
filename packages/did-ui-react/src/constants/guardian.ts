@@ -102,6 +102,11 @@ export const guardianIconMap: Record<AccountType, any> = {
 
 export const eoaWalletGuardianType: AccountType[] = ['TonWallet'];
 
+export const isEOAWalletGuardian = (type?: AccountType) => {
+  if (!type) return false;
+  return eoaWalletGuardianType.includes(type);
+};
+
 export const zkGuardianType: AccountType[] = ['Apple', 'Google'];
 
 export enum VerifyTypeEnum {
