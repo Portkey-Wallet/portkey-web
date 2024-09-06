@@ -19,7 +19,13 @@ export type SendVerificationCodeRequestParams = {
     [x: string]: string;
   };
 };
-
+export type SendSecondaryVerificationCodeRequestParams = {
+  params: { secondaryEmail: string; platformType?: number };
+  headers?: {
+    reCaptchaToken: string;
+    [x: string]: string;
+  };
+};
 export type SendVerificationCodeResult = {
   verifierSessionId: string;
 };
@@ -35,7 +41,11 @@ export type VerifyVerificationCodeParams = {
   operationDetails: TStringJSON;
   caHash?: string;
 };
-
+export type VerifySecondaryVerificationCodeParams = {
+  verifierSessionId: string;
+  verificationCode: string;
+  secondaryEmail: string;
+};
 export type VerifyVerificationCodeResult = {
   verificationDoc?: string;
   signature?: string;

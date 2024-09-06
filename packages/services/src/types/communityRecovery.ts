@@ -109,6 +109,7 @@ export enum OperationTypeEnum {
   modifyTransferLimit = 9,
   transferApprove = 10,
   unsetLoginAccount = 11,
+  setupBackupMailbox = 13,
 }
 
 export type CheckGoogleRecaptchaParams = {

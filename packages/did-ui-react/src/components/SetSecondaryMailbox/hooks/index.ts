@@ -3,9 +3,10 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { ICodeVerifyUIInterface, MAX_TIMER } from '../../CodeVerifyUI';
 import { Form } from 'antd';
 import { sleep } from '@portkey/utils';
-import { setLoading } from '../../../utils';
+import { setLoading, verification } from '../../../utils';
 import { checkEmail, handleErrorMessage } from '../../../utils';
 import { singleMessage } from '../../CustomAnt';
+import useReCaptchaModal from '../../../hooks/useReCaptchaModal';
 
 export function useIsSecondaryMailSet() {
   const [secondaryEmail, setSecondaryEmail] = useState<string>('');
@@ -44,26 +45,37 @@ export function useSecondaryMail(defaultMail: string, onBack?: () => void, onSet
   const [value, setValue] = useState<string>(defaultMail);
   const [error, setError] = useState<string>('');
   const verifierSessionIdRef = useRef<string>();
-  const sendVerifyCode = useCallback(async (secondaryEmail: string) => {
-    const res = await did.services.common.verifySecondaryMail({
-      secondaryEmail,
-    });
-    return res;
-  }, []);
-  const checkVerifyCode = useCallback(async (verificationCode: string, verifierSessionId: string) => {
-    const res = await did.services.common.checkSecondaryMail({
-      verificationCode,
-      verifierSessionId,
-    });
-    if (res.verifiedResult) {
-      // await did.services.common.setSecondaryMail({
-      //   verifierSessionId,
-      // });
-      return true;
-    }
-  }, []);
+  const reCaptchaHandler = useReCaptchaModal();
+  const sendVerifyCode = useCallback(
+    async (secondaryEmail: string) => {
+      const res = await verification.sendSecondaryVerificationCode(
+        {
+          params: {
+            secondaryEmail,
+          },
+        },
+        reCaptchaHandler,
+      );
+      return res;
+    },
+    [reCaptchaHandler],
+  );
+  const checkVerifyCode = useCallback(
+    async (verificationCode: string, verifierSessionId: string) => {
+      const res = await verification.checkSecondaryVerificationCode({
+        verificationCode,
+        verifierSessionId,
+        secondaryEmail: value,
+      });
+      if (res.verifiedResult) {
+        return true;
+      }
+    },
+    [value],
+  );
   const onWrapperBackClick = useCallback(() => {
     if (editable) {
+      setError('');
       setEditable(false);
       setValue(defaultMail);
       form.setFieldsValue({ mailbox: defaultMail });

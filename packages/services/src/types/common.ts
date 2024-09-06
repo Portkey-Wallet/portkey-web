@@ -1,7 +1,9 @@
+import { SendSecondaryVerificationCodeRequestParams } from './verification';
+
 export type TCommonService = {
   saveData(params: TSaveDataApiParams): Promise<string>;
   getSecondaryMail(): Promise<TSecondaryMail>;
-  verifySecondaryMail(params: TSecondaryMail): Promise<TVerifierResult>;
+  verifySecondaryMail(params: SendSecondaryVerificationCodeRequestParams): Promise<TVerifierResult>;
   checkSecondaryMail(params: TSecondaryMailCheckParams): Promise<TCheckVerifierResult>;
   setSecondaryMail(params: TVerifierResult): Promise<string>;
 };

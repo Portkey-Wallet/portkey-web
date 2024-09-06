@@ -1,5 +1,5 @@
 import { IBaseRequest } from '@portkey/types';
-import { BaseService } from '../types';
+import { BaseService, SendSecondaryVerificationCodeRequestParams } from '../types';
 import {
   TCheckVerifierResult,
   TCommonService,
@@ -27,11 +27,11 @@ export class Common<T extends IBaseRequest = IBaseRequest> extends BaseService<T
       url: '/api/app/account/secondary/email',
     });
   }
-  verifySecondaryMail(params: TSecondaryMail): Promise<TVerifierResult> {
+  verifySecondaryMail(params: SendSecondaryVerificationCodeRequestParams): Promise<TVerifierResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/secondary/email/verify',
-      params,
+      ...params,
     });
   }
   checkSecondaryMail(params: TSecondaryMailCheckParams): Promise<TCheckVerifierResult> {
