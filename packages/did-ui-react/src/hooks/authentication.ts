@@ -277,8 +277,22 @@ export function useVerifyTwitter() {
 
 export function useVerifyTonWallet() {
   return useCallback(async (params: VerifySocialLoginParams) => {
-    if (!params.accessToken) throw new Error('accessToken is required');
-    const verificationDetails = JSON.parse(params.accessToken) as VerifyTokenDetails;
+    console.log('useVerifyTonWallet params', params);
+    let accessToken = params.accessToken;
+    if (!accessToken) {
+      const authRes: any = await socialLoginAuth({
+        type: 'TonWallet',
+        network: params.networkType,
+        approveDetail: params.approveDetail,
+      });
+      if (!authRes) throw new Error('Missing Response');
+      accessToken = authRes?.token;
+    }
+    if (!accessToken) throw new Error('accessToken is required');
+    const parsedObj = JSON.parse(accessToken);
+    const verificationDetails = (
+      typeof parsedObj.token === 'string' ? JSON.parse(parsedObj.token) : parsedObj
+    ) as VerifyTokenDetails;
     const { guardianIdentifierHash, extra } = await did.services.verifyTonWalletToken({
       chainId: params.chainId,
       operationType: params.operationType,

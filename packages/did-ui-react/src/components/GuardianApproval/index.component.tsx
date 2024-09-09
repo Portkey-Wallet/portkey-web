@@ -40,7 +40,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { SocialLoginList, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
+import { SocialLoginList, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG, isEOAWalletGuardian } from '../../constants/guardian';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 import { Open_Login_Bridge } from '../../constants/telegram';
@@ -159,7 +159,7 @@ const GuardianApprovalMain = forwardRef(
               ? telegramInfo.accessToken
               : item.accessToken;
           const { clientId, redirectURI, customLoginHandler } = getSocialConfig(accountType);
-          if (!item.verifier?.id) throw 'verifier id is not exist';
+          if (!isEOAWalletGuardian(accountType) && !item.verifier?.id) throw 'verifier id is not exist';
           const id = item.identifier || item.identifierHash;
           if (!id) throw 'identifier is not exist';
           const isFirstShowWarning = await getStorageInstance().getItem(KEY_SHOW_WARNING);

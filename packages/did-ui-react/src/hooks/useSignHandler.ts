@@ -9,6 +9,7 @@ import {
   parseAppleIdentityToken,
   parseFacebookToken,
   parseTelegramToken,
+  parseTonWalletToken,
   parseTwitterToken,
   setLoading,
 } from '../utils';
@@ -130,6 +131,10 @@ export const useSignHandler = ({
         } else if (type === 'Facebook') {
           const userInfo = await parseFacebookToken(data?.accessToken);
           userId = userInfo?.userId;
+          if (!userId) throw 'Authorization failed';
+        } else if (type === 'TonWallet') {
+          const { address } = await parseTonWalletToken(data?.accessToken);
+          userId = address;
           if (!userId) throw 'Authorization failed';
         } else {
           throw Error(`AccountType:${type} is not support`);

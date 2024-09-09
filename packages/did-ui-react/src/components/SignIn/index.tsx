@@ -314,7 +314,11 @@ const SignIn = forwardRef(
             });
             setLoading(false);
 
-            if (!result?.zkLoginInfo && (!result?.signature || !result?.verificationDoc)) {
+            if (
+              !result?.zkLoginInfo &&
+              (!result?.signature || !result?.verificationDoc) &&
+              !result?.verificationRequestInfo
+            ) {
               throw 'Verify social login error';
             }
             onStep2OfSignUpFinish(
