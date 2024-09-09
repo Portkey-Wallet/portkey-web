@@ -19,6 +19,7 @@ import {
   ZKLoginInfo,
 } from '@portkey/services';
 import type { ChainId, TStringJSON } from '@portkey/types';
+import { usePortkeyAsset } from '../components';
 import { FetchRequest } from '@portkey/request';
 import { usePortkey } from '../components/context';
 import { zkLoginVerifyUrlMainnet, zkLoginVerifyUrlTestnet } from '../constants/guardian';
@@ -29,6 +30,7 @@ interface VerifySocialLoginParams extends VerifyTokenParams, BaseAuthProps {
   networkType?: NetworkType;
   operationDetails: TStringJSON;
   approveDetail?: IApproveDetail;
+  caHash?: string;
   idToken?: string;
   nonce?: string;
   timestamp?: number;
@@ -96,7 +98,10 @@ export function useVerifyGoogleToken() {
           accessToken,
           verifierId: params.verifierId,
           chainId: params.chainId,
+          caHash: params.caHash || '',
           operationType: params.operationType,
+          operationDetails: params.operationDetails,
+          targetChainId: params.targetChainId,
         },
         jwt: idToken,
         salt: params.salt ? params.salt : randomId(),
@@ -126,7 +131,9 @@ export function useVerifyAppleToken() {
           const result = await params?.customLoginHandler();
           if (result.error) throw result.error;
           accessToken = result.data?.accessToken;
-          idToken = result.data?.token;
+          idToken = result.data?.idToken;
+          nonce = result.data?.nonce;
+          timestamp = result.data?.timestamp;
         } else {
           const authRes: any = await socialLoginAuth({
             type: 'Apple',
@@ -156,6 +163,9 @@ export function useVerifyAppleToken() {
           verifierId: params.verifierId,
           chainId: params.chainId,
           operationType: params.operationType,
+          caHash: params.caHash || '',
+          operationDetails: params.operationDetails,
+          targetChainId: params.targetChainId,
         },
         jwt: idToken,
         salt: params.salt ? params.salt : randomId(),
@@ -199,6 +209,7 @@ export function useVerifyTelegram() {
       accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      caHash: params.caHash || '',
       operationDetails: params.operationDetails,
     });
   }, []);
@@ -233,6 +244,7 @@ export function useVerifyFacebook() {
       accessToken,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
+      caHash: params.caHash || '',
       operationDetails: params.operationDetails,
     });
   }, []);
@@ -268,6 +280,7 @@ export function useVerifyTwitter() {
         accessToken,
         operationType: params.operationType,
         targetChainId: params.targetChainId,
+        caHash: params.caHash || '',
         operationDetails: params.operationDetails,
       },
       { 'oauth-version': '1.0A' },
@@ -368,6 +381,7 @@ export function useVerifyToken() {
   const verifyFacebook = useVerifyFacebook();
   const verifyTwitter = useVerifyTwitter();
   const verifyTonWallet = useVerifyTonWallet();
+  const assets = usePortkeyAsset();
 
   return useCallback(
     (type: ISocialLogin, params: VerifySocialLoginParams) => {
@@ -386,8 +400,10 @@ export function useVerifyToken() {
       } else if (type === 'TonWallet') {
         func = verifyTonWallet;
       }
-      return func?.(params);
+      const paramsWithCaHash = { caHash: assets?.[0]?.caHash || '', ...params };
+
+      return func?.(paramsWithCaHash);
     },
-    [verifyAppleToken, verifyFacebook, verifyGoogleToken, verifyTelegram, verifyTonWallet, verifyTwitter],
+    [assets, verifyAppleToken, verifyFacebook, verifyGoogleToken, verifyTelegram, verifyTonWallet, verifyTwitter],
   );
 }

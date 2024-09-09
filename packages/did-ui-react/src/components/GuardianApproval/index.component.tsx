@@ -40,7 +40,12 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { SocialLoginList, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG, isEOAWalletGuardian } from '../../constants/guardian';
+import {
+  KEY_SHOW_WARNING,
+  SHOW_WARNING_DIALOG,
+  AllSocialLoginList,
+  isEOAWalletGuardian,
+} from '../../constants/guardian';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 import { Open_Login_Bridge } from '../../constants/telegram';
@@ -66,6 +71,7 @@ export interface GuardianApprovalProps {
   // guardianIdentifier?: string; // for show (email)
   // firstName?: string; // for show (social)
   telegramInfo?: ITelegramInfo;
+  caHash?: string;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -92,6 +98,7 @@ const GuardianApprovalMain = forwardRef(
       // guardianIdentifier,
       // firstName,
       telegramInfo,
+      caHash,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -211,6 +218,7 @@ const GuardianApprovalMain = forwardRef(
             operationDetails,
             customLoginHandler,
             approveDetail: approveDetail,
+            caHash,
           });
 
           if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return;
@@ -250,13 +258,15 @@ const GuardianApprovalMain = forwardRef(
       [
         telegramInfo?.userId,
         telegramInfo?.accessToken,
-        verifyToken,
         originChainId,
         targetChainId,
+        officialWebsiteShow?.symbol,
+        officialWebsiteShow?.amount,
         operationType,
+        verifyToken,
         networkType,
         operationDetails,
-        officialWebsiteShow,
+        caHash,
         isErrorTip,
         onError,
       ],
@@ -264,7 +274,7 @@ const GuardianApprovalMain = forwardRef(
 
     const onVerifyingHandler = useCallback(
       async (_item: UserGuardianStatus, index: number) => {
-        const isSocialLogin = SocialLoginList.includes(_item.guardianType);
+        const isSocialLogin = AllSocialLoginList.includes(_item.guardianType);
         if (isSocialLogin) return socialVerifyHandler(_item, index);
 
         try {
@@ -370,6 +380,7 @@ const GuardianApprovalMain = forwardRef(
               accountType={guardianList[verifyAccountIndex].guardianType}
               isErrorTip={isErrorTip}
               verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
+              caHash={caHash}
               onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
               onError={onError}
               onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}

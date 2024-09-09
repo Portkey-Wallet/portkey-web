@@ -78,6 +78,7 @@ const GuardianApprovalModalMain = forwardRef(
           operationType={operationType}
           operationDetails={operationDetails}
           officialWebsiteShow={officialWebsiteShow}
+          caHash={caHash}
         />
       </CommonBaseModal>
     );

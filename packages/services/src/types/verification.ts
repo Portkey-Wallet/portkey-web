@@ -19,7 +19,13 @@ export type SendVerificationCodeRequestParams = {
     [x: string]: string;
   };
 };
-
+export type SendSecondaryVerificationCodeRequestParams = {
+  params: { secondaryEmail: string; platformType?: number };
+  headers?: {
+    reCaptchaToken: string;
+    [x: string]: string;
+  };
+};
 export type SendVerificationCodeResult = {
   verifierSessionId: string;
 };
@@ -33,6 +39,12 @@ export type VerifyVerificationCodeParams = {
   targetChainId?: ChainId;
   operationType: OperationTypeEnum;
   operationDetails: TStringJSON;
+  caHash?: string;
+};
+export type VerifySecondaryVerificationCodeParams = {
+  verifierSessionId: string;
+  verificationCode: string;
+  secondaryEmail: string;
 };
 
 export type VerificationRequestInfo = {
@@ -87,10 +99,12 @@ export interface VerificationExt {
 export interface VerifierSocialTokenParams extends BaseVerifyTokenParams {
   accessToken?: string;
   verificationDetails?: VerifyTokenDetails;
+  caHash?: string;
 }
 
 export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
   identityToken: string;
+  caHash?: string;
 }
 
 export type VerifyZKPortkeyParams = {
@@ -100,6 +114,9 @@ export type VerifyZKPortkeyParams = {
   verifierId?: string;
   chainId: ChainId;
   operationType: OperationTypeEnum;
+  caHash?: string;
+  operationDetails?: string;
+  targetChainId?: string;
 };
 
 export type VerifyZKLoginParams = {

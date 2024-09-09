@@ -3,6 +3,75 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.5...v2.9.6-alpha.6) (2024-09-04)
+
+### Bug Fixes
+
+- 🐛 apple verify ([38b59c0](https://github.com/Portkey-Wallet/portkey-web/commit/38b59c076e7e5f9d340f8f98ab98511096c24fb2))
+
+## [2.9.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.4...v2.9.6-alpha.5) (2024-09-03)
+
+### Features
+
+- verify zk add targetChainId params ([87988c3](https://github.com/Portkey-Wallet/portkey-web/commit/87988c3cb0ff4afcca7f289365efe306b3c0a200))
+
+### Bug Fixes
+
+- 🐛 apple verify idToken ([622f1e2](https://github.com/Portkey-Wallet/portkey-web/commit/622f1e2ae03b6481d9822e9fa23d37e63b9906f8))
+
+## [2.9.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.3...v2.9.6-alpha.4) (2024-09-03)
+
+### Bug Fixes
+
+- 🐛 manager approve zk ([32297e7](https://github.com/Portkey-Wallet/portkey-web/commit/32297e7e1a9d4569221e28994b0b68a3b413e09d))
+
+## [2.9.6-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.2...v2.9.6-alpha.3) (2024-09-03)
+
+### Bug Fixes
+
+- 🐛 update social type ([c3ad7dd](https://github.com/Portkey-Wallet/portkey-web/commit/c3ad7dd13c36b60fa68d105164ae51601a4dd5c5))
+
+## [2.9.6-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.1...v2.9.6-alpha.2) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.6-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.1) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.0) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.4...v2.9.5-alpha.0) (2024-09-03)
+
+### Bug Fixes
+
+- caHash params ([63339e3](https://github.com/Portkey-Wallet/portkey-web/commit/63339e33ee37237eade1b9fac2cd3d2e80e4439b))
+
+## [2.9.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.3...v2.9.4) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.2...v2.9.3) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.9.2) (2024-09-02)
+
+### Features
+
+- add caHash params ([82eb609](https://github.com/Portkey-Wallet/portkey-web/commit/82eb6095402784bee712329e188764e896420031))
+- add copywritting ([6e74a4c](https://github.com/Portkey-Wallet/portkey-web/commit/6e74a4cf12ad900ffb9228ea31d76b32bc7cadd2))
+- add secondary mailbox ([d5293c0](https://github.com/Portkey-Wallet/portkey-web/commit/d5293c0940ab2ceb1f35c868ad8c9532fdf2b071))
+- change check verify code logic ([94cd8da](https://github.com/Portkey-Wallet/portkey-web/commit/94cd8da2efd5a41b8d621bbbf350700e1c8d4f2f))
+- security ([73ecbeb](https://github.com/Portkey-Wallet/portkey-web/commit/73ecbeb5afb43b15122cfa5479c92da13b2fc662))
+
+### Bug Fixes
+
+- 🐛 social auth ([e191b1e](https://github.com/Portkey-Wallet/portkey-web/commit/e191b1e3d04d4e9bf859ab3f7e3515b33aa51552))
+- update secondary email ([21c392a](https://github.com/Portkey-Wallet/portkey-web/commit/21c392aa5a0438c440aa0151f7939c68cd3b80eb))
+
 ## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
 
 **Note:** Version bump only for package @portkey/did-ui-react

@@ -30,7 +30,7 @@ import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
 import {
-  SocialLoginList,
+  AllSocialLoginList,
   guardianIconMap,
   isEOAWalletGuardian,
   verifierExistTip,
@@ -295,6 +295,7 @@ function GuardianEdit({
         clientId,
         redirectURI,
         networkType,
+        caHash,
         operationDetails: getOperationDetails(operationType, {
           identifierHash: curGuardian.current?.identifierHash,
           guardianType: curGuardian.current?.guardianType,
@@ -318,6 +319,7 @@ function GuardianEdit({
       telegramInfo?.userId,
       telegramInfo?.accessToken,
       verifyToken,
+      caHash,
       originChainId,
       networkType,
       operationType,
@@ -488,7 +490,7 @@ function GuardianEdit({
   }, [isErrorTip, onError, preGuardian, socialVerify]);
 
   const handleUnsetLoginGuardian = useCallback(() => {
-    if (SocialLoginList.includes(`${preGuardian?.guardianType}`)) {
+    if (AllSocialLoginList.includes(`${preGuardian?.guardianType}`)) {
       handleSocialVerify();
     } else {
       handleCommonVerify();
@@ -616,6 +618,7 @@ function GuardianEdit({
           accountType={preGuardian?.guardianType}
           isErrorTip={isErrorTip}
           verifier={preGuardian?.verifier as VerifierItem}
+          caHash={caHash}
           onSuccess={verifySuccess}
           onError={onError}
           onReSend={reSendCode}
@@ -635,6 +638,7 @@ function GuardianEdit({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
+          caHash={caHash}
           operationDetails={getOperationDetails(operationType, {
             identifierHash: curGuardian.current?.identifierHash,
             guardianType: curGuardian.current?.guardianType,

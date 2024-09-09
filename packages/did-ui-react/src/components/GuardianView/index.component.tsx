@@ -31,7 +31,12 @@ import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
 import clsx from 'clsx';
 import './index.less';
-import { SocialLoginList, guardianIconMap, isEOAWalletGuardian, zkLoginVerifierItem } from '../../constants/guardian';
+import {
+  AllSocialLoginList,
+  guardianIconMap,
+  zkLoginVerifierItem,
+  isEOAWalletGuardian,
+} from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
@@ -49,6 +54,7 @@ export interface GuardianViewProps {
   guardianList?: UserGuardianStatus[];
   networkType: NetworkType;
   telegramInfo?: ITelegramInfo;
+  caHash?: string;
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -64,6 +70,7 @@ function GuardianView({
   guardianList,
   networkType,
   telegramInfo,
+  caHash,
   handleSetLoginGuardian,
   onError,
 }: GuardianViewProps) {
@@ -143,6 +150,7 @@ function GuardianView({
         redirectURI,
         networkType,
         operationType,
+        caHash,
         operationDetails: getOperationDetails(operationType, {
           identifierHash: curGuardian.current?.identifierHash,
           guardianType: curGuardian.current?.guardianType,
@@ -165,6 +173,7 @@ function GuardianView({
       telegramInfo?.userId,
       telegramInfo?.accessToken,
       verifyToken,
+      caHash,
       originChainId,
       networkType,
       operationType,
@@ -309,7 +318,7 @@ function GuardianView({
   }, [currentGuardian, isErrorTip, onError, socialVerify]);
 
   const handleSwitch = useCallback(() => {
-    if (SocialLoginList.includes(currentGuardian.guardianType)) {
+    if (AllSocialLoginList.includes(currentGuardian.guardianType)) {
       handleSocialVerify();
     } else {
       handleCommonVerify();
@@ -460,6 +469,7 @@ function GuardianView({
           accountType={currentGuardian.guardianType}
           isErrorTip={isErrorTip}
           verifier={currentGuardian.verifier as VerifierItem}
+          caHash={caHash}
           onSuccess={verifySuccess}
           onError={onError}
           onReSend={reSendCode}
@@ -478,6 +488,7 @@ function GuardianView({
           telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
+          caHash={caHash}
           operationType={operationType}
           operationDetails={getOperationDetails(operationType, {
             identifierHash: curGuardian.current?.identifierHash,

@@ -348,6 +348,7 @@ function GuardianMain({
           handleSetLoginGuardian={handleSetLoginGuardian}
           guardianList={guardianList}
           networkType={networkType}
+          caHash={caHash}
         />
       )}
       {step === GuardianStep.guardianAdd && (

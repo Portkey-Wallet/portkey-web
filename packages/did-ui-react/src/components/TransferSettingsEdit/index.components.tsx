@@ -383,6 +383,7 @@ export default function TransferSettingsEditMain({
           onConfirm={approvalSuccess}
           onError={onGuardiansApproveError}
           operationType={OperationTypeEnum.modifyTransferLimit}
+          caHash={caHash}
           operationDetails={getOperationDetails(OperationTypeEnum.modifyTransferLimit, {
             symbol,
             singleLimit: limitCalFunc().transSingleLimit,

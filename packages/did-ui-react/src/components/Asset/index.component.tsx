@@ -42,6 +42,8 @@ import TokenAllowance from '../TokenAllowance';
 import useGAReport from '../../hooks/useGAReport';
 
 import { AssetStep } from '../../constants/assets';
+import SetSecondaryMailbox from '../SetSecondaryMailbox';
+import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -190,6 +192,7 @@ function AssetMain({
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);
   }, []);
+  const { secondaryEmail, getSecondaryMail } = useIsSecondaryMailSet();
 
   // const saveLiftCycleInfo = useCallback(async () => {
   //   console.log('====== saveLiftCycleInfo', assetStep);
@@ -272,7 +275,9 @@ function AssetMain({
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);
-
+    // (async () => {
+    //   await getSecondaryMail();
+    // })();
     // saveLiftCycleInfo();
   }, [assetStep]);
 
@@ -327,6 +332,14 @@ function AssetMain({
   const WalletSecurityMenuList = useWalletSecurityMenuList({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
     onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
+    onClickSetSecondaryMailbox: async () => {
+      const res = await getSecondaryMail();
+      if (!res) {
+        singleMessage.error('Cannot fetch the secondary email');
+        return;
+      }
+      setAssetStep(AssetStep.setSecondaryMailbox);
+    },
   });
 
   const getLimitFromContract = useCallback(
@@ -662,7 +675,17 @@ function AssetMain({
               }}
             />
           )}
-
+          {assetStep === AssetStep.setSecondaryMailbox && (
+            <SetSecondaryMailbox
+              onBack={() => {
+                setAssetStep(AssetStep.walletSecurity);
+              }}
+              onSetSecondaryMailboxSuccess={() => {
+                setAssetStep(AssetStep.walletSecurity);
+              }}
+              defaultValue={secondaryEmail}
+            />
+          )}
           {assetStep === AssetStep.transferSettings && (
             <TransferSettings
               onBack={() => setAssetStep(AssetStep.paymentSecurity)}

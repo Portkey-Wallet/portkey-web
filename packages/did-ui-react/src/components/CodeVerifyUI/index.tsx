@@ -9,7 +9,7 @@ import { BaseCodeVerifyProps } from '../types';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
 
-const MAX_TIMER = 60;
+export const MAX_TIMER = 60;
 
 export interface ICodeVerifyUIInterface {
   setTimer: (timer: number) => void;
@@ -74,9 +74,13 @@ const CodeVerifyUI = forwardRef(
     return (
       <div className={clsx('verifier-account-wrapper', className)}>
         {isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
-        <div className="portkey-ui-flex-row-center login-account-wrapper">
-          <VerifierPair guardianType={accountType} verifierSrc={verifier.imageUrl} verifierName={verifier.name} />
-          <span className="login-account">{guardianIdentifier || ''}</span>
+        <div className={clsx('portkey-ui-flex-row-center', verifier && 'login-account-wrapper')}>
+          {verifier && (
+            <>
+              <VerifierPair guardianType={accountType} verifierSrc={verifier.imageUrl} verifierName={verifier.name} />
+              <span className="login-account">{guardianIdentifier || ''}</span>
+            </>
+          )}
         </div>
         <div className="send-tip">
           {tipExtra}

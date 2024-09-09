@@ -46,6 +46,7 @@ export interface VerifierSelectProps {
   isErrorTip?: boolean;
   operationType?: OperationTypeEnum;
   chainType?: ChainType;
+  caHash?: string;
   // socialLogin props
   authToken?: string; // apple、google、telegram authorized token
   //
@@ -67,6 +68,7 @@ export default function VerifierSelect({
   defaultVerifier,
   authToken,
   operationType = OperationTypeEnum.register,
+  caHash,
   onError,
   onConfirm,
 }: VerifierSelectProps) {
@@ -206,6 +208,7 @@ export default function VerifierSelect({
         operationType: OperationTypeEnum.register,
         networkType,
         operationDetails,
+        caHash,
         customLoginHandler,
       });
       ConfigProvider.config.storageMethod?.removeItem(SelectVerifierInfoStr);

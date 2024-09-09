@@ -2,7 +2,7 @@ import GuardianApprovalMain from '../GuardianApproval/index.component';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChainId } from '@portkey/types';
 import SetAllowanceMain, { BaseSetAllowanceProps, IAllowance } from '../SetAllowance/index.component';
-import { AuthServe, CustomContractBasic, did, handleErrorMessage, setLoading } from '../../utils';
+import { AuthServe, CustomContractBasic, did, handleErrorMessage, handleZKLoginInfo, setLoading } from '../../utils';
 import { getChain } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
@@ -15,6 +15,7 @@ import { ALLOWANCE_MAX_LIMIT, DEFAULT_DECIMAL, DEFAULT_NFT_DECIMAL } from '../..
 import { isNFT, isNFTCollection } from '../../utils/assets';
 import './index.less';
 import { getOperationDetails } from '../utils/operation.util';
+import { zkGuardianType } from '../../constants/guardian';
 
 export interface BaseManagerApproveInnerProps extends BaseSetAllowanceProps {
   originChainId: ChainId;
@@ -205,15 +206,28 @@ export default function ManagerApproveInner({
             guardianList={guardianList}
             networkType={networkType}
             onConfirm={async (approvalInfo) => {
-              const approved: IGuardiansApproved[] = approvalInfo.map((guardian) => ({
-                type: AccountTypeEnum[guardian.type || 'Google'],
-                identifierHash: guardian.identifierHash || '',
-                verificationInfo: {
-                  id: guardian.verifierId,
-                  signature: Object.values(Buffer.from(guardian.signature as any, 'hex')),
-                  verificationDoc: guardian.verificationDoc,
-                },
-              }));
+              const approved: IGuardiansApproved[] = approvalInfo.map((item) => {
+                if (item.type && zkGuardianType.includes(item.type)) {
+                  return {
+                    type: item?.type ? AccountTypeEnum[item.type] : AccountTypeEnum.Google,
+                    identifierHash: item?.identifierHash || '',
+                    verificationInfo: {
+                      id: item.verifierId,
+                    },
+                    zkLoginInfo: handleZKLoginInfo(item?.zkLoginInfo),
+                  };
+                } else {
+                  return {
+                    type: item?.type ? AccountTypeEnum[item.type] : AccountTypeEnum.Google,
+                    identifierHash: item?.identifierHash || '',
+                    verificationInfo: {
+                      id: item.verifierId,
+                      signature: Object.values(Buffer.from(item?.signature as any, 'hex')) as any,
+                      verificationDoc: item.verificationDoc,
+                    },
+                  };
+                }
+              });
 
               await onFinish?.({
                 amount: timesDecimals(allowance, tokenInfo?.decimals ?? DEFAULT_SYMBOL_DECIMAL).toFixed(0),
