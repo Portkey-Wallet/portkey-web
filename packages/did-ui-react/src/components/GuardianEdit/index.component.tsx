@@ -29,7 +29,13 @@ import CommonBaseModal from '../CommonBaseModal';
 import GuardianAccountShow from '../GuardianAccountShow';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
-import { SocialLoginList, guardianIconMap, verifierExistTip, verifierUsedTip } from '../../constants/guardian';
+import {
+  AllSocialLoginList,
+  guardianIconMap,
+  verifierExistTip,
+  zkGuardianType,
+  zkLoginVerifierItem,
+} from '../../constants/guardian';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
@@ -39,6 +45,7 @@ import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
 
 enum GuardianEditStatus {
@@ -95,9 +102,16 @@ function GuardianEdit({
 }: GuardianEditProps) {
   const { t } = useTranslation();
   const [isExist, setIsExist] = useState<boolean>(false);
+  const isZK = useMemo(
+    () => preGuardian?.verifiedByZk || preGuardian?.manuallySupportForZk,
+    [preGuardian?.manuallySupportForZk, preGuardian?.verifiedByZk],
+  );
+  const [{ managementAccount }] = usePortkeyAsset();
   const preGuardianRef = useRef<UserGuardianStatus | undefined>(preGuardian);
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
-  const [selectVerifierId, setSelectVerifierId] = useState<string | undefined>(currentGuardian?.verifier?.id);
+  const [selectVerifierId, setSelectVerifierId] = useState<string | undefined>(
+    isZK ? zkLoginVerifierItem.id : currentGuardian?.verifier?.id,
+  );
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const verifyToken = useVerifyToken();
@@ -130,7 +144,7 @@ function GuardianEdit({
         label: (
           <div className="portkey-ui-flex label-item">
             <CustomSvg type="Warning" />
-            <div className="tip">{verifierUsedTip}</div>
+            <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
           </div>
         ),
       },
@@ -139,17 +153,28 @@ function GuardianEdit({
   );
   const verifierSelectItems = useMemo(
     () =>
-      verifierList?.map((item) => ({
-        value: item?.id,
-        iconUrl: item?.imageUrl ?? '',
-        label: item?.name,
-        icon: <img src={item?.imageUrl} />,
-        id: item?.id,
-        disabled: !!guardianList
+      verifierList?.map((item) => {
+        let disabled = false;
+        const isUsed = !!guardianList
           ?.filter((temp) => temp.key !== preGuardian?.key)
-          .find((_guardian) => _guardian.verifierId === item.id),
-      })),
-    [guardianList, preGuardian?.key, verifierList],
+          .find((_guardian) => _guardian.verifierId === item.id);
+
+        if (preGuardian?.guardianType && zkGuardianType.includes(preGuardian.guardianType)) {
+          const abled = item.id === preGuardian?.verifier?.id || item.name === zkLoginVerifierItem.name;
+          disabled = !abled;
+        } else {
+          disabled = (isUsed && item.id !== preGuardian?.verifier?.id) || item.name === zkLoginVerifierItem.name;
+        }
+        return {
+          value: item?.id,
+          iconUrl: item?.imageUrl ?? '',
+          label: item?.name,
+          icon: <img src={item?.imageUrl} />,
+          id: item?.id,
+          disabled,
+        };
+      }),
+    [guardianList, preGuardian?.guardianType, preGuardian?.key, preGuardian?.verifier?.id, verifierList],
   );
   const approvalGuardianList = useMemo(
     () => guardianList?.filter((item) => item.key !== preGuardian?.key),
@@ -182,22 +207,34 @@ function GuardianEdit({
       sandboxId,
       chainType,
     });
-    // 2. check verifier exist
-    const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
-    if (_verifierExist) {
-      setIsExist(true);
-      return false;
-    }
 
-    const _key = `${currentGuardian?.guardianIdentifier}&${selectVerifierId}`;
-    const _guardian: UserGuardianStatus = {
-      ...currentGuardian!,
-      key: _key,
-      verifier,
-      verifierId: verifier.id,
-    };
-    curGuardian.current = _guardian;
-    return true;
+    if (curGuardian.current?.guardianType && zkGuardianType.includes(curGuardian.current?.guardianType)) {
+      // zk
+      const _key = `${currentGuardian?.guardianIdentifier}&${selectVerifierId}`;
+
+      const _guardian: UserGuardianStatus = {
+        ...currentGuardian!,
+        key: _key,
+      };
+      curGuardian.current = _guardian;
+      return true;
+    } else {
+      // 2. check verifier exist
+      const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
+      if (_verifierExist) {
+        setIsExist(true);
+        return false;
+      }
+      const _key = `${currentGuardian?.guardianIdentifier}&${selectVerifierId}`;
+      const _guardian: UserGuardianStatus = {
+        ...currentGuardian!,
+        key: _key,
+        verifier,
+        verifierId: verifier.id,
+      };
+      curGuardian.current = _guardian;
+      return true;
+    }
   }, [caHash, chainType, currentGuardian, originChainId, sandboxId, selectVerifierId]);
   const socialBasic = useCallback(
     (v: ISocialLogin) => {
@@ -221,6 +258,9 @@ function GuardianEdit({
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
       let token = '';
+      let idToken;
+      let nonce;
+      let timestamp;
       if (
         _guardian?.guardianType === 'Telegram' &&
         telegramInfo?.userId === _guardian?.guardianIdentifier &&
@@ -234,18 +274,27 @@ function GuardianEdit({
           redirectURI,
           network: networkType,
           guardianIdentifier: _guardian.guardianIdentifier,
+          managerAddress: managementAccount?.address,
         });
         if (!response?.token) throw new Error('auth failed');
         token = response.token;
+        if (!response?.idToken) throw new Error('invalid idToken');
+        idToken = response.idToken;
+        nonce = response.nonce;
+        timestamp = response.timestamp;
       }
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
         accessToken: token,
+        nonce,
+        timestamp,
+        idToken,
         id: _guardian.guardianIdentifier || '',
         verifierId: _guardian?.verifier?.id || '',
         chainId: originChainId,
         clientId,
         redirectURI,
         networkType,
+        caHash,
         operationDetails: getOperationDetails(operationType, {
           identifierHash: curGuardian.current?.identifierHash,
           guardianType: curGuardian.current?.guardianType,
@@ -256,7 +305,12 @@ function GuardianEdit({
       });
       if (!rst) return;
       const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
-      const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+      let guardianIdentifier = '';
+      if (rst.zkLoginInfo) {
+        guardianIdentifier = rst.zkLoginInfo.identifierHash;
+      } else {
+        guardianIdentifier = handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
+      }
       return { verifierInfo, guardianIdentifier };
     },
     [
@@ -264,9 +318,11 @@ function GuardianEdit({
       telegramInfo?.userId,
       telegramInfo?.accessToken,
       verifyToken,
+      caHash,
       originChainId,
       networkType,
       operationType,
+      managementAccount?.address,
     ],
   );
   const sendCode = useCallback(async () => {
@@ -324,7 +380,8 @@ function GuardianEdit({
     };
   }, []);
 
-  const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
+  const verifySuccess = useCallback((res: { verificationDoc?: string; signature?: string; verifierId: string }) => {
+    if (!res.verificationDoc || !res.signature) return;
     const { guardianIdentifier } = handleVerificationDoc(res.verificationDoc);
 
     preGuardianRef.current = {
@@ -343,7 +400,16 @@ function GuardianEdit({
       try {
         setLoading(true);
         if (step === GuardianEditStatus.EditGuardian) {
-          await handleEditGuardian?.(curGuardian.current!, approvalInfo);
+          let _cur = curGuardian.current;
+          if (_cur?.guardianType && zkGuardianType.includes(_cur.guardianType)) {
+            _cur = {
+              ..._cur,
+              verifier: preGuardian?.verifier,
+              verifierId: preGuardian?.verifierId,
+            };
+          }
+
+          await handleEditGuardian?.(_cur!, approvalInfo);
         }
         if (step === GuardianEditStatus.RemoveGuardian) {
           await handleRemoveGuardian?.(approvalInfo);
@@ -365,7 +431,16 @@ function GuardianEdit({
         setLoading(false);
       }
     },
-    [handleEditGuardian, handleRemoveGuardian, handleSetLoginGuardian, isErrorTip, onError, step],
+    [
+      handleEditGuardian,
+      handleRemoveGuardian,
+      handleSetLoginGuardian,
+      isErrorTip,
+      onError,
+      preGuardian?.verifier,
+      preGuardian?.verifierId,
+      step,
+    ],
   );
 
   const handleCommonVerify = useCallback(() => {
@@ -395,6 +470,7 @@ function GuardianEdit({
         verificationDoc: res?.verifierInfo.verificationDoc,
         signature: res?.verifierInfo.signature,
         identifierHash: res?.guardianIdentifier,
+        zkLoginInfo: res?.verifierInfo?.zkLoginInfo,
       };
       setStep(GuardianEditStatus.UnsetLoginGuardian);
       setApprovalVisible(true);
@@ -413,7 +489,7 @@ function GuardianEdit({
   }, [isErrorTip, onError, preGuardian, socialVerify]);
 
   const handleUnsetLoginGuardian = useCallback(() => {
-    if (SocialLoginList.includes(`${preGuardian?.guardianType}`)) {
+    if (AllSocialLoginList.includes(`${preGuardian?.guardianType}`)) {
       handleSocialVerify();
     } else {
       handleCommonVerify();
@@ -492,7 +568,11 @@ function GuardianEdit({
           <p className="guardian-edit-input-item-label">{t('Verifier')}</p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
-            className="verifier-select, portkey-select-verifier-option-tip"
+            className={clsx(
+              'verifier-select',
+              'portkey-select-verifier-option-tip',
+              isZK && 'verifier-select-disabled',
+            )}
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
@@ -510,7 +590,7 @@ function GuardianEdit({
             type="primary"
             className="guardian-btn "
             onClick={onConfirm}
-            disabled={editBtnDisable}
+            disabled={editBtnDisable || isZK}
             loading={editBtnLoading}>
             {t('Send Request')}
           </ThrottleButton>
@@ -533,6 +613,7 @@ function GuardianEdit({
           accountType={preGuardian?.guardianType}
           isErrorTip={isErrorTip}
           verifier={preGuardian?.verifier as VerifierItem}
+          caHash={caHash}
           onSuccess={verifySuccess}
           onError={onError}
           onReSend={reSendCode}
@@ -552,6 +633,7 @@ function GuardianEdit({
           onConfirm={approvalSuccess}
           onError={onError}
           operationType={operationType}
+          caHash={caHash}
           operationDetails={getOperationDetails(operationType, {
             identifierHash: curGuardian.current?.identifierHash,
             guardianType: curGuardian.current?.guardianType,

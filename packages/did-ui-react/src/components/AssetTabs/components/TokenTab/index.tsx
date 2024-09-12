@@ -29,12 +29,12 @@ export default function TokenTab({
 
               <div className="desc">
                 <div className="info">
-                  <span>{item.symbol}</span>
+                  <span>{item?.label || item.symbol}</span>
                   <span>{formatAmountShow(divDecimals(item.balance, item.decimals))}</span>
                 </div>
                 <div className="amount">
                   <p>{transNetworkText(item.chainId, isMainnet)}</p>
-                  {isMainnet && item.balanceInUsd && !BigNumber(item.balanceInUsd).isZero() && (
+                  {isMainnet && item.balanceInUsd && (
                     <p className="convert">{`$ ${formatAmountShow(item.balanceInUsd)}`}</p>
                   )}
                 </div>

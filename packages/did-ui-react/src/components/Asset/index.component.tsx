@@ -7,7 +7,7 @@ import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
-import { IAssetItemType, ITransferLimitItem, IUserTokenItem, AllowanceItem } from '@portkey/services';
+import { IAssetItemType, ITransferLimitItem, AllowanceItem, IUserTokenItemNew } from '@portkey/services';
 import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
@@ -42,6 +42,8 @@ import TokenAllowance from '../TokenAllowance';
 import useGAReport from '../../hooks/useGAReport';
 
 import { AssetStep } from '../../constants/assets';
+import SetSecondaryMailbox from '../SetSecondaryMailbox';
+import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -117,12 +119,12 @@ function AssetMain({
 
   const { startReport, endReport } = useGAReport();
 
-  const [allToken, setAllToken] = useState<IUserTokenItem[]>();
+  const [allToken, setAllToken] = useState<IUserTokenItemNew[]>();
   const [accelerateChainId, setAccelerateChainId] = useState<ChainId>(originChainId);
   const getAllTokenList = useCallback(async () => {
     if (!caAddressInfos) return;
     const chainIdArray = caAddressInfos.map((info) => info.chainId);
-    const result = await did.services.assets.getUserTokenList({
+    const result = await did.services.assets.getUserTokenListNew({
       chainIdArray,
       keyword: '',
     });
@@ -190,6 +192,7 @@ function AssetMain({
   const onAvatarClick = useCallback(async () => {
     setAssetStep(AssetStep.my);
   }, []);
+  const { secondaryEmail, getSecondaryMail } = useIsSecondaryMailSet();
 
   // const saveLiftCycleInfo = useCallback(async () => {
   //   console.log('====== saveLiftCycleInfo', assetStep);
@@ -272,27 +275,37 @@ function AssetMain({
 
   useUpdateEffect(() => {
     onLifeCycleChange?.(assetStep || AssetStep.overview);
-
+    // (async () => {
+    //   await getSecondaryMail();
+    // })();
     // saveLiftCycleInfo();
   }, [assetStep]);
 
-  const onReceive = useCallback(async (v: any) => {
-    setSelectToken({
-      ...v,
-      address: v.address || v.tokenContractAddress,
-    });
-    await sleep(50);
-    setAssetStep(AssetStep.receive);
-  }, []);
+  const onReceive = useCallback(
+    async (v: any) => {
+      preStepRef.current = assetStep;
+      setSelectToken({
+        ...v,
+        address: v.address || v.tokenContractAddress,
+      });
+      await sleep(50);
+      setAssetStep(AssetStep.receive);
+    },
+    [assetStep],
+  );
 
-  const onBuy = useCallback(async (v: any) => {
-    setSelectToken({
-      ...v,
-      address: v.address || v.tokenContractAddress,
-    });
-    await sleep(50);
-    setAssetStep(AssetStep.ramp);
-  }, []);
+  const onBuy = useCallback(
+    async (v: any) => {
+      preStepRef.current = assetStep;
+      setSelectToken({
+        ...v,
+        address: v.address || v.tokenContractAddress,
+      });
+      await sleep(50);
+      setAssetStep(AssetStep.ramp);
+    },
+    [assetStep],
+  );
 
   const onSend = useCallback(async (v: IAssetItemType) => {
     setSendToken(v);
@@ -319,6 +332,14 @@ function AssetMain({
   const WalletSecurityMenuList = useWalletSecurityMenuList({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
     onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
+    onClickSetSecondaryMailbox: async () => {
+      const res = await getSecondaryMail();
+      if (!res) {
+        singleMessage.error('Cannot fetch the secondary email');
+        return;
+      }
+      setAssetStep(AssetStep.setSecondaryMailbox);
+    },
   });
 
   const getLimitFromContract = useCallback(
@@ -406,6 +427,7 @@ function AssetMain({
                 onViewActivityItem(v);
               }}
               onViewTokenItem={(v) => {
+                preStepRef.current = AssetStep.tokenDetail;
                 setTokenDetail(v);
                 setAssetStep(AssetStep.tokenDetail);
               }}
@@ -425,13 +447,16 @@ function AssetMain({
               symbolIcon={selectToken.imageUrl}
               assetInfo={{
                 symbol: selectToken.symbol,
+                label: selectToken?.label,
                 tokenContractAddress: selectToken.address,
                 chainId: selectToken.chainId,
                 decimals: selectToken.decimals,
               }}
               networkType={networkType}
               chainId={selectToken.chainId}
-              onBack={() => setAssetStep(AssetStep.overview)}
+              onBack={() => {
+                onBack();
+              }}
             />
           )}
 
@@ -527,6 +552,7 @@ function AssetMain({
                 const info: IAssetItemType = {
                   chainId: token.chainId,
                   symbol: token.symbol,
+                  label: token?.label,
                   address: token.tokenContractAddress || token.address,
                   tokenInfo: {
                     ...token,
@@ -649,7 +675,17 @@ function AssetMain({
               }}
             />
           )}
-
+          {assetStep === AssetStep.setSecondaryMailbox && (
+            <SetSecondaryMailbox
+              onBack={() => {
+                setAssetStep(AssetStep.walletSecurity);
+              }}
+              onSetSecondaryMailboxSuccess={() => {
+                setAssetStep(AssetStep.walletSecurity);
+              }}
+              defaultValue={secondaryEmail}
+            />
+          )}
           {assetStep === AssetStep.transferSettings && (
             <TransferSettings
               onBack={() => setAssetStep(AssetStep.paymentSecurity)}

@@ -3,6 +3,139 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.5...v2.9.6-alpha.6) (2024-09-04)
+
+### Bug Fixes
+
+- 🐛 apple verify ([38b59c0](https://github.com/Portkey-Wallet/portkey-web/commit/38b59c076e7e5f9d340f8f98ab98511096c24fb2))
+
+## [2.9.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.4...v2.9.6-alpha.5) (2024-09-03)
+
+### Features
+
+- verify zk add targetChainId params ([87988c3](https://github.com/Portkey-Wallet/portkey-web/commit/87988c3cb0ff4afcca7f289365efe306b3c0a200))
+
+### Bug Fixes
+
+- 🐛 apple verify idToken ([622f1e2](https://github.com/Portkey-Wallet/portkey-web/commit/622f1e2ae03b6481d9822e9fa23d37e63b9906f8))
+
+## [2.9.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.3...v2.9.6-alpha.4) (2024-09-03)
+
+### Bug Fixes
+
+- 🐛 manager approve zk ([32297e7](https://github.com/Portkey-Wallet/portkey-web/commit/32297e7e1a9d4569221e28994b0b68a3b413e09d))
+
+## [2.9.6-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.2...v2.9.6-alpha.3) (2024-09-03)
+
+### Bug Fixes
+
+- 🐛 update social type ([c3ad7dd](https://github.com/Portkey-Wallet/portkey-web/commit/c3ad7dd13c36b60fa68d105164ae51601a4dd5c5))
+
+## [2.9.6-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.1...v2.9.6-alpha.2) (2024-09-03)
+
+**Note:** Version bump only for package root
+
+## [2.9.6-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.1) (2024-09-03)
+
+**Note:** Version bump only for package root
+
+## [2.9.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.0) (2024-09-03)
+
+**Note:** Version bump only for package root
+
+## [2.9.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.4...v2.9.5-alpha.0) (2024-09-03)
+
+### Bug Fixes
+
+- caHash params ([63339e3](https://github.com/Portkey-Wallet/portkey-web/commit/63339e33ee37237eade1b9fac2cd3d2e80e4439b))
+
+## [2.9.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.3...v2.9.4) (2024-09-02)
+
+**Note:** Version bump only for package root
+
+## [2.9.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.2...v2.9.3) (2024-09-02)
+
+**Note:** Version bump only for package root
+
+## [2.9.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.9.2) (2024-09-02)
+
+### Features
+
+- add caHash params ([52c48a2](https://github.com/Portkey-Wallet/portkey-web/commit/52c48a2b6e3ef94bed42bb52fe93ed756551831a))
+- add caHash params ([82eb609](https://github.com/Portkey-Wallet/portkey-web/commit/82eb6095402784bee712329e188764e896420031))
+- add copywritting ([6e74a4c](https://github.com/Portkey-Wallet/portkey-web/commit/6e74a4cf12ad900ffb9228ea31d76b32bc7cadd2))
+- add secondary mailbox ([d5293c0](https://github.com/Portkey-Wallet/portkey-web/commit/d5293c0940ab2ceb1f35c868ad8c9532fdf2b071))
+- change check verify code logic ([94cd8da](https://github.com/Portkey-Wallet/portkey-web/commit/94cd8da2efd5a41b8d621bbbf350700e1c8d4f2f))
+- security ([73ecbeb](https://github.com/Portkey-Wallet/portkey-web/commit/73ecbeb5afb43b15122cfa5479c92da13b2fc662))
+
+### Bug Fixes
+
+- 🐛 social auth ([e191b1e](https://github.com/Portkey-Wallet/portkey-web/commit/e191b1e3d04d4e9bf859ab3f7e3515b33aa51552))
+- update secondary email ([21c392a](https://github.com/Portkey-Wallet/portkey-web/commit/21c392aa5a0438c440aa0151f7939c68cd3b80eb))
+
+## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
+
+**Note:** Version bump only for package root
+
+## [2.9.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.9.0) (2024-08-29)
+
+### Features
+
+- 🎸 update zk logic ([42bcb35](https://github.com/Portkey-Wallet/portkey-web/commit/42bcb353ccf1c191677228cafbcf8f80b36f7cc7))
+- 🎸 zklogin ([c089cfb](https://github.com/Portkey-Wallet/portkey-web/commit/c089cfb2a7bfd851d0b658a9f63ff8bf0b6ea71e))
+- 🎸 zklogin finish recovery ([daee4f3](https://github.com/Portkey-Wallet/portkey-web/commit/daee4f3d61cb3eaec55f564e5722d287b75d50eb))
+- 🎸 zklogin finish register ([13c619f](https://github.com/Portkey-Wallet/portkey-web/commit/13c619f8f26de96905023c574160306eb1e45cd6))
+- 🎸 zkLogin fix type error ([fbd4e02](https://github.com/Portkey-Wallet/portkey-web/commit/fbd4e023089bb94fc773a6ebc9220b93191d308e))
+- 🎸 zklogin signin logic ([f33631e](https://github.com/Portkey-Wallet/portkey-web/commit/f33631e36e63ab4f31c239090e2f46eee3a2bcf7))
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/Portkey-Wallet/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/Portkey-Wallet/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/Portkey-Wallet/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/Portkey-Wallet/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+### Bug Fixes
+
+- 🐛 guardian approve ([e0d49a0](https://github.com/Portkey-Wallet/portkey-web/commit/e0d49a0d393edad88293cf5c4a97db425f9add61))
+- 🐛 set login account error & set transfer limit ([338e126](https://github.com/Portkey-Wallet/portkey-web/commit/338e126a37fae6f6da10f8e5a2a950e795031d3d))
+
+## [2.8.0](https://github.com/FrankFeng1116/portkey-web/compare/v2.7.2...v2.8.0) (2024-08-07)
+
+### Features
+
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/FrankFeng1116/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/FrankFeng1116/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/FrankFeng1116/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/FrankFeng1116/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+## [2.7.4](https://github.com/FrankFeng1116/portkey-web/compare/v2.7.2...v2.7.4) (2024-08-07)
+
+### Features
+
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/FrankFeng1116/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/FrankFeng1116/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/FrankFeng1116/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/FrankFeng1116/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+## [2.7.3](https://github.com/FrankFeng1116/portkey-web/compare/v2.7.2...v2.7.3) (2024-08-07)
+
+### Features
+
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/FrankFeng1116/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/FrankFeng1116/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/FrankFeng1116/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/FrankFeng1116/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+## [2.7.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1...v2.7.2) (2024-07-31)
+
+### Bug Fixes
+
+- 🐛 allowance max ([4467393](https://github.com/Portkey-Wallet/portkey-web/commit/4467393888a1fe1d15cff399b450cd57c6e41f58))
+
+## [2.7.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.4...v2.7.1) (2024-07-31)
+
+### Bug Fixes
+
+- 🐛 change approve long max ([ed03dfd](https://github.com/Portkey-Wallet/portkey-web/commit/ed03dfd1b7b7ae60e7a136c14c781b3c45451968))
+
 ## [2.7.1-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.3...v2.7.1-alpha.4) (2024-07-18)
 
 ### Bug Fixes

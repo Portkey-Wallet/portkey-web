@@ -40,7 +40,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { SocialLoginList, KEY_SHOW_WARNING, SHOW_WARNING_DIALOG } from '../../constants/guardian';
+import { KEY_SHOW_WARNING, SHOW_WARNING_DIALOG, AllSocialLoginList } from '../../constants/guardian';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 import { Open_Login_Bridge } from '../../constants/telegram';
@@ -66,6 +66,7 @@ export interface GuardianApprovalProps {
   // guardianIdentifier?: string; // for show (email)
   // firstName?: string; // for show (social)
   telegramInfo?: ITelegramInfo;
+  caHash?: string;
   onError?: OnErrorFunc;
   onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
@@ -92,6 +93,7 @@ const GuardianApprovalMain = forwardRef(
       // guardianIdentifier,
       // firstName,
       telegramInfo,
+      caHash,
       onError,
       onConfirm,
       onGuardianListChange,
@@ -211,12 +213,16 @@ const GuardianApprovalMain = forwardRef(
             operationDetails,
             customLoginHandler,
             approveDetail: approveDetail,
+            caHash,
           });
 
-          if (!rst || !rst.verificationDoc) return;
+          if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return;
 
           const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
-          const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+
+          const guardianIdentifier = rst.zkLoginInfo
+            ? rst.zkLoginInfo.identifierHash
+            : handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
 
           setGuardianList((v) => {
             v[index] = {
@@ -225,6 +231,7 @@ const GuardianApprovalMain = forwardRef(
               verificationDoc: verifierInfo.verificationDoc,
               signature: verifierInfo.signature,
               identifierHash: guardianIdentifier,
+              zkLoginInfo: rst.zkLoginInfo,
             };
             return [...v];
           });
@@ -245,13 +252,15 @@ const GuardianApprovalMain = forwardRef(
       [
         telegramInfo?.userId,
         telegramInfo?.accessToken,
-        verifyToken,
         originChainId,
         targetChainId,
+        officialWebsiteShow?.symbol,
+        officialWebsiteShow?.amount,
         operationType,
+        verifyToken,
         networkType,
         operationDetails,
-        officialWebsiteShow,
+        caHash,
         isErrorTip,
         onError,
       ],
@@ -259,7 +268,7 @@ const GuardianApprovalMain = forwardRef(
 
     const onVerifyingHandler = useCallback(
       async (_item: UserGuardianStatus, index: number) => {
-        const isSocialLogin = SocialLoginList.includes(_item.guardianType);
+        const isSocialLogin = AllSocialLoginList.includes(_item.guardianType);
         if (isSocialLogin) return socialVerifyHandler(_item, index);
 
         try {
@@ -283,7 +292,7 @@ const GuardianApprovalMain = forwardRef(
     );
 
     const onCodeVerifyHandler = useCallback(
-      (res: { verificationDoc: string; signature: string; verifierId: string }, index: number) => {
+      (res: { verificationDoc?: string; signature?: string; verifierId: string }, index: number) => {
         setGuardianList((v) => {
           v[index] = {
             ...v[index],
@@ -302,7 +311,7 @@ const GuardianApprovalMain = forwardRef(
       setFetching(true);
       try {
         const verificationList = guardianList
-          .filter((item) => Boolean(item.signature && item.verificationDoc))
+          .filter((item) => Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo))
           .map((item) => ({
             type: item.guardianType,
             identifier: item.identifier || item.identifierHash || '',
@@ -310,6 +319,7 @@ const GuardianApprovalMain = forwardRef(
             verificationDoc: item.verificationDoc || '',
             signature: item.signature || '',
             identifierHash: item.identifierHash || '',
+            zkLoginInfo: item.zkLoginInfo,
           }));
         await onConfirmRef.current?.(verificationList);
         setFetching(false);
@@ -363,6 +373,7 @@ const GuardianApprovalMain = forwardRef(
               accountType={guardianList[verifyAccountIndex].guardianType}
               isErrorTip={isErrorTip}
               verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
+              caHash={caHash}
               onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
               onError={onError}
               onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}

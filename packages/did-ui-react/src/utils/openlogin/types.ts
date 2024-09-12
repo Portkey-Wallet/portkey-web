@@ -105,4 +105,6 @@ export interface PopupResponse {
   provider: ISocialLogin;
   code?: string;
   message?: string;
+  nonce?: string;
+  timestamp?: number;
 }

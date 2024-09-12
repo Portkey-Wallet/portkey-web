@@ -31,13 +31,13 @@ export const useFaucet = (faucet?: IFaucetConfig) => {
         contractAddress: faucetContractAddress,
         privateKey: managementAccount.privateKey,
       });
-      setLoading(false);
       singleMessage.success('Token successfully requested');
       // TODO
       console.log(result, 'result==callCASendMethod');
     } catch (error) {
+      singleMessage.warning(`Today's limit has been reached`);
+    } finally {
       setLoading(false);
-      singleMessage.error(handleErrorMessage(error));
     }
   }, [caHash, chainType, faucet?.faucetContractAddress, faucet?.faucetUrl, managementAccount, networkType, sandboxId]);
 };

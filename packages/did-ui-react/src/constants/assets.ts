@@ -53,4 +53,5 @@ export enum AssetStep {
   deleteAccount = 'deleteAccount',
   tokenAllowance = 'tokenAllowance',
   tokenAllowanceDetail = 'tokenAllowanceDetail',
+  setSecondaryMailbox = 'setSecondaryMailbox',
 }

@@ -3,6 +3,78 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.9.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.5...v2.9.6-alpha.6) (2024-09-04)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.4...v2.9.6-alpha.5) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.3...v2.9.6-alpha.4) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.6-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.2...v2.9.6-alpha.3) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.6-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.1...v2.9.6-alpha.2) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.6-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.1) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.0) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.4...v2.9.5-alpha.0) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.3...v2.9.4) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.2...v2.9.3) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.9.2) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.9.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.9.0) (2024-08-29)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.8.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.8.0) (2024-08-07)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.7.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.7.4) (2024-08-07)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.7.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.7.3) (2024-08-07)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.7.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1...v2.7.2) (2024-07-31)
+
+**Note:** Version bump only for package @portkey/socket
+
+## [2.7.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.4...v2.7.1) (2024-07-31)
+
+**Note:** Version bump only for package @portkey/socket
+
 ## [2.7.1-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.3...v2.7.1-alpha.4) (2024-07-18)
 
 **Note:** Version bump only for package @portkey/socket

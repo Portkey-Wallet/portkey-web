@@ -1,4 +1,10 @@
-import { OperationTypeEnum, SendVerificationCodeRequestParams, VerifyVerificationCodeParams } from '@portkey/services';
+import {
+  OperationTypeEnum,
+  SendSecondaryVerificationCodeRequestParams,
+  SendVerificationCodeRequestParams,
+  VerifySecondaryVerificationCodeParams,
+  VerifyVerificationCodeParams,
+} from '@portkey/services';
 import { IStorageSuite } from '@portkey/types';
 import { did } from './did';
 import { BaseAsyncStorage } from './BaseAsyncStorage';
@@ -109,6 +115,53 @@ export class Verification extends StorageBaseLoader {
     const { guardianIdentifier, verifierId } = config || {};
     const key = (guardianIdentifier || '') + (verifierId || '');
     const req = await did.services.verifyVerificationCode(config);
+    this.delete(key);
+    return req;
+  }
+
+  public async sendSecondaryVerificationCode(
+    config: SendSecondaryVerificationCodeRequestParams,
+    recaptchaHandler: (
+      open?: boolean | undefined,
+      operationType?: OperationTypeEnum,
+    ) => Promise<{
+      type: ReCaptchaResponseType;
+      message?: any;
+    }>,
+  ) {
+    const { secondaryEmail, platformType } = config.params;
+    const key = 'setupBackupMailbox' + (secondaryEmail || '') + (platformType || 0);
+
+    try {
+      const item = this.get(key);
+      if (item) {
+        return item;
+      } else {
+        const reCaptchaToken = await recaptchaHandler(true, OperationTypeEnum.setupBackupMailbox);
+        if (reCaptchaToken.type !== 'success') throw reCaptchaToken.message;
+        config.headers = {
+          reCaptchaToken: reCaptchaToken.message,
+        };
+        setLoading(true);
+        const req = await did.services.common.verifySecondaryMail(config);
+        setLoading(false);
+        if (!req.verifierSessionId) return req;
+        await this.set(key, { ...req, time: Date.now() });
+        return req;
+      }
+    } catch (error: any) {
+      setLoading(false);
+      const { message } = error?.error || error || {};
+      const item = this.get(key);
+      if (message === IntervalErrorMessage && item) return item;
+      throw error;
+    }
+  }
+  public async checkSecondaryVerificationCode(config: VerifySecondaryVerificationCodeParams) {
+    const { secondaryEmail, verifierSessionId, verificationCode } = config || {};
+    const key = 'setupBackupMailbox' + (secondaryEmail || '') + 0;
+
+    const req = await did.services.common.checkSecondaryMail({ verifierSessionId, verificationCode });
     this.delete(key);
     return req;
   }

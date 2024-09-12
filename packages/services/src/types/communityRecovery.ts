@@ -1,6 +1,6 @@
 import { AccountType } from '.';
 import { ISearchService } from './search';
-import { IVerificationService } from './verification';
+import { IVerificationService, ZKLoginInfo } from './verification';
 import { ChainId, IReferralInfo } from '@portkey/types';
 import { CaHolderWithGuardian } from '@portkey/graphql';
 export interface Context {
@@ -12,9 +12,10 @@ export interface GuardiansApproved {
   type?: AccountType;
   identifier: string;
   verifierId: string;
-  verificationDoc: string;
-  signature: string;
+  verificationDoc?: string;
+  signature?: string;
   identifierHash?: string;
+  zkLoginInfo?: ZKLoginInfo;
 }
 
 export interface RegisterParams {
@@ -24,8 +25,8 @@ export interface RegisterParams {
   extraData: string;
   chainId: ChainId;
   verifierId: string;
-  verificationDoc: string;
-  signature: string;
+  verificationDoc?: string;
+  signature?: string;
   context: Context;
   referralInfo?: IReferralInfo;
 }
@@ -108,6 +109,7 @@ export enum OperationTypeEnum {
   modifyTransferLimit = 9,
   transferApprove = 10,
   unsetLoginAccount = 11,
+  setupBackupMailbox = 13,
 }
 
 export type CheckGoogleRecaptchaParams = {

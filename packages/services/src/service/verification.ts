@@ -14,6 +14,7 @@ import {
   VerifyTwitterTokenHeader,
   TGetTelegramAuthTokenResult,
   TGetTelegramAuthTokenParams,
+  VerifyZKLoginResult,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
 import { IBaseRequest } from '@portkey/types';
@@ -71,6 +72,13 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
         ...params,
         accessToken: params.identityToken,
       },
+    });
+  }
+  verifyZKLogin(params: any): Promise<VerifyZKLoginResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/verifiedzk',
+      params,
     });
   }
   verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {

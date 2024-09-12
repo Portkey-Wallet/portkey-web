@@ -70,7 +70,7 @@ export default function ReceiveCardMain({
           <h2 className="portkey-ui-receive-title">My Wallet Address to Receive</h2>
           <div className="portkey-ui-flex-column-center token-info">
             <TokenImageDisplay width={24} symbol={assetInfo?.symbol?.[0]} src={symbolIcon} />
-            <p className="symbol">{assetInfo.symbol}</p>
+            <p className="symbol">{assetInfo?.label || assetInfo.symbol}</p>
             <p className="network">{transNetworkText(chainId, isMainnet)}</p>
           </div>
           <div className="scan-content">

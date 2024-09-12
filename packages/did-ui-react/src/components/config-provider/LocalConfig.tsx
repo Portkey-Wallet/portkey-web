@@ -1,7 +1,7 @@
 import { GlobalConfigProps } from './types';
 import { setVerification, did, setServiceConfig, setReCaptchaConfig, BaseAsyncStorage } from '../../utils';
 
-export const apiVersion = 'v1.5.1';
+export const apiVersion = 'v1.18.0';
 
 did.setConfig({
   requestDefaults: {

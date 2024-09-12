@@ -17,7 +17,8 @@ export interface CodeVerifyProps extends BaseCodeVerifyProps {
   isErrorTip?: boolean;
   operationType: OperationTypeEnum;
   operationDetails: TStringJSON;
-  onSuccess?: (res: { verificationDoc: string; signature: string; verifierId: string }) => void;
+  caHash?: string;
+  onSuccess?: (res: { verificationDoc?: string; signature?: string; verifierId: string }) => void;
   onReSend?: (result: TVerifyCodeInfo) => void;
 }
 
@@ -35,6 +36,7 @@ export default function CodeVerify({
   guardianIdentifier,
   accountType = 'Email',
   verifierSessionId: defaultVerifierSessionId,
+  caHash,
   onError,
   onReSend,
   onSuccess,
@@ -62,10 +64,11 @@ export default function CodeVerify({
             verifierSessionId,
             verificationCode: code,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
-            verifierId: verifier.id,
+            verifierId: verifier?.id || '',
             chainId: originChainId,
             targetChainId,
             operationType,
+            caHash,
             operationDetails,
           });
           setLoading(false);
@@ -99,10 +102,11 @@ export default function CodeVerify({
     [
       verifierSessionId,
       guardianIdentifier,
-      verifier.id,
+      verifier?.id,
       originChainId,
       targetChainId,
       operationType,
+      caHash,
       operationDetails,
       onSuccess,
       setInputError,
@@ -121,7 +125,7 @@ export default function CodeVerify({
           params: {
             type: accountType,
             guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
-            verifierId: verifier.id,
+            verifierId: verifier?.id || '',
             chainId: originChainId,
             targetChainId,
             operationType,
@@ -130,7 +134,7 @@ export default function CodeVerify({
         },
         reCaptchaHandler,
       );
-      if (!result.verifierSessionId)
+      if (!verifier || !result || !result.verifierSessionId)
         return console.warn('The request was rejected, please check whether the parameters are correct');
       uiRef.current?.setTimer(MAX_TIMER);
       onReSend?.({ verifier, ...result });

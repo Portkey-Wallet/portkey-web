@@ -22,6 +22,7 @@ export type QRCodeDataObjType = {
   deviceType?: number;
   assetInfo: {
     symbol: string;
+    label?: string;
     tokenContractAddress: string;
     chainId: ChainId;
     decimals: string | number;

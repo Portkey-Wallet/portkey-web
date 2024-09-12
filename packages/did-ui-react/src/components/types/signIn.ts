@@ -8,6 +8,9 @@ export interface GuardianInputInfo {
   accountType: AccountType;
   authenticationInfo?: {
     authToken?: string;
+    idToken?: string;
+    nonce?: string;
+    timestamp?: number;
   };
 }
 

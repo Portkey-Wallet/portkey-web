@@ -22,7 +22,7 @@ ConfigProvider.setGlobalConfig({
 export default function Assets() {
   const router = useRouter();
   return (
-    <PortkeyAssetProvider pin="111111" originChainId="tDVW">
+    <PortkeyAssetProvider pin="111111" originChainId="AELF">
       <a href="dapp-webapp">
         <Button>Go to dapp-webapp</Button>
       </a>
