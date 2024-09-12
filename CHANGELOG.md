@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.6...v2.10.0) (2024-09-12)
+
+### Features
+
+- sdk for human machine verify ([4cdea0d](https://github.com/Portkey-Wallet/portkey-web/commit/4cdea0dd55f17925208f2946cc8c952ea8c54c9b))
+
 ## [2.9.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.5...v2.9.6-alpha.6) (2024-09-04)
 
 ### Bug Fixes
