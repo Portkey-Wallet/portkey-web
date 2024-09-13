@@ -88,8 +88,9 @@ export class TelegramPlatform {
 
       const currentTelegramUserId = TelegramPlatform.getTelegramUserId();
       const preTelegramUserId = window.localStorage.getItem(PORTKEY_SDK_TELEGRAM_USER_ID);
+
       if (currentTelegramUserId && currentTelegramUserId !== preTelegramUserId) {
-        await handleLogout();
+        preTelegramUserId && (await handleLogout());
         window.localStorage.setItem(PORTKEY_SDK_TELEGRAM_USER_ID, currentTelegramUserId);
       }
       Telegram.WebApp.ready();
