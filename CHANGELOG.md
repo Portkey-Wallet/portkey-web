@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.1...v2.10.2) (2024-09-13)
+
+### Features
+
+- add issue template ([8f54d56](https://github.com/Portkey-Wallet/portkey-web/commit/8f54d568de302fc5efb90521ebf68c251a03374a))
+
 ## [2.10.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.6...v2.10.1) (2024-09-12)
 
 ### Features
