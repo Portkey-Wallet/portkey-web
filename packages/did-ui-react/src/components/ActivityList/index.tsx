@@ -95,7 +95,7 @@ export default function ActivityList({
           <span>{item?.transactionName}</span>
           <div className="right-not-from-amount">
             <div>{`${formatWithCommas({ sign, amount, decimals, digits: 4 })} ${symbol ?? ''}`}</div>
-            {isMainnet && <div className="usd">{`$ ${formatAmountShow(item.priceInUsd || 0, 2)}`}</div>}
+            {isMainnet && <div className="usd">{`$ ${formatAmountShow(item.currentTxPriceInUsd || 0, 2)}`}</div>}
           </div>
         </div>
       );
