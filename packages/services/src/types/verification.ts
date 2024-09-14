@@ -105,6 +105,7 @@ export type VerifyZKLoginParams = {
   nonce?: string;
   timestamp: number;
   managerAddress: string;
+  networkType?: 'MAINNET' | 'TESTNET';
 };
 
 export interface ZKLoginInfo {

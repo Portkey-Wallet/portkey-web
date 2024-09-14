@@ -103,6 +103,7 @@ export function useVerifyGoogleToken() {
         nonce,
         timestamp: timestamp ?? 0,
         managerAddress,
+        networkType: params.networkType,
       });
       return rst as any;
     },
@@ -167,6 +168,7 @@ export function useVerifyAppleToken() {
         nonce,
         timestamp: timestamp ?? 0,
         managerAddress,
+        networkType: params.networkType,
       });
       return rst as any;
     },
@@ -283,56 +285,53 @@ export function useVerifyTwitter() {
 }
 
 export function useVerifyZKLogin() {
-  const [{ networkType }] = usePortkey();
-  const zkLoginVerifyUrl = networkType === 'MAINNET' ? zkLoginVerifyUrlMainnet : zkLoginVerifyUrlTestnet;
-  return useCallback(
-    async (params: VerifyZKLoginParams) => {
-      const customFetch = new FetchRequest({});
-      const { verifyToken, jwt, salt, kid, nonce, timestamp, managerAddress } = params;
-      const proofParams = { jwt, salt };
-      const proofResult = await customFetch.send({
-        url: zkLoginVerifyUrl,
-        method: 'POST',
-        headers: {
-          Accept: 'text/plain;v=1.0',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(proofParams),
-      });
+  // const [{ networkType }] = usePortkey();
+  return useCallback(async (params: VerifyZKLoginParams) => {
+    const zkLoginVerifyUrl = params.networkType === 'MAINNET' ? zkLoginVerifyUrlMainnet : zkLoginVerifyUrlTestnet;
+    const customFetch = new FetchRequest({});
+    const { verifyToken, jwt, salt, kid, nonce, timestamp, managerAddress } = params;
+    const proofParams = { jwt, salt };
+    const proofResult = await customFetch.send({
+      url: zkLoginVerifyUrl,
+      method: 'POST',
+      headers: {
+        Accept: 'text/plain;v=1.0',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(proofParams),
+    });
 
-      const verifyParams = {
-        identifierHash: proofResult.identifierHash,
-        salt,
-        nonce,
-        kid,
-        proof: proofResult.proof,
-      };
+    const verifyParams = {
+      identifierHash: proofResult.identifierHash,
+      salt,
+      nonce,
+      kid,
+      proof: proofResult.proof,
+    };
 
-      const portkeyVerifyResult = await did.services.verifyZKLogin({
-        ...verifyToken,
-        poseidonIdentifierHash: proofResult.identifierHash,
-        salt,
-      });
+    const portkeyVerifyResult = await did.services.verifyZKLogin({
+      ...verifyToken,
+      poseidonIdentifierHash: proofResult.identifierHash,
+      salt,
+    });
 
-      console.log('portkeyVerifyResult : ', portkeyVerifyResult);
+    console.log('portkeyVerifyResult : ', portkeyVerifyResult);
 
-      const zkProof = decodeURIComponent(verifyParams.proof);
-      const zkLoginInfo: ZKLoginInfo = {
-        identifierHash: portkeyVerifyResult.guardianIdentifierHash,
-        poseidonIdentifierHash: verifyParams.identifierHash,
-        identifierHashType: 1,
-        salt: verifyParams.salt,
-        zkProof,
-        jwt: jwt ?? '',
-        nonce: nonce ?? '',
-        circuitId: proofResult.circuitId,
-        timestamp,
-        managerAddress,
-      };
-      return { zkLoginInfo };
-    },
-    [zkLoginVerifyUrl],
-  );
+    const zkProof = decodeURIComponent(verifyParams.proof);
+    const zkLoginInfo: ZKLoginInfo = {
+      identifierHash: portkeyVerifyResult.guardianIdentifierHash,
+      poseidonIdentifierHash: verifyParams.identifierHash,
+      identifierHashType: 1,
+      salt: verifyParams.salt,
+      zkProof,
+      jwt: jwt ?? '',
+      nonce: nonce ?? '',
+      circuitId: proofResult.circuitId,
+      timestamp,
+      managerAddress,
+    };
+    return { zkLoginInfo };
+  }, []);
 }
 
 export function useVerifyToken() {
