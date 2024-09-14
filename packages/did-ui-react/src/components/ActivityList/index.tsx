@@ -68,7 +68,7 @@ export default function ActivityList({
         <p className="row-2">
           <span>{`From: ${formatStr2EllipsisStr(transFromAddress, [7, 4])}`}</span>
           {nftInfo?.nftId && <span className="nft-name">{formatStr2EllipsisStr(nftInfo.alias)}</span>}
-          {isMainnet && !nftInfo?.nftId && <span>{`$ ${formatAmountShow(item.priceInUsd || 0, 2)}`}</span>}
+          {isMainnet && !nftInfo?.nftId && <span>{`$ ${formatAmountShow(item.currentTxPriceInUsd || 0, 2)}`}</span>}
         </p>
       );
     },

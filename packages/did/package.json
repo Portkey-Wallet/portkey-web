@@ -1,6 +1,6 @@
 {
   "name": "@portkey/did",
-  "version": "2.10.2",
+  "version": "2.10.4",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,13 +41,13 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey/accounts": "^2.10.2",
-    "@portkey/contracts": "^2.10.2",
-    "@portkey/graphql": "^2.10.2",
-    "@portkey/request": "^2.10.2",
-    "@portkey/services": "^2.10.2",
-    "@portkey/types": "^2.10.2",
-    "@portkey/utils": "^2.10.2"
+    "@portkey/accounts": "^2.10.4",
+    "@portkey/contracts": "^2.10.4",
+    "@portkey/graphql": "^2.10.4",
+    "@portkey/request": "^2.10.4",
+    "@portkey/services": "^2.10.4",
+    "@portkey/types": "^2.10.4",
+    "@portkey/utils": "^2.10.4"
   },
   "peerDependencies": {
     "aelf-sdk": "^3.4.7",
@@ -56,5 +56,5 @@
   "devDependencies": {
     "imap": "^0.8.19"
   },
-  "gitHead": "595758d5f1b59b315cb80b12a5dc127724c0f846"
+  "gitHead": "41f6f3ca399815ed096c12391dd0b5ced59e7f02"
 }

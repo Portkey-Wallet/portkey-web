@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.3...v2.10.4) (2024-09-14)
+
+**Note:** Version bump only for package @portkey/types
+
+## [2.10.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.2...v2.10.3) (2024-09-14)
+
+### Features
+
+- change show usd ([b1a857b](https://github.com/Portkey-Wallet/portkey-web/commit/b1a857b5e0c817acea489cbc048426429f9f5d46))
+
 ## [2.10.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.1...v2.10.2) (2024-09-13)
 
 **Note:** Version bump only for package @portkey/types
