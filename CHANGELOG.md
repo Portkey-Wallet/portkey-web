@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.5...v2.10.6-alpha.0) (2024-09-14)
+
+### Bug Fixes
+
+- networkType error ([711ba77](https://github.com/Portkey-Wallet/portkey-web/commit/711ba7753921b4a23bdea8ff13fabb5e22ab0df7))
+
 ## [2.10.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.4...v2.10.5) (2024-09-14)
 
 ### Bug Fixes
