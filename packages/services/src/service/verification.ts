@@ -7,6 +7,7 @@ import {
   SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
+  VerifyTonWalletTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
@@ -106,7 +107,7 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       params,
     });
   }
-  verifyTonWalletToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyTonWalletToken(params: VerifyTonWalletTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTonWalletToken',

@@ -76,7 +76,7 @@ export enum VerificationType {
 export type VerifyTokenParams = {
   id: string;
   chainId: ChainId;
-  verifierId: string;
+  verifierId?: string;
   accessToken?: string;
   customLoginHandler?: TSocialLoginHandler;
 };

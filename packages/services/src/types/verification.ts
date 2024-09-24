@@ -107,6 +107,27 @@ export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
   caHash?: string;
 }
 
+export interface VerifyTonWalletTokenParams extends BaseVerifyTokenParams {
+  tonWalletRequest: {
+    userFriendlyAddress: string;
+    request: {
+      address: string; // raw address
+      network?: string;
+      publicKey: string;
+      proof: {
+        timestamp: number;
+        domain: {
+          LengthBytes: number;
+          value: string;
+        };
+        signature: string;
+        payload: string;
+        stateInit: string;
+      };
+    };
+  };
+}
+
 export type VerifyZKPortkeyParams = {
   type: string;
   accessToken?: string;
@@ -193,7 +214,7 @@ export interface IVerificationService {
     headers?: VerifyTwitterTokenHeader,
   ): Promise<VerifyVerificationCodeResult>;
   verifyFacebookToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
-  verifyTonWalletToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyTonWalletToken(params: VerifyTonWalletTokenParams): Promise<VerifyVerificationCodeResult>;
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
   getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult>;

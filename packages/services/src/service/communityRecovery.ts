@@ -26,6 +26,7 @@ import {
   SendVerificationCodeRequestParams,
   SendVerificationCodeResult,
   VerifyAppleTokenParams,
+  VerifyTonWalletTokenParams,
   VerifyVerificationCodeParams,
   VerifyVerificationCodeResult,
   GetAppleUserExtraInfoParams,
@@ -199,7 +200,7 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   /**
    * deprecated Please use `verification.verifyFacebookToken`
    */
-  verifyTonWalletToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult> {
+  verifyTonWalletToken(params: VerifyTonWalletTokenParams): Promise<VerifyVerificationCodeResult> {
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/verifyTonWalletToken',

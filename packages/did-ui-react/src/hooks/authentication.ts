@@ -13,7 +13,7 @@ import {
 } from '../utils';
 import {
   OperationTypeEnum,
-  VerifyTokenDetails,
+  TonWalletVerifyTokenDetails,
   VerifyVerificationCodeResult,
   VerifyZKLoginParams,
   ZKLoginInfo,
@@ -305,13 +305,21 @@ export function useVerifyTonWallet() {
     const parsedObj = JSON.parse(accessToken);
     const verificationDetails = (
       typeof parsedObj.token === 'string' ? JSON.parse(parsedObj.token) : parsedObj
-    ) as VerifyTokenDetails;
+    ) as TonWalletVerifyTokenDetails;
     const { guardianIdentifierHash, extra } = await did.services.verifyTonWalletToken({
       chainId: params.chainId,
       operationType: params.operationType,
       targetChainId: params.targetChainId,
       operationDetails: params.operationDetails,
-      verificationDetails,
+      tonWalletRequest: {
+        userFriendlyAddress: parsedObj.userFriendlyAddress,
+        request: {
+          address: verificationDetails.address,
+          network: verificationDetails.extra,
+          publicKey: verificationDetails.publicKey,
+          proof: verificationDetails.proof,
+        },
+      },
     });
     const verificationRequestInfo = {
       verifierType: 1, // todo_wade: confirm type enum
