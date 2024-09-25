@@ -43,10 +43,13 @@ export type RecoveryParams = {
   chainId: ChainId;
   context: Context;
   referralInfo?: IReferralInfo;
+  source?: number; //0-UnKnown;1-Android;2-IOS;3-WEB;4-SDK
 };
 
 export type RecoveryResult = {
   sessionId: string;
+  caAddress?: string;
+  caHash?: string;
 };
 
 export type GetCAHolderByManagerParams = {

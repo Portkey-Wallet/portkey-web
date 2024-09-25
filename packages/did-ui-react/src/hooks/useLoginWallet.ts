@@ -148,9 +148,10 @@ export function useLoginWallet({
         },
       };
 
-      const { sessionId } = await did.services.recovery({
+      const { sessionId, caAddress, caHash } = await did.services.recovery({
         ...params,
         manager: managerAddress,
+        source: 4, // SDK Type
       });
 
       onCreatePendingRef.current?.({
@@ -160,6 +161,10 @@ export function useLoginWallet({
         pin,
         createType: type,
         walletInfo: wallet.managementAccount!.wallet,
+        caInfo: {
+          caAddress: caAddress || '',
+          caHash: caHash || '',
+        },
       });
       return getRequestStatus({
         chainId,

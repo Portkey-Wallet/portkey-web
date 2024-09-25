@@ -45,6 +45,7 @@ export interface CreatePendingInfo {
   createType: AddManagerType;
   pin: string;
   walletInfo: IBlockchainWallet;
+  caInfo?: CAInfo;
 }
 
 export type LoginFinishWithoutPin = (info: Omit<DIDWalletInfo, 'pin'>) => void;
