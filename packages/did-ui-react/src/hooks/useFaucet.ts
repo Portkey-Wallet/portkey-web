@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { MAINNET, MAIN_CHAIN_ID } from '../constants/network';
 import { IFaucetConfig } from '../components/types/assets';
-import { handleErrorMessage, setLoading } from '../utils';
+import { setLoading, did } from '../utils';
 import { callCASendMethod } from '../utils/sandboxUtil/callCASendMethod';
 import { timesDecimals } from '../utils/converter';
 import { usePortkey } from '../components/context';
@@ -17,6 +17,9 @@ export const useFaucet = (faucet?: IFaucetConfig) => {
     if (!faucetContractAddress) return singleMessage.error('Please configure `faucets`');
     if (!caHash || !managementAccount?.privateKey) return singleMessage.error('Please confirm whether to log in!');
     try {
+      if (!did.didWallet.isLoginSuccess) {
+        return singleMessage.warning('is Loaning');
+      }
       setLoading(true);
       const result = await callCASendMethod({
         methodName: 'ClaimToken',

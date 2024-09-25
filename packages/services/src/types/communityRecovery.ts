@@ -142,6 +142,14 @@ export type TDeletionAccountParams = {
   appleToken: string;
 };
 
+export type TGetCaInfoByManagerParams = {
+  manager: string;
+};
+
+export type TGetCaInfoByManagerResult = {
+  caAddress: string;
+  caHash: string;
+};
 export interface ICommunityRecoveryService extends IVerificationService, ISearchService {
   register(params: RegisterParams): Promise<RegisterResult>;
   recovery(params: RecoveryParams): Promise<RecoveryResult>;
@@ -153,4 +161,5 @@ export interface ICommunityRecoveryService extends IVerificationService, ISearch
   getShowDeletionEntrance(): Promise<TDeletionEntranceResult>;
   checkDeletion(): Promise<TCheckDeletionResult>;
   deletionAccount(params: TDeletionAccountParams): Promise<any>;
+  getCaInfoByManager(params: TGetCaInfoByManagerParams): Promise<TGetCaInfoByManagerResult>;
 }

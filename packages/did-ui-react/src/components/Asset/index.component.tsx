@@ -690,7 +690,12 @@ function AssetMain({
             <TransferSettings
               onBack={() => setAssetStep(AssetStep.paymentSecurity)}
               initData={viewPaymentSecurity}
-              onEdit={() => setAssetStep(AssetStep.transferSettingsEdit)}
+              onEdit={() => {
+                if (!did.didWallet.isLoginSuccess) {
+                  return singleMessage.warning('is Loaning');
+                }
+                setAssetStep(AssetStep.transferSettingsEdit);
+              }}
             />
           )}
 

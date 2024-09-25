@@ -158,8 +158,11 @@ export default function Sign() {
           ref.current?.setOpen(false);
           setLifeCycle(undefined);
         }}
-        onCreatePending={info => {
+        onCreatePending={async info => {
           console.log(info, 'onCreatePending====info');
+          did.save(PIN);
+          const wallet = await did.load(PIN);
+          console.log(wallet, 'onCreatePending===wallet==load');
         }}
         onSignUp={onSignUpHandler}
         // defaultLifeCycle={{ LoginByScan: null }}

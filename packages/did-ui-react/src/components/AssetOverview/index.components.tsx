@@ -17,6 +17,7 @@ import CustomAssetModal from '../CustomAssetModal';
 import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
+import { did } from '../../utils';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItemNew[];
@@ -156,12 +157,18 @@ export function AssetOverviewContent({
         onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
+          if (!did.didWallet.isLoginSuccess) {
+            return singleMessage.warning('is Loaning');
+          }
           // TODO select Token
           if (!supportToken?.[0]) return singleMessage.error('There is no token that meets the requirements');
 
           onBuy?.(supportToken[0]);
         }}
         onSend={async () => {
+          if (!did.didWallet.isLoginSuccess) {
+            return singleMessage.warning('is Loaning');
+          }
           setAssetOpen(true);
         }}
         onReceive={() => setTokenOpen(true)}

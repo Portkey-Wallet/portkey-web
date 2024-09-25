@@ -50,6 +50,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public accountInfo: { loginAccount?: string; nickName?: string };
   public aaInfo: { accountInfo?: CAInfo; nickName?: string };
   public originChainId?: ChainId;
+  public isLoginSuccess?: boolean;
   constructor({
     accountProvider,
     storage,
@@ -68,6 +69,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.caInfo = {};
     this.accountInfo = {};
     this.aaInfo = {};
+    this.isLoginSuccess = false;
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -116,6 +118,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
       this.originChainId = chainId;
+      this.isLoginSuccess = true;
     }
     return status;
   }
@@ -154,8 +157,15 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
       this.originChainId = chainId;
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
+      this.isLoginSuccess = true;
     }
     return status;
+  }
+  public saveTempStatus({ chainId, caAddress, caHash }: { chainId: ChainId; caAddress: string; caHash: string }) {
+    this.accountInfo = { loginAccount: caHash };
+    this.aaInfo = { accountInfo: { caAddress: caAddress, caHash: caHash } };
+    this.originChainId = chainId;
+    this.caInfo[chainId] = { caAddress: caAddress, caHash: caHash };
   }
   async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
     if (!this.managementAccount) this.create();

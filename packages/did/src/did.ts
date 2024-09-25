@@ -83,6 +83,9 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
     await this.didWallet.load(password, keyName);
     return this;
   }
+  public saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string }): void {
+    this.didWallet.saveTempStatus(params);
+  }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
   public async login(type: any, params: any): Promise<any> {

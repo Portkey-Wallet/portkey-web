@@ -4,7 +4,7 @@ import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
 import { GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
-import { AuthServe, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { AuthServe, did, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
@@ -23,6 +23,7 @@ import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGua
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
+import { singleMessage } from '../CustomAnt';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -139,6 +140,9 @@ function GuardianMain({
     setStep(GuardianStep.guardianAdd);
   }, []);
   const onViewGuardian = useCallback((item: UserGuardianStatus) => {
+    if (!did.didWallet.isLoginSuccess) {
+      return singleMessage.warning('is Loaning');
+    }
     setCurrentGuardian(item);
     setStep(GuardianStep.guardianView);
   }, []);
@@ -329,7 +333,14 @@ function GuardianMain({
             <BackHeaderForPage
               leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
-                <ThrottleButton onClick={() => onAddGuardian()} className="title-add-guardian-btn">
+                <ThrottleButton
+                  onClick={() => {
+                    if (did.didWallet.isLoginSuccess) {
+                      return singleMessage.warning('is Loaning');
+                    }
+                    onAddGuardian();
+                  }}
+                  className="title-add-guardian-btn">
                   Add Guardians
                 </ThrottleButton>
               }
