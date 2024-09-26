@@ -9,7 +9,7 @@ import { ChainId, ChainType } from '@portkey/types';
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
-import { VerifierItem } from '@portkey/did';
+import { LoginStatusEnum, VerifierItem } from '@portkey/did';
 import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
@@ -140,7 +140,7 @@ function GuardianMain({
     setStep(GuardianStep.guardianAdd);
   }, []);
   const onViewGuardian = useCallback((item: UserGuardianStatus) => {
-    if (!did.didWallet.isLoginSuccess) {
+    if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
       return singleMessage.warning('is Loaning');
     }
     setCurrentGuardian(item);
@@ -335,7 +335,7 @@ function GuardianMain({
               rightElement={
                 <ThrottleButton
                   onClick={() => {
-                    if (did.didWallet.isLoginSuccess) {
+                    if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
                       return singleMessage.warning('is Loaning');
                     }
                     onAddGuardian();

@@ -29,6 +29,7 @@ import {
   GetHolderInfoParams,
   IDIDWallet,
   LoginResult,
+  LoginStatusEnum,
   LoginType,
   LogoutResult,
   RegisterResult,
@@ -50,7 +51,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public accountInfo: { loginAccount?: string; nickName?: string };
   public aaInfo: { accountInfo?: CAInfo; nickName?: string };
   public originChainId?: ChainId;
-  public isLoginSuccess?: boolean;
+  public isLoginStatus?: LoginStatusEnum;
   constructor({
     accountProvider,
     storage,
@@ -69,7 +70,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.caInfo = {};
     this.accountInfo = {};
     this.aaInfo = {};
-    this.isLoginSuccess = false;
+    this.isLoginStatus = LoginStatusEnum.INIT;
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -118,7 +119,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
       this.originChainId = chainId;
-      this.isLoginSuccess = true;
+      this.isLoginStatus = LoginStatusEnum.SUCCESS;
     }
     return status;
   }
@@ -157,7 +158,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
       this.originChainId = chainId;
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
-      this.isLoginSuccess = true;
+      this.isLoginStatus = LoginStatusEnum.SUCCESS;
     }
     return status;
   }
@@ -345,6 +346,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       accountInfo: this.accountInfo,
       aaInfo: this.aaInfo,
       originChainId: this.originChainId,
+      isLoginStatus: this.isLoginStatus,
     });
     const aesStr = aes.encrypt(data, password);
     await this._storage.setItem(keyName ?? this._defaultKeyName, aesStr);
@@ -356,7 +358,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (aesStr) {
       const data = aes.decrypt(aesStr, password);
       if (data) {
-        const { aesPrivateKey, caInfo, accountInfo, aaInfo, originChainId } = JSON.parse(data);
+        const { aesPrivateKey, caInfo, accountInfo, aaInfo, originChainId, isLoginStatus } = JSON.parse(data);
         const privateKey = aes.decrypt(aesPrivateKey, password);
         if (aesPrivateKey && privateKey) {
           this.managementAccount = await this._accountProvider.privateKeyToAccount(privateKey);
@@ -364,6 +366,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
           this.accountInfo = accountInfo || {};
           this.aaInfo = aaInfo || {};
           this.originChainId = originChainId;
+          this.isLoginStatus = isLoginStatus;
         }
       }
     }
@@ -375,6 +378,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.accountInfo = {};
     this.aaInfo = {};
     this.managementAccount = undefined;
+    this.isLoginStatus = LoginStatusEnum.INIT;
   }
 
   public async checkManagerIsExistByGQL(params: CheckManagerParams) {
@@ -401,6 +405,10 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
 
   public async checkManagerIsExist(params: CheckManagerParams) {
     return (await this.checkManagerIsExistByGQL(params)) || (await this.checkManagerIsExistByContract(params));
+  }
+
+  public updateLoginStatus(params: LoginStatusEnum) {
+    this.isLoginStatus = params;
   }
 
   public async checkStorageAesStrIsExist(keyName?: string): Promise<boolean> {

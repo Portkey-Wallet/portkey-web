@@ -7,6 +7,7 @@ import {
   IDID,
   IDIDAccountMethods,
   LoginResult,
+  LoginStatusEnum,
   LogoutResult,
   RegisterResult,
   ScanLoginParams,
@@ -85,6 +86,9 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   }
   public saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string }): void {
     this.didWallet.saveTempStatus(params);
+  }
+  public updateLoginStatus(params: LoginStatusEnum): void {
+    this.didWallet.updateLoginStatus(params);
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;

@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { AddManagerType, CreatePendingInfo } from '../components/types';
 import { did, errorTip, extraDataEncode, handlerErrorTipLevel, randomId, setLoading } from '../utils';
-import { LoginResult, RegisterResult } from '@portkey/did';
+import { LoginResult, LoginStatusEnum, RegisterResult } from '@portkey/did';
 import { OnErrorFunc } from '../types';
 import { ChainId } from '@portkey/types';
 import { AccountType, GuardiansApproved, RecoverStatusResult, RegisterStatusResult } from '@portkey/services';
@@ -56,6 +56,7 @@ export function useLoginWallet({
           const { recoveryStatus } = status;
 
           if (recoveryStatus !== 'pass') {
+            did.didWallet.updateLoginStatus(LoginStatusEnum.FAIL);
             throw new Error((status as RecoverStatusResult).recoveryMessage);
           }
         }
@@ -167,13 +168,23 @@ export function useLoginWallet({
         pin,
         createType: type,
         walletInfo: wallet.managementAccount!.wallet,
-        caInfo: {
-          caAddress,
-          caHash,
+        didWallet: {
+          caInfo: {
+            caAddress,
+            caHash,
+          },
+          accountInfo: {
+            managerUniqueId: sessionId,
+            guardianIdentifier,
+            accountType,
+            type: 'recovery',
+          },
+          createType: 'recovery',
+          chainId,
+          pin,
+          walletInfo: wallet.managementAccount!.wallet,
         },
       });
-      // TODO-SA
-      setLoading(false);
       return getRequestStatus({
         chainId,
         sessionId,

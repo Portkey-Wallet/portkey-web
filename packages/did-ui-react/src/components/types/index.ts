@@ -38,6 +38,23 @@ export type IResolveParams = {
   data?: ObjectType;
 };
 
+export interface ICreateWallet {
+  caInfo: {
+    caAddress: string;
+    caHash: string;
+  };
+  accountInfo: {
+    managerUniqueId: string;
+    guardianIdentifier: string;
+    accountType: 'Email' | 'Phone' | 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter';
+    type: 'register' | 'recovery';
+  };
+  createType: 'register' | 'recovery';
+  chainId: ChainId;
+  pin: string;
+  walletInfo: IBlockchainWallet;
+}
+
 export interface CreatePendingInfo {
   sessionId: string;
   requestId: string;
@@ -45,7 +62,7 @@ export interface CreatePendingInfo {
   createType: AddManagerType;
   pin: string;
   walletInfo: IBlockchainWallet;
-  caInfo?: CAInfo;
+  didWallet?: ICreateWallet;
 }
 
 export type LoginFinishWithoutPin = (info: Omit<DIDWalletInfo, 'pin'>) => void;

@@ -85,6 +85,7 @@ export interface IDIDAccountMethods extends IAccountMethods {
   getVerifierServers(chainId: ChainId): Promise<VerifierItem[]>;
   getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo>;
   saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string }): void;
+  updateLoginStatus(params: LoginStatusEnum): void;
   /**
    * @param caHash - CA wallet hash
    * @param managementAddress - address of managementAccount
@@ -121,4 +122,10 @@ export interface VerifierItem {
 export interface IDIDConfig extends IConfig {
   graphQLClient?: IGraphQLClient;
   setConfig(options: IConfig): void;
+}
+
+export enum LoginStatusEnum {
+  INIT = 'INIT',
+  SUCCESS = 'SUCCESS',
+  FAIL = 'FAIL',
 }

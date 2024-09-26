@@ -44,6 +44,7 @@ import useGAReport from '../../hooks/useGAReport';
 import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
+import { LoginStatusEnum } from '@portkey/did';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -691,7 +692,7 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.paymentSecurity)}
               initData={viewPaymentSecurity}
               onEdit={() => {
-                if (!did.didWallet.isLoginSuccess) {
+                if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
                   return singleMessage.warning('is Loaning');
                 }
                 setAssetStep(AssetStep.transferSettingsEdit);

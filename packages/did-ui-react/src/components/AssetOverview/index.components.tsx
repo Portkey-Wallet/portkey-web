@@ -18,6 +18,7 @@ import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
 import { did } from '../../utils';
+import { LoginStatusEnum } from '@portkey/did';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItemNew[];
@@ -157,7 +158,7 @@ export function AssetOverviewContent({
         onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
-          if (!did.didWallet.isLoginSuccess) {
+          if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
             return singleMessage.warning('is Loaning');
           }
           // TODO select Token
@@ -166,7 +167,7 @@ export function AssetOverviewContent({
           onBuy?.(supportToken[0]);
         }}
         onSend={async () => {
-          if (!did.didWallet.isLoginSuccess) {
+          if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
             return singleMessage.warning('is Loaning');
           }
           setAssetOpen(true);
