@@ -119,6 +119,9 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
       this.originChainId = chainId;
+    }
+
+    if (status?.recoveryStatus === 'pass') {
       this.isLoginStatus = LoginStatusEnum.SUCCESS;
     }
     return status;
@@ -158,6 +161,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
       this.originChainId = chainId;
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
+    }
+    if (status?.registerStatus === 'pass') {
       this.isLoginStatus = LoginStatusEnum.SUCCESS;
     }
     return status;
