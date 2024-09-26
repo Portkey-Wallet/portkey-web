@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.2...v2.11.0-alpha.3) (2024-09-26)
+
+### Features
+
+- 🎸 update isLoginStatus ([02146b9](https://github.com/Portkey-Wallet/portkey-web/commit/02146b9cbac6316e4934f735e2a6620e5b4f4090))
+
 ## [2.11.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.1...v2.11.0-alpha.2) (2024-09-26)
 
 ### Features
