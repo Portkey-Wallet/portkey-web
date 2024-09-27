@@ -46,7 +46,12 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
     this.connectRequest = new FetchRequest(this.config.connectRequestConfig);
     this.didGraphQL = new DIDGraphQL({ config: this.config });
     this.connectServices = new Connect(this.connectRequest);
-    this.services = new Services(this.fetchRequest, this.didGraphQL, this.config.referralConfig);
+    this.services = new Services(
+      this.fetchRequest,
+      this.didGraphQL,
+      this.config.referralConfig,
+      this.config.extraInfoConfig,
+    );
 
     this.didWallet = new DIDWallet({
       accountProvider: this.accountProvider,

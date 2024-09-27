@@ -107,3 +107,8 @@ export interface IReferralInfo {
   referralCode?: string;
   projectCode?: string;
 }
+
+export interface IExtraInfo {
+  ip?: string;
+  activityId?: string;
+}
