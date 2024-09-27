@@ -17,6 +17,8 @@ import {
   IConfig,
   SendOptions,
   TransactionStatus,
+  MultiTransactionParamInfo,
+  MultiChainInfo,
 } from '@portkey/types';
 
 export type LoginType = 'scan' | 'account';
@@ -73,6 +75,18 @@ export type LoginResult = {
 };
 export type LogoutResult = { transactionId: string; status?: TransactionStatus };
 
+export interface SendMultiTransactionParams {
+  multiChainInfo: MultiChainInfo;
+  rpcUrl: string; // todo_wade: confirm this
+  gatewayUrl: string;
+  tokenAddress: string;
+  params: MultiTransactionParamInfo;
+}
+
+export type MultiTransaction = {
+  string: string[];
+};
+
 export interface IDIDAccountMethods extends IAccountMethods {
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -92,6 +106,7 @@ export interface IDIDAccountMethods extends IAccountMethods {
    * @returns boolean
    */
   checkManagerIsExist(params: CheckManagerParams): Promise<boolean>;
+  sendMultiTransaction(params: SendMultiTransactionParams): Promise<MultiTransaction>;
 }
 
 export interface IDIDWallet extends IDIDBaseWallet, IDIDAccountMethods {}
