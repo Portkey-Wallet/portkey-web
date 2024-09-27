@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.3...v2.11.0-alpha.4) (2024-09-27)
+
+### Features
+
+- 🎸 define LoginStatusEnum ([8d0af2f](https://github.com/Portkey-Wallet/portkey-web/commit/8d0af2fd44a46d10651848756e228a61eae5d579))
+
 ## [2.11.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.2...v2.11.0-alpha.3) (2024-09-26)
 
 **Note:** Version bump only for package @portkey/types
