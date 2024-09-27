@@ -11,6 +11,7 @@ import {
   TSignUpContinueHandler,
   SignUpValue,
   TModalMethodRef,
+  setLoading,
 } from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
@@ -160,9 +161,14 @@ export default function Sign() {
         }}
         onCreatePending={async info => {
           console.log(info, 'onCreatePending====info');
+          CHAIN_ID = info.didWallet?.chainId || 'AELF';
           did.save(PIN);
-          const wallet = await did.load(PIN);
-          console.log(wallet, 'onCreatePending===wallet==load');
+          ref.current?.setOpen(false);
+          setLoading(false);
+          console.log('did.DIDWallet==onCreatePending', did.didWallet);
+          localStorage.setItem('sessionId', JSON.stringify({ sessionId: info.sessionId }));
+          // const wallet = await did.load(PIN);
+          // console.log(wallet, 'onCreatePending===wallet==load');
         }}
         onSignUp={onSignUpHandler}
         // defaultLifeCycle={{ LoginByScan: null }}

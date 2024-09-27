@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { AddManagerType, CreatePendingInfo } from '../components/types';
 import { did, errorTip, extraDataEncode, handlerErrorTipLevel, randomId, setLoading } from '../utils';
-import { LoginResult, LoginStatusEnum, RegisterResult } from '@portkey/did';
+import { LoginResult, RegisterResult } from '@portkey/did';
+import { LoginStatusEnum } from '@portkey/types';
 import { OnErrorFunc } from '../types';
 import { ChainId } from '@portkey/types';
 import { AccountType, GuardiansApproved, RecoverStatusResult, RegisterStatusResult } from '@portkey/services';

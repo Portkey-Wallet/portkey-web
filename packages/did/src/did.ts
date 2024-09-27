@@ -7,7 +7,6 @@ import {
   IDID,
   IDIDAccountMethods,
   LoginResult,
-  LoginStatusEnum,
   LogoutResult,
   RegisterResult,
   ScanLoginParams,
@@ -28,7 +27,16 @@ import {
 } from '@portkey/services';
 import { FetchRequest } from '@portkey/request';
 import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
-import { ISignature, IKeyStore, IDIDBaseWallet, IConfig, IBaseRequest, ChainId, SendOptions } from '@portkey/types';
+import {
+  ISignature,
+  IKeyStore,
+  IDIDBaseWallet,
+  IConfig,
+  IBaseRequest,
+  ChainId,
+  SendOptions,
+  LoginStatusEnum,
+} from '@portkey/types';
 import { DIDConfig } from './config';
 export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public didWallet: DIDWallet<portkey.WalletAccount>;

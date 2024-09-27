@@ -18,7 +18,7 @@ import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
 import { did } from '../../utils';
-import { LoginStatusEnum } from '@portkey/did';
+import { LoginStatusEnum } from '@portkey/types';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItemNew[];

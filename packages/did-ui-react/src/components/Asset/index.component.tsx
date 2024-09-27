@@ -44,7 +44,7 @@ import useGAReport from '../../hooks/useGAReport';
 import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
-import { LoginStatusEnum } from '@portkey/did';
+import { LoginStatusEnum } from '@portkey/types';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {

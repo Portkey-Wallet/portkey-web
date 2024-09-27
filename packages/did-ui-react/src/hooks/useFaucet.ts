@@ -6,7 +6,7 @@ import { callCASendMethod } from '../utils/sandboxUtil/callCASendMethod';
 import { timesDecimals } from '../utils/converter';
 import { usePortkey } from '../components/context';
 import { singleMessage, usePortkeyAsset } from '../components';
-import { LoginStatusEnum } from '@portkey/did';
+import { LoginStatusEnum } from '@portkey/types';
 
 export const useFaucet = (faucet?: IFaucetConfig) => {
   const [{ sandboxId, networkType, chainType }] = usePortkey();

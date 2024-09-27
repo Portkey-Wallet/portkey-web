@@ -17,6 +17,7 @@ import {
   IConfig,
   SendOptions,
   TransactionStatus,
+  LoginStatusEnum,
 } from '@portkey/types';
 
 export type LoginType = 'scan' | 'account';
@@ -122,10 +123,4 @@ export interface VerifierItem {
 export interface IDIDConfig extends IConfig {
   graphQLClient?: IGraphQLClient;
   setConfig(options: IConfig): void;
-}
-
-export enum LoginStatusEnum {
-  INIT = 'INIT',
-  SUCCESS = 'SUCCESS',
-  FAIL = 'FAIL',
 }

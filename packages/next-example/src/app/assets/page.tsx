@@ -1,9 +1,11 @@
 'use client';
 
-import { ConfigProvider, Asset, PortkeyAssetProvider } from '@portkey/did-ui-react';
+import { ConfigProvider, Asset, PortkeyAssetProvider, did } from '@portkey/did-ui-react';
+import { LoginStatusEnum } from '@portkey/types';
 import { Button } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
+import { useEffectOnce } from 'react-use';
 
 ConfigProvider.setGlobalConfig({
   // storageMethod: myStore,
@@ -21,6 +23,17 @@ ConfigProvider.setGlobalConfig({
 
 export default function Assets() {
   const router = useRouter();
+  const checkLoginStatus = async () => {
+    const sessionId = JSON.parse(localStorage.getItem('sessionId') || '{}').sessionId;
+    if (did.didWallet.isLoginStatus === LoginStatusEnum.INIT) {
+      await did.didWallet.getLoginStatus({ sessionId, chainId: did.didWallet.originChainId || 'AELF' });
+      did.save('111111');
+      localStorage.removeItem('sessionId');
+    }
+  };
+  useEffectOnce(() => {
+    checkLoginStatus();
+  });
   return (
     <PortkeyAssetProvider pin="111111" originChainId="AELF">
       <a href="dapp-webapp">

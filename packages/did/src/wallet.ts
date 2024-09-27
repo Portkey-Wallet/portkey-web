@@ -18,6 +18,7 @@ import {
   IStorageSuite,
   ChainId,
   SendOptions,
+  LoginStatusEnum,
 } from '@portkey/types';
 import { aes } from '@portkey/utils';
 import {
@@ -29,7 +30,6 @@ import {
   GetHolderInfoParams,
   IDIDWallet,
   LoginResult,
-  LoginStatusEnum,
   LoginType,
   LogoutResult,
   RegisterResult,
