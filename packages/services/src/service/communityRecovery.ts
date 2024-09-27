@@ -1,5 +1,5 @@
 import { IDIDGraphQL } from '@portkey/graphql';
-import { IBaseRequest, IReferralConfig } from '@portkey/types';
+import { IBaseRequest, IExtraInfoConfig, IReferralConfig } from '@portkey/types';
 import {
   GetCAHolderByManagerParams,
   GetCAHolderByManagerResult,
@@ -42,12 +42,14 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   implements ICommunityRecoveryService
 {
   public referralConfig: IReferralConfig;
+  public extraInfoConfig: IExtraInfoConfig;
   private readonly _didGraphQL: IDIDGraphQL;
 
-  constructor(request: T, didGraphQL: IDIDGraphQL, referralConfig: IReferralConfig) {
+  constructor(request: T, didGraphQL: IDIDGraphQL, referralConfig: IReferralConfig, extraInfoConfig: IExtraInfoConfig) {
     super(request);
     this._didGraphQL = didGraphQL;
     this.referralConfig = referralConfig;
+    this.extraInfoConfig = extraInfoConfig;
   }
   async getPhoneCountryCodeWithLocal(): Promise<IPhoneCountryCodeResult> {
     return this._request.send({
@@ -93,6 +95,7 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
   register(params: RegisterParams): Promise<RegisterResult> {
     const _params = { ...params };
     if (this.referralConfig.referralInfo) _params.referralInfo = this.referralConfig.referralInfo;
+    if (this.extraInfoConfig.extraInfo) _params.extraInfo = this.extraInfoConfig.extraInfo;
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/register/request',

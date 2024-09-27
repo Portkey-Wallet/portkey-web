@@ -1,5 +1,14 @@
 import { getGraphQLClientProvider, IGraphQLClient } from '@portkey/graphql';
-import { HTTPHeaders, HTTPMethod, IConfig, IReferralInfo, IRequestDefaults, IStorageSuite } from '@portkey/types';
+import {
+  HTTPHeaders,
+  HTTPMethod,
+  IConfig,
+  IExtraInfo,
+  IExtraInfoConfig,
+  IReferralInfo,
+  IRequestDefaults,
+  IStorageSuite,
+} from '@portkey/types';
 import { IDIDConfig } from './types';
 import { IReferralConfig } from '@portkey/types';
 
@@ -35,6 +44,16 @@ export class ReferralConfig implements IReferralConfig {
   }
 }
 
+export class ExtraInfoConfig implements IExtraInfoConfig {
+  public extraInfo: IExtraInfo;
+  setExtraInfo(info: IExtraInfo) {
+    this.extraInfo = info;
+  }
+  getExtraInfo() {
+    return this.extraInfo;
+  }
+}
+
 export class RequestDefaultsConfig {
   public headers?: HTTPHeaders;
   public baseURL?: string;
@@ -63,11 +82,14 @@ export class DIDConfig implements IDIDConfig {
   public connectUrl?: string;
   public storageMethod: StorageConfig;
   public referralConfig: IReferralConfig;
+  public extraInfoConfig: IExtraInfoConfig;
+
   constructor(options?: IConfig) {
     this.storageMethod = new StorageConfig();
     this.requestConfig = new RequestDefaultsConfig();
     this.connectRequestConfig = new RequestDefaultsConfig();
     this.referralConfig = new ReferralConfig();
+    this.extraInfoConfig = new ExtraInfoConfig();
     if (options) this.setConfig(options);
   }
   setConfig(options: IConfig) {
@@ -93,6 +115,9 @@ export class DIDConfig implements IDIDConfig {
           break;
         case 'referralInfo':
           this.referralConfig.setReferralInfo(value);
+          break;
+        case 'extraInfo':
+          this.extraInfoConfig.setExtraInfo(value);
           break;
         default:
           if (key === 'graphQLUrl' && typeof value === 'string') {
