@@ -402,7 +402,14 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }
 
   public async sendMultiTransaction(params: SendMultiTransactionParams) {
-    const { tokenAddress, multiChainInfo, gatewayUrl, rpcUrl, params: multiTransactionParamInfo } = params;
+    const {
+      tokenContractAddress,
+      method,
+      multiChainInfo,
+      gatewayUrl,
+      rpcUrl,
+      params: multiTransactionParamInfo,
+    } = params;
     if (!this.managementAccount?.privateKey) throw new Error('Please login first');
     const transformedMultiChainInfo = Object.entries(multiChainInfo).reduce((acc, [key, value]) => {
       const chainId = ChainIdMap[key];
@@ -417,7 +424,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     };
     const aelfInstance = aelf.getAelfInstance(rpcUrl);
     const wallet = aelf.getWallet(this.managementAccount.privateKey);
-    const tokenContract = await aelfInstance.chain.contractAt(tokenAddress, wallet, tokenContractOption);
+    const tokenContract = await aelfInstance.chain.contractAt(tokenContractAddress, wallet, tokenContractOption);
     const transformedParams = Object.entries(multiTransactionParamInfo).reduce((acc, [key, value]) => {
       const chainId = ChainIdMap[key];
       if (chainId) {
@@ -425,6 +432,6 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       }
       return acc;
     }, {});
-    return await tokenContract.Transfer.sendMultiTransactionToGateway(transformedParams);
+    return await tokenContract[method].sendMultiTransactionToGateway(transformedParams);
   }
 }

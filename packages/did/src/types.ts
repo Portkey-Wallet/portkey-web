@@ -77,9 +77,10 @@ export type LogoutResult = { transactionId: string; status?: TransactionStatus }
 
 export interface SendMultiTransactionParams {
   multiChainInfo: MultiChainInfo;
-  rpcUrl: string; // todo_wade: confirm this
+  rpcUrl: string;
   gatewayUrl: string;
-  tokenAddress: string;
+  tokenContractAddress: string;
+  method: string;
   params: MultiTransactionParamInfo;
 }
 
