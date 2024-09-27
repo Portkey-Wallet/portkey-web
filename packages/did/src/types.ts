@@ -79,7 +79,7 @@ export interface SendMultiTransactionParams {
   multiChainInfo: MultiChainInfo;
   rpcUrl: string;
   gatewayUrl: string;
-  tokenContractAddress: string;
+  contractAddress: string;
   method: string;
   params: MultiTransactionParamInfo;
 }
