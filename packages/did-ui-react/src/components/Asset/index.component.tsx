@@ -44,7 +44,6 @@ import useGAReport from '../../hooks/useGAReport';
 import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
-import { LoginStatusEnum } from '@portkey/types';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -79,7 +78,8 @@ function AssetMain({
   onLifeCycleChange,
 }: AssetMainProps) {
   const [{ networkType, sandboxId }] = usePortkey();
-  const [{ caInfo, initialized, originChainId, caHash, managementAccount }, { dispatch }] = usePortkeyAsset();
+  const [{ caInfo, initialized, originChainId, caHash, managementAccount, isLoginOnChain = true }, { dispatch }] =
+    usePortkeyAsset();
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
   const [, setPreStep] = useState<AssetStep>(AssetStep.overview);
@@ -411,6 +411,7 @@ function AssetMain({
               isShowRamp={isMixShowRamp}
               faucet={faucet}
               backIcon={backIcon}
+              isLoginOnChain={isLoginOnChain}
               onAvatarClick={onAvatarClick}
               onBack={onOverviewBack}
               onReceive={onReceive}
@@ -625,6 +626,7 @@ function AssetMain({
               networkType={networkType}
               originChainId={originChainId}
               accelerateChainId={accelerateChainId}
+              isLoginOnChain={isLoginOnChain}
               onBack={() => setAssetStep(AssetStep.my)}
             />
           )}
@@ -692,7 +694,7 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.paymentSecurity)}
               initData={viewPaymentSecurity}
               onEdit={() => {
-                if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
+                if (!isLoginOnChain) {
                   return singleMessage.warning('is Loaning');
                 }
                 setAssetStep(AssetStep.transferSettingsEdit);

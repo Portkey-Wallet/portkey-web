@@ -17,14 +17,13 @@ import CustomAssetModal from '../CustomAssetModal';
 import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
-import { did } from '../../utils';
-import { LoginStatusEnum } from '@portkey/types';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItemNew[];
   isShowRamp?: boolean;
   backIcon?: ReactNode;
   faucet?: IFaucetConfig;
+  isLoginOnChain?: boolean;
   onAvatarClick?: () => void;
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
@@ -42,6 +41,7 @@ export function AssetOverviewContent({
   isShowRamp = true,
   faucet,
   backIcon = <></>,
+  isLoginOnChain = true,
   onAvatarClick,
   onBuy,
   onSend,
@@ -158,7 +158,7 @@ export function AssetOverviewContent({
         onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
-          if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
+          if (!isLoginOnChain) {
             return singleMessage.warning('is Loaning');
           }
           // TODO select Token
@@ -167,7 +167,7 @@ export function AssetOverviewContent({
           onBuy?.(supportToken[0]);
         }}
         onSend={async () => {
-          if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
+          if (!isLoginOnChain) {
             return singleMessage.warning('is Loaning');
           }
           setAssetOpen(true);

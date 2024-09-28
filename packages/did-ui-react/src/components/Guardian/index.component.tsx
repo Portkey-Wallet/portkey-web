@@ -4,13 +4,12 @@ import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
 import { GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
-import { AuthServe, did, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { AuthServe, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { VerifierItem } from '@portkey/did';
-import { LoginStatusEnum } from '@portkey/types';
 import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { formatAddGuardianValue } from './utils/formatAddGuardianValue';
 import { formatEditGuardianValue } from './utils/formatEditGuardianValue';
@@ -46,6 +45,7 @@ export interface GuardianProps {
   chainType?: ChainType;
   isErrorTip?: boolean;
   networkType: NetworkType;
+  isLoginOnChain?: boolean;
   onError?: OnErrorFunc;
   onBack?: () => void;
   onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
@@ -60,6 +60,7 @@ function GuardianMain({
   isErrorTip = true,
   sandboxId,
   networkType,
+  isLoginOnChain = true,
   onError,
   onBack,
   onAddGuardianFinish,
@@ -140,13 +141,16 @@ function GuardianMain({
   const onAddGuardian = useCallback(() => {
     setStep(GuardianStep.guardianAdd);
   }, []);
-  const onViewGuardian = useCallback((item: UserGuardianStatus) => {
-    if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
-      return singleMessage.warning('is Loaning');
-    }
-    setCurrentGuardian(item);
-    setStep(GuardianStep.guardianView);
-  }, []);
+  const onViewGuardian = useCallback(
+    (item: UserGuardianStatus) => {
+      if (!isLoginOnChain) {
+        return singleMessage.warning('is Loaning');
+      }
+      setCurrentGuardian(item);
+      setStep(GuardianStep.guardianView);
+    },
+    [isLoginOnChain],
+  );
   const onEditGuardian = useCallback(() => {
     setPreGuardian(currentGuardian);
     setStep(GuardianStep.guardianEdit);
@@ -336,7 +340,7 @@ function GuardianMain({
               rightElement={
                 <ThrottleButton
                   onClick={() => {
-                    if (did.didWallet.isLoginStatus !== LoginStatusEnum.SUCCESS) {
+                    if (!isLoginOnChain) {
                       return singleMessage.warning('is Loaning');
                     }
                     onAddGuardian();
