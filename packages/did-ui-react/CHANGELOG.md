@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.4...v2.11.0-alpha.5) (2024-09-28)
+
+### Features
+
+- 🎸 update assets ([3bdeddc](https://github.com/Portkey-Wallet/portkey-web/commit/3bdeddc70da7605bed5df0bac8304454d9d26f22))
+
 ## [2.11.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.3...v2.11.0-alpha.4) (2024-09-27)
 
 ### Features
