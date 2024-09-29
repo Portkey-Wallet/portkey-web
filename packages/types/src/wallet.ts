@@ -113,3 +113,7 @@ export enum LoginStatusEnum {
   SUCCESS = 'SUCCESS',
   FAIL = 'FAIL',
 }
+export interface IExtraInfo {
+  ip?: string;
+  activityId?: string;
+}

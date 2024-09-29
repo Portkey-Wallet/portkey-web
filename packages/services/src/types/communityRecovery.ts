@@ -1,7 +1,7 @@
 import { AccountType } from '.';
 import { ISearchService } from './search';
 import { IVerificationService, ZKLoginInfo } from './verification';
-import { ChainId, IReferralInfo } from '@portkey/types';
+import { ChainId, IExtraInfo, IReferralInfo } from '@portkey/types';
 import { CaHolderWithGuardian } from '@portkey/graphql';
 export interface Context {
   clientId: string;
@@ -29,6 +29,7 @@ export interface RegisterParams {
   signature?: string;
   context: Context;
   referralInfo?: IReferralInfo;
+  extraInfo?: IExtraInfo;
 }
 
 export type RegisterResult = {
