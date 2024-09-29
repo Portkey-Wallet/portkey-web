@@ -355,6 +355,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       aaInfo: this.aaInfo,
       originChainId: this.originChainId,
       isLoginStatus: this.isLoginStatus,
+      sessionId: this.sessionId,
     });
     const aesStr = aes.encrypt(data, password);
     await this._storage.setItem(keyName ?? this._defaultKeyName, aesStr);
@@ -366,7 +367,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (aesStr) {
       const data = aes.decrypt(aesStr, password);
       if (data) {
-        const { aesPrivateKey, caInfo, accountInfo, aaInfo, originChainId, isLoginStatus } = JSON.parse(data);
+        const { aesPrivateKey, caInfo, accountInfo, aaInfo, originChainId, isLoginStatus, sessionId } =
+          JSON.parse(data);
         const privateKey = aes.decrypt(aesPrivateKey, password);
         if (aesPrivateKey && privateKey) {
           this.managementAccount = await this._accountProvider.privateKeyToAccount(privateKey);
@@ -375,6 +377,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
           this.aaInfo = aaInfo || {};
           this.originChainId = originChainId;
           this.isLoginStatus = isLoginStatus;
+          this.sessionId = sessionId;
         }
       }
     }
