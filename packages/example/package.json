@@ -1,13 +1,13 @@
 {
   "private": true,
   "name": "@portkey/example",
-  "version": "2.11.0-alpha.9",
+  "version": "2.11.0-alpha.10",
   "scripts": {
     "start": "cross-env craco start",
     "pin": "sh -c '{ for X in {core,empty}; do lerna add @web3-react/$X --exact --no-bootstrap --scope=example-cra; done }'"
   },
   "dependencies": {
-    "@portkey/did-ui-react": "^2.11.0-alpha.9",
+    "@portkey/did-ui-react": "^2.11.0-alpha.10",
     "@types/react-dom": "^18.0.0",
     "aelf-sdk": "^3.4.7",
     "react-dom": "^18.0.0",
