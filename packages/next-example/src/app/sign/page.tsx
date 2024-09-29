@@ -240,6 +240,46 @@ export default function Sign() {
       </Button>
 
       <div>-----------</div>
+
+      <Button
+        onClick={async () => {
+          const params = {
+            multiChainInfo: {
+              AELF: {
+                chainUrl: 'https://aelf-test-node.aelf.io/',
+                contractAddress: '238X6iw1j8YKcHvkDYVtYVbuYk2gJnK8UoNpVCtssynSpVC8hb',
+              },
+              tDVW: {
+                chainUrl: 'https://tdvw-test-node.aelf.io/',
+                contractAddress: '238X6iw1j8YKcHvkDYVtYVbuYk2gJnK8UoNpVCtssynSpVC8hb',
+              },
+            },
+            gatewayUrl: 'https://gateway-test.aelf.io',
+            chainId: 'tDVW' as ChainId,
+            method: 'ManagerTransfer',
+            params: {
+              AELF: {
+                caHash: did.didWallet.aaInfo.accountInfo?.caHash,
+                symbol: 'ELF',
+                amount: '10000000',
+                to: 'GyQX6t18kpwaD9XHXe1ToKxfov8mSeTLE9q9NwUAeTE8tULZk',
+              },
+              tDVW: {
+                caHash: did.didWallet.aaInfo.accountInfo?.caHash,
+                symbol: 'ELF',
+                amount: '10000000',
+                to: 'GyQX6t18kpwaD9XHXe1ToKxfov8mSeTLE9q9NwUAeTE8tULZk',
+              },
+            },
+          };
+          console.log(params, 'params==');
+          const result = await did.sendMultiTransaction(params);
+          console.log(result, 'wallet==sendMultiTransaction');
+        }}>
+        sendMultiTransaction
+      </Button>
+
+      <div>-----------</div>
       <Button
         onClick={async () => {
           const isExist = await did.checkManagerIsExist({
