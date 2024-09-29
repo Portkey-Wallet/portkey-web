@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.6...v2.11.0-alpha.7) (2024-09-29)
+
+### Features
+
+- 🎸 update loginOptTip ([909ac23](https://github.com/Portkey-Wallet/portkey-web/commit/909ac235f11816b93046ba761740ebb1b6267d92))
+
+### Bug Fixes
+
+- 🐛 verify zk ([1807583](https://github.com/Portkey-Wallet/portkey-web/commit/1807583caaef87672f250fef5072c26b392bcadf))
+
 ## [2.11.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.5...v2.11.0-alpha.6) (2024-09-28)
 
 **Note:** Version bump only for package @portkey/did-ui-react
