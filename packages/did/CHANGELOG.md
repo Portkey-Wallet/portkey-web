@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.8...v2.11.0-alpha.9) (2024-09-29)
+
+### Features
+
+- 🎸 save sessionId ([260dfeb](https://github.com/Portkey-Wallet/portkey-web/commit/260dfebf478bb19a38e1b67391e552b312e8c54e))
+
 ## [2.11.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.7...v2.11.0-alpha.8) (2024-09-29)
 
 ### Features
