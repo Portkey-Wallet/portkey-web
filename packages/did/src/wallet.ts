@@ -52,6 +52,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public aaInfo: { accountInfo?: CAInfo; nickName?: string };
   public originChainId?: ChainId;
   public isLoginStatus?: LoginStatusEnum;
+  public sessionId?: string;
   constructor({
     accountProvider,
     storage,
@@ -89,6 +90,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
         ..._params,
         manager: this.managementAccount?.address as string,
       });
+      this.sessionId = sessionId;
       let status, error;
       try {
         status = await this.services.getRecoverStatus(sessionId);
@@ -133,6 +135,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       ...params,
       manager: this.managementAccount?.address as string,
     });
+    this.sessionId = sessionId;
     let status, error: any;
     try {
       status = await this.services.getRegisterStatus(sessionId);
