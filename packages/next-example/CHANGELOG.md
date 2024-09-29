@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.10.6-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.9...v2.10.6-alpha.10) (2024-09-29)
+
+### Features
+
+- 🎸 multi transaction fix params ([7441905](https://github.com/Portkey-Wallet/portkey-web/commit/74419059d06cfffdf7d088cfe7fe5198c53c0534))
+
 ## [2.10.6-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.8...v2.10.6-alpha.9) (2024-09-29)
 
 **Note:** Version bump only for package @portkey/next-example
