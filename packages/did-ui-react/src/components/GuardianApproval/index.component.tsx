@@ -40,7 +40,7 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import { useVerifyToken } from '../../hooks/authentication';
 import { useUpdateEffect } from 'react-use';
 import { TVerifierItem } from '../types';
-import { KEY_SHOW_WARNING, SHOW_WARNING_DIALOG, AllSocialLoginList } from '../../constants/guardian';
+import { KEY_SHOW_WARNING, SHOW_WARNING_DIALOG, AllSocialLoginList, zkGuardianType } from '../../constants/guardian';
 import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 import { Open_Login_Bridge } from '../../constants/telegram';
@@ -165,7 +165,13 @@ const GuardianApprovalMain = forwardRef(
           const id = item.identifier || item.identifierHash;
           if (!id) throw 'identifier is not exist';
           const isFirstShowWarning = await getStorageInstance().getItem(KEY_SHOW_WARNING);
-
+          const zkInfo = zkGuardianType.includes(item.guardianType)
+            ? {
+                idToken: item.zkLoginInfo?.jwt,
+                nonce: item.zkLoginInfo?.nonce,
+                timestamp: item.zkLoginInfo?.timestamp,
+              }
+            : {};
           if (isFirstShowWarning !== SHOW_WARNING_DIALOG && !accessToken) {
             const isConfirm = await modalMethod({
               width: 320,
@@ -202,6 +208,7 @@ const GuardianApprovalMain = forwardRef(
 
           const rst = await verifyToken(accountType, {
             accessToken,
+            ...zkInfo,
             id,
             verifierId: item.verifier?.id,
             chainId: originChainId,
