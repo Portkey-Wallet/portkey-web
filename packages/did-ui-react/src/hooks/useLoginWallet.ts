@@ -160,7 +160,7 @@ export function useLoginWallet({
         source: 4, // SDK Type
       });
 
-      did.didWallet.saveTempStatus({ chainId, caAddress, caHash });
+      did.didWallet.saveTempStatus({ chainId, caAddress, caHash, sessionId });
 
       onCreatePendingRef.current?.({
         sessionId,

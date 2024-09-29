@@ -92,7 +92,7 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
     await this.didWallet.load(password, keyName);
     return this;
   }
-  public saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string }): void {
+  public saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string; sessionId: string }): void {
     this.didWallet.saveTempStatus(params);
   }
   public updateLoginStatus(params: LoginStatusEnum): void {

@@ -148,7 +148,7 @@ export default function Sign() {
         termsOfService={'https://portkey.finance/terms-of-service'}
         privacyPolicy={'https://portkey.finance/privacy-policy'}
         onFinish={async res => {
-          console.log(res, 'onFinish====');
+          console.log(res, 'onFinish====', did.didWallet);
           CHAIN_ID = res.chainId;
           did.save(PIN);
         }}
@@ -168,7 +168,7 @@ export default function Sign() {
           console.log('did.DIDWallet==onCreatePending', did.didWallet);
           localStorage.setItem('sessionId', JSON.stringify({ sessionId: info.sessionId }));
           // const wallet = await did.load(PIN);
-          // console.log(wallet, 'onCreatePending===wallet==load');
+          // console.log(wallet, did.didWallet, 'onCreatePending===wallet==load');
         }}
         onSignUp={onSignUpHandler}
         // defaultLifeCycle={{ LoginByScan: null }}

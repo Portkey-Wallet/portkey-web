@@ -85,7 +85,7 @@ export interface IDIDAccountMethods extends IAccountMethods {
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   getVerifierServers(chainId: ChainId): Promise<VerifierItem[]>;
   getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo>;
-  saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string }): void;
+  saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string; sessionId: string }): void;
   updateLoginStatus(params: LoginStatusEnum): void;
   /**
    * @param caHash - CA wallet hash

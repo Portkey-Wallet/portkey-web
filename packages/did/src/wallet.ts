@@ -72,6 +72,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.accountInfo = {};
     this.aaInfo = {};
     this.isLoginStatus = LoginStatusEnum.INIT;
+    this.sessionId = '';
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -170,11 +171,22 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     }
     return status;
   }
-  public saveTempStatus({ chainId, caAddress, caHash }: { chainId: ChainId; caAddress: string; caHash: string }) {
+  public saveTempStatus({
+    chainId,
+    caAddress,
+    caHash,
+    sessionId,
+  }: {
+    chainId: ChainId;
+    caAddress: string;
+    caHash: string;
+    sessionId: string;
+  }) {
     this.accountInfo = { loginAccount: caHash };
     this.aaInfo = { accountInfo: { caAddress: caAddress, caHash: caHash } };
     this.originChainId = chainId;
     this.caInfo[chainId] = { caAddress: caAddress, caHash: caHash };
+    this.sessionId = sessionId;
   }
   async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
     if (!this.managementAccount) this.create();
