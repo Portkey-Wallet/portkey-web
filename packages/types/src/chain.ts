@@ -7,12 +7,12 @@ export const ChainIdMap: { [x in ChainId]: string } = {
 };
 
 export type MultiChainInfo = {
-  [x in ChainId]: {
+  [x in ChainId]?: {
     chainUrl: string;
     contractAddress: string;
   };
 };
 
 export type MultiTransactionParamInfo = {
-  [x in ChainId]: any;
+  [x in ChainId]?: any;
 };

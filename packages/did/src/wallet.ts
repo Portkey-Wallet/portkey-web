@@ -412,7 +412,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       return acc;
     }, {});
     const contractOption = {
-      transformedMultiChainInfo,
+      multi: transformedMultiChainInfo,
       gatewayUrl,
     };
     const aelfInstance = aelf.getAelfInstance(rpcUrl);
