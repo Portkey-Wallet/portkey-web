@@ -24,6 +24,7 @@ import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
 import { singleMessage } from '../CustomAnt';
+import { loginOptTip } from '../../constants';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -144,7 +145,7 @@ function GuardianMain({
   const onViewGuardian = useCallback(
     (item: UserGuardianStatus) => {
       if (!isLoginOnChain) {
-        return singleMessage.warning('is Loaning');
+        return singleMessage.warning(loginOptTip);
       }
       setCurrentGuardian(item);
       setStep(GuardianStep.guardianView);
@@ -341,7 +342,7 @@ function GuardianMain({
                 <ThrottleButton
                   onClick={() => {
                     if (!isLoginOnChain) {
-                      return singleMessage.warning('is Loaning');
+                      return singleMessage.warning(loginOptTip);
                     }
                     onAddGuardian();
                   }}

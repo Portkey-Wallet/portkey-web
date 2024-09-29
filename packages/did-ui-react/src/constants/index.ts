@@ -32,3 +32,5 @@ export const WEB_PAGE_TESTNET = 'https://openlogin-testnet.portkey.finance';
 export const WEB_PAGE_TEST = 'https://openlogin-test.portkey.finance';
 
 // export const WEB_PAGE = 'http://localhost:3000';
+
+export const loginOptTip = `Synchronising data on the blockchain. Please try again in 30 seconds.`;

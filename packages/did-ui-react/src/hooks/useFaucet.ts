@@ -6,6 +6,7 @@ import { callCASendMethod } from '../utils/sandboxUtil/callCASendMethod';
 import { timesDecimals } from '../utils/converter';
 import { usePortkey } from '../components/context';
 import { singleMessage, usePortkeyAsset } from '../components';
+import { loginOptTip } from '../constants';
 
 export const useFaucet = (faucet?: IFaucetConfig) => {
   const [{ sandboxId, networkType, chainType }] = usePortkey();
@@ -18,7 +19,7 @@ export const useFaucet = (faucet?: IFaucetConfig) => {
     if (!caHash || !managementAccount?.privateKey) return singleMessage.error('Please confirm whether to log in!');
     try {
       if (!isLoginOnChain) {
-        return singleMessage.warning('is Loaning');
+        return singleMessage.warning(loginOptTip);
       }
       setLoading(true);
       const result = await callCASendMethod({

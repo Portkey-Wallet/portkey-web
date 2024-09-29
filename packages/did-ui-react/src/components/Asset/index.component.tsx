@@ -44,6 +44,7 @@ import useGAReport from '../../hooks/useGAReport';
 import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
+import { loginOptTip } from '../../constants';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -695,7 +696,7 @@ function AssetMain({
               initData={viewPaymentSecurity}
               onEdit={() => {
                 if (!isLoginOnChain) {
-                  return singleMessage.warning('is Loaning');
+                  return singleMessage.warning(loginOptTip);
                 }
                 setAssetStep(AssetStep.transferSettingsEdit);
               }}
