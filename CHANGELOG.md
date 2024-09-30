@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.11...v2.11.0-alpha.12) (2024-09-30)
+
+### Features
+
+- 🎸 add send tip ([772a876](https://github.com/Portkey-Wallet/portkey-web/commit/772a87613eac7c2df3b4a2ec26af5b60737e7c41))
+- 🎸 udpate checkManagerIsExistByGQL ([c31ccb2](https://github.com/Portkey-Wallet/portkey-web/commit/c31ccb2c298d32165c1d670303be4c2b220bad1b))
+
 ## [2.11.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.10...v2.11.0-alpha.11) (2024-09-29)
 
 ## [2.10.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.4...v2.10.6-alpha.5) (2024-09-27)
