@@ -85,6 +85,7 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd, o
 
   // init State
   useThrottleFirstEffect(() => {
+    if (activityList?.length) return;
     if (!caAddressInfos || isOnce.current) return;
     onDataInit?.();
     getList().then(() => {
