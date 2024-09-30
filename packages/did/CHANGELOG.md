@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.15...v2.11.0-alpha.16) (2024-09-30)
+
+### Features
+
+- 🎸 scan add originChainId ([82cc7a9](https://github.com/Portkey-Wallet/portkey-web/commit/82cc7a9b18c8ef337a8066503859a56805b3347e))
+
 ## [2.11.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.14...v2.11.0-alpha.15) (2024-09-30)
 
 ## [2.8.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.8.1) (2024-08-30)
