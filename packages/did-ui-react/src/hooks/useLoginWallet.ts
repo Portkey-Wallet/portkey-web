@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef } from 'react';
 import { AddManagerType, CreatePendingInfo } from '../components/types';
 import { did, errorTip, extraDataEncode, handlerErrorTipLevel, randomId, setLoading } from '../utils';
 import { LoginResult, RegisterResult } from '@portkey/did';
+import { LoginStatusEnum } from '@portkey/types';
 import { OnErrorFunc } from '../types';
 import { ChainId } from '@portkey/types';
 import { AccountType, GuardiansApproved, RecoverStatusResult, RegisterStatusResult } from '@portkey/services';
@@ -56,6 +57,7 @@ export function useLoginWallet({
           const { recoveryStatus } = status;
 
           if (recoveryStatus !== 'pass') {
+            did.didWallet.updateLoginStatus(LoginStatusEnum.FAIL);
             throw new Error((status as RecoverStatusResult).recoveryMessage);
           }
         }
@@ -148,10 +150,17 @@ export function useLoginWallet({
         },
       };
 
-      const { sessionId } = await did.services.recovery({
+      const {
+        sessionId,
+        caAddress = '',
+        caHash = '',
+      } = await did.services.recovery({
         ...params,
         manager: managerAddress,
+        source: 4, // SDK Type
       });
+
+      did.didWallet.saveTempStatus({ chainId, caAddress, caHash, sessionId });
 
       onCreatePendingRef.current?.({
         sessionId,
@@ -160,6 +169,22 @@ export function useLoginWallet({
         pin,
         createType: type,
         walletInfo: wallet.managementAccount!.wallet,
+        didWallet: {
+          caInfo: {
+            caAddress,
+            caHash,
+          },
+          accountInfo: {
+            managerUniqueId: sessionId,
+            guardianIdentifier,
+            accountType,
+            type: 'recovery',
+          },
+          createType: 'recovery',
+          chainId,
+          pin,
+          walletInfo: wallet.managementAccount!.wallet,
+        },
       });
       return getRequestStatus({
         chainId,

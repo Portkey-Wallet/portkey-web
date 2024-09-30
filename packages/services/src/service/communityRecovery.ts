@@ -17,6 +17,8 @@ import {
   TDeletionAccountParams,
   TCheckDeletionResult,
   TDeletionEntranceResult,
+  TGetCaInfoByManagerResult,
+  TGetCaInfoByManagerParams,
 } from '../types/communityRecovery';
 import {
   GetRecommendationVerifierParams,
@@ -238,6 +240,14 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
     return this._request.send({
       method: 'POST',
       url: '/api/app/account/revoke/request',
+      params,
+    });
+  }
+
+  getCaInfoByManager(params: TGetCaInfoByManagerParams): Promise<TGetCaInfoByManagerResult> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/account/manager/check',
       params,
     });
   }

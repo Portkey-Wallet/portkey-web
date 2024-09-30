@@ -29,7 +29,7 @@ export enum EmptyTipMessage {
 }
 
 export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd, onViewActivityItem }: ActivityProps) {
-  const [{ caAddressInfos, activityMap }] = usePortkeyAsset();
+  const [{ activityMap, caInfo }] = usePortkeyAsset();
   const [{ chainType, networkType }] = usePortkey();
   const dispatch = usePortkeyAssetDispatch();
 
@@ -38,6 +38,14 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd, o
   const activityList = useMemo(() => currentActivity?.list, [currentActivity?.list]);
   const activityTotal = useMemo(() => currentActivity?.totalRecordCount ?? 0, [currentActivity?.totalRecordCount]);
   const [pending, setPending] = useState<boolean>();
+
+  const caAddressInfos = useMemo(() => {
+    if (!caInfo) return;
+    return Object.entries(caInfo ?? {}).map(([chainId, info]) => ({
+      chainId: chainId as ChainId,
+      caAddress: info.caAddress,
+    }));
+  }, [caInfo]);
 
   const [, setPageState] = useState<PaginationPage>({
     pageSize: PAGESIZE_10,
@@ -79,8 +87,10 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd, o
   useThrottleFirstEffect(() => {
     if (!caAddressInfos || isOnce.current) return;
     onDataInit?.();
-    getList().then(() => onDataInitEnd?.());
-    isOnce.current = true;
+    getList().then(() => {
+      onDataInitEnd?.();
+      isOnce.current = true;
+    });
   }, [caAddressInfos, getList]);
 
   const loadMoreActivities = useCallback(async () => {

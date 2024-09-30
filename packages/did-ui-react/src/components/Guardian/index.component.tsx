@@ -23,6 +23,8 @@ import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGua
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
+import { loadingTip } from '../../utils/loadingTip';
+import { loginOptTip } from '../../constants';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -44,6 +46,7 @@ export interface GuardianProps {
   chainType?: ChainType;
   isErrorTip?: boolean;
   networkType: NetworkType;
+  isLoginOnChain?: boolean;
   onError?: OnErrorFunc;
   onBack?: () => void;
   onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
@@ -58,6 +61,7 @@ function GuardianMain({
   isErrorTip = true,
   sandboxId,
   networkType,
+  isLoginOnChain = true,
   onError,
   onBack,
   onAddGuardianFinish,
@@ -138,10 +142,16 @@ function GuardianMain({
   const onAddGuardian = useCallback(() => {
     setStep(GuardianStep.guardianAdd);
   }, []);
-  const onViewGuardian = useCallback((item: UserGuardianStatus) => {
-    setCurrentGuardian(item);
-    setStep(GuardianStep.guardianView);
-  }, []);
+  const onViewGuardian = useCallback(
+    (item: UserGuardianStatus) => {
+      if (!isLoginOnChain) {
+        return loadingTip({ msg: loginOptTip });
+      }
+      setCurrentGuardian(item);
+      setStep(GuardianStep.guardianView);
+    },
+    [isLoginOnChain],
+  );
   const onEditGuardian = useCallback(() => {
     setPreGuardian(currentGuardian);
     setStep(GuardianStep.guardianEdit);
@@ -329,7 +339,14 @@ function GuardianMain({
             <BackHeaderForPage
               leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
-                <ThrottleButton onClick={() => onAddGuardian()} className="title-add-guardian-btn">
+                <ThrottleButton
+                  onClick={() => {
+                    if (!isLoginOnChain) {
+                      return loadingTip({ msg: loginOptTip });
+                    }
+                    onAddGuardian();
+                  }}
+                  className="title-add-guardian-btn">
                   Add Guardians
                 </ThrottleButton>
               }

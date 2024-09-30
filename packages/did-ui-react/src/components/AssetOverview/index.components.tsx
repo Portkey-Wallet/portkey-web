@@ -17,12 +17,15 @@ import CustomAssetModal from '../CustomAssetModal';
 import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
+import { loginOptTip } from '../../constants';
+import { loadingTip } from '../../utils/loadingTip';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItemNew[];
   isShowRamp?: boolean;
   backIcon?: ReactNode;
   faucet?: IFaucetConfig;
+  isLoginOnChain?: boolean;
   onAvatarClick?: () => void;
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
@@ -40,6 +43,7 @@ export function AssetOverviewContent({
   isShowRamp = true,
   faucet,
   backIcon = <></>,
+  isLoginOnChain = true,
   onAvatarClick,
   onBuy,
   onSend,
@@ -156,12 +160,18 @@ export function AssetOverviewContent({
         onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
+          if (!isLoginOnChain) {
+            return loadingTip({ msg: loginOptTip });
+          }
           // TODO select Token
           if (!supportToken?.[0]) return singleMessage.error('There is no token that meets the requirements');
 
           onBuy?.(supportToken[0]);
         }}
         onSend={async () => {
+          if (!isLoginOnChain) {
+            return loadingTip({ msg: loginOptTip });
+          }
           setAssetOpen(true);
         }}
         onReceive={() => setTokenOpen(true)}

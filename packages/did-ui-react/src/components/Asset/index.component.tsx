@@ -44,6 +44,8 @@ import useGAReport from '../../hooks/useGAReport';
 import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
+import { loginOptTip } from '../../constants';
+import { loadingTip } from '../../utils/loadingTip';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -78,7 +80,8 @@ function AssetMain({
   onLifeCycleChange,
 }: AssetMainProps) {
   const [{ networkType, sandboxId }] = usePortkey();
-  const [{ caInfo, initialized, originChainId, caHash, managementAccount }, { dispatch }] = usePortkeyAsset();
+  const [{ caInfo, initialized, originChainId, caHash, managementAccount, isLoginOnChain = true }, { dispatch }] =
+    usePortkeyAsset();
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
   const [, setPreStep] = useState<AssetStep>(AssetStep.overview);
@@ -410,6 +413,7 @@ function AssetMain({
               isShowRamp={isMixShowRamp}
               faucet={faucet}
               backIcon={backIcon}
+              isLoginOnChain={isLoginOnChain}
               onAvatarClick={onAvatarClick}
               onBack={onOverviewBack}
               onReceive={onReceive}
@@ -549,6 +553,9 @@ function AssetMain({
               onReceive={onReceive}
               onBuy={onBuy}
               onSend={(token) => {
+                if (!isLoginOnChain) {
+                  return loadingTip({ msg: loginOptTip });
+                }
                 const info: IAssetItemType = {
                   chainId: token.chainId,
                   symbol: token.symbol,
@@ -580,6 +587,9 @@ function AssetMain({
               NFTDetail={NFTDetail}
               onBack={() => setAssetStep(AssetStep.overview)}
               onSend={(nft) => {
+                if (!isLoginOnChain) {
+                  return loadingTip({ msg: loginOptTip });
+                }
                 const info: IAssetItemType = {
                   chainId: nft.chainId,
                   symbol: nft.symbol,
@@ -624,6 +634,7 @@ function AssetMain({
               networkType={networkType}
               originChainId={originChainId}
               accelerateChainId={accelerateChainId}
+              isLoginOnChain={isLoginOnChain}
               onBack={() => setAssetStep(AssetStep.my)}
             />
           )}
@@ -690,7 +701,12 @@ function AssetMain({
             <TransferSettings
               onBack={() => setAssetStep(AssetStep.paymentSecurity)}
               initData={viewPaymentSecurity}
-              onEdit={() => setAssetStep(AssetStep.transferSettingsEdit)}
+              onEdit={() => {
+                if (!isLoginOnChain) {
+                  return loadingTip({ msg: loginOptTip });
+                }
+                setAssetStep(AssetStep.transferSettingsEdit);
+              }}
             />
           )}
 

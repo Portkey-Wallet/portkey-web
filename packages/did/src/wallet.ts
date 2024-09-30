@@ -18,6 +18,7 @@ import {
   IStorageSuite,
   ChainId,
   SendOptions,
+  LoginStatusEnum,
 } from '@portkey/types';
 import { aes } from '@portkey/utils';
 import {
@@ -50,6 +51,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   public accountInfo: { loginAccount?: string; nickName?: string };
   public aaInfo: { accountInfo?: CAInfo; nickName?: string };
   public originChainId?: ChainId;
+  public isLoginStatus?: LoginStatusEnum;
+  public sessionId?: string;
   constructor({
     accountProvider,
     storage,
@@ -68,6 +71,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.caInfo = {};
     this.accountInfo = {};
     this.aaInfo = {};
+    this.isLoginStatus = LoginStatusEnum.INIT;
+    this.sessionId = '';
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -86,6 +91,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
         ..._params,
         manager: this.managementAccount?.address as string,
       });
+      this.sessionId = sessionId;
       let status, error;
       try {
         status = await this.services.getRecoverStatus(sessionId);
@@ -117,6 +123,10 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
       this.originChainId = chainId;
     }
+
+    if (status?.recoveryStatus === 'pass') {
+      this.isLoginStatus = LoginStatusEnum.SUCCESS;
+    }
     return status;
   }
   public async register(params: Omit<RegisterParams, 'manager'>): Promise<RegisterResult> {
@@ -126,6 +136,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       ...params,
       manager: this.managementAccount?.address as string,
     });
+    this.sessionId = sessionId;
     let status, error: any;
     try {
       status = await this.services.getRegisterStatus(sessionId);
@@ -155,7 +166,27 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.originChainId = chainId;
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
     }
+    if (status?.registerStatus === 'pass') {
+      this.isLoginStatus = LoginStatusEnum.SUCCESS;
+    }
     return status;
+  }
+  public saveTempStatus({
+    chainId,
+    caAddress,
+    caHash,
+    sessionId,
+  }: {
+    chainId: ChainId;
+    caAddress: string;
+    caHash: string;
+    sessionId: string;
+  }) {
+    this.accountInfo = { loginAccount: caHash };
+    this.aaInfo = { accountInfo: { caAddress: caAddress, caHash: caHash } };
+    this.originChainId = chainId;
+    this.caInfo[chainId] = { caAddress: caAddress, caHash: caHash };
+    this.sessionId = sessionId;
   }
   async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
     if (!this.managementAccount) this.create();
@@ -276,6 +307,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (!this.connectServices) throw new Error('connectServices does not exist');
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
     const caHash = this.caInfo[originChainId]?.caHash;
+    const caAddress = this.caInfo[originChainId]?.caAddress;
     if (!caHash) throw new Error('caHash does not exist');
     const timestamp = Date.now();
     const message = Buffer.from(`${this.managementAccount.address}-${timestamp}`).toString('hex');
@@ -296,7 +328,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const caHolderInfo = await this.services.getCAHolderInfo(`Bearer ${info.access_token}`, caHash);
     if (caHolderInfo.nickName) {
       this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
-      this.aaInfo = { ...this.aaInfo, nickName: caHolderInfo.nickName };
+      this.aaInfo = { accountInfo: { caHash, caAddress }, ...this.aaInfo, nickName: caHolderInfo.nickName };
     }
     return caHolderInfo;
   }
@@ -335,6 +367,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       accountInfo: this.accountInfo,
       aaInfo: this.aaInfo,
       originChainId: this.originChainId,
+      isLoginStatus: this.isLoginStatus,
+      sessionId: this.sessionId,
     });
     const aesStr = aes.encrypt(data, password);
     await this._storage.setItem(keyName ?? this._defaultKeyName, aesStr);
@@ -346,7 +380,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (aesStr) {
       const data = aes.decrypt(aesStr, password);
       if (data) {
-        const { aesPrivateKey, caInfo, accountInfo, aaInfo, originChainId } = JSON.parse(data);
+        const { aesPrivateKey, caInfo, accountInfo, aaInfo, originChainId, isLoginStatus, sessionId } =
+          JSON.parse(data);
         const privateKey = aes.decrypt(aesPrivateKey, password);
         if (aesPrivateKey && privateKey) {
           this.managementAccount = await this._accountProvider.privateKeyToAccount(privateKey);
@@ -354,6 +389,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
           this.accountInfo = accountInfo || {};
           this.aaInfo = aaInfo || {};
           this.originChainId = originChainId;
+          this.isLoginStatus = isLoginStatus;
+          this.sessionId = sessionId;
         }
       }
     }
@@ -365,6 +402,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.accountInfo = {};
     this.aaInfo = {};
     this.managementAccount = undefined;
+    this.isLoginStatus = LoginStatusEnum.INIT;
   }
 
   public async checkManagerIsExistByGQL(params: CheckManagerParams) {
@@ -375,7 +413,11 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       caHash: params.caHash,
     });
     const info = resultByQGL[0];
-    return Boolean(info && info.caAddress);
+    const res = Boolean(info && info.caAddress);
+    if (res) {
+      this.updateLoginStatus(LoginStatusEnum.SUCCESS);
+    }
+    return res;
   }
 
   public async checkManagerIsExistByContract(params: CheckManagerParams) {
@@ -391,6 +433,10 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
 
   public async checkManagerIsExist(params: CheckManagerParams) {
     return (await this.checkManagerIsExistByGQL(params)) || (await this.checkManagerIsExistByContract(params));
+  }
+
+  public updateLoginStatus(params: LoginStatusEnum) {
+    this.isLoginStatus = params;
   }
 
   public async checkStorageAesStrIsExist(keyName?: string): Promise<boolean> {
