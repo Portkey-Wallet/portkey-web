@@ -1,6 +1,6 @@
 {
   "name": "@portkey/next-example",
-  "version": "2.10.6-alpha.12",
+  "version": "2.10.6-alpha.13",
   "private": true,
   "scripts": {
     "dev-https": "next dev --experimental-https",
@@ -10,8 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@portkey/did-ui-react": "^2.10.6-alpha.12",
-    "@portkey/onboarding": "^2.10.6-alpha.12",
+    "@portkey/did-ui-react": "^2.10.6-alpha.13",
+    "@portkey/onboarding": "^2.10.6-alpha.13",
     "aelf-sdk": "3.4.16-alpha.7",
     "antd": "4.24.14",
     "next": "14.2.5",
