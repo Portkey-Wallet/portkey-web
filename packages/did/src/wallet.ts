@@ -412,7 +412,11 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       caHash: params.caHash,
     });
     const info = resultByQGL[0];
-    return Boolean(info && info.caAddress);
+    const res = Boolean(info && info.caAddress);
+    if (res) {
+      this.updateLoginStatus(LoginStatusEnum.SUCCESS);
+    }
+    return res;
   }
 
   public async checkManagerIsExistByContract(params: CheckManagerParams) {
