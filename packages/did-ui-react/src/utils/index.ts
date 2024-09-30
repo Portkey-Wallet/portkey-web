@@ -20,3 +20,4 @@ export * from './sandboxUtil/CustomContractBasic';
 export * from './security';
 export * from './telegram';
 export * from './telegramPlatform';
+export * from './loadingTip';

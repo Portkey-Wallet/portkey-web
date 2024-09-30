@@ -45,6 +45,7 @@ import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
+import { loadingTip } from '../../utils/loadingTip';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -553,7 +554,7 @@ function AssetMain({
               onBuy={onBuy}
               onSend={(token) => {
                 if (!isLoginOnChain) {
-                  return singleMessage.warning(loginOptTip);
+                  return loadingTip({ msg: loginOptTip });
                 }
                 const info: IAssetItemType = {
                   chainId: token.chainId,
@@ -587,7 +588,7 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.overview)}
               onSend={(nft) => {
                 if (!isLoginOnChain) {
-                  return singleMessage.warning(loginOptTip);
+                  return loadingTip({ msg: loginOptTip });
                 }
                 const info: IAssetItemType = {
                   chainId: nft.chainId,
@@ -702,7 +703,7 @@ function AssetMain({
               initData={viewPaymentSecurity}
               onEdit={() => {
                 if (!isLoginOnChain) {
-                  return singleMessage.warning(loginOptTip);
+                  return loadingTip({ msg: loginOptTip });
                 }
                 setAssetStep(AssetStep.transferSettingsEdit);
               }}

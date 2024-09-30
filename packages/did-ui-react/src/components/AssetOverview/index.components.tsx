@@ -18,6 +18,7 @@ import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
 import { loginOptTip } from '../../constants';
+import { loadingTip } from '../../utils/loadingTip';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItemNew[];
@@ -160,7 +161,7 @@ export function AssetOverviewContent({
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
           if (!isLoginOnChain) {
-            return singleMessage.warning(loginOptTip);
+            return loadingTip({ msg: loginOptTip });
           }
           // TODO select Token
           if (!supportToken?.[0]) return singleMessage.error('There is no token that meets the requirements');
@@ -169,7 +170,7 @@ export function AssetOverviewContent({
         }}
         onSend={async () => {
           if (!isLoginOnChain) {
-            return singleMessage.warning(loginOptTip);
+            return loadingTip({ msg: loginOptTip });
           }
           setAssetOpen(true);
         }}

@@ -23,7 +23,7 @@ import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGua
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
-import { singleMessage } from '../CustomAnt';
+import { loadingTip } from '../../utils/loadingTip';
 import { loginOptTip } from '../../constants';
 
 export enum GuardianStep {
@@ -145,7 +145,7 @@ function GuardianMain({
   const onViewGuardian = useCallback(
     (item: UserGuardianStatus) => {
       if (!isLoginOnChain) {
-        return singleMessage.warning(loginOptTip);
+        return loadingTip({ msg: loginOptTip });
       }
       setCurrentGuardian(item);
       setStep(GuardianStep.guardianView);
@@ -342,7 +342,7 @@ function GuardianMain({
                 <ThrottleButton
                   onClick={() => {
                     if (!isLoginOnChain) {
-                      return singleMessage.warning(loginOptTip);
+                      return loadingTip({ msg: loginOptTip });
                     }
                     onAddGuardian();
                   }}

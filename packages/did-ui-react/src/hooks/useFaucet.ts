@@ -7,6 +7,7 @@ import { timesDecimals } from '../utils/converter';
 import { usePortkey } from '../components/context';
 import { singleMessage, usePortkeyAsset } from '../components';
 import { loginOptTip } from '../constants';
+import { loadingTip } from '../utils/loadingTip';
 
 export const useFaucet = (faucet?: IFaucetConfig) => {
   const [{ sandboxId, networkType, chainType }] = usePortkey();
@@ -19,7 +20,7 @@ export const useFaucet = (faucet?: IFaucetConfig) => {
     if (!caHash || !managementAccount?.privateKey) return singleMessage.error('Please confirm whether to log in!');
     try {
       if (!isLoginOnChain) {
-        return singleMessage.warning(loginOptTip);
+        return loadingTip({ msg: loginOptTip });
       }
       setLoading(true);
       const result = await callCASendMethod({
