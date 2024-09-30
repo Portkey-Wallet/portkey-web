@@ -14,5 +14,8 @@ export type MultiChainInfo = {
 };
 
 export type MultiTransactionParamInfo = {
-  [x in ChainId]?: any;
+  [x in ChainId]?: {
+    method: string;
+    params: any;
+  };
 };

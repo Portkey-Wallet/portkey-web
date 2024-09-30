@@ -79,7 +79,6 @@ export interface SendMultiTransactionParams {
   multiChainInfo: MultiChainInfo;
   gatewayUrl: string;
   chainId: ChainId;
-  method: string;
   params: MultiTransactionParamInfo;
 }
 

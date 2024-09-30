@@ -402,7 +402,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   }
 
   public async sendMultiTransaction(params: SendMultiTransactionParams) {
-    const { chainId, method, multiChainInfo, gatewayUrl, params: multiTransactionParamInfo } = params;
+    const { chainId, multiChainInfo, gatewayUrl, params: multiTransactionParamInfo } = params;
     if (!this.managementAccount?.privateKey) throw new Error('Pleaselogin first');
     if (!this.chainsInfo) await this.getChainsInfo();
     const chainInfo = this.chainsInfo?.[chainId];
@@ -428,6 +428,6 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       }
       return acc;
     }, {});
-    return await caContract[method].sendMultiTransactionToGateway(transformedParams);
+    return await caContract.sendMultiTransactionToGateway(transformedParams);
   }
 }

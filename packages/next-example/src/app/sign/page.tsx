@@ -273,7 +273,40 @@ export default function Sign() {
             },
           };
           console.log(params, 'params==');
-          const result = await did.sendMultiTransaction(params);
+          const result = await did.sendMultiTransaction({
+            multiChainInfo: {
+              AELF: {
+                chainUrl: 'https://aelf-test-node.aelf.io/',
+                contractAddress: '238X6iw1j8YKcHvkDYVtYVbuYk2gJnK8UoNpVCtssynSpVC8hb',
+              },
+              tDVW: {
+                chainUrl: 'https://tdvw-test-node.aelf.io/',
+                contractAddress: '238X6iw1j8YKcHvkDYVtYVbuYk2gJnK8UoNpVCtssynSpVC8hb',
+              },
+            },
+            gatewayUrl: 'https://gateway-test.aelf.io',
+            chainId: 'tDVW' as ChainId,
+            params: {
+              AELF: {
+                method: 'ManagerTransfer',
+                params: {
+                  caHash: did.didWallet.aaInfo.accountInfo?.caHash,
+                  symbol: 'ELF',
+                  amount: '10000000',
+                  to: 'GyQX6t18kpwaD9XHXe1ToKxfov8mSeTLE9q9NwUAeTE8tULZk',
+                },
+              },
+              tDVW: {
+                method: 'ManagerTransfer',
+                params: {
+                  caHash: did.didWallet.aaInfo.accountInfo?.caHash,
+                  symbol: 'ELF',
+                  amount: '10000000',
+                  to: 'GyQX6t18kpwaD9XHXe1ToKxfov8mSeTLE9q9NwUAeTE8tULZk',
+                },
+              },
+            },
+          });
           console.log(result, 'wallet==sendMultiTransaction');
         }}>
         sendMultiTransaction
