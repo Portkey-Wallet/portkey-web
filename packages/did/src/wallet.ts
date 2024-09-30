@@ -307,6 +307,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (!this.connectServices) throw new Error('connectServices does not exist');
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
     const caHash = this.caInfo[originChainId]?.caHash;
+    const caAddress = this.caInfo[originChainId]?.caAddress;
     if (!caHash) throw new Error('caHash does not exist');
     const timestamp = Date.now();
     const message = Buffer.from(`${this.managementAccount.address}-${timestamp}`).toString('hex');
@@ -327,7 +328,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const caHolderInfo = await this.services.getCAHolderInfo(`Bearer ${info.access_token}`, caHash);
     if (caHolderInfo.nickName) {
       this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
-      this.aaInfo = { ...this.aaInfo, nickName: caHolderInfo.nickName };
+      this.aaInfo = { accountInfo: { caHash, caAddress }, ...this.aaInfo, nickName: caHolderInfo.nickName };
     }
     return caHolderInfo;
   }
