@@ -552,6 +552,9 @@ function AssetMain({
               onReceive={onReceive}
               onBuy={onBuy}
               onSend={(token) => {
+                if (!isLoginOnChain) {
+                  return singleMessage.warning(loginOptTip);
+                }
                 const info: IAssetItemType = {
                   chainId: token.chainId,
                   symbol: token.symbol,
@@ -583,6 +586,9 @@ function AssetMain({
               NFTDetail={NFTDetail}
               onBack={() => setAssetStep(AssetStep.overview)}
               onSend={(nft) => {
+                if (!isLoginOnChain) {
+                  return singleMessage.warning(loginOptTip);
+                }
                 const info: IAssetItemType = {
                   chainId: nft.chainId,
                   symbol: nft.symbol,
