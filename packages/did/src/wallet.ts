@@ -329,6 +329,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (caHolderInfo.nickName) {
       this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
       this.aaInfo = { accountInfo: { caHash, caAddress }, ...this.aaInfo, nickName: caHolderInfo.nickName };
+      this.originChainId = originChainId;
     }
     return caHolderInfo;
   }
