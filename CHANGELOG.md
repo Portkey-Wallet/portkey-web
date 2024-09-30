@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.12...v2.11.0-alpha.13) (2024-09-30)
+
+### Features
+
+- 🎸 add loadingTip utils ([8cfd51c](https://github.com/Portkey-Wallet/portkey-web/commit/8cfd51ca6a082926ec2090571db0c2d02a36fd5b))
+
 ## [2.11.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.11...v2.11.0-alpha.12) (2024-09-30)
 
 ### Features
