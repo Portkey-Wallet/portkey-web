@@ -45,6 +45,7 @@ export type BaseAssetProps = {
   originChainId: ChainId;
   managerPrivateKey?: string;
   didStorageKeyName?: string;
+  isLoginOnChain?: boolean;
 };
 
 export type TxFeeType = {

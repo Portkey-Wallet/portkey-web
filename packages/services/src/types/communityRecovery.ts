@@ -1,7 +1,7 @@
 import { AccountType } from '.';
 import { ISearchService } from './search';
 import { IVerificationService, ZKLoginInfo } from './verification';
-import { ChainId, IReferralInfo } from '@portkey/types';
+import { ChainId, IExtraInfo, IReferralInfo } from '@portkey/types';
 import { CaHolderWithGuardian } from '@portkey/graphql';
 export interface Context {
   clientId: string;
@@ -29,6 +29,7 @@ export interface RegisterParams {
   signature?: string;
   context: Context;
   referralInfo?: IReferralInfo;
+  extraInfo?: IExtraInfo;
 }
 
 export type RegisterResult = {
@@ -43,10 +44,13 @@ export type RecoveryParams = {
   chainId: ChainId;
   context: Context;
   referralInfo?: IReferralInfo;
+  source?: number; //0-UnKnown;1-Android;2-IOS;3-WEB;4-SDK
 };
 
 export type RecoveryResult = {
   sessionId: string;
+  caAddress?: string;
+  caHash?: string;
 };
 
 export type GetCAHolderByManagerParams = {
@@ -139,6 +143,14 @@ export type TDeletionAccountParams = {
   appleToken: string;
 };
 
+export type TGetCaInfoByManagerParams = {
+  manager: string;
+};
+
+export type TGetCaInfoByManagerResult = {
+  caAddress: string;
+  caHash: string;
+};
 export interface ICommunityRecoveryService extends IVerificationService, ISearchService {
   register(params: RegisterParams): Promise<RegisterResult>;
   recovery(params: RecoveryParams): Promise<RecoveryResult>;
@@ -150,4 +162,5 @@ export interface ICommunityRecoveryService extends IVerificationService, ISearch
   getShowDeletionEntrance(): Promise<TDeletionEntranceResult>;
   checkDeletion(): Promise<TCheckDeletionResult>;
   deletionAccount(params: TDeletionAccountParams): Promise<any>;
+  getCaInfoByManager(params: TGetCaInfoByManagerParams): Promise<TGetCaInfoByManagerResult>;
 }

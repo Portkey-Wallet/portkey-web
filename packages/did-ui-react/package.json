@@ -20,7 +20,7 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/did-ui-react"
   },
-  "version": "2.10.6-alpha.14",
+  "version": "2.11.0-alpha.16",
   "main": "dist/index.js",
   "types": "dist/_types/index.d.ts",
   "type": "module",
@@ -41,18 +41,18 @@
   },
   "dependencies": {
     "@matt-block/react-recaptcha-v2": "^2.0.0",
-    "@portkey/accounts": "^2.10.6-alpha.14",
-    "@portkey/contracts": "^2.10.6-alpha.14",
-    "@portkey/did": "^2.10.6-alpha.14",
-    "@portkey/graphql": "^2.10.6-alpha.14",
-    "@portkey/onboarding": "^2.10.6-alpha.14",
-    "@portkey/ramp": "^2.10.6-alpha.14",
-    "@portkey/request": "^2.10.6-alpha.14",
-    "@portkey/services": "^2.10.6-alpha.14",
-    "@portkey/socket": "^2.10.6-alpha.14",
-    "@portkey/types": "^2.10.6-alpha.14",
-    "@portkey/utils": "^2.10.6-alpha.14",
-    "@portkey/validator": "^2.10.6-alpha.14",
+    "@portkey/accounts": "^2.11.0-alpha.16",
+    "@portkey/contracts": "^2.11.0-alpha.16",
+    "@portkey/did": "^2.11.0-alpha.16",
+    "@portkey/graphql": "^2.11.0-alpha.16",
+    "@portkey/onboarding": "^2.11.0-alpha.16",
+    "@portkey/ramp": "^2.11.0-alpha.16",
+    "@portkey/request": "^2.11.0-alpha.16",
+    "@portkey/services": "^2.11.0-alpha.16",
+    "@portkey/socket": "^2.11.0-alpha.16",
+    "@portkey/types": "^2.11.0-alpha.16",
+    "@portkey/utils": "^2.11.0-alpha.16",
+    "@portkey/validator": "^2.11.0-alpha.16",
     "@rc-component/portal": "1.0.2",
     "antd": "4.24.14",
     "antd-mobile": "5.33.0",
@@ -80,5 +80,5 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
-  "gitHead": "0d0c997453d260a60eb1617f9d3a29436c21d88d"
+  "gitHead": "dc404b8027cfc47c9a1588d0a092ab0469b6ee97"
 }

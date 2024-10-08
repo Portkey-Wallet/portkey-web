@@ -2,7 +2,7 @@ import AssetCard from '../AssetCard';
 import { usePortkey } from '../context';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import AssetTabs, { AssetTabsProps } from '../AssetTabs';
-import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { MAINNET } from '../../constants/network';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import { ZERO } from '../../constants/misc';
@@ -17,12 +17,16 @@ import CustomAssetModal from '../CustomAssetModal';
 import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
+import { PAGESIZE_10, loginOptTip } from '../../constants';
+import { loadingTip } from '../../utils/loadingTip';
+import { getCurrentActivityMapKey } from '../Activity/utils';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItemNew[];
   isShowRamp?: boolean;
   backIcon?: ReactNode;
   faucet?: IFaucetConfig;
+  isLoginOnChain?: boolean;
   onAvatarClick?: () => void;
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
@@ -40,6 +44,7 @@ export function AssetOverviewContent({
   isShowRamp = true,
   faucet,
   backIcon = <></>,
+  isLoginOnChain = true,
   onAvatarClick,
   onBuy,
   onSend,
@@ -52,7 +57,7 @@ export function AssetOverviewContent({
   onViewActivityItem,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
-  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection }, { dispatch }] = usePortkeyAsset();
+  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, activityMap }, { dispatch }] = usePortkeyAsset();
 
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
@@ -134,6 +139,34 @@ export function AssetOverviewContent({
     setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
   }, [networkType, tokenListInfo?.list]);
 
+  const initActivityRef = useRef(false);
+
+  const initActivity = useCallback(() => {
+    if (activityMap?.[getCurrentActivityMapKey(undefined, undefined)].list.length) {
+      return;
+    }
+    if (!caAddressInfos) return;
+    if (initActivityRef.current) return;
+
+    onDataInit?.();
+    initActivityRef.current = true;
+    basicAssetViewAsync
+      .setActivityList({
+        maxResultCount: PAGESIZE_10,
+        caAddressInfos,
+        skipCount: 0,
+      })
+      .then(dispatch)
+      .catch((e) => {
+        initActivityRef.current = false;
+      });
+    onDataInitEnd?.();
+  }, [activityMap, caAddressInfos, dispatch, onDataInit, onDataInitEnd]);
+
+  useEffect(() => {
+    initActivity();
+  }, [initActivity]);
+
   const allTokenList = useMemo(() => allToken?.map((tokenItem) => tokenItem), [allToken]);
 
   const supportToken = useMemo(() => {
@@ -156,12 +189,18 @@ export function AssetOverviewContent({
         onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
         onBuy={() => {
+          if (!isLoginOnChain) {
+            return loadingTip({ msg: loginOptTip });
+          }
           // TODO select Token
           if (!supportToken?.[0]) return singleMessage.error('There is no token that meets the requirements');
 
           onBuy?.(supportToken[0]);
         }}
         onSend={async () => {
+          if (!isLoginOnChain) {
+            return loadingTip({ msg: loginOptTip });
+          }
           setAssetOpen(true);
         }}
         onReceive={() => setTokenOpen(true)}
@@ -191,6 +230,8 @@ export function AssetOverviewContent({
               })
               .then(dispatch)
               .finally(() => setIsGetNFTCollection(false));
+          } else if (v === BalanceTab.ACTIVITY) {
+            initActivity();
           }
         }}
         onDataInit={onDataInit}

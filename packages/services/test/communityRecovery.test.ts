@@ -3,7 +3,7 @@ import { describe, expect, test, jest } from '@jest/globals';
 import FetchRequestMock from './__mocks__/request';
 import { CommunityRecovery } from '../src/service/communityRecovery';
 import DIDGraphQLMock from './__mocks__/didGraphQL';
-import { IReferralConfig } from '@portkey/types';
+import { IExtraInfoConfig, IReferralConfig } from '@portkey/types';
 
 const request = new FetchRequestMock({});
 const didGraphQL = new DIDGraphQLMock({
@@ -17,7 +17,16 @@ const referral: IReferralConfig = {
   setReferralInfo: jest.fn(),
   getReferralInfo: jest.fn(),
 };
-const communityRecovery = new CommunityRecovery(request, didGraphQL, referral);
+const extraInfo: IExtraInfoConfig = {
+  extraInfo: {
+    ip: '1000',
+    activityId: 'activityId_mock',
+  },
+  setExtraInfo: jest.fn(),
+  getExtraInfo: jest.fn(),
+};
+
+const communityRecovery = new CommunityRecovery(request, didGraphQL, referral, extraInfo);
 
 describe('communityRecovery describe', () => {
   test('test getHolderInfo', async () => {

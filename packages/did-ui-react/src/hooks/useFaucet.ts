@@ -1,15 +1,17 @@
 import { useCallback } from 'react';
 import { MAINNET, MAIN_CHAIN_ID } from '../constants/network';
 import { IFaucetConfig } from '../components/types/assets';
-import { handleErrorMessage, setLoading } from '../utils';
+import { setLoading } from '../utils';
 import { callCASendMethod } from '../utils/sandboxUtil/callCASendMethod';
 import { timesDecimals } from '../utils/converter';
 import { usePortkey } from '../components/context';
 import { singleMessage, usePortkeyAsset } from '../components';
+import { loginOptTip } from '../constants';
+import { loadingTip } from '../utils/loadingTip';
 
 export const useFaucet = (faucet?: IFaucetConfig) => {
   const [{ sandboxId, networkType, chainType }] = usePortkey();
-  const [{ caHash, managementAccount }] = usePortkeyAsset();
+  const [{ caHash, managementAccount, isLoginOnChain = true }] = usePortkeyAsset();
   return useCallback(async () => {
     const faucetUrl = faucet?.faucetUrl;
     const faucetContractAddress = faucet?.faucetContractAddress;
@@ -17,6 +19,9 @@ export const useFaucet = (faucet?: IFaucetConfig) => {
     if (!faucetContractAddress) return singleMessage.error('Please configure `faucets`');
     if (!caHash || !managementAccount?.privateKey) return singleMessage.error('Please confirm whether to log in!');
     try {
+      if (!isLoginOnChain) {
+        return loadingTip({ msg: loginOptTip });
+      }
       setLoading(true);
       const result = await callCASendMethod({
         methodName: 'ClaimToken',
@@ -39,5 +44,14 @@ export const useFaucet = (faucet?: IFaucetConfig) => {
     } finally {
       setLoading(false);
     }
-  }, [caHash, chainType, faucet?.faucetContractAddress, faucet?.faucetUrl, managementAccount, networkType, sandboxId]);
+  }, [
+    faucet?.faucetUrl,
+    faucet?.faucetContractAddress,
+    networkType,
+    caHash,
+    managementAccount?.privateKey,
+    isLoginOnChain,
+    sandboxId,
+    chainType,
+  ]);
 };

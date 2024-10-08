@@ -3,73 +3,121 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.10.6-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.13...v2.10.6-alpha.14) (2024-09-30)
+## [2.11.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.15...v2.11.0-alpha.16) (2024-09-30)
 
-**Note:** Version bump only for package root
+### Features
 
-## [2.10.6-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.12...v2.10.6-alpha.13) (2024-09-30)
+- 🎸 scan add originChainId ([82cc7a9](https://github.com/Portkey-Wallet/portkey-web/commit/82cc7a9b18c8ef337a8066503859a56805b3347e))
+- 🎸 update activity list ([d25f38e](https://github.com/Portkey-Wallet/portkey-web/commit/d25f38ec0a8edb2580041fd2ac8cfe11b9ec6de6))
 
-**Note:** Version bump only for package root
-
-## [2.10.6-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.11...v2.10.6-alpha.12) (2024-09-30)
-
-**Note:** Version bump only for package root
-
-## [2.10.6-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.10...v2.10.6-alpha.11) (2024-09-30)
+## [2.11.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.14...v2.11.0-alpha.15) (2024-09-30)
 
 ### Bug Fixes
 
-- 🐛 multi transaction fix params ([b051c1d](https://github.com/Portkey-Wallet/portkey-web/commit/b051c1da9034c6d364b95c334f1c45e96269427f))
+- 🐛 get aainfo ([733ed32](https://github.com/Portkey-Wallet/portkey-web/commit/733ed328806eb73d1db0a00f6ab50fc2d40f1b0f))
 
-## [2.10.6-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.9...v2.10.6-alpha.10) (2024-09-29)
-
-### Features
-
-- 🎸 multi transaction fix params ([7441905](https://github.com/Portkey-Wallet/portkey-web/commit/74419059d06cfffdf7d088cfe7fe5198c53c0534))
-
-## [2.10.6-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.8...v2.10.6-alpha.9) (2024-09-29)
-
-### Features
-
-- 🎸 fix multi transaction param ([9f96f42](https://github.com/Portkey-Wallet/portkey-web/commit/9f96f425ad76344b7083b99159b4ee8566861c58))
-
-## [2.10.6-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.8...v2.10.6-alpha.7) (2024-09-29)
-
-### Features
-
-- 🎸 fix multi transaction param ([9f96f42](https://github.com/Portkey-Wallet/portkey-web/commit/9f96f425ad76344b7083b99159b4ee8566861c58))
-
-## [2.10.6-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.7...v2.10.6-alpha.8) (2024-09-27)
-
-**Note:** Version bump only for package root
-
-## [2.10.6-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.6...v2.10.6-alpha.7) (2024-09-27)
+## [2.8.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.8.1) (2024-08-30)
 
 ### Bug Fixes
 
-- 🐛 multi transaction fix param ([08e12fb](https://github.com/Portkey-Wallet/portkey-web/commit/08e12fb66dc9a4a98750cfef780e80d801d168b3))
+- 🐛 aainfo null when scan login ([521dd45](https://github.com/Portkey-Wallet/portkey-web/commit/521dd455026d4320ff5065784f1a7517a15fc6a6))
 
-## [2.10.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.4...v2.10.6-alpha.6) (2024-09-27)
-
-### Features
-
-- 🎸 multi transaction fix param ([e37256d](https://github.com/Portkey-Wallet/portkey-web/commit/e37256d514d3ced5d5876d223660f36ac07209ee))
-
-## [2.10.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.4...v2.10.6-alpha.5) (2024-09-27)
+## [2.11.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.13...v2.11.0-alpha.14) (2024-09-30)
 
 ### Features
 
-- 🎸 multi transaction fix param ([e37256d](https://github.com/Portkey-Wallet/portkey-web/commit/e37256d514d3ced5d5876d223660f36ac07209ee))
+- 🎸 update activity fetch ([93110c1](https://github.com/Portkey-Wallet/portkey-web/commit/93110c1510cce4c2f46766bd692266fa3c7729ab))
 
-## [2.10.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.3...v2.10.6-alpha.4) (2024-09-27)
+## [2.11.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.12...v2.11.0-alpha.13) (2024-09-30)
+
+### Features
+
+- 🎸 add loadingTip utils ([8cfd51c](https://github.com/Portkey-Wallet/portkey-web/commit/8cfd51ca6a082926ec2090571db0c2d02a36fd5b))
+
+## [2.11.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.11...v2.11.0-alpha.12) (2024-09-30)
+
+### Features
+
+- 🎸 add send tip ([772a876](https://github.com/Portkey-Wallet/portkey-web/commit/772a87613eac7c2df3b4a2ec26af5b60737e7c41))
+- 🎸 udpate checkManagerIsExistByGQL ([c31ccb2](https://github.com/Portkey-Wallet/portkey-web/commit/c31ccb2c298d32165c1d670303be4c2b220bad1b))
+
+## [2.11.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.10...v2.11.0-alpha.11) (2024-09-29)
+
+## [2.10.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.4...v2.10.6-alpha.5) (2024-09-27)
 
 **Note:** Version bump only for package root
 
-## [2.10.6-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.1...v2.10.6-alpha.3) (2024-09-27)
+## [2.11.0-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.9...v2.11.0-alpha.10) (2024-09-29)
 
 ### Features
 
-- 🎸 multi transaction ([67ab0ca](https://github.com/Portkey-Wallet/portkey-web/commit/67ab0ca3445c6ef1f2437fb97a3c97191c459e64))
+- 🎸 save sessionId ([9c1e8ea](https://github.com/Portkey-Wallet/portkey-web/commit/9c1e8ead5a444292c163c4c4ef4fd6c8d3b5654a))
+
+## [2.11.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.8...v2.11.0-alpha.9) (2024-09-29)
+
+### Features
+
+- 🎸 save sessionId ([260dfeb](https://github.com/Portkey-Wallet/portkey-web/commit/260dfebf478bb19a38e1b67391e552b312e8c54e))
+
+## [2.11.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.7...v2.11.0-alpha.8) (2024-09-29)
+
+### Features
+
+- 🎸 add sessionId ([0569812](https://github.com/Portkey-Wallet/portkey-web/commit/05698128f7451efd3cbd63d4f26d3ba626d7af30))
+
+## [2.11.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.6...v2.11.0-alpha.7) (2024-09-29)
+
+### Features
+
+- 🎸 update loginOptTip ([909ac23](https://github.com/Portkey-Wallet/portkey-web/commit/909ac235f11816b93046ba761740ebb1b6267d92))
+
+### Bug Fixes
+
+- 🐛 verify zk ([1807583](https://github.com/Portkey-Wallet/portkey-web/commit/1807583caaef87672f250fef5072c26b392bcadf))
+
+## [2.11.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.5...v2.11.0-alpha.6) (2024-09-28)
+
+**Note:** Version bump only for package root
+
+## [2.11.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.4...v2.11.0-alpha.5) (2024-09-28)
+
+### Features
+
+- 🎸 update assets ([3bdeddc](https://github.com/Portkey-Wallet/portkey-web/commit/3bdeddc70da7605bed5df0bac8304454d9d26f22))
+
+## [2.11.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.3...v2.11.0-alpha.4) (2024-09-27)
+
+### Features
+
+- 🎸 define LoginStatusEnum ([8d0af2f](https://github.com/Portkey-Wallet/portkey-web/commit/8d0af2fd44a46d10651848756e228a61eae5d579))
+
+## [2.11.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.2...v2.11.0-alpha.3) (2024-09-26)
+
+### Features
+
+- 🎸 update isLoginStatus ([02146b9](https://github.com/Portkey-Wallet/portkey-web/commit/02146b9cbac6316e4934f735e2a6620e5b4f4090))
+
+## [2.11.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.1...v2.11.0-alpha.2) (2024-09-26)
+
+### Features
+
+- 🎸 return didWallet \* add loginStatus ([e1bada7](https://github.com/Portkey-Wallet/portkey-web/commit/e1bada7dcdf459e50520b26cce55c11d9ebdfdcf))
+
+## [2.11.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.0...v2.11.0-alpha.1) (2024-09-25)
+
+### Features
+
+- 🎸 asset logic update ([d07ff03](https://github.com/Portkey-Wallet/portkey-web/commit/d07ff030fb8e9113c5f896790893bd001e347b0d))
+
+## [2.11.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.2...v2.11.0-alpha.0) (2024-09-25)
+
+**Note:** Version bump only for package root
+
+## [2.10.6-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.1...v2.10.6-alpha.2) (2024-09-25)
+
+### Features
+
+- 🎸 login optimize ([edcba70](https://github.com/Portkey-Wallet/portkey-web/commit/edcba701532002503994c47186f49ba27e966322))
 
 ## [2.10.6-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.0...v2.10.6-alpha.1) (2024-09-14)
 
