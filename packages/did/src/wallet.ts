@@ -450,7 +450,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
 
   public async sendMultiTransaction(params: SendMultiTransactionParams) {
     const { chainId, multiChainInfo, gatewayUrl, params: multiTransactionParamInfo } = params;
-    if (!this.managementAccount?.privateKey) throw new Error('Pleaselogin first');
+    if (!this.managementAccount?.privateKey) throw new Error('Please login first');
     if (!this.chainsInfo) await this.getChainsInfo();
     const chainInfo = this.chainsInfo?.[chainId];
     if (!chainInfo) throw new Error(`${chainId} chainInfo does not exist`);
