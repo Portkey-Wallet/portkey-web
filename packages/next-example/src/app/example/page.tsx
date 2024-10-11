@@ -11,7 +11,7 @@ import {
   Unlock,
   ThrottleButton,
 } from '@portkey/did-ui-react';
-import { useRef, useState } from 'react';
+import { useRef, useState, useMemo, useCallback } from 'react';
 import { Button } from 'antd';
 import { OfficialWebsite } from '@portkey/did-ui-react/src/constants/guardian';
 // ConfigProvider.setGlobalConfig({
@@ -25,6 +25,22 @@ function Example() {
   const [val, setVal] = useState<string>('');
   const [unlock, setUnlock] = useState<boolean>();
   const [password, setPassword] = useState<string>('');
+
+  const forgetPinAction = useCallback(() => {
+    console.log('forgetPinAction====');
+  }, []);
+  const forgetPinElement = useMemo(() => {
+    return (
+      <span className="unlock_footer_text">
+        Forget Pin Code? Click{' '}
+        <span className="unlock_footer_highlight" onClick={forgetPinAction}>
+          Here
+        </span>{' '}
+        To Log Back In
+      </span>
+    );
+  }, [forgetPinAction]);
+
   return (
     <div>
       <div id="wrapper"></div>
@@ -58,6 +74,7 @@ function Example() {
           console.log(password, _p, 'onUnlock==');
         }}
         onCancel={() => setUnlock(false)}
+        footer={forgetPinElement}
       />
       <div>----------</div>
       <div>----------</div>

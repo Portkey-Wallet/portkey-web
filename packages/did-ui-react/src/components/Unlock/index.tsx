@@ -29,6 +29,7 @@ export interface UnlockProps {
   value: string;
   onCancel?: () => void;
   onChange: (value: string) => void;
+  footer?: React.ReactNode;
 }
 
 export default function UnLock({
@@ -41,6 +42,7 @@ export default function UnLock({
   onCancel,
   onUnlock,
   onChange,
+  footer,
 }: UnlockProps) {
   const { t } = useTranslation();
   const disabled = useMemo(() => value.length < 6, [value?.length]);
@@ -86,9 +88,10 @@ export default function UnLock({
             Unlock
           </ThrottleButton>
         )}
+        {footer && <div className="unlock-footer">{footer}</div>}
       </div>
     );
-  }, [keyboard, value, onChange, onUnlock, t, disabled, isWrongPassword]);
+  }, [keyboard, isWrongPassword, value, onChange, onUnlock, t, disabled, footer]);
 
   return (
     <PortkeyStyleProvider>
