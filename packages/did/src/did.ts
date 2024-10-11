@@ -8,8 +8,10 @@ import {
   IDIDAccountMethods,
   LoginResult,
   LogoutResult,
+  MultiTransaction,
   RegisterResult,
   ScanLoginParams,
+  SendMultiTransactionParams,
   VerifierItem,
 } from './types';
 import { DIDWallet } from './wallet';
@@ -136,6 +138,9 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   }
   checkManagerIsExist(params: CheckManagerParams): Promise<boolean> {
     return this.didWallet.checkManagerIsExist(params);
+  }
+  sendMultiTransaction(params: SendMultiTransactionParams): Promise<MultiTransaction> {
+    return this.didWallet.sendMultiTransaction(params);
   }
   public async checkStorageAesStrIsExist(keyName?: string): Promise<boolean> {
     return this.didWallet.checkStorageAesStrIsExist(keyName);

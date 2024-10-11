@@ -18,9 +18,10 @@ import {
   IStorageSuite,
   ChainId,
   SendOptions,
+  ChainIdMap,
   LoginStatusEnum,
 } from '@portkey/types';
-import { aes } from '@portkey/utils';
+import { aes, aelf } from '@portkey/utils';
 import {
   AccountLoginParams,
   BaseDIDWallet,
@@ -35,6 +36,7 @@ import {
   RegisterResult,
   ScanLoginParams,
   VerifierItem,
+  SendMultiTransactionParams,
 } from './types';
 import AElf from 'aelf-sdk';
 
@@ -444,5 +446,35 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (!this._storage) throw new Error('Please set storage first');
     const aesStr = await this._storage.getItem(keyName ?? this._defaultKeyName);
     return Boolean(aesStr);
+  }
+
+  public async sendMultiTransaction(params: SendMultiTransactionParams) {
+    const { chainId, multiChainInfo, gatewayUrl, params: multiTransactionParamInfo } = params;
+    if (!this.managementAccount?.privateKey) throw new Error('Pleaselogin first');
+    if (!this.chainsInfo) await this.getChainsInfo();
+    const chainInfo = this.chainsInfo?.[chainId];
+    if (!chainInfo) throw new Error(`${chainId} chainInfo does not exist`);
+    const transformedMultiChainInfo = Object.entries(multiChainInfo).reduce((acc, [key, value]) => {
+      const chainId = ChainIdMap[key];
+      if (chainId) {
+        acc[chainId] = value;
+      }
+      return acc;
+    }, {});
+    const aelfInstance = aelf.getAelfInstance(chainInfo.endPoint);
+    const wallet = aelf.getWallet(this.managementAccount.privateKey);
+    const contractOption = {
+      multi: transformedMultiChainInfo,
+      gatewayUrl,
+    };
+    const caContract = await aelfInstance.chain.contractAt(chainInfo.caContractAddress, wallet, contractOption);
+    const transformedParams = Object.entries(multiTransactionParamInfo).reduce((acc, [key, value]) => {
+      const chainId = ChainIdMap[key];
+      if (chainId) {
+        acc[chainId] = value;
+      }
+      return acc;
+    }, {});
+    return await caContract.sendMultiTransactionToGateway(transformedParams);
   }
 }
