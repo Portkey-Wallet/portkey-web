@@ -37,7 +37,7 @@ export default function Assets() {
   return (
     <PortkeyAssetProvider
       pin="111111"
-      originChainId="AELF"
+      originChainId="tDVW"
       isLoginOnChain={did.didWallet.isLoginStatus === LoginStatusEnum.SUCCESS}>
       <a href="dapp-webapp">
         <Button>Go to dapp-webapp</Button>

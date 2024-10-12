@@ -162,6 +162,28 @@ export interface IAssetItemType {
   nftInfo?: INftInfoType;
 }
 
+export interface ITokenSectionResponse {
+  symbol: string;
+  price?: number;
+  balance?: string;
+  decimals?: number;
+  balanceInUsd?: string;
+  label?: string;
+  imageUrl?: string;
+  displayStatus?: 'All' | 'Partial' | 'None';
+  tokens?: ITokenItem[];
+}
+export interface ITokenItem {
+  chainId: string;
+  symbol: string;
+  price: number;
+  balance: string;
+  decimals: number;
+  balanceInUsd: string;
+  tokenContractAddress: string;
+  imageUrl: string;
+  label: string | null;
+}
 export interface IAssetsService {
   fetchAccountTokenList(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListResult>;
   getSymbolImages(params: GetSymbolImagesParams): Promise<GetSymbolImagesResult>;

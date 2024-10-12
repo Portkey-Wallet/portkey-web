@@ -1,4 +1,4 @@
-import { IBaseRequest } from '@portkey/types';
+import { ChainId, IBaseRequest } from '@portkey/types';
 import { BaseService } from '../types';
 import {
   FetchAccountNftCollectionItemListParams,
@@ -17,6 +17,7 @@ import {
   GetUserTokenListResult,
   GetUserTokenListResultNew,
   IAssetsService,
+  ITokenSectionResponse,
   TFetchAccountNftItemParams,
   TFetchAccountNftItemResult,
 } from '../types/assets';
@@ -26,6 +27,17 @@ export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T
     return this._request.send({
       method: 'POST',
       url: '/api/app/user/assets/token',
+      params,
+    });
+  }
+  fetchAccountTokenListV2(params: FetchAccountTokenListParams): Promise<{
+    data: ITokenSectionResponse[];
+    totalRecordCount: number;
+    totalBalanceInUsd?: string;
+  }> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/v2/user/assets/token',
       params,
     });
   }
@@ -95,6 +107,38 @@ export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T
     return this._request.send({
       method: 'GET',
       url: '/api/app/userTokens',
+      params: {
+        keyword: keyword,
+        chainIds: chainIdArray,
+        skipCount: 0,
+        maxResultCount: 1000,
+      },
+    });
+  }
+  getUserTokenListNewV2({ keyword, chainIdArray }: GetUserTokenListParams): Promise<{
+    data: {
+      symbol: string;
+      imageUrl?: string;
+      label?: string;
+      displayStatus?: 'All' | 'Partial' | 'None';
+      isDefault?: boolean;
+      tokens?: {
+        id: string;
+        chainId: ChainId;
+        symbol: string;
+        imageUrl?: string;
+        address?: string;
+        decimals: number;
+        isDefault: boolean;
+        isDisplay: boolean;
+        label?: string;
+      }[];
+    }[];
+    totalRecordCount: number;
+  }> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/v2/userTokens',
       params: {
         keyword: keyword,
         chainIds: chainIdArray,
