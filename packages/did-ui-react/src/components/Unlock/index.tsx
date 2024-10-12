@@ -64,6 +64,7 @@ export default function UnLock({
               length={PASSWORD_LENGTH}
               onChange={onChange}
               onFill={onUnlock}
+              footer={footer}
             />
           ) : (
             <>
@@ -88,7 +89,7 @@ export default function UnLock({
             Unlock
           </ThrottleButton>
         )}
-        {footer && <div className="unlock-footer">{footer}</div>}
+        {!keyboard && footer && <div className="unlock-footer">{footer}</div>}
       </div>
     );
   }, [keyboard, isWrongPassword, value, onChange, onUnlock, t, disabled, footer]);
