@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.2...v2.12.0) (2024-10-14)
+
+### Features
+
+- 🎸 forget pin fix text ([57fd88e](https://github.com/Portkey-Wallet/portkey-web/commit/57fd88e9e6964c16f742b5bdc7a0e06f57e02c85))
+
 ## [2.12.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.1...v2.12.0-alpha.2) (2024-10-12)
 
 ### Features
