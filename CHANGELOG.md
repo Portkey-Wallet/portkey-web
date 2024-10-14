@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.11.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.11.1-alpha.0) (2024-10-14)
+
+### Features
+
+- 🎸 add tg user changed handler ([6e84b09](https://github.com/Portkey-Wallet/portkey-web/commit/6e84b09e4cdb07fa359617ec9918d103322be98a))
+
 ## [2.11.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.16...v2.11.0) (2024-10-08)
 
 ## [2.10.6-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.13...v2.10.6-alpha.14) (2024-09-30)
