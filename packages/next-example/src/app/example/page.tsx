@@ -32,11 +32,11 @@ function Example() {
   const forgetPinElement = useMemo(() => {
     return (
       <span className="unlock_footer_text">
-        Forget Pin Code? Click{' '}
-        <span className="unlock_footer_highlight" onClick={forgetPinAction}>
-          Here
-        </span>{' '}
-        To Log Back In
+        Forgot your PIN? Click{' '}
+        <a className="unlock_footer_highlight" onClick={forgetPinAction}>
+          here
+        </a>{' '}
+        to log back in.
       </span>
     );
   }, [forgetPinAction]);
