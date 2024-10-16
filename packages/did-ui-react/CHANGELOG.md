@@ -3,21 +3,11 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.12.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.2...v2.12.0) (2024-10-14)
-
-**Note:** Version bump only for package @portkey/did-ui-react
-
-## [2.12.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.1...v2.12.0-alpha.2) (2024-10-12)
+## [2.12.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.12.1-alpha.0) (2024-10-14)
 
 ### Features
 
-- 🎸 add header component in keyboard ([2e0bfd2](https://github.com/Portkey-Wallet/portkey-web/commit/2e0bfd26bc5449c413114fc205b5b532619c9ef5))
-
-## [2.12.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.12.0-alpha.1) (2024-10-11)
-
-### Features
-
-- 🎸 forget pin ([3e140bc](https://github.com/Portkey-Wallet/portkey-web/commit/3e140bc76fc2c9c83f27e09df0917e45cb1c3216))
+- 🎸 add tg user changed handler ([480f6dd](https://github.com/Portkey-Wallet/portkey-web/commit/480f6dd33f9b8947031abdf7c518cfe69a85312a))
 
 ## [2.11.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.16...v2.11.0) (2024-10-08)
 

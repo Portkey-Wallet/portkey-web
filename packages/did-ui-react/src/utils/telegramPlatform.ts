@@ -68,13 +68,12 @@ export class TelegramPlatform {
     }
     return userId;
   }
-
   static async initializeTelegramWebApp({
-    handleLogout,
+    tgUserChanged,
     initialDelay = 1000,
     needExpand = true,
   }: {
-    handleLogout: () => Promise<void>;
+    tgUserChanged: (curUserId: string, preUserId: string) => Promise<void>;
     initialDelay?: number;
     needExpand?: boolean;
   }) {
@@ -90,7 +89,7 @@ export class TelegramPlatform {
       const preTelegramUserId = window.localStorage.getItem(PORTKEY_SDK_TELEGRAM_USER_ID);
 
       if (currentTelegramUserId && currentTelegramUserId !== preTelegramUserId) {
-        preTelegramUserId && (await handleLogout());
+        preTelegramUserId && (await tgUserChanged(currentTelegramUserId, preTelegramUserId));
         window.localStorage.setItem(PORTKEY_SDK_TELEGRAM_USER_ID, currentTelegramUserId);
       }
       Telegram.WebApp.ready();
