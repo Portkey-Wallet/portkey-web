@@ -17,6 +17,7 @@ interface Props {
   onConfirm?: () => void;
   closeOnConfirm?: boolean;
   safeArea?: boolean;
+  header?: React.ReactNode;
 }
 
 export default function PortkeyBaseNumberKeyboard({
@@ -28,6 +29,7 @@ export default function PortkeyBaseNumberKeyboard({
   onDelete,
   onClose,
   onConfirm,
+  header,
 }: Props) {
   const keys = useMemo(() => {
     const defaultKeys = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
@@ -99,14 +101,17 @@ export default function PortkeyBaseNumberKeyboard({
 
   return (
     <div className={clsx(`${classPrefix}-wrapper`)}>
-      <div className={`${classPrefix}-inner-wrapper`}>
-        <div className={clsx(`${classPrefix}-main`)}>{keys.map(renderKey)}</div>
-      </div>
-      {safeArea && (
-        <div className={`${classPrefix}-footer`}>
-          <SafeArea position="bottom" />
+      {header}
+      <div className={clsx(`${classPrefix}-bg-wrapper`)}>
+        <div className={`${classPrefix}-inner-wrapper`}>
+          <div className={clsx(`${classPrefix}-main`)}>{keys.map(renderKey)}</div>
         </div>
-      )}
+        {safeArea && (
+          <div className={`${classPrefix}-footer`}>
+            <SafeArea position="bottom" />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
