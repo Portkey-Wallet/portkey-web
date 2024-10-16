@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.12.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.1-alpha.0...v2.12.1-alpha.1) (2024-10-16)
+
+## [2.12.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.2...v2.12.0) (2024-10-14)
+
+## [2.12.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.1...v2.12.0-alpha.2) (2024-10-12)
+
+## [2.12.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.12.0-alpha.1) (2024-10-11)
+
+### Features
+
+- 🎸 fix typo ([6e40ab7](https://github.com/Portkey-Wallet/portkey-web/commit/6e40ab7b60dff4792dc2b9e929f8ea16fa451390))
+
 ## [2.12.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.12.1-alpha.0) (2024-10-14)
 
 **Note:** Version bump only for package @portkey/did
