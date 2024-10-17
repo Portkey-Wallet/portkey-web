@@ -1,6 +1,6 @@
 {
   "name": "@portkey/contracts",
-  "version": "2.13.0",
+  "version": "2.13.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,8 +41,8 @@
   },
   "dependencies": {
     "@portkey/provider-types": "^2.1.0",
-    "@portkey/types": "^2.13.0",
-    "@portkey/utils": "^2.13.0"
+    "@portkey/types": "^2.13.1",
+    "@portkey/utils": "^2.13.1"
   },
   "peerDependencies": {
     "aelf-sdk": "^3.4.7"
