@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.1-alpha.1...v2.13.0) (2024-10-17)
+
+### Features
+
+- opt sdk ui ([26117df](https://github.com/Portkey-Wallet/portkey-web/commit/26117df66765c4501330bc3a1d83175146a23159))
+
 ## [2.12.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.1-alpha.0...v2.12.1-alpha.1) (2024-10-16)
 
 ## [2.12.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.2...v2.12.0) (2024-10-14)
