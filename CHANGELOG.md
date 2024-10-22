@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.3-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.3-alpha.1...v2.13.3-alpha.2) (2024-10-22)
+
+### Features
+
+- 🎸 add originChainId ([ca3ad12](https://github.com/Portkey-Wallet/portkey-web/commit/ca3ad12d1061f8daaa7fab7f2a3b74b94ffa8604))
+
 ## [2.13.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.3-alpha.0...v2.13.3-alpha.1) (2024-10-22)
 
 ### Features
