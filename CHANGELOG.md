@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.13.3-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.3-alpha.0...v2.13.3-alpha.1) (2024-10-22)
+
+### Features
+
+- 🎸 add beforeLastGuardianApprove ([0735725](https://github.com/Portkey-Wallet/portkey-web/commit/073572507259deda4de0597652819b1d4bf4383c))
+
 ## [2.13.3-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.2...v2.13.3-alpha.0) (2024-10-22)
 
 ### Features
