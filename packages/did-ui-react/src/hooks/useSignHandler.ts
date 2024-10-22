@@ -105,7 +105,7 @@ export const useSignHandler = ({
       onChainIdChange?.(originChainIdRef.current);
       onSuccess?.(
         { ...value, isLoginGuardian: isHasAccount.current, chainId: originChainIdRef.current },
-        caInfoRef.current,
+        { ...caInfoRef.current, originChainId: originChainIdRef.current },
       );
     },
     [getIdentifierChainId, onChainIdChange, onSuccess],

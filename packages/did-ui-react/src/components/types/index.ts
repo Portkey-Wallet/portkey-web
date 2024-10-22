@@ -86,6 +86,7 @@ export type Theme = 'dark' | 'light';
 export type TOnSuccessExtraData = {
   caAddress: string;
   caHash: string;
+  originChainId: ChainId;
 };
 
 export interface IBaseGetGuardianProps {
