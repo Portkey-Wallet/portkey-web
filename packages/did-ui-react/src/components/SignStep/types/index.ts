@@ -104,6 +104,7 @@ export interface SignInProps {
   onSignUp?: TSignUpContinueHandler;
   onFinish?(didWallet: DIDWalletInfo): void;
   onCreatePending?(createPendingInfo: CreatePendingInfo): void;
+  beforeCreatePending?(createPendingInfo: Partial<CreatePendingInfo>): void;
 
   onLifeCycleChange?<T = any>(liftCycle: LifeCycleType, nextLifeCycleProps: T): void;
   onLifeCycleChange?(nextLifeCycle: SignInLifeCycleType, nextLifeCycleProps: undefined | null): void;

@@ -9,6 +9,7 @@ import { AccountType, GuardiansApproved, RecoverStatusResult, RegisterStatusResu
 import { DEVICE_TYPE, getDeviceInfo } from '../constants/device';
 
 type onCreatePendingType = (pendingInfo: CreatePendingInfo) => void;
+type beforeCreatePendingType = (pendingInfo: CreatePendingInfo) => void;
 
 interface CreateWalletParams {
   pin: string;
@@ -23,19 +24,23 @@ export function useLoginWallet({
   isErrorTip = true,
   onError,
   onCreatePending,
+  beforeCreatePending,
 }:
   | {
       isErrorTip?: boolean;
       onCreatePending?: onCreatePendingType;
+      beforeCreatePending?: beforeCreatePendingType;
       onError?: OnErrorFunc;
     }
   | undefined = {}) {
   const onErrorRef = useRef<OnErrorFunc | undefined>(onError);
   const onCreatePendingRef = useRef<onCreatePendingType | undefined>(onCreatePending);
+  const beforeCreatePendingRef = useRef<beforeCreatePendingType | undefined>(beforeCreatePending);
 
   useEffect(() => {
     onErrorRef.current = onError;
     onCreatePendingRef.current = onCreatePending;
+    beforeCreatePendingRef.current = beforeCreatePending;
   });
 
   const getRequestStatus = useCallback(

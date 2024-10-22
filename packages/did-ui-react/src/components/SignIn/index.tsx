@@ -73,6 +73,7 @@ const SignIn = forwardRef(
       onLifeCycleChange,
       onChainIdChange,
       onCreatePending,
+      beforeCreatePending,
       onCancel,
       onFinish,
       onError,
@@ -87,7 +88,7 @@ const SignIn = forwardRef(
     const onChainIdChangeRef = useRef<SignInProps['onChainIdChange']>(onChainIdChange);
     const onLifeCycleChangeRef = useRef<SignInProps['onLifeCycleChange']>(onLifeCycleChange);
     const onSignUpHandlerRef = useRef<SignInProps['onSignUp']>(onSignUpHandler);
-
+    const beforeCreatePendingRef = useRef<SignInProps['beforeCreatePending']>(beforeCreatePending);
     const defaultLifeCycleRef = useRef<LifeCycleType>();
     const defaultLiftCyclePropsRef = useRef<any>();
 
@@ -117,6 +118,7 @@ const SignIn = forwardRef(
       onChainIdChangeRef.current = onChainIdChange;
       onLifeCycleChangeRef.current = onLifeCycleChange;
       onSignUpHandlerRef.current = onSignUpHandler;
+      beforeCreatePendingRef.current = beforeCreatePending;
     });
 
     const [{ chainType, networkType }] = usePortkey();
@@ -234,6 +236,30 @@ const SignIn = forwardRef(
               guardianApprovedList: approvedList,
             };
             console.log(params, 'didWallet==createWallet');
+            if (managerWallet) {
+              beforeCreatePendingRef.current?.({
+                pin,
+                createType: type,
+                walletInfo: managerWallet?.walletInfo,
+                didWallet: {
+                  caInfo: {
+                    caAddress: managerWallet?.caInfo?.caAddress || '',
+                    caHash: managerWallet?.caInfo?.caHash || '',
+                  },
+                  accountInfo: {
+                    managerUniqueId: '',
+                    guardianIdentifier: guardianIdentifierInfo?.identifier,
+                    accountType: guardianIdentifierInfo.accountType,
+                    type,
+                  },
+                  createType: type,
+                  chainId,
+                  pin,
+                  walletInfo: managerWallet?.walletInfo,
+                },
+              });
+            }
+
             didWallet = await createWallet(params);
           }
 

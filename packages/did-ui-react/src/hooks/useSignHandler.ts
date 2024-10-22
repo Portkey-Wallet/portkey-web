@@ -31,6 +31,8 @@ export const useSignHandler = ({
   onChainIdChange: IBaseGetGuardianProps['onChainIdChange'];
 }) => {
   const isHasAccount = useRef<boolean>(false);
+  const originChainIdRef = useRef<ChainId>('AELF');
+  const caInfoRef = useRef({ caHash: '', caAddress: '' });
 
   const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
     let isLoginGuardian = false;
@@ -38,11 +40,16 @@ export const useSignHandler = ({
       const { originChainId } = await did.services.getRegisterInfo({
         loginGuardianIdentifier: identifier,
       });
+      originChainIdRef.current = originChainId;
 
       const payload = await did.getHolderInfo({
         loginGuardianIdentifier: identifier,
         chainId: originChainId,
       });
+      caInfoRef.current = {
+        caAddress: payload.caAddress,
+        caHash: payload.caHash,
+      };
       if (payload?.guardianList?.guardians?.length > 0) {
         isLoginGuardian = true;
       }
@@ -95,11 +102,11 @@ export const useSignHandler = ({
 
   const onFinish = useThrottleFirstCallback(
     async (value: GuardianInputInfo) => {
-      setLoading(true);
-      const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
-      onChainIdChange?.(chainId);
-      setLoading(false);
-      onSuccess?.({ ...value, isLoginGuardian: isHasAccount.current, chainId });
+      onChainIdChange?.(originChainIdRef.current);
+      onSuccess?.(
+        { ...value, isLoginGuardian: isHasAccount.current, chainId: originChainIdRef.current },
+        caInfoRef.current,
+      );
     },
     [getIdentifierChainId, onChainIdChange, onSuccess],
   );
