@@ -14,6 +14,7 @@ import singleMessage from '../../CustomAnt/message';
 import { PORTKEY_OFF_RAMP_GUARDIANS_APPROVE_LIST } from '../../../constants/storage';
 import { ramp, IOrderInfo } from '@portkey/ramp';
 import { MAIN_CHAIN_ID } from '../../../constants/network';
+import { LoadingText } from '../../../types/loading';
 
 interface TransferParams {
   symbol: string;
@@ -91,7 +92,7 @@ const useHandleAchSell = ({ tokenInfo }: IUseHandleAchSellParams) => {
     async ({ orderId, isMainnet }: { orderId: string; isMainnet: boolean }) => {
       try {
         if (isMainnet && initializedRef && managementAccountRef.current && caInfoRef.current) {
-          setLoading(true, 'Payment is being processed and may take around 10 seconds to complete.');
+          setLoading(true, LoadingText.PaymentTip);
           await ramp.transferCrypto(orderId, paymentSellTransfer);
           singleMessage.success('Transaction completed.');
         }

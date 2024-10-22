@@ -7,6 +7,7 @@ import { OnErrorFunc } from '../types';
 import { ChainId } from '@portkey/types';
 import { AccountType, GuardiansApproved, RecoverStatusResult, RegisterStatusResult } from '@portkey/services';
 import { DEVICE_TYPE, getDeviceInfo } from '../constants/device';
+import { LoadingText } from '../types/loading';
 
 type onCreatePendingType = (pendingInfo: CreatePendingInfo) => void;
 
@@ -200,8 +201,7 @@ export function useLoginWallet({
       try {
         if (!guardianIdentifier) throw 'Missing account!!!';
 
-        const loadingText =
-          type === 'recovery' ? 'Initiating social recovery...' : 'Creating a wallet address on the blockchain';
+        const loadingText = type === 'recovery' ? LoadingText.InitiatingRecovery : LoadingText.CreateWallet;
         if (!did.didWallet.managementAccount) {
           handlerErrorTipLevel(`Management information not detected, please "did.create" before`, 'throwError');
         }

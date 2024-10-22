@@ -12,11 +12,14 @@ import {
   SignUpValue,
   TModalMethodRef,
   setLoading,
+  PortkeyLoading,
+  ScreenLoadingInfo,
 } from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { Button } from 'antd';
 import { FetchRequest } from '@portkey/request';
+import { useRouter } from 'next/navigation';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
@@ -51,8 +54,18 @@ export default function Sign() {
   const [design, setDesign] = useState<TDesign>('Web2Design');
   const [uiType, setUIType] = useState<UI_TYPE>('Modal');
 
+  const [loadingInfo, setLoadingInfo] = useState<ScreenLoadingInfo>();
+
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') ?? '{}'));
+  }, []);
+
+  useEffect(() => {
+    ConfigProvider.setGlobalConfig({
+      globalLoadingHandler: {
+        onSetLoading: setLoadingInfo,
+      },
+    });
   }, []);
 
   const switchToV1Modal = useCallback(async () => {
@@ -116,10 +129,11 @@ export default function Sign() {
     },
     [switchToV1Modal],
   );
-
+  const router = useRouter();
   return (
     <div>
       <div>-----------</div>
+      <PortkeyLoading {...loadingInfo} className="sign-loading" />
       <SignIn
         pin={'111111'}
         ref={ref}
@@ -151,6 +165,7 @@ export default function Sign() {
           console.log(res, 'onFinish====', did.didWallet);
           CHAIN_ID = res.chainId;
           did.save(PIN);
+          router.push('/assets');
         }}
         onError={error => {
           console.log(error, 'onError====error');

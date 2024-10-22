@@ -14,6 +14,7 @@ import {
 } from '../utils';
 import { SocialLoginFinishHandler } from '../types';
 import { useThrottleFirstCallback } from './throttle';
+import { LoadingText } from '../types/loading';
 
 export const useSignHandler = ({
   defaultChainId,
@@ -60,7 +61,7 @@ export const useSignHandler = ({
 
   const validateEmail = useCallback(
     async (email?: string) => {
-      setLoading(true, 'Checking account info on the blockchain');
+      setLoading(true, LoadingText.CheckingAccount);
       await validateIdentifier(email);
       return customValidateEmail?.(email);
     },
@@ -69,7 +70,7 @@ export const useSignHandler = ({
 
   const validatePhone = useCallback(
     async (phone?: string) => {
-      setLoading(true, 'Checking account info on the blockchain');
+      setLoading(true, LoadingText.CheckingAccount);
       await validateIdentifier(phone?.replaceAll(/\s/g, ''));
       return customValidatePhone?.(phone);
     },
@@ -107,7 +108,7 @@ export const useSignHandler = ({
   const onSocialFinish: SocialLoginFinishHandler = useCallback(
     async ({ type, data }) => {
       try {
-        setLoading(true, 'Checking account info on the blockchain');
+        setLoading(true, LoadingText.CheckingAccount);
         if (!data) throw 'Action error';
 
         let userId = undefined;

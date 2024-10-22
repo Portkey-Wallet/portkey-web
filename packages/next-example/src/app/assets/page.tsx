@@ -19,6 +19,7 @@ ConfigProvider.setGlobalConfig({
   //   loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
   //   recommendIndexes: [0, 1],
   // },
+  globalLoadingHandler: undefined,
 });
 
 export default function Assets() {

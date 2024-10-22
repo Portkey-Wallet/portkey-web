@@ -41,6 +41,7 @@ import ConfigProvider from '../config-provider';
 import { ILoginConfig } from '../config-provider/types';
 import { getOperationDetails } from '../utils/operation.util';
 import googleAnalytics, { TAllLoginKey } from '../../utils/googleAnalytics';
+import { LoadingText } from '../../types/loading';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -288,7 +289,7 @@ const SignIn = forwardRef(
     const onSignUp = useCallback(
       async (value: IGuardianIdentifierInfo) => {
         try {
-          setLoading(true, 'Assigning a verifier on the blockchain');
+          setLoading(true, LoadingText.AssigningVerifier);
           await sleep(2000);
           const verifier = await getRecommendationVerifier(chainId);
           setLoading(false);
