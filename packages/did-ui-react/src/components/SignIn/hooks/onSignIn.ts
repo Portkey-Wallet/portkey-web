@@ -108,7 +108,10 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
     [],
   );
 
-  const signInHandler: (guardianIdentifierInfo: IGuardianIdentifierInfo) => Promise<
+  const signInHandler: (
+    guardianIdentifierInfo: IGuardianIdentifierInfo,
+    beforeLastGuardianApprove?: () => void,
+  ) => Promise<
     | {
         nextStep: NextStepType;
         value: {
@@ -119,7 +122,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       }
     | undefined
   > = useCallback(
-    async (guardianIdentifierInfo: IGuardianIdentifierInfo) => {
+    async (guardianIdentifierInfo: IGuardianIdentifierInfo, beforeLastGuardianApprove?: () => void) => {
       setLoading(true);
       const guardianList: UserGuardianStatus[] | undefined = await getGuardians(guardianIdentifierInfo);
 
@@ -179,6 +182,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       // social approve;
       if (AllSocialLoginList.includes(accountType)) {
         try {
+          beforeLastGuardianApprove?.();
           const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);
           return {
             nextStep: NextStepType.SetPinAndAddManager,
