@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.14.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.5...v2.14.0-alpha.6) (2024-10-23)
+
+### Features
+
+- 🎸 update multi verify ([3b4eee6](https://github.com/Portkey-Wallet/portkey-web/commit/3b4eee6421cf298a6e0b062fd5e338a3c85ed7a1))
+
 ## [2.14.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.4...v2.14.0-alpha.5) (2024-10-23)
 
 ### Features
