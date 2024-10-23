@@ -237,29 +237,8 @@ const SignIn = forwardRef(
               guardianApprovedList: approvedList,
             };
             console.log(params, 'didWallet==createWallet');
-            if (managerWallet) {
-              beforeCreatePendingRef.current?.({
-                pin,
-                createType: type,
-                walletInfo: managerWallet?.walletInfo,
-                didWallet: {
-                  caInfo: {
-                    caAddress: managerWallet?.caInfo?.caAddress || '',
-                    caHash: managerWallet?.caInfo?.caHash || '',
-                  },
-                  accountInfo: {
-                    managerUniqueId: '',
-                    guardianIdentifier: guardianIdentifierInfo?.identifier,
-                    accountType: guardianIdentifierInfo.accountType,
-                    type,
-                  },
-                  createType: type,
-                  chainId,
-                  pin,
-                  walletInfo: managerWallet?.walletInfo,
-                },
-              });
-            }
+
+            beforeCreatePendingRef.current?.();
 
             didWallet = await createWallet(params);
           }

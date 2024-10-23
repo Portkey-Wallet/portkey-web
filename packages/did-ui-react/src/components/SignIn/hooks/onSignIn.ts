@@ -13,6 +13,7 @@ import { getOperationDetails } from '../../utils/operation.util';
 interface Props {
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
+  beforeLastGuardianApprove?: () => void;
 }
 
 export enum NextStepType {
@@ -20,7 +21,7 @@ export enum NextStepType {
   SetPinAndAddManager = 'SetPinAndAddManager',
 }
 
-const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
+const useSignInHandler = ({ isErrorTip = true, onError, beforeLastGuardianApprove }: Props) => {
   const [{ sandboxId, chainType, networkType }] = usePortkey();
   const { verifySocialToken } = useVerifier();
   const sendCodeConfirm = useSendCode();
@@ -108,10 +109,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
     [],
   );
 
-  const signInHandler: (
-    guardianIdentifierInfo: IGuardianIdentifierInfo,
-    beforeLastGuardianApprove?: () => void,
-  ) => Promise<
+  const signInHandler: (guardianIdentifierInfo: IGuardianIdentifierInfo) => Promise<
     | {
         nextStep: NextStepType;
         value: {
@@ -122,7 +120,7 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       }
     | undefined
   > = useCallback(
-    async (guardianIdentifierInfo: IGuardianIdentifierInfo, beforeLastGuardianApprove?: () => void) => {
+    async (guardianIdentifierInfo: IGuardianIdentifierInfo) => {
       setLoading(true);
       const guardianList: UserGuardianStatus[] | undefined = await getGuardians(guardianIdentifierInfo);
 
