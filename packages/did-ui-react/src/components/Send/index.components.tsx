@@ -225,7 +225,7 @@ function SendContent({
 
   const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
   const { onApprovalSuccess, sendTransfer } = useMemo(() => {
-    const onApprovalSuccess = async (approveList: GuardianApprovedItem[]) => {
+    const onApprovalSuccess = async (approveList: any[]) => {
       try {
         oneTimeApprovalList.current = approveList;
         if (Array.isArray(approveList) && approveList.length > 0) {

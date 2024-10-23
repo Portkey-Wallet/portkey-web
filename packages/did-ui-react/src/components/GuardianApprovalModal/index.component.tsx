@@ -25,9 +25,11 @@ const GuardianApprovalModalMain = forwardRef(
       onBack,
       onApprovalSuccess,
       onApprovalError,
+      isAsyncVerify,
       operationType,
       operationDetails,
       officialWebsiteShow,
+      onGuardianListChange,
     }: GuardianApprovalModalProps,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
@@ -71,7 +73,12 @@ const GuardianApprovalModalMain = forwardRef(
           originChainId={originChainId}
           targetChainId={targetChainId}
           guardianList={guardianList}
+          isAsyncVerify={isAsyncVerify}
+          onGuardianListChange={onGuardianListChange}
           onConfirm={async (approvalInfo) => {
+            if (isAsyncVerify) {
+              return onApprovalSuccess(approvalInfo);
+            }
             const guardiansApproved = formatGuardianValue(approvalInfo);
             await onApprovalSuccess(guardiansApproved);
           }}

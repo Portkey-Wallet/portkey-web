@@ -205,7 +205,7 @@ export default function SellFrom({
   );
 
   const onApprovalSuccess = useCallback(
-    (approveList: GuardianApprovedItem[]) => {
+    (approveList: any[]) => {
       try {
         if (Array.isArray(approveList) && approveList.length > 0) {
           setApprovalVisible(false);

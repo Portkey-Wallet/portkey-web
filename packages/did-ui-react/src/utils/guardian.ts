@@ -1,6 +1,7 @@
 import BigNumber from 'bignumber.js';
 import { ZERO } from '../constants/misc';
 import {
+  GuardianApprovedItem,
   UserGuardianItem,
   UserGuardianStatus,
   VerifyStatus,
@@ -10,6 +11,8 @@ import {
 import { VerifierItem } from '@portkey/did';
 import { ZKLoginInfo } from '@portkey/services';
 import { parseJWTToken, parseZKProof } from './authentication';
+import { AccountType, AccountTypeEnum, GuardiansApproved } from '@portkey/services';
+import { zkGuardianType } from '../constants/guardian';
 
 const APPROVAL_COUNT = ZERO.plus(3).div(5);
 
@@ -92,3 +95,29 @@ export function handleZKLoginInfo(zkLoginInfo?: ZKLoginInfo) {
   }
   return {} as ZKLoginInfoInContract;
 }
+
+export const formatGuardianValue = (approvalInfo?: GuardiansApproved[]) => {
+  const guardiansApproved: GuardianApprovedItem[] =
+    approvalInfo?.map((item) => {
+      if (zkGuardianType.includes(item.type as AccountType)) {
+        return {
+          type: AccountTypeEnum[item.type as AccountType],
+          identifierHash: item?.zkLoginInfo?.identifierHash || item?.identifierHash,
+          verificationInfo: {
+            id: item.verifierId,
+          },
+          zkLoginInfo: handleZKLoginInfo(item?.zkLoginInfo),
+        };
+      }
+      return {
+        type: AccountTypeEnum[item.type as AccountType],
+        identifierHash: item?.identifierHash,
+        verificationInfo: {
+          id: item.verifierId,
+          signature: Object.values(Buffer.from(item?.signature as any, 'hex')) as any,
+          verificationDoc: item.verificationDoc,
+        },
+      };
+    }) || [];
+  return guardiansApproved;
+};
