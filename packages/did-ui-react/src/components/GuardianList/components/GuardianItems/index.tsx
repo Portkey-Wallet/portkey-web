@@ -22,6 +22,7 @@ interface GuardianItemProps {
   onError?: OnErrorFunc;
   onSend?: (item: UserGuardianItem) => void;
   onVerifying?: (item: UserGuardianItem) => void;
+  onAsyncVerifying?: (item: UserGuardianItem) => void;
 }
 
 function GuardianItems({
@@ -36,6 +37,7 @@ function GuardianItems({
   onError,
   onSend,
   onVerifying,
+  onAsyncVerifying,
 }: GuardianItemProps) {
   const { t } = useTranslation();
   const isSocialLogin = useMemo(() => AllSocialLoginList.includes(item.guardianType), [item.guardianType]);
@@ -116,6 +118,13 @@ function GuardianItems({
     [onVerifying],
   );
 
+  const asyncVerifyingHandler = useCallback(
+    async (item: UserGuardianItem) => {
+      onAsyncVerifying?.(item);
+    },
+    [onAsyncVerifying],
+  );
+
   return (
     <li className={clsx('portkey-ui-flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
       {item.isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
@@ -139,11 +148,20 @@ function GuardianItems({
               {t('Send')}
             </ThrottleButton>
           )}
-          {(item.status === VerifyStatus.Verifying || (!item.status && isSocialLogin)) && (
+          {((item.status === VerifyStatus.Verifying && !item.asyncVerifyInfoParams) ||
+            (!item.status && isSocialLogin)) && (
             <ThrottleButton type="primary" className="verifying" onClick={() => verifyingHandler(item)}>
               {t('Verify')}
             </ThrottleButton>
           )}
+          {item.status === VerifyStatus.Verifying &&
+            isSocialLogin &&
+            item.asyncVerifyInfoParams &&
+            asyncVerifyingHandler && (
+              <ThrottleButton type="primary" loading className="verifying" onClick={() => asyncVerifyingHandler(item)}>
+                {t('Verifying')}
+              </ThrottleButton>
+            )}
           {item.status === VerifyStatus.Verified && (
             <ThrottleButton className="verified" type="text" disabled>
               {t('Confirmed')}

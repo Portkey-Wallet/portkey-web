@@ -45,6 +45,7 @@ import { getSocialConfig } from '../utils/social.utils';
 import './index.less';
 import { Open_Login_Bridge } from '../../constants/telegram';
 import { getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
+import { useAsyncVerifyToken, VerifySocialLoginParams } from '../../hooks/authenticationAsync';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -58,6 +59,7 @@ export interface GuardianApprovalProps {
   wrapperStyle?: React.CSSProperties;
   operationType: OperationTypeEnum;
   operationDetails?: TStringJSON;
+  isAsyncVerify?: boolean;
   officialWebsiteShow?: {
     amount?: string;
     symbol?: string;
@@ -68,7 +70,9 @@ export interface GuardianApprovalProps {
   telegramInfo?: ITelegramInfo;
   caHash?: string;
   onError?: OnErrorFunc;
-  onConfirm?: (guardianList: GuardiansApproved[]) => Promise<void>;
+  onConfirm?: (
+    guardianList: (GuardiansApproved & { asyncVerifyInfoParams?: VerifySocialLoginParams })[],
+  ) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
 }
 
@@ -96,6 +100,7 @@ const GuardianApprovalMain = forwardRef(
       caHash,
       onError,
       onConfirm,
+      isAsyncVerify = false,
       onGuardianListChange,
     }: GuardianApprovalProps,
     ref,
@@ -105,6 +110,7 @@ const GuardianApprovalMain = forwardRef(
     const [expiredTime, setExpiredTime] = useState<number>();
     const onErrorRef = useRef<GuardianApprovalProps['onError']>(onError);
     const onConfirmRef = useRef<GuardianApprovalProps['onConfirm']>(onConfirm);
+    console.log(originChainId, targetChainId, defaultGuardianList, 'defaultGuardianList===');
 
     useEffect(() => {
       onErrorRef.current = onError;
@@ -151,6 +157,7 @@ const GuardianApprovalMain = forwardRef(
     );
 
     const verifyToken = useVerifyToken();
+    const asyncVerifyToken = useAsyncVerifyToken();
 
     const socialVerifyHandler = useCallback(
       async (item: UserGuardianStatus, index: number) => {
@@ -191,7 +198,6 @@ const GuardianApprovalMain = forwardRef(
             if (!isConfirm) return;
             getStorageInstance().setItem(KEY_SHOW_WARNING, SHOW_WARNING_DIALOG);
           }
-          setLoading(true);
 
           const approveDetail: IApproveDetail = {
             guardian: {
@@ -206,7 +212,7 @@ const GuardianApprovalMain = forwardRef(
             operationType,
           };
 
-          const rst = await verifyToken(accountType, {
+          const verifyParams = {
             accessToken,
             ...zkInfo,
             id,
@@ -221,7 +227,23 @@ const GuardianApprovalMain = forwardRef(
             customLoginHandler,
             approveDetail: approveDetail,
             caHash,
-          });
+          };
+          setLoading(true);
+          if (isAsyncVerify) {
+            const rst = await asyncVerifyToken(accountType, { ...verifyParams, customLoginHandler });
+
+            setGuardianList((v) => {
+              v[index] = {
+                ...v[index],
+                status: VerifyStatus.Verifying,
+                asyncVerifyInfoParams: rst,
+              };
+              return [...v];
+            });
+            setVerifyAccountIndex(undefined);
+            return;
+          }
+          const rst = await verifyToken(accountType, { ...verifyParams, customLoginHandler });
 
           if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return;
 
@@ -264,10 +286,12 @@ const GuardianApprovalMain = forwardRef(
         officialWebsiteShow?.symbol,
         officialWebsiteShow?.amount,
         operationType,
-        verifyToken,
         networkType,
         operationDetails,
         caHash,
+        isAsyncVerify,
+        verifyToken,
+        asyncVerifyToken,
         isErrorTip,
         onError,
       ],
@@ -298,6 +322,55 @@ const GuardianApprovalMain = forwardRef(
       [socialVerifyHandler, isErrorTip, onError],
     );
 
+    const onAsyncVerifying = useCallback(
+      async (_item: UserGuardianStatus, index: number) => {
+        try {
+          setLoading(true);
+
+          const accountType = _item.guardianType as ISocialLogin;
+          if (!_item?.asyncVerifyInfoParams) throw new Error('asyncVerifyInfoParams is required');
+          const { customLoginHandler } = getSocialConfig(accountType);
+          const rst = await verifyToken(accountType, { ..._item?.asyncVerifyInfoParams, customLoginHandler });
+
+          if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return;
+
+          const verifierInfo: IVerificationInfo = { ...rst, verifierId: _item?.verifier?.id };
+
+          const guardianIdentifier = rst.zkLoginInfo
+            ? rst.zkLoginInfo.identifierHash
+            : handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
+
+          setGuardianList((v) => {
+            v[index] = {
+              ...v[index],
+              status: VerifyStatus.Verified,
+              verificationDoc: verifierInfo.verificationDoc,
+              signature: verifierInfo.signature,
+              identifierHash: guardianIdentifier,
+              zkLoginInfo: rst.zkLoginInfo,
+            };
+            return [...v];
+          });
+          setLoading(false);
+
+          setVerifyAccountIndex(undefined);
+        } catch (error) {
+          setLoading(false);
+          return errorTip(
+            {
+              errorFields: 'GuardianApproval',
+              error: handleErrorMessage(error),
+            },
+            isErrorTip,
+            onError,
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [isErrorTip, onError, verifyToken],
+    );
+
     const onCodeVerifyHandler = useCallback(
       (res: { verificationDoc?: string; signature?: string; verifierId: string }, index: number) => {
         setGuardianList((v) => {
@@ -317,18 +390,39 @@ const GuardianApprovalMain = forwardRef(
     const onConfirmHandler = useCallback(async () => {
       setFetching(true);
       try {
-        const verificationList = guardianList
-          .filter((item) => Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo))
-          .map((item) => ({
-            type: item.guardianType,
-            identifier: item.identifier || item.identifierHash || '',
-            verifierId: item.verifier?.id || '',
-            verificationDoc: item.verificationDoc || '',
-            signature: item.signature || '',
-            identifierHash: item.identifierHash || '',
-            zkLoginInfo: item.zkLoginInfo,
-          }));
-        await onConfirmRef.current?.(verificationList);
+        if (isAsyncVerify) {
+          const verificationList = guardianList
+            .filter((item) =>
+              Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo || item.asyncVerifyInfoParams),
+            )
+            .map((item) => ({
+              type: item.guardianType,
+              identifier: item.identifier || item.identifierHash || '',
+              verifierId: item.verifier?.id || '',
+              verificationDoc: item.verificationDoc || '',
+              signature: item.signature || '',
+              identifierHash: item.identifierHash || '',
+              zkLoginInfo: item?.zkLoginInfo,
+              asyncVerifyInfoParams: item?.asyncVerifyInfoParams,
+            }));
+          await onConfirmRef.current?.(verificationList);
+        } else {
+          const verificationList = guardianList
+            .filter((item) =>
+              Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo || item.asyncVerifyInfoParams),
+            )
+            .map((item) => ({
+              type: item.guardianType,
+              identifier: item.identifier || item.identifierHash || '',
+              verifierId: item.verifier?.id || '',
+              verificationDoc: item.verificationDoc || '',
+              signature: item.signature || '',
+              identifierHash: item.identifierHash || '',
+              zkLoginInfo: item.zkLoginInfo,
+            }));
+          await onConfirmRef.current?.(verificationList);
+        }
+
         setFetching(false);
       } catch (error) {
         console.error(handleErrorMessage(error));
@@ -336,7 +430,7 @@ const GuardianApprovalMain = forwardRef(
       }
 
       setFetching(false);
-    }, [guardianList]);
+    }, [guardianList, isAsyncVerify]);
 
     const onReSendVerifyHandler = useCallback(({ verifierSessionId }: TVerifyCodeInfo, verifyAccountIndex: number) => {
       setGuardianList((v) => {
@@ -401,6 +495,7 @@ const GuardianApprovalMain = forwardRef(
                 operationDetails={operationDetails}
                 onSend={onSendCodeHandler}
                 onVerifying={onVerifyingHandler}
+                onAsyncVerifying={onAsyncVerifying}
                 onConfirm={onConfirmHandler}
                 onError={onError}
               />
