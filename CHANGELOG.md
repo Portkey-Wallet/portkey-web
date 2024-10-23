@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.14.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.3-alpha.2...v2.14.0-alpha.1) (2024-10-23)
+
+## [2.14.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.2...v2.14.0-alpha.0) (2024-10-22)
+
+### Features
+
+- 🎸 Add custom configuration loading ([a634f6f](https://github.com/Portkey-Wallet/portkey-web/commit/a634f6fd8026770ee162bf9dc764cf1b49f0c17e))
+
 ## [2.14.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.2...v2.14.0-alpha.0) (2024-10-22)
 
 ### Features
