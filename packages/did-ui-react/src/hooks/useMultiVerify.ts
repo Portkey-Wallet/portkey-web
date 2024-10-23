@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { useVerifyToken } from './authentication';
 import { ISocialLogin, IVerificationInfo } from '../types';
-import { formatGuardianValue, handleVerificationDoc } from '../utils';
+import { handleVerificationDoc } from '../utils';
 import { GuardiansApproved } from '@portkey/services';
 import { VerifySocialLoginParams } from './authenticationAsync';
 
@@ -36,8 +36,7 @@ export const useMultiVerify = () => {
           };
         }),
       );
-      const _res = res.filter((item) => Boolean(item));
-      return formatGuardianValue(_res as GuardiansApproved[]);
+      return res.filter((item) => Boolean(item));
     },
     [verifyToken],
   );
