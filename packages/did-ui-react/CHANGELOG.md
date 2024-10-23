@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.14.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.1...v2.14.0-alpha.2) (2024-10-23)
+
+### Features
+
+- 🎸 update beforeCreatePending ([42c9e1c](https://github.com/Portkey-Wallet/portkey-web/commit/42c9e1cb252bac825a4971a0d888f731364c9c02))
+
 ## [2.14.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.3-alpha.2...v2.14.0-alpha.1) (2024-10-23)
 
 ## [2.14.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.2...v2.14.0-alpha.0) (2024-10-22)
