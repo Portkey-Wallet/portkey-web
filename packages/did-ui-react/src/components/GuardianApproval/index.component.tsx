@@ -408,9 +408,7 @@ const GuardianApprovalMain = forwardRef(
           await onConfirmRef.current?.(verificationList);
         } else {
           const verificationList = guardianList
-            .filter((item) =>
-              Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo || item.asyncVerifyInfoParams),
-            )
+            .filter((item) => Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo))
             .map((item) => ({
               type: item.guardianType,
               identifier: item.identifier || item.identifierHash || '',

@@ -1,43 +1,34 @@
 import { useCallback } from 'react';
 import { useVerifyToken } from './authentication';
-import { ISocialLogin, IVerificationInfo, UserGuardianStatus, VerifyStatus } from '../types';
+import { ISocialLogin, IVerificationInfo } from '../types';
 import { formatGuardianValue, handleVerificationDoc } from '../utils';
 import { GuardiansApproved } from '@portkey/services';
+import { VerifySocialLoginParams } from './authenticationAsync';
 
 export const useMultiVerify = () => {
   const verifyToken = useVerifyToken();
 
   return useCallback(
-    async (guardianList: UserGuardianStatus[]) => {
+    async (guardianList: (GuardiansApproved & { asyncVerifyInfoParams?: VerifySocialLoginParams })[]) => {
       console.log('guardianList-useMultiVerify', guardianList);
       const res = await Promise.all(
         guardianList.map(async (item) => {
-          if (item.status === VerifyStatus.Verified)
-            return {
-              type: item.guardianType,
-              identifier: item.guardianIdentifier || '',
-              verifierId: item.verifier?.id || '',
-              verificationDoc: item.verificationDoc || '',
-              signature: item.signature || '',
-              identifierHash: item.guardianIdentifier || '',
-              zkLoginInfo: item.zkLoginInfo,
-            };
-          if (!item.asyncVerifyInfoParams) return {};
+          if (!item.asyncVerifyInfoParams) return item;
 
-          const rst = await verifyToken(item.guardianType as ISocialLogin, item.asyncVerifyInfoParams);
+          const rst = await verifyToken(item.type as ISocialLogin, item.asyncVerifyInfoParams);
 
           if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return {};
 
-          const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
+          const verifierInfo: IVerificationInfo = { ...rst, verifierId: item.verifierId };
 
           const guardianIdentifier = rst.zkLoginInfo
             ? rst.zkLoginInfo.identifierHash
             : handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
 
           return {
-            type: item.guardianType,
-            identifier: item.guardianIdentifier || '',
-            verifierId: item.verifier?.id || '',
+            type: item.type,
+            identifier: item.identifier || '',
+            verifierId: item.verifierId || '',
             verificationDoc: verifierInfo.verificationDoc || '',
             signature: verifierInfo.signature || '',
             identifierHash: guardianIdentifier,
