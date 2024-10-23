@@ -9,6 +9,7 @@ import type {
 } from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import { TSocialLoginHandler } from './wallet';
+import { VerifySocialLoginParams } from '../hooks/authenticationAsync';
 
 export interface BaseGuardianItem {
   isLoginGuardian: boolean | undefined;
@@ -57,6 +58,7 @@ export enum VerifyStatus {
 }
 export interface UserGuardianStatus extends IVerificationInfo, UserGuardianItem {
   status?: VerifyStatus;
+  asyncVerifyInfoParams?: VerifySocialLoginParams;
 }
 
 // 0: register, 1: community recovery, 2: Add Guardian 3: Set LoginAccount 4: addManager

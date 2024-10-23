@@ -8,7 +8,6 @@ import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
 import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
-import { getOperationDetails } from '../utils/operation.util';
 import { TStringJSON } from '@portkey/types';
 
 export interface GuardianListProps {
@@ -27,6 +26,7 @@ export interface GuardianListProps {
   onConfirm?: () => void;
   onSend?: (item: UserGuardianStatus, index: number) => void;
   onVerifying?: (item: UserGuardianStatus, index: number) => void;
+  onAsyncVerifying?: (item: UserGuardianStatus, index: number) => void;
 }
 
 function GuardianList({
@@ -45,6 +45,7 @@ function GuardianList({
   onConfirm,
   onSend,
   onVerifying,
+  onAsyncVerifying,
 }: GuardianListProps) {
   const { t } = useTranslation();
 
@@ -110,6 +111,7 @@ function GuardianList({
               onError={onError}
               onSend={(res) => onSend?.(res, index)}
               onVerifying={(res) => onVerifying?.(res, index)}
+              onAsyncVerifying={(res) => onAsyncVerifying?.(res, index)}
             />
           ))}
           {!isExpired && (

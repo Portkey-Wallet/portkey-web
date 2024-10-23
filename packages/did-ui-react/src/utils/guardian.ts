@@ -19,7 +19,13 @@ export function getApprovalCount(length: number) {
 }
 
 export function getAlreadyApprovalLength(guardianList: UserGuardianStatus[]) {
-  return guardianList?.filter((item) => item?.status === VerifyStatus.Verified).length ?? 0;
+  return (
+    guardianList?.filter(
+      (item) =>
+        item?.status === VerifyStatus.Verified ||
+        (item?.status === VerifyStatus.Verifying && item.asyncVerifyInfoParams),
+    ).length ?? 0
+  );
 }
 
 export function handleVerificationDoc(verificationDoc: string) {
