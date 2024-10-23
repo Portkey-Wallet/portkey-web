@@ -3,6 +3,14 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.14.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.2...v2.14.0-alpha.3) (2024-10-23)
+
+### Features
+
+- 🎸 add async approve ([06470e1](https://github.com/Portkey-Wallet/portkey-web/commit/06470e1e3355f8b3f223a07bee591f8ca6aa556c))
+- 🎸 async verify ([e51eed6](https://github.com/Portkey-Wallet/portkey-web/commit/e51eed6097450f3d5cedf7529e4f0fc1fd5db391))
+- 🎸 format guardian list ([e0979b6](https://github.com/Portkey-Wallet/portkey-web/commit/e0979b63a9c029b22e49053451d7582215eaf28d))
+
 ## [2.14.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.1...v2.14.0-alpha.2) (2024-10-23)
 
 ### Features
