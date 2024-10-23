@@ -97,3 +97,5 @@ export * from './context/PortkeySendProvider';
 export * from './SignStep/types';
 
 export * from './types';
+
+export * from './utils/operation.util';

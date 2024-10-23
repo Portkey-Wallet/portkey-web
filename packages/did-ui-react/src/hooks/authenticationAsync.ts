@@ -82,7 +82,7 @@ export function useAsyncVerifyGoogleToken() {
     return {
       ...params,
       accessToken,
-      jwt: idToken,
+      idToken: idToken,
       salt: params.salt ? params.salt : randomId(),
       kid: parseKidFromJWTToken(idToken),
       nonce,
