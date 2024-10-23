@@ -20,6 +20,7 @@ const GuardianApprovalModalMain = forwardRef(
       networkType,
       sandboxId,
       isErrorTip = true,
+      guardianList: defaultGuardianList,
       onClose,
       onBack,
       onApprovalSuccess,
@@ -31,7 +32,7 @@ const GuardianApprovalModalMain = forwardRef(
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
   ) => {
-    const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
+    const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>(defaultGuardianList || []);
 
     const getData = useCallback(async () => {
       setLoading(true);
@@ -59,8 +60,9 @@ const GuardianApprovalModalMain = forwardRef(
     }, [caHash, isErrorTip, onApprovalError, originChainId, sandboxId]);
 
     useEffect(() => {
+      if (defaultGuardianList) return;
       getData();
-    }, [getData]);
+    }, [defaultGuardianList, getData]);
 
     return (
       <CommonBaseModal className={clsx('portkey-ui-modal-approval', className)} open={open} onClose={onClose}>

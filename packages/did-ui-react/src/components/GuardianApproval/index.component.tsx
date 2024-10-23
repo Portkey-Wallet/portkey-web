@@ -54,7 +54,7 @@ export interface GuardianApprovalProps {
   originChainId: ChainId;
   targetChainId?: ChainId;
   className?: string;
-  guardianList?: BaseGuardianItem[];
+  guardianList?: UserGuardianStatus[];
   isErrorTip?: boolean;
   wrapperStyle?: React.CSSProperties;
   operationType: OperationTypeEnum;

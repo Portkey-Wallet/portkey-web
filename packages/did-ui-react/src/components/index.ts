@@ -14,6 +14,7 @@ export { default as CryptoDesign } from './CryptoDesign';
 export { default as CodeVerify } from './CodeVerify';
 export { default as CodeVerifyUI } from './CodeVerifyUI';
 export { default as GuardianApproval } from './GuardianApproval';
+export { default as GuardianApprovalModal } from './GuardianApprovalModal';
 export { default as SignIn } from './SignIn';
 export { default as useSignInHandler } from './SignIn/hooks/onSignIn';
 export { default as PortkeyLoading } from './PortkeyLoading';

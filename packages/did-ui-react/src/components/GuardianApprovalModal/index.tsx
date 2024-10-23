@@ -3,7 +3,7 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import GuardianApprovalModalCom from './index.component';
 import { OperationTypeEnum } from '@portkey/services';
 import { TStringJSON } from '@portkey/types';
-import { GuardianApprovedItem, NetworkType } from '../../types';
+import { GuardianApprovedItem, NetworkType, UserGuardianStatus } from '../../types';
 
 export interface GuardianApprovalModalProps {
   className?: string;
@@ -11,6 +11,7 @@ export interface GuardianApprovalModalProps {
   caHash: string;
   originChainId: ChainId;
   targetChainId: ChainId;
+  guardianList?: UserGuardianStatus[];
   networkType: NetworkType;
   operationType: OperationTypeEnum;
   operationDetails?: TStringJSON;
