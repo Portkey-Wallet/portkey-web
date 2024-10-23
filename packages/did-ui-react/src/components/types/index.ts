@@ -83,6 +83,12 @@ export type TDesign = `${Design}`;
 export type TSize = 'L' | 'S';
 export type Theme = 'dark' | 'light';
 
+export type TOnSuccessExtraData = {
+  caAddress: string;
+  caHash: string;
+  originChainId: ChainId;
+};
+
 export interface IBaseGetGuardianProps {
   defaultChainId?: ChainId;
   className?: string;
@@ -98,7 +104,7 @@ export interface IBaseGetGuardianProps {
   onError?: OnErrorFunc;
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone
-  onSuccess?: (value: IGuardianIdentifierInfo) => void;
+  onSuccess?: (value: IGuardianIdentifierInfo, extraData?: TOnSuccessExtraData) => void;
   onInputConfirmStart?: () => void;
   onSocialStart?: (type: TAllLoginKey) => void;
   onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
