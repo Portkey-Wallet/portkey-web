@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.14.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.6...v2.14.0-alpha.7) (2024-10-25)
+
+### Features
+
+- 🎸 update defaultChainId ([dc3307f](https://github.com/Portkey-Wallet/portkey-web/commit/dc3307fee5171d06d699c7c64a0029035e446f7d))
+
 ## [2.14.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.5...v2.14.0-alpha.6) (2024-10-23)
 
 ### Features
