@@ -32,7 +32,7 @@ export const useSignHandler = ({
   onChainIdChange: IBaseGetGuardianProps['onChainIdChange'];
 }) => {
   const isHasAccount = useRef<boolean>(false);
-  const originChainIdRef = useRef<ChainId>('AELF');
+  const originChainIdRef = useRef<ChainId>(defaultChainId);
   const caInfoRef = useRef({ caHash: '', caAddress: '' });
 
   const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
