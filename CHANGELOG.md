@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.14.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.7...v2.14.1-alpha.0) (2024-10-30)
+
+### Features
+
+- 🎸 get verfiy server by api ([f8d5024](https://github.com/Portkey-Wallet/portkey-web/commit/f8d502455353009ca8b1ca88d09f1f6d5f4e7406))
+
 ## [2.14.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.6...v2.14.0-alpha.7) (2024-10-25)
 
 ### Features
