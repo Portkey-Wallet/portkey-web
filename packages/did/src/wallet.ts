@@ -76,6 +76,10 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.isLoginStatus = LoginStatusEnum.INIT;
     this.sessionId = '';
   }
+  public async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
+    const result = await this.services.getVerifierServers(chainId);
+    return result.guardianVerifierServers;
+  }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
   public async login(type: any, params: any): Promise<any> {
@@ -190,7 +194,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.caInfo[chainId] = { caAddress: caAddress, caHash: caHash };
     this.sessionId = sessionId;
   }
-  async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
+  async getVerifierServersByContract(chainId: ChainId): Promise<VerifierItem[]> {
     if (!this.managementAccount) this.create();
     const contract = await this.getContractByChainInfo(chainId);
     const req = await contract.callViewMethod('GetVerifierServers', '');

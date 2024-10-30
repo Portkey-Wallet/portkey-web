@@ -1,5 +1,5 @@
 import { IDIDGraphQL } from '@portkey/graphql';
-import { IBaseRequest, IExtraInfoConfig, IReferralConfig } from '@portkey/types';
+import { ChainId, IBaseRequest, IExtraInfoConfig, IReferralConfig } from '@portkey/types';
 import {
   GetCAHolderByManagerParams,
   GetCAHolderByManagerResult,
@@ -249,6 +249,14 @@ export class CommunityRecovery<T extends IBaseRequest = IBaseRequest>
       method: 'POST',
       url: '/api/app/account/manager/check',
       params,
+    });
+  }
+
+  getVerifierServers(chainId: ChainId): Promise<{ guardianVerifierServers: VerifierItem[] }> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/account/verifierServers',
+      params: { chainId },
     });
   }
 }

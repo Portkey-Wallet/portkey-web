@@ -175,4 +175,5 @@ export interface IVerificationService {
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
   getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult>;
+  getVerifierServers(chainId: ChainId): Promise<{ guardianVerifierServers: VerifierItem[] }>;
 }

@@ -97,6 +97,7 @@ export interface IDIDAccountMethods extends IAccountMethods {
   getHolderInfo(params: Partial<Pick<GetHolderInfoParams, 'manager' | 'chainId'>>): Promise<GetCAHolderByManagerResult>;
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   getVerifierServers(chainId: ChainId): Promise<VerifierItem[]>;
+  getVerifierServersByContract(chainId: ChainId): Promise<VerifierItem[]>;
   getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo>;
   saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string; sessionId: string }): void;
   updateLoginStatus(params: LoginStatusEnum): void;

@@ -17,7 +17,7 @@ import {
   VerifyZKLoginResult,
 } from '../types/verification';
 import { BaseService, CheckGoogleRecaptchaParams } from '../types';
-import { IBaseRequest } from '@portkey/types';
+import { ChainId, IBaseRequest } from '@portkey/types';
 
 export class Verification<T extends IBaseRequest = IBaseRequest>
   extends BaseService<T>
@@ -118,6 +118,13 @@ export class Verification<T extends IBaseRequest = IBaseRequest>
       method: 'GET',
       url: '/api/app/telegramAuth/token',
       params,
+    });
+  }
+  getVerifierServers(chainId: ChainId): Promise<{ guardianVerifierServers: VerifierItem[] }> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/account/verifierServers',
+      params: { chainId },
     });
   }
 }
