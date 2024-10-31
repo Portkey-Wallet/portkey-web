@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.7...v2.15.0) (2024-10-31)
+
+### Bug Fixes
+
+- sdk demo ([0643bb1](https://github.com/Portkey-Wallet/portkey-web/commit/0643bb1c5067edc64e348ff4777abfa8a2e70764))
+
+## [2.14.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.7...v2.14.0) (2024-10-31)
+
+### Bug Fixes
+
+- sdk demo ([0643bb1](https://github.com/Portkey-Wallet/portkey-web/commit/0643bb1c5067edc64e348ff4777abfa8a2e70764))
+
 ## [2.14.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.6...v2.14.0-alpha.7) (2024-10-25)
 
 **Note:** Version bump only for package @portkey/next-example
