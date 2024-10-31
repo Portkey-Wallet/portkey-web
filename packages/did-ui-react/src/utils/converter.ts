@@ -33,7 +33,7 @@ export function timesDecimals(a?: BigNumber.Value, decimals: string | number = 1
 }
 
 export function transNetworkText(chainId: string, isMainnet?: boolean): string {
-  return `${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN} ${chainId}${isMainnet ? '' : ' ' + TEST_NET}`;
+  return `aelf ${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN}${isMainnet ? '' : ' ' + TEST_NET}`;
 }
 
 export function divDecimalsStr(a?: BigNumber.Value, decimals: string | number = 8, defaultVal = '--') {

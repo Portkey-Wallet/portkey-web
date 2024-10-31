@@ -9,7 +9,7 @@ export const MainChainInfo = {
 
 export const MAIN_CHAIN_ID = 'AELF';
 export const MAIN_CHAIN = 'MainChain';
-export const SIDE_CHAIN = 'SideChain';
+export const SIDE_CHAIN = 'dAppChain';
 export const MAINNET = 'MAINNET';
 export const TESTNET = 'TESTNET';
 export const TEST_NET = 'Testnet';

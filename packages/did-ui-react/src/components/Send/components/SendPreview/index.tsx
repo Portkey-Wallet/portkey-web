@@ -142,7 +142,7 @@ export default function SendPreview({
           <span>Network</span>
           <div>
             <p className="chain">
-              {`${chainShowText(chainId as ChainId)} ${chainId}->${chainShowText(toChain as ChainId)} ${toChain}`}
+              {`aelf ${chainShowText(chainId as ChainId)}->aelf ${chainShowText(toChain as ChainId)}`}
             </p>
           </div>
         </div>
