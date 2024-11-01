@@ -186,6 +186,11 @@ describe('DIDWallet describe', () => {
     expect(result.length).toBeGreaterThan(0);
   });
 
+  test('test getVerifierServersByContract', async () => {
+    const result = await wallet.getVerifierServersByContract('AELF');
+    expect(result.length).toBeGreaterThan(0);
+  });
+
   test('test getContractByChainInfo', async () => {
     const result = await wallet.getContractByChainInfo('AELF');
     expect(result).toHaveProperty('callSendMethod');

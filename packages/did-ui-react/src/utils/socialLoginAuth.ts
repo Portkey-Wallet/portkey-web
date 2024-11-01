@@ -5,7 +5,7 @@ import {
   getStorageInstance,
   getTelegramBotId,
 } from '../components/config-provider/utils';
-import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '../constants';
+import { HOUR, SECOND, WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '../constants';
 import { IApproveDetail, ISocialLogin, NetworkType } from '../types';
 import { stringify } from 'query-string';
 import { dealURLLastChar } from './lib';
@@ -153,9 +153,14 @@ export const socialLoginAuthOpener = ({
     }, 1600);
   });
 
+const expirationError = 'The verification has expired. Please reload the page to start the login process again.';
+
 export const telegramLoginAuth = async () => {
   const telegramUserInfo = TelegramPlatform.getInitData();
   if (!telegramUserInfo) throw new Error('Telegram user info is not found');
+  const expirationTime = Number(telegramUserInfo.auth_date) * SECOND + HOUR;
+
+  if (isNaN(expirationTime) || expirationTime <= Date.now()) throw new Error(expirationError);
   const telegramBotId = getTelegramBotId();
   const accessToken = await generateAccessTokenByPortkeyServer({ ...telegramUserInfo, bot_id: telegramBotId });
   return accessToken.token;

@@ -88,6 +88,9 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
     return this.didWallet.getVerifierServers(chainId);
   }
+  async getVerifierServersByContract(chainId: ChainId): Promise<VerifierItem[]> {
+    return this.didWallet.getVerifierServersByContract(chainId);
+  }
   create(): this {
     this.didWallet.create();
     return this;
