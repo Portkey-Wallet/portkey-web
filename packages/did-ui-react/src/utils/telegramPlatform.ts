@@ -10,6 +10,7 @@ declare const window: Window &
 
 export class TelegramPlatform {
   static getTelegram() {
+    if (typeof window === 'undefined') return null;
     return window?.Telegram;
   }
 
