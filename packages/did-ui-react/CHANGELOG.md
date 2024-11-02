@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.2-alpha.0...v2.15.2) (2024-11-02)
+
+### Bug Fixes
+
+- 🐛 check telegram platform ([c4a339e](https://github.com/Portkey-Wallet/portkey-web/commit/c4a339e60cbb60b1d9995ab88dc3c87038c7dabd))
+
 ## [2.15.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.1...v2.15.2-alpha.0) (2024-11-01)
 
 ### Bug Fixes
