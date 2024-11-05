@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.2...v2.15.3) (2024-11-05)
+
+### Bug Fixes
+
+- 🐛 change trycatch ([6653468](https://github.com/Portkey-Wallet/portkey-web/commit/6653468ff26b8b1c16e328694c5c93d5a0bb0375))
+
 ## [2.15.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.2-alpha.0...v2.15.2) (2024-11-02)
 
 ### Bug Fixes
