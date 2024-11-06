@@ -150,24 +150,24 @@ export class TelegramPlatform {
     initialDelay?: number;
     needExpand?: boolean;
   }) {
-    //   try {
-    //     const { tgUserChanged, initialDelay = 1000, needExpand = true } = params ?? {};
-    //     if (typeof window === 'undefined') return;
-    //     await sleep(initialDelay);
-    //     const Telegram = TelegramPlatform.getTelegram();
-    //     if (!Telegram || !TelegramPlatform.isTelegramPlatform()) return;
-    //     if (needExpand) {
-    //       Telegram.WebApp.expand();
-    //     }
-    //     const currentTelegramUserId = TelegramPlatform.getTelegramUserId();
-    //     const preTelegramUserId = window.localStorage.getItem(PORTKEY_SDK_TELEGRAM_USER_ID);
-    //     if (currentTelegramUserId && currentTelegramUserId !== preTelegramUserId) {
-    //       if (preTelegramUserId) await tgUserChanged(currentTelegramUserId, preTelegramUserId);
-    //       window.localStorage.setItem(PORTKEY_SDK_TELEGRAM_USER_ID, currentTelegramUserId);
-    //     }
-    //     Telegram.WebApp.ready();
-    //   } catch (error) {
-    //     console.error('Error occurred:', error);
-    //   }
+    try {
+      const { tgUserChanged, initialDelay = 1000, needExpand = true } = params ?? {};
+      if (typeof window === 'undefined') return;
+      await sleep(initialDelay);
+      const Telegram = TelegramPlatform.getTelegram();
+      if (!Telegram || !TelegramPlatform.isTelegramPlatform()) return;
+      if (needExpand) {
+        Telegram.WebApp.expand();
+      }
+      const currentTelegramUserId = TelegramPlatform.getTelegramUserId();
+      const preTelegramUserId = window.localStorage.getItem(PORTKEY_SDK_TELEGRAM_USER_ID);
+      if (currentTelegramUserId && currentTelegramUserId !== preTelegramUserId) {
+        if (preTelegramUserId) await tgUserChanged(currentTelegramUserId, preTelegramUserId);
+        window.localStorage.setItem(PORTKEY_SDK_TELEGRAM_USER_ID, currentTelegramUserId);
+      }
+      Telegram.WebApp.ready();
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
   }
 }
