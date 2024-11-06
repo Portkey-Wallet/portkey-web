@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.4...v2.15.5-alpha.0) (2024-11-06)
+
+### Features
+
+- add source for createWallet ([b64e26f](https://github.com/Portkey-Wallet/portkey-web/commit/b64e26f095eb44bde88b0dba99078d2447d1daf1))
+
 ## [2.15.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.3...v2.15.4) (2024-11-05)
 
 **Note:** Version bump only for package root
