@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.1...v2.15.5) (2024-11-06)
+
+### Bug Fixes
+
+- 🐛 add initTelegram ([68e8f72](https://github.com/Portkey-Wallet/portkey-web/commit/68e8f7252536cc884eeb81b6bbe99714affc7e39))
+
 ## [2.15.5-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.0...v2.15.5-alpha.1) (2024-11-06)
 
 **Note:** Version bump only for package root
