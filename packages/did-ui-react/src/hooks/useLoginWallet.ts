@@ -19,6 +19,7 @@ interface CreateWalletParams {
   accountType: AccountType;
   guardianIdentifier: string;
   guardianApprovedList: GuardiansApproved[];
+  source?: number;
 }
 
 export function useLoginWallet({
@@ -128,7 +129,15 @@ export function useLoginWallet({
   );
 
   const requestRecoveryWallet = useCallback(
-    async ({ pin, chainId, accountType, guardianIdentifier, guardianApprovedList, type }: CreateWalletParams) => {
+    async ({
+      pin,
+      chainId,
+      accountType,
+      guardianIdentifier,
+      guardianApprovedList,
+      type,
+      source,
+    }: CreateWalletParams) => {
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
 
       const wallet = did.didWallet;
@@ -163,7 +172,7 @@ export function useLoginWallet({
       } = await did.services.recovery({
         ...params,
         manager: managerAddress,
-        source: 4, // SDK Type
+        source: source ?? 4, // SDK Type
       });
 
       did.didWallet.saveTempStatus({ chainId, caAddress, caHash, sessionId });
@@ -202,7 +211,15 @@ export function useLoginWallet({
   );
 
   const createWallet = useCallback(
-    async ({ pin, type, chainId, accountType, guardianIdentifier, guardianApprovedList }: CreateWalletParams) => {
+    async ({
+      pin,
+      type,
+      chainId,
+      accountType,
+      guardianIdentifier,
+      guardianApprovedList,
+      source,
+    }: CreateWalletParams) => {
       try {
         if (!guardianIdentifier) throw 'Missing account!!!';
 
@@ -220,6 +237,7 @@ export function useLoginWallet({
           accountType,
           guardianIdentifier,
           guardianApprovedList,
+          source,
         };
         if (type === 'register') {
           walletResult = await requestRegisterWallet(walletParams);
