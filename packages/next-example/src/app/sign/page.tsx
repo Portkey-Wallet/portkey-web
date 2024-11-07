@@ -14,6 +14,9 @@ import {
   setLoading,
   PortkeyLoading,
   ScreenLoadingInfo,
+  getServiceUrl,
+  getCommunicationSocketUrl,
+  getCustomNetworkType,
 } from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
@@ -365,12 +368,9 @@ export default function Sign() {
       <div>-----------</div>
       <Button
         onClick={async () => {
-          const isExist = await did.checkManagerIsExist({
-            chainId: 'tDVW',
-            caHash: did.didWallet.caInfo[CHAIN_ID].caHash,
-            managementAddress: did.didWallet.managementAccount?.address ?? '',
-          });
-          console.log(isExist, 'isExist=tDVW');
+          const serviceURI = getServiceUrl();
+          const socketURI = getCommunicationSocketUrl();
+          const ctw = getCustomNetworkType();
         }}>
         checkManagerIsExist: tDVW
       </Button>

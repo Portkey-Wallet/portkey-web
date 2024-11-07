@@ -29,6 +29,21 @@ export class TelegramPlatform {
     });
   }
 
+  static _getInitData() {
+    const Telegram = TelegramPlatform.getTelegram();
+
+    if (!Telegram) {
+      let locationHash = '';
+      try {
+        locationHash = location.hash.toString();
+      } catch (e) {
+        //
+      }
+      TelegramPlatform.setTGScript();
+      return TelegramPlatform.urlParseHashParams(locationHash);
+    }
+  }
+
   static isTelegramPlatform() {
     try {
       const Telegram = TelegramPlatform.getTelegram();
@@ -114,6 +129,8 @@ export class TelegramPlatform {
       const initData = TelegramPlatform.getWebApp()?.initData;
       if (initData) {
         parsedInitData = parse(initData) as unknown as TelegramWebappInitData;
+      } else {
+        parsedInitData = TelegramPlatform._getInitData();
       }
     } catch (error) {
       console.error('getInitData error: ', error);
