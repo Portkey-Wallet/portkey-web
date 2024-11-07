@@ -196,15 +196,6 @@ export const socialLoginAuthBySocket = async ({
   const serviceURI = getServiceUrl();
   const socketURI = getCommunicationSocketUrl();
   const ctw = getCustomNetworkType();
-  const openlogin = new OpenLogin({
-    customNetworkType: ctw,
-    networkType: network || 'MAINNET',
-    serviceURI: serviceURI,
-    clientId,
-    socketURI,
-    currentStorage: getStorageInstance(),
-    // sdkUrl: 'http://localhost:3000',
-  });
 
   // check platform
   const app = await devicesEnv.getPortkeyShellApp();
@@ -220,6 +211,16 @@ export const socialLoginAuthBySocket = async ({
     const token = await telegramLoginAuth();
     return { token, provider: 'Telegram' };
   }
+
+  const openlogin = new OpenLogin({
+    customNetworkType: ctw,
+    networkType: network || 'MAINNET',
+    serviceURI: serviceURI,
+    clientId,
+    socketURI,
+    currentStorage: getStorageInstance(),
+    // sdkUrl: 'http://localhost:3000',
+  });
 
   const result = await openlogin.login({
     from: 'openlogin',
