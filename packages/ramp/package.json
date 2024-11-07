@@ -1,6 +1,6 @@
 {
   "name": "@portkey/ramp",
-  "version": "2.15.6",
+  "version": "2.15.7",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,10 +41,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey/request": "^2.15.6",
-    "@portkey/socket": "^2.15.6",
-    "@portkey/types": "^2.15.6",
-    "@portkey/utils": "^2.15.6",
+    "@portkey/request": "^2.15.7",
+    "@portkey/socket": "^2.15.7",
+    "@portkey/types": "^2.15.7",
+    "@portkey/utils": "^2.15.7",
     "query-string": "^7.1.1"
   },
   "devDependencies": {

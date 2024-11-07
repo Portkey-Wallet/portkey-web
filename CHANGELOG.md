@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.6...v2.15.7) (2024-11-07)
+
+### Features
+
+- 🎸 import get config constants ([fc7aa9d](https://github.com/Portkey-Wallet/portkey-web/commit/fc7aa9d6fc0edd0b5db091c0abd7d4e30644bdbb))
+
 ## [2.15.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5...v2.15.6) (2024-11-06)
 
 ### Features
