@@ -21,3 +21,4 @@ export * from './security';
 export * from './telegram';
 export * from './telegramPlatform';
 export * from './loadingTip';
+export { default as OpenLogin } from './openlogin';

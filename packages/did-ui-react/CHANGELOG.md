@@ -3,6 +3,32 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.8...v2.15.9) (2024-11-07)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.15.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.7...v2.15.8) (2024-11-07)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.15.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.6...v2.15.7) (2024-11-07)
+
+### Features
+
+- 🎸 import get config constants ([fc7aa9d](https://github.com/Portkey-Wallet/portkey-web/commit/fc7aa9d6fc0edd0b5db091c0abd7d4e30644bdbb))
+
+## [2.15.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5...v2.15.6) (2024-11-06)
+
+### Features
+
+- 🎸 import openlogin ([71e7b26](https://github.com/Portkey-Wallet/portkey-web/commit/71e7b2682ae252d13760fe1b645d559ffd8e454e))
+
+## [2.15.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.1...v2.15.5) (2024-11-06)
+
+### Bug Fixes
+
+- 🐛 add initTelegram ([68e8f72](https://github.com/Portkey-Wallet/portkey-web/commit/68e8f7252536cc884eeb81b6bbe99714affc7e39))
+
 ## [2.15.5-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.0...v2.15.5-alpha.1) (2024-11-06)
 
 **Note:** Version bump only for package @portkey/did-ui-react

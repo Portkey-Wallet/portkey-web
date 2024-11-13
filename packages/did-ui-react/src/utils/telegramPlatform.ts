@@ -29,6 +29,21 @@ export class TelegramPlatform {
     });
   }
 
+  static _getInitData() {
+    const Telegram = TelegramPlatform.getTelegram();
+
+    if (!Telegram) {
+      let locationHash = '';
+      try {
+        locationHash = location.hash.toString();
+      } catch (e) {
+        //
+      }
+      TelegramPlatform.setTGScript();
+      return TelegramPlatform.urlParseHashParams(locationHash);
+    }
+  }
+
   static isTelegramPlatform() {
     try {
       const Telegram = TelegramPlatform.getTelegram();
@@ -114,6 +129,8 @@ export class TelegramPlatform {
       const initData = TelegramPlatform.getWebApp()?.initData;
       if (initData) {
         parsedInitData = parse(initData) as unknown as TelegramWebappInitData;
+      } else {
+        parsedInitData = TelegramPlatform._getInitData();
       }
     } catch (error) {
       console.error('getInitData error: ', error);
@@ -150,24 +167,24 @@ export class TelegramPlatform {
     initialDelay?: number;
     needExpand?: boolean;
   }) {
-    //   try {
-    //     const { tgUserChanged, initialDelay = 1000, needExpand = true } = params ?? {};
-    //     if (typeof window === 'undefined') return;
-    //     await sleep(initialDelay);
-    //     const Telegram = TelegramPlatform.getTelegram();
-    //     if (!Telegram || !TelegramPlatform.isTelegramPlatform()) return;
-    //     if (needExpand) {
-    //       Telegram.WebApp.expand();
-    //     }
-    //     const currentTelegramUserId = TelegramPlatform.getTelegramUserId();
-    //     const preTelegramUserId = window.localStorage.getItem(PORTKEY_SDK_TELEGRAM_USER_ID);
-    //     if (currentTelegramUserId && currentTelegramUserId !== preTelegramUserId) {
-    //       if (preTelegramUserId) await tgUserChanged(currentTelegramUserId, preTelegramUserId);
-    //       window.localStorage.setItem(PORTKEY_SDK_TELEGRAM_USER_ID, currentTelegramUserId);
-    //     }
-    //     Telegram.WebApp.ready();
-    //   } catch (error) {
-    //     console.error('Error occurred:', error);
-    //   }
+    try {
+      const { tgUserChanged, initialDelay = 1000, needExpand = true } = params ?? {};
+      if (typeof window === 'undefined') return;
+      await sleep(initialDelay);
+      const Telegram = TelegramPlatform.getTelegram();
+      if (!Telegram || !TelegramPlatform.isTelegramPlatform()) return;
+      if (needExpand) {
+        Telegram.WebApp.expand();
+      }
+      const currentTelegramUserId = TelegramPlatform.getTelegramUserId();
+      const preTelegramUserId = window.localStorage.getItem(PORTKEY_SDK_TELEGRAM_USER_ID);
+      if (currentTelegramUserId && currentTelegramUserId !== preTelegramUserId) {
+        if (preTelegramUserId) await tgUserChanged(currentTelegramUserId, preTelegramUserId);
+        window.localStorage.setItem(PORTKEY_SDK_TELEGRAM_USER_ID, currentTelegramUserId);
+      }
+      Telegram.WebApp.ready();
+    } catch (error) {
+      console.error('Error occurred:', error);
+    }
   }
 }
