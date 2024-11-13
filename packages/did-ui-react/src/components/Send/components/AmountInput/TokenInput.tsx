@@ -147,12 +147,12 @@ export default function TokenInput({
         <div className="control">
           <div className="asset-selector">
             <div className="icon">
-              <TokenImageDisplay src={token.imageUrl} width={40} symbol={token.symbol} />
+              <TokenImageDisplay src={token.imageUrl} width={40} symbol={token?.label || token.symbol} />
             </div>
             <div className="center">
-              <p className="symbol">{token?.symbol}</p>
+              <p className="symbol">{token?.label || token?.symbol}</p>
               <p className="amount">{`Balance: ${formatAmountShow(divDecimals(balance, token.decimals))} ${
-                token?.symbol
+                token?.label || token?.symbol
               }`}</p>
             </div>
           </div>

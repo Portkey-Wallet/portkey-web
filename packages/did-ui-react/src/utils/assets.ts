@@ -12,7 +12,7 @@ export const amountInUsdShow = ({
   price: string | number;
 }) => `$ ${formatAmountShow(divDecimals(balance, decimal).times(price), 2)}`;
 
-export const chainShowText = (chain: ChainId) => (chain === 'AELF' ? 'MainChain' : 'SideChain');
+export const chainShowText = (chain: ChainId) => (chain === 'AELF' ? 'MainChain' : 'dAppChain');
 
 export const isNFT = (symbol: string) => {
   if (!symbol) return false;

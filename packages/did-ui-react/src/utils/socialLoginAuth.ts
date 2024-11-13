@@ -5,7 +5,7 @@ import {
   getStorageInstance,
   getTelegramBotId,
 } from '../components/config-provider/utils';
-import { WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '../constants';
+import { HOUR, SECOND, WEB_PAGE, WEB_PAGE_TEST, WEB_PAGE_TESTNET } from '../constants';
 import { IApproveDetail, ISocialLogin, NetworkType } from '../types';
 import { stringify } from 'query-string';
 import { dealURLLastChar } from './lib';
@@ -14,6 +14,7 @@ import OpenLogin from './openlogin';
 import { facebookAuthPath, twitterAuthPath } from './openlogin/constants';
 import { generateAccessTokenByPortkeyServer } from './telegram';
 import { TelegramPlatform } from './telegramPlatform';
+import { VerifyTypeEnum } from '../constants/guardian';
 
 export const socialLoginInPortkeyApp = async (
   app: devicesEnv.IPortkeyShellClient,
@@ -152,9 +153,14 @@ export const socialLoginAuthOpener = ({
     }, 1600);
   });
 
+const expirationError = 'The verification has expired. Please reload the page to start the login process again.';
+
 export const telegramLoginAuth = async () => {
   const telegramUserInfo = TelegramPlatform.getInitData();
   if (!telegramUserInfo) throw new Error('Telegram user info is not found');
+  const expirationTime = Number(telegramUserInfo.auth_date) * SECOND + HOUR;
+
+  if (isNaN(expirationTime) || expirationTime <= Date.now()) throw new Error(expirationError);
   const telegramBotId = getTelegramBotId();
   const accessToken = await generateAccessTokenByPortkeyServer({ ...telegramUserInfo, bot_id: telegramBotId });
   return accessToken.token;
@@ -167,6 +173,8 @@ export const socialLoginAuthBySocket = async ({
   guardianIdentifier,
   useCurrentTelegramAuth = true,
   approveDetail,
+  managerAddress,
+  verifyType,
 }: {
   type: ISocialLogin;
   clientId?: string;
@@ -176,22 +184,18 @@ export const socialLoginAuthBySocket = async ({
   guardianIdentifier?: string;
   useCurrentTelegramAuth?: boolean;
   approveDetail?: IApproveDetail;
+  managerAddress?: string;
+  verifyType?: VerifyTypeEnum;
 }): Promise<{
   token: string;
+  idToken?: string;
+  nonce?: string;
+  timestamp?: number;
   provider: ISocialLogin;
 } | void> => {
   const serviceURI = getServiceUrl();
   const socketURI = getCommunicationSocketUrl();
   const ctw = getCustomNetworkType();
-  const openlogin = new OpenLogin({
-    customNetworkType: ctw,
-    networkType: network || 'MAINNET',
-    serviceURI: serviceURI,
-    clientId,
-    socketURI,
-    currentStorage: getStorageInstance(),
-    // sdkUrl: 'http://localhost:3000',
-  });
 
   // check platform
   const app = await devicesEnv.getPortkeyShellApp();
@@ -208,10 +212,22 @@ export const socialLoginAuthBySocket = async ({
     return { token, provider: 'Telegram' };
   }
 
+  const openlogin = new OpenLogin({
+    customNetworkType: ctw,
+    networkType: network || 'MAINNET',
+    serviceURI: serviceURI,
+    clientId,
+    socketURI,
+    currentStorage: getStorageInstance(),
+    // sdkUrl: 'http://localhost:3000',
+  });
+
   const result = await openlogin.login({
     from: 'openlogin',
     loginProvider: type,
     approveDetail,
+    managerAddress,
+    verifyType,
   });
   if (!result) throw 'Not result';
   if (result?.code) throw result.message;

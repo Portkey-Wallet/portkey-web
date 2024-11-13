@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useMemo, useReducer } from 'react';
+import React, { createContext, useContext, useEffect, useMemo, useReducer } from 'react';
 import { basicPortkeyView, PortkeyState } from './actions';
 import { BasicActions } from './utils';
 import { Theme } from '../types';
@@ -49,6 +49,10 @@ export default function Provider({ theme, chainType, sandboxId, networkType, chi
       ConfigProvider.setGlobalConfig({});
     }
   });
+
+  useEffect(() => {
+    ConfigProvider.setGlobalConfig({ networkType });
+  }, [networkType]);
 
   return (
     <PortkeyContext.Provider

@@ -8,8 +8,10 @@ import {
   IDIDAccountMethods,
   LoginResult,
   LogoutResult,
+  MultiTransaction,
   RegisterResult,
   ScanLoginParams,
+  SendMultiTransactionParams,
   VerifierItem,
 } from './types';
 import { DIDWallet } from './wallet';
@@ -27,7 +29,16 @@ import {
 } from '@portkey/services';
 import { FetchRequest } from '@portkey/request';
 import { DIDGraphQL, IDIDGraphQL } from '@portkey/graphql';
-import { ISignature, IKeyStore, IDIDBaseWallet, IConfig, IBaseRequest, ChainId, SendOptions } from '@portkey/types';
+import {
+  ISignature,
+  IKeyStore,
+  IDIDBaseWallet,
+  IConfig,
+  IBaseRequest,
+  ChainId,
+  SendOptions,
+  LoginStatusEnum,
+} from '@portkey/types';
 import { DIDConfig } from './config';
 export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public didWallet: DIDWallet<portkey.WalletAccount>;
@@ -46,7 +57,12 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
     this.connectRequest = new FetchRequest(this.config.connectRequestConfig);
     this.didGraphQL = new DIDGraphQL({ config: this.config });
     this.connectServices = new Connect(this.connectRequest);
-    this.services = new Services(this.fetchRequest, this.didGraphQL, this.config.referralConfig);
+    this.services = new Services(
+      this.fetchRequest,
+      this.didGraphQL,
+      this.config.referralConfig,
+      this.config.extraInfoConfig,
+    );
 
     this.didWallet = new DIDWallet({
       accountProvider: this.accountProvider,
@@ -72,6 +88,9 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
     return this.didWallet.getVerifierServers(chainId);
   }
+  async getVerifierServersByContract(chainId: ChainId): Promise<VerifierItem[]> {
+    return this.didWallet.getVerifierServersByContract(chainId);
+  }
   create(): this {
     this.didWallet.create();
     return this;
@@ -82,6 +101,12 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   public async load(password: string, keyName?: string | undefined): Promise<this> {
     await this.didWallet.load(password, keyName);
     return this;
+  }
+  public saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string; sessionId: string }): void {
+    this.didWallet.saveTempStatus(params);
+  }
+  public updateLoginStatus(params: LoginStatusEnum): void {
+    this.didWallet.updateLoginStatus(params);
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -116,6 +141,9 @@ export class DID implements IDID, IDIDAccountMethods, IDIDBaseWallet {
   }
   checkManagerIsExist(params: CheckManagerParams): Promise<boolean> {
     return this.didWallet.checkManagerIsExist(params);
+  }
+  sendMultiTransaction(params: SendMultiTransactionParams): Promise<MultiTransaction> {
+    return this.didWallet.sendMultiTransaction(params);
   }
   public async checkStorageAesStrIsExist(keyName?: string): Promise<boolean> {
     return this.didWallet.checkStorageAesStrIsExist(keyName);

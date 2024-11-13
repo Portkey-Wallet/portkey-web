@@ -31,13 +31,14 @@ import CommonBaseModal from '../CommonBaseModal';
 import { useVerifyToken } from '../../hooks';
 import clsx from 'clsx';
 import './index.less';
-import { SocialLoginList, guardianIconMap } from '../../constants/guardian';
+import { AllSocialLoginList, guardianIconMap, zkLoginVerifierItem } from '../../constants/guardian';
 import GuardianApproval from '../GuardianApproval';
 import BackHeader from '../BackHeader';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -48,6 +49,7 @@ export interface GuardianViewProps {
   guardianList?: UserGuardianStatus[];
   networkType: NetworkType;
   telegramInfo?: ITelegramInfo;
+  caHash?: string;
   onError?: OnErrorFunc;
   onEditGuardian?: () => void;
   handleSetLoginGuardian: (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => Promise<any>;
@@ -63,10 +65,16 @@ function GuardianView({
   guardianList,
   networkType,
   telegramInfo,
+  caHash,
   handleSetLoginGuardian,
   onError,
 }: GuardianViewProps) {
   const { t } = useTranslation();
+  const isZK = useMemo(
+    () => currentGuardian?.verifiedByZk || currentGuardian?.manuallySupportForZk,
+    [currentGuardian?.manuallySupportForZk, currentGuardian?.verifiedByZk],
+  );
+  const [{ managementAccount }] = usePortkeyAsset();
   const curGuardian = useRef<UserGuardianStatus | undefined>(currentGuardian);
   const [verifierVisible, setVerifierVisible] = useState<boolean>(false);
   const [switchDisable, setSwitchDisable] = useState<boolean>(false);
@@ -99,6 +107,9 @@ function GuardianView({
     async (_guardian: UserGuardianStatus) => {
       const { clientId, redirectURI, customLoginHandler } = socialBasic(_guardian?.guardianType as ISocialLogin) || {};
       let token = '';
+      let idToken;
+      let nonce;
+      let timestamp;
       if (
         _guardian?.guardianType === 'Telegram' &&
         telegramInfo?.userId === _guardian?.guardianIdentifier &&
@@ -112,12 +123,21 @@ function GuardianView({
           redirectURI,
           network: networkType,
           guardianIdentifier: _guardian.guardianIdentifier,
+          managerAddress: managementAccount?.address,
         });
+
         if (!response?.token) throw new Error('auth failed');
         token = response.token;
+        idToken = response.idToken;
+        nonce = response.nonce;
+        timestamp = response.timestamp;
       }
+
       const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
         accessToken: token,
+        idToken,
+        nonce,
+        timestamp,
         id: _guardian.guardianIdentifier || '',
         verifierId: _guardian?.verifier?.id || '',
         chainId: originChainId,
@@ -125,6 +145,7 @@ function GuardianView({
         redirectURI,
         networkType,
         operationType,
+        caHash,
         operationDetails: getOperationDetails(operationType, {
           identifierHash: curGuardian.current?.identifierHash,
           guardianType: curGuardian.current?.guardianType,
@@ -134,7 +155,12 @@ function GuardianView({
       });
       if (!rst) return;
       const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
-      const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+      let guardianIdentifier = '';
+      if (rst.zkLoginInfo) {
+        guardianIdentifier = rst.zkLoginInfo.identifierHash;
+      } else {
+        guardianIdentifier = handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
+      }
       return { verifierInfo, guardianIdentifier };
     },
     [
@@ -142,13 +168,16 @@ function GuardianView({
       telegramInfo?.userId,
       telegramInfo?.accessToken,
       verifyToken,
+      caHash,
       originChainId,
       networkType,
       operationType,
+      managementAccount?.address,
     ],
   );
 
-  const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
+  const verifySuccess = useCallback((res: { verificationDoc?: string; signature?: string; verifierId: string }) => {
+    if (!res.verificationDoc || !res.signature) return; // todo_wade
     const { guardianIdentifier } = handleVerificationDoc(res.verificationDoc);
 
     curGuardian.current = {
@@ -265,6 +294,7 @@ function GuardianView({
         verificationDoc: res?.verifierInfo.verificationDoc,
         signature: res?.verifierInfo.signature,
         identifierHash: res?.guardianIdentifier,
+        zkLoginInfo: res?.verifierInfo?.zkLoginInfo,
       };
       setApprovalVisible(true);
     } catch (error) {
@@ -282,7 +312,7 @@ function GuardianView({
   }, [currentGuardian, isErrorTip, onError, socialVerify]);
 
   const handleSwitch = useCallback(() => {
-    if (SocialLoginList.includes(currentGuardian.guardianType)) {
+    if (AllSocialLoginList.includes(currentGuardian.guardianType)) {
       handleSocialVerify();
     } else {
       handleCommonVerify();
@@ -318,17 +348,14 @@ function GuardianView({
       if (error?.error?.code?.toString() === '3002') {
         handleSwitch();
       } else {
-        errorTip(
-          {
-            errorFields: 'GetHolderInfo',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-          onError,
-        );
+        CustomModal({
+          type: 'info',
+          okText: 'Close',
+          content: <>{t('This account address is already a login account and cannot be used')}</>,
+        });
       }
     }
-  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, isErrorTip, onError, originChainId, t]);
+  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, originChainId, t]);
 
   const checkUnsetLoginGuardian = useCallback(async () => {
     setSwitchDisable(true);
@@ -384,10 +411,10 @@ function GuardianView({
               <div className="guardian-view-input-item-label">{t('Verifier')}</div>
               <div className="guardian-view-input-item-control portkey-ui-flex">
                 <BaseVerifierIcon
-                  src={currentGuardian?.verifier?.imageUrl}
-                  fallback={currentGuardian?.verifier?.name[0]}
+                  src={isZK ? zkLoginVerifierItem.imageUrl : currentGuardian?.verifier?.imageUrl}
+                  fallback={isZK ? zkLoginVerifierItem.name[0] : currentGuardian?.verifier?.name[0]}
                 />
-                <span className="name">{currentGuardian?.verifier?.name ?? ''}</span>
+                <span className="name">{isZK ? zkLoginVerifierItem.name : currentGuardian?.verifier?.name ?? ''}</span>
               </div>
             </div>
           </div>
@@ -432,6 +459,7 @@ function GuardianView({
           accountType={currentGuardian.guardianType}
           isErrorTip={isErrorTip}
           verifier={currentGuardian.verifier as VerifierItem}
+          caHash={caHash}
           onSuccess={verifySuccess}
           onError={onError}
           onReSend={reSendCode}
@@ -450,6 +478,7 @@ function GuardianView({
           telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
+          caHash={caHash}
           operationType={operationType}
           operationDetails={getOperationDetails(operationType, {
             identifierHash: curGuardian.current?.identifierHash,

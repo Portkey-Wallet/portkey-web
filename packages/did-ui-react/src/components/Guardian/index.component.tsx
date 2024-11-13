@@ -4,7 +4,7 @@ import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
 import { GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
-import { AuthServe, errorTip, getVerifierStatusMap, handleErrorMessage, setLoading } from '../../utils';
+import { AuthServe, errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
@@ -18,11 +18,13 @@ import { GuardianMth, handleGuardianByContract } from '../../utils/sandboxUtil/h
 import BackHeaderForPage from '../BackHeaderForPage';
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
-import { MaxVerifierNumber, guardiansExceedTip } from '../../constants/guardian';
+import { zkLoginVerifierItem } from '../../constants/guardian';
 import { formatSetUnsetLoginGuardianValue } from './utils/formatSetUnsetLoginGuardianValue';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
 import ThrottleButton from '../ThrottleButton';
+import { loadingTip } from '../../utils/loadingTip';
+import { loginOptTip } from '../../constants';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -44,6 +46,7 @@ export interface GuardianProps {
   chainType?: ChainType;
   isErrorTip?: boolean;
   networkType: NetworkType;
+  isLoginOnChain?: boolean;
   onError?: OnErrorFunc;
   onBack?: () => void;
   onAddGuardianFinish?: (params: IAddGuardianFinishCbParams) => void;
@@ -58,6 +61,7 @@ function GuardianMain({
   isErrorTip = true,
   sandboxId,
   networkType,
+  isLoginOnChain = true,
   onError,
   onBack,
   onAddGuardianFinish,
@@ -68,7 +72,6 @@ function GuardianMain({
   const [preGuardian, setPreGuardian] = useState<UserGuardianStatus>();
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>();
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
-  const [verifierEnableNum, setVerifierEnableNum] = useState(MaxVerifierNumber);
   useThrottleFirstEffect(() => {
     AuthServe.addRequestAuthCheck(originChainId);
   }, []);
@@ -83,9 +86,10 @@ function GuardianMain({
         chainType,
         address: chainInfo?.caContractAddress,
       });
-      setVerifierList(list);
+      const _verifyList = [...list, zkLoginVerifierItem];
+      setVerifierList(_verifyList);
       const _verifierMap: { [x: string]: VerifierItem } = {};
-      list.forEach((item: VerifierItem) => {
+      _verifyList.forEach((item: VerifierItem) => {
         _verifierMap[item.id] = item;
       }, []);
       verifierMap.current = _verifierMap;
@@ -124,22 +128,12 @@ function GuardianMain({
     }
   }, [caHash, chainType, isErrorTip, onError, originChainId, sandboxId]);
 
-  const getVerifierEnableNum = useCallback(
-    (verifierMap: { [x: string]: VerifierItem }, guardianList: UserGuardianStatus[]) => {
-      const verifierStatusMap = getVerifierStatusMap(verifierMap, guardianList);
-      const len = Object.values(verifierStatusMap).filter((verifier) => !verifier.isUsed).length;
-      setVerifierEnableNum(len);
-    },
-    [],
-  );
-
   const getData = useCallback(async () => {
     setLoading(true);
     await getVerifierInfo();
-    const guardianList = await fetchGuardianList();
-    getVerifierEnableNum(verifierMap.current as { [x: string]: VerifierItem }, guardianList as UserGuardianStatus[]);
+    await fetchGuardianList();
     setLoading(false);
-  }, [getVerifierEnableNum, fetchGuardianList, getVerifierInfo]);
+  }, [fetchGuardianList, getVerifierInfo]);
 
   useEffect(() => {
     getData();
@@ -148,10 +142,16 @@ function GuardianMain({
   const onAddGuardian = useCallback(() => {
     setStep(GuardianStep.guardianAdd);
   }, []);
-  const onViewGuardian = useCallback((item: UserGuardianStatus) => {
-    setCurrentGuardian(item);
-    setStep(GuardianStep.guardianView);
-  }, []);
+  const onViewGuardian = useCallback(
+    (item: UserGuardianStatus) => {
+      if (!isLoginOnChain) {
+        return loadingTip({ msg: loginOptTip });
+      }
+      setCurrentGuardian(item);
+      setStep(GuardianStep.guardianView);
+    },
+    [isLoginOnChain],
+  );
   const onEditGuardian = useCallback(() => {
     setPreGuardian(currentGuardian);
     setStep(GuardianStep.guardianEdit);
@@ -198,11 +198,7 @@ function GuardianMain({
             );
           }
         }
-        const guardianList = await fetchGuardianList();
-        getVerifierEnableNum(
-          verifierMap.current as { [x: string]: VerifierItem },
-          guardianList as UserGuardianStatus[],
-        );
+        await fetchGuardianList();
         setStep(GuardianStep.guardianList);
         onAddGuardianFinish?.({ syncStatus });
       } catch (e) {
@@ -218,17 +214,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [
-      sandboxId,
-      originChainId,
-      caHash,
-      accelerateChainId,
-      fetchGuardianList,
-      getVerifierEnableNum,
-      onAddGuardianFinish,
-      onError,
-      isErrorTip,
-    ],
+    [sandboxId, originChainId, caHash, accelerateChainId, fetchGuardianList, onAddGuardianFinish, onError, isErrorTip],
   );
   const handleEditGuardian = useCallback(
     async (
@@ -249,11 +235,7 @@ function GuardianMain({
           chainId: originChainId,
           caHash,
         });
-        const guardianList = await fetchGuardianList();
-        getVerifierEnableNum(
-          verifierMap.current as { [x: string]: VerifierItem },
-          guardianList as UserGuardianStatus[],
-        );
+        await fetchGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
         return errorTip(
@@ -268,7 +250,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [preGuardian, sandboxId, originChainId, caHash, fetchGuardianList, getVerifierEnableNum, isErrorTip, onError],
+    [preGuardian, sandboxId, originChainId, caHash, fetchGuardianList, isErrorTip, onError],
   );
   const handleRemoveGuardian = useCallback(
     async (approvalInfo: GuardiansApproved[], _currentGuardian?: UserGuardianStatus) => {
@@ -284,11 +266,7 @@ function GuardianMain({
           chainId: originChainId,
           caHash,
         });
-        const guardianList = await fetchGuardianList();
-        getVerifierEnableNum(
-          verifierMap.current as { [x: string]: VerifierItem },
-          guardianList as UserGuardianStatus[],
-        );
+        await fetchGuardianList();
         setStep(GuardianStep.guardianList);
       } catch (e) {
         return errorTip(
@@ -303,7 +281,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [currentGuardian, sandboxId, originChainId, caHash, fetchGuardianList, getVerifierEnableNum, isErrorTip, onError],
+    [currentGuardian, sandboxId, originChainId, caHash, fetchGuardianList, isErrorTip, onError],
   );
   const handleSetLoginGuardian = useCallback(
     async (currentGuardian: UserGuardianStatus, approvalInfo: GuardiansApproved[]) => {
@@ -322,10 +300,6 @@ function GuardianMain({
           caHash,
         });
         const _guardianList = await fetchGuardianList();
-        getVerifierEnableNum(
-          verifierMap.current as { [x: string]: VerifierItem },
-          guardianList as UserGuardianStatus[],
-        );
         const _guardian = _guardianList?.find(
           (item) => item.guardianIdentifier === currentGuardian?.guardianIdentifier,
         );
@@ -344,7 +318,7 @@ function GuardianMain({
         setLoading(false);
       }
     },
-    [sandboxId, originChainId, caHash, fetchGuardianList, getVerifierEnableNum, guardianList, isErrorTip, onError],
+    [sandboxId, originChainId, caHash, fetchGuardianList, isErrorTip, onError],
   );
 
   const renderBackHeaderLeftEle = useCallback(
@@ -357,17 +331,6 @@ function GuardianMain({
     [],
   );
 
-  const renderGuardianExceedTip = useMemo(() => {
-    return verifierEnableNum === 0 ? (
-      <div className="content-guardian-tip">
-        <div className="guardian-exceed-tip portkey-ui-flex">
-          <CustomSvg type="Warning" />
-          <span className="exceed-tip-content">{guardiansExceedTip}</span>
-        </div>
-      </div>
-    ) : null;
-  }, [verifierEnableNum]);
-
   return (
     <div className={clsx('portkey-ui-guardian-page', className)}>
       {step === GuardianStep.guardianList && (
@@ -376,17 +339,21 @@ function GuardianMain({
             <BackHeaderForPage
               leftElement={renderBackHeaderLeftEle(onBack)}
               rightElement={
-                verifierEnableNum > 0 ? (
-                  <ThrottleButton onClick={() => onAddGuardian()} className="title-add-guardian-btn">
-                    Add Guardians
-                  </ThrottleButton>
-                ) : null
+                <ThrottleButton
+                  onClick={() => {
+                    if (!isLoginOnChain) {
+                      return loadingTip({ msg: loginOptTip });
+                    }
+                    onAddGuardian();
+                  }}
+                  className="title-add-guardian-btn">
+                  Add Guardians
+                </ThrottleButton>
               }
             />
           }
           guardianList={guardianList}
           onViewGuardian={onViewGuardian}
-          tipContainer={renderGuardianExceedTip}
         />
       )}
       {step === GuardianStep.guardianView && (
@@ -398,6 +365,7 @@ function GuardianMain({
           handleSetLoginGuardian={handleSetLoginGuardian}
           guardianList={guardianList}
           networkType={networkType}
+          caHash={caHash}
         />
       )}
       {step === GuardianStep.guardianAdd && (

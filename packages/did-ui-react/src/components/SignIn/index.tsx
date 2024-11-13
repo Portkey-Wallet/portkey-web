@@ -36,11 +36,12 @@ import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
 import { useLoginWallet } from '../../hooks/useLoginWallet';
 import './index.less';
-import { SocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
+import { AllSocialLoginList, TotalAccountTypeList } from '../../constants/guardian';
 import ConfigProvider from '../config-provider';
 import { ILoginConfig } from '../config-provider/types';
 import { getOperationDetails } from '../utils/operation.util';
 import googleAnalytics, { TAllLoginKey } from '../../utils/googleAnalytics';
+import { LoadingText } from '../../types/loading';
 
 export const LifeCycleMap: { [x in SIGN_IN_STEP]: LifeCycleType[] } = {
   Step3: ['SetPinAndAddManager'],
@@ -73,6 +74,7 @@ const SignIn = forwardRef(
       onLifeCycleChange,
       onChainIdChange,
       onCreatePending,
+      beforeCreatePending,
       onCancel,
       onFinish,
       onError,
@@ -87,7 +89,7 @@ const SignIn = forwardRef(
     const onChainIdChangeRef = useRef<SignInProps['onChainIdChange']>(onChainIdChange);
     const onLifeCycleChangeRef = useRef<SignInProps['onLifeCycleChange']>(onLifeCycleChange);
     const onSignUpHandlerRef = useRef<SignInProps['onSignUp']>(onSignUpHandler);
-
+    const beforeCreatePendingRef = useRef<SignInProps['beforeCreatePending']>(beforeCreatePending);
     const defaultLifeCycleRef = useRef<LifeCycleType>();
     const defaultLiftCyclePropsRef = useRef<any>();
 
@@ -117,6 +119,7 @@ const SignIn = forwardRef(
       onChainIdChangeRef.current = onChainIdChange;
       onLifeCycleChangeRef.current = onLifeCycleChange;
       onSignUpHandlerRef.current = onSignUpHandler;
+      beforeCreatePendingRef.current = beforeCreatePending;
     });
 
     const [{ chainType, networkType }] = usePortkey();
@@ -234,6 +237,9 @@ const SignIn = forwardRef(
               guardianApprovedList: approvedList,
             };
             console.log(params, 'didWallet==createWallet');
+
+            beforeCreatePendingRef.current?.();
+
             didWallet = await createWallet(params);
           }
 
@@ -271,6 +277,7 @@ const SignIn = forwardRef(
             verifierId: res.verifier.id,
             verificationDoc: res.verificationDoc,
             signature: res.signature,
+            zkLoginInfo: res.zkLoginInfo,
           },
         ];
         setApprovedList(list);
@@ -287,7 +294,7 @@ const SignIn = forwardRef(
     const onSignUp = useCallback(
       async (value: IGuardianIdentifierInfo) => {
         try {
-          setLoading(true, 'Assigning a verifier on the blockchain');
+          setLoading(true, LoadingText.AssigningVerifier);
           await sleep(2000);
           const verifier = await getRecommendationVerifier(chainId);
           setLoading(false);
@@ -295,11 +302,14 @@ const SignIn = forwardRef(
           const operationType = OperationTypeEnum.register;
           const operationDetails = getOperationDetails(operationType);
 
-          if (SocialLoginList.includes(accountType)) {
+          if (AllSocialLoginList.includes(accountType)) {
             setLoading(true);
             const result = await verifySocialToken({
               accountType,
               token: authenticationInfo?.authToken,
+              idToken: authenticationInfo?.idToken,
+              nonce: authenticationInfo?.nonce,
+              timestamp: authenticationInfo?.timestamp,
               guardianIdentifier: identifier,
               verifier,
               chainId,
@@ -309,12 +319,15 @@ const SignIn = forwardRef(
             });
             setLoading(false);
 
-            if (!result?.signature || !result?.verificationDoc) throw 'Verify social login error';
+            if (!result?.zkLoginInfo && (!result?.signature || !result?.verificationDoc)) {
+              throw 'Verify social login error';
+            }
             onStep2OfSignUpFinish(
               {
                 verifier,
                 verificationDoc: result.verificationDoc,
                 signature: result.signature,
+                zkLoginInfo: result.zkLoginInfo,
               },
               value,
             );

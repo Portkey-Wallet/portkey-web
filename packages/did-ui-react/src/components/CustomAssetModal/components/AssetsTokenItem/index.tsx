@@ -18,7 +18,7 @@ export default function AssetsTokenItem({
         <TokenImageDisplay src={token.tokenInfo?.imageUrl} symbol={token.symbol} />
       </div>
       <div className="info">
-        <p className="symbol">{`${token.symbol}`}</p>
+        <p className="symbol">{`${token?.label || token.symbol}`}</p>
         <p className="network">{transNetworkText(token.chainId, isMainnet)}</p>
       </div>
       <div className="amount">

@@ -107,3 +107,13 @@ export interface IReferralInfo {
   referralCode?: string;
   projectCode?: string;
 }
+
+export enum LoginStatusEnum {
+  INIT = 'INIT',
+  SUCCESS = 'SUCCESS',
+  FAIL = 'FAIL',
+}
+export interface IExtraInfo {
+  ip?: string;
+  activityId?: string;
+}

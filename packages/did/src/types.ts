@@ -17,6 +17,9 @@ import {
   IConfig,
   SendOptions,
   TransactionStatus,
+  MultiTransactionParamInfo,
+  MultiChainInfo,
+  LoginStatusEnum,
 } from '@portkey/types';
 
 export type LoginType = 'scan' | 'account';
@@ -73,6 +76,17 @@ export type LoginResult = {
 };
 export type LogoutResult = { transactionId: string; status?: TransactionStatus };
 
+export interface SendMultiTransactionParams {
+  multiChainInfo: MultiChainInfo;
+  gatewayUrl: string;
+  chainId: ChainId;
+  params: MultiTransactionParamInfo;
+}
+
+export type MultiTransaction = {
+  string: string[];
+};
+
 export interface IDIDAccountMethods extends IAccountMethods {
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -83,7 +97,10 @@ export interface IDIDAccountMethods extends IAccountMethods {
   getHolderInfo(params: Partial<Pick<GetHolderInfoParams, 'manager' | 'chainId'>>): Promise<GetCAHolderByManagerResult>;
   getHolderInfo(params: Omit<GetHolderInfoParams, 'manager'>): Promise<IHolderInfo>;
   getVerifierServers(chainId: ChainId): Promise<VerifierItem[]>;
+  getVerifierServersByContract(chainId: ChainId): Promise<VerifierItem[]>;
   getCAHolderInfo(originChainId: ChainId): Promise<CAHolderInfo>;
+  saveTempStatus(params: { chainId: ChainId; caHash: string; caAddress: string; sessionId: string }): void;
+  updateLoginStatus(params: LoginStatusEnum): void;
   /**
    * @param caHash - CA wallet hash
    * @param managementAddress - address of managementAccount
@@ -92,6 +109,7 @@ export interface IDIDAccountMethods extends IAccountMethods {
    * @returns boolean
    */
   checkManagerIsExist(params: CheckManagerParams): Promise<boolean>;
+  sendMultiTransaction(params: SendMultiTransactionParams): Promise<MultiTransaction>;
 }
 
 export interface IDIDWallet extends IDIDBaseWallet, IDIDAccountMethods {}

@@ -9,6 +9,11 @@ import { forgeWeb } from '@portkey/utils';
 import { IOpenloginHandlerResult, TOpenLoginQueryParams } from '../../types/openlogin';
 import { CrossTabPushMessageType } from '@portkey/socket';
 import { TelegramPlatform } from '../telegramPlatform';
+import { VerifyTypeEnum, zkGuardianType } from '../../constants/guardian';
+import { generateNonceAndTimestamp } from '../nonce';
+import AElf from 'aelf-sdk';
+import { getOperationDetails } from '../../components/utils/operation.util';
+import { OperationTypeEnum } from '@portkey/services';
 
 class OpenLogin {
   options: OpenLoginOptions;
@@ -54,11 +59,40 @@ class OpenLogin {
     const { loginProvider } = params;
     if (!loginProvider) throw `SocialLogin type is required`;
 
+    let zkParams = {};
+    let zkNonce = '';
+    let zkTimestamp = 0;
+
+    if (zkGuardianType.includes(params.loginProvider)) {
+      const operationDetails = getOperationDetails(OperationTypeEnum.communityRecovery);
+      const managerAddress = JSON.parse(operationDetails).manager;
+      if (!managerAddress) {
+        throw 'managerAddress is required';
+      }
+      const { nonce, timestamp } = generateNonceAndTimestamp(managerAddress);
+      if (params.loginProvider === 'Apple') {
+        /**
+         * on App, nonce is hashed by framework,
+         * so the server need to hash the data (timestamp+manager address) twice to verify the nonce.
+         * And also, the extension need to hash the nonce again to verify the nonce.
+         */
+        zkNonce = AElf.utils.sha256(nonce);
+      } else {
+        zkNonce = nonce;
+      }
+      zkTimestamp = timestamp;
+      zkParams = {
+        nonce: zkNonce,
+        socialType: VerifyTypeEnum.zklogin,
+      };
+    }
+
     const dataObject: OpenloginParamConfig = {
       clientId: this.options.clientId,
       ...params,
       actionType: OPENLOGIN_ACTIONS.LOGIN,
       serviceURI: this.serviceURI,
+      ...zkParams,
     };
     console.log(dataObject, 'dataObject==');
     const result = await this.openloginHandler({
@@ -70,7 +104,8 @@ class OpenLogin {
 
     if (!result) return null;
     if (this.options.uxMode === UX_MODE.REDIRECT) return null;
-    return result.data as PopupResponse;
+    const res = Object.assign(result.data || {}, { nonce: zkNonce, timestamp: zkTimestamp });
+    return res as PopupResponse;
   }
 
   async getLoginId(): Promise<string> {

@@ -18,8 +18,10 @@ import {
   IStorageSuite,
   ChainId,
   SendOptions,
+  ChainIdMap,
+  LoginStatusEnum,
 } from '@portkey/types';
-import { aes } from '@portkey/utils';
+import { aes, aelf } from '@portkey/utils';
 import {
   AccountLoginParams,
   BaseDIDWallet,
@@ -34,6 +36,7 @@ import {
   RegisterResult,
   ScanLoginParams,
   VerifierItem,
+  SendMultiTransactionParams,
 } from './types';
 import AElf from 'aelf-sdk';
 
@@ -49,6 +52,9 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
   /** @deprecated Please use aaInfo instead  */
   public accountInfo: { loginAccount?: string; nickName?: string };
   public aaInfo: { accountInfo?: CAInfo; nickName?: string };
+  public originChainId?: ChainId;
+  public isLoginStatus?: LoginStatusEnum;
+  public sessionId?: string;
   constructor({
     accountProvider,
     storage,
@@ -67,6 +73,12 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.caInfo = {};
     this.accountInfo = {};
     this.aaInfo = {};
+    this.isLoginStatus = LoginStatusEnum.INIT;
+    this.sessionId = '';
+  }
+  public async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
+    const result = await this.services.getVerifierServers(chainId);
+    return result.guardianVerifierServers;
   }
   login(type: 'scan', params: ScanLoginParams): Promise<true>;
   login(type: 'loginAccount', params: AccountLoginParams): Promise<LoginResult>;
@@ -85,6 +97,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
         ..._params,
         manager: this.managementAccount?.address as string,
       });
+      this.sessionId = sessionId;
       let status, error;
       try {
         status = await this.services.getRecoverStatus(sessionId);
@@ -114,6 +127,11 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       this.accountInfo = { loginAccount: status.caHash };
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
+      this.originChainId = chainId;
+    }
+
+    if (status?.recoveryStatus === 'pass') {
+      this.isLoginStatus = LoginStatusEnum.SUCCESS;
     }
     return status;
   }
@@ -124,6 +142,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       ...params,
       manager: this.managementAccount?.address as string,
     });
+    this.sessionId = sessionId;
     let status, error: any;
     try {
       status = await this.services.getRegisterStatus(sessionId);
@@ -150,11 +169,32 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (status?.registerStatus === 'pass' && this.managementAccount?.address && !this.caInfo?.[chainId]) {
       this.accountInfo = { loginAccount: status.caHash };
       this.aaInfo = { accountInfo: { caAddress: status.caAddress, caHash: status.caHash } };
+      this.originChainId = chainId;
       this.caInfo[chainId] = { caAddress: status.caAddress, caHash: status.caHash };
+    }
+    if (status?.registerStatus === 'pass') {
+      this.isLoginStatus = LoginStatusEnum.SUCCESS;
     }
     return status;
   }
-  async getVerifierServers(chainId: ChainId): Promise<VerifierItem[]> {
+  public saveTempStatus({
+    chainId,
+    caAddress,
+    caHash,
+    sessionId,
+  }: {
+    chainId: ChainId;
+    caAddress: string;
+    caHash: string;
+    sessionId: string;
+  }) {
+    this.accountInfo = { loginAccount: caHash };
+    this.aaInfo = { accountInfo: { caAddress: caAddress, caHash: caHash } };
+    this.originChainId = chainId;
+    this.caInfo[chainId] = { caAddress: caAddress, caHash: caHash };
+    this.sessionId = sessionId;
+  }
+  async getVerifierServersByContract(chainId: ChainId): Promise<VerifierItem[]> {
     if (!this.managementAccount) this.create();
     const contract = await this.getContractByChainInfo(chainId);
     const req = await contract.callViewMethod('GetVerifierServers', '');
@@ -273,6 +313,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (!this.connectServices) throw new Error('connectServices does not exist');
     if (!this.managementAccount) throw new Error('managerAccount does not exist');
     const caHash = this.caInfo[originChainId]?.caHash;
+    const caAddress = this.caInfo[originChainId]?.caAddress;
     if (!caHash) throw new Error('caHash does not exist');
     const timestamp = Date.now();
     const message = Buffer.from(`${this.managementAccount.address}-${timestamp}`).toString('hex');
@@ -293,7 +334,8 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     const caHolderInfo = await this.services.getCAHolderInfo(`Bearer ${info.access_token}`, caHash);
     if (caHolderInfo.nickName) {
       this.accountInfo = { ...this.accountInfo, nickName: caHolderInfo.nickName };
-      this.aaInfo = { ...this.aaInfo, nickName: caHolderInfo.nickName };
+      this.aaInfo = { accountInfo: { caHash, caAddress }, ...this.aaInfo, nickName: caHolderInfo.nickName };
+      this.originChainId = originChainId;
     }
     return caHolderInfo;
   }
@@ -331,6 +373,9 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       caInfo: this.caInfo,
       accountInfo: this.accountInfo,
       aaInfo: this.aaInfo,
+      originChainId: this.originChainId,
+      isLoginStatus: this.isLoginStatus,
+      sessionId: this.sessionId,
     });
     const aesStr = aes.encrypt(data, password);
     await this._storage.setItem(keyName ?? this._defaultKeyName, aesStr);
@@ -342,13 +387,17 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     if (aesStr) {
       const data = aes.decrypt(aesStr, password);
       if (data) {
-        const { aesPrivateKey, caInfo, accountInfo, aaInfo } = JSON.parse(data);
+        const { aesPrivateKey, caInfo, accountInfo, aaInfo, originChainId, isLoginStatus, sessionId } =
+          JSON.parse(data);
         const privateKey = aes.decrypt(aesPrivateKey, password);
         if (aesPrivateKey && privateKey) {
           this.managementAccount = await this._accountProvider.privateKeyToAccount(privateKey);
           this.caInfo = caInfo || {};
           this.accountInfo = accountInfo || {};
           this.aaInfo = aaInfo || {};
+          this.originChainId = originChainId;
+          this.isLoginStatus = isLoginStatus;
+          this.sessionId = sessionId;
         }
       }
     }
@@ -360,6 +409,7 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     this.accountInfo = {};
     this.aaInfo = {};
     this.managementAccount = undefined;
+    this.isLoginStatus = LoginStatusEnum.INIT;
   }
 
   public async checkManagerIsExistByGQL(params: CheckManagerParams) {
@@ -370,7 +420,11 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
       caHash: params.caHash,
     });
     const info = resultByQGL[0];
-    return Boolean(info && info.caAddress);
+    const res = Boolean(info && info.caAddress);
+    if (res) {
+      this.updateLoginStatus(LoginStatusEnum.SUCCESS);
+    }
+    return res;
   }
 
   public async checkManagerIsExistByContract(params: CheckManagerParams) {
@@ -388,9 +442,43 @@ export class DIDWallet<T extends IBaseWalletAccount> extends BaseDIDWallet<T> im
     return (await this.checkManagerIsExistByGQL(params)) || (await this.checkManagerIsExistByContract(params));
   }
 
+  public updateLoginStatus(params: LoginStatusEnum) {
+    this.isLoginStatus = params;
+  }
+
   public async checkStorageAesStrIsExist(keyName?: string): Promise<boolean> {
     if (!this._storage) throw new Error('Please set storage first');
     const aesStr = await this._storage.getItem(keyName ?? this._defaultKeyName);
     return Boolean(aesStr);
+  }
+
+  public async sendMultiTransaction(params: SendMultiTransactionParams) {
+    const { chainId, multiChainInfo, gatewayUrl, params: multiTransactionParamInfo } = params;
+    if (!this.managementAccount?.privateKey) throw new Error('Please login first');
+    if (!this.chainsInfo) await this.getChainsInfo();
+    const chainInfo = this.chainsInfo?.[chainId];
+    if (!chainInfo) throw new Error(`${chainId} chainInfo does not exist`);
+    const transformedMultiChainInfo = Object.entries(multiChainInfo).reduce((acc, [key, value]) => {
+      const chainId = ChainIdMap[key];
+      if (chainId) {
+        acc[chainId] = value;
+      }
+      return acc;
+    }, {});
+    const aelfInstance = aelf.getAelfInstance(chainInfo.endPoint);
+    const wallet = aelf.getWallet(this.managementAccount.privateKey);
+    const contractOption = {
+      multi: transformedMultiChainInfo,
+      gatewayUrl,
+    };
+    const caContract = await aelfInstance.chain.contractAt(chainInfo.caContractAddress, wallet, contractOption);
+    const transformedParams = Object.entries(multiTransactionParamInfo).reduce((acc, [key, value]) => {
+      const chainId = ChainIdMap[key];
+      if (chainId) {
+        acc[chainId] = value;
+      }
+      return acc;
+    }, {});
+    return await caContract.sendMultiTransactionToGateway(transformedParams);
   }
 }

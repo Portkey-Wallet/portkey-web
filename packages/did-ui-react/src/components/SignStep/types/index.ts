@@ -70,7 +70,9 @@ export enum SignUpValue {
 export type TSignUpContinueHandler = (identifierInfo: {
   identifier: string;
   accountType: AccountType;
-  authToken?: string;
+  authenticationInfo?: {
+    [key: string]: any;
+  };
 }) => Promise<SignUpValue>;
 
 export interface SignInProps {
@@ -102,6 +104,7 @@ export interface SignInProps {
   onSignUp?: TSignUpContinueHandler;
   onFinish?(didWallet: DIDWalletInfo): void;
   onCreatePending?(createPendingInfo: CreatePendingInfo): void;
+  beforeCreatePending?(): void;
 
   onLifeCycleChange?<T = any>(liftCycle: LifeCycleType, nextLifeCycleProps: T): void;
   onLifeCycleChange?(nextLifeCycle: SignInLifeCycleType, nextLifeCycleProps: undefined | null): void;

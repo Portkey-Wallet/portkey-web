@@ -15,8 +15,10 @@ import {
   hasCurrentTelegramGuardian,
   parseAppleIdentityToken,
   parseFacebookToken,
+  parseKidFromJWTToken,
   parseTelegramToken,
   parseTwitterToken,
+  randomId,
   setLoading,
   socialLoginAuth,
   verification,
@@ -25,6 +27,7 @@ import {
   ISocialLogin,
   ITelegramInfo,
   IVerificationInfo,
+  IZKAuth,
   NetworkType,
   OnErrorFunc,
   UserGuardianStatus,
@@ -39,7 +42,7 @@ import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CustomModal from '../CustomModal';
 import CommonBaseModal from '../CommonBaseModal';
 import ConfigProvider from '../config-provider';
-import { useVerifyToken } from '../../hooks';
+import { useVerifyToken, useVerifyZKLogin } from '../../hooks';
 import clsx from 'clsx';
 import BackHeader from '../BackHeader';
 import {
@@ -47,7 +50,8 @@ import {
   AddGuardiansType,
   guardianAccountExistTip,
   verifierExistTip,
-  verifierUsedTip,
+  zkGuardianType,
+  zkLoginVerifierItem,
 } from '../../constants/guardian';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
 import './index.less';
@@ -56,6 +60,7 @@ import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -115,6 +120,9 @@ function GuardianAdd({
     () => verifierExist || accountErr || !selectVerifierId || !guardianAccount,
     [accountErr, guardianAccount, selectVerifierId, verifierExist],
   );
+  const [zkAuth, setZKAuth] = useState<IZKAuth>({});
+  const verifyZKLogin = useVerifyZKLogin();
+  const [{ managementAccount }] = usePortkeyAsset();
 
   const loginConfig = ConfigProvider.getConfig('loginConfig') as ILoginConfig;
   const loginMethodsOrder = useMemo(
@@ -148,7 +156,7 @@ function GuardianAdd({
         label: (
           <div className="portkey-ui-flex label-item">
             <CustomSvg type="Warning" />
-            <div className="tip">{verifierUsedTip}</div>
+            <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
           </div>
         ),
       },
@@ -163,10 +171,20 @@ function GuardianAdd({
         label: item?.name,
         icon: <img src={item?.imageUrl} />,
         id: item?.id,
-        disabled: !!guardianList?.find((_guardian) => _guardian.verifierId === item.id),
+        disabled:
+          !!guardianList?.find((_guardian) => _guardian.verifierId === item.id) || item.id === zkLoginVerifierItem.id,
       })),
     [guardianList, verifierList],
   );
+  const defaultSelectedVerifier = useMemo(() => {
+    const _v = verifierSelectItems?.find((item) => !item.disabled) || verifierSelectItems?.[0];
+    return {
+      id: _v?.id || '',
+      name: _v?.label || '',
+      imageUrl: verifierList?.find((item) => item.id === _v?.id)?.imageUrl || '',
+    };
+  }, [verifierList, verifierSelectItems]);
+
   useEffect(() => {
     const _verifierMap: { [x: string]: VerifierItem } = {};
     verifierList?.forEach((item: VerifierItem) => {
@@ -174,13 +192,23 @@ function GuardianAdd({
     }, []);
     verifierMap.current = _verifierMap;
   }, [verifierList]);
-  const handleGuardianTypeChange = useCallback((value: AccountType) => {
-    setSelectGuardianType(value);
-    setEmailValue('');
-    setSocialValue(undefined);
-    setVerifierExist(false);
-    setAccountErr('');
-  }, []);
+  const handleGuardianTypeChange = useCallback(
+    (value: AccountType) => {
+      if (selectGuardianType && zkGuardianType.includes(selectGuardianType) && !zkGuardianType.includes(value)) {
+        setSelectVerifierId(undefined);
+      }
+      setZKAuth({});
+      setSelectGuardianType(value);
+      setEmailValue('');
+      setSocialValue(undefined);
+      setVerifierExist(false);
+      setAccountErr('');
+      if (zkGuardianType.includes(value)) {
+        setSelectVerifierId(zkLoginVerifierItem.id);
+      }
+    },
+    [selectGuardianType],
+  );
   const handleVerifierChange = useCallback((id: string) => {
     setSelectVerifierId(id);
     setVerifierExist(false);
@@ -287,9 +315,16 @@ function GuardianAdd({
             clientId,
             redirectURI,
             network: networkType,
+            managerAddress: managementAccount?.address,
           });
           if (!response?.token) throw new Error('add guardian failed');
           token = response.token;
+          setZKAuth({
+            id_token: response.idToken,
+            access_token: response.token,
+            nonce: response.nonce,
+            timestamp: response.timestamp,
+          });
         }
         const info = await socialUserInfo(v, token);
         return info;
@@ -304,7 +339,16 @@ function GuardianAdd({
         );
       }
     },
-    [guardianList, isErrorTip, networkType, onError, socialBasic, socialUserInfo, telegramInfo?.accessToken],
+    [
+      guardianList,
+      isErrorTip,
+      managementAccount?.address,
+      networkType,
+      onError,
+      socialBasic,
+      socialUserInfo,
+      telegramInfo?.accessToken,
+    ],
   );
 
   const socialVerify = useCallback(
@@ -314,27 +358,53 @@ function GuardianAdd({
           socialBasic(_guardian?.guardianType as ISocialLogin) || {};
         const info: any = await socialUserInfo(_guardian?.guardianType as ISocialLogin, _guardian?.accessToken || '');
         const operationType = OperationTypeEnum.addGuardian;
+        const isUseZK =
+          curGuardian.current?.guardianType &&
+          zkAuth.nonce &&
+          zkGuardianType.includes(curGuardian.current?.guardianType);
 
-        const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
-          accessToken: _guardian?.accessToken,
-          id: info?.id,
-          verifierId: _guardian?.verifierId || '',
-          chainId: originChainId,
-          clientId,
-          redirectURI,
-          networkType,
-          operationDetails: getOperationDetails(OperationTypeEnum.addGuardian, {
-            identifierHash: curGuardian.current?.identifierHash,
-            guardianType: curGuardian.current?.guardianType,
-            verifierId: curGuardian.current?.verifierId,
-          }),
-          operationType,
-          customLoginHandler,
-        });
-        if (!rst) return;
-        const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
-        const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
-        return { verifierInfo, guardianIdentifier };
+        if (isUseZK) {
+          if (!curGuardian.current?.guardianType) return;
+          const rst = await verifyZKLogin({
+            verifyToken: {
+              type: curGuardian.current?.guardianType,
+              accessToken: zkAuth.access_token,
+              verifierId: defaultSelectedVerifier?.id,
+              chainId: originChainId,
+              operationType: OperationTypeEnum.addGuardian,
+            },
+            jwt: zkAuth.id_token,
+            salt: randomId(),
+            kid: parseKidFromJWTToken(zkAuth.id_token!),
+            nonce: zkAuth.nonce,
+            timestamp: zkAuth.timestamp ?? 0,
+            managerAddress: managementAccount?.address ?? '',
+          });
+          const guardianIdentifier = rst.zkLoginInfo.identifierHash;
+          return { guardianIdentifier, zkLoginInfo: rst.zkLoginInfo };
+        } else {
+          const rst = await verifyToken(_guardian?.guardianType as ISocialLogin, {
+            accessToken: _guardian?.accessToken,
+            id: info?.id,
+            verifierId: _guardian?.verifierId || '',
+            chainId: originChainId,
+            clientId,
+            redirectURI,
+            networkType,
+            operationDetails: getOperationDetails(OperationTypeEnum.addGuardian, {
+              identifierHash: curGuardian.current?.identifierHash,
+              guardianType: curGuardian.current?.guardianType,
+              verifierId: curGuardian.current?.verifierId,
+            }),
+            operationType,
+            caHash,
+            customLoginHandler,
+          });
+          if (!rst) return;
+          const verifierInfo: IVerificationInfo = { ...rst, verifierId: _guardian?.verifierId };
+          const { guardianIdentifier } = handleVerificationDoc(verifierInfo.verificationDoc as string);
+          return { verifierInfo, guardianIdentifier };
+        }
       } catch (error) {
         errorTip(
           {
@@ -348,7 +418,23 @@ function GuardianAdd({
         setLoading(false);
       }
     },
-    [socialBasic, socialUserInfo, verifyToken, originChainId, networkType, isErrorTip, onError],
+    [
+      socialBasic,
+      socialUserInfo,
+      zkAuth.nonce,
+      zkAuth.access_token,
+      zkAuth.id_token,
+      zkAuth.timestamp,
+      verifyZKLogin,
+      defaultSelectedVerifier?.id,
+      originChainId,
+      managementAccount?.address,
+      verifyToken,
+      networkType,
+      isErrorTip,
+      caHash,
+      onError,
+    ],
   );
 
   const checkValid = useCallback(async () => {
@@ -380,10 +466,13 @@ function GuardianAdd({
       return false;
     }
     // 4. check verifier exist
-    const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
-    if (_verifierExist) {
-      setVerifierExist(true);
-      return false;
+
+    if (!(curGuardian.current?.guardianType && zkGuardianType.includes(curGuardian.current?.guardianType))) {
+      const _verifierExist = _guardianList?.some((temp) => temp.verifierId === verifier.id);
+      if (_verifierExist) {
+        setVerifierExist(true);
+        return false;
+      }
     }
 
     const _key = `${guardianAccount}&${verifier.id}`;
@@ -435,6 +524,7 @@ function GuardianAdd({
   const handleClearSocialAccount = useCallback(() => {
     setSocialValue(undefined);
     setAccountErr('');
+    setZKAuth({});
   }, []);
 
   const renderSocialGuardianAccount = useCallback(
@@ -495,7 +585,8 @@ function GuardianAdd({
     }),
     [emailValue, setEmailValue, renderSocialGuardianAccount, t],
   );
-  const verifySuccess = useCallback((res: { verificationDoc: string; signature: string; verifierId: string }) => {
+  const verifySuccess = useCallback((res: { verificationDoc?: string; signature?: string; verifierId: string }) => {
+    if (!res.verificationDoc || !res.signature) return;
     const { guardianIdentifier } = handleVerificationDoc(res.verificationDoc);
 
     curGuardian.current = {
@@ -564,9 +655,13 @@ function GuardianAdd({
   }, []);
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
+      let _cur = curGuardian.current;
+      if (_cur?.guardianType && zkGuardianType.includes(_cur?.guardianType)) {
+        _cur = Object.assign(_cur, { verifierId: defaultSelectedVerifier?.id, verifier: defaultSelectedVerifier });
+      }
       try {
         setLoading(true);
-        await handleAddGuardian?.(curGuardian.current!, approvalInfo);
+        await handleAddGuardian?.(_cur!, approvalInfo);
       } catch (e) {
         errorTip(
           {
@@ -580,7 +675,7 @@ function GuardianAdd({
         setLoading(false);
       }
     },
-    [handleAddGuardian, isErrorTip, onError],
+    [defaultSelectedVerifier, handleAddGuardian, isErrorTip, onError],
   );
   const onConfirm = useCallback(async () => {
     let _valid = true;
@@ -597,13 +692,23 @@ function GuardianAdd({
         try {
           setLoading(true);
           const res = await socialVerify(curGuardian.current!);
-          const { guardianIdentifier, verifierInfo } = res || {};
-          if (guardianIdentifier && verifierInfo) {
-            curGuardian.current = {
-              ...(curGuardian?.current as UserGuardianStatus),
-              identifierHash: guardianIdentifier,
-              ...verifierInfo,
-            };
+          const { guardianIdentifier, verifierInfo, zkLoginInfo } = res || {};
+          if (guardianIdentifier) {
+            if (zkLoginInfo) {
+              curGuardian.current = {
+                ...(curGuardian?.current as UserGuardianStatus),
+                identifierHash: guardianIdentifier,
+                zkLoginInfo,
+                verifier: defaultSelectedVerifier,
+                verifierId: defaultSelectedVerifier?.id,
+              };
+            } else {
+              curGuardian.current = {
+                ...(curGuardian?.current as UserGuardianStatus),
+                identifierHash: guardianIdentifier,
+                ...verifierInfo,
+              };
+            }
             setApprovalVisible(true);
           }
         } catch (e) {
@@ -633,7 +738,7 @@ function GuardianAdd({
         });
       }
     }
-  }, [checkValid, isErrorTip, onError, sendCode, socialValue, socialVerify]);
+  }, [checkValid, defaultSelectedVerifier, isErrorTip, onError, sendCode, socialValue?.id, socialVerify]);
   const onCloseApproval = useCallback(() => {
     setVerifierVisible(false);
     setApprovalVisible(false);
@@ -663,7 +768,11 @@ function GuardianAdd({
           <p className="guardian-add-input-item-label">{t('Verifier')}</p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
-            className="verifier-select, portkey-select-verifier-option-tip"
+            className={clsx(
+              'verifier-select',
+              'portkey-select-verifier-option-tip',
+              selectVerifierId === zkLoginVerifierItem.id && 'verifier-select-disabled',
+            )}
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
@@ -698,6 +807,7 @@ function GuardianAdd({
           isCountdownNow={curGuardian?.current?.isInitStatus}
           accountType={curGuardian?.current?.guardianType}
           isErrorTip={isErrorTip}
+          caHash={caHash}
           verifier={(curGuardian?.current?.verifier as VerifierItem) || verifierList?.[0]}
           onSuccess={verifySuccess}
           onError={onError}
@@ -717,6 +827,7 @@ function GuardianAdd({
           telegramInfo={telegramInfo}
           onConfirm={approvalSuccess}
           onError={onError}
+          caHash={caHash}
           operationType={OperationTypeEnum.addGuardian}
           operationDetails={getOperationDetails(OperationTypeEnum.addGuardian, {
             identifierHash: curGuardian.current?.identifierHash,

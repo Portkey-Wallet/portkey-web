@@ -7,12 +7,13 @@ import { BaseGuardianItem, OnErrorFunc, UserGuardianStatus, VerifyStatus } from 
 import useVerifier from '../../../hooks/useVerifier';
 import { GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import useSendCode from './useSendCode';
-import { SocialLoginList } from '../../../constants/guardian';
+import { AllSocialLoginList, SocialLoginList } from '../../../constants/guardian';
 import { getOperationDetails } from '../../utils/operation.util';
 
 interface Props {
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
+  beforeLastGuardianApprove?: () => void;
 }
 
 export enum NextStepType {
@@ -20,7 +21,7 @@ export enum NextStepType {
   SetPinAndAddManager = 'SetPinAndAddManager',
 }
 
-const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
+const useSignInHandler = ({ isErrorTip = true, onError, beforeLastGuardianApprove }: Props) => {
   const [{ sandboxId, chainType, networkType }] = usePortkey();
   const { verifySocialToken } = useVerifier();
   const sendCodeConfirm = useSendCode();
@@ -65,10 +66,12 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
       const verifier = guardian.verifier as VerifierItem;
       const operationType = OperationTypeEnum.communityRecovery;
       const operationDetails = getOperationDetails(operationType);
-
       const result = await verifySocialToken({
         accountType: guardian.guardianType,
         token: guardian.accessToken,
+        idToken: guardianIdentifierInfo.authenticationInfo?.idToken,
+        nonce: guardianIdentifierInfo.authenticationInfo?.nonce,
+        timestamp: guardianIdentifierInfo.authenticationInfo?.timestamp,
         guardianIdentifier: guardian.identifier || '',
         verifier,
         networkType,
@@ -76,13 +79,14 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
         operationType,
         operationDetails,
       });
-      if (!result?.signature || !result?.verificationDoc) throw 'Verify social login error';
+      if (!result?.zkLoginInfo && (!result?.signature || !result?.verificationDoc)) throw 'Verify social login error';
       const approvedItem = {
         type: guardian.guardianType,
         identifier: guardian.identifier || guardian.identifierHash || '',
         verifierId: guardian.verifier?.id || '',
         verificationDoc: result.verificationDoc,
         signature: result.signature,
+        zkLoginInfo: result.zkLoginInfo,
       };
 
       return approvedItem;
@@ -174,8 +178,9 @@ const useSignInHandler = ({ isErrorTip = true, onError }: Props) => {
 
       const accountType = guardian.guardianType;
       // social approve;
-      if (SocialLoginList.includes(accountType)) {
+      if (AllSocialLoginList.includes(accountType)) {
         try {
+          beforeLastGuardianApprove?.();
           const approvedItem = await approveSocialLogin(guardianIdentifierInfo, guardian);
           return {
             nextStep: NextStepType.SetPinAndAddManager,

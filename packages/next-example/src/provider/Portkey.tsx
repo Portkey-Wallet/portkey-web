@@ -50,6 +50,14 @@ export default function Portkey({ children }: { children?: ReactNode }) {
           change theme
         </Button>
         <Button onClick={handleNetworkTypeChange}>Only change networkType: {networkType}</Button>
+
+        <Button
+          onClick={async () => {
+            const VConsole = require('vconsole');
+            new VConsole();
+          }}>
+          VConsole
+        </Button>
         {children}
       </div>
     </PortkeyProvider>

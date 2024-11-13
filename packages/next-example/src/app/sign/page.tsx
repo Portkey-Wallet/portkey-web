@@ -11,11 +11,15 @@ import {
   TSignUpContinueHandler,
   SignUpValue,
   TModalMethodRef,
+  setLoading,
+  PortkeyLoading,
+  ScreenLoadingInfo,
 } from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
 import { sleep } from '@portkey/utils';
 import { Button } from 'antd';
 import { FetchRequest } from '@portkey/request';
+import { useRouter } from 'next/navigation';
 
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
@@ -50,8 +54,18 @@ export default function Sign() {
   const [design, setDesign] = useState<TDesign>('Web2Design');
   const [uiType, setUIType] = useState<UI_TYPE>('Modal');
 
+  const [loadingInfo, setLoadingInfo] = useState<ScreenLoadingInfo>();
+
   useEffect(() => {
     typeof window !== 'undefined' && setLifeCycle(JSON.parse(localStorage.getItem('portkeyLifeCycle') ?? '{}'));
+  }, []);
+
+  useEffect(() => {
+    ConfigProvider.setGlobalConfig({
+      globalLoadingHandler: {
+        onSetLoading: setLoadingInfo,
+      },
+    });
   }, []);
 
   const switchToV1Modal = useCallback(async () => {
@@ -115,10 +129,11 @@ export default function Sign() {
     },
     [switchToV1Modal],
   );
-
+  const router = useRouter();
   return (
     <div>
       <div>-----------</div>
+      <PortkeyLoading {...loadingInfo} className="sign-loading" />
       <SignIn
         pin={'111111'}
         ref={ref}
@@ -147,9 +162,10 @@ export default function Sign() {
         termsOfService={'https://portkey.finance/terms-of-service'}
         privacyPolicy={'https://portkey.finance/privacy-policy'}
         onFinish={async res => {
-          console.log(res, 'onFinish====');
+          console.log(res, 'onFinish====', did.didWallet);
           CHAIN_ID = res.chainId;
           did.save(PIN);
+          router.push('/assets');
         }}
         onError={error => {
           console.log(error, 'onError====error');
@@ -158,8 +174,16 @@ export default function Sign() {
           ref.current?.setOpen(false);
           setLifeCycle(undefined);
         }}
-        onCreatePending={info => {
+        onCreatePending={async info => {
           console.log(info, 'onCreatePending====info');
+          CHAIN_ID = info.didWallet?.chainId || 'AELF';
+          did.save(PIN);
+          ref.current?.setOpen(false);
+          setLoading(false);
+          console.log('did.DIDWallet==onCreatePending', did.didWallet);
+          localStorage.setItem('sessionId', JSON.stringify({ sessionId: info.sessionId }));
+          // const wallet = await did.load(PIN);
+          // console.log(wallet, did.didWallet, 'onCreatePending===wallet==load');
         }}
         onSignUp={onSignUpHandler}
         // defaultLifeCycle={{ LoginByScan: null }}
@@ -237,6 +261,79 @@ export default function Sign() {
           console.log(wallet, 'wallet==load');
         }}>
         load
+      </Button>
+
+      <div>-----------</div>
+
+      <Button
+        onClick={async () => {
+          const params = {
+            multiChainInfo: {
+              AELF: {
+                chainUrl: 'https://aelf-test-node.aelf.io/',
+                contractAddress: '238X6iw1j8YKcHvkDYVtYVbuYk2gJnK8UoNpVCtssynSpVC8hb',
+              },
+              tDVW: {
+                chainUrl: 'https://tdvw-test-node.aelf.io/',
+                contractAddress: '238X6iw1j8YKcHvkDYVtYVbuYk2gJnK8UoNpVCtssynSpVC8hb',
+              },
+            },
+            gatewayUrl: 'https://gateway-test.aelf.io',
+            chainId: 'tDVW' as ChainId,
+            method: 'ManagerTransfer',
+            params: {
+              AELF: {
+                caHash: did.didWallet.aaInfo.accountInfo?.caHash,
+                symbol: 'ELF',
+                amount: '10000000',
+                to: 'GyQX6t18kpwaD9XHXe1ToKxfov8mSeTLE9q9NwUAeTE8tULZk',
+              },
+              tDVW: {
+                caHash: did.didWallet.aaInfo.accountInfo?.caHash,
+                symbol: 'ELF',
+                amount: '10000000',
+                to: 'GyQX6t18kpwaD9XHXe1ToKxfov8mSeTLE9q9NwUAeTE8tULZk',
+              },
+            },
+          };
+          console.log(params, 'params==');
+          const result = await did.sendMultiTransaction({
+            multiChainInfo: {
+              AELF: {
+                chainUrl: 'https://aelf-test-node.aelf.io/',
+                contractAddress: '238X6iw1j8YKcHvkDYVtYVbuYk2gJnK8UoNpVCtssynSpVC8hb',
+              },
+              tDVW: {
+                chainUrl: 'https://tdvw-test-node.aelf.io/',
+                contractAddress: '238X6iw1j8YKcHvkDYVtYVbuYk2gJnK8UoNpVCtssynSpVC8hb',
+              },
+            },
+            gatewayUrl: 'https://gateway-test.aelf.io',
+            chainId: 'tDVW' as ChainId,
+            params: {
+              AELF: {
+                method: 'ManagerTransfer',
+                params: {
+                  caHash: did.didWallet.aaInfo.accountInfo?.caHash,
+                  symbol: 'ELF',
+                  amount: '10000000',
+                  to: 'GyQX6t18kpwaD9XHXe1ToKxfov8mSeTLE9q9NwUAeTE8tULZk',
+                },
+              },
+              tDVW: {
+                method: 'ManagerTransfer',
+                params: {
+                  caHash: did.didWallet.aaInfo.accountInfo?.caHash,
+                  symbol: 'ELF',
+                  amount: '10000000',
+                  to: 'GyQX6t18kpwaD9XHXe1ToKxfov8mSeTLE9q9NwUAeTE8tULZk',
+                },
+              },
+            },
+          });
+          console.log(result, 'wallet==sendMultiTransaction');
+        }}>
+        sendMultiTransaction
       </Button>
 
       <div>-----------</div>

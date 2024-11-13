@@ -14,6 +14,7 @@ import {
 } from '../utils';
 import { SocialLoginFinishHandler } from '../types';
 import { useThrottleFirstCallback } from './throttle';
+import { LoadingText } from '../types/loading';
 
 export const useSignHandler = ({
   defaultChainId,
@@ -31,6 +32,8 @@ export const useSignHandler = ({
   onChainIdChange: IBaseGetGuardianProps['onChainIdChange'];
 }) => {
   const isHasAccount = useRef<boolean>(false);
+  const originChainIdRef = useRef<ChainId>(defaultChainId);
+  const caInfoRef = useRef({ caHash: '', caAddress: '' });
 
   const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
     let isLoginGuardian = false;
@@ -38,11 +41,16 @@ export const useSignHandler = ({
       const { originChainId } = await did.services.getRegisterInfo({
         loginGuardianIdentifier: identifier,
       });
+      originChainIdRef.current = originChainId;
 
       const payload = await did.getHolderInfo({
         loginGuardianIdentifier: identifier,
         chainId: originChainId,
       });
+      caInfoRef.current = {
+        caAddress: payload.caAddress,
+        caHash: payload.caHash,
+      };
       if (payload?.guardianList?.guardians?.length > 0) {
         isLoginGuardian = true;
       }
@@ -60,7 +68,7 @@ export const useSignHandler = ({
 
   const validateEmail = useCallback(
     async (email?: string) => {
-      setLoading(true, 'Checking account info on the blockchain');
+      setLoading(true, LoadingText.CheckingAccount);
       await validateIdentifier(email);
       return customValidateEmail?.(email);
     },
@@ -69,7 +77,7 @@ export const useSignHandler = ({
 
   const validatePhone = useCallback(
     async (phone?: string) => {
-      setLoading(true, 'Checking account info on the blockchain');
+      setLoading(true, LoadingText.CheckingAccount);
       await validateIdentifier(phone?.replaceAll(/\s/g, ''));
       return customValidatePhone?.(phone);
     },
@@ -95,11 +103,11 @@ export const useSignHandler = ({
 
   const onFinish = useThrottleFirstCallback(
     async (value: GuardianInputInfo) => {
-      setLoading(true);
-      const chainId = await getIdentifierChainId(value.identifier.replaceAll(/\s/g, ''));
-      onChainIdChange?.(chainId);
-      setLoading(false);
-      onSuccess?.({ ...value, isLoginGuardian: isHasAccount.current, chainId });
+      onChainIdChange?.(originChainIdRef.current);
+      onSuccess?.(
+        { ...value, isLoginGuardian: isHasAccount.current, chainId: originChainIdRef.current },
+        { ...caInfoRef.current, originChainId: originChainIdRef.current },
+      );
     },
     [getIdentifierChainId, onChainIdChange, onSuccess],
   );
@@ -107,7 +115,7 @@ export const useSignHandler = ({
   const onSocialFinish: SocialLoginFinishHandler = useCallback(
     async ({ type, data }) => {
       try {
-        setLoading(true, 'Checking account info on the blockchain');
+        setLoading(true, LoadingText.CheckingAccount);
         if (!data) throw 'Action error';
 
         let userId = undefined;
@@ -139,7 +147,12 @@ export const useSignHandler = ({
         onFinish({
           identifier: userId,
           accountType: type,
-          authenticationInfo: { authToken: data?.accessToken },
+          authenticationInfo: {
+            authToken: data?.accessToken,
+            idToken: data?.idToken,
+            nonce: data?.nonce,
+            timestamp: data?.timestamp,
+          },
         });
       } catch (error) {
         setLoading(false);

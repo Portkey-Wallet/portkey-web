@@ -1,9 +1,10 @@
 import { ChainId } from '@portkey/types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import GuardianApprovalModalCom from './index.component';
-import { OperationTypeEnum } from '@portkey/services';
+import { GuardiansApproved, OperationTypeEnum } from '@portkey/services';
 import { TStringJSON } from '@portkey/types';
-import { GuardianApprovedItem, NetworkType } from '../../types';
+import { GuardianApprovedItem, NetworkType, UserGuardianStatus } from '../../types';
+import { VerifySocialLoginParams } from '../../hooks/authenticationAsync';
 
 export interface GuardianApprovalModalProps {
   className?: string;
@@ -11,6 +12,7 @@ export interface GuardianApprovalModalProps {
   caHash: string;
   originChainId: ChainId;
   targetChainId: ChainId;
+  guardianList?: UserGuardianStatus[];
   networkType: NetworkType;
   operationType: OperationTypeEnum;
   operationDetails?: TStringJSON;
@@ -18,13 +20,17 @@ export interface GuardianApprovalModalProps {
     amount?: string;
     symbol?: string;
   };
+  isAsyncVerify?: boolean;
   isErrorTip?: boolean;
   sandboxId?: string;
   toAddress?: string;
   onClose: () => void;
   onBack: () => void;
-  onApprovalSuccess: (approveList: GuardianApprovedItem[]) => void | Promise<void>;
+  onApprovalSuccess: (
+    approveList: (GuardianApprovedItem | (GuardiansApproved & { asyncVerifyInfoParams?: VerifySocialLoginParams }))[],
+  ) => void | Promise<void>;
   onApprovalError?: () => void;
+  onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
 }
 
 export default function GuardianApprovalModal(props: GuardianApprovalModalProps) {

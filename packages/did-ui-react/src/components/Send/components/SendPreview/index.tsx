@@ -16,6 +16,7 @@ export interface SendPreviewProps {
   isMainnet: boolean;
   amount: string;
   symbol: string;
+  label?: string;
   alias: string;
   balanceInUsd?: string;
   imageUrl: string;
@@ -36,6 +37,7 @@ export default function SendPreview({
   nickname = '--',
   amount,
   symbol,
+  label,
   alias,
   toAccount,
   transactionFee,
@@ -88,18 +90,18 @@ export default function SendPreview({
               })}
             &nbsp;
           </span>
-          {`${formatAmountShow(ZERO.plus(amount).minus(crossChainFee))} ${symbol}`}
+          {`${formatAmountShow(ZERO.plus(amount).minus(crossChainFee))} ${label || symbol}`}
         </>
       );
     }
-  }, [amount, crossChainFee, defaultTokenPrice, isMainnet, symbol, defaultToken]);
+  }, [amount, crossChainFee, defaultTokenPrice, isMainnet, label, symbol, defaultToken]);
 
   return (
     <div className="portkey-ui-send-preview">
       {type !== 'nft' ? (
         <div className="amount-preview">
           <p className="amount">
-            -{formatAmountShow(amount)} {symbol}
+            -{formatAmountShow(amount)} {label || symbol}
           </p>
           <p className="convert">{isMainnet && amountInUsdShow({ balance: amount, decimal: 0, price: symbolPrice })}</p>
         </div>
@@ -140,7 +142,7 @@ export default function SendPreview({
           <span>Network</span>
           <div>
             <p className="chain">
-              {`${chainShowText(chainId as ChainId)} ${chainId}->${chainShowText(toChain as ChainId)} ${toChain}`}
+              {`aelf ${chainShowText(chainId as ChainId)}->aelf ${chainShowText(toChain as ChainId)}`}
             </p>
           </div>
         </div>

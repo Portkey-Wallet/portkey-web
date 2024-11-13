@@ -1,7 +1,15 @@
 import { VerifierItem } from '@portkey/did';
-import type { AccountType, AccountTypeEnum, Guardian, Manager, OperationTypeEnum } from '@portkey/services';
+import type {
+  AccountType,
+  AccountTypeEnum,
+  Guardian,
+  Manager,
+  OperationTypeEnum,
+  ZKLoginInfo,
+} from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import { TSocialLoginHandler } from './wallet';
+import { VerifySocialLoginParams } from '../hooks/authenticationAsync';
 
 export interface BaseGuardianItem {
   isLoginGuardian: boolean | undefined;
@@ -17,11 +25,22 @@ export interface BaseGuardianItem {
   firstName?: string;
   lastName?: string;
   accessToken?: string;
+  verifiedByZk?: boolean;
+  manuallySupportForZk?: boolean;
+  zkLoginInfo?: ZKLoginInfo;
+}
+
+export interface IZKAuth {
+  access_token?: string;
+  id_token?: string;
+  nonce?: string;
+  timestamp?: number;
 }
 export interface IVerificationInfo {
   signature?: string;
   verificationDoc?: string;
   verifierId?: string;
+  zkLoginInfo?: ZKLoginInfo;
 }
 export interface IVerifierInfo {
   sessionId: string;
@@ -39,6 +58,7 @@ export enum VerifyStatus {
 }
 export interface UserGuardianStatus extends IVerificationInfo, UserGuardianItem {
   status?: VerifyStatus;
+  asyncVerifyInfoParams?: VerifySocialLoginParams;
 }
 
 // 0: register, 1: community recovery, 2: Add Guardian 3: Set LoginAccount 4: addManager
@@ -69,9 +89,10 @@ export interface IGuardiansApproved {
   identifierHash: string;
   verificationInfo: {
     id: string;
-    signature: string | number[];
-    verificationDoc: string;
+    signature?: string | number[];
+    verificationDoc?: string;
   };
+  zkLoginInfo?: ZKLoginInfoInContract;
 }
 
 export interface IVerification {
@@ -85,6 +106,8 @@ export interface GuardianApprovedItem {
   type: AccountTypeEnum;
   identifierHash?: string;
   verificationInfo: IVerification;
+  zkLoginInfo?: ZKLoginInfoInContract;
+  updateSupportZk?: boolean;
 }
 
 export interface IApproveDetail {
@@ -98,4 +121,34 @@ export interface IApproveDetail {
   operationType: OperationTypeEnum;
   symbol?: string;
   amount?: string;
+}
+
+export interface ZKProofInfo {
+  zkProofPiA: string;
+  zkProofPiB1: string;
+  zkProofPiB2: string;
+  zkProofPiB3: string;
+  zkProofPiC: string;
+}
+
+export interface ZKLoginInfoNoncePayload {
+  addManagerAddress: {
+    timestamp: {
+      seconds: number;
+    };
+    managerAddress: string;
+  };
+}
+
+export interface ZKLoginInfoInContract {
+  identifierHash: string;
+  poseidonIdentifierHash: string;
+  salt: string;
+  kid: string;
+  circuitId: string;
+  zkProof: string;
+  zkProofInfo: ZKProofInfo;
+  nonce: string;
+  noncePayload: ZKLoginInfoNoncePayload;
+  issuer: string;
 }

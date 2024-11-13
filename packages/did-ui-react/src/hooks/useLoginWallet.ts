@@ -2,12 +2,15 @@ import { useCallback, useEffect, useRef } from 'react';
 import { AddManagerType, CreatePendingInfo } from '../components/types';
 import { did, errorTip, extraDataEncode, handlerErrorTipLevel, randomId, setLoading } from '../utils';
 import { LoginResult, RegisterResult } from '@portkey/did';
+import { LoginStatusEnum } from '@portkey/types';
 import { OnErrorFunc } from '../types';
 import { ChainId } from '@portkey/types';
 import { AccountType, GuardiansApproved, RecoverStatusResult, RegisterStatusResult } from '@portkey/services';
 import { DEVICE_TYPE, getDeviceInfo } from '../constants/device';
+import { LoadingText } from '../types/loading';
 
 type onCreatePendingType = (pendingInfo: CreatePendingInfo) => void;
+type beforeCreatePendingType = (pendingInfo: CreatePendingInfo) => void;
 
 interface CreateWalletParams {
   pin: string;
@@ -16,25 +19,30 @@ interface CreateWalletParams {
   accountType: AccountType;
   guardianIdentifier: string;
   guardianApprovedList: GuardiansApproved[];
+  source?: number;
 }
 
 export function useLoginWallet({
   isErrorTip = true,
   onError,
   onCreatePending,
+  beforeCreatePending,
 }:
   | {
       isErrorTip?: boolean;
       onCreatePending?: onCreatePendingType;
+      beforeCreatePending?: beforeCreatePendingType;
       onError?: OnErrorFunc;
     }
   | undefined = {}) {
   const onErrorRef = useRef<OnErrorFunc | undefined>(onError);
   const onCreatePendingRef = useRef<onCreatePendingType | undefined>(onCreatePending);
+  const beforeCreatePendingRef = useRef<beforeCreatePendingType | undefined>(beforeCreatePending);
 
   useEffect(() => {
     onErrorRef.current = onError;
     onCreatePendingRef.current = onCreatePending;
+    beforeCreatePendingRef.current = beforeCreatePending;
   });
 
   const getRequestStatus = useCallback(
@@ -56,6 +64,7 @@ export function useLoginWallet({
           const { recoveryStatus } = status;
 
           if (recoveryStatus !== 'pass') {
+            did.didWallet.updateLoginStatus(LoginStatusEnum.FAIL);
             throw new Error((status as RecoverStatusResult).recoveryMessage);
           }
         }
@@ -90,6 +99,7 @@ export function useLoginWallet({
         verifierId: registerVerifier.verifierId,
         verificationDoc: registerVerifier.verificationDoc,
         signature: registerVerifier.signature,
+        zkLoginInfo: registerVerifier.zkLoginInfo,
         context: {
           clientId,
           requestId,
@@ -119,7 +129,15 @@ export function useLoginWallet({
   );
 
   const requestRecoveryWallet = useCallback(
-    async ({ pin, chainId, accountType, guardianIdentifier, guardianApprovedList, type }: CreateWalletParams) => {
+    async ({
+      pin,
+      chainId,
+      accountType,
+      guardianIdentifier,
+      guardianApprovedList,
+      type,
+      source,
+    }: CreateWalletParams) => {
       if (!guardianIdentifier || !accountType) throw 'Missing account!!! Please login/register again';
 
       const wallet = did.didWallet;
@@ -133,7 +151,7 @@ export function useLoginWallet({
       const extraData = await extraDataEncode(getDeviceInfo(DEVICE_TYPE), '');
 
       const _guardianApprovedList = guardianApprovedList.filter((item) =>
-        Boolean(item.signature && item.verificationDoc),
+        Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo),
       );
 
       const params = {
@@ -147,10 +165,17 @@ export function useLoginWallet({
         },
       };
 
-      const { sessionId } = await did.services.recovery({
+      const {
+        sessionId,
+        caAddress = '',
+        caHash = '',
+      } = await did.services.recovery({
         ...params,
         manager: managerAddress,
+        source: source ?? 4, // SDK Type
       });
+
+      did.didWallet.saveTempStatus({ chainId, caAddress, caHash, sessionId });
 
       onCreatePendingRef.current?.({
         sessionId,
@@ -159,6 +184,22 @@ export function useLoginWallet({
         pin,
         createType: type,
         walletInfo: wallet.managementAccount!.wallet,
+        didWallet: {
+          caInfo: {
+            caAddress,
+            caHash,
+          },
+          accountInfo: {
+            managerUniqueId: sessionId,
+            guardianIdentifier,
+            accountType,
+            type: 'recovery',
+          },
+          createType: 'recovery',
+          chainId,
+          pin,
+          walletInfo: wallet.managementAccount!.wallet,
+        },
       });
       return getRequestStatus({
         chainId,
@@ -170,12 +211,19 @@ export function useLoginWallet({
   );
 
   const createWallet = useCallback(
-    async ({ pin, type, chainId, accountType, guardianIdentifier, guardianApprovedList }: CreateWalletParams) => {
+    async ({
+      pin,
+      type,
+      chainId,
+      accountType,
+      guardianIdentifier,
+      guardianApprovedList,
+      source,
+    }: CreateWalletParams) => {
       try {
         if (!guardianIdentifier) throw 'Missing account!!!';
 
-        const loadingText =
-          type === 'recovery' ? 'Initiating social recovery...' : 'Creating a wallet address on the blockchain';
+        const loadingText = type === 'recovery' ? LoadingText.InitiatingRecovery : LoadingText.CreateWallet;
         if (!did.didWallet.managementAccount) {
           handlerErrorTipLevel(`Management information not detected, please "did.create" before`, 'throwError');
         }
@@ -189,6 +237,7 @@ export function useLoginWallet({
           accountType,
           guardianIdentifier,
           guardianApprovedList,
+          source,
         };
         if (type === 'register') {
           walletResult = await requestRegisterWallet(walletParams);

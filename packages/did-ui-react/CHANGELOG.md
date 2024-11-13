@@ -3,6 +3,458 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.8...v2.15.9) (2024-11-07)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.15.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.7...v2.15.8) (2024-11-07)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.15.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.6...v2.15.7) (2024-11-07)
+
+### Features
+
+- 🎸 import get config constants ([fc7aa9d](https://github.com/Portkey-Wallet/portkey-web/commit/fc7aa9d6fc0edd0b5db091c0abd7d4e30644bdbb))
+
+## [2.15.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5...v2.15.6) (2024-11-06)
+
+### Features
+
+- 🎸 import openlogin ([71e7b26](https://github.com/Portkey-Wallet/portkey-web/commit/71e7b2682ae252d13760fe1b645d559ffd8e454e))
+
+## [2.15.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.1...v2.15.5) (2024-11-06)
+
+### Bug Fixes
+
+- 🐛 add initTelegram ([68e8f72](https://github.com/Portkey-Wallet/portkey-web/commit/68e8f7252536cc884eeb81b6bbe99714affc7e39))
+
+## [2.15.5-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.0...v2.15.5-alpha.1) (2024-11-06)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.15.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.4...v2.15.5-alpha.0) (2024-11-06)
+
+### Features
+
+- add source for createWallet ([b64e26f](https://github.com/Portkey-Wallet/portkey-web/commit/b64e26f095eb44bde88b0dba99078d2447d1daf1))
+
+## [2.15.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.3...v2.15.4) (2024-11-05)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.15.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.2...v2.15.3) (2024-11-05)
+
+### Bug Fixes
+
+- 🐛 change trycatch ([6653468](https://github.com/Portkey-Wallet/portkey-web/commit/6653468ff26b8b1c16e328694c5c93d5a0bb0375))
+
+## [2.15.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.2-alpha.0...v2.15.2) (2024-11-02)
+
+### Bug Fixes
+
+- 🐛 check telegram platform ([c4a339e](https://github.com/Portkey-Wallet/portkey-web/commit/c4a339e60cbb60b1d9995ab88dc3c87038c7dabd))
+
+## [2.15.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.1...v2.15.2-alpha.0) (2024-11-01)
+
+### Bug Fixes
+
+- 🐛 tg platform ([eec5bca](https://github.com/Portkey-Wallet/portkey-web/commit/eec5bca32bfc9716695bd2a0be84376e94d9d659))
+
+## [2.15.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.0...v2.15.1) (2024-11-01)
+
+## [2.14.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.1-alpha.0...v2.14.2-alpha.0) (2024-10-30)
+
+## [2.14.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.7...v2.14.1-alpha.0) (2024-10-30)
+
+### Features
+
+- 🎸 get verfiy server by api ([f8d5024](https://github.com/Portkey-Wallet/portkey-web/commit/f8d502455353009ca8b1ca88d09f1f6d5f4e7406))
+
+## [2.15.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.7...v2.15.0) (2024-10-31)
+
+### Features
+
+- change sidechain name ([946aa5c](https://github.com/Portkey-Wallet/portkey-web/commit/946aa5c1894717c4f214de0e35d616b5d075c3bf))
+
+## [2.14.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.7...v2.14.0) (2024-10-31)
+
+### Features
+
+- change sidechain name ([946aa5c](https://github.com/Portkey-Wallet/portkey-web/commit/946aa5c1894717c4f214de0e35d616b5d075c3bf))
+
+## [2.14.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.6...v2.14.0-alpha.7) (2024-10-25)
+
+### Features
+
+- 🎸 update defaultChainId ([dc3307f](https://github.com/Portkey-Wallet/portkey-web/commit/dc3307fee5171d06d699c7c64a0029035e446f7d))
+
+## [2.14.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.5...v2.14.0-alpha.6) (2024-10-23)
+
+### Features
+
+- 🎸 update multi verify ([3b4eee6](https://github.com/Portkey-Wallet/portkey-web/commit/3b4eee6421cf298a6e0b062fd5e338a3c85ed7a1))
+
+## [2.14.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.4...v2.14.0-alpha.5) (2024-10-23)
+
+### Features
+
+- 🎸 verify google ([db43443](https://github.com/Portkey-Wallet/portkey-web/commit/db434432cb22c992defe685a670f9373ddc1109f))
+
+## [2.14.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.3...v2.14.0-alpha.4) (2024-10-23)
+
+### Features
+
+- 🎸 update multi verify ([6e00154](https://github.com/Portkey-Wallet/portkey-web/commit/6e0015442c97b186bf1abce0f4095006f0eba43c))
+
+## [2.14.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.2...v2.14.0-alpha.3) (2024-10-23)
+
+### Features
+
+- 🎸 add async approve ([06470e1](https://github.com/Portkey-Wallet/portkey-web/commit/06470e1e3355f8b3f223a07bee591f8ca6aa556c))
+- 🎸 async verify ([e51eed6](https://github.com/Portkey-Wallet/portkey-web/commit/e51eed6097450f3d5cedf7529e4f0fc1fd5db391))
+- 🎸 format guardian list ([e0979b6](https://github.com/Portkey-Wallet/portkey-web/commit/e0979b63a9c029b22e49053451d7582215eaf28d))
+
+## [2.14.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.1...v2.14.0-alpha.2) (2024-10-23)
+
+### Features
+
+- 🎸 update beforeCreatePending ([42c9e1c](https://github.com/Portkey-Wallet/portkey-web/commit/42c9e1cb252bac825a4971a0d888f731364c9c02))
+
+## [2.14.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.3-alpha.2...v2.14.0-alpha.1) (2024-10-23)
+
+## [2.14.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.2...v2.14.0-alpha.0) (2024-10-22)
+
+### Features
+
+- 🎸 Add custom configuration loading ([a634f6f](https://github.com/Portkey-Wallet/portkey-web/commit/a634f6fd8026770ee162bf9dc764cf1b49f0c17e))
+
+## [2.14.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.2...v2.14.0-alpha.0) (2024-10-22)
+
+### Features
+
+- 🎸 Add custom configuration loading ([a634f6f](https://github.com/Portkey-Wallet/portkey-web/commit/a634f6fd8026770ee162bf9dc764cf1b49f0c17e))
+
+## [2.13.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.1...v2.13.2) (2024-10-21)
+
+### Features
+
+- 🎸 add rc-notification dependency ([54f0628](https://github.com/Portkey-Wallet/portkey-web/commit/54f06283a11e383bd5ea566bdb0609ac79cf3275))
+
+## [2.13.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.0...v2.13.1) (2024-10-17)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.13.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.1-alpha.1...v2.13.0) (2024-10-17)
+
+### Features
+
+- opt sdk ui ([26117df](https://github.com/Portkey-Wallet/portkey-web/commit/26117df66765c4501330bc3a1d83175146a23159))
+
+## [2.12.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.1-alpha.0...v2.12.1-alpha.1) (2024-10-16)
+
+## [2.12.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.2...v2.12.0) (2024-10-14)
+
+## [2.12.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.1...v2.12.0-alpha.2) (2024-10-12)
+
+### Features
+
+- 🎸 add header component in keyboard ([2e0bfd2](https://github.com/Portkey-Wallet/portkey-web/commit/2e0bfd26bc5449c413114fc205b5b532619c9ef5))
+
+## [2.12.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.12.0-alpha.1) (2024-10-11)
+
+### Features
+
+- 🎸 forget pin ([3e140bc](https://github.com/Portkey-Wallet/portkey-web/commit/3e140bc76fc2c9c83f27e09df0917e45cb1c3216))
+
+## [2.12.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.12.1-alpha.0) (2024-10-14)
+
+### Features
+
+- 🎸 add tg user changed handler ([480f6dd](https://github.com/Portkey-Wallet/portkey-web/commit/480f6dd33f9b8947031abdf7c518cfe69a85312a))
+
+## [2.11.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.16...v2.11.0) (2024-10-08)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.11.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.15...v2.11.0-alpha.16) (2024-09-30)
+
+### Features
+
+- 🎸 update activity list ([d25f38e](https://github.com/Portkey-Wallet/portkey-web/commit/d25f38ec0a8edb2580041fd2ac8cfe11b9ec6de6))
+
+## [2.11.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.14...v2.11.0-alpha.15) (2024-09-30)
+
+### Bug Fixes
+
+- 🐛 get aainfo ([733ed32](https://github.com/Portkey-Wallet/portkey-web/commit/733ed328806eb73d1db0a00f6ab50fc2d40f1b0f))
+
+## [2.8.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.8.1) (2024-08-30)
+
+### Bug Fixes
+
+- 🐛 aainfo null when scan login ([521dd45](https://github.com/Portkey-Wallet/portkey-web/commit/521dd455026d4320ff5065784f1a7517a15fc6a6))
+
+## [2.11.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.13...v2.11.0-alpha.14) (2024-09-30)
+
+### Features
+
+- 🎸 update activity fetch ([93110c1](https://github.com/Portkey-Wallet/portkey-web/commit/93110c1510cce4c2f46766bd692266fa3c7729ab))
+
+## [2.11.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.12...v2.11.0-alpha.13) (2024-09-30)
+
+### Features
+
+- 🎸 add loadingTip utils ([8cfd51c](https://github.com/Portkey-Wallet/portkey-web/commit/8cfd51ca6a082926ec2090571db0c2d02a36fd5b))
+
+## [2.11.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.11...v2.11.0-alpha.12) (2024-09-30)
+
+### Features
+
+- 🎸 add send tip ([772a876](https://github.com/Portkey-Wallet/portkey-web/commit/772a87613eac7c2df3b4a2ec26af5b60737e7c41))
+
+## [2.11.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.10...v2.11.0-alpha.11) (2024-09-29)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.11.0-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.9...v2.11.0-alpha.10) (2024-09-29)
+
+### Features
+
+- 🎸 save sessionId ([9c1e8ea](https://github.com/Portkey-Wallet/portkey-web/commit/9c1e8ead5a444292c163c4c4ef4fd6c8d3b5654a))
+
+## [2.11.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.8...v2.11.0-alpha.9) (2024-09-29)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.11.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.7...v2.11.0-alpha.8) (2024-09-29)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.11.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.6...v2.11.0-alpha.7) (2024-09-29)
+
+### Features
+
+- 🎸 update loginOptTip ([909ac23](https://github.com/Portkey-Wallet/portkey-web/commit/909ac235f11816b93046ba761740ebb1b6267d92))
+
+### Bug Fixes
+
+- 🐛 verify zk ([1807583](https://github.com/Portkey-Wallet/portkey-web/commit/1807583caaef87672f250fef5072c26b392bcadf))
+
+## [2.11.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.5...v2.11.0-alpha.6) (2024-09-28)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.11.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.4...v2.11.0-alpha.5) (2024-09-28)
+
+### Features
+
+- 🎸 update assets ([3bdeddc](https://github.com/Portkey-Wallet/portkey-web/commit/3bdeddc70da7605bed5df0bac8304454d9d26f22))
+
+## [2.11.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.3...v2.11.0-alpha.4) (2024-09-27)
+
+### Features
+
+- 🎸 define LoginStatusEnum ([8d0af2f](https://github.com/Portkey-Wallet/portkey-web/commit/8d0af2fd44a46d10651848756e228a61eae5d579))
+
+## [2.11.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.2...v2.11.0-alpha.3) (2024-09-26)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.11.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.1...v2.11.0-alpha.2) (2024-09-26)
+
+### Features
+
+- 🎸 return didWallet \* add loginStatus ([e1bada7](https://github.com/Portkey-Wallet/portkey-web/commit/e1bada7dcdf459e50520b26cce55c11d9ebdfdcf))
+
+## [2.11.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.0...v2.11.0-alpha.1) (2024-09-25)
+
+### Features
+
+- 🎸 asset logic update ([d07ff03](https://github.com/Portkey-Wallet/portkey-web/commit/d07ff030fb8e9113c5f896790893bd001e347b0d))
+
+## [2.11.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.2...v2.11.0-alpha.0) (2024-09-25)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.10.6-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.1...v2.10.6-alpha.2) (2024-09-25)
+
+### Features
+
+- 🎸 login optimize ([edcba70](https://github.com/Portkey-Wallet/portkey-web/commit/edcba701532002503994c47186f49ba27e966322))
+
+## [2.10.6-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.0...v2.10.6-alpha.1) (2024-09-14)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.10.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.5...v2.10.6-alpha.0) (2024-09-14)
+
+### Bug Fixes
+
+- networkType error ([711ba77](https://github.com/Portkey-Wallet/portkey-web/commit/711ba7753921b4a23bdea8ff13fabb5e22ab0df7))
+
+## [2.10.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.4...v2.10.5) (2024-09-14)
+
+### Bug Fixes
+
+- notShowFromAndNetworkUI ([2aabcba](https://github.com/Portkey-Wallet/portkey-web/commit/2aabcbae2d522ebad4125a651b063d4be331b8d4))
+
+## [2.10.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.3...v2.10.4) (2024-09-14)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.10.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.2...v2.10.3) (2024-09-14)
+
+### Features
+
+- change show usd ([b1a857b](https://github.com/Portkey-Wallet/portkey-web/commit/b1a857b5e0c817acea489cbc048426429f9f5d46))
+
+## [2.10.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.1...v2.10.2) (2024-09-13)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.10.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.6...v2.10.1) (2024-09-12)
+
+### Features
+
+- sdk for human machine verify ([4cdea0d](https://github.com/Portkey-Wallet/portkey-web/commit/4cdea0dd55f17925208f2946cc8c952ea8c54c9b))
+
+## [2.10.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.6...v2.10.0) (2024-09-12)
+
+### Features
+
+- sdk for human machine verify ([4cdea0d](https://github.com/Portkey-Wallet/portkey-web/commit/4cdea0dd55f17925208f2946cc8c952ea8c54c9b))
+
+## [2.9.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.5...v2.9.6-alpha.6) (2024-09-04)
+
+### Bug Fixes
+
+- 🐛 apple verify ([38b59c0](https://github.com/Portkey-Wallet/portkey-web/commit/38b59c076e7e5f9d340f8f98ab98511096c24fb2))
+
+## [2.9.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.4...v2.9.6-alpha.5) (2024-09-03)
+
+### Features
+
+- verify zk add targetChainId params ([87988c3](https://github.com/Portkey-Wallet/portkey-web/commit/87988c3cb0ff4afcca7f289365efe306b3c0a200))
+
+### Bug Fixes
+
+- 🐛 apple verify idToken ([622f1e2](https://github.com/Portkey-Wallet/portkey-web/commit/622f1e2ae03b6481d9822e9fa23d37e63b9906f8))
+
+## [2.9.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.3...v2.9.6-alpha.4) (2024-09-03)
+
+### Bug Fixes
+
+- 🐛 manager approve zk ([32297e7](https://github.com/Portkey-Wallet/portkey-web/commit/32297e7e1a9d4569221e28994b0b68a3b413e09d))
+
+## [2.9.6-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.2...v2.9.6-alpha.3) (2024-09-03)
+
+### Bug Fixes
+
+- 🐛 update social type ([c3ad7dd](https://github.com/Portkey-Wallet/portkey-web/commit/c3ad7dd13c36b60fa68d105164ae51601a4dd5c5))
+
+## [2.9.6-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.1...v2.9.6-alpha.2) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.6-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.1) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.0) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.4...v2.9.5-alpha.0) (2024-09-03)
+
+### Bug Fixes
+
+- caHash params ([63339e3](https://github.com/Portkey-Wallet/portkey-web/commit/63339e33ee37237eade1b9fac2cd3d2e80e4439b))
+
+## [2.9.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.3...v2.9.4) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.2...v2.9.3) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.9.2) (2024-09-02)
+
+### Features
+
+- add caHash params ([82eb609](https://github.com/Portkey-Wallet/portkey-web/commit/82eb6095402784bee712329e188764e896420031))
+- add copywritting ([6e74a4c](https://github.com/Portkey-Wallet/portkey-web/commit/6e74a4cf12ad900ffb9228ea31d76b32bc7cadd2))
+- add secondary mailbox ([d5293c0](https://github.com/Portkey-Wallet/portkey-web/commit/d5293c0940ab2ceb1f35c868ad8c9532fdf2b071))
+- change check verify code logic ([94cd8da](https://github.com/Portkey-Wallet/portkey-web/commit/94cd8da2efd5a41b8d621bbbf350700e1c8d4f2f))
+- security ([73ecbeb](https://github.com/Portkey-Wallet/portkey-web/commit/73ecbeb5afb43b15122cfa5479c92da13b2fc662))
+
+### Bug Fixes
+
+- 🐛 social auth ([e191b1e](https://github.com/Portkey-Wallet/portkey-web/commit/e191b1e3d04d4e9bf859ab3f7e3515b33aa51552))
+- update secondary email ([21c392a](https://github.com/Portkey-Wallet/portkey-web/commit/21c392aa5a0438c440aa0151f7939c68cd3b80eb))
+
+## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.9.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.9.0) (2024-08-29)
+
+### Features
+
+- 🎸 update zk logic ([42bcb35](https://github.com/Portkey-Wallet/portkey-web/commit/42bcb353ccf1c191677228cafbcf8f80b36f7cc7))
+- 🎸 zklogin ([c089cfb](https://github.com/Portkey-Wallet/portkey-web/commit/c089cfb2a7bfd851d0b658a9f63ff8bf0b6ea71e))
+- 🎸 zklogin finish recovery ([daee4f3](https://github.com/Portkey-Wallet/portkey-web/commit/daee4f3d61cb3eaec55f564e5722d287b75d50eb))
+- 🎸 zklogin finish register ([13c619f](https://github.com/Portkey-Wallet/portkey-web/commit/13c619f8f26de96905023c574160306eb1e45cd6))
+- 🎸 zkLogin fix type error ([fbd4e02](https://github.com/Portkey-Wallet/portkey-web/commit/fbd4e023089bb94fc773a6ebc9220b93191d308e))
+- 🎸 zklogin signin logic ([f33631e](https://github.com/Portkey-Wallet/portkey-web/commit/f33631e36e63ab4f31c239090e2f46eee3a2bcf7))
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/Portkey-Wallet/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/Portkey-Wallet/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/Portkey-Wallet/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/Portkey-Wallet/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+### Bug Fixes
+
+- 🐛 guardian approve ([e0d49a0](https://github.com/Portkey-Wallet/portkey-web/commit/e0d49a0d393edad88293cf5c4a97db425f9add61))
+- 🐛 set login account error & set transfer limit ([338e126](https://github.com/Portkey-Wallet/portkey-web/commit/338e126a37fae6f6da10f8e5a2a950e795031d3d))
+
+## [2.8.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.8.0) (2024-08-07)
+
+### Features
+
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/Portkey-Wallet/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/Portkey-Wallet/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/Portkey-Wallet/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/Portkey-Wallet/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+## [2.7.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.7.4) (2024-08-07)
+
+### Features
+
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/Portkey-Wallet/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/Portkey-Wallet/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/Portkey-Wallet/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/Portkey-Wallet/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+## [2.7.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.7.3) (2024-08-07)
+
+### Features
+
+- 1. add api version 2.show main crypto balance in usd 3.change faucet error msg ([e69de47](https://github.com/Portkey-Wallet/portkey-web/commit/e69de4712c5586c56fce186806f2ac6bad06e641))
+- change page router ([91027ef](https://github.com/Portkey-Wallet/portkey-web/commit/91027efabedd1a591234bd9066af992c9f67f254))
+- sgr label show ([e4f90b3](https://github.com/Portkey-Wallet/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+- sgr show ([4ae6d40](https://github.com/Portkey-Wallet/portkey-web/commit/4ae6d40283cf17ac7a83049e100d4da2035eb0bc))
+
+## [2.7.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1...v2.7.2) (2024-07-31)
+
+### Bug Fixes
+
+- 🐛 allowance max ([4467393](https://github.com/Portkey-Wallet/portkey-web/commit/4467393888a1fe1d15cff399b450cd57c6e41f58))
+
+## [2.7.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.4...v2.7.1) (2024-07-31)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
 ## [2.7.1-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.3...v2.7.1-alpha.4) (2024-07-18)
 
 ### Bug Fixes

@@ -4,7 +4,6 @@
 ![Node Version](https://img.shields.io/badge/node-14.x-green)
 [![NPM Package Version][npm-image-version]][npm-url]
 
-
 ## Installation
 
 ### Using NPM
@@ -75,11 +74,10 @@ contract.callViewMethod('your method', paramsOption);
 // call send
 contract.callSendMethod('your method', 'your address', paramsOption);
 ```
+
 ### standard types
 
 [contract types](../types/src/contract.ts)
-
-
 
 [npm-image-version]: https://img.shields.io/npm/v/@portkey/contracts
 [npm-url]: https://npmjs.org/package/@portkey/contracts

@@ -2,7 +2,7 @@ import { AccountType } from '@portkey/services';
 import { LoginMethod, TGAPageKey } from './types';
 import { ConfigProvider } from '../../components';
 import { GA_API_SECRET, MEASUREMENT_ID } from '../../constants/google-analytics';
-import { getCustomNetworkType } from '../../components/config-provider/utils';
+import { getCustomNetworkType, getProviderNetworkType } from '../../components/config-provider/utils';
 import { IStorageSuite } from '@portkey/types';
 import { randomId } from '@portkey/utils';
 
@@ -30,11 +30,13 @@ class Analytics {
   // Stores client id in local storage to keep the same client id as long as
   // the page is installed.
   async getOrCreateClientId() {
-    let clientId = await this.storageMethod.getItem('clientId');
+    let clientId = await this.storageMethod.getItem('analytics-clientId');
+
     if (!clientId) {
       // Generate a unique client ID, the actual value is not relevant
       clientId = randomId();
-      await this.storageMethod.setItem('clientId', clientId);
+
+      await this.storageMethod.setItem('analytics-clientId', clientId);
     }
     return clientId;
   }
@@ -43,7 +45,7 @@ class Analytics {
   // the previous one has expired.
   async getOrCreateSessionId() {
     // Use storage.session because it is only in memory
-    let sessionData = await this.storageMethod.getItem('sessionData');
+    let sessionData = await this.storageMethod.getItem('analytic-sessionData');
     const currentTimeInMs = Date.now();
     // Check if session exists and is still valid
     if (sessionData && sessionData.timestamp) {
@@ -56,7 +58,7 @@ class Analytics {
       } else {
         // Update timestamp to keep session alive
         sessionData.timestamp = currentTimeInMs;
-        await this.storageMethod.setItem('sessionData', JSON.stringify(sessionData));
+        await this.storageMethod.setItem('analytic-sessionData', JSON.stringify(sessionData));
       }
     }
     if (!sessionData) {
@@ -65,7 +67,7 @@ class Analytics {
         session_id: currentTimeInMs.toString(),
         timestamp: currentTimeInMs.toString(),
       };
-      await this.storageMethod.setItem('sessionData', JSON.stringify(sessionData));
+      await this.storageMethod.setItem('analytic-sessionData', JSON.stringify(sessionData));
     }
     return sessionData.session_id;
   }
@@ -82,6 +84,8 @@ class Analytics {
     if (!params.engagement_time_msec) {
       params.engagement_time_msec = DEFAULT_ENGAGEMENT_TIME_MSEC;
     }
+    params.networkType = getProviderNetworkType();
+
     if (!GA_API_SECRET) return;
     try {
       const response = await fetch(
@@ -102,22 +106,23 @@ class Analytics {
       if (!this.debug) {
         return;
       }
-      console.log(await response.text());
+      console.log(await response.text(), 'fireEvent=', name);
     } catch (e) {
       console.error('Google Analytics request failed with an exception', e);
     }
   }
 
   get _storage(): IStorageSuite {
+    const storageStore = typeof localStorage !== 'undefined' ? localStorage : this.storageStore;
     return {
       setItem: async (key: string, value: string) => {
-        this.storageStore[key] = value;
+        storageStore[key] = value;
       },
       getItem: async (key: string) => {
-        return this.storageStore[key];
+        return storageStore[key];
       },
       removeItem: async (key: string) => {
-        delete this.storageStore[key];
+        delete storageStore[key];
       },
     };
   }
@@ -132,7 +137,7 @@ class Analytics {
     try {
       const params = { timestamp: Date.now(), loginType };
 
-      await this.storageMethod?.setItem('loginStart', JSON.stringify(params));
+      await this.storageMethod?.setItem('analytic-loginStart', JSON.stringify(params));
 
       // return this.fireEvent('portkey_sdk_login_start', {
       //   ...params,
@@ -145,17 +150,29 @@ class Analytics {
 
   async loginEndEvent(loginMethod: LoginMethod, additionalParams = {}) {
     try {
-      const loginStart = await this.storageMethod?.getItem('loginStart');
-      if (!loginStart) return;
-      const { loginType, timestamp } = JSON.parse(loginStart ?? {});
+      const loginStart = await this.storageMethod?.getItem('analytic-loginStart');
+      // if (!loginStart) return;
+      const { loginType = 'Email', timestamp = Date.now() } = JSON.parse(loginStart ?? '{}');
 
       const params = { timestamp: Date.now(), loginType, loginMethod, duration: 0 };
       params.duration = params.timestamp - timestamp;
-
-      return this.fireEvent('portkey_sdk_login_end', {
-        ...params,
-        ...additionalParams,
-      });
+      console.log('portkey_sdk_register', loginMethod, 'portkey_sdk_register==');
+      if ('register' === loginMethod) {
+        await this.fireEvent('portkey_sdk_register', {
+          ...params,
+          hostname: location.hostname,
+          registerSiteUrl: location.hostname, // portkey.finance
+          ...additionalParams,
+        });
+      } else {
+        await this.fireEvent('portkey_sdk_login_end', {
+          ...params,
+          hostname: location.hostname,
+          loginSiteUrl: location.hostname, // portkey.finance
+          ...additionalParams,
+        });
+      }
+      this.storageMethod?.removeItem('analytic-loginStart');
     } catch (e) {
       console.error('Google Analytics request failed with an exception', e);
     }
@@ -167,8 +184,6 @@ class Analytics {
       const params = { timestamp: Date.now(), pageKey };
 
       await this.storageMethod.setItem(`${pageKey}_pageStateUpdate`, JSON.stringify({ timestamp: params.timestamp }));
-
-      console.log(params, pageKey, 'params===pageStateUpdateStartEvent====pageStateUpdate');
 
       // return this.fireEvent('extension_page_update_start', {
       //   ...params,
@@ -183,13 +198,11 @@ class Analytics {
     try {
       const sessionKey = `${pageKey}_pageStateUpdate`;
       const sessionParams = await this.storageMethod.getItem(sessionKey);
-      console.log(sessionParams, 'sessionParams===pageStateUpdate', sessionKey);
-      const { timestamp } = JSON.parse(sessionParams) ?? {};
+      const { timestamp } = JSON.parse(sessionParams ?? '{}');
 
       const params = { timestamp: Date.now(), pageKey, duration: 0 };
 
       params.duration = params.timestamp - timestamp;
-      console.log(params, pageKey, timestamp, 'params===pageStateUpdateEndEvent====pageStateUpdate');
 
       // return this.fireEvent('portkey_sdk_page_update_end', {
       //   ...params,

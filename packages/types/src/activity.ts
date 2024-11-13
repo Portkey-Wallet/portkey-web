@@ -34,6 +34,7 @@ export type ActivityItemType = {
   symbol: string;
   decimals?: string;
   priceInUsd?: string;
+  currentTxPriceInUsd?: string;
   nftInfo?: IBaseNFTType;
   transactionFees: TransactionFees[];
   listIcon?: string;

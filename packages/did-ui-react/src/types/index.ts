@@ -26,9 +26,16 @@ export type ValidatorHandler = (value?: string) => Promise<any>;
 export type OpacityType = number; // 0-1
 
 export interface LoadingInfo {
+  /** loading text */
   text?: string;
+  /** Whether it is cancelable, whether to display the cancel button */
   cancelable?: boolean;
+  /** Click the cancel button to trigger the callback */
   onCancel?: () => void;
+}
+
+export interface ScreenLoadingInfo extends Partial<LoadingInfo> {
+  loading: boolean | OpacityType;
 }
 
 export type LoadingInfoType = LoadingInfo | string;

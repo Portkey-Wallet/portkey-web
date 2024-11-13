@@ -20,18 +20,21 @@ const GuardianApprovalModalMain = forwardRef(
       networkType,
       sandboxId,
       isErrorTip = true,
+      guardianList: defaultGuardianList,
       onClose,
       onBack,
       onApprovalSuccess,
       onApprovalError,
+      isAsyncVerify,
       operationType,
       operationDetails,
       officialWebsiteShow,
+      onGuardianListChange,
     }: GuardianApprovalModalProps,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     ref,
   ) => {
-    const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>();
+    const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>(defaultGuardianList || []);
 
     const getData = useCallback(async () => {
       setLoading(true);
@@ -59,8 +62,9 @@ const GuardianApprovalModalMain = forwardRef(
     }, [caHash, isErrorTip, onApprovalError, originChainId, sandboxId]);
 
     useEffect(() => {
+      if (defaultGuardianList) return;
       getData();
-    }, [getData]);
+    }, [defaultGuardianList, getData]);
 
     return (
       <CommonBaseModal className={clsx('portkey-ui-modal-approval', className)} open={open} onClose={onClose}>
@@ -69,7 +73,12 @@ const GuardianApprovalModalMain = forwardRef(
           originChainId={originChainId}
           targetChainId={targetChainId}
           guardianList={guardianList}
+          isAsyncVerify={isAsyncVerify}
+          onGuardianListChange={onGuardianListChange}
           onConfirm={async (approvalInfo) => {
+            if (isAsyncVerify) {
+              return onApprovalSuccess(approvalInfo);
+            }
             const guardiansApproved = formatGuardianValue(approvalInfo);
             await onApprovalSuccess(guardiansApproved);
           }}
@@ -78,6 +87,7 @@ const GuardianApprovalModalMain = forwardRef(
           operationType={operationType}
           operationDetails={operationDetails}
           officialWebsiteShow={officialWebsiteShow}
+          caHash={caHash}
         />
       </CommonBaseModal>
     );

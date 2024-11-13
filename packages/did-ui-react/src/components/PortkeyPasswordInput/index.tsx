@@ -10,6 +10,7 @@ interface PortkeyPasswordInputProps {
   error?: string;
   onChange?: (val: string) => void;
   onFill?: (val: string) => void;
+  footer?: React.ReactNode;
 }
 
 export default function PortkeyPasswordInput({
@@ -18,6 +19,7 @@ export default function PortkeyPasswordInput({
   error,
   onFill,
   onChange,
+  footer,
 }: PortkeyPasswordInputProps) {
   const valueLength = useMemo(() => value.length, [value.length]);
 
@@ -35,6 +37,7 @@ export default function PortkeyPasswordInput({
       </div>
       <div className="passcode-error-tip">{error}</div>
       <PortkeyBaseNumberKeyboard
+        header={footer && <div className="footer-wrapper">{footer}</div>}
         onInput={(v) => {
           if (value.length === length) return;
           if (value.length < length) {

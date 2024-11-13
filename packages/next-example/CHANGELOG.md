@@ -3,6 +3,366 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.8...v2.15.9) (2024-11-07)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.7...v2.15.8) (2024-11-07)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.6...v2.15.7) (2024-11-07)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5...v2.15.6) (2024-11-06)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.1...v2.15.5) (2024-11-06)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.5-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.0...v2.15.5-alpha.1) (2024-11-06)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.4...v2.15.5-alpha.0) (2024-11-06)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.3...v2.15.4) (2024-11-05)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.2...v2.15.3) (2024-11-05)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.2-alpha.0...v2.15.2) (2024-11-02)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.1...v2.15.2-alpha.0) (2024-11-01)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.0...v2.15.1) (2024-11-01)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.15.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.7...v2.15.0) (2024-10-31)
+
+### Bug Fixes
+
+- sdk demo ([0643bb1](https://github.com/Portkey-Wallet/portkey-web/commit/0643bb1c5067edc64e348ff4777abfa8a2e70764))
+
+## [2.14.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.7...v2.14.0) (2024-10-31)
+
+### Bug Fixes
+
+- sdk demo ([0643bb1](https://github.com/Portkey-Wallet/portkey-web/commit/0643bb1c5067edc64e348ff4777abfa8a2e70764))
+
+## [2.14.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.6...v2.14.0-alpha.7) (2024-10-25)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.14.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.5...v2.14.0-alpha.6) (2024-10-23)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.14.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.4...v2.14.0-alpha.5) (2024-10-23)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.14.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.3...v2.14.0-alpha.4) (2024-10-23)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.14.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.2...v2.14.0-alpha.3) (2024-10-23)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.14.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.14.0-alpha.1...v2.14.0-alpha.2) (2024-10-23)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.14.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.3-alpha.2...v2.14.0-alpha.1) (2024-10-23)
+
+## [2.14.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.2...v2.14.0-alpha.0) (2024-10-22)
+
+### Features
+
+- 🎸 Add custom configuration loading ([a634f6f](https://github.com/Portkey-Wallet/portkey-web/commit/a634f6fd8026770ee162bf9dc764cf1b49f0c17e))
+
+## [2.14.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.2...v2.14.0-alpha.0) (2024-10-22)
+
+### Features
+
+- 🎸 Add custom configuration loading ([a634f6f](https://github.com/Portkey-Wallet/portkey-web/commit/a634f6fd8026770ee162bf9dc764cf1b49f0c17e))
+
+## [2.13.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.1...v2.13.2) (2024-10-21)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.13.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.13.0...v2.13.1) (2024-10-17)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.13.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.1-alpha.1...v2.13.0) (2024-10-17)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.12.1-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.1-alpha.0...v2.12.1-alpha.1) (2024-10-16)
+
+## [2.12.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.2...v2.12.0) (2024-10-14)
+
+### Features
+
+- 🎸 forget pin fix text ([57fd88e](https://github.com/Portkey-Wallet/portkey-web/commit/57fd88e9e6964c16f742b5bdc7a0e06f57e02c85))
+
+## [2.12.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.12.0-alpha.1...v2.12.0-alpha.2) (2024-10-12)
+
+### Features
+
+- 🎸 add header component in keyboard ([2e0bfd2](https://github.com/Portkey-Wallet/portkey-web/commit/2e0bfd26bc5449c413114fc205b5b532619c9ef5))
+
+## [2.12.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.12.0-alpha.1) (2024-10-11)
+
+### Features
+
+- 🎸 forget pin ([3e140bc](https://github.com/Portkey-Wallet/portkey-web/commit/3e140bc76fc2c9c83f27e09df0917e45cb1c3216))
+
+## [2.12.1-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0...v2.12.1-alpha.0) (2024-10-14)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.16...v2.11.0) (2024-10-08)
+
+## [2.10.6-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.13...v2.10.6-alpha.14) (2024-09-30)
+
+## [2.10.6-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.14...v2.10.6-alpha.13) (2024-09-30)
+
+## [2.10.6-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.13...v2.10.6-alpha.12) (2024-09-30)
+
+## [2.10.6-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.12...v2.10.6-alpha.11) (2024-09-30)
+
+### Bug Fixes
+
+- 🐛 multi transaction fix params ([b051c1d](https://github.com/Portkey-Wallet/portkey-web/commit/b051c1da9034c6d364b95c334f1c45e96269427f))
+
+## [2.10.6-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.10...v2.10.6-alpha.10) (2024-09-29)
+
+### Features
+
+- 🎸 multi transaction fix params ([7441905](https://github.com/Portkey-Wallet/portkey-web/commit/74419059d06cfffdf7d088cfe7fe5198c53c0534))
+
+## [2.10.6-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.6...v2.10.6-alpha.9) (2024-09-29)
+
+## [2.10.6-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.7...v2.10.6-alpha.8) (2024-09-27)
+
+## [2.10.6-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.6...v2.10.6-alpha.7) (2024-09-27)
+
+## [2.10.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.5...v2.10.6-alpha.6) (2024-09-27)
+
+## [2.10.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.3...v2.10.6-alpha.4) (2024-09-27)
+
+## [2.10.6-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.3...v2.10.6-alpha.3) (2024-09-27)
+
+## [2.11.0-alpha.16](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.15...v2.11.0-alpha.16) (2024-09-30)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.15](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.14...v2.11.0-alpha.15) (2024-09-30)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.13...v2.11.0-alpha.14) (2024-09-30)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.12...v2.11.0-alpha.13) (2024-09-30)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.11...v2.11.0-alpha.12) (2024-09-30)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.10...v2.11.0-alpha.11) (2024-09-29)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.9...v2.11.0-alpha.10) (2024-09-29)
+
+### Features
+
+- 🎸 save sessionId ([9c1e8ea](https://github.com/Portkey-Wallet/portkey-web/commit/9c1e8ead5a444292c163c4c4ef4fd6c8d3b5654a))
+
+## [2.11.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.8...v2.11.0-alpha.9) (2024-09-29)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.7...v2.11.0-alpha.8) (2024-09-29)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.6...v2.11.0-alpha.7) (2024-09-29)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.5...v2.11.0-alpha.6) (2024-09-28)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.4...v2.11.0-alpha.5) (2024-09-28)
+
+### Features
+
+- 🎸 update assets ([3bdeddc](https://github.com/Portkey-Wallet/portkey-web/commit/3bdeddc70da7605bed5df0bac8304454d9d26f22))
+
+## [2.11.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.3...v2.11.0-alpha.4) (2024-09-27)
+
+### Features
+
+- 🎸 define LoginStatusEnum ([8d0af2f](https://github.com/Portkey-Wallet/portkey-web/commit/8d0af2fd44a46d10651848756e228a61eae5d579))
+
+## [2.11.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.2...v2.11.0-alpha.3) (2024-09-26)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.1...v2.11.0-alpha.2) (2024-09-26)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.11.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.11.0-alpha.0...v2.11.0-alpha.1) (2024-09-25)
+
+### Features
+
+- 🎸 asset logic update ([d07ff03](https://github.com/Portkey-Wallet/portkey-web/commit/d07ff030fb8e9113c5f896790893bd001e347b0d))
+
+## [2.11.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.2...v2.11.0-alpha.0) (2024-09-25)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.6-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.1...v2.10.6-alpha.2) (2024-09-25)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.6-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.6-alpha.0...v2.10.6-alpha.1) (2024-09-14)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.5...v2.10.6-alpha.0) (2024-09-14)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.4...v2.10.5) (2024-09-14)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.3...v2.10.4) (2024-09-14)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.2...v2.10.3) (2024-09-14)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.10.1...v2.10.2) (2024-09-13)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.6...v2.10.1) (2024-09-12)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.10.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.6...v2.10.0) (2024-09-12)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.6-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.5...v2.9.6-alpha.6) (2024-09-04)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.6-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.4...v2.9.6-alpha.5) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.6-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.3...v2.9.6-alpha.4) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.6-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.2...v2.9.6-alpha.3) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.6-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.6-alpha.1...v2.9.6-alpha.2) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.6-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.1) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.6-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.5-alpha.0...v2.9.6-alpha.0) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.5-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.4...v2.9.5-alpha.0) (2024-09-03)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.3...v2.9.4) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.2...v2.9.3) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.1...v2.9.2) (2024-09-02)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.9.0...v2.9.1) (2024-08-29)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.9.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.2...v2.9.0) (2024-08-29)
+
+### Features
+
+- sgr label show ([e4f90b3](https://github.com/Portkey-Wallet/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+
+## [2.8.0](https://github.com/FrankFeng1116/portkey-web/compare/v2.7.2...v2.8.0) (2024-08-07)
+
+### Features
+
+- sgr label show ([e4f90b3](https://github.com/FrankFeng1116/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+
+## [2.7.4](https://github.com/FrankFeng1116/portkey-web/compare/v2.7.2...v2.7.4) (2024-08-07)
+
+### Features
+
+- sgr label show ([e4f90b3](https://github.com/FrankFeng1116/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+
+## [2.7.3](https://github.com/FrankFeng1116/portkey-web/compare/v2.7.2...v2.7.3) (2024-08-07)
+
+### Features
+
+- sgr label show ([e4f90b3](https://github.com/FrankFeng1116/portkey-web/commit/e4f90b329b721ad4d1267aeeba63baa7e3a7f7dd))
+
+## [2.7.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1...v2.7.2) (2024-07-31)
+
+**Note:** Version bump only for package @portkey/next-example
+
+## [2.7.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.4...v2.7.1) (2024-07-31)
+
+### Bug Fixes
+
+- 🐛 change approve long max ([ed03dfd](https://github.com/Portkey-Wallet/portkey-web/commit/ed03dfd1b7b7ae60e7a136c14c781b3c45451968))
+
 ## [2.7.1-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.7.1-alpha.3...v2.7.1-alpha.4) (2024-07-18)
 
 **Note:** Version bump only for package @portkey/next-example

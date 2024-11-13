@@ -103,6 +103,7 @@ function SendContent({
       balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
       isSeed: assetItem.nftInfo?.isSeed,
       seedType: assetItem.nftInfo?.seedType,
+      label: assetItem?.label,
     }),
     [assetItem, isNFT],
   );
@@ -224,7 +225,7 @@ function SendContent({
 
   const oneTimeApprovalList = useRef<GuardianApprovedItem[]>([]);
   const { onApprovalSuccess, sendTransfer } = useMemo(() => {
-    const onApprovalSuccess = async (approveList: GuardianApprovedItem[]) => {
+    const onApprovalSuccess = async (approveList: any[]) => {
       try {
         oneTimeApprovalList.current = approveList;
         if (Array.isArray(approveList) && approveList.length > 0) {
@@ -564,7 +565,8 @@ function SendContent({
             toAccount={toAccount}
             amount={amount}
             balanceInUsd={tokenInfo.balanceInUsd}
-            symbol={tokenInfo?.symbol || ''}
+            symbol={tokenInfo?.label || tokenInfo?.symbol || ''}
+            label={tokenInfo?.label || ''}
             alias={tokenInfo.alias || ''}
             imageUrl={tokenInfo.imageUrl || ''}
             decimals={tokenInfo.decimals}
@@ -604,7 +606,7 @@ function SendContent({
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
         className="page-title"
-        title={`Send ${!isNFT ? tokenInfo.symbol : ''}`}
+        title={`Send ${!isNFT ? tokenInfo?.label || tokenInfo.symbol : ''}`}
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}

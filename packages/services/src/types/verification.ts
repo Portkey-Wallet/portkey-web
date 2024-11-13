@@ -19,7 +19,13 @@ export type SendVerificationCodeRequestParams = {
     [x: string]: string;
   };
 };
-
+export type SendSecondaryVerificationCodeRequestParams = {
+  params: { secondaryEmail: string; platformType?: number };
+  headers?: {
+    reCaptchaToken: string;
+    [x: string]: string;
+  };
+};
 export type SendVerificationCodeResult = {
   verifierSessionId: string;
 };
@@ -33,11 +39,21 @@ export type VerifyVerificationCodeParams = {
   targetChainId?: ChainId;
   operationType: OperationTypeEnum;
   operationDetails: TStringJSON;
+  caHash?: string;
+};
+export type VerifySecondaryVerificationCodeParams = {
+  verifierSessionId: string;
+  verificationCode: string;
+  secondaryEmail: string;
+};
+export type VerifyVerificationCodeResult = {
+  verificationDoc?: string;
+  signature?: string;
+  zkLoginInfo?: ZKLoginInfo;
 };
 
-export type VerifyVerificationCodeResult = {
-  verificationDoc: string;
-  signature: string;
+export type VerifyZKLoginResult = {
+  guardianIdentifierHash: string;
 };
 
 export type SendAppleUserExtraInfoParams = {
@@ -61,10 +77,48 @@ export type BaseVerifyTokenParams = {
 
 export interface VerifierSocialTokenParams extends BaseVerifyTokenParams {
   accessToken: string;
+  caHash?: string;
 }
 
 export interface VerifyAppleTokenParams extends BaseVerifyTokenParams {
   identityToken: string;
+  caHash?: string;
+}
+
+export type VerifyZKPortkeyParams = {
+  type: string;
+  accessToken?: string;
+  jwt?: string;
+  verifierId?: string;
+  chainId: ChainId;
+  operationType: OperationTypeEnum;
+  caHash?: string;
+  operationDetails?: string;
+  targetChainId?: string;
+};
+
+export type VerifyZKLoginParams = {
+  verifyToken: VerifyZKPortkeyParams;
+  jwt?: string;
+  salt: string;
+  kid: string;
+  nonce?: string;
+  timestamp: number;
+  managerAddress: string;
+  networkType?: 'MAINNET' | 'TESTNET';
+};
+
+export interface ZKLoginInfo {
+  identifierHash: string;
+  poseidonIdentifierHash: string;
+  identifierHashType: number;
+  salt: string;
+  zkProof: string;
+  jwt: string;
+  nonce: string;
+  timestamp: number;
+  managerAddress: string;
+  circuitId: string;
 }
 
 export type SendAppleUserExtraInfoResult = { userId: string };
@@ -111,6 +165,7 @@ export interface IVerificationService {
   getAppleUserExtraInfo(params: GetAppleUserExtraInfoParams): Promise<getAppleUserExtraInfoResult>;
   verifyGoogleToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyAppleToken(params: VerifyAppleTokenParams): Promise<VerifyVerificationCodeResult>;
+  verifyZKLogin(params: any): Promise<VerifyZKLoginResult>;
   verifyTelegramToken(params: VerifierSocialTokenParams): Promise<VerifyVerificationCodeResult>;
   verifyTwitterToken(
     params: VerifierSocialTokenParams,
@@ -120,4 +175,5 @@ export interface IVerificationService {
   checkGoogleRecaptcha(params: CheckGoogleRecaptchaParams): Promise<boolean>;
   getRecommendationVerifier(params: GetRecommendationVerifierParams): Promise<VerifierItem>;
   getTelegramAuthToken(params: TGetTelegramAuthTokenParams): Promise<TGetTelegramAuthTokenResult>;
+  getVerifierServers(chainId: ChainId): Promise<{ guardianVerifierServers: VerifierItem[] }>;
 }
