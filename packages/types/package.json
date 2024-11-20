@@ -1,6 +1,6 @@
 {
   "name": "@portkey/types",
-  "version": "2.15.10",
+  "version": "2.15.10-alpha.0",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
