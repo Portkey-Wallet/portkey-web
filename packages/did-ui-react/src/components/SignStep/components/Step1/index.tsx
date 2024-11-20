@@ -8,6 +8,7 @@ import LoginModal from '../../../LoginModal';
 import SocialDesign from '../../../SocialDesign/index.component';
 import Web2Design from '../../../Web2Design/index.component';
 import { ISocialLogin } from '../../../../types';
+import { setLoading } from '../../../../utils';
 
 export type OnSignInFinishedFun = (values: {
   isFinished: boolean;
@@ -65,6 +66,7 @@ function Step1({
     async (value: IGuardianIdentifierInfo) => {
       signInSuccessRef.current = value;
       if (!value.isLoginGuardian) {
+        setLoading(false);
         const isContinue = await onSignUpHandlerRef.current?.({
           identifier: value.identifier,
           accountType: value.accountType,
