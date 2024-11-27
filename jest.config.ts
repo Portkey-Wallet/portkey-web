@@ -3,13 +3,13 @@
  * https://jestjs.io/docs/configuration
  */
 
-const path = require('path');
-const { lstatSync, readdirSync } = require('fs');
+import { resolve, join } from 'path';
+import { lstatSync, readdirSync } from 'fs';
 // get listing of packages in the mono repo
-const basePath = path.resolve(__dirname, 'packages');
-const packages = readdirSync(basePath).filter((name: string) => lstatSync(path.join(basePath, name)).isDirectory());
+const basePath = resolve(__dirname, 'packages');
+const packages = readdirSync(basePath).filter((name: string) => lstatSync(join(basePath, name)).isDirectory());
 
-const moduleNameMapper: any = {};
+const moduleNameMapper = {};
 packages.forEach((key: string) => {
   moduleNameMapper[`@portkey/${key}/test/(.+)$`] = `<rootDir>/packages/${key}/test/$1`;
   moduleNameMapper[`@portkey/${key}`] = `<rootDir>/packages/${key}/src`;
@@ -17,6 +17,15 @@ packages.forEach((key: string) => {
 
 export default {
   preset: 'ts-jest',
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        diagnostics: false,
+        isolatedModules: true,
+      },
+    ],
+  },
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
