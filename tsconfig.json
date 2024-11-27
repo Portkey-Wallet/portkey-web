@@ -18,5 +18,5 @@
     "strictNullChecks": true,
     "esModuleInterop": true
   },
-  "include": ["index.d.ts"]
+  "include": ["index.d.ts", "@tsconfig/recommended", "jest"]
 }
