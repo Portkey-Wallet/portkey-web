@@ -18,5 +18,5 @@
     "strictNullChecks": true,
     "esModuleInterop": true
   },
-  "include": ["index.d.ts", "@tsconfig/recommended", "jest"]
+  "include": ["index.d.ts", "@tsconfig/recommended", "jest", "@testing-library/jest-dom", "jest/globals"]
 }

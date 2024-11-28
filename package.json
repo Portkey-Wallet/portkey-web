@@ -27,6 +27,7 @@
     "utils": "yarn workspace @portkey/utils run",
     "validator": "yarn workspace @portkey/validator run",
     "test": "jest",
+    "test:dev": "jest --watch",
     "test:browser": "jest --config=jest.browser.config.ts",
     "make-badges": "istanbul-badges-readme"
   },
@@ -42,6 +43,9 @@
     "@rollup/plugin-image": "^3.0.2",
     "@rollup/plugin-url": "^8.0.1",
     "@tsconfig/recommended": "^1.0.1",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@testing-library/react-hooks": "^8.0.1",
     "@types/elliptic": "^6.4.14",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
     "@typescript-eslint/parser": "^5.19.0",
