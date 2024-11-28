@@ -462,7 +462,19 @@ class FetchRequestMock {
           totalRecordCount: 1,
         };
         break;
-
+      case '/api/app/account/verifierServers':
+        result = {
+          guardianVerifierServers: [
+            {
+              id: 'id_mock',
+              name: 'name_mock',
+              imageUrl: 'imageUrl_mock',
+              endPoints: ['endPoints_mock'],
+              verifierAddresses: ['verifierAddresses_mock'],
+            },
+          ],
+        };
+        break;
       default:
         break;
     }

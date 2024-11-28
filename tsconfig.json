@@ -16,7 +16,21 @@
     "removeComments": false,
     "strict": false,
     "strictNullChecks": true,
-    "esModuleInterop": true
+    "downlevelIteration": true,
+    "esModuleInterop": true,
+    "allowJs": false,
+    "skipLibCheck": true,
+    "allowSyntheticDefaultImports": true,
+    "jsx": "react",
+    "types": [
+      "node",
+      "@testing-library/jest-dom",
+      "@jest/globals"
+    ]
   },
-  "include": ["index.d.ts"]
+  "include": [
+    "index.d.ts",
+    "@tsconfig/recommended",
+    "jest"
+  ]
 }

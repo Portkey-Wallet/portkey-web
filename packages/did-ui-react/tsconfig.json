@@ -1,4 +1,5 @@
 {
+  "extends": "../../tsconfig.json",
   "compilerOptions": {
     "jsx": "react-jsx",
     "target": "ES2020",
@@ -25,5 +26,5 @@
     "declaration": true
   },
   "include": ["global.d.ts", "src", "index.ts"],
-  "exclude": ["./dist", "node_modules"]
+  "exclude": ["./dist", "node_modules", "./**/*.test.tsx"]
 }
