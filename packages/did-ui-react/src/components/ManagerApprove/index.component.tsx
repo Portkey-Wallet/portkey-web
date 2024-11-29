@@ -58,7 +58,6 @@ export default function ManagerApproveInner({
   onError,
 }: ManagerApproveInnerProps) {
   const [step, setStep] = useState<ManagerApproveStep>(ManagerApproveStep.SetAllowance);
-
   const [tokenInfo, setTokenInfo] = useState<{
     symbol: string;
     tokenName: string;
@@ -194,6 +193,9 @@ export default function ManagerApproveInner({
             onCancel={onCancel}
             onAllowanceChange={setAllowance}
             onConfirm={allowanceConfirm}
+            networkType={networkType}
+            originChainId={originChainId}
+            targetChainId={targetChainId}
           />
         )}
 

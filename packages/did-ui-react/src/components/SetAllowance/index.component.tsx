@@ -1,5 +1,5 @@
 import { Input } from 'antd';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { parseInputNumberChange } from '../../utils/input';
 import BigNumber from 'bignumber.js';
 import './index.less';
@@ -7,6 +7,12 @@ import { isValidNumber } from '../../utils';
 import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
 import { isNFT } from '../../utils/assets';
+import CustomSvg from '../CustomSvg';
+import { useGetContractUpgradeTime } from '@portkey/graphql';
+import { NetworkType } from '../../types';
+import { getChain } from '../../hooks';
+import { ChainId } from '@portkey/types';
+import { checkTimeOver12, formatDateTime } from '@portkey/utils';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
@@ -31,6 +37,9 @@ export interface SetAllowanceHandlerProps {
 
 export type SetAllowanceProps = BaseSetAllowanceProps & {
   recommendedAmount?: string | number;
+  networkType?: NetworkType;
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
 } & SetAllowanceHandlerProps;
 
 export default function SetAllowanceMain({
@@ -41,6 +50,9 @@ export default function SetAllowanceMain({
   dappInfo,
   className,
   recommendedAmount = 0,
+  networkType,
+  originChainId,
+  targetChainId,
   onCancel,
   onAllowanceChange,
   onConfirm,
@@ -56,6 +68,44 @@ export default function SetAllowanceMain({
   const allowance = useMemo(() => formatAllowanceInput(amount), [amount, formatAllowanceInput]);
 
   const [error, setError] = useState<string>('');
+  const getContractUpgradeTime = useGetContractUpgradeTime(networkType === 'MAINNET');
+  const [contractUpgradeTimeResult, setContractUpgradeTimeResult] = useState<{
+    isInit: boolean;
+    isTimeOver12: boolean;
+    formatTime: string;
+  }>({
+    isInit: true,
+    isTimeOver12: true,
+    formatTime: '',
+  });
+  useEffect(() => {
+    (async () => {
+      if (!originChainId || !targetChainId) {
+        return;
+      }
+      const chainInfo = await getChain(originChainId);
+      const result = await getContractUpgradeTime({
+        input: {
+          chainId: targetChainId,
+          address: chainInfo.caContractAddress || '',
+          skipCount: 0,
+          maxResultCount: 10,
+        },
+      });
+      console.log('wfs===result', result);
+      const blockTime = result.data.contractList.items[0].metadata.block.blockTime;
+      setContractUpgradeTimeResult({
+        isInit: false,
+        isTimeOver12: checkTimeOver12(blockTime),
+        formatTime: formatDateTime(blockTime),
+      });
+      console.log('wfs===result2', {
+        isInit: false,
+        isTimeOver12: checkTimeOver12(blockTime),
+        formatTime: formatDateTime(blockTime),
+      });
+    })();
+  }, [getContractUpgradeTime, originChainId, targetChainId]);
 
   const inputChange = useCallback(
     (amount: string | number) => {
@@ -122,6 +172,19 @@ export default function SetAllowanceMain({
 
         <div className={`${PrefixCls}-notice`}>{noticeText}</div>
       </div>
+      {!contractUpgradeTimeResult.isInit && (
+        <div
+          className={`${PrefixCls}-warning ${!contractUpgradeTimeResult.isTimeOver12 && `${PrefixCls}-warning-hint`}`}>
+          <CustomSvg
+            type="WarningTriangle"
+            className={`warning-icon`}
+            fillColor={contractUpgradeTimeResult.isTimeOver12 ? '#5D42FF' : '#FF9417'}
+          />
+          <div>{`Contract update time: ${
+            contractUpgradeTimeResult?.formatTime || 'Oct 15, 2024, at 17:07'
+          } The dApp's smart contract has been updated. Please proceed with caution.`}</div>
+        </div>
+      )}
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
         <div className="btn-wrapper">
           <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton>
