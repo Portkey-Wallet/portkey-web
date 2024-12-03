@@ -181,8 +181,8 @@ export default function SetAllowanceMain({
             fillColor={contractUpgradeTimeResult.isTimeOver12 ? '#5D42FF' : '#FF9417'}
           />
           <div>{`Contract update time: ${
-            contractUpgradeTimeResult?.formatTime || 'Oct 15, 2024, at 17:07'
-          } The dApp's smart contract has been updated. Please proceed with caution.`}</div>
+            contractUpgradeTimeResult?.formatTime || ''
+          }. The dApp's smart contract has been updated. Please proceed with caution.`}</div>
         </div>
       )}
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
