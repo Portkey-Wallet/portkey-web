@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10-alpha.0...v2.15.10) (2024-11-20)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.15.10-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.5-alpha.1...v2.15.10-alpha.0) (2024-11-20)
+
+### Bug Fixes
+
+- 🐛 sign up hide loading ([50ba7db](https://github.com/Portkey-Wallet/portkey-web/commit/50ba7db24a1ab64be1bc85631ca99fa18d977f6f))
+
 ## [2.15.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.8...v2.15.9) (2024-11-07)
 
 **Note:** Version bump only for package @portkey/did-ui-react
