@@ -38,6 +38,10 @@ export function getWallet(privateKey: string) {
   return AElf.wallet.getWalletByPrivateKey(privateKey);
 }
 
+export const createNewWallet = () => {
+  return AElf.wallet.createNewWallet();
+};
+
 export const getRawTx = ({
   blockHeightInput,
   blockHashInput,
