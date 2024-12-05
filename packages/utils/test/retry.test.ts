@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import { RetryOptions, retryAsyncFunction } from '../src/retry';
 import { sleep } from '../src/misc';
 const DefaultQueryOptions: RetryOptions = {

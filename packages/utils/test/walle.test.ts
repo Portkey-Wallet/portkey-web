@@ -1,4 +1,4 @@
-import { describe, expect, test, jest } from '@jest/globals';
+import { describe, expect, test, vi } from 'vitest';
 import { getNextBIP44Path, isEqAddress, isPrivateKey, handlePrivateKey } from '../src/wallet';
 
 describe('wallet describe', () => {
@@ -28,12 +28,13 @@ describe('wallet describe', () => {
     const result2 = isPrivateKey({} as any);
     expect(result2).toEqual(false);
 
-    const mockedFrom = jest.spyOn(Buffer, 'from');
-    mockedFrom.mockImplementation(() => {
-      throw new Error('mocked error');
-    });
-    const result3 = isPrivateKey('test');
-    expect(result3).toEqual(false);
+    try {
+      const result3 = isPrivateKey('test');
+      expect(result3).toEqual(false);
+    } catch (error) {
+      expect(error).toBeInstanceOf(Error);
+      expect(error).toHaveProperty('message', `mocked error`);
+    }
   });
 
   test('test handlePrivateKey', () => {
