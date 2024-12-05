@@ -81,3 +81,4 @@ export interface ITelegramInfo {
   accessToken?: string;
   userId: string;
 }
+export type ThemeType = 'light' | 'dark';

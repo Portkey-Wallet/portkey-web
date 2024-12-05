@@ -4,6 +4,7 @@ import {
   NetworkType,
   ScreenLoadingInfo,
   TCustomNetworkType,
+  ThemeType,
   TSupportAccountType,
 } from '../../types';
 import { BaseReCaptcha } from '../types';
@@ -28,4 +29,5 @@ export interface GlobalConfigProps extends IConfig {
   globalLoadingHandler?: {
     onSetLoading: (loadingInfo: ScreenLoadingInfo) => void;
   };
+  theme?: ThemeType;
 }
