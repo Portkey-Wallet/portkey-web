@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { describe, expect, test, jest } from '@jest/globals';
+import { describe, expect, test, vi } from 'vitest';
 import FetchRequestMock from './__mocks__/request';
 import { CommunityRecovery } from '../src/service/communityRecovery';
 import DIDGraphQLMock from './__mocks__/didGraphQL';
@@ -14,16 +14,16 @@ const referral: IReferralConfig = {
     referralCode: '1000',
     projectCode: '2000',
   },
-  setReferralInfo: jest.fn(),
-  getReferralInfo: jest.fn(),
+  setReferralInfo: vi.fn(),
+  getReferralInfo: vi.fn(),
 };
 const extraInfo: IExtraInfoConfig = {
   extraInfo: {
     ip: '1000',
     activityId: 'activityId_mock',
   },
-  setExtraInfo: jest.fn(),
-  getExtraInfo: jest.fn(),
+  setExtraInfo: vi.fn(),
+  getExtraInfo: vi.fn(),
 };
 
 const communityRecovery = new CommunityRecovery(request, didGraphQL, referral, extraInfo);
