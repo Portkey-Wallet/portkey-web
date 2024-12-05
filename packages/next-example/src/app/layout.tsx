@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import '@portkey/did-ui-react/dist/assets/index.css';
 import './globals.css';
 import './index.css';
 import PortkeyProvider from '@/provider/Portkey';
