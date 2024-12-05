@@ -24,30 +24,35 @@ import { useRouter } from 'next/navigation';
 const PIN = '111111';
 let CHAIN_ID: ChainId = 'AELF';
 
-ConfigProvider.setGlobalConfig({
-  connectUrl: 'https://auth-aa-portkey-test.portkey.finance',
-  socialLogin: {
-    Portkey: {
-      websiteName: 'website demo',
-      websiteIcon: '',
+setTimeout(() => {
+  ConfigProvider.setGlobalConfig({
+    connectUrl: 'https://auth-aa-portkey-test.portkey.finance',
+    socialLogin: {
+      Portkey: {
+        websiteName: 'website demo',
+        websiteIcon: '',
+      },
     },
-  },
-  loginConfig: {
-    loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Apple', 'Scan'],
-    recommendIndexes: [0, 1],
-  },
-  requestDefaults: {
-    timeout: 30000,
-    baseURL: 'https://aa-portkey-test.portkey.finance',
-  },
-  serviceUrl: 'https://aa-portkey-test.portkey.finance',
-  /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
-  // reCaptchaConfig: {
-  //   siteKey: '',
-  // },
-  graphQLUrl: '/graphql',
-});
-
+    loginConfig: {
+      loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Apple', 'Scan'],
+      recommendIndexes: [0, 1],
+    },
+    requestDefaults: {
+      timeout: 30000,
+      baseURL: 'https://aa-portkey-test.portkey.finance',
+    },
+    serviceUrl: 'https://aa-portkey-test.portkey.finance',
+    /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
+    // reCaptchaConfig: {
+    //   siteKey: '',
+    // },
+    graphQLUrl: '/graphql',
+    theme: 'dark',
+  });
+}, 10);
+// window.onload = function() {
+//   document.documentElement.style.setProperty('--sds-color-background-default-default', '#000000');
+// };
 export default function Sign() {
   const ref = useRef<ISignIn>();
   const [, setLifeCycle] = useState<any>();
@@ -362,7 +367,7 @@ export default function Sign() {
         checkManagerIsExist: tDVV
       </Button>
 
-      <div>-----------</div>
+      <div className="line">-----------</div>
       <Button
         onClick={async () => {
           const isExist = await did.checkManagerIsExist({

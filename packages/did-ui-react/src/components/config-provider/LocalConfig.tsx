@@ -1,5 +1,7 @@
 import { GlobalConfigProps } from './types';
 import { setVerification, did, setServiceConfig, setReCaptchaConfig, BaseAsyncStorage } from '../../utils';
+import { ThemeType } from '../../types';
+import { DEFAULT_THEME, initTheme } from '../../assets/theme';
 
 export const apiVersion = 'v1.18.0';
 
@@ -66,7 +68,8 @@ class LocalConfigProvider {
         referralInfo: _config['referralInfo'],
       });
     }
-
+    const theme: ThemeType = _config['theme'] || DEFAULT_THEME;
+    initTheme(theme);
     this.config = { ...this.config, ..._config };
   };
 
