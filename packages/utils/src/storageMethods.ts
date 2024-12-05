@@ -7,3 +7,4 @@
 //   removeItem = async (key: string) => {};
 //   setItem = async (key: string, value: any) => {};
 // }
+export default {};

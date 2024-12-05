@@ -26,10 +26,9 @@
     "types": "yarn workspace @portkey/types run",
     "utils": "yarn workspace @portkey/utils run",
     "validator": "yarn workspace @portkey/validator run",
-    "test:vitest": "vitest",
-    "test": "jest",
+    "test": "vitest",
     "test:dev": "yarn test --watch",
-    "test:browser": "yarn test --config=jest.browser.config.ts",
+    "test:browser": "jest --config=jest.browser.config.ts",
     "make-badges": "istanbul-badges-readme"
   },
   "devDependencies": {
