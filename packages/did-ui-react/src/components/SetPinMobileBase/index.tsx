@@ -40,22 +40,24 @@ export default function SetPinMobileBase({
 
   return (
     <div className={clsx('portkey-ui-set-pin-mobile-wrapper', className)}>
-      <BackHeader
-        leftElement={step === STEP.enterPin && type === 'recovery' ? false : undefined}
-        onBack={() => {
-          if (step === STEP.confirmPin) {
-            setPin('');
-            setError('');
-            setConfirmPin('');
-            setStep(STEP.enterPin);
-          } else {
-            onCancel?.();
-          }
-        }}
-      />
+      {(step !== STEP.enterPin || type !== 'recovery') && (
+        <BackHeader
+          leftElement={undefined}
+          onBack={() => {
+            if (step === STEP.confirmPin) {
+              setPin('');
+              setError('');
+              setConfirmPin('');
+              setStep(STEP.enterPin);
+            } else {
+              onCancel?.();
+            }
+          }}
+        />
+      )}
 
       <div className="portkey-ui-set-pin-mobile-title">
-        {step === STEP.confirmPin ? 'Confirm Pin' : 'Enter Pin to protect your device'}
+        {step === STEP.confirmPin ? 'Confirm your PIN' : 'Create a PIN to protect your wallet'}
       </div>
       <div>
         {step === STEP.enterPin && (

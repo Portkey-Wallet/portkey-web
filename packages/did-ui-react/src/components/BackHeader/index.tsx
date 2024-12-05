@@ -13,7 +13,7 @@ export default function BackHeader({
   const defaultLeftEle = useMemo(
     () => (
       <div className="portkey-ui-flex-row-center default-left-ele">
-        <CustomSvg type="BackLeft" className="left-arrow" />
+        <CustomSvg type="ArrowLeft" className="left-arrow" />
       </div>
     ),
     [],
