@@ -52,7 +52,7 @@ export default defineConfig({
       all: false,
       enabled: true,
       provider: 'v8',
-      exclude: [...exclude, '**/__tests__/*.*', '**/test/*.*'],
+      exclude: [...exclude, '**/__tests__/*.*', '**/test/*.*', '**/__generated__/', './empty.js'],
       reportsDirectory: './coverage',
       reporter: [['json-summary', { file: 'coverage-summary.json' }], ['lcov', { file: 'lcov.info' }], ['text']],
     },
