@@ -1,8 +1,8 @@
 import 'isomorphic-fetch';
-import { describe, expect, test, jest } from '@jest/globals';
+import { describe, expect, test, vi } from 'vitest';
 
 import { getGraphQLClientProvider } from '../src/client';
-jest.mock('../src/did/utils', () => {
+vi.mock('../src/did/utils', () => {
   return {
     getCAHolderManagerInfo: (_, { dto: { caHash } }) => {
       switch (caHash) {

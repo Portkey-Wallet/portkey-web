@@ -1,30 +1,30 @@
-import { describe, expect, jest, test } from '@jest/globals';
+import { describe, expect, vi, test } from 'vitest';
 import { ramp, IRampProviderType, SELL_ORDER_DISPLAY_STATUS } from '../src';
 import { rampRequestConfig } from './__mocks__/commonData';
 import { rampInfoResponse } from './__mocks__/requestData';
 import RampFetchRequestMock, { commonResponse } from './__mocks__/rampRequest';
 
-jest.mock('../src/constants');
+vi.mock('../src/constants');
 
-jest.mock('../src/service', () => {
-  const originalModule = jest.requireActual('../src/service');
+vi.mock('../src/service', async () => {
+  const originalModule = await vi.importActual('../src/service');
 
   return {
-    RampService: jest.fn().mockImplementation(() => {
+    RampService: vi.fn().mockImplementation(() => {
       return {
         getRampInfo: async () => {
           return commonResponse({ thirdPart: { ...rampInfoResponse.thirdPart, Test: {} } });
         },
-        sendSellTransaction: jest.fn(),
+        sendSellTransaction: vi.fn(),
       };
     }),
     AlchemyPayRampService: (originalModule as any).AlchemyPayRampService,
   };
 });
 
-jest.mock('../src/signalr', () => {
+vi.mock('../src/signalr', () => {
   return {
-    RampSignalr: jest.fn().mockImplementation(() => {
+    RampSignalr: vi.fn().mockImplementation(() => {
       return {
         doOpen: (data: any) => {
           return data;
@@ -37,9 +37,9 @@ jest.mock('../src/signalr', () => {
         },
         onRampOrderChanged: (callback: Function) => {
           callback({ displayStatus: SELL_ORDER_DISPLAY_STATUS.TRANSFERRED });
-          return { remove: jest.fn() };
+          return { remove: vi.fn() };
         },
-        stop: jest.fn(),
+        stop: vi.fn(),
       };
     }),
   };
@@ -78,7 +78,7 @@ describe('ramp instance', () => {
       setTimeout(() => {
         callback({ displayStatus: SELL_ORDER_DISPLAY_STATUS.TRANSFERRED });
       }, 500);
-      return { remove: jest.fn() };
+      return { remove: vi.fn() };
     };
 
     ramp.setConfig({
@@ -102,7 +102,7 @@ describe('ramp instance', () => {
       setTimeout(() => {
         callback({ displayStatus: SELL_ORDER_DISPLAY_STATUS.TRANSFERRED });
       }, 500);
-      return { remove: jest.fn() };
+      return { remove: vi.fn() };
     };
 
     try {
@@ -124,15 +124,15 @@ describe('ramp instance', () => {
   test('timeout', async () => {
     ramp.rampSignalr.onRampOrderChanged = (callback: Function) => {
       callback({ displayStatus: SELL_ORDER_DISPLAY_STATUS.CREATED });
-      return { remove: jest.fn() };
+      return { remove: vi.fn() };
     };
 
     try {
-      jest.useFakeTimers();
-      jest.spyOn(global, 'setTimeout');
+      vi.useFakeTimers();
+      vi.spyOn(global, 'setTimeout');
 
       await ramp.transferCrypto('123abc', async () => {
-        jest.runAllTimers();
+        vi.runAllTimers();
         return { rawTransaction: 'rawTransaction', signature: 'signature', publicKey: 'publicKey' };
       });
     } catch (error) {
@@ -146,7 +146,7 @@ describe('ramp instance', () => {
     };
     ramp.rampSignalr.onRampOrderChanged = (callback: Function) => {
       callback({ displayStatus: SELL_ORDER_DISPLAY_STATUS.TRANSFERRED });
-      return { remove: jest.fn() };
+      return { remove: vi.fn() };
     };
     ramp.setConfig({
       requestConfig: {

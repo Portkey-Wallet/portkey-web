@@ -10,8 +10,7 @@
 
 | Statements                  | Branches                | Functions                 | Lines             |
 | --------------------------- | ----------------------- | ------------------------- | ----------------- |
-| ![Statements](https://img.shields.io/badge/statements-79.84%25-red.svg?style=flat) | ![Branches](https://img.shields.io/badge/branches-67.31%25-red.svg?style=flat) | ![Functions](https://img.shields.io/badge/functions-71.13%25-red.svg?style=flat) | ![Lines](https://img.shields.io/badge/lines-79.71%25-red.svg?style=flat) |
-
+| ![Statements](https://img.shields.io/badge/statements-92.8%25-brightgreen.svg?style=flat) | ![Branches](https://img.shields.io/badge/branches-98.11%25-brightgreen.svg?style=flat) | ![Functions](https://img.shields.io/badge/functions-84.3%25-yellow.svg?style=flat) | ![Lines](https://img.shields.io/badge/lines-92.8%25-brightgreen.svg?style=flat) |
 
 ## Packages
 
@@ -28,7 +27,7 @@
 | [`@portkey/validator`](packages/validator)                     | [![npm](https://img.shields.io/npm/v/@portkey/validator)](https://www.npmjs.com/package/@portkey/validator)                     | [![minzip](https://img.shields.io/bundlephobia/minzip/@portkey/validator)](https://bundlephobia.com/package/@portkey/validator)                               |                                                                           |
 | [`@portkey/socket`](packages/socket)                     | [![npm](https://img.shields.io/npm/v/@portkey/utils)](https://www.npmjs.com/package/@portkey/socket)                     | [![minzip](https://img.shields.io/bundlephobia/minzip/@portkey/socket)](https://bundlephobia.com/package/@portkey/socket)|
 | **UI Packages**                                            |                                                                                                                                               |                                                                                                                                                                  |                                                                           |
-| [`@portkey/did-ui-react`](packages/did-ui-react)                     | [![npm](https://img.shields.io/npm/v/@portkey/did-ui-react)](https://www.npmjs.com/package/@portkey/did-ui-react)                     | [![minzip](https://img.shields.io/bundlephobia/minzip/@portkey/did-ui-react)](https://bundlephobia.com/package/@portkey/did-ui-react) 
+| [`@portkey/did-ui-react`](packages/did-ui-react)                     | [![npm](https://img.shields.io/npm/v/@portkey/did-ui-react)](https://www.npmjs.com/package/@portkey/did-ui-react)                     | [![minzip](https://img.shields.io/bundlephobia/minzip/@portkey/did-ui-react)](https://bundlephobia.com/package/@portkey/did-ui-react)
 
 ## Get start
 

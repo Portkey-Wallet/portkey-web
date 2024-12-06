@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import { generateKeyPairSync, rsaDecrypt, rsaEncrypt } from '../src/rsa';
 //   const keyPair = generateKeyPairSync();
 //   console.log(keyPair, '====keyPair');

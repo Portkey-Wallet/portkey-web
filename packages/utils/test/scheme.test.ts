@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import { formatScheme, V1_DID_APP_SCHEMA, DID_APP_SCHEMA } from '../src/scheme';
 
 describe('scheme describe', () => {

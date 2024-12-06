@@ -21,11 +21,14 @@
     "allowJs": false,
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
+    "experimentalDecorators": true,
+    "isolatedModules": true,
     "types": [
       "node",
       "@testing-library/jest-dom",
-      "@jest/globals"
+      "@jest/globals",
+      "vitest/globals"
     ]
   },
   "include": [

@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import FetchRequestMock from './__mocks__/request';
 import { Activity } from '../src/service/activity';
 

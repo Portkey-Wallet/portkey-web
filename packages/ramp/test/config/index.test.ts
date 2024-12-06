@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, jest, test } from '@jest/globals';
+import { beforeEach, describe, expect, vi, test } from 'vitest';
 import { RampConfig } from '../../src/config';
 import { rampRequestConfig } from '../__mocks__/commonData';
 
@@ -6,7 +6,7 @@ const rampConfig = new RampConfig();
 
 describe('RampConfig', () => {
   beforeEach(() => {
-    jest.restoreAllMocks();
+    vi.restoreAllMocks();
   });
   test('rampConfig has all properties.', () => {
     expect(rampConfig).toHaveProperty('requestConfig');
