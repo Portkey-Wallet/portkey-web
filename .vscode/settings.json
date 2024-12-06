@@ -1,4 +1,8 @@
 {
   "cSpell.enableFiletypes": ["typescriptreact"],
-  "cSpell.words": ["clsx", "OPENLOGIN"]
+  "cSpell.words": [
+    "clsx",
+    "OPENLOGIN"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }
