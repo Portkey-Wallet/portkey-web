@@ -456,50 +456,48 @@ const GuardianApprovalMain = forwardRef(
     }, [approvalLength, alreadyApprovalLength]);
 
     return (
-      <div>
-        <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
-          {typeof verifyAccountIndex === 'number' ? (
-            <VerifierPage
-              targetChainId={targetChainId}
+      <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
+        {typeof verifyAccountIndex === 'number' ? (
+          <VerifierPage
+            targetChainId={targetChainId}
+            originChainId={originChainId}
+            operationType={operationType}
+            operationDetails={operationDetails}
+            onBack={() => setVerifyAccountIndex(undefined)}
+            guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
+            verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
+            isLoginGuardian={guardianList[verifyAccountIndex].isLoginGuardian}
+            isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
+            accountType={guardianList[verifyAccountIndex].guardianType}
+            isErrorTip={isErrorTip}
+            verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
+            caHash={caHash}
+            onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
+            onError={onError}
+            onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}
+          />
+        ) : (
+          <>
+            {header}
+            <GuardianList
               originChainId={originChainId}
+              targetChainId={targetChainId}
+              expiredTime={expiredTime}
               operationType={operationType}
-              operationDetails={operationDetails}
-              onBack={() => setVerifyAccountIndex(undefined)}
-              guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
-              verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
-              isLoginGuardian={guardianList[verifyAccountIndex].isLoginGuardian}
-              isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
-              accountType={guardianList[verifyAccountIndex].guardianType}
+              isFetching={isFetching}
+              approvalLength={approvalLength}
+              alreadyApprovalLength={alreadyApprovalLength}
+              guardianList={guardianList}
               isErrorTip={isErrorTip}
-              verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
-              caHash={caHash}
-              onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
+              operationDetails={operationDetails}
+              onSend={onSendCodeHandler}
+              onVerifying={onVerifyingHandler}
+              onAsyncVerifying={onAsyncVerifying}
+              onConfirm={onConfirmHandler}
               onError={onError}
-              onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}
             />
-          ) : (
-            <>
-              {header}
-              <GuardianList
-                originChainId={originChainId}
-                targetChainId={targetChainId}
-                expiredTime={expiredTime}
-                operationType={operationType}
-                isFetching={isFetching}
-                approvalLength={approvalLength}
-                alreadyApprovalLength={alreadyApprovalLength}
-                guardianList={guardianList}
-                isErrorTip={isErrorTip}
-                operationDetails={operationDetails}
-                onSend={onSendCodeHandler}
-                onVerifying={onVerifyingHandler}
-                onAsyncVerifying={onAsyncVerifying}
-                onConfirm={onConfirmHandler}
-                onError={onError}
-              />
-            </>
-          )}
-        </div>
+          </>
+        )}
       </div>
     );
   },

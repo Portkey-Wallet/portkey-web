@@ -1,13 +1,12 @@
 import clsx from 'clsx';
 import { forwardRef, memo, useCallback, useEffect, useState } from 'react';
-import CommonBaseModal from '../CommonBaseModal';
 import GuardianApproval from '../GuardianApproval';
-import BackHeader from '../BackHeader';
 import { GuardianApprovalModalProps } from '.';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import { UserGuardianStatus } from '../../types';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
+import CommonModal from '../CommonModal';
 
 const GuardianApprovalModalMain = forwardRef(
   (
@@ -67,9 +66,12 @@ const GuardianApprovalModalMain = forwardRef(
     }, [defaultGuardianList, getData]);
 
     return (
-      <CommonBaseModal className={clsx('portkey-ui-modal-approval', className)} open={open} onClose={onClose}>
+      <CommonModal
+        leftCallBack={onBack}
+        className={clsx('portkey-ui-modal-approval', className)}
+        open={open}
+        onClose={onClose}>
         <GuardianApproval
-          header={<BackHeader onBack={onBack} />}
           originChainId={originChainId}
           targetChainId={targetChainId}
           guardianList={guardianList}
@@ -89,7 +91,7 @@ const GuardianApprovalModalMain = forwardRef(
           officialWebsiteShow={officialWebsiteShow}
           caHash={caHash}
         />
-      </CommonBaseModal>
+      </CommonModal>
     );
   },
 );

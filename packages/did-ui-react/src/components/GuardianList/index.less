@@ -1,171 +1,127 @@
 @import '../../assets/theme/constants.less';
 
 .guardian-list-wrapper {
+  height: 100%;
+  padding: 16px;
+  color: var(--sds-color-text-default-default);
+  background-color: var(--sds-color-background-default-default);
   .guardian-list-content {
     height: 100%;
     display: flex;
     flex-direction: column;
-  }
-  .guardian-list-description {
-    font-size: 14px;
-    margin-bottom: 42px;
-    text-align: center;
-    color: var(--portkey-ui-text-secondary);
-  }
-  .guardian-list-title {
-    font-size: 24px;
-    color: var(--portkey-ui-text-primary);
-    margin-bottom: 8px;
-    text-align: center;
-    line-height: normal;
-  }
-
-  .approve-count {
-    line-height: 20px;
-    font-size: 14px;
-    padding-bottom: 12px;
-    color: var(--portkey-ui-text-secondary);
-    border-bottom: 1px solid var(--portkey-ui-default-border);
-    .tooltip-icon {
-      margin-left: 8px;
-      width: 14px;
-      height: 14px;
-    }
-    .already-approval {
-      color: var(--portkey-ui-font-4);
-    }
-    .common-tooltip {
-      max-width: 272px;
-    }
-  }
-
-  .verifier-item {
-    position: relative;
-    padding: 26px 0;
-    border-bottom: 1px solid var(--portkey-ui-default-border);
-    &:last-of-type {
-      border-bottom: none;
-    }
-    &.verifier-item-disabled {
-      &::after {
-        content: '';
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        background-color: var(--portkey-ui-default-bg);
-        opacity: 0.3;
-        cursor: not-allowed;
-      }
-    }
-    .account-text {
-      margin-left: 12px;
-      line-height: 20px;
-      color: var(--portkey-ui-text-primary);
-      font-size: 16px;
-      flex: 1;
-      width: 0;
-      .detail {
-        font-size: 12px;
-        line-height: 16px;
-        color: var(--portkey-ui-text-secondary);
-      }
-    }
-
-    .not-verified,
-    .verifying,
-    .portkey-ant-btn-text {
-      width: auto;
-      display: block;
-    }
-    .not-verified,
-    .verifying {
-      border-radius: var(--portkey-ui-border-radius-1);
-      line-height: 24px;
-      font-size: 12px;
-      padding: 0 12px;
-    }
-    .portkey-ant-btn-text {
-      color: var(--portkey-ui-font-4);
-      padding: 0;
-      &.verified {
-        color: var(--portkey-ui-text-success);
-        background-color: transparent;
-      }
-      &.expired {
-        color: var(--portkey-ui-text-disabled);
-        background-color: transparent;
-      }
-      &:hover {
-        background-color: transparent;
-      }
-      span {
-        line-height: 20px;
-        font-size: 14px;
-      }
-    }
-  }
-
-  .account-text-one-row {
-    word-wrap: break-word;
-    .text-overflow(2);
-  }
-  .account-text-two-row {
-    .name,
-    .detail {
-      word-wrap: break-word;
-      .text-overflow(1);
-    }
-  }
-
-  .verifier-content {
-    flex: 1;
-
-    .btn-wrap {
-      border-top: 1px solid var(--portkey-ui-border-2);
-      padding-top: 24px;
-    }
-  }
-
-  .login-icon {
-    position: absolute;
-    top: 4px;
-    left: 0;
-    border-bottom-right-radius: 9px;
-    border-top-left-radius: 9px;
-    line-height: 18px;
-    background-color: var(--portkey-ui-bg-1);
-    padding: 0 8px;
-    text-align: center;
-    color: var(--portkey-ui-font-3);
-    font-size: 12px;
-  }
-
-  .confirm-approve-btn {
-    box-shadow: none;
-    height: auto;
-    padding: 0;
-    text-shadow: none;
-    width: 100%;
-    background-color: var(--portkey-ui-primary-btn-bg);
-    border-color: var(--portkey-ui-primary-border);
-    line-height: var(--portkey-ui-default-btn-h);
-    border-radius: var(--portkey-ui-primary-border-radius);
-  }
-
-  .confirm-approve-btn:disabled {
-    background-color: var(--portkey-ui-primary-btn-bg);
-    border-color: var(--portkey-ui-primary-border);
-    box-shadow: none !important;
-    color: var(--portkey-ui-font-12);
-    opacity: 0.3;
-  }
-}
-
-@media screen and (max-width: @screen-max-w-768) {
-  .guardian-list-wrapper {
     .guardian-list-title {
-      font-size: var(--portkey-ui-title-text-2);
-      margin-bottom: 8px;
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 700;
+      color: var(--sds-color-text-default-default);
+    }
+    .guardian-list-description {
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--sds-color-text-default-secondary);
+    }
+    .guardian-list-progress {
+      margin-top: 24px;
+      font-size: 16px;
+      line-height: 22px;
+      .selected-icon {
+        margin-left: 8px;
+        svg {
+          path {
+            fill: #99EB87;
+          }
+        }
+      }
+      .portkey-ui-progress-line {
+        margin-top: 8px;
+      }
+    }
+    .verifier-item {
+      position: relative;
+      padding: 16px 0;
+      &.verifier-item-disabled {
+        &::after {
+          content: '';
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          background-color: var(--portkey-ui-default-bg);
+          opacity: 0.3;
+          cursor: not-allowed;
+        }
+      }
+      .account-text {
+        margin-left: 8px;
+        font-size: 16px;
+        line-height: 22px;
+        color: var(--sds-color-text-default-default);
+        flex: 1;
+        width: 0;
+        .detail {
+          font-size: 14px;
+          line-height: 20px;
+          color: var(--sds-color-text-default-secondary);
+        }
+      }
+      .portkey-ui-common-button {
+        width: 84px;
+        height: 40px;
+        border-radius: 20px;
+      }
+      .verified-text {
+        font-size: 16px;
+        line-height: 16px;
+        text-align: right;
+        color: var(--sds-color-text-default-tertiary);
+      }
+    }
+    .account-text-one-row {
+      word-wrap: break-word;
+      .text-overflow(2);
+    }
+    .account-text-two-row {
+      .name,
+      .detail {
+        word-wrap: break-word;
+        .text-overflow(1);
+      }
+    }
+    .guardian-list-list {
+      flex: 1;
+      .login-guardians-text,
+      .other-guardians-text {
+        padding: 16px 0 8px 0;
+        font-size: 14px;
+        line-height: 20px;
+        color: var(--sds-color-text-default-secondary);
+      }
+    }
+    .confirm-loading {
+      margin-top: 96px;
+    }
+  }
+  .guardian-expired-content {
+    height: 100%;
+    .guardian-list-title {
+      font-size: 20px;
+      line-height: 24px;
+      font-weight: 700;
+      color: var(--sds-color-text-default-default);
+    }
+    .guardian-list-description {
+      margin-top: 16px;
+      font-size: 14px;
+      line-height: 20px;
+      color: var(--sds-color-text-default-secondary);
+    }
+    .warning-icon {
+      width: 32px;
+      height: 32px;
+      margin-bottom: 16px;
+    }
+    .expire-footer {
+      gap: 16px;
     }
   }
 }

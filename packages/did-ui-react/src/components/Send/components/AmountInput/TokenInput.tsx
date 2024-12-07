@@ -161,7 +161,9 @@ export default function TokenInput({
       <div className="item amount">
         <div className="label">
           <div>Amount:</div>
-          <ThrottleButton onClick={handleMax}>Max</ThrottleButton>
+          <ThrottleButton type="default" onClick={handleMax}>
+            Max
+          </ThrottleButton>
         </div>
         <div className="control">
           <div className="amount-input">

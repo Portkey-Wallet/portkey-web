@@ -26,7 +26,9 @@ export default function SecurityCheckMain({ className, onCancel, onConfirm }: Se
 
       <div className={`${PrefixCls}-footer`}>
         <div className="portkey-ui-btn-wrapper">
-          <ThrottleButton onClick={onCancel}>Not Now</ThrottleButton>
+          <ThrottleButton type="outline" onClick={onCancel}>
+            Not Now
+          </ThrottleButton>
           <ThrottleButton type="primary" onClick={onConfirm}>
             Add Guardians
           </ThrottleButton>
