@@ -1,16 +1,18 @@
 .base-guardian-type-icon {
-  width: 32px;
-  height: 32px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   border: 1px solid var(--portkey-ui-default-border);
   background-color: var(--portkey-ui-bg-4);
-
+  &.guardian-type-email-icon {
+    background-color: var(--sds-color-background-brand-default);
+  }
   .guardian-type-icon {
-    &.custom-svg, 
-    &.custom-svg svg {
+    &.portkey-ui-custom-svg, 
+    &.portkey-ui-custom-svg svg {
       flex-shrink: 0;
-      width: 18px;
-      height: 18px;
+      width: 21px;
+      height: 21px;
     }
   }
 }

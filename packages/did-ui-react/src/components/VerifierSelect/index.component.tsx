@@ -332,7 +332,9 @@ export default function VerifierSelect({
           {` to verify your ${accountType} address.`}
         </p>
         <div className="btn-wrapper">
-          <ThrottleButton onClick={() => setOpen(false)}>{t('Cancel')}</ThrottleButton>
+          <ThrottleButton type="outline" onClick={() => setOpen(false)}>
+            {t('Cancel')}
+          </ThrottleButton>
           <ThrottleButton type="primary" onClick={verifyHandler}>
             {t('Confirm')}
           </ThrottleButton>

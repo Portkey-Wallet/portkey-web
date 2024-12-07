@@ -1,14 +1,16 @@
 import { useTranslation } from 'react-i18next';
-import { useState, useEffect, memo, useMemo, useCallback } from 'react';
+import { useState, useEffect, memo, useMemo } from 'react';
 import clsx from 'clsx';
-import CommonTooltip from '../CommonTooltip/index.component';
 import GuardianItems from './components/GuardianItems';
 import { ChainId } from '@portkey/types';
 import { UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../types';
 import { OperationTypeEnum } from '@portkey/services';
 import './index.less';
-import ThrottleButton from '../ThrottleButton';
 import { TStringJSON } from '@portkey/types';
+import CommonButton from '../CommonButton';
+import ProgressLine from '../LineProgress';
+import CustomSvg from '../CustomSvg';
+import { Loading } from '..';
 
 export interface GuardianListProps {
   originChainId: ChainId;
@@ -38,11 +40,9 @@ function GuardianList({
   isErrorTip = true,
   operationType = OperationTypeEnum.communityRecovery,
   approvalLength,
-  isFetching,
   alreadyApprovalLength,
   operationDetails,
   onError,
-  onConfirm,
   onSend,
   onVerifying,
   onAsyncVerifying,
@@ -50,6 +50,8 @@ function GuardianList({
   const { t } = useTranslation();
 
   const [isExpired, setIsExpired] = useState<boolean>(false);
+  const loginGuardians = useMemo(() => guardianList.filter((item) => item.isLoginGuardian), [guardianList]);
+  const otherGuardians = useMemo(() => guardianList.filter((item) => !item.isLoginGuardian), [guardianList]);
 
   useEffect(() => {
     if (!expiredTime) return setIsExpired(false);
@@ -66,70 +68,108 @@ function GuardianList({
     };
   }, [expiredTime]);
 
-  const btnDisabled = useMemo(
-    () => alreadyApprovalLength <= 0 || alreadyApprovalLength !== approvalLength,
-    [alreadyApprovalLength, approvalLength],
-  );
-
-  const onFinish = useCallback(() => {
-    if (isFetching) return;
-    onConfirm?.();
-  }, [isFetching, onConfirm]);
-
-  return (
-    <div className={clsx('guardian-list-wrapper', className)}>
+  const renderGuardianList = useMemo(() => {
+    return (
       <div className="guardian-list-content">
         <div className="guardian-list-title">{t('Guardian Approval')}</div>
-        <p className="guardian-list-description">{isExpired ? t('Expired') : t('Expire after 1 hour')}</p>
-        <div className="portkey-ui-flex-between-center approve-count">
-          <span className="portkey-ui-flex-row-center">
-            {t("Guardians' approval")}
-            <CommonTooltip
-              placement="top"
-              title={
-                'You will need a certain number of guardians to confirm your action. The requirements differ depending on your guardian counts.'
-              }
-            />
-          </span>
-          <div>
-            <span className="already-approval">{alreadyApprovalLength}</span>
-            <span className="all-approval">{`/${approvalLength}`}</span>
+        <div className="guardian-list-description">
+          {t('Complete the required guardian approvals below. Note: approvals expire after 1 hour.')}
+        </div>
+        <div className="guardian-list-progress">
+          <div className="portkey-ui-flex-row-center">
+            <span>{`${alreadyApprovalLength} / ${approvalLength} completed`}</span>
+            {alreadyApprovalLength === approvalLength ? <CustomSvg type="selected" /> : null}
+          </div>
+          <ProgressLine percent={Math.round((alreadyApprovalLength / approvalLength) * 100)} />
+        </div>
+        {alreadyApprovalLength === approvalLength ? (
+          <div className="portkey-ui-flex-center confirm-loading">
+            <Loading width={32} height={32} />
+          </div>
+        ) : (
+          <div className="guardian-list-list">
+            <div className="login-guardians-text">{`Login account(s)`}</div>
+            {loginGuardians.map((item, index) => (
+              <GuardianItems
+                originChainId={originChainId}
+                targetChainId={targetChainId}
+                key={item.key}
+                operationType={operationType}
+                operationDetails={operationDetails}
+                disabled={alreadyApprovalLength >= approvalLength && item.status !== VerifyStatus.Verified}
+                isExpired={isExpired}
+                item={item}
+                isErrorTip={isErrorTip}
+                onError={onError}
+                onSend={(res) => onSend?.(res, index)}
+                onVerifying={(res) => onVerifying?.(res, index)}
+                onAsyncVerifying={(res) => onAsyncVerifying?.(res, index)}
+              />
+            ))}
+            {otherGuardians.length ? (
+              <>
+                <div className="other-guardians-text">{`Other account(s)`}</div>
+                {otherGuardians.map((item, index) => (
+                  <GuardianItems
+                    originChainId={originChainId}
+                    targetChainId={targetChainId}
+                    key={item.key}
+                    operationType={operationType}
+                    operationDetails={operationDetails}
+                    disabled={alreadyApprovalLength >= approvalLength && item.status !== VerifyStatus.Verified}
+                    isExpired={isExpired}
+                    item={item}
+                    isErrorTip={isErrorTip}
+                    onError={onError}
+                    onSend={(res) => onSend?.(res, index)}
+                    onVerifying={(res) => onVerifying?.(res, index)}
+                    onAsyncVerifying={(res) => onAsyncVerifying?.(res, index)}
+                  />
+                ))}
+              </>
+            ) : null}
+          </div>
+        )}
+      </div>
+    );
+  }, [
+    alreadyApprovalLength,
+    approvalLength,
+    isErrorTip,
+    isExpired,
+    loginGuardians,
+    onAsyncVerifying,
+    onError,
+    onSend,
+    onVerifying,
+    operationDetails,
+    operationType,
+    originChainId,
+    otherGuardians,
+    t,
+    targetChainId,
+  ]);
+
+  const renderExpiredUI = useMemo(() => {
+    return (
+      <div className="portkey-ui-flex-column-between guardian-expired-content">
+        <div className="expire-header">
+          <CustomSvg type="warning" />
+          <div className="guardian-list-title">{t('Guardian Approval Expired')}</div>
+          <div className="guardian-list-description">
+            {t('Your guardian approvals have expired. Please request new approvals to continue or cancel the process.')}
           </div>
         </div>
-        <ul className="verifier-content">
-          {guardianList?.map((item, index) => (
-            <GuardianItems
-              originChainId={originChainId}
-              targetChainId={targetChainId}
-              key={item.key}
-              operationType={operationType}
-              operationDetails={operationDetails}
-              disabled={alreadyApprovalLength >= approvalLength && item.status !== VerifyStatus.Verified}
-              isExpired={isExpired}
-              item={item}
-              isErrorTip={isErrorTip}
-              onError={onError}
-              onSend={(res) => onSend?.(res, index)}
-              onVerifying={(res) => onVerifying?.(res, index)}
-              onAsyncVerifying={(res) => onAsyncVerifying?.(res, index)}
-            />
-          ))}
-          {!isExpired && (
-            <div className="btn-wrap">
-              <ThrottleButton
-                type="primary"
-                className="confirm-approve-btn"
-                loading={isFetching}
-                disabled={btnDisabled}
-                onClick={onFinish}>
-                {t('Confirm')}
-                {isFetching}
-              </ThrottleButton>
-            </div>
-          )}
-        </ul>
+        <div className="expire-footer portkey-ui-flex-column">
+          <CommonButton type="primary" block>{`Try Again`}</CommonButton>
+          <CommonButton type="outline" block>{`Cancel`}</CommonButton>
+        </div>
       </div>
-    </div>
+    );
+  }, [t]);
+
+  return (
+    <div className={clsx('guardian-list-wrapper', className)}>{isExpired ? renderExpiredUI : renderGuardianList}</div>
   );
 }
 

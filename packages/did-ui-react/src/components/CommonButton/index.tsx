@@ -7,18 +7,17 @@ import './index.less';
 export type CommonButtonProps = {
   loadingWidth?: number;
   loadingHeight?: number;
-  type: 'primary' | 'outline';
+  type?: 'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'outline';
 } & Omit<ButtonProps, 'type'>;
 
 export default function CommonButton(props: CommonButtonProps) {
-  const { loadingWidth, loadingHeight, className, loading, children, type, ...prop } = props;
-  console.log('===type', type);
+  const { loadingWidth, loadingHeight, className, loading, children, type = 'default', ...prop } = props;
   const btnClsName = useMemo(() => `portkey-btn-${type}`, [type]);
   return (
     <Button
       className={clsx('portkey-ui-common-button portkey-ui-flex-center', btnClsName, className)}
       {...prop}
-      type={type === 'primary' ? type : undefined}>
+      type={type === 'outline' ? undefined : type}>
       {loading ? <Loading width={loadingWidth} height={loadingHeight} /> : children}
     </Button>
   );

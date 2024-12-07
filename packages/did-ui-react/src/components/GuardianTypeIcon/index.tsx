@@ -8,8 +8,9 @@ interface GuardianTypeIconProps {
 }
 
 export default function GuardianTypeIcon({ type, className }: GuardianTypeIconProps) {
+  const cls = type === 'Email' ? 'guardian-type-email-icon' : '';
   return (
-    <div className={clsx('base-guardian-type-icon', 'portkey-ui-flex-center', className)}>
+    <div className={clsx('base-guardian-type-icon', 'portkey-ui-flex-center', cls, className)}>
       <CustomSvg className="portkey-ui-flex-center guardian-type-icon" type={type} />
     </div>
   );

@@ -45,23 +45,28 @@ function GuardianItems({
   const accountShow = useCallback((guardian: UserGuardianItem) => {
     switch (guardian.guardianType) {
       case 'Email':
-      case 'Phone':
         return <div className="account-text account-text-one-row">{guardian.identifier}</div>;
       case 'Google':
-        return (
+        return guardian.firstName ? (
           <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
             <div className="detail">{guardian.thirdPartyEmail}</div>
           </div>
+        ) : (
+          <div className="account-text account-text-one-row">{guardian.thirdPartyEmail}</div>
         );
       case 'Apple':
       case 'Telegram':
       case 'Twitter':
       case 'Facebook':
-        return (
+        return guardian.firstName ? (
           <div className="account-text account-text-two-row">
             <div className="name">{guardian.firstName}</div>
             <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail || '******'}</div>
+          </div>
+        ) : (
+          <div className="account-text account-text-one-row">
+            {guardian.isPrivate ? '******' : guardian.thirdPartyEmail || '******'}
           </div>
         );
     }
@@ -127,7 +132,6 @@ function GuardianItems({
 
   return (
     <li className={clsx('portkey-ui-flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
-      {item.isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
       <div className="portkey-ui-w-100 portkey-ui-flex-between-center">
         <VerifierPair
           guardian={item}
@@ -138,9 +142,7 @@ function GuardianItems({
         {accountShow(item)}
       </div>
       {isExpired && item.status !== VerifyStatus.Verified ? (
-        <ThrottleButton className="expired" type="text" disabled>
-          {t('Expired')}
-        </ThrottleButton>
+        <div className="verified-text">{t('Expired')}</div>
       ) : (
         <>
           {(!item.status || item.status === VerifyStatus.NotVerified) && !isSocialLogin && (
@@ -162,11 +164,7 @@ function GuardianItems({
                 {t('Verifying')}
               </ThrottleButton>
             )}
-          {item.status === VerifyStatus.Verified && (
-            <ThrottleButton className="verified" type="text" disabled>
-              {t('Confirmed')}
-            </ThrottleButton>
-          )}
+          {item.status === VerifyStatus.Verified && <div className="verified-text">{t('Approved')}</div>}
         </>
       )}
     </li>
