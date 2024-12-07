@@ -10,6 +10,9 @@ import { useLoginWallet } from '../../hooks/useLoginWallet';
 import SetPinMobileBase from '../SetPinMobileBase';
 import { devices } from '@portkey/utils';
 import BackHeader from '../BackHeader';
+import CustomSvg from '../CustomSvg';
+import { useTranslation } from 'react-i18next';
+import './index.less';
 
 export interface SetPinAndAddManagerProps {
   type: AddManagerType;
@@ -42,6 +45,7 @@ function SetPinAndAddManager({
   onFinish,
   onCreatePending,
 }: SetPinAndAddManagerProps) {
+  const { t } = useTranslation();
   const onFinishRef = useRef<SetPinAndAddManagerProps['onFinish']>(onFinish);
   const isMobile = useMemo(() => devices.isMobileDevices(), []);
 
@@ -102,8 +106,24 @@ function SetPinAndAddManager({
       onCancel={onBack}
     />
   ) : (
-    <>
-      {onBack && <BackHeader leftElement={type === 'recovery' ? false : undefined} onBack={onBack} />}
+    <div className="set-pin-pc-container">
+      {onBack && (
+        <BackHeader
+          leftElement={false}
+          title={<div className="set-pin-title">{t('Create a PIN to protect your wallet')}</div>}
+          rightElement={
+            <CustomSvg
+              type="X"
+              onClick={onBack}
+              fillColor="black"
+              style={{
+                width: 20,
+                height: 20,
+              }}
+            />
+          }
+        />
+      )}
       <SetPinBase
         className={clsx('portkey-card-height', 'portkey-ui-set-pin-pc', className)}
         onFinish={onCreate}
@@ -118,7 +138,7 @@ function SetPinAndAddManager({
           )
         }
       />
-    </>
+    </div>
   );
 }
 

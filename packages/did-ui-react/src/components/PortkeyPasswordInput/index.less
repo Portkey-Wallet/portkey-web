@@ -20,18 +20,22 @@
   .portkey-ui-passcode-cell::before {
     content: '';
     display: block;
-    width: 16px;
-    height: 4px;
-    background-color: var(--portkey-ui-text-primary);
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+
+    background: var(--sds-color-background-neutral-tertiary);
+    // background-color: var(--portkey-ui-text-primary);
   }
   .portkey-ui-passcode-cell.portkey-ui-passcode-cell-dot::before {
     content: '';
-    height: 16px;
+    height: 14px;
     border-radius: 100%;
+    background: var(--sds-color-background-brand-default);
   }
 
   .passcode-error-tip {
-    color: var(--portkey-ui-text-error);
+    color: var(--sds-color-text-danger-on-danger-tertiary);
     font-size: 12px;
     margin-top: 30px;
     height: 16px;

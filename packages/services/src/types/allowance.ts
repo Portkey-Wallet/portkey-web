@@ -3,6 +3,7 @@ import { CaAddressInfosType } from './assets';
 
 export interface IAllowanceService {
   getAllowanceList: (params: GetAllowanceParams) => Promise<GetAllowanceResult>;
+  checkSpenderValid: (params: ICheckSpenderValidParams) => Promise<boolean>;
 }
 
 export interface ISymbolApprovedItem {
@@ -24,6 +25,11 @@ export interface GetAllowanceParams {
   maxResultCount: number;
   skipCount: number;
   caAddressInfos: CaAddressInfosType;
+}
+export interface ICheckSpenderValidParams {
+  website: string;
+  logo: string;
+  spender: string;
 }
 
 export interface GetAllowanceResult {

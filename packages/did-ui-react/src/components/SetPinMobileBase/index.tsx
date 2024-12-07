@@ -2,10 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import PortkeyPasswordInput from '../PortkeyPasswordInput';
 import { PASSWORD_LENGTH } from '../../constants/misc';
 import BackHeader from '../BackHeader';
-import { PinErrorMessage } from '../../utils';
+import { isMobileWidth, PinErrorMessage } from '../../utils';
 import './index.less';
 import { AddManagerType } from '../types';
 import clsx from 'clsx';
+import CustomSvg from '../CustomSvg';
+import { useTranslation } from 'react-i18next';
 
 enum STEP {
   enterPin = 'enterPin',
@@ -23,11 +25,13 @@ export default function SetPinMobileBase({
   onCancel?: () => void;
   onFinish?: (pin: string) => Promise<void>;
 }) {
+  const { t } = useTranslation();
   const [step, setStep] = useState<STEP>(STEP.enterPin);
   const [pin, setPin] = useState<string>();
   const [confirmPin, setConfirmPin] = useState<string>();
   const [error, setError] = useState<string>();
   const isFinishRef = useRef<boolean>(false);
+  const [isPad, setPad] = useState(!isMobileWidth());
 
   useEffect(() => {
     return () => {
@@ -37,28 +41,70 @@ export default function SetPinMobileBase({
       setStep(STEP.enterPin);
     };
   }, []);
-
+  console.log('wfs==== step', step);
   return (
     <div className={clsx('portkey-ui-set-pin-mobile-wrapper', className)}>
-      {(step !== STEP.enterPin || type !== 'recovery') && (
-        <BackHeader
-          leftElement={undefined}
-          onBack={() => {
-            if (step === STEP.confirmPin) {
-              setPin('');
-              setError('');
-              setConfirmPin('');
-              setStep(STEP.enterPin);
-            } else {
-              onCancel?.();
-            }
-          }}
-        />
+      {!isPad ? (
+        <>
+          {(step !== STEP.enterPin || type !== 'recovery') && (
+            <BackHeader
+              leftElement={undefined}
+              onBack={() => {
+                if (step === STEP.confirmPin) {
+                  setPin('');
+                  setError('');
+                  setConfirmPin('');
+                  setStep(STEP.enterPin);
+                } else {
+                  onCancel?.();
+                }
+              }}
+            />
+          )}
+          <div className="portkey-ui-set-pin-mobile-title">
+            {t(step === STEP.confirmPin ? 'Confirm your PIN' : 'Create a PIN to protect your wallet')}
+          </div>
+        </>
+      ) : (
+        <>
+          {onCancel && (
+            <BackHeader
+              leftElement={step === STEP.enterPin ? false : undefined}
+              onBack={() => {
+                if (step === STEP.confirmPin) {
+                  setPin('');
+                  setError('');
+                  setConfirmPin('');
+                  setStep(STEP.enterPin);
+                } else {
+                  onCancel?.();
+                }
+              }}
+              title={
+                step === STEP.enterPin ? (
+                  <div className="set-pin-title">{t('Create a PIN to protect your wallet')}</div>
+                ) : null
+              }
+              rightElement={
+                <CustomSvg
+                  type="X"
+                  onClick={onCancel}
+                  fillColor="black"
+                  style={{
+                    width: 20,
+                    height: 20,
+                  }}
+                />
+              }
+            />
+          )}
+          {step === STEP.confirmPin && (
+            <div className="portkey-ui-set-pin-mobile-title">
+              {t(step === STEP.confirmPin ? 'Confirm your PIN' : 'Create a PIN to protect your wallet')}
+            </div>
+          )}
+        </>
       )}
-
-      <div className="portkey-ui-set-pin-mobile-title">
-        {step === STEP.confirmPin ? 'Confirm your PIN' : 'Create a PIN to protect your wallet'}
-      </div>
       <div>
         {step === STEP.enterPin && (
           <PortkeyPasswordInput
@@ -85,9 +131,9 @@ export default function SetPinMobileBase({
                 isFinishRef.current = true;
                 if (pin !== val) {
                   setConfirmPin('');
-                  return setError('Pins do not match');
+                  return setError(t('Pins do not match'));
                 }
-                if (!pin) return setError(PinErrorMessage.invalidPin);
+                if (!pin) return setError(t(PinErrorMessage.invalidPin));
                 await onFinish?.(pin);
                 isFinishRef.current = false;
               } finally {

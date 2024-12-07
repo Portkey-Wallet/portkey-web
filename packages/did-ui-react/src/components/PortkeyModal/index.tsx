@@ -110,7 +110,7 @@ export default function PortkeyModal({
 
   const defaultHeight = useMemo(() => {
     if (type === 'modal') return height;
-    if (!height && (type === 'drawer' || isMobile)) return '80vh';
+    if (!height && (type === 'drawer' || isMobile)) return '70vh';
     return height;
   }, [height, isMobile, type]);
 

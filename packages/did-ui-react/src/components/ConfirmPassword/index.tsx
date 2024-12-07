@@ -59,7 +59,7 @@ export default function ConfirmPassword({
           ) : (
             <>
               <span style={{ marginRight: 8 }}>
-                Pin&nbsp;<span className="label-tip">{'(Must be at least 6 characters)'}</span>
+                <span className="label-tip">{t('Set PIN')}</span>
               </span>
             </>
           )
@@ -75,9 +75,9 @@ export default function ConfirmPassword({
               if (!value) {
                 setCreateValidate({
                   validateStatus: 'error',
-                  errorMsg: t('Please enter Pin'),
+                  errorMsg: t('Please enter pin'),
                 });
-                return Promise.reject(t('Please enter Pin'));
+                return Promise.reject(t('Please enter pin'));
               }
               if (value.length < 6) {
                 setCreateValidate({
@@ -102,30 +102,32 @@ export default function ConfirmPassword({
           }),
         ]}>
         <CustomPassword
-          placeholder={label?.newPlaceholder || t('Enter Pin')}
+          placeholder={label?.newPlaceholder || t('At least 6 characters')}
           value={value || password}
           onChange={(e) => setPassword(e.target.value)}
+          autoComplete="off"
         />
       </FormItem>
       <FormItem
-        label={label?.confirmPassword ? label?.confirmPassword : t('Confirm Pin')}
+        label={label?.confirmPassword ? label?.confirmPassword : <span className="label-tip">{t('Confirm PIN')}</span>}
         name="confirmPassword"
         validateTrigger="onBlur"
         rules={[
-          { required: true, message: t('Please enter Pin') },
+          { required: true, message: t('Please enter pin') },
           () => ({
             validator(_, value) {
               if (!value || password === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error(t('Pins do not match')));
+              return Promise.reject(new Error(t('Not match, please try again.')));
             },
           }),
         ]}>
         <CustomPassword
-          placeholder={label?.confirmPlaceholder || t('Enter Pin')}
+          placeholder={label?.confirmPlaceholder || t('Enter pin')}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          autoComplete="off"
         />
       </FormItem>
     </div>

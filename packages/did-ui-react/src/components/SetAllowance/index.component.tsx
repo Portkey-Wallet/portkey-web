@@ -1,5 +1,5 @@
 import { Input } from 'antd';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { parseInputNumberChange } from '../../utils/input';
 import BigNumber from 'bignumber.js';
 import './index.less';
@@ -8,11 +8,9 @@ import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
 import { isNFT } from '../../utils/assets';
 import CustomSvg from '../CustomSvg';
-import { useGetContractUpgradeTime } from '@portkey/graphql';
 import { NetworkType } from '../../types';
-import { getChain } from '../../hooks';
 import { ChainId } from '@portkey/types';
-import { checkTimeOver12, formatDateTime } from '@portkey/utils';
+import { useDappSpenderCheck } from '../../hooks/allowance';
 
 const PrefixCls = 'set-allowance';
 export interface BaseSetAllowanceProps {
@@ -40,6 +38,7 @@ export type SetAllowanceProps = BaseSetAllowanceProps & {
   networkType?: NetworkType;
   originChainId?: ChainId;
   targetChainId?: ChainId;
+  spender?: string;
 } & SetAllowanceHandlerProps;
 
 export default function SetAllowanceMain({
@@ -50,9 +49,7 @@ export default function SetAllowanceMain({
   dappInfo,
   className,
   recommendedAmount = 0,
-  networkType,
-  originChainId,
-  targetChainId,
+  spender,
   onCancel,
   onAllowanceChange,
   onConfirm,
@@ -68,44 +65,7 @@ export default function SetAllowanceMain({
   const allowance = useMemo(() => formatAllowanceInput(amount), [amount, formatAllowanceInput]);
 
   const [error, setError] = useState<string>('');
-  const getContractUpgradeTime = useGetContractUpgradeTime(networkType === 'MAINNET');
-  const [contractUpgradeTimeResult, setContractUpgradeTimeResult] = useState<{
-    isInit: boolean;
-    isTimeOver12: boolean;
-    formatTime: string;
-  }>({
-    isInit: true,
-    isTimeOver12: true,
-    formatTime: '',
-  });
-  useEffect(() => {
-    (async () => {
-      if (!originChainId || !targetChainId) {
-        return;
-      }
-      const chainInfo = await getChain(originChainId);
-      const result = await getContractUpgradeTime({
-        input: {
-          chainId: targetChainId,
-          address: chainInfo.caContractAddress || '',
-          skipCount: 0,
-          maxResultCount: 10,
-        },
-      });
-      console.log('wfs===result', result);
-      const blockTime = result.data.contractList.items[0].metadata.block.blockTime;
-      setContractUpgradeTimeResult({
-        isInit: false,
-        isTimeOver12: checkTimeOver12(blockTime),
-        formatTime: formatDateTime(blockTime),
-      });
-      console.log('wfs===result2', {
-        isInit: false,
-        isTimeOver12: checkTimeOver12(blockTime),
-        formatTime: formatDateTime(blockTime),
-      });
-    })();
-  }, [getContractUpgradeTime, originChainId, targetChainId]);
+  const spenderValid = useDappSpenderCheck(dappInfo?.href, spender, dappInfo?.icon);
 
   const inputChange = useCallback(
     (amount: string | number) => {
@@ -172,17 +132,10 @@ export default function SetAllowanceMain({
 
         <div className={`${PrefixCls}-notice`}>{noticeText}</div>
       </div>
-      {!contractUpgradeTimeResult.isInit && (
-        <div
-          className={`${PrefixCls}-warning ${!contractUpgradeTimeResult.isTimeOver12 && `${PrefixCls}-warning-hint`}`}>
-          <CustomSvg
-            type="WarningTriangle"
-            className={`warning-icon`}
-            fillColor={contractUpgradeTimeResult.isTimeOver12 ? '#5D42FF' : '#FF9417'}
-          />
-          <div>{`Contract update time: ${
-            contractUpgradeTimeResult?.formatTime || ''
-          }. The dApp's smart contract has been updated. Please proceed with caution.`}</div>
+      {!spenderValid && (
+        <div className={`${PrefixCls}-warning`}>
+          <CustomSvg type="WarningTriangle" className={`warning-icon`} fillColor={'#FF9417'} />
+          <div>{`The dApp's logo, domain, or address you're approving may not be authentic. Please proceed with caution.`}</div>
         </div>
       )}
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">

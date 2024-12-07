@@ -3,7 +3,7 @@ import { AccountType } from '@portkey/services';
 import { ChainId, IBlockchainWallet } from '@portkey/types';
 import { CSSProperties, ReactNode } from 'react';
 import { IGuardianIdentifierInfo, IPhoneCountry } from './signIn';
-import { OnErrorFunc, TotalAccountType, ValidatorHandler } from '../../types';
+import { OnErrorFunc, ThemeType, TotalAccountType, ValidatorHandler } from '../../types';
 import { TAllLoginKey } from '../../utils/googleAnalytics';
 export * from './verify';
 export * from './signIn';
@@ -81,7 +81,7 @@ export enum Design {
 export type TDesign = `${Design}`;
 
 export type TSize = 'L' | 'S';
-export type Theme = 'dark' | 'light';
+export type Theme = ThemeType;
 
 export type TOnSuccessExtraData = {
   caAddress: string;
