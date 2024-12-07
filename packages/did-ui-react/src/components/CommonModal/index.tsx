@@ -1,39 +1,43 @@
-import { Col, Row } from 'antd';
 import clsx from 'clsx';
-import { LeftOutlined as LeftOutlinedIcon } from '@ant-design/icons';
-import { ReactNode } from 'react';
+import { useMemo } from 'react';
 import CommonBaseModal from '../CommonBaseModal';
 import { PortkeyModalProps } from '../PortkeyModal';
+import CustomSvg from '../CustomSvg';
 import './styles.less';
 
-const LeftOutlined = (LeftOutlinedIcon as any).default || LeftOutlinedIcon;
 export interface CommonModalProps extends PortkeyModalProps {
   className?: string;
   leftCallBack?: () => void;
-  leftElement?: ReactNode;
+  onClose?: () => void;
 }
 
 export default function CommonModal(props: CommonModalProps) {
-  const { leftCallBack, width, title, leftElement } = props;
+  const { leftCallBack, width, title, onClose, children, maskClosable = false } = props;
+
+  const headerUI = useMemo(() => {
+    if (leftCallBack) {
+      return (
+        <div className="portkey-ui-header">
+          <div className="portkey-ui-flex-between-center">
+            <CustomSvg type="ArrowLeft" onClick={leftCallBack} />
+            {onClose ? <CustomSvg type="Close" onClick={onClose} /> : null}
+          </div>
+          {title ? <div className="header-title">{title}</div> : null}
+        </div>
+      );
+    }
+    return <CustomSvg className="portkey-ui-close-icon" type="Close" onClick={onClose} />;
+  }, [leftCallBack, onClose, title]);
+
   return (
     <CommonBaseModal
       destroyOnClose
       {...props}
+      maskClosable={maskClosable}
       width={width ? width : '400px'}
-      className={clsx('portkey-ui-common-modals', props.className)}
-      title={
-        <Row justify="space-between">
-          {leftCallBack || leftElement ? (
-            <Col className="common-modal-left-icon" flex={1} onClick={leftCallBack}>
-              {leftElement || (LeftOutlined && <LeftOutlined />)}
-            </Col>
-          ) : null}
-          <Col flex={2} style={{ textAlign: 'center' }}>
-            {title}
-          </Col>
-          {leftCallBack || leftElement ? <Col flex={1} /> : null}
-        </Row>
-      }
-    />
+      className={clsx('portkey-ui-common-modals', props.className)}>
+      {headerUI}
+      {children}
+    </CommonBaseModal>
   );
 }
