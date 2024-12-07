@@ -61,6 +61,7 @@ import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
+import CommonModal from '../CommonModal';
 
 export interface GuardianAddProps {
   header?: ReactNode;
@@ -155,7 +156,7 @@ function GuardianAdd({
         className: 'portkey-option-tip',
         label: (
           <div className="portkey-ui-flex label-item">
-            <CustomSvg type="Warning" />
+            <CustomSvg type="warning" />
             <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
           </div>
         ),
@@ -814,13 +815,12 @@ function GuardianAdd({
           onReSend={reSendCode}
         />
       </CommonBaseModal>
-      <CommonBaseModal
+      <CommonModal
         className="portkey-ui-modal-approval"
         open={approvalVisible}
         destroyOnClose
         onClose={onCloseApproval}>
         <GuardianApproval
-          header={<BackHeader onBack={onCloseApproval} />}
           originChainId={originChainId}
           guardianList={guardianList}
           networkType={networkType}
@@ -835,7 +835,7 @@ function GuardianAdd({
             verifierId: curGuardian.current?.verifierId,
           })}
         />
-      </CommonBaseModal>
+      </CommonModal>
     </div>
   );
 }

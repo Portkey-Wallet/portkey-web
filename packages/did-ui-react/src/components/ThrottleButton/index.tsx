@@ -1,8 +1,8 @@
-import { Button, ButtonProps } from 'antd';
 import { useEffect, useRef } from 'react';
 import { useThrottleFirstCallback } from '../../hooks/throttle';
+import CommonButton, { CommonButtonProps } from '../CommonButton';
 
-export default function ThrottleButton({ onClick, ...props }: ButtonProps) {
+export default function ThrottleButton({ onClick, ...props }: CommonButtonProps) {
   const onClickRef = useRef(onClick);
   useEffect(() => {
     onClickRef.current = onClick;
@@ -14,5 +14,5 @@ export default function ThrottleButton({ onClick, ...props }: ButtonProps) {
     [],
     500,
   );
-  return <Button {...props} onClick={throttleClick} />;
+  return <CommonButton {...props} onClick={throttleClick} />;
 }

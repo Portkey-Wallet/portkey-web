@@ -101,7 +101,7 @@ export default function WakeUpPortkey({
   }, [deviceInfo, generateKeystore, intervalHandler, networkType, websiteInfo]);
 
   return (
-    <ThrottleButton className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
+    <ThrottleButton type="default" className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
       <CustomSvg type="Portkey-login" />
       {`${type} with Portkey`}
     </ThrottleButton>

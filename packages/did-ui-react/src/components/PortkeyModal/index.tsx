@@ -90,10 +90,11 @@ export default function PortkeyModal({
         {(contextLocale) => {
           return (
             <>
-              <ThrottleButton onClick={onClose} {...cancelButtonProps}>
+              <ThrottleButton type="outline" onClick={onClose} {...cancelButtonProps}>
                 {cancelText || contextLocale.cancelText}
               </ThrottleButton>
               <ThrottleButton
+                type="default"
                 {...convertLegacyProps(okType)}
                 loading={confirmLoading}
                 onClick={onOk}
