@@ -33,6 +33,7 @@ export { default as ScanBase } from './ScanBase';
 export { default as LoginBase } from './LoginBase';
 export { default as BaseVerifierIcon } from './BaseVerifierIcon';
 export { default as CommonModal } from './CommonModal';
+export { default as CommonButton } from './CommonButton';
 export { default as CommonSelect } from './CommonSelect';
 export { default as CommonTooltip } from './CommonTooltip';
 export { default as ConfirmPassword } from './ConfirmPassword';
