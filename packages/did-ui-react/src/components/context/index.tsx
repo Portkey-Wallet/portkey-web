@@ -8,6 +8,7 @@ import { useEffectOnce } from 'react-use';
 import { did } from '../../utils';
 import ConfigProvider from '../config-provider';
 import { initConfig } from './initConfig';
+import { initTheme } from '../../assets/theme';
 
 const INITIAL_STATE = {
   theme: 'light',
@@ -53,6 +54,9 @@ export default function Provider({ theme, chainType, sandboxId, networkType, chi
   useEffect(() => {
     ConfigProvider.setGlobalConfig({ networkType });
   }, [networkType]);
+  useEffect(() => {
+    initTheme(theme);
+  }, [theme]);
 
   return (
     <PortkeyContext.Provider

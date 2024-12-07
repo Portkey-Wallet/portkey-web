@@ -204,3 +204,9 @@ export function compareVersions(v1: string, v2: string) {
   }
   return 0;
 }
+export function isMobileWidth() {
+  return window.innerWidth < 769;
+}
+export function isPadWidth() {
+  return window.innerWidth >= 769 && window.innerWidth <= 1024;
+}

@@ -4,29 +4,34 @@
   bottom: 0;
   left: 0;
   .portkey-ui-base-number-keyboard-bg-wrapper {
-    padding: 14px;
-    background-color: var(--portkey-ui-keyboard-bg);
+    padding: 24px;
+    // background-color: var(--portkey-ui-keyboard-bg);
     .portkey-ui-base-number-keyboard-main {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
+      grid-template-columns: repeat(3, 1fr);
+      column-gap: 52.5px;
+      row-gap: 24px;
       .portkey-ui-base-number-keyboard-key {
         border-radius: 6px;
         padding: 8px 0;
         display: flex;
         justify-content: center;
         align-items: center;
-        font-size: 24px;
+        font-size: 32px;
         font-style: normal;
         line-height: normal;
-        font-weight: 500;
-        color: var(--portkey-ui-text-primary);
+        font-weight: 600;
+        height: 80px;
+        color: var(--sds-color-text-default-default);
       }
   
       .portkey-ui-base-number-keyboard-key {
-        &.portkey-ui-base-number-keyboard-key-sign,
-        &.portkey-ui-base-number-keyboard-key-number {
-          background-color: var(--portkey-ui-keyboard-btn-bg);
+        &.portkey-ui-base-number-keyboard-key-sign {
+          svg {
+            path {
+              fill: var(--sds-color-text-default-default);
+            }
+          }
         }
       }
     }

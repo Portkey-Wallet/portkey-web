@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { usePortkeyAsset } from '../components';
 import { did } from '../utils/did';
 import { GetAllowanceResult } from '@portkey/services';
@@ -29,3 +29,20 @@ export const useAllowanceList = ({ step = 10 }: { step?: number }) => {
     fetchMoreAllowanceList,
   };
 };
+export function useDappSpenderCheck(website?: string, spender?: string, logo?: string) {
+  const [spenderValid, setSpenderValid] = useState<boolean>(true);
+  const checkDappSpenderValid = useCallback(async (website?: string, spender?: string, logo?: string) => {
+    const result = await did.services.allowance.checkSpenderValid({
+      website: website || '',
+      logo: logo || '',
+      spender: spender || '',
+    });
+    setSpenderValid(result);
+  }, []);
+  useEffect(() => {
+    (async () => {
+      await checkDappSpenderValid(website, spender, logo);
+    })();
+  }, [checkDappSpenderValid, logo, spender, website]);
+  return spenderValid;
+}
