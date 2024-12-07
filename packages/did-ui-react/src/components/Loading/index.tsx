@@ -1,8 +1,14 @@
 import { useRef, useEffect } from 'react';
 import lottie, { AnimationItem } from 'lottie-web';
-import animationData from './data';
+import animationData from './spinnerDark';
 
-const LoadingIndicator = () => {
+export type LoadingType = {
+  width?: number;
+  height?: number;
+};
+
+const LoadingIndicator = (props: LoadingType) => {
+  const { width = 16, height = 16 } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const animation = useRef<AnimationItem | null>(null);
 
@@ -23,7 +29,7 @@ const LoadingIndicator = () => {
     };
   }, []);
 
-  return <div className="loading" ref={containerRef}></div>;
+  return <div className="loading" style={{ width, height }} ref={containerRef}></div>;
 };
 
 export default LoadingIndicator;

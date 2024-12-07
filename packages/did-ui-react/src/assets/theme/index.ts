@@ -9,7 +9,7 @@ export const darkTheme = {
   backgroundDefaultTertiary: '#414142',
   backgroundDefaultTertiaryHover: '#626264',
 
-  backgroundDisableDefault: '#1F1F21',
+  backgroundDisabledDefault: '#1F1F21',
 
   backgroundBrandDefault: '#B8E1FF',
   backgroundBrandHover: '#DFF0FF',
