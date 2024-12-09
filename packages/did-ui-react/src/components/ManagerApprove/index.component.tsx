@@ -196,6 +196,7 @@ export default function ManagerApproveInner({
             networkType={networkType}
             originChainId={originChainId}
             targetChainId={targetChainId}
+            spender={spender}
           />
         )}
 
