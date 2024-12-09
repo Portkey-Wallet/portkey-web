@@ -627,6 +627,7 @@ const SignIn = forwardRef(
             privacyPolicy={privacyPolicy}
             loginMethodsOrder={loginMethodsOrder}
             recommendIndexes={recommendIndexes}
+            onClose={onModalCancel}
           />
         );
       if (LifeCycleMap['Step2OfSignUp'].includes(lifeCycle)) {
@@ -682,6 +683,7 @@ const SignIn = forwardRef(
       privacyPolicy,
       loginMethodsOrder,
       recommendIndexes,
+      onModalCancel,
       keyboard,
       guardianIdentifierInfo,
       walletWithoutPin,

@@ -30,6 +30,7 @@ export default function CryptoDesignBaseCom({
   privacyPolicy,
   loginMethodsOrder,
   recommendIndexes,
+  onClose,
   onError,
   onSuccess,
   validateEmail,
@@ -136,6 +137,7 @@ export default function CryptoDesignBaseCom({
           onFinish={onLoginFinishWithoutPin}
           isErrorTip={isErrorTip}
           onError={onError}
+          onClose={onClose}
         />
       )}
       {_type === 'Login' && (

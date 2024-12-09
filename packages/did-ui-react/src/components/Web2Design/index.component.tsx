@@ -42,6 +42,7 @@ export default function Web2Design({
   privacyPolicy,
   loginMethodsOrder = SocialLoginList as ISocialLogin[],
   onError,
+  onClose,
   onSuccess,
   validateEmail,
   validatePhone,
@@ -76,6 +77,7 @@ export default function Web2Design({
   const isMobile = useMobile();
 
   const littleSize = useMemo(() => {
+    console.log('wfs====size', size);
     try {
       if (size === 'L') return false;
       if (size === 'S') return true;
@@ -220,16 +222,20 @@ export default function Web2Design({
       <div className="portkey-ui-flex-center right-wrapper">
         {showScan && (
           <ScanCard
-            gridType={1}
+            gridType={0}
             isMobile={isMobile}
             chainId={defaultChainId}
             chainType={chainType}
             networkType={networkType}
             onShowQrCode={() => onSocialStart?.('Scan')}
-            onBack={() => setType('Login')}
+            onBack={() => {
+              setType('Login');
+              setShowQRCode(false);
+            }}
             onFinish={onLoginFinishWithoutPin}
             isErrorTip={isErrorTip}
             onError={onError}
+            onClose={onClose}
           />
         )}
       </div>
@@ -240,6 +246,7 @@ export default function Web2Design({
       isErrorTip,
       isMobile,
       networkType,
+      onClose,
       onError,
       onLoginFinishWithoutPin,
       onSocialStart,
@@ -247,17 +254,10 @@ export default function Web2Design({
     ],
   );
   const [showQRCode, setShowQRCode] = useState<boolean>();
-
   return (
     <div className="portkey-ui-web2design-wrapper">
-      {type === 'Login' && littleSize && (
-        <>
-          {!showQRCode ? (
-            <CustomSvg className="web2design-qrcode-icon" type="QRCode" onClick={() => setShowQRCode(true)} />
-          ) : (
-            <CustomSvg className="web2design-qrcode-icon" type="PC" onClick={() => setShowQRCode(false)} />
-          )}
-        </>
+      {type === 'Login' && littleSize && !showQRCode && (
+        <CustomSvg className="web2design-qrcode-icon" type="QRCode" onClick={() => setShowQRCode(true)} />
       )}
       <div
         className={clsx(

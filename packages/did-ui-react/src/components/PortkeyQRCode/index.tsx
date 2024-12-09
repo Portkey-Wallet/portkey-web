@@ -10,10 +10,10 @@ export default function PortkeyQRCode({ value, ...props }: IProps) {
       size={400}
       quietZone={0}
       logoImage={PortkeyQR}
-      logoWidth={80}
-      logoHeight={80}
-      qrStyle={'squares'}
-      eyeRadius={{ outer: 7, inner: 4 }}
+      logoWidth={64}
+      logoHeight={64}
+      qrStyle={'dots'}
+      eyeRadius={{ outer: 27, inner: 14 }}
       ecLevel={'L'}
       {...props}
     />
