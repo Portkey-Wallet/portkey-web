@@ -1,6 +1,8 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useMemo } from 'react';
 import lottie, { AnimationItem } from 'lottie-web';
-import animationData from './spinnerDark';
+import animationDarkData from './spinnerDark';
+import animationWhiteData from './spinnerWhite';
+import ConfigProvider from '../config-provider';
 
 export type LoadingType = {
   width?: number;
@@ -11,6 +13,7 @@ const LoadingIndicator = (props: LoadingType) => {
   const { width = 16, height = 16 } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const animation = useRef<AnimationItem | null>(null);
+  const theme = useMemo(() => ConfigProvider?.getGlobalConfig()?.theme, []);
 
   useEffect(() => {
     if (!animation.current) {
@@ -19,7 +22,7 @@ const LoadingIndicator = (props: LoadingType) => {
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        animationData: animationData,
+        animationData: theme !== 'dark' ? animationDarkData : animationWhiteData,
       });
     }
     return () => {
@@ -27,7 +30,7 @@ const LoadingIndicator = (props: LoadingType) => {
       animation.current?.destroy();
       animation.current = null;
     };
-  }, []);
+  }, [theme]);
 
   return <div className="loading" style={{ width, height }} ref={containerRef}></div>;
 };
