@@ -1,5 +1,8 @@
 {
-  "extends": ["stylelint-config-standard", "stylelint-config-prettier"],
+  "extends": [
+    "stylelint-config-standard",
+    "stylelint-config-standard-less"
+  ],
   "customSyntax": "postcss-less",
   "rules": {
     "font-family-name-quotes": null,
