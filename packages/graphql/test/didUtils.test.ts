@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import { getCAHolderManagerInfo, getLoginGuardianAccount } from '../src/did/utils';
 
 const client = {

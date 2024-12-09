@@ -18,7 +18,13 @@
     "resolveJsonModule": true,
     "isolatedModules": false,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "types": [
+      "node",
+      "@testing-library/jest-dom",
+      "@jest/globals",
+      "vitest/globals"
+    ]
   },
   "include": [
     "src"
