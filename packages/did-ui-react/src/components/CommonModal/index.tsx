@@ -26,7 +26,10 @@ export default function CommonModal(props: CommonModalProps) {
         </div>
       );
     }
-    return <CustomSvg className="portkey-ui-close-icon" type="Close" onClick={onClose} />;
+    if (onClose) {
+      return <CustomSvg className="portkey-ui-close-icon" type="Close" onClick={onClose} />;
+    }
+    return null;
   }, [leftCallBack, onClose, title]);
 
   return (
