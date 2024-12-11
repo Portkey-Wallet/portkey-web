@@ -61,13 +61,14 @@ export default function SetPinBase({ className, onFinish, onFinishFailed }: SetP
           }}
           onFinishFailed={onFinishFailed}
           autoComplete="off">
-          <FormItem name="pin" style={{ marginBottom: 16 }}>
+          <FormItem name="pin" style={{ marginBottom: 40 }}>
             <ConfirmPassword validateFields={form.validateFields} isPasswordLengthTipShow={false} />
           </FormItem>
 
           <FormItem className="submit-btn-form-item" shouldUpdate>
             {() => (
               <ThrottleButton
+                block
                 className="submit-btn"
                 type="primary"
                 htmlType="submit"
