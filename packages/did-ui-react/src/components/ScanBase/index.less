@@ -4,12 +4,12 @@
   text-align: center;
   height: 100%;
   .scan-title {
-    text-align: center;
-    padding-top: 120px;
-    line-height: 28px;
-    color: var(--portkey-ui-text-primary);
-    font-size: 24px;
-    padding-bottom: 8px;
+    text-align: left;
+    padding: 0 16px 16px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--sds-color-text-default-default);
     position: relative;
 
     .back-icon-wrapper {
@@ -24,8 +24,11 @@
     max-width: 232px;
     margin: auto;
     .scan-title {
-      padding-top: 24px;
-      line-height: 36px;
+      // padding-top: 24px;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+      color: var(--sds-color-text-default-default);
     }
   }
   .scan-card-content {
@@ -41,11 +44,14 @@
   }
   .description {
     line-height: 20px;
-    color: var(--portkey-ui-text-secondary);
+    color: var(--sds-color-text-default-secondary);
     font-size: 14px;
-    margin-bottom: 45px;
+    font-weight: 400;
+    margin-bottom: 32px;
     z-index: 10;
     position: relative;
+    padding: 0 16px;
+    text-align: left;
   }
   .waiting-wrapper {
     margin-top: 24px;
@@ -64,7 +70,7 @@
       padding: 0 16px 16px;
     }
     .description {
-      margin-bottom: 30px;
+      margin-bottom: 32px;
     }
   }
 }
@@ -75,12 +81,12 @@
   .portkey-icon {
     margin: 0 auto 12px;
   }
-  .scan-title {
-    padding-top: 64px;
-  }
-  .description {
-    margin-bottom: 80px;
-  }
+  // .scan-title {
+    // padding-top: 64px;
+  // }
+  // .description {
+  //   margin-bottom: 80px;
+  // }
 }
 .scan-card-wrapper.scan-card-mobile-wrapper {
   .pc-icon {

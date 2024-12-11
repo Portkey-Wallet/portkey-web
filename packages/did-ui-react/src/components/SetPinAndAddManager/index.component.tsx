@@ -26,6 +26,7 @@ export interface SetPinAndAddManagerProps {
   isErrorTip?: boolean;
   onError?: OnErrorFunc;
   onBack?: () => void;
+  onClose?: () => void;
   onFinish?: (values: DIDWalletInfo | string) => void;
   onCreatePending?: (pendingInfo: CreatePendingInfo) => void;
 }
@@ -42,6 +43,7 @@ function SetPinAndAddManager({
   isErrorTip = true,
   onError,
   onBack,
+  onClose,
   onFinish,
   onCreatePending,
 }: SetPinAndAddManagerProps) {
@@ -97,13 +99,13 @@ function SetPinAndAddManager({
       createWallet,
     ],
   );
-
+  console.log('render SetPinAndAddManager', keyboard);
   return keyboard ? (
     <SetPinMobileBase
       type={type}
       className={clsx('portkey-card-height', className)}
       onFinish={onCreate}
-      onCancel={onBack}
+      onCancel={onClose}
     />
   ) : (
     <div className="set-pin-pc-container">

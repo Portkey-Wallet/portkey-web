@@ -31,8 +31,8 @@ export default function SetPinMobileBase({
   const [confirmPin, setConfirmPin] = useState<string>();
   const [error, setError] = useState<string>();
   const isFinishRef = useRef<boolean>(false);
-  const [isPad, setPad] = useState(!isMobileWidth());
-
+  // const [isPad, setPad] = useState(!isMobileWidth());
+  console.log('111111', isMobileWidth());
   useEffect(() => {
     return () => {
       setPin('');
@@ -42,69 +42,42 @@ export default function SetPinMobileBase({
     };
   }, []);
   console.log('wfs==== step', step);
+  console.log('render SetPinMobileBase');
+
   return (
     <div className={clsx('portkey-ui-set-pin-mobile-wrapper', className)}>
-      {!isPad ? (
-        <>
-          {(step !== STEP.enterPin || type !== 'recovery') && (
-            <BackHeader
-              leftElement={undefined}
-              onBack={() => {
-                if (step === STEP.confirmPin) {
-                  setPin('');
-                  setError('');
-                  setConfirmPin('');
-                  setStep(STEP.enterPin);
-                } else {
-                  onCancel?.();
-                }
+      <BackHeader
+        leftElement={step !== STEP.enterPin ? undefined : false}
+        onBack={() => {
+          if (step === STEP.confirmPin) {
+            setPin('');
+            setError('');
+            setConfirmPin('');
+            setStep(STEP.enterPin);
+          } else {
+            onCancel?.();
+          }
+        }}
+        title={
+          step === STEP.enterPin ? (
+            <div className="set-pin-title">{t('Create a PIN to protect your wallet')}</div>
+          ) : null
+        }
+        rightElement={
+          onCancel && (
+            <CustomSvg
+              type="X"
+              onClick={onCancel}
+              fillColor="black"
+              style={{
+                width: 20,
+                height: 20,
               }}
             />
-          )}
-          <div className="portkey-ui-set-pin-mobile-title">
-            {t(step === STEP.confirmPin ? 'Confirm your PIN' : 'Create a PIN to protect your wallet')}
-          </div>
-        </>
-      ) : (
-        <>
-          {onCancel && (
-            <BackHeader
-              leftElement={step === STEP.enterPin ? false : undefined}
-              onBack={() => {
-                if (step === STEP.confirmPin) {
-                  setPin('');
-                  setError('');
-                  setConfirmPin('');
-                  setStep(STEP.enterPin);
-                } else {
-                  onCancel?.();
-                }
-              }}
-              title={
-                step === STEP.enterPin ? (
-                  <div className="set-pin-title">{t('Create a PIN to protect your wallet')}</div>
-                ) : null
-              }
-              rightElement={
-                <CustomSvg
-                  type="X"
-                  onClick={onCancel}
-                  fillColor="black"
-                  style={{
-                    width: 20,
-                    height: 20,
-                  }}
-                />
-              }
-            />
-          )}
-          {step === STEP.confirmPin && (
-            <div className="portkey-ui-set-pin-mobile-title">
-              {t(step === STEP.confirmPin ? 'Confirm your PIN' : 'Create a PIN to protect your wallet')}
-            </div>
-          )}
-        </>
-      )}
+          )
+        }
+      />
+      {step === STEP.confirmPin && <div className="portkey-ui-set-pin-mobile-title">{t('Confirm your PIN')}</div>}
       <div>
         {step === STEP.enterPin && (
           <PortkeyPasswordInput

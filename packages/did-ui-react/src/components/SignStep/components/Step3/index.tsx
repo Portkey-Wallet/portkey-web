@@ -64,7 +64,7 @@ function Step3({
         onError={onError}
         onCreatePending={onCreatePending}
       />
-      <CommonModal
+      {/* <CommonModal
         maskClosable={false}
         closable={false}
         type="modal"
@@ -75,14 +75,14 @@ function Step3({
         getContainer={'#set-pin-wrapper'}>
         <p className="modal-content">Are you sure you want to leave this page? All changes will not be saved.</p>
         <div className="btn-wrapper">
-          <ThrottleButton type="outline" onClick={() => setReturnOpen(false)}>
+          <ThrottleButton type="outline" block onClick={() => setReturnOpen(false)}>
             No
           </ThrottleButton>
-          <ThrottleButton type="primary" onClick={() => onCancel?.('register')}>
+          <ThrottleButton type="primary" block onClick={() => onCancel?.('register')}>
             Yes
           </ThrottleButton>
         </div>
-      </CommonModal>
+      </CommonModal> */}
     </div>
   );
 }

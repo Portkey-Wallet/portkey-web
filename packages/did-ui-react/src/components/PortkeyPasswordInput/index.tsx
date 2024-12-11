@@ -21,6 +21,7 @@ export default function PortkeyPasswordInput({
   onChange,
   footer,
 }: PortkeyPasswordInputProps) {
+  console.log('render PortkeyPasswordInput');
   const valueLength = useMemo(() => value.length, [value.length]);
 
   return (
@@ -37,7 +38,7 @@ export default function PortkeyPasswordInput({
       </div>
       <div className="passcode-error-tip">{error}</div>
       <PortkeyBaseNumberKeyboard
-        header={footer && <div className="footer-wrapper">{footer}</div>}
+        // header={footer && <div className="footer-wrapper">{footer}</div>}
         onInput={(v) => {
           if (value.length === length) return;
           if (value.length < length) {

@@ -109,4 +109,5 @@ export interface IBaseGetGuardianProps {
   onSocialStart?: (type: TAllLoginKey) => void;
   onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
   onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
+  onClose?: () => void;
 }

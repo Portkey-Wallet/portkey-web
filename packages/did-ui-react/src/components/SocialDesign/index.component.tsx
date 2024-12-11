@@ -35,6 +35,7 @@ function SocialDesign({
   loginMethodsOrder,
   onError,
   onSuccess,
+  onClose,
   validateEmail: defaultValidateEmail,
   validatePhone: defaultValidatePhone,
   onInputConfirmStart,
@@ -118,6 +119,7 @@ function SocialDesign({
           onShowQrCode={() => onSocialStart?.('Scan')}
           isErrorTip={isErrorTip}
           onError={onError}
+          onClose={onClose}
         />
       )}
       {(accountType === 'Email' || accountType === 'Phone') && (

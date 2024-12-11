@@ -23,6 +23,7 @@ export interface ScanCardProps {
   wrapperClassName?: string;
   gridType?: GridType;
   onError?: OnErrorFunc;
+  onClose?: () => void;
   onBack?: () => void;
   onFinish?: LoginFinishWithoutPin;
   onShowQrCode?: () => void;
@@ -40,6 +41,7 @@ export default function ScanCard({
   wrapperClassName,
   onError,
   onBack,
+  onClose,
   onFinish,
   onShowQrCode,
 }: ScanCardProps) {
@@ -138,6 +140,7 @@ export default function ScanCard({
         isWaitingAuth={isWaitingAuth}
         backIcon={backIcon}
         onBack={onBack}
+        onClose={onClose}
         qrData={qrData}
       />
     </div>

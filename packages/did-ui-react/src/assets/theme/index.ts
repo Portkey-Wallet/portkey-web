@@ -168,7 +168,7 @@ export const lightTheme = {
   backgroundDefaultTertiary: '#D2D2D3',
   backgroundDefaultTertiaryHover: '#BCBCBC',
 
-  backgroundDisableDefault: '#E9E9E9',
+  backgroundDisabledDefault: '#E9E9E9',
 
   backgroundBrandDefault: '#0996EE',
   backgroundBrandHover: '#0076CC',

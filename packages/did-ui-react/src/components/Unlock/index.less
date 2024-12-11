@@ -10,9 +10,9 @@
   height: 100%;
   flex-direction: column;
   align-items: center;
-  padding: 72px 30px 0;
+  padding: 32px 16px 0;
   .unlock-title {
-    color: var(--portkey-ui-text-primary);
+    color: var(--sds-color-text-default-default);
   }
 
   .password-wrap {
@@ -25,14 +25,24 @@
       font-size: 12px;
       color: var(--portkey-ui-form-label);
     }
+    .label-tip {
+      color: var(--sds-color-text-default-default);
+      font-size: 16px;
+      font-weight: 400;
+    }
+    svg {
+      path {
+        fill: var(--sds-color-icon-default-secondary);
+      }
+    }
   }
 
   .error-tips {
-    color: var(--portkey-ui-text-error);
-    font-size: 12px;
-    margin-top: 4px;
-    height: 16px;
-    line-height: 16px;
+    color: var(--sds-color-text-danger-secondary);
+    font-size: 16px;
+    margin-top: 8px;
+    height: 22.4px;
+    line-height: 22.4px;
   }
   .submit-btn {
     border-radius: var(--portkey-ui-primary-border-radius);
@@ -55,18 +65,14 @@
 }
 
 .unlock-body h1 {
-  margin-top: 24px;
+  margin-top: 16px;
   font-size: 32px;
   line-height: 38px;
-  margin-bottom: 56px;
+  margin-bottom: 40px;
 }
 
 .portkey-ui-unlock-input {
-  border: none;
-  border-bottom: 2px solid var(--portkey-ui-border-1) !important;
-  border-radius: 0 !important;
-  padding: 7px 0 5px !important;
-
+  margin-top: 8px;
   &:hover {
     border-color: var(--portkey-ui-border-1) !important;
   }
@@ -74,9 +80,9 @@
 
 @media screen and (max-width: @screen-max-w-768) {
   .unlock-body {
-    padding-top: 100px;
+    padding-top: 32px;
     .unlock-title {
-      margin-bottom: 60px;
+      margin-bottom: 40px;
     }
   }
 }

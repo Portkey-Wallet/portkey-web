@@ -50,6 +50,7 @@ export default function UnLock({
   const isMobile = useMemo(() => devices.isMobileDevices(), []);
 
   const keyboard = useMemo(() => isMobile && defaultKeyboard, [defaultKeyboard, isMobile]);
+  console.log('render UnLock', isMobile, defaultKeyboard, keyboard);
 
   const mainContent = useCallback(() => {
     return (
@@ -68,6 +69,7 @@ export default function UnLock({
             />
           ) : (
             <>
+              <span className="label-tip">{t('Set PIN')}</span>
               <CustomPassword
                 value={value}
                 placeholder={t('Enter Pin')}
@@ -99,7 +101,7 @@ export default function UnLock({
       {uiType === 'Full' ? (
         <div className="portkey-sign-full-wrapper">{mainContent()}</div>
       ) : (
-        <CommonBaseModal destroyOnClose className={className} open={open} onClose={onCancel}>
+        <CommonBaseModal destroyOnClose className={className} open={open} onClose={onCancel} height={668}>
           {mainContent()}
         </CommonBaseModal>
       )}
