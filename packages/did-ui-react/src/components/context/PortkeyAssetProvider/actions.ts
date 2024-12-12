@@ -10,7 +10,7 @@ import {
 } from '@portkey/services';
 import { did } from '../../../utils';
 import { NEW_CLIENT_DEFAULT_ELF_LIST, NFT_SMALL_SIZE } from '../../../constants/assets';
-import { NFTCollectionItemShowType, TokenItemShowType } from '../../types/assets';
+import { NFTCollectionItemShowType, ITokenSectionResponse, TokenItemShowType } from '../../types/assets';
 import { fetchTxFeeAsync } from '../../../request/token';
 import { BaseListInfo } from '../../../types';
 import { PIC_MIDDLE_SIZE } from '../../../constants';
@@ -22,6 +22,7 @@ export const PortkeyAssetActions = {
   setGuardianList: 'setGuardianList',
   setCAInfo: 'setCAInfo',
   setTokenList: 'setTokenList',
+  setTokenListV2: 'setTokenListV2',
   setNFTCollections: 'setNFTCollections',
   setNFTItemList: 'setNFTItemList',
   setTokenPrice: 'setTokenPrice',
@@ -70,6 +71,7 @@ export type ActivityStateMap = {
 
 export type BalanceInfo = {
   tokenListInfo?: BaseListInfo<TokenItemShowType>;
+  tokenListInfoV2?: BaseListInfo<ITokenSectionResponse> & { totalBalanceInUsd?: string };
   NFTCollection?: BaseListInfo<NFTCollectionItemShowType> & { updateRandom?: string };
   tokenPrices?: {
     tokenPriceObject: {
@@ -130,13 +132,45 @@ const fetchTokenList = async ({
     data = {
       skipCount,
       maxResultCount,
-      list: NEW_CLIENT_DEFAULT_ELF_LIST,
-      totalRecordCount: NEW_CLIENT_DEFAULT_ELF_LIST.length,
+      list: NEW_CLIENT_DEFAULT_ELF_LIST[0].tokens,
+      totalRecordCount: NEW_CLIENT_DEFAULT_ELF_LIST[0].tokens?.length || 0,
     };
   } else {
     data = { skipCount, maxResultCount, list: response.data, totalRecordCount: response.totalRecordCount };
   }
   return basicActions(PortkeyAssetActions['setTokenList'], { tokenListInfo: data });
+};
+
+const fetchTokenListV2 = async ({
+  caAddressInfos,
+  skipCount = 0,
+  maxResultCount = 1000,
+}: BaseListParams): Promise<any> => {
+  const response = await did.services.assets.fetchAccountTokenListV2({
+    skipCount,
+    maxResultCount,
+    caAddressInfos,
+  });
+  let data;
+  // mock data for new account
+  if (response.data.length === 0) {
+    data = {
+      skipCount,
+      maxResultCount,
+      list: NEW_CLIENT_DEFAULT_ELF_LIST[0].tokens,
+      totalRecordCount: NEW_CLIENT_DEFAULT_ELF_LIST[0].tokens?.length || 0,
+      totalBalanceInUsd: '0',
+    };
+  } else {
+    data = {
+      skipCount,
+      maxResultCount,
+      list: response.data,
+      totalRecordCount: response.totalRecordCount,
+      totalBalanceInUsd: response.totalBalanceInUsd,
+    };
+  }
+  return basicActions(PortkeyAssetActions['setTokenListV2'], { tokenListInfoV2: data });
 };
 
 const fetchNFTCollections = async ({
@@ -256,6 +290,7 @@ const fetchActivityList = async ({
 
 export const basicAssetViewAsync = {
   setTokenList: fetchTokenList,
+  setTokenListV2: fetchTokenListV2,
   setNFTCollections: fetchNFTCollections,
   setNFTItemList: fetchNFTItemList,
   setTokenPrices: fetchTokenPrices,

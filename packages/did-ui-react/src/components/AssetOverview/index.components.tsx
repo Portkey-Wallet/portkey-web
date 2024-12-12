@@ -6,7 +6,15 @@ import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { MAINNET } from '../../constants/network';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import { ZERO } from '../../constants/misc';
-import { BalanceTab, BaseToken, IFaucetConfig, NFTItemBaseExpand, TokenItemShowType, TokenType } from '../types/assets';
+import {
+  BalanceTab,
+  BaseToken,
+  IFaucetConfig,
+  NFTItemBaseExpand,
+  ITokenSectionResponse,
+  TokenItemShowType,
+  TokenType,
+} from '../types/assets';
 import { formatAmountShow } from '../../utils/converter';
 import CustomTokenModal from '../CustomTokenModal';
 import { ActivityItemType, ChainId } from '@portkey/types';
@@ -57,11 +65,12 @@ export function AssetOverviewContent({
   onViewActivityItem,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
-  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, activityMap }, { dispatch }] = usePortkeyAsset();
+  const [{ accountInfo, tokenListInfo, tokenListInfoV2, caInfo, NFTCollection, activityMap }, { dispatch }] =
+    usePortkeyAsset();
 
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
-
+  const [tokenListV2, setTokenListV2] = useState<ITokenSectionResponse[]>();
   const [tokenOpen, setTokenOpen] = useState(false);
   const [assetOpen, setAssetOpen] = useState(false);
 
@@ -131,13 +140,22 @@ export function AssetOverviewContent({
     // }));
     setTokenList(tokenListInfo.list);
 
-    const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
-      // Dealing with the problem of balanceInUsd === ''
-      return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
-    }, ZERO);
+    // const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
+    //   // Dealing with the problem of balanceInUsd === ''
+    //   return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
+    // }, ZERO);
 
-    setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
+    // setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
   }, [networkType, tokenListInfo?.list]);
+
+  useEffect(() => {
+    if (tokenListInfoV2) {
+      setTokenListV2(tokenListInfoV2.list);
+      if (tokenListInfoV2.totalBalanceInUsd) {
+        setAccountBalanceUSD(formatAmountShow(tokenListInfoV2.totalBalanceInUsd, 2));
+      }
+    }
+  }, [tokenListInfoV2]);
 
   const initActivityRef = useRef(false);
 

@@ -46,6 +46,19 @@ export interface TokenItemShowType extends TokenItemType {
   userTokenId?: string;
 }
 
+export type ITokenSectionResponse = {
+  chainId?: string;
+  symbol: string;
+  price?: number;
+  balance?: string;
+  decimals?: number;
+  balanceInUsd?: string;
+  label?: string;
+  imageUrl?: string;
+  displayStatus?: 'All' | 'Partial' | 'None';
+  tokens?: TokenItemShowType[];
+};
+
 // nft item types
 export type NFTItemBaseType = {
   chainId: ChainId;

@@ -1,6 +1,5 @@
 import { TokenItemShowType } from '../../../types/assets';
 import { divDecimals, formatAmountShow, transNetworkText } from '../../../../utils/converter';
-import BigNumber from 'bignumber.js';
 import CheckFetchLoading from '../../../CheckFetchLoading';
 import TokenImageDisplay from '../../../TokenImageDisplay';
 import './index.less';
