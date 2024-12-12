@@ -187,7 +187,7 @@
   .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(
       .portkey-ant-input-affix-wrapper-borderless
     ).portkey-ant-input-affix-wrapper:hover {
-      background: var(--sds-color-background-default-default);
+    background: var(--sds-color-background-default-default);
 
     border-color: var(--sds-color-border-default-secondary) !important;
   }
@@ -282,4 +282,71 @@
 
 .portkey-ant-message {
   z-index: var(--portkey-ui-message-zIndex);
+  .portkey-ant-message-notice-content {
+    padding: 16px;
+    box-shadow: none;
+    border-radius: 16px;
+    border: 1px solid var(--sds-color-background-default-tertiary);
+    background-color: var(--sds-color-background-default-default);
+  }
+  .portkey-ant-message-custom-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .portkey-ant-message-custom-content-icon-wrapper {
+    width: 20px;
+    height: 20px;
+  }
+  .portkey-ant-message-custom-content-text-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .portkey-ant-message-custom-content-title {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 600;
+    color: var(--sds-color-text-default-default);
+    text-align: left;
+  }
+  .portkey-ant-message-custom-content-description {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--sds-color-text-default-secondary);
+    text-align: left;
+  }
+
+  .portkey-ant-message-error {
+    .portkey-ant-message-notice-content {
+      background-color: var(--sds-color-background-danger-tertiary);
+      border-color: var(--sds-color-border-danger-tertiary);
+      .portkey-ant-message-custom-content-title,
+      .portkey-ant-message-custom-content-description {
+        color: var(--sds-color-text-danger-on-danger-tertiary);
+      }
+    }
+  }
+
+  .portkey-ant-message-success {
+    .portkey-ant-message-notice-content {
+      background-color: var(--sds-color-background-positive-tertiary);
+      border-color: var(--sds-color-border-positive-tertiary);
+      .portkey-ant-message-custom-content-title,
+      .portkey-ant-message-custom-content-description {
+        color: var(--sds-color-text-positive-on-positive-tertiary);
+      }
+    }
+  }
+
+  .portkey-ant-message-warning {
+    .portkey-ant-message-notice-content {
+      background-color: var(--sds-color-background-warning-tertiary);
+      border-color: var(--sds-color-border-warning-tertiary);
+      .portkey-ant-message-custom-content-title,
+      .portkey-ant-message-custom-content-description {
+        color: var(--sds-color-text-warning-on-warning-tertiary);
+      }
+    }
+  }
 }

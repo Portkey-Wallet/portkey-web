@@ -1,9 +1,4 @@
 'use client';
-import CheckCircleFilled from '@ant-design/icons/CheckCircleFilled';
-import CloseCircleFilled from '@ant-design/icons/CloseCircleFilled';
-import ExclamationCircleFilled from '@ant-design/icons/ExclamationCircleFilled';
-import InfoCircleFilled from '@ant-design/icons/InfoCircleFilled';
-import LoadingOutlined from '@ant-design/icons/LoadingOutlined';
 import classNames from 'classnames';
 import RCNotification from 'rc-notification';
 import type { NoticeContent, NotificationInstance as RCNotificationInstance } from 'rc-notification/lib/Notification';
@@ -11,6 +6,8 @@ import * as React from 'react';
 import { messagePrefixCls } from '../../constants';
 import { PORTKEY_ICON_PREFIX_CLS, PORTKEY_PREFIX_CLS } from '../../../../constants';
 import ConfigProvider from '../../config-provider';
+import CustomSvg from '../../../CustomSvg';
+import Loading from '../../../Loading';
 
 let messageInstance: RCNotificationInstance | null;
 let defaultDuration = 3;
@@ -114,11 +111,11 @@ export interface MessageType extends PromiseLike<any> {
 }
 
 const typeToIcon = {
-  info: (InfoCircleFilled as any).default || InfoCircleFilled,
-  success: (CheckCircleFilled as any).default || CheckCircleFilled,
-  error: (CloseCircleFilled as any).default || CloseCircleFilled,
-  warning: (ExclamationCircleFilled as any).default || ExclamationCircleFilled,
-  loading: (LoadingOutlined as any).default || LoadingOutlined,
+  info: <CustomSvg type="InfoFilled" style={{ width: 20, height: 20 }} />,
+  success: <CustomSvg type="CheckCircle" style={{ width: 20, height: 20 }} />,
+  error: <CustomSvg type="WarnRedBackground" style={{ width: 20, height: 20 }} />,
+  warning: <CustomSvg type="WarningInfoFilled" style={{ width: 20, height: 20 }} />,
+  loading: <Loading width={20} height={20} />,
 };
 
 export type NoticeType = keyof typeof typeToIcon;
@@ -126,6 +123,7 @@ export type NoticeType = keyof typeof typeToIcon;
 export const typeList = Object.keys(typeToIcon) as NoticeType[];
 
 export interface ArgsProps {
+  title?: string;
   content: any;
   duration?: number;
   type?: NoticeType;
@@ -143,20 +141,19 @@ export interface ArgsProps {
 function getRCNoticeProps(args: ArgsProps, prefixCls: string, iconPrefixCls?: string): NoticeContent {
   const duration = args.duration !== undefined ? args.duration : defaultDuration;
   const IconComponent = typeToIcon[args.type!];
-  const messageClass = classNames(`${prefixCls}-custom-content`, {
-    [`${prefixCls}-${args.type}`]: args.type,
-    [`${prefixCls}-rtl`]: rtl === true,
-  });
   return {
     key: args.key,
     duration,
     style: args.style || {},
-    className: args.className,
+    className: classNames({ [`${prefixCls}-${args.type}`]: args.type }, args.className),
     content: (
       <ConfigProvider iconPrefixCls={iconPrefixCls}>
-        <div className={messageClass}>
-          {args.icon || (IconComponent && <IconComponent />)}
-          <span>{args.content}</span>
+        <div className={`${prefixCls}-custom-content`}>
+          <div className={`${prefixCls}-custom-content-icon-wrapper`}>{IconComponent}</div>
+          <div className={`${prefixCls}-custom-content-text-wrapper`}>
+            {args.title && <span className={`${prefixCls}-custom-content-title`}>{args.title}</span>}
+            <span className={`${prefixCls}-custom-content-description`}>{args.content}</span>
+          </div>
         </div>
       </ConfigProvider>
     ),
