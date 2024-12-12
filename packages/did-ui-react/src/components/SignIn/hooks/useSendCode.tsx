@@ -1,5 +1,4 @@
 import { AccountType, OperationTypeEnum } from '@portkey/services';
-import { modalMethod, setLoading } from '../../../utils';
 import { useCallback } from 'react';
 import { IGuardianIdentifierInfo, IVerifier } from '../../types';
 import useVerifier from '../../../hooks/useVerifier';
@@ -22,37 +21,20 @@ const useSendCode = () => {
       operationType?: OperationTypeEnum;
     }) => {
       const identifier = identifierInfo.identifier;
-      const isOk = await modalMethod({
-        wrapClassName: 'verify-confirm-modal',
-        type: 'confirm',
-        content: (
-          <p className="modal-content">
-            {`${verifier.name ?? ''} will send a verification code to `}
-            <span className="bold">{identifier}</span>
-            {` to verify your ${accountType} address.`}
-          </p>
-        ),
+      const result = await sendVerifyCode({
+        accountType,
+        guardianIdentifier: identifier,
+        verifier,
+        chainId: identifierInfo.chainId,
+        operationType,
       });
-      if (isOk) {
-        setLoading(true);
-        const result = await sendVerifyCode({
-          accountType,
-          guardianIdentifier: identifier,
-          verifier,
-          chainId: identifierInfo.chainId,
-          operationType,
-        });
-        setLoading(false);
 
-        if (!result?.verifierSessionId) return;
-        const verifyCodeInfo = {
-          verifier,
-          verifierSessionId: result.verifierSessionId,
-        };
-        return verifyCodeInfo;
-      } else {
-        // Cancel
-      }
+      if (!result?.verifierSessionId) return;
+      const verifyCodeInfo = {
+        verifier,
+        verifierSessionId: result.verifierSessionId,
+      };
+      return verifyCodeInfo;
     },
     [sendVerifyCode],
   );
