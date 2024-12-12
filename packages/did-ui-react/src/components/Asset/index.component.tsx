@@ -531,14 +531,14 @@ function AssetMain({
             />
           )}
 
-          {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
+          {/* {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
             <Transaction
               chainId={transactionDetail?.chainId}
               caAddressInfos={caAddressInfos}
               onClose={onBack}
               transactionDetail={transactionDetail}
             />
-          )}
+          )} */}
 
           {assetStep === AssetStep.tokenDetail && tokenDetail && (
             <TokenDetailMain

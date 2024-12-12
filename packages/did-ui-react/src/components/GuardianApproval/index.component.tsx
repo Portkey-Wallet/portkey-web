@@ -74,6 +74,7 @@ export interface GuardianApprovalProps {
     guardianList: (GuardiansApproved & { asyncVerifyInfoParams?: VerifySocialLoginParams })[],
   ) => Promise<void>;
   onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
+  onExpiredCancel?: () => void;
 }
 
 export interface IGuardianApprovalInstance {
@@ -102,6 +103,7 @@ const GuardianApprovalMain = forwardRef(
       onConfirm,
       isAsyncVerify = false,
       onGuardianListChange,
+      onExpiredCancel,
     }: GuardianApprovalProps,
     ref,
   ) => {
@@ -455,6 +457,11 @@ const GuardianApprovalMain = forwardRef(
       }
     }, [approvalLength, alreadyApprovalLength]);
 
+    const onResetGuardianList = useCallback(() => {
+      defaultGuardianList?.length && setGuardianList(defaultGuardianList);
+      setExpiredTime(getExpiredTime());
+    }, [defaultGuardianList]);
+
     return (
       <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
         {typeof verifyAccountIndex === 'number' ? (
@@ -495,6 +502,8 @@ const GuardianApprovalMain = forwardRef(
               onAsyncVerifying={onAsyncVerifying}
               onConfirm={onConfirmHandler}
               onError={onError}
+              onExpiredRetry={onResetGuardianList}
+              onExpiredCancel={onExpiredCancel}
             />
           </>
         )}

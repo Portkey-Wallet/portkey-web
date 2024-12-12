@@ -46,6 +46,11 @@ export const darkTheme = {
   backgroundDangerTertiary: '#20110C',
   backgroundDangerTertiaryHover: '#36170B',
 
+  backgroundUtilitiesScrim: '#000000CC',
+  backgroundUtilitiesBlanket: '#000000B2',
+  backgroundUtilitiesOverlay: '#00000080',
+  backgroundUtilitiesOverlayLight: '#0000004D',
+
   // icon
   iconDefaultDefault: '#FFFFFF',
   iconDefaultSecondary: '#FFFFFFB2',
@@ -93,7 +98,7 @@ export const darkTheme = {
   textDefaultSecondary: '#FFFFFFB2',
   textDefaultTertiary: '#FFFFFF66',
 
-  textDisableDefault: '#626264',
+  textDisabledDefault: '#626264',
   textDisabledOnDisabled: '#848485',
 
   textBrandDefault: '#68C3FF',
@@ -157,6 +162,8 @@ export const darkTheme = {
   borderDangerDefault: '#EB7D50',
   borderDangerSecondary: '#8C2E08',
   borderDangerTertiary: '#61220A',
+
+  borderUtilitiesSwatch: '#FFFFFF3D',
 };
 
 export const lightTheme = {
@@ -205,6 +212,11 @@ export const lightTheme = {
   backgroundDangerTertiary: '#FCECE6',
   backgroundDangerTertiaryHover: '#F6C7B4',
 
+  backgroundUtilitiesScrim: '#FFFFFFCC',
+  backgroundUtilitiesBlanket: '#000000B2',
+  backgroundUtilitiesOverlay: '#00000080',
+  backgroundUtilitiesOverlayLight: '#0000004D',
+
   // icon
   iconDefaultDefault: '#1F1F21',
   iconDefaultSecondary: '#A5A5A6',
@@ -252,7 +264,7 @@ export const lightTheme = {
   textDefaultSecondary: '#626264',
   textDefaultTertiary: '#A5A5A6',
 
-  textDisableDefault: '#A5A5A6',
+  textDisabledDefault: '#A5A5A6',
   textDisabledOnDisabled: '#A5A5A6',
 
   textBrandDefault: '#0076CC',
@@ -316,6 +328,8 @@ export const lightTheme = {
   borderDangerDefault: '#B73907',
   borderDangerSecondary: '#EB7D50',
   borderDangerTertiary: '#F1A282',
+
+  borderUtilitiesSwatch: '#0000003D',
 };
 function setCSSVariables(theme: { [key: string]: string }) {
   if (typeof document !== 'undefined') {
@@ -331,8 +345,24 @@ export function initTheme(themeType?: ThemeType) {
   console.log('wfs==inject themeType', themeType);
   if (themeType === 'dark') {
     theme = darkTheme;
+    // inject custom properties
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty(
+        '--Loading-Skeleton-BG',
+        'linear-gradient(90deg, rgba(65, 65, 66, 0.30) 0%, rgba(98, 98, 100, 0.30) 50%, rgba(65, 65, 66, 0.30) 100%)',
+      );
+      document.documentElement.style.setProperty('--Border-Brand-Button-Default-Inner', '#062A4B');
+    }
   } else {
     theme = lightTheme;
+    // inject custom properties
+    if (typeof document !== 'undefined') {
+      document.documentElement.style.setProperty(
+        '--Loading-Skeleton-BG',
+        'linear-gradient(90deg, rgba(233, 233, 233, 0.30) 0%, rgba(188, 188, 188, 0.30) 50%, rgba(233, 233, 233, 0.30) 100%)',
+      );
+      document.documentElement.style.setProperty('--Border-Brand-Button-Default-Inner', '#FFFFFF');
+    }
   }
   setCSSVariables(theme);
 }

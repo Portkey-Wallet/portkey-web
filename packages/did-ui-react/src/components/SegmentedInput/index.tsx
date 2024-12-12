@@ -1,7 +1,7 @@
 import { GuardianInputInfo, IPhoneCountry } from '../types';
 import { AccountType } from '@portkey/services';
 import { ValidatorHandler } from '../../types';
-import EmailTab from '../EmailTab';
+import EmailInputAndButton from '../EmailInputAndButton';
 import './index.less';
 
 export interface InputInfoProps {
@@ -39,7 +39,7 @@ export default function SegmentedInput({ confirmText, onFinish, validateEmail }:
         />
       )} */}
       {/* {value === 'Email' && ( */}
-      <EmailTab
+      <EmailInputAndButton
         className="portkey-ui-segmented-email"
         confirmText={confirmText}
         validate={validateEmail}

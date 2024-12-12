@@ -29,6 +29,7 @@ export interface LoginBaseProps {
   networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
+  isEmailLoading?: boolean;
   onLoginByPortkey?: LoginFinishWithoutPin;
   onInputFinish?: (data: GuardianInputInfo) => void;
   validateEmail?: ValidatorHandler;
@@ -56,6 +57,7 @@ export default function LoginCard({
   privacyPolicy,
   loginMethodsOrder,
   recommendIndexes,
+  isEmailLoading,
   onStep,
   onError,
   onInputFinish,
@@ -76,6 +78,7 @@ export default function LoginCard({
       {step === STEP.inputLogin ? (
         <InputLogin
           type="Login"
+          isLoading={isEmailLoading}
           defaultAccountType={defaultKey}
           phoneCountry={phoneCountry}
           validateEmail={validateEmail}

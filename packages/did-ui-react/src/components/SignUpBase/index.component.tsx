@@ -34,6 +34,7 @@ export interface SignUpBaseProps {
   networkType: NetworkType;
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
+  isEmailLoading?: boolean;
   onLoginByPortkey?: LoginFinishWithoutPin;
   onBack?: () => void;
   onError?: OnErrorFunc;
@@ -56,6 +57,7 @@ export default function SignUpBase({
   privacyPolicy,
   loginMethodsOrder,
   recommendIndexes,
+  isEmailLoading,
   onBack,
   onError,
   onInputFinish,
@@ -86,6 +88,7 @@ export default function SignUpBase({
       {step === STEP.inputLogin ? (
         <InputLogin
           type="Sign up"
+          isLoading={isEmailLoading}
           phoneCountry={phoneCountry}
           defaultAccountType={defaultKey}
           validateEmail={validateEmail}
