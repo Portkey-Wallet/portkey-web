@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { RegisterType, ValidatorHandler } from '../../types';
 import CustomSvg from '../CustomSvg';
-import InputInfo, { InputInfoProps } from '../InputInfo';
+import EmailLogin, { EmailLoginProps } from '../EmailLogin';
 import type { IPhoneCountry } from '../types';
 import './index.less';
 import { AccountType } from '@portkey/services';
@@ -10,21 +10,20 @@ import clsx from 'clsx';
 export default function InputLogin({
   type,
   className,
-  phoneCountry,
-  defaultAccountType,
+  isLoading,
   onBack,
   onFinish,
   validateEmail,
-  validatePhone,
 }: {
   type: RegisterType;
   className?: string;
-  phoneCountry?: IPhoneCountry;
-  defaultAccountType?: AccountType;
+  isLoading?: boolean;
+  phoneCountry?: IPhoneCountry; // deprecated
+  defaultAccountType?: AccountType; // deprecated
   onBack?: () => void;
-  onFinish?: InputInfoProps['onFinish'];
+  onFinish?: EmailLoginProps['onFinish'];
   validateEmail?: ValidatorHandler;
-  validatePhone?: ValidatorHandler;
+  validatePhone?: ValidatorHandler; // deprecated
 }) {
   const { t } = useTranslation();
 
@@ -35,14 +34,7 @@ export default function InputLogin({
         <span>{t(type)}</span>
         <span className="empty"></span>
       </h1>
-      <InputInfo
-        phoneCountry={phoneCountry}
-        defaultActiveKey={defaultAccountType}
-        validatePhone={validatePhone}
-        validateEmail={validateEmail}
-        confirmText={t(type)}
-        onFinish={onFinish}
-      />
+      <EmailLogin isLoading={isLoading} validateEmail={validateEmail} onFinish={onFinish} />
     </div>
   );
 }

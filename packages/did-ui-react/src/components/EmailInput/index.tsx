@@ -38,7 +38,8 @@ const EmailInput = forwardRef(({ error, val, wrapperClassName, validate, onChang
         <Input
           className="login-input"
           value={val}
-          placeholder={t('Enter email')}
+          placeholder={t('Enter your email')}
+          allowClear
           onChange={(e) => {
             onChange?.(e.target.value);
           }}

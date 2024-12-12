@@ -14,6 +14,7 @@ import { usePortkeyAssetDispatch } from '../context/PortkeyAssetProvider/hooks';
 import CheckFetchLoading from '../CheckFetchLoading';
 import './index.less';
 import singleMessage from '../CustomAnt/message';
+import CustomActivityModal from '../CustomActivityModal';
 
 export interface ActivityProps {
   chainId?: ChainId;
@@ -28,7 +29,8 @@ export enum EmptyTipMessage {
   NETWORK_NO_TRANSACTIONS = 'No transaction records accessible from the current custom network',
 }
 
-export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd, onViewActivityItem }: ActivityProps) {
+export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }: ActivityProps) {
+  const [isActivityDetailModalShow, setIsActivityDetailModalShow] = useState(true);
   const [{ activityMap, caInfo }] = usePortkeyAsset();
   const [{ chainType, networkType }] = usePortkey();
   const dispatch = usePortkeyAssetDispatch();
@@ -111,6 +113,13 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd, o
 
   return (
     <div className="portkey-ui-activity-wrapper">
+      <CustomActivityModal
+        open={isActivityDetailModalShow}
+        onCancel={() => {
+          setIsActivityDetailModalShow(false);
+        }}
+      />
+
       {activityTotal || currentActivity?.list ? (
         <ActivityList
           networkType={networkType}
@@ -119,7 +128,7 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd, o
           chainId={chainId}
           hasMore={isHasMore}
           loadMore={loadMoreActivities}
-          onSelect={onViewActivityItem}
+          onSelect={() => setIsActivityDetailModalShow(true)}
         />
       ) : (
         <CheckFetchLoading

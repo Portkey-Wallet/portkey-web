@@ -29,6 +29,8 @@ export interface GuardianListProps {
   onSend?: (item: UserGuardianStatus, index: number) => void;
   onVerifying?: (item: UserGuardianStatus, index: number) => void;
   onAsyncVerifying?: (item: UserGuardianStatus, index: number) => void;
+  onExpiredRetry?: () => void;
+  onExpiredCancel?: () => void;
 }
 
 function GuardianList({
@@ -46,6 +48,8 @@ function GuardianList({
   onSend,
   onVerifying,
   onAsyncVerifying,
+  onExpiredRetry,
+  onExpiredCancel,
 }: GuardianListProps) {
   const { t } = useTranslation();
 
@@ -161,12 +165,12 @@ function GuardianList({
           </div>
         </div>
         <div className="expire-footer portkey-ui-flex-column">
-          <CommonButton type="primary" block>{`Try Again`}</CommonButton>
-          <CommonButton type="outline" block>{`Cancel`}</CommonButton>
+          {onExpiredRetry && <CommonButton type="primary" block onClick={onExpiredRetry}>{`Try Again`}</CommonButton>}
+          {onExpiredCancel && <CommonButton type="outline" block onClick={onExpiredCancel}>{`Cancel`}</CommonButton>}
         </div>
       </div>
     );
-  }, [t]);
+  }, [onExpiredCancel, onExpiredRetry, t]);
 
   return (
     <div className={clsx('guardian-list-wrapper', className)}>{isExpired ? renderExpiredUI : renderGuardianList}</div>

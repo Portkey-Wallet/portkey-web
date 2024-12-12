@@ -85,6 +85,7 @@ export default function CryptoDesignBaseCom({
     [defaultChainId, onSuccess],
   );
   const {
+    isEmailLoading,
     validateEmail: _validateEmail,
     validatePhone: _validatePhone,
     onFinish,
@@ -115,6 +116,7 @@ export default function CryptoDesignBaseCom({
           networkType={networkType}
           loginMethodsOrder={loginMethodsOrder}
           recommendIndexes={recommendIndexes}
+          isEmailLoading={isEmailLoading}
           onLoginByPortkey={onLoginFinishWithoutPin}
           validatePhone={_validatePhone}
           validateEmail={_validateEmail}
@@ -154,6 +156,7 @@ export default function CryptoDesignBaseCom({
           networkType={networkType}
           loginMethodsOrder={loginMethodsOrder}
           recommendIndexes={recommendIndexes}
+          isEmailLoading={isEmailLoading}
           onLoginByPortkey={onLoginFinishWithoutPin}
           onInputFinish={onInputFinish}
           onSocialStart={onSocialStart}

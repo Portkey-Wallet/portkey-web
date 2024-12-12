@@ -5,9 +5,30 @@
     font-size: 16px;
     margin-bottom: 4px;
   }
-  .login-input.portkey-ant-input {
-    font-size: 14px;
+
+  .login-input {
+    height: 40px;
+    font-size: 16px;
     color: var(--portkey-ui-input-text);
+    border-radius: 8px;
+    border: 1px solid var(--sds-color-border-default-default) !important;
+
+    .portkey-ant-input-suffix {
+      .portkey-ant-input-clear-icon {
+        width: 16px;
+        height: 16px;
+        .anticon-close-circle {
+          width: 16px;
+          height: 16px;
+          background: url('../../assets/svgIcon/Close3.svg') no-repeat center;
+          background-size: inherit;
+
+          & > svg {
+            display: none;
+          }
+        }
+      }
+    }
   }
   .input-wrapper {
     margin-bottom: 40px;

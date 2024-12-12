@@ -67,7 +67,7 @@ function SocialDesign({
     }),
     [defaultChainId, onSuccess],
   );
-  const { validateEmail, validatePhone, onFinish, onSocialFinish } = useSignHandler(handlerParam);
+  const { isEmailLoading, validateEmail, validatePhone, onFinish, onSocialFinish } = useSignHandler(handlerParam);
 
   const onAccountTypeChange = useCallback(
     async (type: TAllLoginKey) => {
@@ -126,6 +126,7 @@ function SocialDesign({
         <InputLogin
           type="Login"
           className="user-input-login"
+          isLoading={isEmailLoading}
           defaultAccountType={accountType}
           phoneCountry={phoneCountry}
           validateEmail={validateEmail}
