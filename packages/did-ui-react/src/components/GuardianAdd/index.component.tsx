@@ -156,7 +156,7 @@ function GuardianAdd({
         className: 'portkey-option-tip',
         label: (
           <div className="portkey-ui-flex label-item">
-            <CustomSvg type="warning" />
+            <CustomSvg type="Warning" />
             <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
           </div>
         ),

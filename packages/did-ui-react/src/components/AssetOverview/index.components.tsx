@@ -68,7 +68,7 @@ export function AssetOverviewContent({
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
   const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, activityMap }, { dispatch }] = usePortkeyAsset();
-
+  console.log('tokenListInfo', tokenListInfo);
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
 
@@ -152,7 +152,7 @@ export function AssetOverviewContent({
   const initActivityRef = useRef(false);
 
   const initActivity = useCallback(() => {
-    if (activityMap?.[getCurrentActivityMapKey(undefined, undefined)].list.length) {
+    if (activityMap?.[getCurrentActivityMapKey(undefined, undefined)]?.list.length) {
       return;
     }
     if (!caAddressInfos) return;

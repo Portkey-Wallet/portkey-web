@@ -37,7 +37,10 @@ export type INftCollection = {
   symbol: string;
   isSeed: boolean;
   decimals: number;
+  displayChainImage?: boolean;
+  chainImageUrl?: string;
 };
+
 export type FetchAccountNftCollectionListParams = {
   skipCount: number;
   maxResultCount: number;
@@ -71,6 +74,8 @@ export type INftCollectionItem = {
   generation?: string;
   traits?: string;
   traitsPercentages?: TTraitsPercentage[];
+  description?: string;
+  chainImageUrl?: string;
 };
 
 export type TTraitsPercentage = { traitType: string; value: string; percent: string };

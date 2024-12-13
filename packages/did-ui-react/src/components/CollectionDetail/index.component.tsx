@@ -1,23 +1,10 @@
-import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { usePortkey } from '../context';
-import { MAINNET } from '../../constants/network';
-import { addressFormat, divDecimalsStr, transNetworkText } from '../../utils/converter';
-import Copy from '../Copy';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { transNetworkText } from '../../utils/converter';
 import SettingHeader from '../SettingHeader';
 import './index.less';
-import { ChainId, SeedTypeEnum } from '@portkey/types';
+import { ChainId } from '@portkey/types';
 import { NFTCollectionItemShowType, NFTItemBaseExpand } from '../types/assets';
-import { did, formatStr2EllipsisStr } from '../../utils';
-import ThrottleButton from '../ThrottleButton';
-import clsx from 'clsx';
-import NFTImage from '../NFTImage';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import moment from 'moment';
-import { NFT_SMALL_SIZE } from '../../constants/assets';
-import TraitsItem from './TraitsItem';
-import CustomSvg from '../CustomSvg';
-import ExpandableText from '../ExpandableText';
-import { Divider } from 'antd';
 import { devices } from '@portkey/utils';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import { AssetTabsProps } from '../AssetTabs';
@@ -135,9 +122,15 @@ export default function CollectionDetailMain({
 
   const renderCollectionDetailHeader = useMemo(() => {
     // eslint-disable-next-line prettier/prettier
-    const { imageUrl: collectionImageUrl, collectionName, chainId = 'AELF', itemCount, totalRecordCount  } = currentCollection || {};
+    const {
+      imageUrl: collectionImageUrl,
+      collectionName,
+      chainId = 'AELF',
+      itemCount,
+      totalRecordCount,
+    } = currentCollection || {};
     return (
-      <>
+      <div className="header-container">
         <div className="img">
           {collectionImageUrl ? (
             <img src={collectionImageUrl} />
@@ -146,11 +139,11 @@ export default function CollectionDetailMain({
           )}
         </div>
         <div className="collection-name">{collectionName}</div>
-        <div className="collection-name">
+        <div className="collection-value">
           {transNetworkText(chainId, networkType === 'MAINNET')} • {totalRecordCount || itemCount}{' '}
           {totalRecordCount || itemCount || 0 > 1 ? 'items' : 'item'}
         </div>
-      </>
+      </div>
     );
   }, [currentCollection, networkType]);
   const renderNFTList = useMemo(() => {

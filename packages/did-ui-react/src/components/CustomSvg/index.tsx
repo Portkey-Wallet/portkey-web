@@ -13,7 +13,6 @@ export interface CustomSvgProps {
 export default function CustomSvg({ type, className, fillColor, ...props }: CustomSvgProps) {
   let svgContent = svgsList[type];
   if (fillColor && type !== 'Google') {
-    // 使用正则表达式替换 fill 属性
     svgContent = svgContent.replace(/fill="[^"]*"/g, `fill="${fillColor}"`);
   }
   return (
