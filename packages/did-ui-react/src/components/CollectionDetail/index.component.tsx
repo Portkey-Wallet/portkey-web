@@ -14,7 +14,6 @@ import NFTImage from '../NFTImage';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import moment from 'moment';
 import { NFT_SMALL_SIZE } from '../../constants/assets';
-import TraitsItem from './TraitsItem';
 import CustomSvg from '../CustomSvg';
 import ExpandableText from '../ExpandableText';
 import { Divider } from 'antd';
@@ -135,7 +134,13 @@ export default function CollectionDetailMain({
 
   const renderCollectionDetailHeader = useMemo(() => {
     // eslint-disable-next-line prettier/prettier
-    const { imageUrl: collectionImageUrl, collectionName, chainId = 'AELF', itemCount, totalRecordCount  } = currentCollection || {};
+    const {
+      imageUrl: collectionImageUrl,
+      collectionName,
+      chainId = 'AELF',
+      itemCount,
+      totalRecordCount,
+    } = currentCollection || {};
     return (
       <>
         <div className="img">

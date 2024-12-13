@@ -1,6 +1,6 @@
 import { List } from 'antd-mobile';
 import { useMemo } from 'react';
-import { ActivityItemType, ChainId, ChainType } from '@portkey/types';
+import { ActivityItemType, ChainId, ChainType, TransactionEnum } from '@portkey/types';
 import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
 import { addressFormat, formatAmountShow, formatWithCommas } from '../../utils/converter';
 import dayjs from 'dayjs';
@@ -165,7 +165,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
             {item?.status === contractStatusEnum.PENDING ? (
               loadingStatus
             ) : (
-              <ImgPair imgSrc1={renderTopIconInfo.imageUrl} imgSrc2={renderBottomIconInfo.imageUrl} />
+              <ImgPair imgSrc1={renderTopIconInfo.imageUrl || ''} imgSrc2={renderBottomIconInfo.imageUrl || ''} />
             )}
           </div>
           <div className="activity-center-section">
@@ -258,7 +258,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
           {!item?.isSystem && (
             <>
               {AddressDom}
-              {item?.transactionType === TransactionTypesEnum.CROSS_CHAIN_TRANSFER && (
+              {item?.transactionType === TransactionEnum.CROSS_CHAIN_TRANSFER && (
                 <span className="cross-chain-text">Cross-Chain Transfer</span>
               )}
             </>
