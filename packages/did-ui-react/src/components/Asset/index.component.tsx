@@ -46,6 +46,7 @@ import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
+import { PullToRefresh } from 'antd-mobile';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -441,7 +442,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.receive && caInfo && selectToken && (
             <ReceiveCard
               receiveInfo={{
@@ -463,7 +463,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.ramp && selectToken && (
             <RampMain
               initState={rampExtraConfig}
@@ -493,7 +492,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
             <RampPreviewMain
               isMainnet={networkType === MAINNET}
@@ -507,7 +505,6 @@ function AssetMain({
               isSellSectionShow={isMixShowSell}
             />
           )}
-
           {assetStep === AssetStep.send && sendToken && (
             <SendMain
               assetItem={sendToken}
@@ -531,16 +528,7 @@ function AssetMain({
             />
           )}
 
-          {/* {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
-            <Transaction
-              chainId={transactionDetail?.chainId}
-              caAddressInfos={caAddressInfos}
-              onClose={onBack}
-              transactionDetail={transactionDetail}
-            />
-          )} */}
-
-          {assetStep === AssetStep.tokenDetail && tokenDetail && (
+          {tokenDetail && (
             <TokenDetailMain
               faucet={faucet}
               isShowRamp={isMixShowRamp}
@@ -581,7 +569,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.NFTDetail && NFTDetail && (
             <NFTDetailMain
               NFTDetail={NFTDetail}
@@ -602,7 +589,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.my && (
             // My
             <MenuListMain
@@ -622,11 +608,9 @@ function AssetMain({
               }
             />
           )}
-
           {assetStep === AssetStep.deleteAccount && (
             <DeleteAccount onBack={() => setAssetStep(AssetStep.my)} onDelete={onDeleteAccount} />
           )}
-
           {assetStep === AssetStep.guardians && (
             <Guardian
               sandboxId={sandboxId}
@@ -638,7 +622,6 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.my)}
             />
           )}
-
           {assetStep === AssetStep.walletSecurity && (
             // My - WalletSecurity
             <MenuListMain
@@ -649,7 +632,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.paymentSecurity && (
             <PaymentSecurity
               onBack={() => setAssetStep(AssetStep.walletSecurity)}
@@ -662,7 +644,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.tokenAllowanceDetail && originalAllowanceItem && (
             <TokenAllowanceDetail
               chainId={originalAllowanceItem.chainId}
@@ -674,7 +655,6 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.tokenAllowance)}
             />
           )}
-
           {assetStep === AssetStep.tokenAllowance && (
             <TokenAllowance
               onClickItem={(item) => {
@@ -709,7 +689,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.transferSettingsEdit && (
             <TransferSettingsEdit
               initData={viewPaymentSecurity}

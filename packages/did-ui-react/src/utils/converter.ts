@@ -91,5 +91,5 @@ export const dateFormatTransTo13 = (ipt?: moment.MomentInput) => {
   while (time.length < 13) {
     time = time + '0';
   }
-  return moment(Number(time)).format('MMM D , h:mm a').replace(',', 'at');
+  return moment(Number(time)).format('MMM D, YYYY [at] h:mm a');
 };

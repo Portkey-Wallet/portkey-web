@@ -1,27 +1,18 @@
 import { useMemo, useState } from 'react';
-import './index.less';
-import { ELF_SYMBOL } from '../../constants/assets';
-import CustomSvg from '../CustomSvg';
 
-interface TokenImageDisplayProps {
+interface CoinImageProps {
   src?: string;
   width?: number;
   symbol?: string;
 }
 
-export default function TokenImageDisplay({ src, symbol = 'ELF', width = 32 }: TokenImageDisplayProps) {
+export default function CoinImage({ src, symbol = 'ELF', width = 32 }: CoinImageProps) {
   const [isError, setError] = useState<boolean>(false);
 
   const tokenSrc = useMemo(() => src, [src]);
 
   const isShowDefault = useMemo(() => isError || !tokenSrc, [isError, tokenSrc]);
-  return symbol === ELF_SYMBOL ? (
-    <CustomSvg
-      className="portkey-ui-token-logo portkey-ui-token-logo-elf"
-      type="ELF"
-      style={{ width, height: width }}
-    />
-  ) : (
+  return (
     <div
       className="portkey-ui-token-img-loading-wrapper portkey-ui-token-logo portkey-ui-flex-center"
       style={{ width, height: width }}>

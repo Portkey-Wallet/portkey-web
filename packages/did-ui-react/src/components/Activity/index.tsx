@@ -1,5 +1,5 @@
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getCurrentActivityMapKey } from './utils';
 import { handleErrorMessage, setLoading } from '../../utils';
@@ -30,7 +30,8 @@ export enum EmptyTipMessage {
 }
 
 export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }: ActivityProps) {
-  const [isActivityDetailModalShow, setIsActivityDetailModalShow] = useState(true);
+  const [isActivityDetailModalShow, setIsActivityDetailModalShow] = useState(false);
+  const [selectedTransaction, setSelectionTransaction] = useState<ActivityItemType>();
   const [{ activityMap, caInfo }] = usePortkeyAsset();
   const [{ chainType, networkType }] = usePortkey();
   const dispatch = usePortkeyAssetDispatch();
@@ -83,6 +84,12 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
     [caAddressInfos, chainId, activityTotal, symbol],
   );
 
+  useEffect(() => {
+    if (chainId) {
+      getList();
+    }
+  }, [chainId]);
+
   const isOnce = useRef<boolean>();
 
   // init State
@@ -115,6 +122,8 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
     <div className="portkey-ui-activity-wrapper">
       <CustomActivityModal
         open={isActivityDetailModalShow}
+        caAddressInfos={caAddressInfos}
+        transactionDetail={selectedTransaction}
         onCancel={() => {
           setIsActivityDetailModalShow(false);
         }}
@@ -128,7 +137,10 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
           chainId={chainId}
           hasMore={isHasMore}
           loadMore={loadMoreActivities}
-          onSelect={() => setIsActivityDetailModalShow(true)}
+          onSelect={(item: ActivityItemType) => {
+            setSelectionTransaction(item);
+            setIsActivityDetailModalShow(true);
+          }}
         />
       ) : (
         <CheckFetchLoading

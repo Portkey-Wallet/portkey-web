@@ -1,6 +1,6 @@
 import { List } from 'antd-mobile';
 import { useCallback, useMemo } from 'react';
-import { ActivityItemType, ChainId, ChainType, TransactionTypes } from '@portkey/types';
+import { ActivityItemType, ChainId, ChainType, TransactionEnum } from '@portkey/types';
 import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
 import { AmountSign } from '../../types/activity';
 import {
@@ -37,7 +37,7 @@ export default function ActivityList({
 }: IActivityListProps) {
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
 
-  const activityListLeftIcon = useCallback((type: TransactionTypes) => {
+  const activityListLeftIcon = useCallback((type: TransactionEnum) => {
     return SHOW_FROM_TRANSACTION_TYPES.includes(type) ? 'Transfer' : 'SocialRecovery';
   }, []);
 
