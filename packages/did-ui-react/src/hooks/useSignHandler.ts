@@ -72,6 +72,7 @@ export const useSignHandler = ({
       setIsEmailLoading(true);
       try {
         await validateIdentifier(email);
+        console.log('🌈 🌈 🌈 🌈 🌈 🌈 1', '');
         return customValidateEmail?.(email);
       } catch (error) {
         console.log('validateEmail error', error);
@@ -110,6 +111,7 @@ export const useSignHandler = ({
 
   const onFinish = useThrottleFirstCallback(
     async (value: GuardianInputInfo) => {
+      console.log('🌈 🌈 🌈 🌈 🌈 🌈 onFinish', '');
       onChainIdChange?.(originChainIdRef.current);
       onSuccess?.(
         { ...value, isLoginGuardian: isHasAccount.current, chainId: originChainIdRef.current },
@@ -122,7 +124,7 @@ export const useSignHandler = ({
   const onSocialFinish: SocialLoginFinishHandler = useCallback(
     async ({ type, data }) => {
       try {
-        setLoading(true, LoadingText.CheckingAccount);
+        // setLoading(true, LoadingText.CheckingAccount);
         if (!data) throw 'Action error';
 
         let userId = undefined;
@@ -162,7 +164,7 @@ export const useSignHandler = ({
           },
         });
       } catch (error) {
-        setLoading(false);
+        // setLoading(false);
 
         const msg = handleErrorMessage(error);
         onError?.({

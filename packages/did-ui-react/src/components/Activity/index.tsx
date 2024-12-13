@@ -30,7 +30,6 @@ export enum EmptyTipMessage {
 }
 
 export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }: ActivityProps) {
-  const [isActivityDetailModalShow, setIsActivityDetailModalShow] = useState(true);
   const [{ activityMap, caInfo }] = usePortkeyAsset();
   const [{ chainType, networkType }] = usePortkey();
   const dispatch = usePortkeyAssetDispatch();
@@ -40,6 +39,9 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
   const activityList = useMemo(() => currentActivity?.list, [currentActivity?.list]);
   const activityTotal = useMemo(() => currentActivity?.totalRecordCount ?? 0, [currentActivity?.totalRecordCount]);
   const [pending, setPending] = useState<boolean>();
+
+  const [isActivityDetailModalShow, setIsActivityDetailModalShow] = useState(false);
+  const [currentActivityDetail, setCurrentActivityDetail] = useState<ActivityItemType>();
 
   const caAddressInfos = useMemo(() => {
     if (!caInfo) return;
@@ -128,7 +130,10 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
           chainId={chainId}
           hasMore={isHasMore}
           loadMore={loadMoreActivities}
-          onSelect={() => setIsActivityDetailModalShow(true)}
+          onSelect={(item) => {
+            setIsActivityDetailModalShow(true);
+            setCurrentActivityDetail(item);
+          }}
         />
       ) : (
         <CheckFetchLoading

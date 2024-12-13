@@ -125,6 +125,7 @@ export default function Web2Design({
         if (Web2LoginList.includes(type)) throw Error('Please try social account');
 
         setLoading(true);
+        console.log('🌈 🌈 🌈 🌈 🌈 🌈 17', '');
         const result = await socialLoginHandler(type as ISocialLogin);
         setLoading(false);
         if (result) {

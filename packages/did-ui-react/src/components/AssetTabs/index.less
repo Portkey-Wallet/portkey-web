@@ -1,46 +1,14 @@
 .portkey-ui-balance-tab {
-  background-color: var(--portkey-ui-default-bg);
-  overflow: hidden;
+  .portkey-ui-common-tabs-header {
+    padding: 24px 24px 16px;
+    border-top: 1px solid var(--sds-color-border-default-default);
+  }
+}
 
-  .portkey-ant-tabs-nav {
-    margin: 0;
-    box-shadow: var(--portkey-ui-tab-shadow);
-    z-index: 9;
-    position: sticky;
-    background: var(--portkey-ui-default-bg);
-
-    .portkey-ant-tabs-nav-wrap {
-      min-width: 100%;
-      max-width: 100%;
-
-      .portkey-ant-tabs-nav-list {
-        flex: 1;
-        justify-content: space-between;
-
-        .portkey-ant-tabs-tab {
-          flex: 1;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 18px 0;
-          margin: 0;
-
-          .portkey-ant-tabs-tab-btn {
-            width: 80px;
-            height: 20px;
-            line-height: 20px;
-            text-align: center;
-            color: var(--portkey-ui-text-primary);
-            text-shadow: unset;
-          }
-        }
-
-        .portkey-ant-tabs-tab-active {
-          .portkey-ant-tabs-tab-btn {
-            color: var(--portkey-ui-font-4);
-          }
-        }
-      }
+@media screen and (max-width: 600px) {
+  .portkey-ui-balance-tab {
+    .portkey-ui-common-tabs-header {
+      padding: 24px 16px 16px;
     }
   }
 }

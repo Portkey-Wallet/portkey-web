@@ -1,0 +1,38 @@
+.portkey-ui-common-tabs {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  .portkey-ui-common-tabs-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    width: 100%;
+    padding: 16px 0;
+  }
+
+  .portkey-ui-common-tabs-header-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 22px;
+    cursor: pointer;
+    color: var(--sds-color-text-default-secondary);
+
+    &-active {
+      color: var(--sds-color-text-default-default);
+    }
+  }
+
+  .portkey-ui-common-tabs-header-item-label {
+    font-size: 16px;
+    font-weight: 600;
+  }
+
+  .portkey-ui-common-tabs-header-item-number {
+    padding: 4px 6px;
+    font-size: 14px;
+    border-radius: 4px;
+    background-color: var(--sds-color-background-neutral-tertiary);
+  }
+}

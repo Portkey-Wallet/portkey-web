@@ -103,9 +103,7 @@ export default function SetSecondaryMailboxMain(props: ISetSecondaryMailboxProps
           error={codeError}
           className={className}
           isCountdownNow={true}
-          isLoginGuardian={false}
           guardianIdentifier={value}
-          accountType={'Email'}
           onCodeChange={onCodeChange}
           onReSend={onReSend}
           onCodeFinish={onCodeFinish}

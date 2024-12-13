@@ -75,7 +75,7 @@ function SocialDesign({
         onSocialStart?.(type);
         if (!SocialLoginList.includes(type)) return setAccountType(type);
         setLoading(true);
-
+        console.log('🌈 🌈 🌈 🌈 🌈 🌈 15', '');
         const result = await socialLoginHandler(type as any);
 
         setLoading(false);

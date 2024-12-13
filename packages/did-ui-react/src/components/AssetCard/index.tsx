@@ -1,10 +1,17 @@
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useMemo, useRef } from 'react';
+import { ChainId } from '@portkey/types';
 import BalanceCard from '../BalanceCard';
 import TitleWrapper from '../TitleWrapper';
 import './index.less';
 import CustomSvg from '../CustomSvg';
 import { SvgType } from '../../types';
 import { MAINNET } from '../../constants/network';
+import AddressCopyModal, { IAddressCopyModalRef } from '../AddressCopyModal';
+
+interface ICAAddressInfo {
+  chainId: ChainId;
+  caAddress: string;
+}
 
 interface AssetCardProps {
   backIcon?: ReactNode;
@@ -14,6 +21,7 @@ interface AssetCardProps {
   isShowRamp?: boolean;
   isShowFaucet?: boolean;
   walletAvatar?: SvgType;
+  caAddressInfos?: ICAAddressInfo[];
   onAvatarClick?: () => void;
   onBuy?: () => void;
   onSend?: () => void;
@@ -28,44 +36,71 @@ export default function AssetCard({
   accountBalanceUSD,
   isShowRamp,
   isShowFaucet,
-  backIcon,
   walletAvatar = 'master1',
+  caAddressInfos,
   onAvatarClick,
   onBuy,
-  onBack,
   onSend,
   onReceive,
   onFaucet,
 }: AssetCardProps) {
+  const addressCopyModalRef = useRef<IAddressCopyModalRef>(null);
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
+
+  const leftElement = useMemo(() => {
+    return (
+      <div className="portkey-ui-account-left-element" onClick={onAvatarClick}>
+        <CustomSvg className="portkey-ui-account-avatar" type={walletAvatar} />
+        <div className="portkey-ui-account-name">{nickName || '--'}</div>
+        <CustomSvg className="portkey-ui-account-arrow" type="KeyboardArrowDown" />
+      </div>
+    );
+  }, [walletAvatar, onAvatarClick, nickName]);
+
+  const rightElement = useMemo(() => {
+    return (
+      <div className="portkey-ui-account-right-element">
+        <CustomSvg
+          className="portkey-ui-account-right-element-icon"
+          type="Copy"
+          onClick={() => addressCopyModalRef.current?.open()}
+        />
+        <CustomSvg className="portkey-ui-account-right-element-icon" type="Gear" />
+      </div>
+    );
+  }, []);
+
   return (
     <div className="portkey-ui-asset-card-wrapper">
-      <div className="portkey-ui-header-wrap">
-        <TitleWrapper
-          className="portkey-ui-wallet-name"
-          leftElement={backIcon}
-          leftCallBack={onBack}
-          title={nickName || '--'}
-        />
-        <CustomSvg className="portkey-ui-custom-avatar" type={walletAvatar} onClick={onAvatarClick} />
-      </div>
-
-      <div className="portkey-ui-text-center portkey-ui-balance-amount">
-        {isMainnet ? (
-          <span className="amount">{`$ ${accountBalanceUSD ?? '0.00'}`}</span>
-        ) : (
-          <span className="dev-mode amount">Dev Mode</span>
-        )}
-      </div>
-      <BalanceCard
-        isShowFaucet={isShowFaucet}
-        isShowRamp={isShowRamp}
-        isMainnet={isMainnet}
-        onBuy={onBuy}
-        onSend={onSend}
-        onReceive={onReceive}
-        onFaucet={onFaucet}
+      <AddressCopyModal ref={addressCopyModalRef} isMainnet={isMainnet} caAddressInfos={caAddressInfos} />
+      <TitleWrapper
+        className="portkey-ui-account-title-wrapper"
+        leftElement={leftElement}
+        rightElement={rightElement}
       />
+
+      <div className="portkey-ui-content-wrapper">
+        <div className="portkey-ui-balance-amount">
+          {isMainnet ? (
+            <>
+              <span className="amount">{`$${accountBalanceUSD ?? '0.00'}`}</span>
+              {/* TODO: visibility off */}
+              <CustomSvg className="portkey-ui-balance-amount-icon" type={'Visibility'} />
+            </>
+          ) : (
+            <span className="dev-mode amount">Dev Mode</span>
+          )}
+        </div>
+        <BalanceCard
+          isShowFaucet={isShowFaucet}
+          isShowRamp={isShowRamp}
+          isMainnet={isMainnet}
+          onBuy={onBuy}
+          onSend={onSend}
+          onReceive={onReceive}
+          onFaucet={onFaucet}
+        />
+      </div>
     </div>
   );
 }

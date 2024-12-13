@@ -26,3 +26,7 @@ export const isNFTCollection = (symbol: string) => {
   const lastStr = symbol.split('-').splice(-1)[0];
   return BigNumber(lastStr).isZero();
 };
+
+export const getChainIconType = (chainId: ChainId) => {
+  return chainId === 'AELF' ? 'Aelf' : 'dAppChain';
+};
