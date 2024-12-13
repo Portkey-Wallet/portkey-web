@@ -13,19 +13,30 @@
     height: @header-logo-height;
     .portkeylogo-icon {
       width: 87px;
-      height: 24px;
+      height: 20px;
+      path {
+        fill: var(--sds-color-icon-neutral-default);
+      }
     }
   }
   .portkey-ui-asset-container {
     width: 100%;
     height: calc(100% - @header-logo-height); // 100% - height(header logo)
-
+    &.small-screen {
+      // width: 440px;
+      // min-width: 440px;
+      // max-width: 440px;
+      width: 100%;
+      min-width: 393px;
+      max-width: 897px;
+    }
     .portkey-ui-asset-container-body {
       flex: 1;
       flex-basis: calc(100% - 28px - 24px); // 100% - height(powered) - border
       background-color: var(--sds-color-background-default-default);
       border-top-left-radius: 12px;
       border-top-right-radius: 12px;
+      overflow: hidden;
     }
     .delete-account-button {
       position: absolute;

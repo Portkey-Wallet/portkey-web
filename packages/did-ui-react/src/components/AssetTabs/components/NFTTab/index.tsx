@@ -1,6 +1,6 @@
 import { Collapse, List } from 'antd';
 import { NFTCollectionItemShowType, NFTItemBaseExpand } from '../../../types/assets';
-import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
+import { forwardRef, useCallback, useImperativeHandle, useMemo, useState } from 'react';
 import { transNetworkText } from '../../../../utils/converter';
 import clsx from 'clsx';
 import CustomSvg from '../../../CustomSvg';
@@ -10,12 +10,15 @@ import { INftCollectionItem } from '@portkey/services';
 import CheckFetchLoading from '../../../CheckFetchLoading';
 import './index.less';
 import NFTImage from '../../../NFTImage';
+import NFTItem from '../../../NFTItem';
+import { useResponsiveScreenType } from '../../../../hooks/useMedia';
 
 export interface NFTTabProps {
   isMainnet?: boolean;
   accountNFTList?: NFTCollectionItemShowType[];
   loadMoreNFT?: (params: { symbol: string; chainId: ChainId; pageNum: number }) => void;
-  onNFTView?: (item: NFTItemBaseExpand) => void;
+  onNFTView?: (item: NFTItemBaseExpand, collectionItem?: NFTCollectionItemShowType) => void;
+  onCollectionView?: (collectionItem?: NFTCollectionItemShowType) => void;
   isGetNFTCollectionPending?: boolean;
 }
 
@@ -24,10 +27,22 @@ export interface NFTTabInstance {
 }
 
 const NFTTab = forwardRef(
-  ({ accountNFTList, isMainnet, isGetNFTCollectionPending = false, loadMoreNFT, onNFTView }: NFTTabProps, ref) => {
+  (
+    {
+      accountNFTList,
+      isMainnet,
+      isGetNFTCollectionPending = false,
+      loadMoreNFT,
+      onNFTView,
+      onCollectionView,
+    }: NFTTabProps,
+    ref,
+  ) => {
     const [openPanel, setOpenPanel] = useState<string[]>([]);
     const [nftNum, setNftNum] = useState<Record<string, number>>({});
     const [getMoreFlag, setGetMoreFlag] = useState(false);
+    const screenType = useResponsiveScreenType();
+    const [activeKey, setActiveKey] = useState<string | string[]>([]);
 
     const refreshState = useCallback(() => {
       setOpenPanel([]);
@@ -65,6 +80,7 @@ const NFTTab = forwardRef(
 
     const handleChange = useCallback(
       (arr: string[] | string) => {
+        setActiveKey(arr);
         if (isGetNFTCollectionPending) return;
         const openArr = typeof arr === 'string' ? [arr] : arr;
 
@@ -73,7 +89,7 @@ const NFTTab = forwardRef(
             setNftNum((v) => ({ ...v, [prev]: 0 }));
           }
         });
-        console.log(openArr, openPanel, 'openArr,handleChange');
+        console.log(openArr, openPanel, 'wfs==== openArr,handleChange');
         openArr.forEach((cur: string) => {
           if (!openPanel.some((prev: string) => cur === prev)) {
             const curTmp = cur.split('_');
@@ -94,61 +110,64 @@ const NFTTab = forwardRef(
 
     const renderItem = (nft: NFTCollectionItemShowType) => {
       const nftColKey = `${nft.symbol}_${nft.chainId}`;
-
+      console.log('nft.children.length', nft.children);
+      // nft.children.length = 11;
+      const totalRecordCount = Number(nft.totalRecordCount);
+      const showViewAll =
+        (screenType === 'small' && totalRecordCount > 8) ||
+        (screenType === 'medium' && totalRecordCount > 11) ||
+        (screenType === 'large' && totalRecordCount > 14);
       if (!nft.symbol) return null;
       return (
         <Collapse.Panel
           key={nftColKey}
+          showArrow={false}
+          style={{ borderBottom: 0 }}
           header={
             <div className="protocol">
               <div className="avatar">
                 {nft.imageUrl ? <img src={nft.imageUrl} /> : nft.collectionName?.slice(0, 1)}
+                {nft.displayChainImage && nft.chainImageUrl && <img className="chain-image" src={nft.chainImageUrl} />}
               </div>
               <div className="info">
                 <p className="alias">{nft.collectionName}</p>
-                <p className="network">{transNetworkText(nft.chainId, isMainnet)}</p>
+                {/* <p className="network">{transNetworkText(nft.chainId, isMainnet)}</p> */}
               </div>
               <div className="amount">{nft.itemCount}</div>
+              <CustomSvg
+                type="ChevronDown"
+                className={clsx('rotate', { 'rotate-180': activeKey.includes(nftColKey) })}
+              />
             </div>
           }>
-          <div className={clsx('list', (!nft.children?.length || !nftNum[nftColKey]) && 'empty-list')}>
-            {Boolean(nftNum[nftColKey]) &&
-              nft.children.map((nftItem: INftCollectionItem, index: number) => {
-                const curNftNum = nftNum[nftColKey] ?? 0;
-                return (
-                  index < curNftNum * maxNftNum && (
-                    <NFTImage
-                      key={`${nft.symbol}-${nftItem.symbol}-${nftItem.chainId}`}
-                      className={clsx(['item', nftItem.imageUrl ? 'item-img' : ''])}
-                      name=""
-                      imageUrl={nftItem.imageUrl}
-                      isSeed={nftItem.isSeed}
-                      seedType={nftItem.seedType}
-                      onClick={() =>
-                        onNFTView?.({
-                          ...nftItem,
-                          collectionName: nft.collectionName,
-                          collectionImageUrl: nft.imageUrl,
-                        })
-                      }>
-                      <div className="mask">
-                        <p className="alias">{nftItem.alias}</p>
-                        <p className="token-id">#{nftItem.tokenId}</p>
-                      </div>
-                    </NFTImage>
-                  )
-                );
-              })}
-            {!!nftNum[nftColKey] && Number(nft.totalRecordCount) > nftNum[nftColKey] * maxNftNum && (
-              <div
-                className="load-more"
-                onClick={() => {
-                  getMore?.(nft.symbol, nft.chainId);
-                }}>
-                <CustomSvg type="Down" /> More
-              </div>
-            )}
-          </div>
+          {Boolean(nftNum[nftColKey]) && (
+            <div className={clsx('grid-container', (!nft.children?.length || !nftNum[nftColKey]) && 'empty-list')}>
+              {Boolean(nftNum[nftColKey]) &&
+                nft.children.map((nftItem: INftCollectionItem, index: number) => {
+                  return (
+                    <NFTItem
+                      key={index + ''}
+                      isViewAll={false}
+                      nftItem={nftItem}
+                      onNFTView={(v) => {
+                        onNFTView?.(v, nft);
+                      }}
+                      nftCollectionName={nft.collectionName}
+                      nftImageUrl={nft.imageUrl}
+                    />
+                  );
+                })}
+              {!!nftNum[nftColKey] && showViewAll && (
+                <NFTItem
+                  isViewAll
+                  onCollectionView={() => {
+                    console.log('wfs====2', onCollectionView);
+                    onCollectionView?.(nft);
+                  }}
+                />
+              )}
+            </div>
+          )}
         </Collapse.Panel>
       );
     };
@@ -160,7 +179,7 @@ const NFTTab = forwardRef(
         ) : (
           <List className="portkey-ui-nft-list">
             <List.Item style={{ cursor: isGetNFTCollectionPending ? 'not-allowed' : 'pointer' }}>
-              <Collapse activeKey={openPanel} onChange={handleChange}>
+              <Collapse activeKey={openPanel} onChange={handleChange} expandIconPosition="end">
                 {accountNFTList.map((item) => renderItem(item))}
               </Collapse>
             </List.Item>

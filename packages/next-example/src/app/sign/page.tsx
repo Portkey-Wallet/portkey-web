@@ -35,7 +35,7 @@ setTimeout(() => {
     },
     loginConfig: {
       loginMethodsOrder: ['Email', 'Telegram', 'Google', 'Apple', 'Scan'],
-      recommendIndexes: [0, 1],
+      recommendIndexes: [0, 2],
     },
     requestDefaults: {
       timeout: 30000,

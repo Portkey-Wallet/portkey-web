@@ -5,3 +5,9 @@ export const SHOW_FROM_TRANSACTION_TYPES: TransactionTypes[] = [
   TransactionEnum.CROSS_CHAIN_TRANSFER,
   TransactionEnum.CLAIM_TOKEN,
 ];
+
+export enum contractStatusEnum {
+  MINED = 'MINED',
+  FAILED = 'FAILED',
+  PENDING = 'PENDING',
+}

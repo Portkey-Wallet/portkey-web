@@ -6,7 +6,15 @@ import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 're
 import { MAINNET } from '../../constants/network';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import { ZERO } from '../../constants/misc';
-import { BalanceTab, BaseToken, IFaucetConfig, NFTItemBaseExpand, TokenItemShowType, TokenType } from '../types/assets';
+import {
+  BalanceTab,
+  BaseToken,
+  IFaucetConfig,
+  NFTCollectionItemShowType,
+  NFTItemBaseExpand,
+  TokenItemShowType,
+  TokenType,
+} from '../types/assets';
 import { formatAmountShow } from '../../utils/converter';
 import CustomTokenModal from '../CustomTokenModal';
 import { ActivityItemType, ChainId } from '@portkey/types';
@@ -36,7 +44,8 @@ export interface AssetOverviewProps {
   onSend?: (selectToken: IAssetItemType, type: TokenType) => void;
   onViewActivityItem?: (item: ActivityItemType) => void;
   onViewTokenItem?: (v: TokenItemShowType) => void;
-  onNFTView?: (item: NFTItemBaseExpand) => void;
+  onNFTView?: (item: NFTItemBaseExpand, collectionItem?: NFTCollectionItemShowType) => void;
+  onCollectionView?: (collectionItem?: NFTCollectionItemShowType) => void;
 }
 
 export function AssetOverviewContent({
@@ -50,6 +59,7 @@ export function AssetOverviewContent({
   onSend,
   onBack,
   onNFTView,
+  onCollectionView,
   onReceive,
   onViewTokenItem,
   onDataInit,
@@ -82,7 +92,7 @@ export function AssetOverviewContent({
       const targetNFTCollection = NFTCollection?.list.find(
         (item) => item.symbol === symbol && item.chainId === chainId,
       );
-
+      console.log('wfs=== loadMoreNFT', targetNFTCollection);
       if (!targetNFTCollection) return;
 
       const { skipCount, maxResultCount, totalRecordCount, children } = targetNFTCollection;
@@ -240,6 +250,7 @@ export function AssetOverviewContent({
         onViewTokenItem={onViewTokenItem}
         onViewActivityItem={onViewActivityItem}
         onNFTView={onNFTView}
+        onCollectionView={onCollectionView}
       />
       <CustomTokenModal
         networkType={networkType}

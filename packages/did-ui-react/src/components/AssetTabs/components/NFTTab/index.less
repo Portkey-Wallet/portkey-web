@@ -60,18 +60,27 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 36px;
-        height: 36px;
-        border-radius: 6px;
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
         background-color: var(--portkey-ui-bg-14);
         font-size: 20px;
         color: var(--portkey-ui-font-12);
         margin-right: 12px;
+        position: relative;
         img {
           width: 100%;
           height: 100%;
-          border-radius: 6px;
+          border-radius: 8px;
           object-fit: cover;
+        }
+        .chain-image {
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          right: -4px;
+          bottom: -2px;
+          overflow: visible;
         }
       }
       .info {
@@ -82,7 +91,7 @@
         .alias {
           line-height: 22px;
           font-size: 16px;
-          color: var(--portkey-ui-text-primary);
+          color: var(--sds-color-text-default-default);
           overflow: hidden;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 1;
@@ -101,6 +110,25 @@
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+        color: var(--sds-color-text-default-secondary);
+        line-height: 22px;
+        font-size: 16px;
+      }
+      .rotate {
+        transition: transform 0.3s ease;
+        width: 24px;
+        height: 24px;
+        svg {
+          width: 24px;
+          height: 24px;
+          path {
+            fill: var(--sds-color-icon-default-default);
+          }
+        }
+      }
+      
+      .rotate-180 {
+        transform: rotate(180deg);
       }
     }
     .list {
@@ -130,7 +158,7 @@
             height: 40px;
             line-height: 20px;
             font-size: 14px;
-            color: var(--portkey-ui-text-primary);
+            color: var(--sds-color-text-default-default);
             word-break: break-all;
             .text-overflow(2);
           }
@@ -158,7 +186,7 @@
             font-size: 12px;
             height: 16px;
             line-height: 16px;
-            color: var(--portkey-ui-font-12);
+            color: var(--sds-color-text-default-default);
             .text-overflow(1);
           }
           .token-id {
@@ -219,6 +247,51 @@
           }
         }
       }
+    }
+  }
+  
+
+
+
+
+  .grid-container {
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-item {
+    // background-color: #ececec;
+    text-align: center;
+    min-width: 110px;
+  }
+  
+  @media (max-width: 600px) {
+    .grid-item:nth-child(n+9) {
+      display: none;
+    }
+    .grid-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 601px ) and (max-width: 896px){
+    .grid-item:nth-child(n+12) {
+      display: none;
+    }
+    .grid-item {
+      display: block;
+    }
+    .grid-container {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  @media (min-width: 897px) {
+    .grid-item:nth-child(n+15) {
+      display: none;
+    }
+    .grid-container {
+      grid-template-columns: repeat(5, 1fr);
     }
   }
 }
