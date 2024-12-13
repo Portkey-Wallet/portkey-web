@@ -12,6 +12,7 @@ import { evokePortkey } from '@portkey/onboarding';
 import './index.less';
 import singleMessage from '../CustomAnt/message';
 import ThrottleButton from '../ThrottleButton';
+import { usePortkey } from '../context';
 
 export default function WakeUpPortkey({
   type,
@@ -24,6 +25,7 @@ export default function WakeUpPortkey({
   websiteInfo: {};
   onFinish?: (info: Omit<DIDWalletInfo, 'pin'>) => void;
 }) {
+  const [{ theme }] = usePortkey();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
 
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
@@ -102,7 +104,7 @@ export default function WakeUpPortkey({
 
   return (
     <ThrottleButton type="default" className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
-      <CustomSvg type="Portkey-login" />
+      <CustomSvg type="Portkey-login" fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />
       {`${type} with Portkey`}
     </ThrottleButton>
   );

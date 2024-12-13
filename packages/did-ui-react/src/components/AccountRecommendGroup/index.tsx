@@ -10,6 +10,7 @@ import { AccountsInfo } from '../../constants/socialLogin';
 import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
 import ThrottleButton from '../ThrottleButton';
+import { usePortkey } from '../context';
 
 interface AccountRecommendGroupProps {
   type: RegisterType;
@@ -32,6 +33,7 @@ export default function AccountRecommendGroup({
   onWeb2Change,
   onLoginByPortkey,
 }: AccountRecommendGroupProps) {
+  const [{ theme }] = usePortkey();
   const isMobile = useMemo(() => {
     try {
       return devices.isMobileDevices();
@@ -53,13 +55,13 @@ export default function AccountRecommendGroup({
             }
           }}
           key={'Portkey_ui_renderLoginElement' + accountType}>
-          <CustomSvg type={AccountsInfo[accountType].icon} />
+          <CustomSvg type={AccountsInfo[accountType].icon} fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />
           <span>{`${type} with ${AccountsInfo[accountType].name}`}</span>
           <span className="empty"></span>
         </ThrottleButton>
       );
     },
-    [onSocialChange, onWeb2Change, type],
+    [onSocialChange, onWeb2Change, theme, type],
   );
 
   return (
