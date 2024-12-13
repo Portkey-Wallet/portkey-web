@@ -1,4 +1,3 @@
-import { BaseApiResponse } from './index';
 import { ChainId } from '@portkey/types';
 
 export type GetReceiveNetworkListParams = {
@@ -34,12 +33,14 @@ export type TReceiveTokenMap = {
 };
 
 export type TReceiveData = {
-  data: {
-    destinationMap: TReceiveTokenMap;
-  };
+  destinationMap: TReceiveTokenMap;
 };
 
-export type TReceiveNetworkListResponse = BaseApiResponse<TReceiveData>;
+export type TReceiveNetworkListResponse = {
+  code: string;
+  message?: string;
+  data: TReceiveData;
+};
 
 export type IReceiveService = {
   getReceiveNetworkList(params: GetReceiveNetworkListParams): Promise<TReceiveNetworkListResponse>;
