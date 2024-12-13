@@ -15,6 +15,7 @@ export interface BaseToken {
   symbol: string;
   label?: string;
   imageUrl?: string;
+  chainImageUrl?: string;
 }
 
 export interface BaseTokenExpand extends BaseToken {

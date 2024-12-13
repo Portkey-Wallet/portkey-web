@@ -1,5 +1,5 @@
 import { Tabs } from 'antd';
-import { BalanceTab, TokenItemShowType } from '../types/assets';
+import { BalanceTab, ITokenSectionResponse, TokenItemShowType } from '../types/assets';
 import { useMemo, useRef, useState } from 'react';
 import NFTTab, { NFTTabInstance, NFTTabProps } from './components/NFTTab';
 import TokenTab from './components/TokenTab';
@@ -11,7 +11,7 @@ import './index.less';
 
 export interface AssetTabsProps extends NFTTabProps {
   networkType: NetworkType;
-  tokenList?: TokenItemShowType[];
+  tokenListV2?: ITokenSectionResponse[];
   isGetNFTCollectionPending?: boolean;
   onChange?: (activeKey: BalanceTab) => void;
   onDataInit?: () => void;
@@ -23,7 +23,7 @@ export interface AssetTabsProps extends NFTTabProps {
 
 export default function AssetTabs({
   networkType,
-  tokenList,
+  tokenListV2,
   accountNFTList,
   isGetNFTCollectionPending,
   onChange,
@@ -50,7 +50,7 @@ export default function AssetTabs({
         {
           label: 'Tokens',
           key: BalanceTab.TOKEN,
-          children: <TokenTab isMainnet={isMainnet} tokenList={tokenList} onViewTokenItem={onViewTokenItem} />,
+          children: <TokenTab isMainnet={isMainnet} tokenListV2={tokenListV2} onViewTokenItem={onViewTokenItem} />,
         },
         {
           label: 'NFTs',

@@ -228,7 +228,7 @@ export function AssetOverviewContent({
       <AssetTabs
         networkType={networkType}
         accountNFTList={NFTCollection?.list}
-        tokenList={tokenList || tokenListInfo?.list}
+        tokenListV2={tokenListV2}
         loadMoreNFT={loadMoreNFT}
         isGetNFTCollectionPending={isGetNFTCollectionPending}
         onChange={(v) => {
