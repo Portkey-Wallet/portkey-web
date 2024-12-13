@@ -42,6 +42,8 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
   const activityTotal = useMemo(() => currentActivity?.totalRecordCount ?? 0, [currentActivity?.totalRecordCount]);
   const [pending, setPending] = useState<boolean>();
 
+  const [currentActivityDetail, setCurrentActivityDetail] = useState<ActivityItemType>();
+
   const caAddressInfos = useMemo(() => {
     if (!caInfo) return;
     return Object.entries(caInfo ?? {}).map(([chainId, info]) => ({
@@ -139,6 +141,7 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
           loadMore={loadMoreActivities}
           onSelect={(item: ActivityItemType) => {
             setSelectionTransaction(item);
+            setCurrentActivityDetail(item);
             setIsActivityDetailModalShow(true);
           }}
         />

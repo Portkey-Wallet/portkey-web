@@ -10,3 +10,8 @@ export const SHOW_FROM_TRANSACTION_TYPES: TransactionEnum[] = [
 ];
 
 export const SHOW_DAPP_TRANSACTION_TYPES = [TransactionEnum.SWAP];
+export enum contractStatusEnum {
+  MINED = 'MINED',
+  FAILED = 'FAILED',
+  PENDING = 'PENDING',
+}

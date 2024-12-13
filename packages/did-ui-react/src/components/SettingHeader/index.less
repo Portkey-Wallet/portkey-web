@@ -3,8 +3,17 @@
   height: 80px;
   display: flex;
   align-items: center;
+  position: sticky;
+  top: 0;
+  left: 0;
+  background: var(--sds-color-background-default-default);
+  z-index: 999;
   border-bottom: 1px solid var(--portkey-ui-default-border);
-
+  svg {
+    path {
+      fill: var(--sds-color-icon-default-default);
+    }
+  }
   .title-right-col,
   .title-left-col {
     display: flex;

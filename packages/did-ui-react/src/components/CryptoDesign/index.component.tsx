@@ -102,6 +102,7 @@ export default function CryptoDesignBaseCom({
 
   const extra = useMemo(() => <>{extraElementList?.map((item) => item) ?? null}</>, [extraElementList]);
   const extraFirst = useMemo(() => <>{extraElementList?.[0] ?? null}</>, [extraElementList]);
+
   return (
     <div className={clsx('signup-login-content', className)} style={style}>
       {_type === 'SignUp' && (

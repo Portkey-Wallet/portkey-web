@@ -6,6 +6,13 @@ import { AmountSign } from '../types/activity';
 import { ChainId, ChainType } from '@portkey/types';
 import moment from 'moment';
 
+export const formatTokenAmountShowWithDecimals = (
+  amount?: number | BigNumber.Value | string,
+  decimal: string | number = 4,
+) => {
+  return formatAmountShow(divDecimals(amount, decimal), decimal);
+};
+
 export const formatAmountShow = (
   count: number | BigNumber | string,
   decimal: string | number = 4,
