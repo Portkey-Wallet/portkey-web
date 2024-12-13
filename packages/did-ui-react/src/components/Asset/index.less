@@ -13,7 +13,10 @@
     height: @header-logo-height;
     .portkeylogo-icon {
       width: 87px;
-      height: 24px;
+      height: 20px;
+      path {
+        fill: var(--sds-color-icon-neutral-default);
+      }
     }
   }
   .portkey-ui-asset-container {
@@ -33,6 +36,7 @@
       background-color: var(--sds-color-background-default-default);
       border-top-left-radius: 12px;
       border-top-right-radius: 12px;
+      overflow: hidden;
     }
     .delete-account-button {
       position: absolute;
