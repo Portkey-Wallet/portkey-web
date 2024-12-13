@@ -5,7 +5,7 @@ import './index.less';
 import { BaseToken, IFaucetConfig, TokenItemShowType, TokenType } from '../types/assets';
 import { usePortkey } from '../context';
 import { MAINNET } from '../../constants/network';
-import { divDecimals, formatAmountShow, transNetworkText } from '../../utils/converter';
+import { divDecimals, formatAmountShow } from '../../utils/converter';
 import BalanceCard from '../BalanceCard';
 import Activity from '../Activity';
 import { ActivityItemType, ChainId } from '@portkey/types';
@@ -13,9 +13,9 @@ import { useFaucet } from '../../hooks/useFaucet';
 import SettingHeader from '../SettingHeader';
 import { SHOW_RAMP_CHAIN_ID_LIST, SHOW_RAMP_SYMBOL_LIST } from '../../constants/ramp';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import TokenImageDisplay from '../TokenImageDisplay';
 import { PullToRefresh } from 'antd-mobile';
 import LoadingIndicator from '../Loading';
+import CoinImage from '../CoinImage';
 
 export enum TokenTransferStatus {
   CONFIRMED = 'Confirmed',
@@ -107,15 +107,15 @@ function TokenDetailMain({
     <div className={clsx(['portkey-ui-token-detail'])}>
       <div className="token-detail-title">
         <SettingHeader
-          // className="setting-header-wrapper"
           title={
             <div className="token-detail-header">
-              <TokenImageDisplay src={tokenInfo.imageUrl} symbol={tokenInfo?.symbol} width={32} />
+              <CoinImage src={tokenInfo.imageUrl} width={32} />
               <p className="symbol">{tokenInfo?.label || tokenInfo?.symbol}</p>
             </div>
           }
           leftCallBack={onBack}
         />
+
         <div className="toggle-slider-container">
           <div ref={selectorRef} className="selector-bg" />
           <div className="toggle-slider-items">

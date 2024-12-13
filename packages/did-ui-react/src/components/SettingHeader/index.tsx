@@ -1,5 +1,5 @@
 import BackHeader from '../BackHeader';
-import TitleWrapper, { TitleWrapperProps } from '../TitleWrapper';
+import { TitleWrapperProps } from '../TitleWrapper';
 import './index.less';
 
 export default function SettingHeader({ title, leftCallBack, rightElement, leftElement, ...props }: TitleWrapperProps) {

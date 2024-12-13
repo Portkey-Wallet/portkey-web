@@ -166,9 +166,7 @@ export default function TransactionMain({
       return (
         <div className="multi-token-container">
           <div className="token-wrapper">
-            <TokenImageDisplay src={top.url} symbol={top?.symbol} width={42} />
-
-            {/* <img className="icon" src={top.url} /> */}
+            <CoinImage src={top.url} width={42} />
             <img className="icon bottom" src={bottom.url} />
           </div>
           <div className="token-direction-wrapper">
