@@ -1,115 +1,125 @@
 .activity-list {
+  background-color: var(--sds-color-background-default-default);
+  .adm-list-body {
+    border-width: 0 !important;
+  }
+
+  .activity-time {
+    height: 18px;
+    padding-left: 16px;
+    padding-bottom: 4px;
+    font-size: 14px;
+    line-height: 14px;
+    background-color: var(--sds-color-background-default-default);
+    color: var(--sds-color-text-default-default);
+  }
+
   .adm-list-item {
+    background-color: var(--sds-color-background-default-default);
     padding-left: 0;
+    border: 0;
     .adm-list-item-content {
       padding-right: 0;
+      border: 0;
+      .adm-list-item-content-main {
+        padding: 0;
+      }
     }
   }
   .activity-item {
     display: flex;
-    flex-direction: column;
-    gap: 8px;
-    padding: 4px 16px;
+    flex-direction: row;
+    align-items: center;
+    padding: 16px;
     cursor: pointer;
-    .time {
-      line-height: 16px;
-      color: var(--portkey-ui-text-secondary);
-      font-size: 12px;
-    }
-    .info {
-      display: flex;
-      gap: 16px;
-      .custom-list-icon {
-        width: 28px;
-        height: 28px;
-        margin-top: 7px;
-        background-position: center;
-        background-repeat: no-repeat;
-        background-size: contain;
-      }
-      .portkey-ui-custom-svg {
-        margin-top: 7px;
-      }
-      .portkey-ui-custom-svg,
-      svg {
-        width: 28px;
-        height: 28px;
-      }
-      .right {
-        flex: 1;
-        .row-1 {
-          display: flex;
-          justify-content: space-between;
-          line-height: 22px;
-          color: var(--portkey-ui-text-primary);
-          font-size: 16px;
-        }
-        .row-2 {
-          display: flex;
-          justify-content: space-between;
-          line-height: 16px;
-          font-size: 12px;
-          color: var(--portkey-ui-text-secondary);
-          margin-top: 4px;
-          .nft-name {
-            width: 100px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            /* stylelint-disable-next-line value-no-vendor-prefix */
-            display: -webkit-box;
-            -webkit-box-orient: vertical;
-            line-clamp: 1;
-            -webkit-line-clamp: 1;
-            word-break: break-all;
-            text-align: right;
-          }
-        }
-        .row-3 {
-          line-height: 16px;
-          font-size: 12px;
-          color: var(--portkey-ui-text-secondary);
-          left: 60px;
-          width: 217px;
-          word-break: break-word;
-          margin-top: 2px;
-        }
-        .row-4 {
-          margin-top: 8px;
-          text-align: right;
-          .resend-btn {
-            display: inline-block;
-            width: 61px;
-            height: 24px;
-            font-size: 12px;
-            font-weight: 400;
-          }
-        }
-      }
-      .right-not-from {
+    color: var(--sds-color-text-default-default);
+    background-color: var(--sds-color-background-default-default);
+
+    .activity-left-section {
+      margin-right: 11px;
+      margin-bottom: 3px;
+      .loading-wrap {
+        width: 42px;
         height: 42px;
+        border-radius: 21px;
+        background-color: var(--sds-color-background-brand-secondary);
         display: flex;
-        justify-content: space-between;
+        justify-content: center;
         align-items: center;
-        .right-not-from-amount {
-          text-align: end;
-          div {
-            line-height: 22px;
-          }
-          .usd {
-            line-height: 16px;
-            font-size: 12px;
-            color: var(--portkey-ui-text-secondary);
-            margin-top: 4px;
-          }
-        }
+      }
+      .nft-img {
+        width: 42px;
+        height: 42px;
+        border-radius: 8px;
+      }
+      .left-img {
+        width: 42px;
+        height: 42px;
+        border-radius: 21px;
+      }
+    }
+
+    .activity-center-section {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      overflow: hidden;
+
+      .transaction-name {
+        line-height: 20px;
+        font-size: 16px;
+        color: var(--sds-color-text-default-default);
+      }
+      .dapp-name {
+        line-height: 20px;
+        font-size: 14px;
+        color: var(--sds-color-text-default-secondary);
+      }
+
+      .address {
+        line-height: 20px;
+        font-size: 14px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--sds-color-text-default-secondary);
+      }
+      .cross-chain-text {
+        font-size: 14px;
+        color: var(--sds-color-text-default-secondary);
+      }
+    }
+    .activity-right-section {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-end;
+      overflow: hidden;
+      .amount {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 20px;
+      }
+
+      .amount-usd {
+        font-size: 14px;
+        line-height: 20px;
+      }
+
+      .yellow-text {
+        color: var(--sds-color-text-positive-default);
+      }
+
+      .small-size-text {
+        font-size: 14px;
       }
     }
   }
 
   @media screen and (min-width: 768px) {
-    .activity-item {
-      padding: 4px 24px;
-    }
     .load-more {
       padding-bottom: 12px;
     }
