@@ -29,6 +29,7 @@ export default function AssetTabs({
   onChange,
   loadMoreNFT,
   onNFTView,
+  onCollectionView,
   onDataInit,
   onDataInitEnd,
   onViewActivityItem,
@@ -63,6 +64,10 @@ export default function AssetTabs({
               isMainnet={isMainnet}
               loadMoreNFT={loadMoreNFT}
               onNFTView={onNFTView}
+              onCollectionView={(v) => {
+                console.log('wfs====3', onCollectionView);
+                onCollectionView?.(v);
+              }}
             />
           ),
         },
