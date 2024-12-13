@@ -6,7 +6,6 @@ import { TVerifyCodeInfo } from '../SignStep/types';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
 import { BaseCodeVerifyProps } from '../types';
-import { sleep } from '@portkey/utils';
 
 const MAX_TIMER = 60;
 
@@ -27,12 +26,10 @@ export default function CodeVerify({
   targetChainId,
   verifier,
   className,
-  tipExtra,
   isErrorTip = true,
   operationType,
   operationDetails,
   isCountdownNow,
-  isLoginGuardian,
   guardianIdentifier,
   accountType = 'Email',
   verifierSessionId: defaultVerifierSessionId,
@@ -49,8 +46,8 @@ export default function CodeVerify({
   const setInputError = useCallback(async (isError?: boolean) => {
     if (!isError) return setCodeError(isError);
     setCodeError(true);
-    await sleep(2000);
-    setCodeError(false);
+    // await sleep(2000);
+    // setCodeError(false);
   }, []);
 
   const onFinish = useCallback(
@@ -180,13 +177,10 @@ export default function CodeVerify({
       ref={uiRef}
       code={pinVal}
       error={codeError}
-      tipExtra={tipExtra}
       verifier={verifier}
       className={className}
       isCountdownNow={isCountdownNow}
-      isLoginGuardian={isLoginGuardian}
       guardianIdentifier={guardianIdentifier}
-      accountType={accountType}
       onCodeChange={onCodeChange}
       onReSend={resendCode}
       onCodeFinish={onFinish}

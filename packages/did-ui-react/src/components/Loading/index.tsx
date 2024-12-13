@@ -22,7 +22,7 @@ const LoadingIndicator = (props: LoadingType) => {
         renderer: 'svg',
         loop: true,
         autoplay: true,
-        animationData: theme !== 'dark' ? animationDarkData : animationWhiteData,
+        animationData: theme !== 'dark' ? animationWhiteData : animationDarkData,
       });
     }
     return () => {

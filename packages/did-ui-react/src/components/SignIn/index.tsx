@@ -304,6 +304,7 @@ const SignIn = forwardRef(
 
           if (AllSocialLoginList.includes(accountType)) {
             setLoading(true);
+            console.log('🌈 🌈 🌈 🌈 🌈 🌈 11', '');
             const result = await verifySocialToken({
               accountType,
               token: authenticationInfo?.authToken,

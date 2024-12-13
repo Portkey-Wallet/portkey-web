@@ -94,7 +94,7 @@ export default function SocialLogin({
     async (type: ISocialLogin) => {
       try {
         onSocialStart?.(type);
-
+        console.log('🌈 🌈 🌈 🌈 🌈 🌈 16', '');
         setLoading(true);
         const result = await socialLoginHandler(type);
         setLoading(false);

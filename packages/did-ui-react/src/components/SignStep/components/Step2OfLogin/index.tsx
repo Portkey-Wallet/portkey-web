@@ -44,7 +44,7 @@ function Step2OfLogin({
   const _getGuardianList = useCallback(async () => {
     try {
       setLoading(true);
-
+      console.log('🌈 🌈 🌈 🌈 🌈 🌈 14', '');
       const guardianAccounts = await getGuardianList({
         originChainId: guardianIdentifierInfo.chainId,
         identifier: guardianIdentifierInfo.identifier,
