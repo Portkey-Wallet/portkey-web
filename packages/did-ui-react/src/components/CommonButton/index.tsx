@@ -7,7 +7,7 @@ import './index.less';
 export type CommonButtonProps = {
   loadingWidth?: number;
   loadingHeight?: number;
-  type?: 'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'outline';
+  type?: 'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'outline' | 'primaryOutline';
 } & Omit<ButtonProps, 'type'>;
 
 export default function CommonButton(props: CommonButtonProps) {
@@ -17,7 +17,7 @@ export default function CommonButton(props: CommonButtonProps) {
     <Button
       className={clsx('portkey-ui-common-button portkey-ui-flex-center', btnClsName, className)}
       {...prop}
-      type={type === 'outline' ? undefined : type}>
+      type={type === 'outline' || type === 'primaryOutline' ? undefined : type}>
       {loading ? <Loading width={loadingWidth} height={loadingHeight} /> : children}
     </Button>
   );

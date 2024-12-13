@@ -206,6 +206,7 @@ export function AssetOverviewContent({
         walletAvatar={'master1'}
         onAvatarClick={onAvatarClick}
         accountBalanceUSD={accountBalanceUSD}
+        caAddressInfos={caAddressInfos}
         onBuy={() => {
           if (!isLoginOnChain) {
             return loadingTip({ msg: loginOptTip });

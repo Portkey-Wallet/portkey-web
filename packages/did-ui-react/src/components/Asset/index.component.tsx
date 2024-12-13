@@ -540,14 +540,14 @@ function AssetMain({
             />
           )}
 
-          {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
+          {/* {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
             <Transaction
               chainId={transactionDetail?.chainId}
               caAddressInfos={caAddressInfos}
               onClose={onBack}
               transactionDetail={transactionDetail}
             />
-          )}
+          )} */}
 
           {assetStep === AssetStep.tokenDetail && tokenDetail && (
             <TokenDetailMain
@@ -730,14 +730,6 @@ function AssetMain({
               onSuccess={transferSettingsEditBack}
             />
           )}
-        </div>
-
-        <div className="portkey-ui-powered-wrapper">
-          <div className="portkey-ui-powered portkey-ui-flex-center">
-            <div className="powered-by">Powered By</div>
-            <CustomSvg type="Portkey" />
-            <div className="brand-name">Portkey</div>
-          </div>
         </div>
       </div>
     </div>

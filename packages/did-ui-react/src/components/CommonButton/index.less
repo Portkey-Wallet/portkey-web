@@ -27,7 +27,7 @@
     border: 1.5px solid var(--sds-color-border-neutral-secondary);
     &:hover {
       background: var(--sds-color-background-default-default-hover);
-      border-color: var(--sds-color-border-neutral-tertiary)
+      border-color: var(--sds-color-border-neutral-tertiary);
     }
     &:disabled,
     &:disabled:hover {
@@ -35,5 +35,19 @@
       background-color: var(--sds-color-background-disabled-default);
       border-color: transparent;
     }
+  }
+  &.portkey-btn-primaryOutline {
+    color: var(--sds-color-text-neutral-on-neutral);
+    box-shadow: 0px 0px 0px 5px var(--Border-Brand-Button-Default-Inner) inset;
+    border-radius: 9999px;
+    background: var(--sds-color-background-brand-default);
+    &:hover,
+    &:active {
+      background: var(--sds-color-background-brand-hover);
+      border-color: var(--sds-color-background-brand-hover);
+    }
+  }
+  .loading {
+    display: flex;
   }
 }

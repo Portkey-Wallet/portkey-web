@@ -2,94 +2,66 @@
 
 .verifier-account-wrapper {
   height: 100%;
-  .login-icon {
-    display: inline-block;
-    border-bottom-right-radius: 9px;
-    border-top-left-radius: 9px;
-    line-height: 18px;
-    background-color: var(--portkey-ui-bg-1);
-    padding: 0 8px;
-    text-align: center;
-    color: var(--portkey-ui-font-3);
-    font-size: 12px;
-    margin-bottom: 6px;
+  .verifier-account-title {
+    color: var(--sds-color-text-default-default);
+    font-size: 20px;
+    font-weight: 700; // TODO
+    line-height: 24px;
+    margin-bottom: 16px;
   }
-  .icon-pair {
-    margin-right: 12px;
-    .base-verifier-icon {
-      margin-left: -8px;
-    }
-  }
-  .login-account {
-    line-height: 20px;
-    color: var(--portkey-ui-text-primary);
-    font-size: 16px;
-    word-wrap: break-word;
-    .text-overflow(2);
-  }
-  .login-account-wrapper {
-    padding-bottom: 25px;
-    margin-bottom: 24px;
-    border-bottom: 1px solid var(--portkey-ui-default-border);
-  }
-  .login-account-wrapper-no-verifier {
-    padding-bottom: 25px;
-    margin-bottom: 24px;
-  }
-  .send-tip {
-    line-height: 22px;
-    color: var(--portkey-ui-text-secondary);
+  .verifier-account-desc {
     font-size: 14px;
-    .account {
-      color: var(--portkey-ui-font-4);
+    line-height: 20px;
+    color: var(--sds-color-text-default-secondary);
+    margin-bottom: 8px;
+    .verifier-account-desc-account {
+      color: var(--sds-color-text-brand-default);
     }
   }
 }
 
 .portkey-ui-code-verify-passcode {
-  padding-top: 26px;
+  padding-top: 24px;
 
-  /** pin */
-
+  /** code input */
   .adm-passcode-input,
   .adm-passcode-input-cell-container {
     width: 100%;
   }
   .adm-passcode-input-cell-container {
-    justify-content: center;
+    justify-content: space-between;
+    gap: 8;
   }
 
   .adm-passcode-input-cell {
+    flex: 1;
     margin: 0;
-    font-size: 24px;
-    line-height: 48px;
-    height: 48px;
-    width: 48px;
-    max-width: 48px;
-    color: var(--portkey-ui-text-primary);
-    font-weight: 500;
+    font-size: 16px;
+    line-height: 16px;
+    height: 40px;
+    color: var(--sds-color-text-default-default);
   }
   .adm-passcode-input.adm-passcode-input-seperated {
     .adm-passcode-input-cell {
-      border: 1px solid var(--portkey-ui-default-border);
-      border-radius: 6px;
+      border: 1px solid var(--sds-color-border-default-default);
+      border-radius: 8px;
     }
     .adm-passcode-input-cell-focused {
       box-shadow: none;
-    }
-
-    .adm-passcode-input-cell:not(:last-child) {
-      margin-right: 20px;
     }
   }
 
   &.portkey-ui-code-verify-passcode-error {
     .adm-passcode-input .adm-passcode-input-cell {
-      border-color: var(--portkey-ui-error-border);
+      border-color: var(--sds-color-border-danger-default) !important;
     }
-    .resend-btn {
-      color: var(--portkey-ui-text-error) !important;
-    }
+  }
+
+  .portkey-ui-code-verify-passcode-error-message {
+    font-size: 16px;
+    line-height: 22px;
+    margin-top: 8px;
+    color: var(--sds-color-border-danger-default);
   }
 
   /** btn */
@@ -98,41 +70,19 @@
     margin: auto;
     display: block;
     margin-top: 24px;
-    color: var(--portkey-ui-font-4);
+    color: var(--sds-color-text-brand-default);
     background-color: transparent;
     &:hover {
       background-color: transparent;
     }
     span {
-      line-height: 20px;
-      font-size: 14px;
-    }
-    &.resend-after-btn {
-      color: var(--portkey-ui-text-tip);
-    }
-  }
-}
-
-@media screen and (max-width: @screen-max-w-768) {
-  .verifier-account-wrapper {
-    .login-account {
+      line-height: 16px;
       font-size: 16px;
-    }
-    .send-tip {
-      font-size: 14px;
+      font-weight: 600;
     }
   }
-
-  .portkey-ui-code-verify-passcode {
-    padding-top: 48px;
-    .adm-passcode-input-cell {
-      width: 44px;
-      max-width: 44px;
-    }
-    .adm-passcode-input.adm-passcode-input-seperated {
-      .adm-passcode-input-cell:not(:last-child) {
-        margin-right: 14px;
-      }
-    }
+  .portkey-ant-btn.resend-after-btn {
+    color: var(--sds-color-text-disabled-default) !important;
+    font-weight: 400 !important;
   }
 }

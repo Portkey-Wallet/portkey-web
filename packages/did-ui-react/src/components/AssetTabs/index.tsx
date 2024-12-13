@@ -1,6 +1,6 @@
-import { Tabs } from 'antd';
 import { BalanceTab, ITokenSectionResponse, TokenItemShowType } from '../types/assets';
 import { useMemo, useRef, useState } from 'react';
+import CommonTabs from '../CommonTabs';
 import NFTTab, { NFTTabInstance, NFTTabProps } from './components/NFTTab';
 import TokenTab from './components/TokenTab';
 import { MAINNET } from '../../constants/network';
@@ -38,7 +38,7 @@ export default function AssetTabs({
   const [value, setValue] = useState<string>(BalanceTab.TOKEN);
   const nftTabRef = useRef<NFTTabInstance>();
   return (
-    <Tabs
+    <CommonTabs
       className="portkey-ui-balance-tab"
       activeKey={value}
       onChange={(v) => {

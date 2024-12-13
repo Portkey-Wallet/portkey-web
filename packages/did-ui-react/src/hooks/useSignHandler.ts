@@ -1,5 +1,5 @@
 import { ChainId } from '@portkey/types';
-import { useRef, useCallback, useMemo } from 'react';
+import { useRef, useCallback, useMemo, useState } from 'react';
 import { GuardianInputInfo, IBaseGetGuardianProps } from '../components';
 import {
   did,
@@ -34,6 +34,7 @@ export const useSignHandler = ({
   const isHasAccount = useRef<boolean>(false);
   const originChainIdRef = useRef<ChainId>(defaultChainId);
   const caInfoRef = useRef({ caHash: '', caAddress: '' });
+  const [isEmailLoading, setIsEmailLoading] = useState(false);
 
   const validateIdentifier = useCallback(async (identifier?: string): Promise<any> => {
     let isLoginGuardian = false;
@@ -68,9 +69,16 @@ export const useSignHandler = ({
 
   const validateEmail = useCallback(
     async (email?: string) => {
-      setLoading(true, LoadingText.CheckingAccount);
-      await validateIdentifier(email);
-      return customValidateEmail?.(email);
+      setIsEmailLoading(true);
+      try {
+        await validateIdentifier(email);
+        console.log('🌈 🌈 🌈 🌈 🌈 🌈 1', '');
+        return customValidateEmail?.(email);
+      } catch (error) {
+        console.log('validateEmail error', error);
+      } finally {
+        setIsEmailLoading(false);
+      }
     },
     [customValidateEmail, validateIdentifier],
   );
@@ -103,6 +111,7 @@ export const useSignHandler = ({
 
   const onFinish = useThrottleFirstCallback(
     async (value: GuardianInputInfo) => {
+      console.log('🌈 🌈 🌈 🌈 🌈 🌈 onFinish', '');
       onChainIdChange?.(originChainIdRef.current);
       onSuccess?.(
         { ...value, isLoginGuardian: isHasAccount.current, chainId: originChainIdRef.current },
@@ -115,7 +124,7 @@ export const useSignHandler = ({
   const onSocialFinish: SocialLoginFinishHandler = useCallback(
     async ({ type, data }) => {
       try {
-        setLoading(true, LoadingText.CheckingAccount);
+        // setLoading(true, LoadingText.CheckingAccount);
         if (!data) throw 'Action error';
 
         let userId = undefined;
@@ -155,7 +164,7 @@ export const useSignHandler = ({
           },
         });
       } catch (error) {
-        setLoading(false);
+        // setLoading(false);
 
         const msg = handleErrorMessage(error);
         onError?.({
@@ -168,7 +177,15 @@ export const useSignHandler = ({
   );
 
   return useMemo(
-    () => ({ validateIdentifier, validateEmail, validatePhone, getIdentifierChainId, onFinish, onSocialFinish }),
-    [validateIdentifier, validateEmail, validatePhone, getIdentifierChainId, onFinish, onSocialFinish],
+    () => ({
+      isEmailLoading,
+      validateIdentifier,
+      validateEmail,
+      validatePhone,
+      getIdentifierChainId,
+      onFinish,
+      onSocialFinish,
+    }),
+    [isEmailLoading, validateIdentifier, validateEmail, validatePhone, getIdentifierChainId, onFinish, onSocialFinish],
   );
 };
