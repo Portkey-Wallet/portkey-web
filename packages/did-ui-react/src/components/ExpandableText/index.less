@@ -1,0 +1,18 @@
+.expandable-text {
+  .description {
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    &.collapsed {
+      max-height: 48px; // Adjust as needed
+    }
+  }
+
+  .toggle-button {
+    cursor: pointer;
+    color: #1890ff;
+    margin-top: 8px;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

@@ -1,0 +1,28 @@
+.portkey-ui-collection-detail{
+  .grid-container {
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-item {
+    display: block;
+  }
+  @media (max-width: 600px) {
+    .grid-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 601px ) and (max-width: 896px){
+  
+    .grid-container {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  @media (min-width: 897px) {
+    .grid-container {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+}

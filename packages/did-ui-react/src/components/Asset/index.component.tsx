@@ -8,7 +8,7 @@ import { usePortkey } from '../context';
 import { ActivityItemType, ChainId } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
 import { IAssetItemType, ITransferLimitItem, AllowanceItem, IUserTokenItemNew } from '@portkey/services';
-import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
+import { BaseToken, NFTCollectionItemShowType, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
@@ -45,6 +45,7 @@ import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
+import CollectionDetailMain from '../CollectionDetail/index.component';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -186,6 +187,7 @@ function AssetMain({
   const [rampPreview, setRampPreview] = useState<TRampPreviewInitState>();
 
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
+  const [collectionItem, setCollectionItem] = useState<NFTCollectionItemShowType>();
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
@@ -423,9 +425,16 @@ function AssetMain({
                 setTokenDetail(v);
                 setAssetStep(AssetStep.tokenDetail);
               }}
-              onNFTView={(v) => {
+              onNFTView={(v, collectionItem) => {
+                preStepRef.current = AssetStep.overview;
                 setAssetStep(AssetStep.NFTDetail);
                 setNFTDetail(v);
+                setCollectionItem(collectionItem);
+              }}
+              onCollectionView={(collectionItem) => {
+                console.log('wfs====4');
+                setAssetStep(AssetStep.collectionDetail);
+                setCollectionItem(collectionItem);
               }}
             />
           )}
@@ -564,11 +573,14 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.NFTDetail && NFTDetail && (
             <NFTDetailMain
               NFTDetail={NFTDetail}
-              onBack={() => setAssetStep(AssetStep.overview)}
+              onBack={onBack}
+              onCollectionDetail={() => {
+                preStepRef.current = AssetStep.NFTDetail;
+                setAssetStep(AssetStep.collectionDetail);
+              }}
               onSend={(nft) => {
                 if (!isLoginOnChain) {
                   return loadingTip({ msg: loginOptTip });
@@ -582,6 +594,18 @@ function AssetMain({
                 preStepRef.current = AssetStep.NFTDetail;
                 setPreStep(AssetStep.NFTDetail);
                 onSend(info);
+              }}
+            />
+          )}
+          {assetStep === AssetStep.collectionDetail && collectionItem && (
+            <CollectionDetailMain
+              collectionItem={collectionItem}
+              networkType={networkType}
+              onBack={() => setAssetStep(AssetStep.overview)}
+              onNFTView={(v) => {
+                setPreStep(AssetStep.collectionDetail);
+                setAssetStep(AssetStep.NFTDetail);
+                setNFTDetail(v);
               }}
             />
           )}
