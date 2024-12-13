@@ -16,7 +16,6 @@ import { TRampInitState, TRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import { useUpdateEffect } from 'react-use';
 import SendMain, { SendExtraConfig } from '../Send/index.components';
-import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
@@ -186,7 +185,6 @@ function AssetMain({
   const [rampExtraConfig, setRampExtraConfig] = useState<TRampInitState | undefined>(rampState);
   const [rampPreview, setRampPreview] = useState<TRampPreviewInitState>();
 
-  const [transactionDetail, setTransactionDetail] = useState<ActivityItemType & { chainId?: ChainId }>();
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
@@ -315,11 +313,6 @@ function AssetMain({
     setAssetStep(AssetStep.send);
   }, []);
 
-  const onViewActivityItem = useCallback(async (v: ActivityItemType) => {
-    setTransactionDetail(v);
-    setAssetStep(AssetStep.transactionDetail);
-  }, []);
-
   const onBack = useCallback(() => {
     setAssetStep(preStepRef.current);
   }, []);
@@ -424,11 +417,6 @@ function AssetMain({
                 preStepRef.current = AssetStep.overview;
                 setPreStep(AssetStep.overview);
                 onSend(v);
-              }}
-              onViewActivityItem={(v) => {
-                preStepRef.current = AssetStep.overview;
-                setPreStep(AssetStep.overview);
-                onViewActivityItem(v);
               }}
               onViewTokenItem={(v) => {
                 preStepRef.current = AssetStep.tokenDetail;
@@ -573,11 +561,6 @@ function AssetMain({
                 preStepRef.current = AssetStep.tokenDetail;
                 setPreStep(AssetStep.tokenDetail);
                 onSend(info);
-              }}
-              onViewActivityItem={(v) => {
-                preStepRef.current = AssetStep.tokenDetail;
-                setPreStep(AssetStep.tokenDetail);
-                onViewActivityItem(v);
               }}
             />
           )}
