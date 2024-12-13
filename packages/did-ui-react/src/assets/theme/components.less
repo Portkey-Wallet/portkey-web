@@ -282,6 +282,10 @@
 
 .portkey-ant-message {
   z-index: var(--portkey-ui-message-zIndex);
+  top: 16px;
+  @media screen and (max-width: 600px) {
+    top: 42px;
+  }
   .portkey-ant-message-notice-content {
     padding: 16px;
     box-shadow: none;

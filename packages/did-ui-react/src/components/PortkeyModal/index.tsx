@@ -81,7 +81,7 @@ export default function PortkeyModal({
   footer,
   ...props
 }: PortkeyModalProps) {
-  const isWide = useMedia('(max-width: 768px)');
+  const isWide = useMedia('(max-width: 600px)');
   const isMobile = useMemo(() => isWide || devices.isMobileDevices(), [isWide]);
 
   const defaultFooter = useCallback(

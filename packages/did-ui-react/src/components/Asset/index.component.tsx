@@ -722,14 +722,6 @@ function AssetMain({
             />
           )}
         </div>
-
-        <div className="portkey-ui-powered-wrapper">
-          <div className="portkey-ui-powered portkey-ui-flex-center">
-            <div className="powered-by">Powered By</div>
-            <CustomSvg type="Portkey" />
-            <div className="brand-name">Portkey</div>
-          </div>
-        </div>
       </div>
     </div>
   );

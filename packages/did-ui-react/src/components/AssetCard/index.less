@@ -1,40 +1,76 @@
 .portkey-ui-asset-card-wrapper {
-  color: var(--portkey-ui-text-primary);
+  color: var(--sds-color-text-default-default);
 
-  .portkey-ui-header-wrap {
-    position: relative;
+  .portkey-ui-account-title-wrapper {
+    padding: 16px 24px;
+    background-color: var(--sds-color-background-default-default);
+  }
 
-    .portkey-ui-custom-avatar {
-      position: absolute;
-      right: 24px;
-      top: 16px;
-      width: 40px;
-      height: 40px;
+  .portkey-ui-account-left-element {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    .portkey-ui-account-avatar {
+      width: 24px;
+      height: 24px;
+      margin-right: 6px;
+    }
+
+    .portkey-ui-account-name {
+      font-size: 14px;
+      margin-right: 4px;
+    }
+
+    .portkey-ui-account-arrow {
+      width: 12px;
     }
   }
 
-  .portkey-ui-wallet-name {
-    position: relative;
-    line-height: 28px;
-    font-size: 24px;
-    font-weight: 400;
-    height: 72px;
-    padding: 16px 24px;
-    border-bottom: 1px solid var(--portkey-ui-default-border);
+  .portkey-ui-account-right-element {
+    display: flex;
     align-items: center;
+    gap: 24px;
+
+    .portkey-ui-account-right-element-icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  .portkey-ui-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    padding: 16px 24px 24px;
   }
 
   .portkey-ui-balance-amount {
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    padding: 32px 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .amount {
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+
+    .portkey-ui-balance-amount-icon {
+      width: 24px;
+      height: 24px;
+    }
   }
 
-  @media screen and (max-width: 768px) {
-    .portkey-ui-wallet-name {
-      font-size: 20px;
+  @media screen and (max-width: 600px) {
+    .portkey-ui-account-title-wrapper {
+      position: sticky;
+      top: 0;
+      padding: 16px;
+    }
+    .portkey-ui-content-wrapper {
+      padding: 16px 16px 24px;
     }
   }
 }
