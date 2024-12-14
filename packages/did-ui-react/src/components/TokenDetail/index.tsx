@@ -5,7 +5,7 @@ import './index.less';
 import { BaseToken, IFaucetConfig, TokenItemShowType, TokenType } from '../types/assets';
 import { usePortkey } from '../context';
 import { MAINNET } from '../../constants/network';
-import { divDecimals, formatAmountShow, transNetworkText } from '../../utils/converter';
+import { divDecimals, formatAmountShow } from '../../utils/converter';
 import BalanceCard from '../BalanceCard';
 import Activity from '../Activity';
 import { ActivityItemType, ChainId } from '@portkey/types';
@@ -13,9 +13,10 @@ import { useFaucet } from '../../hooks/useFaucet';
 import SettingHeader from '../SettingHeader';
 import { SHOW_RAMP_CHAIN_ID_LIST, SHOW_RAMP_SYMBOL_LIST } from '../../constants/ramp';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import TokenImageDisplay from '../TokenImageDisplay';
 import { PullToRefresh } from 'antd-mobile';
 import LoadingIndicator from '../Loading';
+import CoinImage from '../CoinImage';
+import CustomSvg from '../CustomSvg';
 
 export enum TokenTransferStatus {
   CONFIRMED = 'Confirmed',
@@ -57,11 +58,17 @@ function TokenDetailMain({
 }: TokenDetailProps) {
   const [, forceRerender] = useReducer((x) => x + 1, 0);
   const [{ networkType }] = usePortkey();
-  const [chainId, setChainId] = useState<ChainId>('AELF');
+  const [chainId, setChainId] = useState<ChainId>(tokenInfo.chainId);
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   const [{ tokenListInfo }] = usePortkeyAsset();
 
-  const [activeIndex, setActiveIndex] = useState<number>(0);
+  const networkList: TokenItemShowType[] = useMemo(() => {
+    return tokenListInfo?.list.filter((item) => item.symbol === tokenInfo.symbol).reverse() || [];
+  }, [tokenInfo.symbol, tokenListInfo?.list]);
+
+  const [activeIndex, setActiveIndex] = useState<number>(
+    networkList.findIndex((item) => item.chainId === tokenInfo.chainId),
+  );
   const itemRefs = useRef<Array<HTMLDivElement | null>>([]);
   const selectorRef = useRef<HTMLDivElement | null>(null);
 
@@ -78,9 +85,12 @@ function TokenDetailMain({
     return tokenListInfo?.list.find((item) => item.symbol === tokenInfo.symbol && item.chainId === chainId);
   }, [tokenInfo.symbol, tokenListInfo?.list, chainId]);
 
-  const networkList: TokenItemShowType[] = useMemo(() => {
-    return tokenListInfo?.list.filter((item) => item.symbol === tokenInfo.symbol).reverse() || [];
-  }, [tokenInfo.symbol, tokenListInfo?.list]);
+  useEffect(() => {
+    if (tokenInfo.chainId) {
+      setChainId(tokenInfo.chainId);
+      setActiveIndex(networkList.findIndex((item) => item.chainId === tokenInfo.chainId));
+    }
+  }, [networkList, tokenInfo.chainId]);
 
   useEffect(() => {
     itemRefs.current = itemRefs.current.slice(0, 2);
@@ -106,16 +116,25 @@ function TokenDetailMain({
   return (
     <div className={clsx(['portkey-ui-token-detail'])}>
       <div className="token-detail-title">
-        <SettingHeader
-          // className="setting-header-wrapper"
+        {/* <SettingHeader
           title={
             <div className="token-detail-header">
-              <TokenImageDisplay src={tokenInfo.imageUrl} symbol={tokenInfo?.symbol} width={32} />
+              <CoinImage src={tokenInfo.imageUrl} width={32} />
               <p className="symbol">{tokenInfo?.label || tokenInfo?.symbol}</p>
             </div>
           }
           leftCallBack={onBack}
-        />
+        /> */}
+        <div className="token-detail-nav">
+          <div className="left-icon" onClick={onBack}>
+            <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default);" className="left-arrow" />
+          </div>
+          <div className="token-detail-header">
+            <CoinImage src={tokenInfo.imageUrl} width={32} />
+            <p className="symbol">{tokenInfo?.label || tokenInfo?.symbol}</p>
+          </div>
+        </div>
+
         <div className="toggle-slider-container">
           <div ref={selectorRef} className="selector-bg" />
           <div className="toggle-slider-items">

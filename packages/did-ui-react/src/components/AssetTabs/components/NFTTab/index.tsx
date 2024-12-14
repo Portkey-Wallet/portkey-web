@@ -1,7 +1,6 @@
 import { Collapse, List } from 'antd';
 import { NFTCollectionItemShowType, NFTItemBaseExpand } from '../../../types/assets';
 import { forwardRef, useCallback, useImperativeHandle, useMemo, useState } from 'react';
-import { transNetworkText } from '../../../../utils/converter';
 import clsx from 'clsx';
 import CustomSvg from '../../../CustomSvg';
 import { ChainId } from '@portkey/types';
@@ -9,7 +8,6 @@ import useNFTMaxCount from '../../../../hooks/useNFTMaxCount';
 import { INftCollectionItem } from '@portkey/services';
 import CheckFetchLoading from '../../../CheckFetchLoading';
 import './index.less';
-import NFTImage from '../../../NFTImage';
 import NFTItem from '../../../NFTItem';
 import { useResponsiveScreenType } from '../../../../hooks/useMedia';
 
@@ -177,12 +175,14 @@ const NFTTab = forwardRef(
         {accountNFTList?.length === 0 || !accountNFTList ? (
           <CheckFetchLoading list={accountNFTList} emptyElement={<p className="empty-text">No NFTs yet</p>} />
         ) : (
-          <List className="portkey-ui-nft-list">
-            <List.Item style={{ cursor: isGetNFTCollectionPending ? 'not-allowed' : 'pointer' }}>
-              <Collapse activeKey={openPanel} onChange={handleChange} expandIconPosition="end">
-                {accountNFTList.map((item) => renderItem(item))}
-              </Collapse>
-            </List.Item>
+          <List
+            className="portkey-ui-nft-list"
+            style={{ cursor: isGetNFTCollectionPending ? 'not-allowed' : 'pointer' }}>
+            {/* <List.Item style={{ cursor: isGetNFTCollectionPending ? 'not-allowed' : 'pointer', background: 'red' }}> */}
+            <Collapse activeKey={openPanel} onChange={handleChange} expandIconPosition="end">
+              {accountNFTList.map((item) => renderItem(item))}
+            </Collapse>
+            {/* </List.Item> */}
           </List>
         )}
       </div>

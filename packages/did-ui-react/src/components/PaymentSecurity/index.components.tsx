@@ -111,7 +111,6 @@ export default function PaymentSecurityMain({
                 <MenuItem
                   key={item.chainId + index}
                   icon={<TokenImageDisplay src={item.imageUrl} symbol={item.symbol} />}
-                  height={92}
                   onClick={() => onClickItem?.(item)}>
                   <div className="token-info">
                     <div className="token-symbol">{item.symbol}</div>

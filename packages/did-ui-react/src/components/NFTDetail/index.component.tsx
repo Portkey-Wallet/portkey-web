@@ -18,8 +18,6 @@ import TraitsItem from './TraitsItem';
 import CustomSvg from '../CustomSvg';
 import ExpandableText from '../ExpandableText';
 import { Divider } from 'antd';
-import DividerCenter from '../DividerCenter';
-import { devices } from '@portkey/utils';
 
 export interface NFTDetailProps {
   NFTDetail: NFTItemBaseExpand;
@@ -29,7 +27,7 @@ export interface NFTDetailProps {
 }
 
 export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionDetail }: NFTDetailProps) {
-  const scrollerContainerRef = useRef(null);
+  const scrollerContainerRef = useRef<any>(null);
   const [info, setInfo] = useState<NFTItemBaseExpand>({ ...NFTDetail });
   const [{ networkType, chainType }] = usePortkey();
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
@@ -78,7 +76,6 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionD
 
   const renderCollectionInfo = useMemo(() => {
     const { collectionName, collectionImageUrl, description } = info;
-    // const description = 'NFT description goes here, NFT description NFT description NFT NFT description goes here, NFT description NFT description NFT';
 
     return (
       <div className="collection-container">
@@ -303,20 +300,6 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionD
     );
   }, [renderBasicInfo, renderGenerationInfo, renderInscriptionInfo, renderOriginSeedInfo, renderTraitsInfo]);
 
-  const renderFooter = useMemo(() => {
-    const { balance, decimals } = info;
-    return (
-      <div>
-        <div className="btn-wrap portkey-ui-flex-column-center">
-          <div className="balance">{`You have: ${divDecimalsStr(balance, decimals)}`}</div>
-          <ThrottleButton type="primary" onClick={() => onSend?.(info)}>
-            Send
-          </ThrottleButton>
-        </div>
-      </div>
-    );
-  }, [info, onSend]);
-
   const { alias, tokenId } = info;
   const [opacity, setOpacity] = useState(0);
 
@@ -324,8 +307,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionD
     lastKnownScrollPosition.current = event.target.scrollTop;
     if (!ticking.current) {
       window.requestAnimationFrame(() => {
-        console.log('lastKnownScrollPosition.current is:', lastKnownScrollPosition.current);
-        if (lastKnownScrollPosition.current >= (devices.isMobileDevices() ? 618 - 60 : 618)) {
+        if (lastKnownScrollPosition.current >= 560) {
           setOpacity(1);
         } else {
           setOpacity(0);
@@ -337,13 +319,14 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionD
   }, []);
 
   useEffect(() => {
-    document.getElementsByClassName('portkey-ui-asset-wrapper')?.[0]?.addEventListener('scroll', handleScroll);
-    // document.addEventListener('scroll', handleScroll);
+    const scrollerContainer = scrollerContainerRef.current;
+
+    scrollerContainerRef.current?.addEventListener('scroll', handleScroll);
     return () => {
-      document.getElementsByClassName('portkey-ui-asset-wrapper')?.[0]?.removeEventListener('scroll', handleScroll);
+      scrollerContainer?.removeEventListener('scroll', handleScroll);
     };
   }, [handleScroll]);
-  // return <TraitsItem traitType={'Background'} value={'Desert Mirage Citadel'} percent={'5%'} />;
+
   return (
     <div className="portkey-ui-nft-detail" ref={scrollerContainerRef}>
       <div className="nft-detail-body">
@@ -358,8 +341,10 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionD
         {renderCollectionInfo}
         {/* {renderPicture} */}
         {renderDetail}
+        {renderDetail}
+        {renderDetail}
+        {renderDetail}
       </div>
-      {/* {renderFooter} */}
     </div>
   );
 }

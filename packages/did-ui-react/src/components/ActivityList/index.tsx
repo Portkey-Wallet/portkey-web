@@ -5,7 +5,7 @@ import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
 import { addressFormat, formatAmountShow, formatWithCommas } from '../../utils/converter';
 import dayjs from 'dayjs';
 import { contractStatusEnum } from '../../constants/activity';
-import { AmountSign, TransactionTypesEnum } from '../../types/activity';
+import { AmountSign } from '../../types/activity';
 import { NetworkType } from '../../types';
 import { formatStr2EllipsisStr } from '../../utils';
 import { MAINNET } from '../../constants/network';
@@ -30,7 +30,6 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
     const preTime = dayjs.unix(Number(preItem?.timestamp || 0));
     const curTime = dayjs.unix(Number(item?.timestamp || 0));
 
-    console.log('isSameDay(preTime, curTime)', isSameDay(preTime, curTime));
     return isSameDay(preTime, curTime);
   }, [item?.timestamp, preItem?.timestamp]);
 
@@ -45,7 +44,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
   const isShowTx = useMemo(() => !isEmptyToken, [isEmptyToken]);
 
   const AddressDom = useMemo(() => {
-    const { fromAddress, fromChainId, nftInfo } = item;
+    const { fromAddress, fromChainId } = item;
     const transFromAddress = addressFormat(fromAddress, fromChainId);
 
     if (!item) {
@@ -220,7 +219,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
                 cornerImgSrc={item.isReceived ? 'ReceiveActivity' : 'SendActivity'}
               />
             ) : (
-              <img src={item?.listIcon || ''} width={420} height={42} />
+              <img src={item?.listIcon || ''} width={42} height={42} />
             )}
           </div>
 

@@ -13,6 +13,8 @@ export interface AssetTabsProps extends NFTTabProps {
   networkType: NetworkType;
   tokenList?: TokenItemShowType[];
   isGetNFTCollectionPending?: boolean;
+  defaultActiveKey?: string;
+  setActiveKey?: (activeKey: string) => void;
   onChange?: (activeKey: BalanceTab) => void;
   onDataInit?: () => void;
   onDataInitEnd?: () => void;
@@ -34,9 +36,11 @@ export default function AssetTabs({
   onDataInitEnd,
   onViewActivityItem,
   onViewTokenItem,
+  defaultActiveKey,
+  setActiveKey,
 }: AssetTabsProps) {
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
-  const [value, setValue] = useState<string>(BalanceTab.TOKEN);
+  const [value, setValue] = useState<string>(defaultActiveKey || BalanceTab.TOKEN);
   const nftTabRef = useRef<NFTTabInstance>();
   return (
     <CommonTabs
@@ -44,6 +48,7 @@ export default function AssetTabs({
       activeKey={value}
       onChange={(v) => {
         setValue(v);
+        setActiveKey?.(v);
         onChange?.(v as BalanceTab);
         if (v === BalanceTab.NFT) nftTabRef.current?.refreshState();
       }}

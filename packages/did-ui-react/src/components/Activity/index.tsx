@@ -1,5 +1,5 @@
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getCurrentActivityMapKey } from './utils';
 import { handleErrorMessage, setLoading } from '../../utils';
@@ -86,12 +86,6 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
     [caAddressInfos, chainId, activityTotal, symbol],
   );
 
-  useEffect(() => {
-    if (chainId) {
-      getList();
-    }
-  }, [chainId]);
-
   const isOnce = useRef<boolean>();
 
   // init State
@@ -103,7 +97,7 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
       onDataInitEnd?.();
       isOnce.current = true;
     });
-  }, [caAddressInfos, getList]);
+  }, [caAddressInfos, getList, chainId]);
 
   const loadMoreActivities = useCallback(async () => {
     if (pending) return;
