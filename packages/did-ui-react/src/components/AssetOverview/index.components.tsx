@@ -68,7 +68,6 @@ export function AssetOverviewContent({
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
   const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, activityMap }, { dispatch }] = usePortkeyAsset();
-  console.log('tokenListInfo', tokenListInfo);
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
 

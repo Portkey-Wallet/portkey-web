@@ -44,9 +44,6 @@ export default function Assets() {
         faucet={{
           faucetContractAddress: '233wFn5JbyD4i8R5Me4cW4z6edfFGRn5bpWnGuY8fjR7b2kRsD',
         }}
-        onLifeCycleChange={lifeCycle => {
-          console.log(lifeCycle, 'onLifeCycleChange');
-        }}
         onDeleteAccount={() => {
           router.replace('/sign');
         }}

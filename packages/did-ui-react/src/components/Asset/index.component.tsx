@@ -5,7 +5,7 @@ import ReceiveCard from '../ReceiveCard/index.components';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
-import { ActivityItemType, ChainId } from '@portkey/types';
+import { ChainId } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
 import { IAssetItemType, ITransferLimitItem, AllowanceItem, IUserTokenItemNew } from '@portkey/services';
 import { BaseToken, NFTCollectionItemShowType, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
@@ -45,7 +45,6 @@ import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
-import { PullToRefresh } from 'antd-mobile';
 import CollectionDetailMain from '../CollectionDetail/index.component';
 
 export interface AssetMainProps
