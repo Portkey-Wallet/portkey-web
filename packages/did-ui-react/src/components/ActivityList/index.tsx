@@ -5,7 +5,7 @@ import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
 import { addressFormat, formatAmountShow, formatWithCommas } from '../../utils/converter';
 import dayjs from 'dayjs';
 import { contractStatusEnum } from '../../constants/activity';
-import { AmountSign, TransactionTypesEnum } from '../../types/activity';
+import { AmountSign } from '../../types/activity';
 import { NetworkType } from '../../types';
 import { formatStr2EllipsisStr } from '../../utils';
 import { MAINNET } from '../../constants/network';
