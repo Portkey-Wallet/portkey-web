@@ -1,8 +1,8 @@
 import SegmentedInput from '../SegmentedInput';
 import { CreateWalletType, GuardianInputInfo, IBaseGetGuardianProps, TSize } from '../types';
-import { ISocialLogin, RegisterType } from '../../types';
+import { ISocialLogin, RegisterType, TotalAccountType } from '../../types';
 import DividerCenter from '../DividerCenter';
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef, ReactElement } from 'react';
 import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
 import ScanCard from '../ScanCard/index.component';
@@ -20,11 +20,12 @@ import useSocialLogin from '../../hooks/useSocialLogin';
 import SocialLoginGroup from '../SocialLoginGroup';
 import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
+import LoginIconAndLabel from '../LoginIconAndLabel';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
   size?: TSize;
-  loginMethodsOrder?: ISocialLogin[];
+  loginMethodsOrder?: TotalAccountType[];
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
@@ -40,7 +41,7 @@ export default function Web2Design({
   extraElementList,
   termsOfService,
   privacyPolicy,
-  loginMethodsOrder = SocialLoginList as ISocialLogin[],
+  loginMethodsOrder,
   onError,
   onClose,
   onSuccess,
@@ -52,6 +53,7 @@ export default function Web2Design({
   onInputConfirmStart,
   onLoginFinishWithoutPin,
 }: Web2DesignProps) {
+  console.log('loginMethodsOrder', loginMethodsOrder);
   const signType = useMemo(() => (mode === 'SignUp' ? 'Sign up' : 'Login'), [mode]);
   const [type, setType] = useState<RegisterType>(signType || 'Login');
 
@@ -122,6 +124,10 @@ export default function Web2Design({
     async (type: ISocialLogin) => {
       try {
         onSocialStart?.(type);
+        if (!SocialLoginList.includes(type)) return setShowQRCode(true);
+        setLoading(true);
+        console.log('🌈 🌈 🌈 🌈 🌈 🌈 15', '');
+
         if (Web2LoginList.includes(type)) throw Error('Please try social account');
 
         setLoading(true);
@@ -159,14 +165,13 @@ export default function Web2Design({
     [extraElementList, type],
   );
 
+  const loginMethodsOrderWithoutEmail = loginMethodsOrder?.filter((ele) => ele !== 'Email');
+
   const leftWrapper = useMemo(
     () => (
       <div className="portkey-ui-flex-1 portkey-ui-flex-column left-wrapper">
         <div className="portkey-ui-flex-1">
-          <h1 className="web2design-title">
-            {type}
-            {type === 'Login' && <UpgradedPortkeyTip className="web2-design-upgraded-portkey" />}
-          </h1>
+          <LoginIconAndLabel />
           <SegmentedInput
             phoneCountry={phoneCountry}
             defaultActiveKey={'Phone'}
@@ -175,9 +180,7 @@ export default function Web2Design({
             confirmText={type}
             onFinish={onInputFinish}
           />
-          <DividerCenter />
-          <SocialLoginGroup supportAccounts={loginMethodsOrder} onAccountTypeChange={onSocialChange} />
-          {extraElement ? extraElement : <div className="empty-element"></div>}
+
           <div
             className={clsx(
               'portkey-ui-web2design-switch-sign',
@@ -185,9 +188,9 @@ export default function Web2Design({
             )}>
             {type === 'Login' ? (
               <>
-                No Account?&nbsp;
+                Don’t have an account?&nbsp;
                 <span className="btn-text" onClick={onSwitch}>
-                  Sign up now
+                  Sign up
                 </span>
               </>
             ) : (
@@ -199,6 +202,18 @@ export default function Web2Design({
               </>
             )}
           </div>
+          <DividerCenter />
+
+          <div className="portkey-ui-web2design-social-wrapper">
+            <SocialLoginGroup supportAccounts={loginMethodsOrderWithoutEmail} onAccountTypeChange={onSocialChange} />
+          </div>
+
+          {(extraElement as ReactElement)?.props?.children && (
+            <>
+              <DividerCenter />
+              {extraElement}
+            </>
+          )}
         </div>
         {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}
       </div>
@@ -207,7 +222,7 @@ export default function Web2Design({
       _validateEmail,
       _validatePhone,
       extraElement,
-      loginMethodsOrder,
+      loginMethodsOrderWithoutEmail,
       onInputFinish,
       onSocialChange,
       onSwitch,
@@ -257,9 +272,9 @@ export default function Web2Design({
   const [showQRCode, setShowQRCode] = useState<boolean>();
   return (
     <div className="portkey-ui-web2design-wrapper">
-      {type === 'Login' && littleSize && !showQRCode && (
+      {/* {type === 'Login' && littleSize && !showQRCode && (
         <CustomSvg className="web2design-qrcode-icon" type="QRCode" onClick={() => setShowQRCode(true)} />
-      )}
+      )} */}
       <div
         className={clsx(
           type === 'Login' && 'portkey-ui-flex-between portkey-ui-web2design-login',

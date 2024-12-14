@@ -10,7 +10,7 @@ import { AccountsInfo } from '../../constants/socialLogin';
 import { AccountLoginList, SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
 import ThrottleButton from '../ThrottleButton';
-import { usePortkey } from '../context';
+import { BlockLoginButton } from '../LoginButton';
 
 interface AccountRecommendGroupProps {
   type: RegisterType;
@@ -33,7 +33,6 @@ export default function AccountRecommendGroup({
   onWeb2Change,
   onLoginByPortkey,
 }: AccountRecommendGroupProps) {
-  const [{ theme }] = usePortkey();
   const isMobile = useMemo(() => {
     try {
       return devices.isMobileDevices();
@@ -45,23 +44,35 @@ export default function AccountRecommendGroup({
   const renderLoginElement = useCallback(
     (accountType: AccountType) => {
       return (
-        <ThrottleButton
-          className={clsx('recommend-login-btn')}
-          onClick={() => {
+        <BlockLoginButton
+          onClickCallback={() => {
             if (Web2LoginList.includes(accountType)) {
               onWeb2Change?.(accountType as IWeb2Login);
             } else if (SocialLoginList.includes(accountType)) {
               onSocialChange?.(accountType as ISocialLogin);
             }
           }}
-          key={'Portkey_ui_renderLoginElement' + accountType}>
-          <CustomSvg type={AccountsInfo[accountType].icon} fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />
-          <span>{`${type} with ${AccountsInfo[accountType].name}`}</span>
-          <span className="empty"></span>
-        </ThrottleButton>
+          iconType={AccountsInfo[accountType].icon}
+          iconName={AccountsInfo[accountType].name}
+          key={'Portkey_ui_renderLoginElement' + accountType}
+        />
+        // <ThrottleButton
+        //   className={clsx('recommend-login-btn')}
+        //   onClick={() => {
+        //     if (Web2LoginList.includes(accountType)) {
+        //       onWeb2Change?.(accountType as IWeb2Login);
+        //     } else if (SocialLoginList.includes(accountType)) {
+        //       onSocialChange?.(accountType as ISocialLogin);
+        //     }
+        //   }}
+        //   key={'Portkey_ui_renderLoginElement' + accountType}>
+        //   <CustomSvg type={AccountsInfo[accountType].icon} fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />
+        //   <span>{`${type} with ${AccountsInfo[accountType].name}`}</span>
+        //   <span className="empty"></span>
+        // </ThrottleButton>
       );
     },
-    [onSocialChange, onWeb2Change, theme, type],
+    [onSocialChange, onWeb2Change],
   );
 
   return (

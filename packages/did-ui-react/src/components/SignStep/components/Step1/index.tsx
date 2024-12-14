@@ -144,7 +144,7 @@ function Step1({
           {...props}
           size={size}
           type={type}
-          loginMethodsOrder={loginMethodsOrder as ISocialLogin[]}
+          loginMethodsOrder={loginMethodsOrder}
           phoneCountry={phoneCountry}
           isErrorTip={isErrorTip}
           onError={onError}
