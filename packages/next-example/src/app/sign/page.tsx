@@ -22,7 +22,7 @@ import { FetchRequest } from '@portkey/request';
 import { useRouter } from 'next/navigation';
 
 const PIN = '111111';
-let CHAIN_ID: ChainId = 'AELF';
+let CHAIN_ID: ChainId = 'tDVW';
 
 setTimeout(() => {
   ConfigProvider.setGlobalConfig({
@@ -49,7 +49,7 @@ setTimeout(() => {
     graphQLUrl: '/graphql',
     theme: 'dark',
   });
-}, 10);
+}, 100);
 // window.onload = function() {
 //   document.documentElement.style.setProperty('--sds-color-background-default-default', '#000000');
 // };
@@ -140,7 +140,7 @@ export default function Sign() {
       <div>-----------</div>
       <PortkeyLoading {...loadingInfo} className="sign-loading" />
       <SignIn
-        pin={'111111'}
+        // pin={'111111'}
         ref={ref}
         keyboard={true}
         design={design}
@@ -367,7 +367,7 @@ export default function Sign() {
         checkManagerIsExist: tDVV
       </Button>
 
-      <div className="line">-----------</div>
+      <div className="wfs">-----------</div>
       <Button
         onClick={async () => {
           const isExist = await did.checkManagerIsExist({

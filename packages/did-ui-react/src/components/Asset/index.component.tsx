@@ -332,7 +332,14 @@ function AssetMain({
       setAccelerateChainId(originChainId);
       setAssetStep(AssetStep.guardians);
     },
-    onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
+    // todo
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onClickTransactionLimits: () => {},
+    // todo
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onClickTokenAllowances: () => {},
+    onClickBackupEmail: () => setAssetStep(AssetStep.walletSecurity),
+    // onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
   });
 
   const WalletSecurityMenuList = useWalletSecurityMenuList({
@@ -614,7 +621,7 @@ function AssetMain({
             <MenuListMain
               menuList={myMenuList}
               headerConfig={{
-                title: 'My',
+                title: 'Settings',
                 onBack: () => setAssetStep(AssetStep.overview),
               }}
               isShowFooter={showDeletion} // TODO delete w
