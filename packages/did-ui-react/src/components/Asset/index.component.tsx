@@ -656,6 +656,7 @@ function AssetMain({
           {assetStep === AssetStep.tokenAllowanceDetail && originalAllowanceItem && (
             <TokenAllowanceDetail
               chainId={originalAllowanceItem.chainId}
+              chainImageUrl={originalAllowanceItem.chainImageUrl}
               contractAddress={originalAllowanceItem.contractAddress}
               url={originalAllowanceItem.url}
               icon={originalAllowanceItem.icon}
