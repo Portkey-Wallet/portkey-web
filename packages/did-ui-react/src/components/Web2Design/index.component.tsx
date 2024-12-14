@@ -125,9 +125,6 @@ export default function Web2Design({
       try {
         onSocialStart?.(type);
         if (!SocialLoginList.includes(type)) return setShowQRCode(true);
-        setLoading(true);
-        console.log('🌈 🌈 🌈 🌈 🌈 🌈 15', '');
-
         if (Web2LoginList.includes(type)) throw Error('Please try social account');
 
         setLoading(true);
