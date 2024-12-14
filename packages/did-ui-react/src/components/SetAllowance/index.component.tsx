@@ -72,44 +72,6 @@ export default function SetAllowanceMain({
 
   const [error, setError] = useState<string>('');
   const checkResult = useDappSpenderCheck(dappInfo?.href, spender, dappInfo?.icon, targetChainId, networkType);
-  // const getContractUpgradeTime = useGetContractUpgradeTime(networkType === 'MAINNET');
-  // const [contractUpgradeTimeResult, setContractUpgradeTimeResult] = useState<{
-  //   isInit: boolean;
-  //   isTimeOver12: boolean;
-  //   formatTime: string;
-  // }>({
-  //   isInit: true,
-  //   isTimeOver12: true,
-  //   formatTime: '',
-  // });
-  // useEffect(() => {
-  //   (async () => {
-  //     if (!originChainId || !targetChainId) {
-  //       return;
-  //     }
-  //     const chainInfo = await getChain(originChainId);
-  //     const result = await getContractUpgradeTime({
-  //       input: {
-  //         chainId: targetChainId,
-  //         address: chainInfo.caContractAddress || '',
-  //         skipCount: 0,
-  //         maxResultCount: 10,
-  //       },
-  //     });
-  //     console.log('wfs===result', result);
-  //     const blockTime = result.data.contractList.items[0].metadata.block.blockTime;
-  //     setContractUpgradeTimeResult({
-  //       isInit: false,
-  //       isTimeOver12: checkTimeOver12(blockTime),
-  //       formatTime: formatDateTime(blockTime),
-  //     });
-  //     console.log('wfs===result2', {
-  //       isInit: false,
-  //       isTimeOver12: checkTimeOver12(blockTime),
-  //       formatTime: formatDateTime(blockTime),
-  //     });
-  //   })();
-  // }, [getContractUpgradeTime, originChainId, targetChainId]);
 
   const inputChange = useCallback(
     (amount: string | number) => {
@@ -183,7 +145,12 @@ export default function SetAllowanceMain({
             className={`warning-icon`}
             fillColor={checkResult.type === 'info' ? '#5D42FF' : '#FF9417'}
           />
-          <div className={'warning-title'}>{checkResult.text}</div>
+          <div
+            className="warning-title"
+            dangerouslySetInnerHTML={{
+              __html: checkResult.text.replace(/\n/g, '<br/>'),
+            }}
+          />
         </div>
       )}
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">

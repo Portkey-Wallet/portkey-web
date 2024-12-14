@@ -4,6 +4,7 @@ import './globals.css';
 import './index.css';
 import PortkeyProvider from '@/provider/Portkey';
 import Script from 'next/script';
+import '@portkey/did-ui-react/dist/assets/index.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
