@@ -31,6 +31,8 @@ export default function CollectionDetailMain({
   onNFTView,
   onBack,
 }: CollectionDetailProps) {
+  const scrollerContainerRef = useRef<HTMLDivElement>(null);
+  const divContentRef = useRef<HTMLDivElement>(null);
   const [{ caInfo, NFTCollection, initialized }, { dispatch }] = usePortkeyAsset();
   const { symbol, chainId } = collectionItem;
   const nftMaxCount = useNFTMaxCount();
@@ -113,13 +115,30 @@ export default function CollectionDetailMain({
   );
 
   useEffect(() => {
-    document.getElementsByClassName('portkey-ui-asset-wrapper')?.[0]?.addEventListener('scroll', handleScroll);
-    // document.addEventListener('scroll', handleScroll);
+    const scrollerContainer = scrollerContainerRef.current;
+
+    scrollerContainerRef.current?.addEventListener('scroll', handleScroll);
     return () => {
-      document.getElementsByClassName('portkey-ui-asset-wrapper')?.[0]?.removeEventListener('scroll', handleScroll);
+      scrollerContainer?.removeEventListener('scroll', handleScroll);
     };
   }, [handleScroll]);
-
+  useEffect(() => {
+    if (divContentRef.current) {
+      const intervalTimer = setInterval(() => {
+        const parentHeight = divContentRef?.current?.parentElement?.clientHeight || 0;
+        const divContentHeight = divContentRef?.current?.clientHeight || 0;
+        if (divContentHeight < parentHeight) {
+          loadMoreNFT({
+            symbol,
+            chainId,
+            pageNum: ++currentNum.current,
+          });
+        } else {
+          clearInterval(intervalTimer);
+        }
+      }, 100);
+    }
+  }, [chainId, loadMoreNFT, symbol]);
   const renderCollectionDetailHeader = useMemo(() => {
     // eslint-disable-next-line prettier/prettier
     const {
@@ -163,8 +182,8 @@ export default function CollectionDetailMain({
     );
   }, [currentCollection, onNFTView]);
   return (
-    <div className="portkey-ui-collection-detail">
-      <div className="collection-detail-body">
+    <div className="portkey-ui-collection-detail" ref={scrollerContainerRef}>
+      <div className="collection-detail-body" ref={divContentRef}>
         <SettingHeader
           leftCallBack={onBack}
           leftElement={undefined}
