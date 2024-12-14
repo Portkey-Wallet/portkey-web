@@ -8,7 +8,13 @@ import { usePortkey } from '../context';
 import { ChainId } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
 import { IAssetItemType, ITransferLimitItem, AllowanceItem, IUserTokenItemNew } from '@portkey/services';
-import { BaseToken, NFTCollectionItemShowType, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
+import {
+  BalanceTab,
+  BaseToken,
+  NFTCollectionItemShowType,
+  NFTItemBaseExpand,
+  TokenItemShowType,
+} from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
@@ -196,6 +202,7 @@ function AssetMain({
     setAssetStep(AssetStep.my);
   }, []);
   const { secondaryEmail, getSecondaryMail } = useIsSecondaryMailSet();
+  const [activeKey, setActiveKey] = useState<string>(BalanceTab.TOKEN);
 
   // const saveLiftCycleInfo = useCallback(async () => {
   //   console.log('====== saveLiftCycleInfo', assetStep);
@@ -316,6 +323,7 @@ function AssetMain({
   }, []);
 
   const onBack = useCallback(() => {
+    console.log('wfs====onBack', preStepRef);
     setAssetStep(preStepRef.current);
   }, []);
 
@@ -409,6 +417,8 @@ function AssetMain({
               faucet={faucet}
               backIcon={backIcon}
               isLoginOnChain={isLoginOnChain}
+              defaultActiveKey={activeKey}
+              setActiveKey={setActiveKey}
               onAvatarClick={onAvatarClick}
               onBack={onOverviewBack}
               onReceive={onReceive}
@@ -590,6 +600,8 @@ function AssetMain({
               networkType={networkType}
               onBack={() => setAssetStep(AssetStep.overview)}
               onNFTView={(v) => {
+                console.log('wfs====12331111');
+                preStepRef.current = AssetStep.collectionDetail;
                 setPreStep(AssetStep.collectionDetail);
                 setAssetStep(AssetStep.NFTDetail);
                 setNFTDetail(v);
