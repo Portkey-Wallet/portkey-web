@@ -250,7 +250,18 @@ export default function BuyFrom({
     () => exchange !== '' && !errMsg && <ExchangeRate showRateText={showRateText} rateUpdateTime={updateTime} />,
     [errMsg, exchange, showRateText, updateTime],
   );
+  const [buyCryptoList, setBuyCryptoList] = useState<IRampCryptoItem[]>();
+  const fetchBuyCryptoList = useCallback(async () => {
+    const { buyCryptoList } = await getBuyCrypto({});
+    setBuyCryptoList(buyCryptoList);
+  }, []);
+  useEffectOnce(() => {
+    if (initialized) {
+      startReport('Buy-DataInit');
 
+      fetchBuyCryptoList().finally(() => endReport('Buy-DataInit'));
+    }
+  });
   return (
     <>
       <div className="portkey-ui-ramp-buy-form portkey-ui-flex-column-center">

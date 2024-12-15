@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Radio, RadioChangeEvent } from 'antd';
 import { useEffectOnce } from 'react-use';
@@ -14,12 +14,16 @@ import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import useHandleAchSell from './hooks/useHandleAchSell';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
-import { RampType } from '@portkey/ramp';
+import { IRampCryptoItem, RampType } from '@portkey/ramp';
 import './index.less';
 import { TokenItemShowType } from '../types/assets';
 import { mixRampShow } from './utils';
 import { openloginSignal } from '@portkey/socket';
 import { getCommunicationSocketUrl } from '../config-provider/utils';
+import CommonInput from '../CommonInput';
+import { getBuyCrypto, getSellCrypto } from './utils/api';
+import useGAReport from '../../hooks/useGAReport';
+import TokenImageDisplay from '../TokenImageDisplay';
 
 export default function RampMain({
   className,
@@ -35,6 +39,8 @@ export default function RampMain({
   onModifyGuardians,
 }: IRampProps) {
   const { t } = useTranslation();
+  const { startReport, endReport } = useGAReport();
+  const [keyword, setKeyword] = useState('');
   const [{ initialized, caHash, originChainId }] = usePortkeyAsset();
   const [page, setPage] = useState<RampType>(initState?.side || RampType.BUY);
   const isSell = useRef(0); // guaranteed to make only one transfer
@@ -44,7 +50,45 @@ export default function RampMain({
 
   const [initBuyState, setInitBuyState] = useState(initState?.side === RampType.BUY ? initState : {});
   const [initSellState, setInitSellState] = useState(initState?.side === RampType.SELL ? initState : {});
-
+  const [buyCryptoList, setBuyCryptoList] = useState<IRampCryptoItem[]>();
+  const [sellCryptoList, setSellCryptoList] = useState<IRampCryptoItem[]>();
+  const fetchBuyCryptoList = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { buyCryptoList } = await getBuyCrypto({});
+      setBuyCryptoList(buyCryptoList);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  const fetchSellCryptoList = useCallback(async () => {
+    try {
+      setLoading(true);
+      const { cryptoList } = await getSellCrypto({});
+      setSellCryptoList(cryptoList);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+  useEffectOnce(() => {
+    if (initialized) {
+      fetchBuyCryptoList();
+      fetchSellCryptoList();
+    }
+  });
+  const list = useMemo(() => {
+    if (page === RampType.BUY) {
+      return buyCryptoList;
+    }
+    if (page === RampType.SELL) {
+      return sellCryptoList;
+    }
+    return [];
+  }, [buyCryptoList, page, sellCryptoList]);
+  const filterList = useMemo(
+    () => list?.filter((item) => item.symbol.toLocaleUpperCase().includes(keyword.toLocaleUpperCase())),
+    [keyword, list],
+  );
   useEffectOnce(() => {
     if (initialized) {
       mixRampShow({ isMainnet, isBuySectionShow, isSellSectionShow, isFetch: true })
@@ -147,6 +191,8 @@ export default function RampMain({
 
           const msg = handleErrorMessage(error);
           singleMessage.error(msg);
+        } finally {
+          setLoading(false);
         }
       } else {
         setInitBuyState({});
@@ -170,15 +216,39 @@ export default function RampMain({
 
   return (
     <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column', className])} id="portkey-ui-ramp">
-      <BackHeaderForPage title={t('Buy')} leftCallBack={onBack} />
+      <BackHeaderForPage
+        title={
+          <div className="portkey-ui-ramp-radio">
+            <Radio.Group defaultValue={RampType.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
+              <Radio.Button value={RampType.BUY} style={{ cursor: 'pointer' }}>
+                {t('Buy')}
+              </Radio.Button>
+              <Radio.Button value={RampType.SELL} style={{ cursor: 'pointer' }}>
+                {t('Sell')}
+              </Radio.Button>
+            </Radio.Group>
+          </div>
+        }
+        leftCallBack={onBack}
+      />
       <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
-        <div className="portkey-ui-ramp-radio">
-          <Radio.Group defaultValue={RampType.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
-            <Radio.Button value={RampType.BUY}>{t('Buy')}</Radio.Button>
-            <Radio.Button value={RampType.SELL}>{t('Sell')}</Radio.Button>
-          </Radio.Group>
-        </div>
-        {page === RampType.BUY && (
+        <CommonInput
+          type="search"
+          placeholder="Search"
+          onChange={(e) => {
+            const v = e.target.value.trim();
+            setKeyword(v.trim());
+          }}
+        />
+        <ul style={{ width: '100%', marginTop: 16 }}>
+          {filterList?.map((item, index) => (
+            <li key={index + '_' + item.symbol} className="crypto-list-item">
+              <TokenImageDisplay src={item.icon} symbol={item.symbol} />
+              <span className="crypto-name">{item.symbol}</span>
+            </li>
+          ))}
+        </ul>
+        {/* {page === RampType.BUY && (
           <BuyForm
             isMainnet={isMainnet}
             isBuySectionShow={isBuySectionShow}
@@ -214,7 +284,7 @@ export default function RampMain({
             onModifyLimit={onModifyLimit}
             onModifyGuardians={onModifyGuardians}
           />
-        )}
+        )} */}
       </div>
     </div>
   );

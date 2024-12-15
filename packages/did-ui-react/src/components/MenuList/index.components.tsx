@@ -31,11 +31,17 @@ export default function MenuListMain({
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-menu-list-wrapper', className)}>
       {isShowHeader && (
-        <BackHeaderForPage title={headerConfig?.title} leftCallBack={headerConfig?.onBack} {...headerConfig} />
+        <BackHeaderForPage
+          title={headerConfig?.title}
+          leftCallBack={headerConfig?.onBack}
+          {...headerConfig}
+          leftElement={<CustomSvg type={'Close4'} className="close-icon" />}
+        />
       )}
       <div>
         {menuList.map((item) => (
           <MenuItem
+            className="settings-menu-item"
             key={item.label}
             icon={item?.icon && <CustomSvg type={item.icon} style={{ width: 20, height: 20 }} />}
             onClick={item?.onClick}>

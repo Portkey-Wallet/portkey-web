@@ -2,6 +2,7 @@ import { Col, Row } from 'antd';
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
 import { CSSProperties, ReactNode } from 'react';
+import './index.less';
 
 export interface TitleWrapperProps {
   title?: ReactNode;

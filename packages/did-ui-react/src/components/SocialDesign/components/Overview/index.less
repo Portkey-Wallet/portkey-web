@@ -2,7 +2,7 @@
 
 .portkey-ui-user-input-overview {
   height: 100%;
-  padding: 0 32px;
+  padding: 16px 16px 32px 16px;
   overflow-y: auto;
   .default-extra-ele {
     width: 100%;
@@ -18,30 +18,38 @@
     left: 0;
   }
 }
-
-.portkey-ui-account-type-wrapper {
-  .account-type-list {
-    gap: 18px;
-    flex-wrap: wrap;
-    .portkey-ui-custom-svg {
-      cursor: pointer;
-      width: 40px;
-      height: 40px;
-      border: 1px solid var(--portkey-ui-border-6);
-      border-radius: var(--portkey-ui-border-radius-4);
-      & > svg {
-        width: 22px;
-        height: 22px;
-      }
-    }
-    .expand-account {
-      transform: rotate(180deg);
-    }
-  }
-  .user-input-bottom-extra-ele {
-    min-height: 66px;
-  }
+.portkey-ui-social-login-circle-icon-wrapper{
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  margin-top: 32px;
+  justify-content: center;
 }
+
+
+// .portkey-ui-account-type-wrapper {
+//   .account-type-list {
+//     gap: 18px;
+//     flex-wrap: wrap;
+//     .portkey-ui-custom-svg {
+//       cursor: pointer;
+//       width: 40px;
+//       height: 40px;
+//       border: 1px solid var(--portkey-ui-border-6);
+//       border-radius: var(--portkey-ui-border-radius-4);
+//       & > svg {
+//         width: 22px;
+//         height: 22px;
+//       }
+//     }
+//     .expand-account {
+//       transform: rotate(180deg);
+//     }
+//   }
+//   .user-input-bottom-extra-ele {
+//     min-height: 66px;
+//   }
+// }
 
 @media screen and (max-width: @screen-max-w-768) {
   .default-extra-ele .portkey-icon {

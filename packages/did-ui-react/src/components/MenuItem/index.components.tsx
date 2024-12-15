@@ -17,7 +17,7 @@ export default function MenuItemMain({ icon, children, onClick, className, showE
       {icon && <div className="portkey-ui-icon-area">{icon}</div>}
       <span className="portkey-ui-menu-item-title">{children}</span>
       {showEnterIcon && (
-        <CustomSvg className="portkey-ui-enter-btn" type="LeftArrow" style={{ width: 16, height: 16 }} />
+        <CustomSvg className="portkey-ui-enter-btn" type="ChevronRight" style={{ width: 16, height: 16 }} />
       )}
     </div>
   );

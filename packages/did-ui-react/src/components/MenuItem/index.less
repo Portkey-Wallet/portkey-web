@@ -3,7 +3,7 @@
   align-items: center;
   padding: 18px 16px;
   background-color: var(--sds-color-background-default-default);
-  border-bottom: 1px solid var(--portkey-ui-border-2);
+  // border-bottom: 1px solid var(--portkey-ui-border-2);
   cursor: pointer;
 
   .portkey-ui-icon-area {
@@ -16,7 +16,21 @@
     color: var(--portkey-ui-font-6);
   }
   .portkey-ui-enter-btn {
-    transform: rotateZ(180deg);
+    // transform: rotateZ(180deg);
     flex-shrink: 0;
+    width: 7px !important;
+    height: 12px !important;
+    svg {
+      width: 7px !important;
+      height: 12px !important;
+      path {
+        fill: var(--sds-color-icon-neutral-tertiary);
+      }
+    }
+  }
+}
+@media (min-width: 601px) {
+  .portkey-ui-menu-item { 
+    padding: 18px 24px;
   }
 }
