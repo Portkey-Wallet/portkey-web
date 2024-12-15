@@ -38,6 +38,20 @@ export interface ITransferLimitItem {
   defaultDailyLimit?: string;
 }
 
+export interface ITransferLimitItem {
+  chainId: ChainId;
+  symbol: string;
+  singleLimit: string;
+  dailyLimit: string;
+  restricted: boolean;
+  decimals: number | string;
+  imageUrl?: string;
+  defaultSingleLimit?: string;
+  defaultDailyLimit?: string;
+  chainImageUrl?: string;
+  displayChainName?: string;
+}
+
 export interface IPaymentSecurityListParams {
   caHash: string;
   skipCount: number;

@@ -1,6 +1,6 @@
-.portkey-ui-payment-security-wrapper {
+.portkey-ui-token-allowance-wrapper {
   height: 100%;
-  .payment-security-nav {
+  .token-allowance-nav {
     position: relative;
     align-items: center;
     display: flex;
@@ -10,7 +10,7 @@
       left: 16px;
     }
 
-    .payment-security-header {
+    .token-allowance-header {
       width: 100%;
       justify-content: center;
       align-items: center;
@@ -23,6 +23,52 @@
         line-height: 22.4px;
         text-align: center;
         color: var(--sds-color-text-default-default);
+      }
+    }
+  }
+
+  .portkey-ui-token-allowance-list {
+    .adm-list-body {
+      border: 0;
+    }
+    .portkey-ui-token-allowance-item-wrap {
+      background-color: var(--sds-color-background-default-default);
+
+      .adm-list-item-content {
+        border-top: 0;
+      }
+      .portkey-ui-token-allowance-item {
+        padding: 0;
+        border: 0;
+        gap: 8px;
+        display: flex;
+      }
+
+      .portkey-ui-token-allowance-item-icon {
+        margin: 0;
+      }
+      .token-info {
+        .token-symbol-line {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
+          align-items: flex-start;
+        }
+        .token-symbol-text {
+          font-size: 16px;
+          color: var(--sds-color-text-default-default);
+          line-height: 22px;
+        }
+        .token-symbol-icon {
+          width: 12px;
+          height: 12px;
+          margin-left: 4px;
+        }
+        .token-network {
+          font-size: 14px;
+          color: var(--sds-color-text-default-tertiary);
+          line-height: 20px;
+        }
       }
     }
   }

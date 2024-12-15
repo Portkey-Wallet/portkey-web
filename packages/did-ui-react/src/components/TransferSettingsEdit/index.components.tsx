@@ -244,6 +244,9 @@ export default function TransferSettingsEditMain({
           decimals: initData.decimals || 8,
           restricted,
           businessFrom: initData.businessFrom,
+          chainImageUrl: '',
+          imageUrl: '',
+          displayChainName: '',
         };
 
         onSuccess?.(params);
