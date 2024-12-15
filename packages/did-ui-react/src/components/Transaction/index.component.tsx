@@ -1,5 +1,5 @@
 import clsx from 'clsx';
-import { SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityItemType, ChainId, TDappOperations, TransactionEnum } from '@portkey/types';
 import { useDefaultToken } from '../../hooks/assets';
 import { AmountSign, TransactionStatus } from '../../types/activity';
@@ -11,7 +11,6 @@ import {
   divDecimalsStr,
   formatAmountShow,
   formatWithCommas,
-  transNetworkText,
 } from '../../utils/converter';
 import { usePortkey } from '../context';
 import { MAINNET } from '../../constants/network';
@@ -25,7 +24,6 @@ import { CaAddressInfosType } from '@portkey/services';
 import './index.less';
 import NFTImage from '../NFTImage';
 import CommonButton from '../CommonButton';
-import TokenImageDisplay from '../TokenImageDisplay';
 import CoinImage from '../CoinImage';
 
 export interface TransactionProps {

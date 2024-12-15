@@ -12,6 +12,8 @@ import { NetworkType } from '../../types';
 import { MAINNET } from '../../constants/network';
 import TokenImageDisplay from '../TokenImageDisplay';
 import './index.less';
+import CustomSvg from '../CustomSvg';
+import ChainTokenIcon from '../ChainTokenIcon';
 
 export interface IPaymentSecurityProps {
   className?: string;
@@ -98,20 +100,37 @@ export default function PaymentSecurityMain({
     getSecurityList();
   }, [getSecurityList]);
 
+  console.log(securityList);
+
   return (
-    <div style={wrapperStyle} className={clsx('portkey-ui-payment-security-wrapper', className)}>
-      <BackHeaderForPage title={`Payment Security`} leftCallBack={onBack} />
+    <div style={wrapperStyle} className={clsx('portkey-ui-transaction-limits-wrapper', className)}>
+      <div className="transaction-limits-nav">
+        <div className="left-icon" onClick={onBack}>
+          <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default)" />
+        </div>
+        <div className="transaction-limits-header">
+          <p className="symbol">Transaction Limits</p>
+        </div>
+      </div>
       {securityList.length > 0 && (
         <>
-          <List className="portkey-ui-payment-security-list">
+          <List className="portkey-ui-transaction-limits-list">
             {securityList?.map((item, index) => (
               <List.Item
-                key={`paymentSecurity_${item.chainId}_${index}`}
-                className="portkey-ui-payment-security-item-wrap">
+                key={`transactionLimits_${item.chainId}_${index}`}
+                className="portkey-ui-transaction-limits-item-wrap">
                 <MenuItem
                   key={item.chainId + index}
-                  icon={<TokenImageDisplay src={item.imageUrl} symbol={item.symbol} />}
-                  onClick={() => onClickItem?.(item)}>
+                  icon={
+                    <ChainTokenIcon
+                      symbol={item.symbol}
+                      imageUrl={item.imageUrl || ''}
+                      chainImageUrl={item.chainImageUrl || ''}
+                    />
+                  }
+                  onClick={() => onClickItem?.(item)}
+                  className="portkey-ui-transaction-limits-item"
+                  iconClassName="portkey-ui-transaction-limits-item-icon">
                   <div className="token-info">
                     <div className="token-symbol">{item.symbol}</div>
                     <div className="token-network">{transNetworkText(item.chainId, isMainnet)}</div>

@@ -71,6 +71,9 @@ const InitTransferLimitData: ITransferLimitItemWithRoute = {
   dailyLimit: '100000000000',
   restricted: true,
   decimals: 8,
+  chainImageUrl: '',
+  imageUrl: '',
+  displayChainName: '',
 };
 
 function AssetMain({
@@ -707,17 +710,22 @@ function AssetMain({
           )}
           {assetStep === AssetStep.transferSettings && (
             <TransferSettings
+              caHash={caHash || ''}
+              originChainId={originChainId}
+              networkType={networkType}
+              sandboxId={sandboxId}
               onBack={() => setAssetStep(AssetStep.paymentSecurity)}
+              onSuccess={transferSettingsEditBack}
               initData={viewPaymentSecurity}
               onEdit={() => {
                 if (!isLoginOnChain) {
                   return loadingTip({ msg: loginOptTip });
                 }
-                setAssetStep(AssetStep.transferSettingsEdit);
+                // setAssetStep(AssetStep.transferSettingsEdit);
               }}
             />
           )}
-          {assetStep === AssetStep.transferSettingsEdit && (
+          {/* {assetStep === AssetStep.transferSettingsEdit && (
             <TransferSettingsEdit
               initData={viewPaymentSecurity}
               caHash={caHash || ''}
@@ -727,7 +735,7 @@ function AssetMain({
               onBack={transferSettingsEditBack}
               onSuccess={transferSettingsEditBack}
             />
-          )}
+          )} */}
         </div>
       </div>
     </div>
