@@ -11,6 +11,19 @@ export type ITokenItemResponse = {
   price: number;
 };
 
+export type ITokenSectionResponse = {
+  chainId?: string;
+  symbol: string;
+  price?: number;
+  balance?: string;
+  decimals?: number;
+  balanceInUsd?: string;
+  label?: string;
+  imageUrl?: string;
+  displayStatus?: 'All' | 'Partial' | 'None';
+  tokens?: ITokenItemResponse[];
+};
+
 export type CaAddressInfosType = { chainId: ChainId; caAddress: string }[];
 
 export type FetchAccountTokenListParams = {
@@ -22,6 +35,13 @@ export type FetchAccountTokenListParams = {
 export type FetchAccountTokenListResult = {
   data: ITokenItemResponse[];
   totalRecordCount: number;
+};
+
+export type FetchAccountTokenListV2Result = {
+  data: ITokenSectionResponse[];
+  totalRecordCount: number;
+  totalDisplayCount: number;
+  totalBalanceInUsd?: string;
 };
 
 export type GetSymbolImagesParams = {} | undefined;
@@ -169,6 +189,7 @@ export interface IAssetItemType {
 
 export interface IAssetsService {
   fetchAccountTokenList(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListResult>;
+  fetchAccountTokenListV2(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListV2Result>;
   getSymbolImages(params: GetSymbolImagesParams): Promise<GetSymbolImagesResult>;
   fetchAccountNftCollectionList(
     params: FetchAccountNftCollectionListParams,

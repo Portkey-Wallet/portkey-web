@@ -161,6 +161,15 @@ function AssetMain({
         });
 
       basicAssetViewAsync
+        .setTokenListV2({
+          caAddressInfos,
+        })
+        .then((res) => {
+          dispatch(res);
+          endReport('Home-TokenList');
+        });
+
+      basicAssetViewAsync
         .setNFTCollections({
           caAddressInfos,
           maxNFTCount: maxNftNum,

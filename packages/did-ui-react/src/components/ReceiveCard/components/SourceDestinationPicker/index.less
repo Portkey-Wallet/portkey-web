@@ -1,0 +1,55 @@
+@import '../../../../assets/theme/constants.less';
+
+.portkey-ui-receive-source-destination-picker {
+  background-color: var(--portkey-ui-default-bg);
+  height: 70px;
+  width: 440px;
+  margin: auto;
+  padding-bottom: 40px;
+  border-radius: var(--sds-size-radius-200);
+  border: 1px solid var(--sds-color-border-default-default);
+  display: flex;
+  flex-direction: row;
+
+  .divider {
+    width: 1px;
+    background-color: var(--sds-color-border-default-default);
+    height: '100%';
+  }
+
+  .item_wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 0, 8px;
+    flex: 1 0 0;
+    .title {
+      color: var(--sds-color-text-default-secondary);
+      font-size: 12px;
+    }
+    .chain-wrapper {
+      margin-top: 8px;
+      display: flex;
+      align-items: center;
+    }
+    .icon-and-name {
+      display: flex;
+      align-items: center;
+      flex: 1;
+      .icon {
+        width: 16px;
+        height: 16px;
+      }
+      .chain-name {
+        margin-left: 6px;
+        color: var(--sds-color-text-default-default);
+        font-size: 14px;
+      }
+    }
+    .arrow-icon {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
