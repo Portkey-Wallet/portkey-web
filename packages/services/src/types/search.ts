@@ -31,6 +31,7 @@ export type ChainInfo = {
     symbol: string;
     decimals: string;
   };
+  chainImageUrl?: string;
 };
 
 export type QueryOptions = {

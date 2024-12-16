@@ -65,7 +65,9 @@ export const useReceive = (token: IUserTokenItemResponse, initToChainId?: ChainI
   }, [isAelfChain, sourceChain?.network, sourceChain?.serviceList]);
 
   useEffect(() => {
+    console.log('useEffect aaa');
     did.services.getChainsInfo().then((chainList) => {
+      console.log('chainList bbb', chainList);
       setChainList(chainList);
     });
   }, []);
