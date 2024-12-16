@@ -10,6 +10,7 @@ import {
   ISecurityService,
   IAllowanceService,
   TCommonService,
+  IReceiveService,
 } from '../types';
 import { IDIDGraphQL } from '@portkey/graphql';
 import { CommunityRecovery } from './communityRecovery';
@@ -21,6 +22,7 @@ import { Activity } from './activity';
 import { Security } from './security';
 import { Allowance } from './allowance';
 import { Common } from './common';
+import { Receive } from './receive';
 
 export class Services<T extends IBaseRequest = IBaseRequest> extends CommunityRecovery<T> implements IServices {
   readonly communityRecovery: ICommunityRecoveryService;
@@ -32,7 +34,7 @@ export class Services<T extends IBaseRequest = IBaseRequest> extends CommunityRe
   readonly security: ISecurityService;
   readonly allowance: IAllowanceService;
   readonly common: TCommonService;
-
+  readonly receive: IReceiveService;
   constructor(request: T, didGraphQL: IDIDGraphQL, referralConfig: IReferralConfig, extraInfoConfig: IExtraInfoConfig) {
     super(request, didGraphQL, referralConfig, extraInfoConfig);
     this.communityRecovery = new CommunityRecovery(request, didGraphQL, referralConfig, extraInfoConfig);
@@ -44,5 +46,6 @@ export class Services<T extends IBaseRequest = IBaseRequest> extends CommunityRe
     this.security = new Security(request);
     this.allowance = new Allowance(request);
     this.common = new Common(request);
+    this.receive = new Receive(request);
   }
 }

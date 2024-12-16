@@ -7,6 +7,7 @@ import {
   FetchAccountNftCollectionListResult,
   FetchAccountTokenListParams,
   FetchAccountTokenListResult,
+  FetchAccountTokenListV2Result,
   FetchTokenPriceParams,
   FetchTokenPriceResult,
   GetAccountAssetsByKeywordsParams,
@@ -26,6 +27,13 @@ export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T
     return this._request.send({
       method: 'POST',
       url: '/api/app/user/assets/token',
+      params,
+    });
+  }
+  fetchAccountTokenListV2(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListV2Result> {
+    return this._request.send({
+      method: 'POST',
+      url: '/api/app/v2/user/assets/token',
       params,
     });
   }

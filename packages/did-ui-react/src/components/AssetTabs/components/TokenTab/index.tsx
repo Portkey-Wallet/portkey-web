@@ -1,45 +1,88 @@
-import { TokenItemShowType } from '../../../types/assets';
+import { TokenItemShowType, ITokenSectionResponse } from '../../../types/assets';
 import { divDecimals, formatAmountShow, transNetworkText } from '../../../../utils/converter';
-import BigNumber from 'bignumber.js';
 import CheckFetchLoading from '../../../CheckFetchLoading';
-import TokenImageDisplay from '../../../TokenImageDisplay';
+import TokenChainImageDisplay from '../../../TokenChainImageDisplay';
 import './index.less';
+import { useCallback, useState } from 'react';
 
 export default function TokenTab({
   isMainnet,
-  tokenList,
+  tokenListV2,
   onViewTokenItem,
 }: {
   isMainnet?: boolean;
-  tokenList?: TokenItemShowType[];
+  tokenListV2?: ITokenSectionResponse[];
   onViewTokenItem?: (v: TokenItemShowType) => void;
 }) {
+  const [selectedItem, setSelectedItem] = useState(new Map<string, boolean>());
+
+  const onClickSection = useCallback(
+    (item: ITokenSectionResponse) => {
+      if (item.tokens?.length === 1) {
+        onViewTokenItem?.(item.tokens[0]);
+      } else {
+        selectedItem.set(item.symbol, !selectedItem.get(item.symbol));
+        setSelectedItem(new Map(selectedItem));
+      }
+    },
+    [onViewTokenItem, selectedItem],
+  );
+
   return (
     <>
       <ul className="portkey-ui-token-list">
-        {typeof tokenList === 'undefined' ? (
-          <CheckFetchLoading list={tokenList} />
+        {typeof tokenListV2 === 'undefined' ? (
+          <CheckFetchLoading list={tokenListV2} />
         ) : (
-          tokenList?.map((item) => (
-            <li
-              className="token-list-item"
-              key={`${item.chainId}_${item.symbol}`}
-              onClick={() => onViewTokenItem?.(item)}>
-              <TokenImageDisplay src={item.imageUrl} symbol={item.symbol} />
+          tokenListV2?.map((item) => (
+            <>
+              <li className="token-list-item" key={`${item.symbol}`} onClick={() => onClickSection?.(item)}>
+                <TokenChainImageDisplay
+                  tokenSrc={item.imageUrl}
+                  symbol={item.symbol}
+                  chainSrc={item.tokens?.length === 1 ? item.tokens[0].chainImageUrl : undefined}
+                  chainCount={item.tokens?.length}
+                />
 
-              <div className="desc">
-                <div className="info">
-                  <span>{item?.label || item.symbol}</span>
-                  <span>{formatAmountShow(divDecimals(item.balance, item.decimals))}</span>
+                <div className="desc">
+                  <div className="info">
+                    <span>{item?.label || item.symbol}</span>
+                    <span>{formatAmountShow(divDecimals(item.balance, item.decimals))}</span>
+                  </div>
+                  <div className="amount">
+                    {isMainnet && item.price && <p className="convert">{`$${item.price}`}</p>}
+                    {isMainnet && item.balanceInUsd && (
+                      <p className="convert">{`$ ${formatAmountShow(item.balanceInUsd)}`}</p>
+                    )}
+                  </div>
                 </div>
-                <div className="amount">
-                  <p>{transNetworkText(item.chainId, isMainnet)}</p>
-                  {isMainnet && item.balanceInUsd && (
-                    <p className="convert">{`$ ${formatAmountShow(item.balanceInUsd)}`}</p>
-                  )}
-                </div>
-              </div>
-            </li>
+              </li>
+              {selectedItem.get(item.symbol) &&
+                item.tokens?.map((token) => (
+                  <li
+                    className="token-list-item token-list-inner-item"
+                    key={`${item.chainId}_${item.symbol}`}
+                    onClick={() => onViewTokenItem?.(token)}>
+                    <TokenChainImageDisplay
+                      tokenSrc={token.imageUrl}
+                      chainSrc={token.chainImageUrl}
+                      symbol={token.symbol}
+                    />
+                    <div className="desc">
+                      <div className="info">
+                        <span>{item?.label || item.symbol}</span>
+                        <span>{formatAmountShow(divDecimals(token.balance, token.decimals))}</span>
+                      </div>
+                      <div className="amount">
+                        <p>{transNetworkText(token.chainId, isMainnet)}</p>
+                        {isMainnet && token.balanceInUsd && (
+                          <p className="convert">{`$ ${formatAmountShow(token.balanceInUsd)}`}</p>
+                        )}
+                      </div>
+                    </div>
+                  </li>
+                ))}
+            </>
           ))
         )}
       </ul>
