@@ -334,18 +334,14 @@ function AssetMain({
       setAccelerateChainId(originChainId);
       setAssetStep(AssetStep.guardians);
     },
-    // todo
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onClickTransactionLimits: () => {},
-    // todo
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onClickTokenAllowances: () => {},
+    onClickTransactionLimits: () => setAssetStep(AssetStep.transactionLimits),
+    onClickTokenAllowances: () => setAssetStep(AssetStep.tokenAllowance),
     onClickBackupEmail: () => setAssetStep(AssetStep.walletSecurity),
     // onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
   });
 
   const WalletSecurityMenuList = useWalletSecurityMenuList({
-    onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
+    onClickPaymentSecurity: () => setAssetStep(AssetStep.transactionLimits),
     onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
     onClickSetSecondaryMailbox: async () => {
       const res = await getSecondaryMail();
@@ -661,9 +657,9 @@ function AssetMain({
               }}
             />
           )}
-          {assetStep === AssetStep.paymentSecurity && (
+          {assetStep === AssetStep.transactionLimits && (
             <PaymentSecurity
-              onBack={() => setAssetStep(AssetStep.walletSecurity)}
+              onBack={() => setAssetStep(AssetStep.my)}
               networkType={networkType}
               caHash={caHash || ''}
               onClickItem={async (data) => {
@@ -692,7 +688,7 @@ function AssetMain({
                 setAssetStep(AssetStep.tokenAllowanceDetail);
               }}
               onBack={() => {
-                setAssetStep(AssetStep.walletSecurity);
+                setAssetStep(AssetStep.my);
               }}
             />
           )}
@@ -713,7 +709,7 @@ function AssetMain({
               originChainId={originChainId}
               networkType={networkType}
               sandboxId={sandboxId}
-              onBack={() => setAssetStep(AssetStep.paymentSecurity)}
+              onBack={() => setAssetStep(AssetStep.my)}
               onSuccess={transferSettingsEditBack}
               initData={viewPaymentSecurity}
             />

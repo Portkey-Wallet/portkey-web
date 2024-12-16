@@ -47,7 +47,7 @@ export enum AssetStep {
   my = 'my',
   guardians = 'guardians',
   walletSecurity = 'walletSecurity',
-  paymentSecurity = 'paymentSecurity',
+  transactionLimits = 'transactionLimits',
   transferSettings = 'transferSettings',
   transferSettingsEdit = 'transferSettingsEdit',
   deleteAccount = 'deleteAccount',
