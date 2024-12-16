@@ -9,12 +9,20 @@ export interface IMenuItemProps {
   onClick?: (v?: any) => void;
   showEnterIcon?: boolean;
   className?: string;
+  iconClassName?: string;
 }
 
-export default function MenuItemMain({ icon, children, onClick, className, showEnterIcon = true }: IMenuItemProps) {
+export default function MenuItemMain({
+  icon,
+  children,
+  onClick,
+  className,
+  iconClassName,
+  showEnterIcon = true,
+}: IMenuItemProps) {
   return (
     <div className={clsx('portkey-ui-menu-item', className)} onClick={onClick}>
-      {icon && <div className="portkey-ui-icon-area">{icon}</div>}
+      {icon && <div className={clsx('portkey-ui-icon-area', iconClassName)}>{icon}</div>}
       <span className="portkey-ui-menu-item-title">{children}</span>
       {showEnterIcon && (
         <CustomSvg className="portkey-ui-enter-btn" type="ChevronRight" style={{ width: 16, height: 16 }} />

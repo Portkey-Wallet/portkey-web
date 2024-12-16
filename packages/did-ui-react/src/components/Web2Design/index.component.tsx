@@ -201,9 +201,9 @@ export default function Web2Design({
           </div>
           <DividerCenter />
 
-          <div className="portkey-ui-web2design-social-wrapper">
+          {/* <div className="portkey-ui-web2design-social-wrapper">
             <SocialLoginGroup supportAccounts={loginMethodsOrderWithoutEmail} onAccountTypeChange={onSocialChange} />
-          </div>
+          </div> */}
 
           {(extraElement as ReactElement)?.props?.children && (
             <>

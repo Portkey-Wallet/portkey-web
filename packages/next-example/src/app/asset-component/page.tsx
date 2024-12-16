@@ -9,7 +9,7 @@ import {
   singleMessage,
 } from '@portkey/did-ui-react';
 import React, { useMemo } from 'react';
-import { ActivityItemType } from '@portkey/types';
+import { ActivityItemType, TransactionEnum } from '@portkey/types';
 
 ConfigProvider.setGlobalConfig({
   requestDefaults: {
@@ -20,12 +20,13 @@ ConfigProvider.setGlobalConfig({
 export default function AssetComponent() {
   const transactionDetail: ActivityItemType = useMemo(
     () => ({
+      chainId: 'AELF',
       nftInfo: {} as any,
       listIcon:
         'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTYiIGhlaWdodD0iMTYiIHZpZXdCb3g9IjAgMCAxNiAxNiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGcgaWQ9InRyYW5zZmVyIj4KPHBhdGggaWQ9InNoYXBlIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGNsaXAtcnVsZT0iZXZlbm9kZCIgZD0iTTAgOEMwIDEyLjQxODMgMy41ODE3MiAxNiA4IDE2QzEyLjQxODMgMTYgMTYgMTIuNDE4MyAxNiA4QzE2IDMuNTgxNzIgMTIuNDE4MyAwIDggMEMzLjU4MTcyIDAgMCAzLjU4MTcyIDAgOFpNMTUuMiA4QzE1LjIgMTEuOTc2NCAxMS45NzY0IDE1LjIgOCAxNS4yQzQuMDIzNTUgMTUuMiAwLjggMTEuOTc2NSAwLjggOEMwLjggNC4wMjM1NSA0LjAyMzU1IDAuOCA4IDAuOEMxMS45NzY0IDAuOCAxNS4yIDQuMDIzNTUgMTUuMiA4Wk0xMS42NDM4IDYuOTUxM0MxMS42NDQ0IDYuOTYxODkgMTEuNjQ0NyA2Ljk3MjU5IDExLjY0NDcgNi45ODMzNkMxMS42NDQ3IDcuMjQwMTMgMTEuNDYzMyA3LjQ0ODUyIDExLjIzOTggNy40NDg1Mkg0Ljc2MDI0QzQuNTM2NyA3LjQ0ODUyIDQuMzU1MjcgNy4yNDAxMyA0LjM1NTI3IDYuOTgzMzZDNC4zNTUyNyA2LjcyNjU5IDQuNTM2NyA2LjUxODIgNC43NjAyNCA2LjUxODJIMTAuMTE3OEw4Ljg3NjggNS4yNzcxNkM4LjY5NTM4IDUuMDk1NzQgOC42OTUzOCA0LjgwMDgzIDguODc2OCA0LjYxOTQyQzkuMDU4MjEgNC40MzgwMSA5LjM1MzEyIDQuNDM4MDEgOS41MzQ1MyA0LjYxOTQyTDExLjUwODcgNi41OTI2M0MxMS42MDY5IDYuNjkwOTEgMTEuNjUyIDYuODIyNDkgMTEuNjQzOCA2Ljk1MTNaTTQuMzU1MjcgOS4wMTY2NEM0LjM1NTI3IDkuMDI3NDEgNC4zNTU1OSA5LjAzODExIDQuMzU2MjIgOS4wNDg3QzQuMzQ4MDIgOS4xNzc1MSA0LjM5MzA1IDkuMzA5MDkgNC40OTEzMyA5LjQwNzM3TDYuNDY1NDcgMTEuMzgwNkM2LjY0Njg4IDExLjU2MiA2Ljk0MTc5IDExLjU2MiA3LjEyMzIgMTEuMzgwNkM3LjMwNDYyIDExLjE5OTIgNy4zMDQ2MiAxMC45MDQzIDcuMTIzMiAxMC43MjI4TDUuODgyMTYgOS40ODE4SDExLjIzOThDMTEuNDYzMyA5LjQ4MTggMTEuNjQ0NyA5LjI3MzQxIDExLjY0NDcgOS4wMTY2NEMxMS42NDQ3IDguNzU5ODcgMTEuNDYzMyA4LjU1MTQ4IDExLjIzOTggOC41NTE0OEg0Ljc2MDI0QzQuNTM2NyA4LjU1MTQ4IDQuMzU1MjcgOC43NTk4NyA0LjM1NTI3IDkuMDE2NjRaIiBmaWxsPSIjNUI4RUY0Ii8+CjwvZz4KPC9zdmc+Cg==',
       transactionId: '0fb966e3bdd7aebda5e96bb1dcce97642f301d148f9aac6ac2185da97861ac31',
       blockHash: '0dc162247bc7a69edd00deeb2c0e78fc45ebc0ce8e63ab822b8a4d214739052c',
-      transactionType: 'CrossChainTransfer',
+      transactionType: TransactionEnum.CROSS_CHAIN_TRANSFER,
       transactionName: 'CrossChain Transfer',
       amount: '968000000',
       symbol: 'ELF',
@@ -54,7 +55,7 @@ export default function AssetComponent() {
   );
   return (
     <>
-      <PortkeyAssetProvider pin="111111" originChainId="AELF">
+      <PortkeyAssetProvider pin="111111" originChainId="tDVW">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
           <Send
             wrapperStyle={{ height: 600, border: '1px solid gray' }}

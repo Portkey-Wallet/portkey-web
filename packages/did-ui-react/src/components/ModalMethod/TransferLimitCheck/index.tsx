@@ -2,7 +2,6 @@ import { ChainId, ChainType } from '@portkey/types';
 import { ITransferLimitItem } from '@portkey/services';
 import { checkTransferLimit } from '../../../utils/sandboxUtil/checkTransferLimit';
 import { modalMethod } from './modalMethod';
-import { IBusinessFrom, ITransferLimitItemWithRoute } from '../../TransferSettingsEdit/index.components';
 import type { ModalFuncProps } from 'antd';
 import { ZERO } from '../../../constants/misc';
 import {
@@ -19,6 +18,7 @@ import { getBalanceByContract } from '../../../utils/sandboxUtil/getBalance';
 import './index.less';
 import { TRampPreviewInitState } from '../../../types';
 import { SendExtraConfig } from '../../Send/index.components';
+import { IBusinessFrom, ITransferLimitItemWithRoute } from '../../../types/transfer';
 
 interface ITransferLimitCheckProps {
   wrapClassName?: string;
@@ -112,6 +112,8 @@ const transferLimitCheck = async ({
       restricted: !limitRes?.dailyLimit.eq(-1),
       decimals,
       businessFrom,
+      chainImageUrl: '',
+      displayChainName: '',
     };
 
     // check limit type and show modal

@@ -9,7 +9,7 @@ import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { AllowanceItem, ISymbolApprovedItem } from '@portkey/services';
 import TokenImageDisplay from '../TokenImageDisplay';
 import CustomSvg from '../CustomSvg';
-import AllowanceIcon from '../AllowanceIcon';
+import ChainTokenIcon from '../ChainTokenIcon';
 import { formatTimeDifference } from '../../utils/time';
 
 import './index.less';
@@ -95,7 +95,11 @@ export default function TokenAllowanceDetailMain({
             {approvedList.map((item) => (
               <div key={item.symbol} className="approve-item">
                 <div className="token-detail">
-                  <AllowanceIcon symbol={item.symbol} imageUrl={item.imageUrl} chainImageUrl={chainImageUrl} />
+                  <ChainTokenIcon
+                    symbol={item.symbol}
+                    imageUrl={item.imageUrl || ''}
+                    chainImageUrl={chainImageUrl || ''}
+                  />
                   <div className="action" onClick={() => onRevokeClick(item)}>
                     <CustomSvg type="Delete" fillColor="var(--sds-color-text-danger-tertiary)" />
                     <span>Revoke</span>
@@ -119,7 +123,12 @@ export default function TokenAllowanceDetailMain({
             {revokeList.map((item) => (
               <div key={item.symbol} className="revoked-item">
                 <div className="token-detail">
-                  <AllowanceIcon symbol={item.symbol} imageUrl={item.imageUrl} chainImageUrl={chainImageUrl} />
+                  <ChainTokenIcon
+                    showSymbol
+                    symbol={item.symbol}
+                    imageUrl={item.imageUrl || ''}
+                    chainImageUrl={chainImageUrl || ''}
+                  />
                   <div className="date-difference">{`Revoked ${formatTimeDifference(Number(item.updateTime))}`}</div>
                 </div>
               </div>

@@ -1,4 +1,4 @@
-import { IAssetItemType, OperationTypeEnum } from '@portkey/services';
+import { IAssetItemType, ITransferLimitItem, OperationTypeEnum } from '@portkey/services';
 import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
@@ -28,7 +28,6 @@ import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
-import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 import { getChain } from '../../hooks/useChainInfo';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
@@ -36,6 +35,7 @@ import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
+import { ITransferLimitItemWithRoute } from '../../types/transfer';
 
 export interface SendProps {
   assetItem: IAssetItemType;

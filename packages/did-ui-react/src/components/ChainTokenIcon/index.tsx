@@ -2,21 +2,22 @@ import React, { useState } from 'react';
 
 import './index.less';
 
-interface IAllowanceIconProps {
+interface IChainTokenIconProps {
   imageUrl: string;
   symbol: string;
   chainImageUrl: string;
+  showSymbol?: boolean;
 }
 
-const AllowanceIcon = ({ symbol, imageUrl, chainImageUrl }: IAllowanceIconProps) => {
+const ChainTokenIcon = ({ showSymbol = false, symbol, imageUrl, chainImageUrl }: IChainTokenIconProps) => {
   const [isError, setError] = useState<boolean>(false);
 
   return (
-    <div className="allowance-icon-token">
+    <div className="chain-icon-token">
       {isError ? (
         <>
           <div className="unknown-token">{symbol?.slice(0, 1).toUpperCase()}</div>
-          <span className="symbol">{symbol}</span>
+          {showSymbol && <span className="symbol">{symbol}</span>}
         </>
       ) : (
         <>
@@ -33,11 +34,11 @@ const AllowanceIcon = ({ symbol, imageUrl, chainImageUrl }: IAllowanceIconProps)
             />
             <img className="chain-image" src={chainImageUrl} />
           </div>
-          <span className="symbol">{symbol}</span>
+          {showSymbol && <span className="symbol">{symbol}</span>}
         </>
       )}
     </div>
   );
 };
 
-export default AllowanceIcon;
+export default ChainTokenIcon;
