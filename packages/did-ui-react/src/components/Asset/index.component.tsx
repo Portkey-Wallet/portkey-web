@@ -27,14 +27,12 @@ import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
 import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
-import TransferSettingsEdit from '../TransferSettingsEdit';
 import Guardian from '../Guardian';
 import MenuListMain from '../MenuList/index.components';
 import TokenAllowanceDetail from '../TokenAllowanceDetail';
 import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
-import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 import { useDebounce } from '../../hooks/debounce';
 import singleMessage from '../CustomAnt/message';
 import CustomSvg from '../CustomSvg';
@@ -52,6 +50,7 @@ import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
 import CollectionDetailMain from '../CollectionDetail/index.component';
+import { ITransferLimitItemWithRoute } from '../../types/transfer';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -717,25 +716,8 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.paymentSecurity)}
               onSuccess={transferSettingsEditBack}
               initData={viewPaymentSecurity}
-              onEdit={() => {
-                if (!isLoginOnChain) {
-                  return loadingTip({ msg: loginOptTip });
-                }
-                // setAssetStep(AssetStep.transferSettingsEdit);
-              }}
             />
           )}
-          {/* {assetStep === AssetStep.transferSettingsEdit && (
-            <TransferSettingsEdit
-              initData={viewPaymentSecurity}
-              caHash={caHash || ''}
-              originChainId={originChainId}
-              sandboxId={sandboxId}
-              networkType={networkType}
-              onBack={transferSettingsEditBack}
-              onSuccess={transferSettingsEditBack}
-            />
-          )} */}
         </div>
       </div>
     </div>

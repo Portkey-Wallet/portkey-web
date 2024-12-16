@@ -3,7 +3,7 @@ import CryptoInput from '../CryptoInput';
 import { useTranslation } from 'react-i18next';
 import { handleKeyDown } from '../../../../utils/keyDown';
 import GuardianApprovalModal from '../../../GuardianApprovalModal';
-import { OperationTypeEnum } from '@portkey/services';
+import { ITransferLimitItem, OperationTypeEnum } from '@portkey/services';
 import { useCallback, useMemo, useRef, useState } from 'react';
 import { generateRateText, mixRampSellShow } from '../../utils';
 import { ChainId } from '@portkey/types';
@@ -24,12 +24,12 @@ import { usePortkey } from '../../../context';
 import { getBalanceByContract } from '../../../../utils/sandboxUtil/getBalance';
 import walletSecurityCheck from '../../../ModalMethod/WalletSecurityCheck';
 import { useUpdateReceiveAndInterval } from '../../hooks/index';
-import { ITransferLimitItemWithRoute } from '../../../TransferSettingsEdit/index.components';
 import { getChain } from '../../../../hooks/useChainInfo';
 import transferLimitCheck from '../../../ModalMethod/TransferLimitCheck';
 import { getSellData } from '../../utils/sell';
 import { MAIN_CHAIN_ID } from '../../../../constants/network';
 import { getOperationDetails } from '../../../utils/operation.util';
+import { ITransferLimitItemWithRoute } from '../../../../types/transfer';
 
 interface ISellFormProps extends TRampInitState {
   isMainnet: boolean;

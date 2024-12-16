@@ -172,7 +172,7 @@ export default function AppleAuth() {
 
       <div id="nft-checkout">-----</div>
 
-      <PortkeyAssetProvider pin="111111" originChainId="AELF">
+      <PortkeyAssetProvider pin="111111" originChainId="tDVW">
         <Button
           type="primary"
           onClick={async () => {

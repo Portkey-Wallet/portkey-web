@@ -36,7 +36,7 @@ export default function Assets() {
     checkLoginStatus();
   });
   return (
-    <PortkeyAssetProvider pin="111111" originChainId="AELF" isLoginOnChain={true}>
+    <PortkeyAssetProvider pin="111111" originChainId="tDVW" isLoginOnChain={true}>
       <a href="dapp-webapp">
         <Button>Go to dapp-webapp</Button>
       </a>

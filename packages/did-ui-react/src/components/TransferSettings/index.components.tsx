@@ -1,9 +1,8 @@
 import clsx from 'clsx';
 import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Form, FormProps, Switch } from 'antd';
+import { Switch } from 'antd';
 import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
-import { divDecimals, formatAmountShow, formatWithCommas, timesDecimals } from '../../utils/converter';
-import { AmountSign } from '../../types/activity';
+import { divDecimals, formatAmountShow, timesDecimals } from '../../utils/converter';
 import './index.less';
 import CustomSvg from '../CustomSvg';
 import CommonButton from '../CommonButton';
@@ -17,27 +16,18 @@ import { NetworkType, UserGuardianStatus } from '../../types';
 import { did, errorTip, formatGuardianValue, handleErrorMessage, setLoading } from '../../utils';
 import { sleep } from '@portkey/utils';
 import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
-import { IBusinessFrom } from '../TransferSettingsEdit/index.components';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { getChainInfo } from '../../hooks';
+import { ITransferLimitItemWithRoute } from '../../types/transfer';
 
-export interface ITransferLimitItemWithRoute extends ITransferLimitItem {
-  businessFrom?: {
-    module: IBusinessFrom;
-    extraConfig?: any;
-  };
-}
-
-export interface TransferSettingsProps extends FormProps {
+export interface TransferSettingsProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   initData: ITransferLimitItemWithRoute;
-  isShowEditButton?: boolean;
   originChainId: ChainId;
   networkType: NetworkType;
   sandboxId?: string;
   caHash: string;
-  onEdit?: () => void;
   onBack?: () => void;
   onSuccess?: (data: ITransferLimitItemWithRoute) => void;
 }
@@ -48,8 +38,6 @@ export interface ITransferSettingsFormInit {
   restricted: boolean;
 }
 
-const { Item: FormItem } = Form;
-
 export default function TransferSettingsMain({
   className,
   wrapperStyle,
@@ -59,10 +47,7 @@ export default function TransferSettingsMain({
   networkType,
   sandboxId,
   onSuccess,
-  form,
-  isShowEditButton = true,
   onBack,
-  onEdit,
 }: TransferSettingsProps) {
   const [dailyLimit, setDailyLimit] = useState<string>();
   const [dailyLimitError, setDailyLimitError] = useState<string | undefined>();
@@ -117,7 +102,8 @@ export default function TransferSettingsMain({
 
   const onLimitChange = async () => {
     if (limitsOn) {
-      setLimitOn((prev) => !prev);
+      setDailyLimit(undefined);
+      setTransactionLimit(undefined);
       await getGuardianList();
       setIsGuardianModalOpen(true);
     } else {
@@ -126,10 +112,12 @@ export default function TransferSettingsMain({
   };
 
   const limitCalFunc = useCallback(() => {
-    const transDailyLimit = limitsOn ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
-    const transSingleLimit = limitsOn ? String(timesDecimals(transactionLimit, initData.decimals)) : '-1';
+    const transDailyLimit = Number(dailyLimit) > 0 ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
+    const transSingleLimit = Number(transactionLimit)
+      ? String(timesDecimals(transactionLimit, initData.decimals))
+      : '-1';
     return { transDailyLimit, transSingleLimit };
-  }, [dailyLimit, initData.decimals, limitsOn, transactionLimit]);
+  }, [dailyLimit, initData.decimals, transactionLimit]);
 
   const getGuardianList = useCallback(async () => {
     try {
@@ -171,22 +159,18 @@ export default function TransferSettingsMain({
       try {
         setLoading(true);
         const guardiansApproved = formatGuardianValue(approvalInfo);
-        // const transDailyLimit = !limitsOn ? String(dailyLimit) : '-1';
-        // const transSingleLimit = !limitsOn ? String(transactionLimit) : '-1';
-
-        const transDailyLimit = limitsOn ? String(timesDecimals(dailyLimit, initData.decimals)) : '-1';
-        const transSingleLimit = limitsOn ? String(timesDecimals(transactionLimit, initData.decimals)) : '-1';
+        const { transDailyLimit, transSingleLimit } = limitCalFunc() || {};
 
         await setTransferLimit({
           params: {
-            dailyLimit: '10',
-            singleLimit: '2',
-            symbol: symbol,
+            dailyLimit: transDailyLimit,
+            singleLimit: transSingleLimit,
+            symbol,
             guardiansApproved,
           },
-          targetChainId: targetChainId,
+          targetChainId,
           sandboxId,
-          caHash,
+          caHash: caHash || '',
         });
 
         // Guarantee that the contract can query the latest data
@@ -205,9 +189,11 @@ export default function TransferSettingsMain({
           displayChainName: initData.displayChainName,
         };
 
-        setLimitOn(true);
+        setLimitOn(Number(transDailyLimit) > 0 ? true : false);
         onSuccess?.(params);
       } catch (e) {
+        setLimitOn(initData.restricted);
+
         console.error('setTransferLimit===', e);
         errorTip(
           {
@@ -218,22 +204,23 @@ export default function TransferSettingsMain({
         );
       } finally {
         setLoading(false);
+        setIsGuardianModalOpen(false);
       }
     },
     [
       caHash,
-      dailyLimit,
       initData.businessFrom,
       initData.chainImageUrl,
       initData.decimals,
       initData.displayChainName,
       initData.imageUrl,
+      initData.restricted,
+      limitCalFunc,
       limitsOn,
       onSuccess,
       sandboxId,
       symbol,
       targetChainId,
-      transactionLimit,
     ],
   );
 
@@ -285,6 +272,9 @@ export default function TransferSettingsMain({
     setTransactionLimitError(undefined);
   };
 
+  console.log('originChainId', originChainId);
+  console.log('networkType', networkType);
+  console.log('targetChainId', targetChainId);
   return (
     <>
       <div style={wrapperStyle} className={clsx('portkey-ui-transfer-settings-wrapper', className)}>
