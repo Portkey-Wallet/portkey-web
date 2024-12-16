@@ -2,7 +2,7 @@ import { ChainId } from '@portkey/types';
 import { TRampInitState, TRampPreviewInitState, IUseHandleAchSellParams } from '../../types';
 import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import RampMain from './index.component';
-import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
+import { ITransferLimitItemWithRoute } from '../../types/transfer';
 
 export interface IRampProps extends IUseHandleAchSellParams {
   isMainnet: boolean;
