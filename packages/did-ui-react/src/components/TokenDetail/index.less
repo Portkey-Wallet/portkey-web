@@ -5,9 +5,76 @@
   display: flex;
   flex-direction: column;
 
+  .token-detail-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+  }
+
   .token-detail-title {
     padding: 13px 0;
     background-color: var(--portkey-ui-default-bg);
+
+    .token-detail-nav {
+      position: relative;
+      align-items: center;
+      display: flex;
+      .left-icon {
+        position: absolute;
+        left: 16px;
+      }
+
+      .token-detail-header {
+        width: 100%;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        height: 56px;
+      }
+    }
+
+    .toggle-slider-container {
+      position: relative;
+      width: 100%;
+      height: 40px;
+      max-width: 600px;
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      overflow: hidden;
+      padding: 0 16px;
+
+      .selector-bg {
+        position: absolute;
+        top: 3px;
+        height: 34px;
+        background-color: var(--sds-color-background-default-secondary);
+        border-radius: 8px;
+        transition: transform 0.3s ease, width 0.3s ease;
+        z-index: 1;
+      }
+
+      .toggle-slider-items {
+        display: flex;
+        width: 100%;
+        position: relative;
+        z-index: 2;
+        gap: 8px;
+
+        .toggle-slider-item {
+          width: max-content;
+          text-align: center;
+          color: var(--sds-color-icon-default-default);
+          font-size: 16px;
+          line-height: 16px;
+          cursor: pointer;
+          padding: 10px 0;
+          transition: font-weight 0.3s ease;
+          padding: 8px;
+        }
+      }
+    }
   }
   .setting-header-wrapper {
     height: 64px;
@@ -44,14 +111,16 @@
     background-color: var(--portkey-ui-default-bg);
     box-shadow: var(--portkey-ui-box-shadow-3);
     z-index: 1;
+    padding: 24px 16px;
     .balance-amount {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      margin: 32px 0 28px;
+      align-items: flex-start;
+      margin-bottom: 28px;
 
       .amount {
         font-size: 32px;
+        font-family: var(--sds-typography-title-page-font-family);
         color: var(--portkey-ui-text-primary);
         font-weight: 500;
         margin: 0 0 4px;
@@ -61,6 +130,7 @@
 
       .convert {
         font-size: 16px;
+        font-family: var(--sds-typography-body-font-family);
         color: var(--portkey-ui-text-secondary);
         height: 22px;
         line-height: 22px;

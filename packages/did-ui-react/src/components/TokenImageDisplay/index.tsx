@@ -15,7 +15,6 @@ export default function TokenImageDisplay({ src, symbol = 'ELF', width = 32 }: T
   const tokenSrc = useMemo(() => src, [src]);
 
   const isShowDefault = useMemo(() => isError || !tokenSrc, [isError, tokenSrc]);
-
   return symbol === ELF_SYMBOL ? (
     <CustomSvg
       className="portkey-ui-token-logo portkey-ui-token-logo-elf"

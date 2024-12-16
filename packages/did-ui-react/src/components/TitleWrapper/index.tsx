@@ -1,7 +1,8 @@
 import { Col, Row } from 'antd';
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
+import './index.less';
 
 export interface TitleWrapperProps {
   title?: ReactNode;
@@ -10,6 +11,7 @@ export interface TitleWrapperProps {
   rightElement?: ReactNode;
   leftCallBack?: () => void;
   rightCallback?: () => void;
+  titleStyle?: CSSProperties;
 }
 
 export default function TitleWrapper({
@@ -17,6 +19,7 @@ export default function TitleWrapper({
   className,
   leftElement,
   rightElement,
+  titleStyle,
   leftCallBack,
   rightCallback,
 }: TitleWrapperProps) {
@@ -36,7 +39,9 @@ export default function TitleWrapper({
           ) : null}
         </Col>
       )}
-      <Col className="title-center">{title}</Col>
+      <Col className="title-center" style={titleStyle}>
+        {title}
+      </Col>
       <Col className="title-right-col">
         <span onClick={rightCallback}>{rightElement || ''}</span>
       </Col>

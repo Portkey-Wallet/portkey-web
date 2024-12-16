@@ -1,4 +1,4 @@
-import { TransactionTypes, ActivityItemType } from '@portkey/types';
+import { TransactionEnum, ActivityItemType } from '@portkey/types';
 import { CaAddressInfosType } from './assets';
 
 export interface IActivitiesApiParams {
@@ -6,7 +6,7 @@ export interface IActivitiesApiParams {
   skipCount: number;
   caAddressInfos?: { chainId: string; caAddress: string }[];
   managerAddresses?: string[];
-  transactionTypes?: TransactionTypes[];
+  transactionTypes?: TransactionEnum[];
   chainId?: string;
   symbol?: string;
   width?: number;

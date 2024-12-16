@@ -5,6 +5,7 @@ import { handleErrorMessage } from '../../utils';
 import './index.less';
 import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
+import Loading from '../Loading';
 
 interface EmailInputAndButtonProps {
   className?: string;
@@ -38,16 +39,25 @@ export default function EmailInputAndButton({
 
   return (
     <div className={clsx('email-sign-wrapper', className)}>
-      <EmailInput
-        val={val}
-        ref={emailInputInstance}
-        error={error}
-        validate={validate}
-        onChange={(v) => {
-          setError(undefined);
-          setVal(v);
-        }}
-      />
+      <div className="email-input-wrapper-top">
+        <div className="email-input-wrapper-top-text">Email</div>
+        <EmailInput
+          val={val}
+          ref={emailInputInstance}
+          error={error}
+          validate={validate}
+          onChange={(v) => {
+            setError(undefined);
+            setVal(v);
+          }}
+        />
+      </div>
+
+      {/* TODO */}
+      {/* <div className="email-sign-loading">
+        <Loading width={32} height={32} />
+      </div> */}
+
       <ThrottleButton
         className="login-primary-btn"
         type="primary"

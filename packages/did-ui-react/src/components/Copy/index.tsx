@@ -33,7 +33,7 @@ export default function Copy({
         isClose.current = false;
       });
     },
-    [],
+    [toCopy],
     2500,
   );
 
@@ -42,7 +42,11 @@ export default function Copy({
       onClick={copyHandler}
       className={clsx('portkey-ui-flex-row-center portkey-ui-copy-wrapper', className)}
       style={{ cursor: 'pointer' }}>
-      <CustomSvg type={iconType as any} className={clsx(['copy-icon', iconClassName])} />
+      <CustomSvg
+        type={iconType as any}
+        fillColor="var(--sds-color-icon-neutral-tertiary)"
+        className={clsx(['copy-icon', iconClassName])}
+      />
       {children}
     </span>
   );

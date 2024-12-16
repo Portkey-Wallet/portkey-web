@@ -6,6 +6,13 @@ import { AmountSign } from '../types/activity';
 import { ChainId, ChainType } from '@portkey/types';
 import moment from 'moment';
 
+export const formatTokenAmountShowWithDecimals = (
+  amount?: number | BigNumber.Value | string,
+  decimal: string | number = 4,
+) => {
+  return formatAmountShow(divDecimals(amount, decimal), decimal);
+};
+
 export const formatAmountShow = (
   count: number | BigNumber | string,
   decimal: string | number = 4,
@@ -91,5 +98,5 @@ export const dateFormatTransTo13 = (ipt?: moment.MomentInput) => {
   while (time.length < 13) {
     time = time + '0';
   }
-  return moment(Number(time)).format('MMM D , h:mm a').replace(',', 'at');
+  return moment(Number(time)).format('MMM D, YYYY [at] h:mm a');
 };

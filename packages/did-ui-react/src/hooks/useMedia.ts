@@ -49,5 +49,16 @@ const useMedia = (query: string, defaultState?: boolean) => {
 
   return state;
 };
+export const useResponsiveScreenType = () => {
+  const isSmallScreen = useMedia('(max-width: 600px)');
+  const isMediumScreen = useMedia('(min-width: 601px) and (max-width: 896px)');
+  const isLargeScreen = useMedia('(min-width: 897px)');
+
+  if (isSmallScreen) return 'small';
+  if (isMediumScreen) return 'medium';
+  if (isLargeScreen) return 'large';
+
+  return 'unknown';
+};
 
 export default useMedia;

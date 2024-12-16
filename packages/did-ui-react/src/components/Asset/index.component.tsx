@@ -5,10 +5,16 @@ import ReceiveCard from '../ReceiveCard/index.components';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
-import { ActivityItemType, ChainId } from '@portkey/types';
+import { ChainId } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
 import { IAssetItemType, ITransferLimitItem, AllowanceItem, IUserTokenItemNew } from '@portkey/services';
-import { BaseToken, NFTItemBaseExpand, TokenItemShowType } from '../types/assets';
+import {
+  BalanceTab,
+  BaseToken,
+  NFTCollectionItemShowType,
+  NFTItemBaseExpand,
+  TokenItemShowType,
+} from '../types/assets';
 import { sleep } from '@portkey/utils';
 import RampMain from '../Ramp/index.component';
 import { MAINNET } from '../../constants/network';
@@ -16,7 +22,6 @@ import { TRampInitState, TRampPreviewInitState } from '../../types';
 import RampPreviewMain from '../RampPreview/index.component';
 import { useUpdateEffect } from 'react-use';
 import SendMain, { SendExtraConfig } from '../Send/index.components';
-import Transaction from '../Transaction/index.component';
 import TokenDetailMain from '../TokenDetail';
 import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
@@ -46,6 +51,7 @@ import SetSecondaryMailbox from '../SetSecondaryMailbox';
 import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
+import CollectionDetailMain from '../CollectionDetail/index.component';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -195,8 +201,8 @@ function AssetMain({
   const [rampExtraConfig, setRampExtraConfig] = useState<TRampInitState | undefined>(rampState);
   const [rampPreview, setRampPreview] = useState<TRampPreviewInitState>();
 
-  const [transactionDetail, setTransactionDetail] = useState<ActivityItemType & { chainId?: ChainId }>();
   const [NFTDetail, setNFTDetail] = useState<NFTItemBaseExpand>();
+  const [collectionItem, setCollectionItem] = useState<NFTCollectionItemShowType>();
 
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
@@ -205,6 +211,7 @@ function AssetMain({
     setAssetStep(AssetStep.my);
   }, []);
   const { secondaryEmail, getSecondaryMail } = useIsSecondaryMailSet();
+  const [activeKey, setActiveKey] = useState<string>(BalanceTab.TOKEN);
 
   // const saveLiftCycleInfo = useCallback(async () => {
   //   console.log('====== saveLiftCycleInfo', assetStep);
@@ -324,12 +331,8 @@ function AssetMain({
     setAssetStep(AssetStep.send);
   }, []);
 
-  const onViewActivityItem = useCallback(async (v: ActivityItemType) => {
-    setTransactionDetail(v);
-    setAssetStep(AssetStep.transactionDetail);
-  }, []);
-
   const onBack = useCallback(() => {
+    console.log('wfs====onBack', preStepRef);
     setAssetStep(preStepRef.current);
   }, []);
 
@@ -338,7 +341,14 @@ function AssetMain({
       setAccelerateChainId(originChainId);
       setAssetStep(AssetStep.guardians);
     },
-    onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
+    // todo
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onClickTransactionLimits: () => {},
+    // todo
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
+    onClickTokenAllowances: () => {},
+    onClickBackupEmail: () => setAssetStep(AssetStep.walletSecurity),
+    // onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
   });
 
   const WalletSecurityMenuList = useWalletSecurityMenuList({
@@ -423,6 +433,8 @@ function AssetMain({
               faucet={faucet}
               backIcon={backIcon}
               isLoginOnChain={isLoginOnChain}
+              defaultActiveKey={activeKey}
+              setActiveKey={setActiveKey}
               onAvatarClick={onAvatarClick}
               onBack={onOverviewBack}
               onReceive={onReceive}
@@ -434,23 +446,24 @@ function AssetMain({
                 setPreStep(AssetStep.overview);
                 onSend(v);
               }}
-              onViewActivityItem={(v) => {
-                preStepRef.current = AssetStep.overview;
-                setPreStep(AssetStep.overview);
-                onViewActivityItem(v);
-              }}
               onViewTokenItem={(v) => {
                 preStepRef.current = AssetStep.tokenDetail;
                 setTokenDetail(v);
                 setAssetStep(AssetStep.tokenDetail);
               }}
-              onNFTView={(v) => {
+              onNFTView={(v, collectionItem) => {
+                preStepRef.current = AssetStep.overview;
                 setAssetStep(AssetStep.NFTDetail);
                 setNFTDetail(v);
+                setCollectionItem(collectionItem);
+              }}
+              onCollectionView={(collectionItem) => {
+                console.log('wfs====4');
+                setAssetStep(AssetStep.collectionDetail);
+                setCollectionItem(collectionItem);
               }}
             />
           )}
-
           {assetStep === AssetStep.receive && caInfo && selectToken && (
             <ReceiveCard
               receiveInfo={{
@@ -472,7 +485,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.ramp && selectToken && (
             <RampMain
               initState={rampExtraConfig}
@@ -502,7 +514,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.rampPreview && selectToken && rampPreview && (
             <RampPreviewMain
               isMainnet={networkType === MAINNET}
@@ -516,7 +527,6 @@ function AssetMain({
               isSellSectionShow={isMixShowSell}
             />
           )}
-
           {assetStep === AssetStep.send && sendToken && (
             <SendMain
               assetItem={sendToken}
@@ -540,16 +550,7 @@ function AssetMain({
             />
           )}
 
-          {/* {assetStep === AssetStep.transactionDetail && transactionDetail && caAddressInfos && (
-            <Transaction
-              chainId={transactionDetail?.chainId}
-              caAddressInfos={caAddressInfos}
-              onClose={onBack}
-              transactionDetail={transactionDetail}
-            />
-          )} */}
-
-          {assetStep === AssetStep.tokenDetail && tokenDetail && (
+          {tokenDetail && (
             <TokenDetailMain
               faucet={faucet}
               isShowRamp={isMixShowRamp}
@@ -583,18 +584,16 @@ function AssetMain({
                 setPreStep(AssetStep.tokenDetail);
                 onSend(info);
               }}
-              onViewActivityItem={(v) => {
-                preStepRef.current = AssetStep.tokenDetail;
-                setPreStep(AssetStep.tokenDetail);
-                onViewActivityItem(v);
-              }}
             />
           )}
-
           {assetStep === AssetStep.NFTDetail && NFTDetail && (
             <NFTDetailMain
               NFTDetail={NFTDetail}
-              onBack={() => setAssetStep(AssetStep.overview)}
+              onBack={onBack}
+              onCollectionDetail={() => {
+                preStepRef.current = AssetStep.NFTDetail;
+                setAssetStep(AssetStep.collectionDetail);
+              }}
               onSend={(nft) => {
                 if (!isLoginOnChain) {
                   return loadingTip({ msg: loginOptTip });
@@ -611,13 +610,27 @@ function AssetMain({
               }}
             />
           )}
+          {assetStep === AssetStep.collectionDetail && collectionItem && (
+            <CollectionDetailMain
+              collectionItem={collectionItem}
+              networkType={networkType}
+              onBack={() => setAssetStep(AssetStep.overview)}
+              onNFTView={(v) => {
+                console.log('wfs====12331111');
+                preStepRef.current = AssetStep.collectionDetail;
+                setPreStep(AssetStep.collectionDetail);
+                setAssetStep(AssetStep.NFTDetail);
+                setNFTDetail(v);
+              }}
+            />
+          )}
 
           {assetStep === AssetStep.my && (
             // My
             <MenuListMain
               menuList={myMenuList}
               headerConfig={{
-                title: 'My',
+                title: 'Settings',
                 onBack: () => setAssetStep(AssetStep.overview),
               }}
               isShowFooter={showDeletion} // TODO delete w
@@ -631,11 +644,9 @@ function AssetMain({
               }
             />
           )}
-
           {assetStep === AssetStep.deleteAccount && (
             <DeleteAccount onBack={() => setAssetStep(AssetStep.my)} onDelete={onDeleteAccount} />
           )}
-
           {assetStep === AssetStep.guardians && (
             <Guardian
               sandboxId={sandboxId}
@@ -647,7 +658,6 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.my)}
             />
           )}
-
           {assetStep === AssetStep.walletSecurity && (
             // My - WalletSecurity
             <MenuListMain
@@ -658,7 +668,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.paymentSecurity && (
             <PaymentSecurity
               onBack={() => setAssetStep(AssetStep.walletSecurity)}
@@ -671,10 +680,10 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.tokenAllowanceDetail && originalAllowanceItem && (
             <TokenAllowanceDetail
               chainId={originalAllowanceItem.chainId}
+              chainImageUrl={originalAllowanceItem.chainImageUrl}
               contractAddress={originalAllowanceItem.contractAddress}
               url={originalAllowanceItem.url}
               icon={originalAllowanceItem.icon}
@@ -683,7 +692,6 @@ function AssetMain({
               onBack={() => setAssetStep(AssetStep.tokenAllowance)}
             />
           )}
-
           {assetStep === AssetStep.tokenAllowance && (
             <TokenAllowance
               onClickItem={(item) => {
@@ -718,7 +726,6 @@ function AssetMain({
               }}
             />
           )}
-
           {assetStep === AssetStep.transferSettingsEdit && (
             <TransferSettingsEdit
               initData={viewPaymentSecurity}

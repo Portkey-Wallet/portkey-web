@@ -3,22 +3,31 @@ import AssetModal from '../AssetModal';
 import TitleWrapper from '../TitleWrapper';
 import CustomSvg from '../CustomSvg';
 import '../CustomTokenList/index.less';
+import Transaction from '../Transaction';
+import { ActivityItemType } from '@portkey/types';
+import { CaAddressInfosType } from '@portkey/services';
+import TransactionMain from '../Transaction/index.component';
 
 type ICustomTokenModalProps = ModalProps & {
   onCancel: () => void;
+  transactionDetail: ActivityItemType | undefined;
+  caAddressInfos: CaAddressInfosType | undefined;
 };
 
-export default function CustomAssetModal({ onCancel, ...props }: ICustomTokenModalProps) {
+export default function CustomAssetModal({
+  onCancel,
+  caAddressInfos,
+  transactionDetail,
+  ...props
+}: ICustomTokenModalProps) {
   return (
-    <AssetModal {...props} onClose={onCancel}>
-      <div className="portkey-ui-flex-column portkey-ui-custom-token-list">
-        <TitleWrapper
-          className="custom-token-header"
-          leftElement={false}
-          title={'Receive'}
-          rightElement={<CustomSvg type="Close2" onClick={onCancel} />}
-        />
-      </div>
+    <AssetModal {...props}>
+      <TransactionMain
+        chainId={transactionDetail?.chainId || undefined}
+        caAddressInfos={caAddressInfos}
+        onClose={onCancel}
+        transactionDetail={transactionDetail}
+      />
     </AssetModal>
   );
 }

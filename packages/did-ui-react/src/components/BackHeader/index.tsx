@@ -8,6 +8,7 @@ export default function BackHeader({
   onBack,
   rightElement,
   leftElement,
+  className,
   ...props
 }: TitleWrapperProps & { onBack?: TitleWrapperProps['leftCallBack'] }) {
   const defaultLeftEle = useMemo(
@@ -21,7 +22,7 @@ export default function BackHeader({
 
   return (
     <TitleWrapper
-      className="back-header"
+      className={`back-header ${className}`}
       title={title}
       leftCallBack={onBack}
       rightElement={rightElement}

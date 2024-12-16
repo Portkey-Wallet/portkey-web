@@ -115,7 +115,7 @@ const typeToIcon = {
   success: <CustomSvg type="CheckCircle" style={{ width: 20, height: 20 }} />,
   error: <CustomSvg type="WarnRedBackground" style={{ width: 20, height: 20 }} />,
   warning: <CustomSvg type="WarningInfoFilled" style={{ width: 20, height: 20 }} />,
-  loading: <Loading width={20} height={20} />,
+  loading: <Loading isDarkThemeWhiteLoading width={20} height={20} />,
 };
 
 export type NoticeType = keyof typeof typeToIcon;

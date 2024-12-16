@@ -5,11 +5,12 @@ import TermsOfServiceItem from '../../../TermsOfServiceItem';
 import './index.less';
 import { TotalAccountType } from '../../../../types';
 import { TotalAccountsInfo } from '../../../../constants/socialLogin';
-import { useMemo, useRef, useState } from 'react';
+import { ReactElement, useMemo, useRef, useState } from 'react';
 import { useComputeIconCountPreRow } from '../../../../hooks/login';
 import clsx from 'clsx';
-import UpgradedPortkeyTip from '../../../UpgradedPortkeyTip';
 import { TotalAccountTypeList } from '../../../../constants/guardian';
+import LoginIconAndLabel from '../../../LoginIconAndLabel';
+import { BlockLoginButton, CircleLoginButton } from '../../../LoginButton';
 
 export interface OverviewProps {
   extraElementList?: React.ReactNode[];
@@ -31,36 +32,30 @@ export default function Overview({
   loginMethodsOrder = TotalAccountTypeList,
   onAccountTypeChange,
 }: OverviewProps) {
-  const guardiansGroupRef = useRef<HTMLDivElement>(null);
-  const [isFold, setIsFold] = useState(true);
+  // const guardiansGroupRef = useRef<HTMLDivElement>(null);
+  // const [isFold, setIsFold] = useState(true);
 
-  const { isNeedFold, iconMinWidthRealGap, expendDisplayList, defaultDisplayList } =
-    useComputeIconCountPreRow<TotalAccountType>({
-      ref: guardiansGroupRef,
-      accountList: loginMethodsOrder,
-      supportList: TotalAccountTypeList,
-      minLoginAccountIconWidth: 40,
-      minIconGap: MinIconGap,
-    });
+  // const { isNeedFold, iconMinWidthRealGap, expendDisplayList, defaultDisplayList } =
+  //   useComputeIconCountPreRow<TotalAccountType>({
+  //     ref: guardiansGroupRef,
+  //     accountList: loginMethodsOrder,
+  //     supportList: TotalAccountTypeList,
+  //     minLoginAccountIconWidth: 40,
+  //     minIconGap: MinIconGap,
+  //   });
 
+  console.log(loginMethodsOrder, TotalAccountTypeList);
+  const loginMethodsOrderWithoutGoogle = loginMethodsOrder.filter((ele) => ele !== 'Google');
   const bottomExtraEle = useMemo(() => extraElementList?.slice(1).map((item) => <>{item}</>), [extraElementList]);
 
   return (
     <div className="portkey-ui-flex-column portkey-ui-user-input-overview">
-      <UpgradedPortkeyTip className="social-design-upgraded-portkey" />
-
       <div className="portkey-ui-flex-1 portkey-ui-flex-column">
         <div className="user-input-extra-ele">
-          {extraElementList?.[0] ? (
-            extraElementList?.[0]
-          ) : (
-            <div className="portkey-ui-flex-center default-extra-ele">
-              <CustomSvg type="Portkey" />
-            </div>
-          )}
+          {extraElementList?.[0] ? extraElementList?.[0] : <LoginIconAndLabel />}
         </div>
         <DividerCenter />
-        <div ref={guardiansGroupRef} className="portkey-ui-flex-center portkey-ui-account-type-wrapper">
+        {/* <div ref={guardiansGroupRef} className="portkey-ui-flex-center portkey-ui-account-type-wrapper">
           <div
             className="portkey-ui-flex-center account-type-list"
             style={{
@@ -101,8 +96,23 @@ export default function Overview({
               />
             )}
           </div>
+        </div> */}
+        <BlockLoginButton onClickCallback={() => onAccountTypeChange?.('Google')} iconType="Google" iconName="Google" />
+        <div className="portkey-ui-social-login-circle-icon-wrapper">
+          {loginMethodsOrderWithoutGoogle.map((item) => {
+            return (
+              <CircleLoginButton
+                key={item}
+                iconType={TotalAccountsInfo[item].icon}
+                onClickCallback={() => onAccountTypeChange?.(item)}
+              />
+            );
+          })}
         </div>
-        <div className="portkey-ui-flex-1  user-input-bottom-extra-ele">{bottomExtraEle}</div>
+
+        {bottomExtraEle && bottomExtraEle.length > 0 && (
+          <div className="portkey-ui-flex-1  user-input-bottom-extra-ele">{bottomExtraEle}</div>
+        )}
       </div>
 
       {termsOfService && <TermsOfServiceItem termsOfService={termsOfService} privacyPolicy={privacyPolicy} />}

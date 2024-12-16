@@ -36,16 +36,13 @@ export default function Assets() {
     checkLoginStatus();
   });
   return (
-    <PortkeyAssetProvider pin="111111" originChainId="AELF" isLoginOnChain={true}>
+    <PortkeyAssetProvider pin="111111" originChainId="tDVW" isLoginOnChain={true}>
       <a href="dapp-webapp">
         <Button>Go to dapp-webapp</Button>
       </a>
       <Asset
         faucet={{
           faucetContractAddress: '233wFn5JbyD4i8R5Me4cW4z6edfFGRn5bpWnGuY8fjR7b2kRsD',
-        }}
-        onLifeCycleChange={lifeCycle => {
-          console.log(lifeCycle, 'onLifeCycleChange');
         }}
         onDeleteAccount={() => {
           router.replace('/sign');

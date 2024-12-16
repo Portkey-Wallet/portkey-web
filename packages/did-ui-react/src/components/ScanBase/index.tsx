@@ -13,48 +13,17 @@ interface ScanCardProps {
   isWaitingAuth?: boolean;
   qrData?: string; // JSON.stringify(LoginQRData)
   backIcon?: React.ReactNode;
+  rightElement?: React.ReactNode;
   wrapperClassName?: string;
   onBack?: () => void;
   onClose?: () => void;
 }
-/*
-<BackHeader
-              leftElement={step === STEP.enterPin ? false : undefined}
-              onBack={() => {
-                if (step === STEP.confirmPin) {
-                  setPin('');
-                  setError('');
-                  setConfirmPin('');
-                  setStep(STEP.enterPin);
-                } else {
-                  onCancel?.();
-                }
-              }}
-              title={
-                step === STEP.enterPin ? (
-                  <div className="set-pin-title">{t('Create a PIN to protect your wallet')}</div>
-                ) : null
-              }
-              rightElement={
-                <CustomSvg
-                  type="X"
-                  onClick={onCancel}
-                  fillColor="black"
-                  style={{
-                    width: 20,
-                    height: 20,
-                  }}
-                />
-              }
-            />
-*/
 export default function ScanBase({
   qrData,
   backIcon,
-  gridType = GridType.qrCodeOnTop,
+  rightElement,
   isMobile,
   isWaitingAuth = false,
-  isShowIcon = true,
   wrapperClassName,
   onBack,
   onClose,
@@ -70,32 +39,26 @@ export default function ScanBase({
       )}>
       <div className={clsx('scan-text-inner')}>
         <BackHeader
-          leftElement={undefined}
+          leftElement={backIcon || undefined}
           onBack={onBack}
           rightElement={
-            <CustomSvg
-              type="X"
-              onClick={onClose}
-              fillColor="black"
-              style={{
-                width: 20,
-                height: 20,
-                cursor: 'pointer',
-              }}
-            />
+            rightElement ? (
+              rightElement
+            ) : (
+              <CustomSvg
+                type="X"
+                onClick={onClose}
+                fillColor="black"
+                style={{
+                  width: 20,
+                  height: 20,
+                  cursor: 'pointer',
+                }}
+              />
+            )
           }
         />
-        <h2 className={clsx('font-medium scan-title')}>
-          {/* {gridType === GridType.qrCodeOnTop && isMobile && (
-            <CustomSvg type="Portkey" style={{ width: '56px', height: '56px' }} />
-          )} */}
-          Log in with QR code
-          {/* {isShowIcon && backIcon && (
-            <div className="back-icon-wrapper" onClick={onBack}>
-              {backIcon}
-            </div>
-          )} */}
-        </h2>
+        <h2 className={clsx('font-medium scan-title')}>Log in with QR code</h2>
         <p className="description">Please use the portkey Dapp to scan the QR code</p>
       </div>
 

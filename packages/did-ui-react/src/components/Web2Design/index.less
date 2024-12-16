@@ -11,23 +11,14 @@
     top: 8px;
     right: 8px;
   }
+  .portkey-ui-web2design-social-wrapper{
+    align-items: center;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+  }
 
   .portkey-ui-segmented-input {
-    .portkey-ui-segmented-email {
-      .email-input-wrapper {
-        .input-wrapper {
-          .login-input {
-            height: 48px;
-            border: none;
-            border-radius: var(--portkey-ui-border-radius-4);
-            background: var(--portkey-ui-segmented-bg);
-          }
-        }
-      }
-      & > .login-primary-btn {
-        border-radius: var(--portkey-ui-border-radius-4);
-      }
-    }
 
     .portkey-ui-segmented-phone {
       .phone-number-input-wrapper {
@@ -92,9 +83,6 @@
     border-radius: 12px;
     margin-left: 8px;
   }
-  .portkey-ui-segmented-input {
-    padding-top: 40px;
-  }
 }
 
 // .portkey-ui-web2design-social-login {
@@ -111,12 +99,15 @@
   height: 12px;
 }
 .portkey-ui-web2design-switch-sign {
-  color: var(--portkey-ui-text-secondary);
+  padding-top: 32px;
+  padding-bottom: 16px;
+  color: var(--sds-color-text-default-secondary);
   text-align: center;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 16px;
   .btn-text {
-    color: var(--portkey-ui-text-primary1);
+    color: var(--sds-color-text-brand-default);
+    font-weight: 600;
     cursor: pointer;
   }
   &.portkey-ui-web2design-switch-sign-sign-up {
@@ -126,7 +117,7 @@
 
 .portkey-ui-web2design-login-little-screen {
   .left-wrapper {
-    padding: 24px 16px 0;
+    padding: 16px 16px 32px 16px;
   }
   .right-wrapper {
     width: 100%;

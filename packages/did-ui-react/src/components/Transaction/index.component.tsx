@@ -1,12 +1,13 @@
 import clsx from 'clsx';
-import { SetStateAction, useCallback, useMemo, useState } from 'react';
-import { ActivityItemType, ChainId } from '@portkey/types';
+import { SetStateAction, useCallback, useEffect, useMemo, useState } from 'react';
+import { ActivityItemType, ChainId, TDappOperations, TransactionEnum } from '@portkey/types';
 import { useDefaultToken } from '../../hooks/assets';
 import { AmountSign, TransactionStatus } from '../../types/activity';
 import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
 import {
   addressFormat,
   dateFormatTransTo13,
+  divDecimals,
   divDecimalsStr,
   formatAmountShow,
   formatWithCommas,
@@ -23,10 +24,13 @@ import { useThrottleFirstEffect } from '../../hooks/throttle';
 import { CaAddressInfosType } from '@portkey/services';
 import './index.less';
 import NFTImage from '../NFTImage';
+import CommonButton from '../CommonButton';
+import TokenImageDisplay from '../TokenImageDisplay';
+import CoinImage from '../CoinImage';
 
 export interface TransactionProps {
-  transactionDetail: ActivityItemType;
-  caAddressInfos: CaAddressInfosType;
+  transactionDetail: ActivityItemType | undefined;
+  caAddressInfos: CaAddressInfosType | undefined;
   className?: string;
   chainId?: ChainId;
   onClose?: () => void;
@@ -42,39 +46,59 @@ export default function TransactionMain({
   const [{ networkType, chainType }] = usePortkey();
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   // Obtain data through routing to ensure that the page must have data and prevent Null Data Errors.
-  const [activityItem, setActivityItem] = useState<ActivityItemType>(transactionDetail);
-  const feeInfo = useMemo(() => activityItem.transactionFees, [activityItem.transactionFees]);
-  const defaultToken = useDefaultToken(activityItem.fromChainId);
+  const [activityItem, setActivityItem] = useState<ActivityItemType | undefined>(transactionDetail);
+  const feeInfo = useMemo(() => activityItem?.transactionFees, [activityItem?.transactionFees]);
+  const defaultToken = useDefaultToken(activityItem?.fromChainId);
+
+  const isEmptyToken = useMemo(
+    () => !(activityItem?.nftInfo || activityItem?.symbol || activityItem?.operations?.length),
+    [activityItem?.nftInfo, activityItem?.operations?.length, activityItem?.symbol],
+  );
+  const isDappTx = useMemo(() => !!activityItem?.dappName, [activityItem?.dappName]);
+  const isShowEmptyTokenForDapp = useMemo(() => isEmptyToken && isDappTx, [isDappTx, isEmptyToken]);
+  const isShowSystemForDefault = useMemo(() => isEmptyToken && !isDappTx, [isDappTx, isEmptyToken]);
+  const isMultiTokenTx = useMemo(
+    () => activityItem?.operations?.length && activityItem.operations.length >= 2,
+    [activityItem?.operations?.length],
+  );
+
+  useEffect(() => {
+    if (transactionDetail) {
+      setActivityItem(transactionDetail);
+    }
+  }, [transactionDetail]);
 
   // Obtain data through api to ensure data integrity.
   // Because some data is not returned in the Activities API. Such as from, to.
   useThrottleFirstEffect(() => {
-    let _caAddressInfos = caAddressInfos;
-    if (chainId) {
-      _caAddressInfos = caAddressInfos?.filter((info) => info.chainId === chainId, []);
+    if (caAddressInfos && activityItem) {
+      let _caAddressInfos = caAddressInfos;
+      if (chainId) {
+        _caAddressInfos = caAddressInfos?.filter((info) => info.chainId === chainId, []);
+      }
+
+      const params = {
+        caAddressInfos: _caAddressInfos,
+        transactionId: activityItem?.transactionId,
+        blockHash: activityItem?.blockHash,
+      };
+
+      did.services.activity
+        .getActivityDetail(params)
+        .then((res: ActivityItemType) => {
+          setActivityItem(res);
+        })
+        .catch((err: any) => {
+          console.error('getActivityDetail:' + handleErrorMessage(err));
+        });
     }
-
-    const params = {
-      caAddressInfos: _caAddressInfos,
-      transactionId: activityItem.transactionId,
-      blockHash: activityItem.blockHash,
-    };
-
-    did.services.activity
-      .getActivityDetail(params)
-      .then((res: SetStateAction<ActivityItemType>) => {
-        setActivityItem(res);
-      })
-      .catch((err: any) => {
-        console.error('getActivityDetail:' + handleErrorMessage(err));
-      });
   }, [caAddressInfos, chainId]);
 
   const status = useMemo(() => {
     if (activityItem?.status === TransactionStatus.Mined)
       return {
-        text: 'Confirmed',
-        style: 'confirmed',
+        text: 'Success',
+        style: 'success',
       };
     return {
       text: 'Failed',
@@ -84,8 +108,8 @@ export default function TransactionMain({
 
   const isNft = useMemo(() => !!activityItem?.nftInfo?.nftId, [activityItem?.nftInfo?.nftId]);
 
-  const nftHeaderUI = useCallback(() => {
-    const { nftInfo, amount, decimals } = activityItem;
+  const nftHeaderUI = useMemo(() => {
+    const { nftInfo, amount, decimals } = activityItem || {};
     return (
       <div className="nft-amount">
         <NFTImage
@@ -105,103 +129,158 @@ export default function TransactionMain({
     );
   }, [activityItem]);
 
-  const tokenHeaderUI = useCallback(() => {
-    const { amount, isReceived, decimals, symbol, transactionType, priceInUsd } = activityItem;
+  const renderTokenStatus = (statusIcon: string, transactionType: TransactionEnum | undefined) => {
+    if (isShowSystemForDefault && transactionType === TransactionEnum.TRANSFER) {
+      return (
+        <div className="status-container">
+          <CustomSvg type="ArrowDownThin" />
+        </div>
+      );
+    }
+
+    if (transactionType && !SHOW_FROM_TRANSACTION_TYPES.includes(transactionType)) {
+      return null;
+    }
+
+    if (statusIcon) {
+      return <img className="status-icon" src={statusIcon} />;
+    }
+
+    return null;
+  };
+
+  const renderListIcon = (listIcon: string, operations: TDappOperations[] = []) => {
+    if (isMultiTokenTx) {
+      let [top, bottom] = operations.map((_token) => ({
+        symbol: _token.nftInfo ? _token.nftInfo.alias : _token.symbol,
+        url: _token.nftInfo ? _token.nftInfo.imageUrl : _token.icon,
+        isReceived: _token.isReceived,
+        amount: _token.amount,
+        decimals: _token.decimals,
+      }));
+      const sameDirection = top.isReceived === bottom.isReceived;
+      if (!sameDirection && top.isReceived) {
+        [bottom, top] = [top, bottom];
+      }
+
+      return (
+        <div className="multi-token-container">
+          <div className="token-wrapper">
+            <CoinImage src={top.url} width={42} />
+            <img className="icon bottom" src={bottom.url} />
+          </div>
+          <div className="token-direction-wrapper">
+            <span>{top.symbol}</span>
+            <CustomSvg type="ArrowRight" />
+            <span>{bottom.symbol}</span>
+          </div>
+        </div>
+      );
+    }
+
+    return <CoinImage src={listIcon} width={60} />;
+  };
+
+  const tokenHeaderUI = useMemo(() => {
+    const { amount, isReceived, decimals, symbol, operations, priceInUsd, transactionType, listIcon, statusIcon } =
+      activityItem || {};
     const sign = isReceived ? AmountSign.PLUS : AmountSign.MINUS;
     /* Hidden during [SocialRecovery, AddManager, RemoveManager] */
-    if (transactionType && SHOW_FROM_TRANSACTION_TYPES.includes(transactionType)) {
-      return (
-        <p className="amount">
-          {`${formatWithCommas({ amount, decimals, sign })} ${symbol ?? ''}`}
-          {networkType === MAINNET && (
+
+    return (
+      <div className="token-header-container">
+        <div className="token-icon-container">
+          {renderListIcon(listIcon || '', operations)}
+          {renderTokenStatus(statusIcon || '', transactionType)}
+        </div>
+        {transactionType && SHOW_FROM_TRANSACTION_TYPES.includes(transactionType) && (
+          <div
+            className={clsx('amount', {
+              positive: isReceived,
+            })}>
+            <span>{`${formatWithCommas({ amount, decimals, sign })} ${symbol ?? ''}`}</span>
             <span className="usd">
               {amountInUsdShow({
-                balance: amount,
+                balance: amount || 0,
                 decimal: decimals || 0,
                 price: priceInUsd || 0,
               })}
             </span>
-          )}
-        </p>
-      );
-    } else {
-      return <p className="no-amount"></p>;
-    }
-  }, [activityItem, networkType]);
-
-  const statusAndDateUI = useCallback(() => {
-    return (
-      <div className="status-wrap">
-        <p className="label">
-          <span className="left">Status</span>
-          <span className="right">Date</span>
-        </p>
-        <p className="value">
-          <span className={clsx(['left', status.style])}>{status.text}</span>
-          <span className="right">{dateFormatTransTo13(activityItem.timestamp)}</span>
-        </p>
+          </div>
+        )}
       </div>
     );
-  }, [activityItem.timestamp, status.style, status.text]);
+  }, [activityItem]);
 
-  const fromToUI = useCallback(() => {
-    const { from, fromAddress, fromChainId, to, toAddress, toChainId, transactionType } = activityItem;
+  const statusAndDateUI = useMemo(() => {
+    return (
+      <div className="status-container">
+        <div className="row">
+          <span>Date</span>
+          <span>{dateFormatTransTo13(activityItem?.timestamp)}</span>
+        </div>
+        <div className="row">
+          <span>Status</span>
+          <span className={status.style}>{status.text}</span>
+        </div>
+      </div>
+    );
+  }, [activityItem?.timestamp, status.style, status.text]);
+
+  const networkUI = useMemo(() => {
+    const { transactionType, fromChainIdUpdated, toChainIdUpdated, fromChainIcon, toChainIcon } = activityItem || {};
+    const isNetworkShow = transactionType && SHOW_FROM_TRANSACTION_TYPES.includes(transactionType);
+    if (!isNetworkShow) {
+      return null;
+    }
+
+    return (
+      <div className="account-container">
+        <div className="row">
+          <span>Source Network</span>
+          <span className="chain">
+            <img className="chain-icon" src={fromChainIcon} />
+            {fromChainIdUpdated}
+          </span>
+        </div>
+        <div className="row">
+          <span>Destination Network</span>
+          <span className="chain">
+            <img className="chain-icon" src={toChainIcon} />
+            {toChainIdUpdated}
+          </span>
+        </div>
+      </div>
+    );
+  }, [activityItem]);
+
+  const fromOrToUI = useMemo(() => {
+    const { fromAddress, fromChainId, toAddress, toChainId } = activityItem || {};
+
     const transFromAddress = addressFormat(fromAddress, fromChainId, chainType);
     const transToAddress = addressFormat(toAddress, toChainId, chainType);
 
-    /* Hidden during [SocialRecovery, AddManager, RemoveManager] */
-    return (
-      transactionType &&
-      SHOW_FROM_TRANSACTION_TYPES.includes(transactionType) && (
-        <div className="account-wrap">
-          <p className="label">
-            <span className="left">From</span>
-            <span className="right">To</span>
-          </p>
-          <div className="value">
-            <div className="content">
-              <span className="left name">{from}</span>
-              {fromAddress && (
-                <span className="left address-wrap">
-                  <span>{formatStr2EllipsisStr(transFromAddress, [7, 4])}</span>
-                  <Copy toCopy={transFromAddress} iconClassName="copy-address" />
-                </span>
-              )}
-            </div>
-            <CustomSvg type="RightArrow" className="right-arrow" />
-            <div className="content">
-              <span className="right name">{to}</span>
-              {toAddress && (
-                <span className="right address-wrap">
-                  <span>{formatStr2EllipsisStr(transToAddress, [7, 4])}</span>
-                  <Copy toCopy={transToAddress} iconClassName="copy-address" />
-                </span>
-              )}
-            </div>
+    if (activityItem?.transactionType && SHOW_FROM_TRANSACTION_TYPES.includes(activityItem?.transactionType)) {
+      if (activityItem?.dappName) return null;
+      return activityItem?.isReceived ? (
+        <div className="from-to-container">
+          <div className="row">
+            <span>From</span>
+            <span>{formatStr2EllipsisStr(transFromAddress, [8, 9])}</span>
           </div>
         </div>
-      )
-    );
-  }, [activityItem, chainType]);
-
-  const networkUI = useCallback(() => {
-    /* Hidden during [SocialRecovery, AddManager, RemoveManager] */
-    const { transactionType, fromChainId, toChainId } = activityItem;
-    const from = transNetworkText(fromChainId, isMainnet);
-    const to = transNetworkText(toChainId, isMainnet);
-
-    return (
-      transactionType &&
-      SHOW_FROM_TRANSACTION_TYPES.includes(transactionType) && (
-        <div className="network-wrap">
-          <p className="label">
-            <span className="left">Network</span>
-          </p>
-          <p className="value">{`${from}->${to}`}</p>
+      ) : (
+        <div className="from-to-container">
+          <div className="row">
+            <span>To</span>
+            <span>{formatStr2EllipsisStr(transToAddress, [8, 9])}</span>
+          </div>
         </div>
-      )
-    );
-  }, [activityItem, isMainnet]);
+      );
+    }
+
+    return null;
+  }, [activityItem, chainType]);
 
   const noFeeUI = useCallback(() => {
     return (
@@ -212,85 +291,141 @@ export default function TransactionMain({
   }, [isMainnet]);
 
   const feeUI = useCallback(() => {
-    return activityItem.isDelegated ? (
-      <div className="value">
-        <span className="left">Transaction Fee</span>
-        {noFeeUI()}
-      </div>
+    return activityItem?.isDelegated ? (
+      noFeeUI()
     ) : (
-      <div className="value">
-        <span className="left">Transaction Fee</span>
-        <span className="right">
-          {(!feeInfo || feeInfo?.length === 0) && noFeeUI()}
-          {feeInfo?.length > 0 &&
-            feeInfo.map((item, idx) => {
-              return (
-                <div key={'transactionFee' + idx} className="right-item">
-                  <span>{`${formatWithCommas({
-                    amount: item.fee,
-                    decimals: item.decimals || defaultToken.decimals,
-                  })} ${item.symbol ?? ''}`}</span>
-                  {isMainnet && <span className="right-usd">{`$ ${formatAmountShow(item.feeInUsd, 2)}`}</span>}
-                </div>
-              );
-            })}
-        </span>
-      </div>
+      <>
+        {(!feeInfo || feeInfo?.length === 0) && noFeeUI()}
+        {feeInfo &&
+          feeInfo?.length > 0 &&
+          feeInfo?.map((item, idx) => {
+            return (
+              <div key={'transactionFee' + idx} className="right-item">
+                <span>{`${formatWithCommas({
+                  amount: item.fee,
+                  decimals: item.decimals || defaultToken.decimals,
+                })} ${item.symbol ?? ''}`}</span>
+                {isMainnet && <span className="right-usd">{`$ ${formatAmountShow(item.feeInUsd, 2)}`}</span>}
+              </div>
+            );
+          })}
+      </>
     );
-  }, [activityItem.isDelegated, defaultToken.decimals, feeInfo, isMainnet, noFeeUI]);
+  }, [activityItem?.isDelegated, defaultToken.decimals, feeInfo, isMainnet, noFeeUI]);
 
-  const transactionUI = useCallback(() => {
+  const transactionUI = useMemo(() => {
+    console.log(activityItem?.transactionId);
     return (
-      <div className="money-wrap">
-        <p className="label">
-          <span className="left">Transaction</span>
-        </p>
-        <div>
-          <div className="value">
-            <span className="left">Transaction ID</span>
-            <span className="right tx-id">
-              {`${formatStr2EllipsisStr(activityItem.transactionId, [7, 4])} `}
-              <Copy toCopy={activityItem.transactionId} />
-            </span>
+      <div className="transaction-container">
+        {!activityItem?.isReceived && (
+          <div className="row">
+            <span>Network Fee</span>
+            {feeUI()}
           </div>
-          {feeUI()}
+        )}
+        <div className="row">
+          <span>Txn ID</span>
+          <span className="txn-display">
+            {formatStr2EllipsisStr(activityItem?.transactionId, [10], 'tail')}
+            <Copy toCopy={activityItem?.transactionId || ''} />
+          </span>
         </div>
       </div>
     );
-  }, [activityItem.transactionId, feeUI]);
+  }, [activityItem]);
 
   const openOnExplorer = useCallback(async () => {
-    const chainInfo = await getChain(activityItem.fromChainId);
-    const exploreLink = getExploreLink(chainInfo?.explorerUrl || '', activityItem.transactionId || '', 'transaction');
-    // TODO open by iframe
-    window.open(exploreLink);
-  }, [activityItem.fromChainId, activityItem.transactionId]);
+    if (activityItem?.fromChainId) {
+      const chainInfo = await getChain(activityItem?.fromChainId);
+      const exploreLink = getExploreLink(
+        chainInfo?.explorerUrl || '',
+        activityItem?.transactionId || '',
+        'transaction',
+      );
+      // TODO open by iframe
+      window.open(exploreLink);
+    }
+  }, [activityItem?.fromChainId, activityItem?.transactionId]);
 
+  const dappTXDetailUI = useMemo(() => {
+    const { dappName, transactionType } = activityItem || {};
+    console.log(dappName);
+    console.log(transactionType);
+
+    console.log(activityItem);
+    if (
+      isMultiTokenTx &&
+      activityItem?.dappName &&
+      activityItem?.transactionType &&
+      SHOW_FROM_TRANSACTION_TYPES.includes(activityItem.transactionType)
+    ) {
+      let [tokenPaid, tokenReceived] =
+        activityItem.operations?.map((_token) => ({
+          symbol: _token.nftInfo ? _token.nftInfo.alias : _token.symbol,
+          url: _token.nftInfo ? _token.nftInfo.imageUrl : _token.icon,
+          isReceived: _token.isReceived,
+          amount: _token.amount,
+          decimals: _token.decimals,
+        })) || [];
+      if (tokenPaid.isReceived) {
+        [tokenPaid, tokenReceived] = [tokenReceived, tokenPaid];
+      }
+
+      return (
+        <div className="dappTxDetail-container">
+          <div className="row">
+            <span>Provider</span>
+            <span>{dappName}</span>
+          </div>
+          <div className="row">
+            <span>You paid</span>
+            <span>
+              {`${tokenPaid?.isReceived ? '+' : '-'} ${formatAmountShow(
+                divDecimals(tokenPaid?.amount, tokenPaid?.decimals),
+                tokenPaid?.decimals,
+              )} ${tokenPaid?.symbol || ''}`}
+            </span>
+          </div>
+          <div className="row">
+            <span>You received</span>
+            <span>
+              {`${tokenReceived?.isReceived ? '+' : '-'} ${formatAmountShow(
+                divDecimals(tokenReceived?.amount, tokenReceived?.decimals),
+                tokenReceived?.decimals,
+              )} ${tokenReceived?.symbol || ''}`}
+            </span>
+          </div>
+        </div>
+      );
+    }
+
+    return null;
+  }, [activityItem, isMultiTokenTx]);
   return (
     <div className={clsx('portkey-ui-transaction-detail', className)}>
       <div className="transaction-detail-body">
-        <div className="header">
-          <CustomSvg type="Close2" onClick={onClose} />
+        <div className="transaction-detail-header">
+          <span className="title">{transactionDetail?.transactionName}</span>
+          <CustomSvg type="Close2" fillColor="var(--portkey-ui-text-primary)" onClick={onClose} />
         </div>
-        <div className="transaction-info">
-          <div className="method-wrap">
-            <p className="method-name">{activityItem?.transactionName}</p>
-            {isNft ? nftHeaderUI() : tokenHeaderUI()}
-          </div>
-          {statusAndDateUI()}
-          {fromToUI()}
-          {networkUI()}
-          {transactionUI()}
+        <div className="transaction-detail-content">
+          {isNft ? nftHeaderUI : tokenHeaderUI}
+          {statusAndDateUI}
+          {fromOrToUI}
+          {networkUI}
+          {transactionUI}
+          {dappTXDetailUI}
         </div>
       </div>
-      <div className="transaction-footer">
-        <div>
-          {activityItem.transactionId && (
-            <span className="link" onClick={openOnExplorer}>
-              View on Explorer
-            </span>
-          )}
-        </div>
+      <div className="transaction-detail-footer">
+        {activityItem?.transactionId && (
+          // <span className="link" onClick={openOnExplorer}>
+          //   View on Explorer
+          // </span>
+          <CommonButton className="item-button" type="primary" onClick={openOnExplorer}>
+            View on Explorer
+          </CommonButton>
+        )}
       </div>
     </div>
   );

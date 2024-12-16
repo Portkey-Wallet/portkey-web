@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePortkey } from '../context';
 import { MAINNET } from '../../constants/network';
 import { addressFormat, divDecimalsStr, transNetworkText } from '../../utils/converter';
@@ -14,19 +14,27 @@ import NFTImage from '../NFTImage';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import moment from 'moment';
 import { NFT_SMALL_SIZE } from '../../constants/assets';
+import TraitsItem from './TraitsItem';
+import CustomSvg from '../CustomSvg';
+import ExpandableText from '../ExpandableText';
+import { Divider } from 'antd';
 
 export interface NFTDetailProps {
   NFTDetail: NFTItemBaseExpand;
   onSend?: (nft: NFTItemBaseExpand) => void;
   onBack?: () => void;
+  onCollectionDetail?: () => void;
 }
 
-export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailProps) {
+export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionDetail }: NFTDetailProps) {
+  const scrollerContainerRef = useRef<any>(null);
   const [info, setInfo] = useState<NFTItemBaseExpand>({ ...NFTDetail });
   const [{ networkType, chainType }] = usePortkey();
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   const [{ caInfo, initialized }] = usePortkeyAsset();
   const updateTimerRef = useRef<NodeJS.Timer | number>();
+  const lastKnownScrollPosition = useRef(0);
+  const ticking = useRef(false);
 
   const caAddressInfos = useMemo(() => {
     if (!caInfo) return;
@@ -67,27 +75,43 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   }, [NFTDetail, info?.recommendedRefreshSeconds, initialized]);
 
   const renderCollectionInfo = useMemo(() => {
-    const { collectionName, collectionImageUrl } = info;
+    const { collectionName, collectionImageUrl, description } = info;
 
     return (
-      <div className="collection portkey-ui-flex-start-center">
-        <div className="img">
-          {collectionImageUrl ? (
-            <img src={collectionImageUrl} />
-          ) : (
-            <div className="img-text portkey-ui-flex-center">{collectionName?.slice(0, 1)}</div>
-          )}
+      <div className="collection-container">
+        <div
+          className="collection portkey-ui-flex-start-center"
+          onClick={() => {
+            onCollectionDetail?.();
+          }}>
+          <div className="img">
+            {collectionImageUrl ? (
+              <img src={collectionImageUrl} />
+            ) : (
+              <div className="img-text portkey-ui-flex-center">{collectionName?.slice(0, 1)}</div>
+            )}
+          </div>
+          <div className="name">{collectionName}</div>
+          <CustomSvg type="Vector" />
         </div>
-        <div className="name">{collectionName}</div>
+        {description && <ExpandableText description={description} textClassName={'description'} />}
       </div>
     );
   }, [info]);
 
-  const renderPicture = useMemo(() => {
-    const { imageUrl, symbol, isSeed, seedType } = info;
+  const renderNFTTopPart = useMemo(() => {
+    const { imageUrl, symbol, isSeed, seedType, balance, decimals } = info;
 
-    return <NFTImage className="picture" name={symbol} imageUrl={imageUrl} isSeed={isSeed} seedType={seedType} />;
-  }, [info]);
+    return (
+      <>
+        <NFTImage className="picture" name={symbol} imageUrl={imageUrl} isSeed={isSeed} seedType={seedType} />
+        <div className="balance">{`You own: ${divDecimalsStr(balance, decimals)}`}</div>
+        <ThrottleButton type="primaryOutline" block onClick={() => onSend?.(info)} className="send-button">
+          Send
+        </ThrottleButton>
+      </>
+    );
+  }, [info, onSend]);
 
   const renderInfoRow = useCallback(
     ({
@@ -95,17 +119,22 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
       value,
       className,
       valueClassName,
+      valuePrevNode,
     }: {
       label: string;
       value?: string;
       className?: string;
       valueClassName?: string;
+      valuePrevNode?: ReactNode;
     }) => {
       return (
         value && (
           <div className={clsx('portkey-ui-flex-between', 'info-item', className)}>
             <div className="label">{label}</div>
-            <div className={clsx(valueClassName)}>{value}</div>
+            <div className="portkey-ui-flex-row-center">
+              {valuePrevNode}
+              <div className={clsx(valueClassName, 'value')}>{value}</div>
+            </div>
           </div>
         )
       );
@@ -114,32 +143,42 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
   );
 
   const renderBasicInfo = useMemo(() => {
-    const { tokenContractAddress, chainId, symbol, totalSupply, decimals } = info;
+    const { tokenContractAddress, chainId, symbol, totalSupply, decimals, chainImageUrl } = info;
 
     const formatTokenContractAds = addressFormat(tokenContractAddress, chainId as ChainId, chainType);
     return (
-      <div className="info">
-        <div className="title">Basic Info</div>
-        <div className="contract info-item portkey-ui-flex-between">
-          <div className="label">Contract Address</div>
-          <div className="contract-title portkey-ui-flex">
-            {formatStr2EllipsisStr(formatTokenContractAds, [8, 9])}
-            <Copy toCopy={formatTokenContractAds} />
+      <>
+        <div className="info">
+          <div className="title">Basic Info</div>
+          <div className="info-content">
+            <div className="contract info-item portkey-ui-flex-between">
+              <div className="label">Contract Address</div>
+              <div className="contract-title portkey-ui-flex">
+                {formatStr2EllipsisStr(formatTokenContractAds, [8, 9])}
+                <Copy toCopy={formatTokenContractAds} iconType="CopyNew" />
+              </div>
+            </div>
+            {renderInfoRow({
+              label: 'Blockchain',
+              value: transNetworkText(chainId, isMainnet),
+              className: 'chain',
+              valuePrevNode: <img className="chain-image" src={chainImageUrl} />,
+            })}
+            {renderInfoRow({
+              label: 'Symbol',
+              value: symbol,
+              className: 'symbol',
+              valueClassName: 'symbol-value',
+            })}
+            {renderInfoRow({
+              label: 'Total Supply',
+              value: divDecimalsStr(totalSupply, decimals),
+              className: 'total-supply',
+            })}
           </div>
         </div>
-        {renderInfoRow({ label: 'Blockchain', value: transNetworkText(chainId, isMainnet), className: 'chain' })}
-        {renderInfoRow({
-          label: 'Symbol',
-          value: symbol,
-          className: 'symbol',
-          valueClassName: 'symbol-value',
-        })}
-        {renderInfoRow({
-          label: 'Total Supply',
-          value: divDecimalsStr(totalSupply, decimals),
-          className: 'total-supply',
-        })}
-      </div>
+        <Divider className="divider" />
+      </>
     );
   }, [info, chainType, isMainnet, renderInfoRow]);
 
@@ -149,23 +188,29 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
 
     return (
       isSeed && (
-        <div className="info">
-          <div className="title">Token Creation via This Seed</div>
-          {seedType &&
-            renderInfoRow({
-              label: 'Type',
-              value: seedType === SeedTypeEnum.FT ? 'Token' : 'NFT',
-              className: 'origin-seed-type',
-            })}
-          {seedOwnedSymbol &&
-            renderInfoRow({
-              label: 'Token Symbol',
-              value: seedOwnedSymbol,
-              className: 'symbol',
-              valueClassName: 'symbol-value',
-            })}
-          {formatExpires && renderInfoRow({ label: 'Expires', value: formatExpires, className: 'origin-seed-expires' })}
-        </div>
+        <>
+          <div className="info">
+            <div className="title">Token Creation via This Seed</div>
+            <div className="info-content">
+              {seedType &&
+                renderInfoRow({
+                  label: 'Type',
+                  value: seedType === SeedTypeEnum.FT ? 'Token' : 'NFT',
+                  className: 'origin-seed-type',
+                })}
+              {seedOwnedSymbol &&
+                renderInfoRow({
+                  label: 'Token Symbol',
+                  value: seedOwnedSymbol,
+                  className: 'symbol',
+                  valueClassName: 'symbol-value',
+                })}
+              {formatExpires &&
+                renderInfoRow({ label: 'Expires', value: formatExpires, className: 'origin-seed-expires' })}
+            </div>
+          </div>
+          <Divider className="divider" />
+        </>
       )
     );
   }, [info, renderInfoRow]);
@@ -176,20 +221,24 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
     return (
       <>
         {Array.isArray(traitsPercentages) && traitsPercentages?.length > 0 && (
-          <div className="info">
-            <div className="title">Traits</div>
-            {traitsPercentages?.map((item, index) => {
-              return (
-                <div key={item.traitType + index} className="traits-info info-item portkey-ui-flex-between-center">
-                  <div className="label portkey-ui-flex-column">
-                    <span>{item.traitType}</span>
-                    <span className="below-label-value">{item.value}</span>
-                  </div>
-                  <div>{item.percent}</div>
-                </div>
-              );
-            })}
-          </div>
+          <>
+            <div className="info">
+              <div className="title">Traits</div>
+              <div className="info-content gride-content">
+                {traitsPercentages?.map((item, index) => {
+                  return (
+                    <TraitsItem
+                      key={item.traitType + index}
+                      traitType={item.traitType}
+                      value={item.value}
+                      percent={item.percent}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+            <Divider className="divider" />
+          </>
         )}
       </>
     );
@@ -199,10 +248,15 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
     return (
       <>
         {info?.generation && (
-          <div className="info">
-            <div className="title">Generation Info</div>
-            {renderInfoRow({ label: 'Generation', value: info.generation, className: 'generation' })}
-          </div>
+          <>
+            <div className="info">
+              <div className="title">Generation Info</div>
+              <div className="info-content">
+                {renderInfoRow({ label: 'Generation', value: info.generation, className: 'generation' })}
+              </div>
+            </div>
+            <Divider className="divider" />
+          </>
         )}
       </>
     );
@@ -214,18 +268,20 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
         {info?.inscriptionName && (
           <div className="info">
             <div className="title">Inscription Info</div>
-            {renderInfoRow({
-              label: 'Inscription Name',
-              value: info.inscriptionName,
-              className: 'inscription-name',
-              valueClassName: 'inscription-name-value',
-            })}
-            {info.limitPerMint != null &&
-              renderInfoRow({
-                label: 'Limit Per Mint',
-                value: String(info.limitPerMint),
-                className: 'inscription-limit',
+            <div className="info-content">
+              {renderInfoRow({
+                label: 'Inscription Name',
+                value: info.inscriptionName,
+                className: 'inscription-name',
+                valueClassName: 'inscription-name-value',
               })}
+              {info.limitPerMint != null &&
+                renderInfoRow({
+                  label: 'Limit Per Mint',
+                  value: String(info.limitPerMint),
+                  className: 'inscription-limit',
+                })}
+            </div>
           </div>
         )}
       </>
@@ -244,32 +300,51 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack }: NFTDetailPr
     );
   }, [renderBasicInfo, renderGenerationInfo, renderInscriptionInfo, renderOriginSeedInfo, renderTraitsInfo]);
 
-  const renderFooter = useMemo(() => {
-    const { balance, decimals } = info;
-    return (
-      <div>
-        <div className="btn-wrap portkey-ui-flex-column-center">
-          <div className="balance">{`You have: ${divDecimalsStr(balance, decimals)}`}</div>
-          <ThrottleButton type="primary" onClick={() => onSend?.(info)}>
-            Send
-          </ThrottleButton>
-        </div>
-      </div>
-    );
-  }, [info, onSend]);
-
   const { alias, tokenId } = info;
+  const [opacity, setOpacity] = useState(0);
+
+  const handleScroll = useCallback((event: { target: any }) => {
+    lastKnownScrollPosition.current = event.target.scrollTop;
+    if (!ticking.current) {
+      window.requestAnimationFrame(() => {
+        if (lastKnownScrollPosition.current >= 560) {
+          setOpacity(1);
+        } else {
+          setOpacity(0);
+        }
+        ticking.current = false;
+      });
+      ticking.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    const scrollerContainer = scrollerContainerRef.current;
+
+    scrollerContainerRef.current?.addEventListener('scroll', handleScroll);
+    return () => {
+      scrollerContainer?.removeEventListener('scroll', handleScroll);
+    };
+  }, [handleScroll]);
 
   return (
-    <div className="portkey-ui-nft-detail">
+    <div className="portkey-ui-nft-detail" ref={scrollerContainerRef}>
       <div className="nft-detail-body">
-        <SettingHeader leftCallBack={onBack} />
-        {renderCollectionInfo}
+        <SettingHeader
+          leftCallBack={onBack}
+          leftElement={undefined}
+          title={`${alias} #${tokenId}`}
+          titleStyle={{ opacity, textAlign: 'center' }}
+        />
+        {renderNFTTopPart}
         <div className="token-id">{`${alias} #${tokenId}`}</div>
-        {renderPicture}
+        {renderCollectionInfo}
+        {/* {renderPicture} */}
+        {renderDetail}
+        {renderDetail}
+        {renderDetail}
         {renderDetail}
       </div>
-      {renderFooter}
     </div>
   );
 }

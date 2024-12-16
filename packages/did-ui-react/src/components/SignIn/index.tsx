@@ -30,7 +30,8 @@ import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
 import { sleep } from '@portkey/utils';
-import CommonBaseModal from '../CommonBaseModal';
+import CommonModal from '../CommonBaseModal';
+// import CommonModal from '../CommonModal';
 import { PORTKEY_ROOT_ID } from '../../constants';
 import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
@@ -706,7 +707,7 @@ const SignIn = forwardRef(
             <div className={clsx('portkey-sign-full-wrapper', className)}>{mainContent()}</div>
           </Container>
         ) : (
-          <CommonBaseModal
+          <CommonModal
             destroyOnClose
             className={clsx('portkey-ui-sign-modal', `portkey-ui-sign-modal-${design}`, className)}
             maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
@@ -714,7 +715,7 @@ const SignIn = forwardRef(
             getContainer={getContainer ? getContainer : `#${PORTKEY_ROOT_ID}`}
             onClose={onModalCancel}>
             {mainContent()}
-          </CommonBaseModal>
+          </CommonModal>
         )}
       </PortkeyStyleProvider>
     );

@@ -1,7 +1,13 @@
 .portkey-ui-nft-detail {
   .picture {
-    width: 264px;
-    height: 264px;
+    // width: 264px;
+    // height: 264px;
+    // padding: 0 16px;
+    width: 100%;
+    height: 100%;
+    background: var(--sds-color-background-utilities-blanket);
+    // height: auto;
+    // aspect-ratio: 1/1;
   }
 }
 
@@ -12,9 +18,33 @@
   justify-content: space-between;
   position: relative;
   background: var(--portkey-ui-default-bg);
+  overflow-y: auto;
 
   .nft-detail-body {
     background: var(--portkey-ui-default-bg);
+    // width: calc(100%-32px);
+    padding-left: 16px;
+    padding-right: 16px;
+    position: relative;
+    .balance {
+      margin: 0 auto 12px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      align-self: center;
+      text-align: center;
+      color: var(--sds-color-text-default-secondary);
+    }
+    // .portkey-btn-primaryOutline {
+    //   margin: 0 16px 0 16px;
+    // }
+    .send-button {
+      width: 100%;
+    }
+    .divider {
+      margin: 8px 0px;
+      padding: 4px 0px;
+    }
   }
 
   .setting-header-wrapper {
@@ -22,49 +52,73 @@
     height: 64px;
     padding: 0 16px;
   }
-
-  .collection {
-    margin: 10px 24px 0;
-    .img {
-      width: 24px;
-      height: 24px;
-      flex-shrink: 0;
-      img,
-      .img-text {
-        width: 100%;
-        height: 100%;
-        border-radius: 4px;
+  .collection-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    .collection {
+      margin: 0 0px 12px;
+      .img {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        img,
+        .img-text {
+          width: 100%;
+          height: 100%;
+          border-radius: 8px;
+        }
+        .img-text {
+          background-color: var(--portkey-ui-bg-14);
+          font-size: 12px;
+          line-height: 14px;
+          color: var(--portkey-ui-text-tip);
+        }
       }
-      .img-text {
-        background-color: var(--portkey-ui-bg-14);
-        font-size: 12px;
-        line-height: 14px;
-        color: var(--portkey-ui-text-tip);
+      .name {
+        margin-left: 6.8px;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 400;
+        color: var(--sds-color-text-default-secondary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .vector-icon {
+        margin-left: 8px;
+        width: 6.55px;
+        height: 11.15px;
+        svg {
+          width: 6.55px;
+          height: 11.15px;
+          path {
+            fill: var(--sds-color-icon-default-secondary);
+          }
+        }
       }
     }
-    .name {
-      margin-left: 8px;
-      font-size: 14px;
-      line-height: 20px;
-      font-weight: 500;
-      color: var(--portkey-ui-text-primary);
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
+    .description {
+      color: var(--sds-color-text-default-secondary);
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%; /* 22.4px */
     }
   }
-
   .token-id {
-    margin: 6px 24px 0;
+    margin: 24px 0px 12px;
     font-size: 20px;
     line-height: 24px;
-    font-weight: 500;
+    font-weight: 700;
     word-break: break-word;
-    color: var(--portkey-ui-text-primary);
+    font-family: 'Bricolage Grotesque';
+    color: var(--sds-color-text-default-default);
   }
-
   .picture {
-    margin: 16px auto 24px;
+    margin: 8px auto 24px;
     width: 320px;
     height: 320px;
     font-size: 40px;
@@ -85,31 +139,64 @@
   }
 
   .info {
-    padding: 0 24px 32px;
+    padding: 0 0px 0px;
     .title {
       font-size: 16px;
       line-height: 22px;
-      font-weight: 500;
-      color: var(--portkey-ui-text-primary);
+      font-weight: 600;
+      color: var(--sds-color-text-default-tertiary);
       overflow: hidden;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 1;
       text-overflow: ellipsis;
       white-space: nowrap;
+      font-family: 'Schibsted Grotesk';
+      font-style: normal;
+    }
+    .info-content {
+      margin-top: 8px;
+      &.gride-content {
+        padding: 16px 0px;
+        display: grid;
+        gap: 16px;
+        // grid-template-columns: repeat(2, 1fr);
+      }
     }
     .info-item {
-      margin-top: 12px;
-      font-size: 14px;
-      line-height: 20px;
+      font-size: 16px;
+      line-height: 22px;
       font-weight: 400;
+      padding: 16px 0;
       color: var(--portkey-ui-text-primary);
       .label {
-        color: var(--portkey-ui-text-secondary);
+        color: var(--sds-color-text-default-default);
+
+        /* Body Base */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
         .below-label-value {
           color: var(--portkey-ui-text-primary);
           font-weight: 500;
           margin-top: 4px;
         }
+      }
+      .value {
+        color: var(--sds-color-text-default-default);
+        text-align: right;
+        /* Body Strong */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 140%; /* 22.4px */
+      }
+      .chain-image {
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
       }
     }
     .contract {
@@ -120,6 +207,11 @@
             svg path {
               fill: var(--portkey-ui-font-4);
             }
+          }
+        }
+        svg {
+          path {
+            fill: var(--sds-color-icon-default-secondary);
           }
         }
       }
@@ -150,6 +242,8 @@
       font-size: 14px;
       line-height: 20px;
       font-weight: 500;
+      align-self: center;
+      text-align: center;
       color: var(--portkey-ui-text-primary);
     }
     button {
@@ -163,4 +257,40 @@
 
 .portkey-prompt {
   padding-bottom: none !important;
+}
+@media (max-width: 600px) {
+  .portkey-ui-nft-detail {
+    .picture {
+      width: 361px;
+      height: 361px;
+    }
+  }
+  .gride-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 601px ) and (max-width: 896px){
+  .portkey-ui-nft-detail {
+    .picture {
+      width: 400px;
+      height: 400px;
+    }
+  }
+  .gride-content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 897px) {
+  .portkey-ui-nft-detail {
+    .picture {
+      width: 400px;
+      height: 400px;
+    }
+  }
+  .info-content {
+    &.gride-content {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
 }

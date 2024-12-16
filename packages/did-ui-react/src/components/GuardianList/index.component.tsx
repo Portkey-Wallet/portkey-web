@@ -158,7 +158,7 @@ function GuardianList({
     return (
       <div className="portkey-ui-flex-column-between guardian-expired-content">
         <div className="expire-header">
-          <CustomSvg type="warning" />
+          <CustomSvg type="Warning" />
           <div className="guardian-list-title">{t('Guardian Approval Expired')}</div>
           <div className="guardian-list-description">
             {t('Your guardian approvals have expired. Please request new approvals to continue or cancel the process.')}

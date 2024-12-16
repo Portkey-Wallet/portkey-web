@@ -99,12 +99,8 @@ export function useDappSpenderCheck(
       if (!spenderValidResult && !blockTime) {
         result.text = `The dApp's logo, domain, or address you're approving may not be authentic. Please proceed with caution.`;
       } else if (!spenderValidResult && blockTime) {
-        // todo
-        // const isTimeOver12 = checkTimeOver12(blockTime);
-        // const upgradeTime = formatDateTime(blockTime);
-        result.text = '';
-        //result.type=???
-        // result.type = isTimeOver12 ?
+        const upgradeTime = formatDateTime(blockTime);
+        result.text = `The dApp's logo, domain, or address you're approving may not be authentic. Please proceed with caution.\nThe dApp's smart contract has been updated. Contract update time: ${upgradeTime}`;
       } else if (blockTime && spenderValidResult) {
         const isTimeOver12 = checkTimeOver12(blockTime);
         const upgradeTime = formatDateTime(blockTime);
