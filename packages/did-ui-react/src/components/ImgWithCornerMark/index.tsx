@@ -21,7 +21,7 @@ export const ImgWithCornerMark = ({ imgSrc, cornerImgSrc }: IImgWithCornerMark) 
 
   return (
     <div className="img-with-mask-wrap">
-      <img src={imgSrc || ''} width={42} height={42} />
+      <img className="main-img" src={imgSrc || ''} />
       <div className="corner-icon-wrap">{cornerDom}</div>
     </div>
   );

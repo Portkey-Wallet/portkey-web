@@ -86,6 +86,7 @@ export { default as PaymentSecurity } from './PaymentSecurity';
 export { default as TransferSettings } from './TransferSettings';
 export { default as TransferSettingsEdit } from './TransferSettingsEdit';
 export { default as ThrottleButton } from './ThrottleButton';
+export { default as AddressTypeSelect } from './AddressTypeSelect';
 
 export type { ManagerApproveInnerProps } from './ManagerApprove/index.component';
 export type { IAllowance } from './SetAllowance/index.component';
