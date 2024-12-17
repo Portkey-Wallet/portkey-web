@@ -113,21 +113,13 @@ function TokenDetailMain({
     setChainId(chainId);
   };
 
+  console.log(chainId);
   return (
     <div className={clsx(['portkey-ui-token-detail'])}>
       <div className="token-detail-title">
-        {/* <SettingHeader
-          title={
-            <div className="token-detail-header">
-              <CoinImage src={tokenInfo.imageUrl} width={32} />
-              <p className="symbol">{tokenInfo?.label || tokenInfo?.symbol}</p>
-            </div>
-          }
-          leftCallBack={onBack}
-        /> */}
         <div className="token-detail-nav">
           <div className="left-icon" onClick={onBack}>
-            <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default);" className="left-arrow" />
+            <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default)" />
           </div>
           <div className="token-detail-header">
             <CoinImage src={tokenInfo.imageUrl} width={32} />
@@ -171,13 +163,10 @@ function TokenDetailMain({
               <span className="convert">{`$ ${formatAmountShow(tokenBalance?.balanceInUsd || 0, 2)}`}</span>
             </div>
             <BalanceCard
-              isShowRamp={isShowBuy}
-              isShowFaucet={
-                Boolean(faucet?.faucetContractAddress || faucet?.faucetUrl) &&
-                tokenInfo.chainId === 'AELF' &&
-                tokenInfo.symbol === 'ELF'
-              }
+              isShowRamp={(chainId === 'AELF' && isMainnet) || (chainId === 'AELF' && !isMainnet)}
+              isShowSwap={chainId === 'tDVW'}
               isMainnet={isMainnet}
+              isShowFaucet={chainId === 'AELF'}
               onBuy={() => onBuy?.(tokenInfo)}
               onSend={() => onSend?.(tokenInfo, 'TOKEN')}
               onReceive={() => onReceive?.(tokenInfo)}

@@ -46,7 +46,6 @@ import useGAReport from '../../hooks/useGAReport';
 
 import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
-import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
 import CollectionDetailMain from '../CollectionDetail/index.component';
@@ -209,10 +208,9 @@ function AssetMain({
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
 
-  const onAvatarClick = useCallback(async () => {
+  const onAvatarClick = useCallback(() => {
     setAssetStep(AssetStep.my);
   }, []);
-  const { secondaryEmail, getSecondaryMail } = useIsSecondaryMailSet();
   const [activeKey, setActiveKey] = useState<string>(BalanceTab.TOKEN);
 
   // const saveLiftCycleInfo = useCallback(async () => {
@@ -345,7 +343,7 @@ function AssetMain({
     },
     onClickTransactionLimits: () => setAssetStep(AssetStep.transactionLimits),
     onClickTokenAllowances: () => setAssetStep(AssetStep.tokenAllowance),
-    onClickBackupEmail: () => setAssetStep(AssetStep.walletSecurity),
+    onClickBackupEmail: () => setAssetStep(AssetStep.setSecondaryMailbox),
     // onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
   });
 
@@ -353,11 +351,6 @@ function AssetMain({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.transactionLimits),
     onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
     onClickSetSecondaryMailbox: async () => {
-      const res = await getSecondaryMail();
-      if (!res) {
-        singleMessage.error('Cannot fetch the secondary email');
-        return;
-      }
       setAssetStep(AssetStep.setSecondaryMailbox);
     },
   });
@@ -478,6 +471,7 @@ function AssetMain({
               }}
               networkType={networkType}
               chainId={selectToken.chainId}
+              selectToken={selectToken}
               onBack={() => {
                 onBack();
               }}
@@ -548,7 +542,7 @@ function AssetMain({
             />
           )}
 
-          {tokenDetail && (
+          {assetStep === AssetStep.tokenDetail && tokenDetail && (
             <TokenDetailMain
               faucet={faucet}
               isShowRamp={isMixShowRamp}
@@ -704,12 +698,8 @@ function AssetMain({
           {assetStep === AssetStep.setSecondaryMailbox && (
             <SetSecondaryMailbox
               onBack={() => {
-                setAssetStep(AssetStep.walletSecurity);
+                setAssetStep(AssetStep.my);
               }}
-              onSetSecondaryMailboxSuccess={() => {
-                setAssetStep(AssetStep.walletSecurity);
-              }}
-              defaultValue={secondaryEmail}
             />
           )}
           {assetStep === AssetStep.transferSettings && (
@@ -718,7 +708,7 @@ function AssetMain({
               originChainId={originChainId}
               networkType={networkType}
               sandboxId={sandboxId}
-              onBack={() => setAssetStep(AssetStep.my)}
+              onBack={() => setAssetStep(AssetStep.transactionLimits)}
               onSuccess={transferSettingsEditBack}
               initData={viewPaymentSecurity}
             />

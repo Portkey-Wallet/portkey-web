@@ -36,7 +36,7 @@ export default function TokenTab({
         ) : (
           tokenListV2?.map((item) => (
             <>
-              <li className="token-list-item" key={`${item.symbol}`} onClick={() => onClickSection?.(item)}>
+              <li className="token-list-item" key={item.symbol} onClick={() => onClickSection?.(item)}>
                 <TokenChainImageDisplay
                   tokenSrc={item.imageUrl}
                   symbol={item.symbol}

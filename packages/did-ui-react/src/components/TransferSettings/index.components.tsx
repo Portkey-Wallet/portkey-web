@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Switch } from 'antd';
-import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
+import { AccountType, GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { divDecimals, formatAmountShow, timesDecimals } from '../../utils/converter';
 import './index.less';
 import CustomSvg from '../CustomSvg';

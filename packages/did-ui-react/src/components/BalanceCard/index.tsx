@@ -8,8 +8,8 @@ export interface BalanceCardProps {
   accountInfo?: any;
   isMainnet?: boolean;
   isShowRamp?: boolean;
-  isShowSwap?: boolean;
   isShowFaucet?: boolean;
+  isShowSwap?: boolean;
   onBuy?: () => void;
   onSend?: () => void;
   onReceive?: () => void;
@@ -27,9 +27,9 @@ enum ItemType {
 
 export default function BalanceCard({
   isShowRamp = true,
-  isShowSwap,
   isShowFaucet,
   isMainnet,
+  isShowSwap,
   onBuy,
   onSend,
   onReceive,
