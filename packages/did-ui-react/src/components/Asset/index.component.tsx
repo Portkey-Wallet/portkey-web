@@ -471,7 +471,7 @@ function AssetMain({
               }}
               networkType={networkType}
               chainId={selectToken.chainId}
-              selectToken={selectToken}
+              // selectToken={selectToken}
               onBack={() => {
                 onBack();
               }}

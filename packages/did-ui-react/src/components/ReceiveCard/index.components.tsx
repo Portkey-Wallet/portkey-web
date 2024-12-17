@@ -65,7 +65,7 @@ export default function ReceiveCardMain({
         chainId: 'tDVV',
         chainImageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/dappChain.png',
         decimals: 8,
-        displayChainName: 'aelf dAppChain',
+        // displayChainName: 'aelf dAppChain',
         id: 'db8c582e-22b5-bd39-9f42-3a10e6a9bbe4',
         imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin-ELF.png',
         isDefault: true,
