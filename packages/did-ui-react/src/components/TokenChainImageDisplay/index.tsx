@@ -17,7 +17,7 @@ export default function TokenImageDisplay({
   const [isError, setError] = useState<boolean>(false);
   const isShowDefault = useMemo(() => isError || !tokenSrc, [isError, tokenSrc]);
   return (
-    <div className="portkey-ui-token-img-loading-wrapper portkey-ui-token-logo portkey-ui-flex-center">
+    <div className="portkey-ui-token-img-loading-wrapper">
       {isShowDefault ? (
         <div className="portkey-ui-show-name-index portkey-ui-flex-center token-image">{symbol?.slice(0, 1)}</div>
       ) : (

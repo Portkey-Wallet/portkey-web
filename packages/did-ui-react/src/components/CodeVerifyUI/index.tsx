@@ -70,13 +70,16 @@ const CodeVerifyUI = forwardRef(
     return (
       <div className={clsx('verifier-account-wrapper', className)}>
         <div className="verifier-account-title">Verify your email</div>
-        {verifier && (
-          <div className="verifier-account-desc">
-            <span>{`${verifier.name}, your assigned Guardian Verifier, has sent a verification email to`}&nbsp;</span>
-            <span className="verifier-account-desc-account">{guardianIdentifier}</span>
-            <span>{`. Please enter the 6-digit code from the email to continue.`}</span>
-          </div>
-        )}
+        <div className="verifier-account-desc">
+          <span>
+            {`${
+              verifier ? `${verifier.name}, y` : 'Y'
+            }our assigned Guardian Verifier, has sent a verification email to`}
+            &nbsp;
+          </span>
+          <span className="verifier-account-desc-account">{guardianIdentifier}</span>
+          <span>{`. Please enter the 6-digit code from the email to continue.`}</span>
+        </div>
 
         <div className={clsx('portkey-ui-code-verify-passcode', error && 'portkey-ui-code-verify-passcode-error')}>
           <PasscodeInput

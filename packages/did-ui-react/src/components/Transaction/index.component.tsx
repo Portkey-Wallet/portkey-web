@@ -176,6 +176,17 @@ export default function TransactionMain({
       );
     }
 
+    if (isShowSystemForDefault) {
+      return (
+        <div className="default-token-container">
+          <div className="token-wrapper">
+            <CoinImage src={activityItem?.listIcon} width={60} />
+            <img className="icon bottom" src={activityItem?.sourceIcon} />
+          </div>
+        </div>
+      );
+    }
+
     return <CoinImage src={listIcon} width={60} />;
   };
 

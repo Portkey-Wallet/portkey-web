@@ -84,7 +84,7 @@ export default function TokenAllowanceMain(props: ITokenAllowanceProps) {
           <LoadingMore hasMore={list?.length < totalRecordCount} loadMore={loadMore} className="load-more" />
         </>
       )}
-      {list?.length === 0 && <div className="no-data-text">No data</div>}
+      {list?.length === 0 && <div className="no-data-text">No assets yet</div>}
     </div>
   );
 }
