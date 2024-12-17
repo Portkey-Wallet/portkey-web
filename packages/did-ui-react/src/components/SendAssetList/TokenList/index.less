@@ -1,0 +1,41 @@
+.select-send-token-list {
+  min-width: 375px;
+  font-size: 16px;
+  line-height: 22px;
+  .token-item {
+    padding: 16px;
+    &:hover {
+      background-color: var(--sds-color-background-default-default-hover);
+    }
+    .token-icon-show {
+      width: 45px;
+    }
+    .token-info-show {
+      .token-info-symbol {
+        .token-chain {
+          font-size: 14px;
+          line-height: 20px;
+          color: var(--sds-color-text-default-secondary);
+        }
+      }
+      .token-info-amount {
+        text-align: right;
+        .token-usd {
+          font-size: 14px;
+          line-height: 20px;
+          color: var(--sds-color-text-default-secondary);
+        }
+      }
+    }
+  }
+  .circle-loading {
+    margin: 32px auto;
+  }
+  .no-data-message {
+    margin-top: 32px;
+    color: var(--sds-color-text-default-secondary);
+  }
+  .gap-8 {
+    gap: 8px;
+  }
+}

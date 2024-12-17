@@ -174,8 +174,34 @@ export type GetAccountAssetsByKeywordsParams = {
   width?: number;
   height?: number;
 };
+export interface IAssetNftCollection {
+  collectionName: string;
+  imageUrl: string;
+  items: INftInfoType[];
+}
+
+export interface IAssetToken {
+  address: string; // user chain address
+  balance: string;
+  balanceInUsd: string;
+  chainId: ChainId;
+  chainImageUrl: string;
+  decimals: string;
+  displayChainName: string;
+  imageUrl: string;
+  symbol: string;
+  tokenContractAddress: string;
+  label?: string;
+}
+
 export type GetAccountAssetsByKeywordsResult = {
   data: IAssetItemType[];
+  totalRecordCount: number;
+};
+
+export type GetAccountAssetsByKeywordsV2Result = {
+  nftInfos: IAssetNftCollection[];
+  tokenInfos: IAssetToken[];
   totalRecordCount: number;
 };
 export interface IAssetItemType {
@@ -202,4 +228,5 @@ export interface IAssetsService {
   getUserTokenList(params: GetUserTokenListParams): Promise<GetUserTokenListResult>;
   getUserTokenListNew(params: GetUserTokenListParams): Promise<GetUserTokenListResultNew>;
   getAccountAssetsByKeywords(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsResult>;
+  getAccountAssetsByKeywordsV2(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsV2Result>;
 }
