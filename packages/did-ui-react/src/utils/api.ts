@@ -96,7 +96,7 @@ export class Verification extends StorageBaseLoader {
         config.headers = {
           reCaptchaToken: reCaptchaToken.message,
         };
-        setLoading(true);
+        // setLoading(true); // unnecessary in email login
         const req = await did.services.getVerificationCode(config);
         setLoading(false);
         if (!req.verifierSessionId) return req;

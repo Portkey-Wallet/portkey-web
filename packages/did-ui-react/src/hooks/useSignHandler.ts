@@ -72,7 +72,6 @@ export const useSignHandler = ({
       setIsEmailLoading(true);
       try {
         await validateIdentifier(email);
-        console.log('🌈 🌈 🌈 🌈 🌈 🌈 1', '');
         return customValidateEmail?.(email);
       } catch (error) {
         console.log('validateEmail error', error);
@@ -111,7 +110,6 @@ export const useSignHandler = ({
 
   const onFinish = useThrottleFirstCallback(
     async (value: GuardianInputInfo) => {
-      console.log('🌈 🌈 🌈 🌈 🌈 🌈 onFinish', '');
       onChainIdChange?.(originChainIdRef.current);
       onSuccess?.(
         { ...value, isLoginGuardian: isHasAccount.current, chainId: originChainIdRef.current },

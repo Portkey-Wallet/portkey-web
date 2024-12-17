@@ -1,6 +1,5 @@
 import { useMemo, useRef, useEffect, ReactNode, useCallback, useState, ReactElement } from 'react';
 import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 import {
   ISocialLogin,
   ISocialLoginConfig,
@@ -11,7 +10,6 @@ import {
   SocialLoginFinishHandler,
   TotalAccountType,
 } from '../../types';
-import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
 import AccountRecommendGroup from '../AccountRecommendGroup';
 import TermsOfServiceItem from '../TermsOfServiceItem';
@@ -23,9 +21,7 @@ import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { SocialLoginList, TotalAccountTypeList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
-import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 import { TAllLoginKey } from '../../utils/googleAnalytics';
-import { usePortkey } from '../context';
 import LoginIconAndLabel from '../LoginIconAndLabel';
 import { CircleLoginButton } from '../LoginButton';
 
@@ -75,8 +71,6 @@ export default function SocialLogin({
   onSocialStart,
   switchType,
 }: SocialLoginProps) {
-  const [{ theme }] = usePortkey();
-  const { t } = useTranslation();
   const onBackRef = useRef<SocialLoginProps['onBack']>(onBack);
   const onFinishRef = useRef<SocialLoginProps['onFinish']>(onFinish);
 
@@ -92,13 +86,10 @@ export default function SocialLogin({
   });
   const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
 
-  const isLogin = useMemo(() => type === 'Login', [type]);
-
   const onSocialChange = useCallback(
     async (type: ISocialLogin) => {
       try {
         onSocialStart?.(type);
-        console.log('🌈 🌈 🌈 🌈 🌈 🌈 16', '');
         setLoading(true);
         const result = await socialLoginHandler(type);
         setLoading(false);
@@ -143,7 +134,6 @@ export default function SocialLogin({
 
   const {
     isNeedFold,
-    iconMinWidthRealGap,
     expendDisplayList: notRecommendExpendDisplayList,
     defaultDisplayList: notRecommendDefaultDisplayList,
   } = useComputeIconCountPreRow<TotalAccountType>({
