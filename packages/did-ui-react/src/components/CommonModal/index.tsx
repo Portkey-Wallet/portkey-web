@@ -31,7 +31,6 @@ export default function CommonModal(props: CommonModalProps) {
     }
     return null;
   }, [leftCallBack, onClose, title]);
-
   return (
     <CommonBaseModal
       destroyOnClose

@@ -6,25 +6,39 @@
     flex: 1;
 
     .transaction {
-      margin: 32px auto;
+      margin: 48px auto;
       .send {
         font-weight: 500;
         color: var(--portkey-ui-text-primary);
         .amount {
-          font-size: 28px;
-          line-height: 28px;
+          color: var(--sds-color-text-default-default);
+          font-family: 'Bricolage Grotesque';
+          font-size: 32px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 120%; /* 38.4px */
+          letter-spacing: -0.64px;
         }
         .currency {
-          margin-left: 8px;
-          font-size: 12px;
-          line-height: 16px;
+          margin-left: 6px;
+          color: var(--sds-color-text-default-default);
+          /* Title Page */
+          font-family: 'Bricolage Grotesque';
+          font-size: 32px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 120%; /* 38.4px */
+          letter-spacing: -0.64px;
         }
       }
       .receive {
-        margin-top: 12px;
-        font-size: 12px;
-        line-height: 16px;
-        color: var(--portkey-ui-text-secondary);
+        margin-top: 8px;
+        color: var(--sds-color-text-default-secondary);
+        /* Body Base */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        line-height: 140%; /* 22.4px */
       }
     }
 
@@ -32,15 +46,23 @@
       width: 100%;
       color: var(--portkey-ui-text-secondary);
       .portkey-ui-ramp-provider-label {
-        margin: 0 0 8px 8px;
-        font-size: 12px;
-        line-height: 16px;
+        margin: 0 0 16px 0px;
+        overflow: hidden;
+        color: var(--sds-color-text-default-secondary);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        /* Body Strong */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 140%; /* 22.4px */
       }
       .portkey-ui-ramp-provider-card-item {
         padding: 16px 12px;
-        border: 1px solid var(--portkey-ui-default-border);
-        border-radius: 6px;
-        margin-bottom: 8px;
+        border: 1px solid var(--Border-Default-Subtle);
+        border-radius: 15px;
+        margin-bottom: 16px;
         position: relative;
         overflow: hidden;
         .portkey-ui-ramp-provider {
@@ -61,6 +83,7 @@
           .portkey-ui-ramp-provider-pay-item {
             border-radius: 2px;
             border: 0.5px solid var(--portkey-ui-default-border);
+            background: white;
             min-width: 20px;
             height: 20px;
             margin-right: 6px;
@@ -72,13 +95,23 @@
       }
 
       .portkey-ui-ramp-provider-card-item-selected {
-        border: 1px solid var(--portkey-ui-border-7);
+        // border: 1px solid var(--portkey-ui-border-7);
+        border-radius: 15px;
+        border: 1px solid var(--sds-color-border-brand-default);
+        background: var(--sds-color-background-default-secondary);
         .card-selected-icon {
           position: absolute;
-          top: -1px;
-          right: -1px;
+          top: 16px;
+          right: 16px;
           width: 24px;
-          height: 18px;
+          height: 24px;
+          svg {
+            width: 24px;
+            height: 24px;
+            path {
+              fill: var(--sds-color-icon-brand-secondary);
+            }
+          }
         }
       }
     }
@@ -86,18 +119,15 @@
 
   .portkey-ui-ramp-preview-footer {
     width: 100%;
-    height: 128px;
+    // height: 128px;
     padding: 16px;
-    border-top: 1px solid var(--portkey-ui-default-border);
-    background-color: var(--portkey-ui-bg-5);
+    // border-top: 1px solid var(--portkey-ui-default-border);
+    // background-color: var(--portkey-ui-bg-5);
 
     .portkey-ui-ramp-preview-disclaimer {
-      margin: 0 8px 8px;
-      font-size: 14px;
-      line-height: 20px;
-      background-color: var(--portkey-ui-bg-5);
+      margin-bottom: 40px;
       .highlight {
-        color: var(--portkey-ui-font-4);
+        color: var(--sds-color-text-brand-default);
         cursor: pointer;
       }
     }
@@ -107,6 +137,36 @@
       border-radius: 22px;
       font-size: 16px;
       line-height: 22px;
+    }
+  }
+}
+.disclaimer-tip-modal {
+  .disclaimer-tip-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 16px;
+    .disclaimer-tip-title {
+      color: var(--sds-color-text-default-default);
+
+      /* Heading */
+      font-family: 'Bricolage Grotesque';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 120%; /* 24px */
+      letter-spacing: -0.4px;
+
+      margin: 0px 0px 12px;
+    }
+    .disclaimer-tip-content {
+      color: var(--sds-color-text-default-default);
+
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      line-height: 140%; /* 22.4px */
+      margin: 0px 0px 24px;
     }
   }
 }

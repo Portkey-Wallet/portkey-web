@@ -55,6 +55,7 @@ export default function Provider({ theme, chainType, sandboxId, networkType, chi
     ConfigProvider.setGlobalConfig({ networkType });
   }, [networkType]);
   useEffect(() => {
+    ConfigProvider.setGlobalConfig({ theme });
     initTheme(theme);
   }, [theme]);
 

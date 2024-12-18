@@ -1,0 +1,126 @@
+.portkey-ui-ramp-content {
+  &.ramp-buy {
+    justify-content: space-between;
+    padding-bottom: 16px;
+  }
+ .ramp-buy-pageWrap {
+  flex-shrink: 1;
+  .flex {
+    flex: 1;
+  }
+  
+  .rightDom {
+    margin-right: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  
+  .rightDomText {
+    font-size: 16px;
+  }
+  
+  .fiatWrap {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+  }
+  .input-style {
+    font-size: 32px; 
+    font-family: 'Bricolage Grotesque';
+    line-height: 120%;
+    letter-spacing: -0.64px;
+    white-space: pre;
+    color: var(--sds-color-text-default-default);
+  }
+  .fiatInput {
+    flex-shrink: 0;
+    border: none;       
+    outline: none;  
+    min-width: 21px;    
+  }
+  
+  .amountErrorText {
+    color: var(--sds-color-text-danger-default);
+  }
+  
+  .fiatText {
+    margin-left: 6px;
+    font-size: 32px;
+    font-family: 'Bricolage Grotesque';
+    color: var(--sds-color-text-default-default);
+  }
+  
+  .warningText {
+    width: 100%;
+    text-align: center;
+    margin-top: 8px;
+    font-size: 14px;
+    color: var(--sds-color-text-danger-secondary);
+  }
+  
+  .receiveAmount {
+    margin-top: 8px;
+    color: var(--sds-color-text-default-secondary);
+    font-size: 16px;
+    text-align: center;
+  }
+  
+  .btnWrap {
+    padding-bottom: 24px;
+  }
+  
+  .btnStyle {
+    width: 100%;
+  }
+ }
+}
+.change-currency-modal-list {
+  .change-currency-modal-list-title {
+    color: var(--sds-color-text-default-default);
+
+    /* Heading */
+    font-family: 'Bricolage Grotesque';
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 120%; /* 24px */
+    letter-spacing: -0.4px;
+
+    margin: 16px 16px 0px;
+  }
+  .change-currency-modal-list-search {
+    margin: 20px 16px 0;
+    width: calc(100%-32px);
+  }
+  .fiat-list-item {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    margin: 12px 0px;
+    cursor: pointer;
+    width: 100%;
+    .fiat-name {
+      color: var(--sds-color-text-default-default);
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      line-height: 140%; /* 22.4px */
+    }
+    .fiat-check-circle {
+      width: 24px;
+      height: 24px;
+      svg {
+        width: 24px;
+        height: 24px;
+        path {
+          fill: var(--sds-color-icon-brand-secondary);
+        }
+      }
+    }
+  }
+}

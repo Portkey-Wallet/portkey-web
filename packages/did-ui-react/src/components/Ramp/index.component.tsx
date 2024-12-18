@@ -14,17 +14,25 @@ import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import useHandleAchSell from './hooks/useHandleAchSell';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
-import { IRampCryptoItem, RampType } from '@portkey/ramp';
+import { IRampCryptoItem, IRampFiatItem, RampType } from '@portkey/ramp';
 import './index.less';
 import { TokenItemShowType } from '../types/assets';
-import { mixRampShow } from './utils';
+import { mixRampShow, transformAction } from './utils';
 import { openloginSignal } from '@portkey/socket';
 import { getCommunicationSocketUrl } from '../config-provider/utils';
 import CommonInput from '../CommonInput';
 import { getBuyCrypto, getSellCrypto } from './utils/api';
 import useGAReport from '../../hooks/useGAReport';
 import TokenImageDisplay from '../TokenImageDisplay';
+import CustomSvg from '../CustomSvg';
+import FiatInput from './components/FiatInput';
+import RampPreview from './components/RampPreview';
+import { useBuyCryptoList } from './hooks/hook';
 
+export const enum RampStep {
+  HOME,
+  PREVIEW,
+}
 export default function RampMain({
   className,
   initState,
@@ -32,15 +40,17 @@ export default function RampMain({
   isMainnet,
   isBuySectionShow = true,
   isSellSectionShow = true,
-  isErrorTip = true,
+  // isErrorTip = true,
   onBack,
   onShowPreview,
-  onModifyLimit,
+  // onModifyLimit,
   onModifyGuardians,
 }: IRampProps) {
   const { t } = useTranslation();
-  const { startReport, endReport } = useGAReport();
-  const [keyword, setKeyword] = useState('');
+  const [step, setStep] = useState(RampStep.HOME);
+  // const [fiatList, setFiatList] = useState<IRampFiatItem[]>([]);
+  // const { startReport, endReport } = useGAReport();
+  const [keyword, setKeyword] = useState<string>('');
   const [{ initialized, caHash, originChainId }] = usePortkeyAsset();
   const [page, setPage] = useState<RampType>(initState?.side || RampType.BUY);
   const isSell = useRef(0); // guaranteed to make only one transfer
@@ -48,10 +58,11 @@ export default function RampMain({
   const [isBuyShow, setIsBuyShow] = useState<boolean>(isBuySectionShow);
   const [isSellShow, setIsSellShow] = useState<boolean>(isSellSectionShow);
 
-  const [initBuyState, setInitBuyState] = useState(initState?.side === RampType.BUY ? initState : {});
-  const [initSellState, setInitSellState] = useState(initState?.side === RampType.SELL ? initState : {});
+  // const [initBuyState, setInitBuyState] = useState(initState?.side === RampType.BUY ? initState : {});
+  // const [initSellState, setInitSellState] = useState(initState?.side === RampType.SELL ? initState : {});
   const [buyCryptoList, setBuyCryptoList] = useState<IRampCryptoItem[]>();
   const [sellCryptoList, setSellCryptoList] = useState<IRampCryptoItem[]>();
+  const [selectedCrypto, setSelectedCrypto] = useState<IRampCryptoItem>();
   const fetchBuyCryptoList = useCallback(async () => {
     try {
       setLoading(true);
@@ -86,7 +97,7 @@ export default function RampMain({
     return [];
   }, [buyCryptoList, page, sellCryptoList]);
   const filterList = useMemo(
-    () => list?.filter((item) => item.symbol.toLocaleUpperCase().includes(keyword.toLocaleUpperCase())),
+    () => list?.filter((item) => item.symbol.toLocaleUpperCase().includes(keyword?.toLocaleUpperCase())),
     [keyword, list],
   );
   useEffectOnce(() => {
@@ -183,7 +194,7 @@ export default function RampMain({
             onOk: onModifyGuardians,
           });
           if (!res) {
-            setInitSellState({});
+            // setInitSellState({});
             setLoading(false);
           }
         } catch (error) {
@@ -195,7 +206,7 @@ export default function RampMain({
           setLoading(false);
         }
       } else {
-        setInitBuyState({});
+        // setInitBuyState({});
       }
 
       setPage(side);
@@ -216,76 +227,62 @@ export default function RampMain({
 
   return (
     <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column', className])} id="portkey-ui-ramp">
-      <BackHeaderForPage
-        title={
-          <div className="portkey-ui-ramp-radio">
-            <Radio.Group defaultValue={RampType.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
-              <Radio.Button value={RampType.BUY} style={{ cursor: 'pointer' }}>
-                {t('Buy')}
-              </Radio.Button>
-              <Radio.Button value={RampType.SELL} style={{ cursor: 'pointer' }}>
-                {t('Sell')}
-              </Radio.Button>
-            </Radio.Group>
+      {step === RampStep.HOME && (
+        <>
+          <BackHeaderForPage
+            title={
+              <div className="portkey-ui-ramp-radio">
+                <Radio.Group defaultValue={RampType.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
+                  <Radio.Button value={RampType.BUY} style={{ cursor: 'pointer' }}>
+                    {t('Buy')}
+                  </Radio.Button>
+                  <Radio.Button value={RampType.SELL} style={{ cursor: 'pointer' }}>
+                    {t('Sell')}
+                  </Radio.Button>
+                </Radio.Group>
+              </div>
+            }
+            leftCallBack={onBack}
+          />
+          <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
+            <CommonInput
+              type="search"
+              placeholder="Search"
+              onChange={(e) => {
+                const v = e.target.value.trim();
+                setKeyword(v);
+              }}
+            />
+            <ul style={{ width: '100%', marginTop: 16 }}>
+              {filterList?.map((item, index) => (
+                <li
+                  key={index + '_' + item.symbol}
+                  className="crypto-list-item"
+                  onClick={() => {
+                    setStep(RampStep.PREVIEW);
+                    setSelectedCrypto(item);
+                  }}>
+                  <TokenImageDisplay src={item.icon} symbol={item.symbol} />
+                  <span className="crypto-name">{item.symbol}</span>
+                </li>
+              ))}
+            </ul>
           </div>
-        }
-        leftCallBack={onBack}
-      />
-      <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
-        <CommonInput
-          type="search"
-          placeholder="Search"
-          onChange={(e) => {
-            const v = e.target.value.trim();
-            setKeyword(v.trim());
-          }}
+        </>
+      )}
+      {step === RampStep.PREVIEW && selectedCrypto && list && (
+        <RampPreview
+          selectedCrypto={selectedCrypto}
+          pageType={page}
+          setStep={setStep}
+          list={list}
+          isMainnet={isMainnet}
+          isSellShow={isSellShow}
+          isBuyShow={isBuyShow}
+          onBack={onBack}
+          onShowPreview={onShowPreview}
         />
-        <ul style={{ width: '100%', marginTop: 16 }}>
-          {filterList?.map((item, index) => (
-            <li key={index + '_' + item.symbol} className="crypto-list-item">
-              <TokenImageDisplay src={item.icon} symbol={item.symbol} />
-              <span className="crypto-name">{item.symbol}</span>
-            </li>
-          ))}
-        </ul>
-        {/* {page === RampType.BUY && (
-          <BuyForm
-            isMainnet={isMainnet}
-            isBuySectionShow={isBuySectionShow}
-            crypto={initBuyState?.crypto}
-            cryptoIcon={initBuyState?.cryptoIcon}
-            network={initBuyState?.network}
-            fiat={initBuyState?.fiat}
-            country={initBuyState?.country}
-            countryName={initBuyState?.countryName}
-            fiatIcon={initBuyState?.fiatIcon}
-            amount={initBuyState?.amount}
-            tokenInfo={tokenInfo as TokenItemShowType}
-            onBack={onBack}
-            onShowPreview={onShowPreview}
-          />
-        )}
-        {page === RampType.SELL && (
-          <SellForm
-            isMainnet={isMainnet}
-            isSellSectionShow={isSellSectionShow}
-            crypto={initSellState?.crypto}
-            cryptoIcon={initBuyState?.cryptoIcon}
-            network={initSellState?.network}
-            fiat={initSellState?.fiat}
-            country={initSellState?.country}
-            countryName={initSellState?.countryName}
-            fiatIcon={initBuyState?.fiatIcon}
-            amount={initSellState?.amount}
-            tokenInfo={tokenInfo as TokenItemShowType}
-            isErrorTip={isErrorTip}
-            onBack={onBack}
-            onShowPreview={onShowPreview}
-            onModifyLimit={onModifyLimit}
-            onModifyGuardians={onModifyGuardians}
-          />
-        )} */}
-      </div>
+      )}
     </div>
   );
 }

@@ -3,6 +3,7 @@ import lottie, { AnimationItem } from 'lottie-web';
 import animationDarkData from './spinnerDark';
 import animationWhiteData from './spinnerWhite';
 import ConfigProvider from '../config-provider';
+import { usePortkey } from '../context';
 
 export enum LoadingColor {
   WHITE = 'white',
@@ -17,10 +18,11 @@ export type LoadingType = {
 };
 
 const LoadingIndicator = (props: LoadingType) => {
+  const [{ theme: providerTheme }] = usePortkey();
   const { width = 16, height = 16, color, isDarkThemeWhiteLoading = false } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const animation = useRef<AnimationItem | null>(null);
-  const theme = useMemo(() => ConfigProvider?.getGlobalConfig()?.theme, []);
+  const theme = useMemo(() => ConfigProvider?.getGlobalConfig()?.theme || providerTheme, [providerTheme]);
   const animationData = useMemo(() => {
     if (color === LoadingColor.WHITE) return animationWhiteData;
     if (color === LoadingColor.DARK) return animationDarkData;

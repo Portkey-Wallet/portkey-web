@@ -68,8 +68,10 @@ class LocalConfigProvider {
         referralInfo: _config['referralInfo'],
       });
     }
-    const theme: ThemeType = _config['theme'] || DEFAULT_THEME;
-    initTheme(theme);
+    if ('theme' in _config) {
+      const theme: ThemeType = _config['theme'] || DEFAULT_THEME;
+      initTheme(theme);
+    }
     this.config = { ...this.config, ..._config };
   };
 

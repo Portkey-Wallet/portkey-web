@@ -12,7 +12,8 @@ export type CommonButtonType =
   | 'link'
   | 'text'
   | 'outline'
-  | 'primaryOutline';
+  | 'primaryOutline'
+  | 'danger';
 
 export type CommonButtonProps = {
   loadingWidth?: number;
@@ -27,7 +28,7 @@ export default function CommonButton(props: CommonButtonProps) {
     <Button
       className={clsx('portkey-ui-common-button portkey-ui-flex-center', btnClsName, className)}
       {...prop}
-      type={type === 'outline' || type === 'primaryOutline' ? undefined : type}>
+      type={type === 'outline' || type === 'primaryOutline' || type === 'danger' ? undefined : type}>
       {loading ? <Loading width={loadingWidth} height={loadingHeight} /> : children}
     </Button>
   );
