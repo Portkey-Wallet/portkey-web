@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.16.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.16.0-alpha.0) (2024-12-18)
+
+### Features
+
+- change format date string ([1baa94c](https://github.com/Portkey-Wallet/portkey-web/commit/1baa94cb1695ecdff2b45dc86b383e2773e1a564))
+- dapp security ([e186193](https://github.com/Portkey-Wallet/portkey-web/commit/e1861930d21a5121a638ff209483be728de60b5a))
+
+### Bug Fixes
+
+- 🐛 get common account ([6cc4583](https://github.com/Portkey-Wallet/portkey-web/commit/6cc4583190aab2d0b0a14cc163e832789f2a57d9))
+
 ## [2.15.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10-alpha.0...v2.15.10) (2024-11-20)
 
 **Note:** Version bump only for package @portkey/did-ui-react
