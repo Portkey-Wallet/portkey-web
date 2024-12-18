@@ -48,10 +48,6 @@
     "query-string": "^7.1.1"
   },
   "devDependencies": {
-    "@jest/globals": "^29.3.1",
-    "babel-jest": "^29.3.1",
-    "jest": "^29.3.1",
-    "ts-jest": "^29.0.5"
   },
   "gitHead": "dc404b8027cfc47c9a1588d0a092ab0469b6ee97"
 }

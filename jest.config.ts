@@ -3,13 +3,13 @@
  * https://jestjs.io/docs/configuration
  */
 
-const path = require('path');
-const { lstatSync, readdirSync } = require('fs');
+import { resolve, join } from 'path';
+import { lstatSync, readdirSync } from 'fs';
 // get listing of packages in the mono repo
-const basePath = path.resolve(__dirname, 'packages');
-const packages = readdirSync(basePath).filter((name: string) => lstatSync(path.join(basePath, name)).isDirectory());
+const basePath = resolve(__dirname, 'packages');
+const packages = readdirSync(basePath).filter((name: string) => lstatSync(join(basePath, name)).isDirectory());
 
-const moduleNameMapper: any = {};
+const moduleNameMapper = {};
 packages.forEach((key: string) => {
   moduleNameMapper[`@portkey/${key}/test/(.+)$`] = `<rootDir>/packages/${key}/test/$1`;
   moduleNameMapper[`@portkey/${key}`] = `<rootDir>/packages/${key}/src`;
@@ -17,6 +17,16 @@ packages.forEach((key: string) => {
 
 export default {
   preset: 'ts-jest',
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        diagnostics: false,
+        isolatedModules: true,
+        useESM: true,
+      },
+    ],
+  },
   // All imported modules in your tests should be mocked automatically
   // automock: false,
 
@@ -39,7 +49,7 @@ export default {
   coverageDirectory: 'coverage',
   testEnvironment: 'node',
   // An array of regexp pattern strings used to skip coverage collection
-  coveragePathIgnorePatterns: ['/node_modules/', '/__generated__/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/__generated__/', './empty.js'],
 
   // Indicates which provider should be used to instrument code for coverage
   // coverageProvider: "babel",
@@ -87,19 +97,14 @@ export default {
   // ],
 
   // An array of file extensions your modules use
-  // moduleFileExtensions: [
-  //   "js",
-  //   "mjs",
-  //   "cjs",
-  //   "jsx",
-  //   "ts",
-  //   "tsx",
-  //   "json",
-  //   "node"
-  // ],
+  moduleFileExtensions: ['js', 'mjs', 'cjs', 'jsx', 'ts', 'tsx', 'json', 'node'],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  moduleNameMapper,
+  moduleNameMapper: {
+    ...moduleNameMapper,
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/empty.js',
+    '\\.(css|less|scss|sass)$': '<rootDir>/empty.js',
+  },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
@@ -146,7 +151,7 @@ export default {
   // setupFiles: [],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  // setupFilesAfterEnv: [],
+  setupFilesAfterEnv: ['./jest.setup.ts'],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,

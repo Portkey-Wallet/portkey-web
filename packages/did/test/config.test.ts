@@ -1,5 +1,5 @@
 import 'isomorphic-fetch';
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import { DIDConfig, RequestDefaultsConfig } from '../src/config';
 import { StorageMock } from './__mocks__/storageMock';
 import { IConfig } from '@portkey/types';
