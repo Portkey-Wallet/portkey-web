@@ -1,52 +1,62 @@
-.portkey-ui-payment-security-wrapper {
-  .back-header-page-wrapper {
-    background-color: var(--portkey-ui-default-bg);
-    border-bottom: 1px solid var(--portkey-ui-border-2);
+.portkey-ui-transaction-limits-wrapper {
+  .transaction-limits-nav {
+    position: relative;
+    align-items: center;
+    display: flex;
+    background-color: var(--sds-color-background-default-default);
+    .left-icon {
+      position: absolute;
+      left: 16px;
+    }
+
+    .transaction-limits-header {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      height: 56px;
+
+      .symbol {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 22.4px;
+        text-align: center;
+        color: var(--sds-color-text-default-default);
+      }
+    }
   }
 
-  .portkey-ui-payment-security-list {
+  .portkey-ui-transaction-limits-list {
     .adm-list-body {
-      border-top: 0;
-      border-bottom: 0;
+      border: 0;
     }
-    .portkey-ui-payment-security-item-wrap {
-      padding: 0;
+    .portkey-ui-transaction-limits-item-wrap {
+      background-color: var(--sds-color-background-default-default);
+
       .adm-list-item-content {
-        padding: 0;
         border-top: 0;
-        .adm-list-item-content-main {
-          padding: 0;
-        }
+      }
+      .portkey-ui-transaction-limits-item {
+        padding: 0;
+        border: 0;
+        gap: 8px;
+        display: flex;
       }
 
-      .portkey-ui-menu-item {
-        border: 0;
-        .portkey-ui-enter-btn {
-          margin-top: 6px;
+      .portkey-ui-transaction-limits-item-icon {
+        margin: 0;
+      }
+      .token-info {
+        .token-symbol {
+          font-weight: 400;
+          line-height: 22.4px;
+          font-size: 16px;
+          color: var(--portkey-ui-text-primary);
         }
-
-        .token-info {
-          .token-symbol-line {
-            display: flex;
-            flex-direction: row;
-            justify-content: flex-start;
-            align-items: flex-start;
-          }
-          .token-symbol-text {
-            font-size: 16px;
-            color: var(--sds-color-text-default-default);
-            line-height: 22px;
-          }
-          .token-symbol-icon {
-            width: 12px;
-            height: 12px;
-            margin-left: 4px;
-          }
-          .token-network {
-            font-size: 14px;
-            color: var(--sds-color-text-default-tertiary);
-            line-height: 20px;
-          }
+        .token-network {
+          font-size: 14px;
+          color: var(--sds-color-icon-default-secondary);
+          line-height: 20px;
         }
       }
     }

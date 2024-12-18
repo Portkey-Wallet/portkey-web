@@ -1,6 +1,5 @@
 import { useMemo, useRef, useEffect, ReactNode, useCallback, useState, ReactElement } from 'react';
 import clsx from 'clsx';
-import { useTranslation } from 'react-i18next';
 import {
   ISocialLogin,
   ISocialLoginConfig,
@@ -11,7 +10,6 @@ import {
   SocialLoginFinishHandler,
   TotalAccountType,
 } from '../../types';
-import CustomSvg from '../CustomSvg';
 import DividerCenter from '../DividerCenter';
 import AccountRecommendGroup from '../AccountRecommendGroup';
 import TermsOfServiceItem from '../TermsOfServiceItem';
@@ -23,9 +21,9 @@ import { TotalAccountsInfo } from '../../constants/socialLogin';
 import { SocialLoginList, TotalAccountTypeList, Web2LoginList } from '../../constants/guardian';
 import { AccountType } from '@portkey/services';
 import { useComputeIconCountPreRow } from '../../hooks/login';
-import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 import { TAllLoginKey } from '../../utils/googleAnalytics';
-import { usePortkey } from '../context';
+import LoginIconAndLabel from '../LoginIconAndLabel';
+import { CircleLoginButton } from '../LoginButton';
 
 interface SocialLoginProps {
   type: RegisterType;
@@ -73,8 +71,6 @@ export default function SocialLogin({
   onSocialStart,
   switchType,
 }: SocialLoginProps) {
-  const [{ theme }] = usePortkey();
-  const { t } = useTranslation();
   const onBackRef = useRef<SocialLoginProps['onBack']>(onBack);
   const onFinishRef = useRef<SocialLoginProps['onFinish']>(onFinish);
 
@@ -90,13 +86,10 @@ export default function SocialLogin({
   });
   const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
 
-  const isLogin = useMemo(() => type === 'Login', [type]);
-
   const onSocialChange = useCallback(
     async (type: ISocialLogin) => {
       try {
         onSocialStart?.(type);
-        console.log('🌈 🌈 🌈 🌈 🌈 🌈 16', '');
         setLoading(true);
         const result = await socialLoginHandler(type);
         setLoading(false);
@@ -141,7 +134,6 @@ export default function SocialLogin({
 
   const {
     isNeedFold,
-    iconMinWidthRealGap,
     expendDisplayList: notRecommendExpendDisplayList,
     defaultDisplayList: notRecommendDefaultDisplayList,
   } = useComputeIconCountPreRow<TotalAccountType>({
@@ -181,44 +173,32 @@ export default function SocialLogin({
           justifyContent: isNeedFold && !isFold ? 'flex-start' : 'center',
         }}>
         {notRecommendDefaultDisplayList?.map((item) => (
-          <div
-            className="icon-wrapper portkey-ui-flex-center"
+          <CircleLoginButton
             key={item}
-            onClick={() => handleNotRecommendChange(item)}>
-            <CustomSvg type={TotalAccountsInfo[item].icon} fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />
-          </div>
+            onClickCallback={() => handleNotRecommendChange(item)}
+            iconType={TotalAccountsInfo[item].icon}
+          />
         ))}
 
         {!isFold &&
           notRecommendExpendDisplayList?.map((item) => (
-            <div
-              className="icon-wrapper portkey-ui-flex-center"
+            <CircleLoginButton
               key={item}
-              onClick={() => handleNotRecommendChange(item)}>
-              <CustomSvg type={TotalAccountsInfo[item].icon} fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />
-            </div>
+              onClickCallback={() => handleNotRecommendChange(item)}
+              iconType={TotalAccountsInfo[item].icon}
+            />
           ))}
 
         {isNeedFold && (
-          <div className="icon-wrapper portkey-ui-flex-center">
-            <CustomSvg
-              fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'}
-              className={clsx('portkey-ui-flex-center', !isFold && 'expand-account')}
-              type={'ArrowDown'}
-              onClick={() => setIsFold(!isFold)}
-            />
-          </div>
+          <CircleLoginButton
+            className={clsx(!isFold && 'expand-account')}
+            onClickCallback={() => setIsFold(!isFold)}
+            iconType="ArrowDown"
+          />
         )}
       </div>
     );
-  }, [
-    handleNotRecommendChange,
-    isFold,
-    isNeedFold,
-    notRecommendDefaultDisplayList,
-    notRecommendExpendDisplayList,
-    theme,
-  ]);
+  }, [handleNotRecommendChange, isFold, isNeedFold, notRecommendDefaultDisplayList, notRecommendExpendDisplayList]);
 
   console.log('extraElement', extraElement);
   return (
@@ -231,16 +211,17 @@ export default function SocialLogin({
           className,
         )}>
         {/* {isLogin && <UpgradedPortkeyTip className="social-login-upgraded-portkey" />} */}
-        <h1 className="portkey-ui-flex-between-center font-medium social-login-title">
+        {/* <h1 className="portkey-ui-flex-between-center font-medium social-login-title">
           {!isLogin && <CustomSvg type="BackLeft" onClick={onBackRef?.current} />}
           {isLogin && <span></span>}
           <div className={clsx('title')}>
             <CustomSvg type="Portkey" style={{ width: '48px', height: '48px' }} />
             <span>{t('Log in to Portkey')}</span>
           </div>
-          {/* {isLogin && isShowScan && <CustomSvg type="QRCode" onClick={() => switchTypeRef?.current?.('LoginByScan')} />} */}
+          {isLogin && isShowScan && <CustomSvg type="QRCode" onClick={() => switchTypeRef?.current?.('LoginByScan')} />}
           {!isLogin && !isMobile && <span className="empty"></span>}
-        </h1>
+        </h1> */}
+        <LoginIconAndLabel />
         <div className="portkey-ui-flex-column portkey-ui-flex-1 social-login-content">
           <AccountRecommendGroup
             accountTypeList={recommendList as AccountType[] | undefined}

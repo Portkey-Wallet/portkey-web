@@ -4,10 +4,21 @@ import { Loading } from '..';
 import { useMemo } from 'react';
 import './index.less';
 
+export type CommonButtonType =
+  | 'default'
+  | 'primary'
+  | 'ghost'
+  | 'dashed'
+  | 'link'
+  | 'text'
+  | 'outline'
+  | 'primaryOutline'
+  | 'danger';
+
 export type CommonButtonProps = {
   loadingWidth?: number;
   loadingHeight?: number;
-  type?: 'default' | 'primary' | 'ghost' | 'dashed' | 'link' | 'text' | 'outline' | 'primaryOutline' | 'danger';
+  type?: CommonButtonType;
 } & Omit<ButtonProps, 'type'>;
 
 export default function CommonButton(props: CommonButtonProps) {

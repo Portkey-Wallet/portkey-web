@@ -38,17 +38,15 @@ export default function MenuListMain({
           leftElement={<CustomSvg type={'Close4'} className="close-icon" />}
         />
       )}
-      <div>
-        {menuList.map((item) => (
-          <MenuItem
-            className="settings-menu-item"
-            key={item.label}
-            icon={item?.icon && <CustomSvg type={item.icon} style={{ width: 20, height: 20 }} />}
-            onClick={item?.onClick}>
-            {item.label}
-          </MenuItem>
-        ))}
-      </div>
+      {menuList.map((item) => (
+        <MenuItem
+          className="settings-menu-item"
+          key={item.label}
+          icon={item?.icon && <CustomSvg type={item.icon} style={{ width: 20, height: 20 }} />}
+          onClick={item?.onClick}>
+          {item.label}
+        </MenuItem>
+      ))}
       {isShowFooter && footerElement}
     </div>
   );

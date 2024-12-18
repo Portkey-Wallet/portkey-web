@@ -46,24 +46,26 @@ export default function TokenAllowanceMain(props: ITokenAllowanceProps) {
   const { data: list, totalRecordCount } = allowanceList;
 
   return (
-    <div style={wrapperStyle} className={clsx('portkey-ui-payment-security-wrapper', className)}>
-      <div className="payment-security-nav">
+    <div style={wrapperStyle} className={clsx('portkey-ui-token-allowance-wrapper', className)}>
+      <div className="token-allowance-nav">
         <div className="left-icon" onClick={onBack}>
           <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default)" />
         </div>
-        <div className="payment-security-header">
+        <div className="token-allowance-header">
           <p className="symbol">Token Allowances</p>
         </div>
       </div>
       {list?.length > 0 && (
         <>
-          <List className="portkey-ui-payment-security-list">
+          <List className="portkey-ui-token-allowance-list">
             {list?.map((item: AllowanceItem, index: number) => (
               <List.Item
-                key={`paymentSecurity_${item.chainId}_${index}`}
-                className="portkey-ui-payment-security-item-wrap">
+                key={`tokenAllowance_${item.chainId}_${index}`}
+                className="portkey-ui-token-allowance-item-wrap">
                 <MenuItem
                   key={item.chainId + index}
+                  className="portkey-ui-token-allowance-item"
+                  iconClassName="portkey-ui-token-allowance-item-icon"
                   icon={<TokenImageDisplay src={item.icon} width={42} symbol={item.name || 'Unknown'} />}
                   onClick={() => onClickItem?.(item)}>
                   <div className="token-info">
@@ -82,7 +84,7 @@ export default function TokenAllowanceMain(props: ITokenAllowanceProps) {
           <LoadingMore hasMore={list?.length < totalRecordCount} loadMore={loadMore} className="load-more" />
         </>
       )}
-      {list?.length === 0 && <div className="no-data-text">No data</div>}
+      {list?.length === 0 && <div className="no-data-text">No assets yet</div>}
     </div>
   );
 }

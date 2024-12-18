@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.11-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.15.11-alpha.0) (2024-12-18)
+
+### Features
+
+- 🎸 add fetch token list v2 request ([a99010a](https://github.com/Portkey-Wallet/portkey-web/commit/a99010af2d510a8665593668d51b0170c685767b))
+- 🎸 finish use receive hooks ([ebc216b](https://github.com/Portkey-Wallet/portkey-web/commit/ebc216bda523011b4a68a75c52aa41c3d8650934))
+- 🎸 receive source and destination picker ([855500a](https://github.com/Portkey-Wallet/portkey-web/commit/855500ad87de2cd10ba367160a93c6d8b369f4ef))
+- 🎸 send asset ([0be4bbf](https://github.com/Portkey-Wallet/portkey-web/commit/0be4bbf6a7f9ba6b1b6bb96fb6dfa9e76f037c4d))
+- add spender check ([513fbc5](https://github.com/Portkey-Wallet/portkey-web/commit/513fbc5a8323ee9f8d68cbe9eb91e3a6245cc827))
+- complete token detail ([41565c7](https://github.com/Portkey-Wallet/portkey-web/commit/41565c760eee6ef615a5be1c22a859a6db1860ab))
+- complete transaction limits page ([b9ace32](https://github.com/Portkey-Wallet/portkey-web/commit/b9ace321cca04d09d8f6902814bf9d705868420b))
+- useReceive hooks ([35ccc8c](https://github.com/Portkey-Wallet/portkey-web/commit/35ccc8c2235f60beb3758c9600aef2e4689cfa2f))
+
 ## [2.15.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10-alpha.0...v2.15.10) (2024-11-20)
 
 **Note:** Version bump only for package @portkey/services

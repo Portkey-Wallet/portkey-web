@@ -1,7 +1,132 @@
-// @import '../../assets/theme/common-class.less';
-
 .portkey-ui-transfer-settings-wrapper {
-  height: 100%;
+  .transfer-settings-nav {
+    position: relative;
+    align-items: center;
+    display: flex;
+    background-color: var(--sds-color-background-default-default);
+    .left-icon {
+      position: absolute;
+      left: 16px;
+    }
+
+    .transfer-settings-header {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      height: 56px;
+
+      .symbol {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 22.4px;
+        text-align: center;
+        color: var(--sds-color-text-default-default);
+      }
+    }
+  }
+
+  .transfer-settings-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px;
+    height: 93vh;
+    position: relative;
+
+    .transfer-settings-token {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 24px;
+
+      .token-img {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 8px;
+      }
+
+      .token-name {
+        font-weight: 400;
+        line-height: 22.4px;
+        text-align: left;
+        color: var(--sds-color-text-default-default);
+      }
+
+      .token-network {
+        font-weight: 400;
+        line-height: 19.6px;
+        text-align: center;
+        color: var(--sds-color-text-default-secondary);
+      }
+    }
+
+    .transfer-settings-toggle {
+      padding: 16px;
+      background: var(--sds-color-background-default-secondary);
+      border-radius: 8px;
+      gap: 4px;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      margin-bottom: 12px;
+
+      .option {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+
+        .portkey-ant-switch-checked {
+          background-color: var(--sds-color-background-brand-tertiary);
+        }
+
+        .label {
+          font-weight: 400;
+          line-height: 22.4px;
+          color: var(--sds-color-text-default-default);
+          font-size: 16px;
+        }
+      }
+
+      .description {
+        font-weight: 400;
+        line-height: 19.6px;
+        color: var(--sds-color-text-default-secondary);
+      }
+    }
+
+    .transfer-limt-content {
+      width: 100%;
+      .row {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 0;
+        color: var(--sds-color-text-default-default);
+        .label {
+          font-weight: 400;
+          line-height: 22.4px;
+          font-size: 16px;
+        }
+        .value {
+          font-weight: 600;
+          line-height: 22.4px;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  .transfer-button-wrapper {
+    padding: 0 16px;
+    bottom: 0;
+    position: absolute;
+    width: 100%;
+    margin-bottom: 16px;
+
+    .item-button {
+      width: 100%;
+    }
+  }
 
   .back-header-page-wrapper {
     background-color: var(--portkey-ui-default-bg);
@@ -57,6 +182,110 @@
         background-color: var(--portkey-ui-bg-6);
         border: 1px solid var(--portkey-ui-border-1);
         color: var(--portkey-ui-font-6);
+      }
+    }
+  }
+}
+
+.portkey-ui-modal-edit-limit {
+  .portkey-ui-modal-edit-limit-content {
+    padding: 16px;
+
+    .limit-detail-header {
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      position: sticky;
+      background-color: var(--sds-color-background-default-default);
+      top: 0;
+      z-index: 1;
+
+      .title {
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 24px;
+        letter-spacing: -0.02em;
+        color: var(--portkey-ui-text-primary);
+      }
+    }
+
+    .limit-detail-body {
+      color: var(--portkey-ui-text-primary);
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      margin-bottom: 16px;
+      .row {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        font-weight: 400;
+        line-height: 22.4px;
+        font-size: 16px;
+
+        .error {
+          color: var(--sds-color-text-danger-secondary);
+        }
+
+        .input-container {
+          border-radius: 8px;
+          padding: 12px 16px;
+          border: 1px solid var(--sds-color-border-default-default);
+          display: flex;
+          align-items: center;
+          gap: 8px;
+
+          &.error {
+            border-color: var(--sds-color-text-danger-secondary);
+          }
+
+          .input {
+            background-color: transparent;
+            font-weight: 400;
+            line-height: 16px;
+            font-size: 16px;
+            border: 0;
+            width: 100%;
+
+            &:focus-visible {
+              outline: none;
+            }
+          }
+
+          .close-icon-wrapper {
+            background-color: var(--sds-color-background-neutral-secondary);
+            border-radius: 9999px;
+            aspect-ratio: 1;
+            width: 20px;
+            height: auto;
+            justify-content: center;
+            align-items: center;
+            display: flex;
+
+            .close-icon {
+              width: 12px;
+              height: 12px;
+              display: flex;
+              justify-content: center;
+              align-content: center;
+            }
+          }
+
+          .symbol {
+            font-weight: 400;
+            line-height: 16px;
+            font-size: 16px;
+          }
+        }
+      }
+    }
+
+    .limit-detail-footer {
+      margin-top: 16px;
+      .item-button {
+        width: 100%;
       }
     }
   }

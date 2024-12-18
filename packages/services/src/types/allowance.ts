@@ -10,6 +10,8 @@ export interface ISymbolApprovedItem {
   symbol: string;
   amount: number;
   decimals: number;
+  imageUrl?: string;
+  updateTime?: string;
 }
 
 export interface AllowanceItem {
@@ -19,6 +21,7 @@ export interface AllowanceItem {
   icon?: string;
   name?: string;
   symbolApproveList?: ISymbolApprovedItem[];
+  chainImageUrl?: string;
 }
 
 export interface GetAllowanceParams {

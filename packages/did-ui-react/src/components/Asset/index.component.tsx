@@ -27,14 +27,12 @@ import NFTDetailMain from '../NFTDetail/index.component';
 import clsx from 'clsx';
 import PaymentSecurity from '../PaymentSecurity';
 import TransferSettings from '../TransferSettings';
-import TransferSettingsEdit from '../TransferSettingsEdit';
 import Guardian from '../Guardian';
 import MenuListMain from '../MenuList/index.components';
 import TokenAllowanceDetail from '../TokenAllowanceDetail';
 import { useMyMenuList, useWalletSecurityMenuList } from '../../hooks/my';
 import { getTransferLimit } from '../../utils/sandboxUtil/getTransferLimit';
 import { getChain } from '../../hooks/useChainInfo';
-import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 import { useDebounce } from '../../hooks/debounce';
 import singleMessage from '../CustomAnt/message';
 import CustomSvg from '../CustomSvg';
@@ -48,11 +46,11 @@ import useGAReport from '../../hooks/useGAReport';
 
 import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
-import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
 import CollectionDetailMain from '../CollectionDetail/index.component';
 import CommonButton from '../CommonButton';
+import { ITransferLimitItemWithRoute } from '../../types/transfer';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -72,6 +70,9 @@ const InitTransferLimitData: ITransferLimitItemWithRoute = {
   dailyLimit: '100000000000',
   restricted: true,
   decimals: 8,
+  chainImageUrl: '',
+  imageUrl: '',
+  displayChainName: '',
 };
 
 function AssetMain({
@@ -162,6 +163,15 @@ function AssetMain({
         });
 
       basicAssetViewAsync
+        .setTokenListV2({
+          caAddressInfos,
+        })
+        .then((res) => {
+          dispatch(res);
+          endReport('Home-TokenList');
+        });
+
+      basicAssetViewAsync
         .setNFTCollections({
           caAddressInfos,
           maxNFTCount: maxNftNum,
@@ -199,10 +209,9 @@ function AssetMain({
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
 
-  const onAvatarClick = useCallback(async () => {
+  const onAvatarClick = useCallback(() => {
     setAssetStep(AssetStep.my);
   }, []);
-  const { secondaryEmail, getSecondaryMail } = useIsSecondaryMailSet();
   const [activeKey, setActiveKey] = useState<string>(BalanceTab.TOKEN);
 
   // const saveLiftCycleInfo = useCallback(async () => {
@@ -333,25 +342,16 @@ function AssetMain({
       setAccelerateChainId(originChainId);
       setAssetStep(AssetStep.guardians);
     },
-    // todo
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onClickTransactionLimits: () => {},
-    // todo
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    onClickTokenAllowances: () => {},
-    onClickBackupEmail: () => setAssetStep(AssetStep.walletSecurity),
+    onClickTransactionLimits: () => setAssetStep(AssetStep.transactionLimits),
+    onClickTokenAllowances: () => setAssetStep(AssetStep.tokenAllowance),
+    onClickBackupEmail: () => setAssetStep(AssetStep.setSecondaryMailbox),
     // onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
   });
 
   const WalletSecurityMenuList = useWalletSecurityMenuList({
-    onClickPaymentSecurity: () => setAssetStep(AssetStep.paymentSecurity),
+    onClickPaymentSecurity: () => setAssetStep(AssetStep.transactionLimits),
     onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
     onClickSetSecondaryMailbox: async () => {
-      const res = await getSecondaryMail();
-      if (!res) {
-        singleMessage.error('Cannot fetch the secondary email');
-        return;
-      }
       setAssetStep(AssetStep.setSecondaryMailbox);
     },
   });
@@ -472,6 +472,7 @@ function AssetMain({
               }}
               networkType={networkType}
               chainId={selectToken.chainId}
+              // selectToken={selectToken}
               onBack={() => {
                 onBack();
               }}
@@ -542,7 +543,7 @@ function AssetMain({
             />
           )}
 
-          {tokenDetail && (
+          {assetStep === AssetStep.tokenDetail && tokenDetail && (
             <TokenDetailMain
               faucet={faucet}
               isShowRamp={isMixShowRamp}
@@ -661,9 +662,9 @@ function AssetMain({
               }}
             />
           )}
-          {assetStep === AssetStep.paymentSecurity && (
+          {assetStep === AssetStep.transactionLimits && (
             <PaymentSecurity
-              onBack={() => setAssetStep(AssetStep.walletSecurity)}
+              onBack={() => setAssetStep(AssetStep.my)}
               networkType={networkType}
               caHash={caHash || ''}
               onClickItem={async (data) => {
@@ -692,42 +693,26 @@ function AssetMain({
                 setAssetStep(AssetStep.tokenAllowanceDetail);
               }}
               onBack={() => {
-                setAssetStep(AssetStep.walletSecurity);
+                setAssetStep(AssetStep.my);
               }}
             />
           )}
           {assetStep === AssetStep.setSecondaryMailbox && (
             <SetSecondaryMailbox
               onBack={() => {
-                setAssetStep(AssetStep.walletSecurity);
+                setAssetStep(AssetStep.my);
               }}
-              onSetSecondaryMailboxSuccess={() => {
-                setAssetStep(AssetStep.walletSecurity);
-              }}
-              defaultValue={secondaryEmail}
             />
           )}
           {assetStep === AssetStep.transferSettings && (
             <TransferSettings
-              onBack={() => setAssetStep(AssetStep.paymentSecurity)}
-              initData={viewPaymentSecurity}
-              onEdit={() => {
-                if (!isLoginOnChain) {
-                  return loadingTip({ msg: loginOptTip });
-                }
-                setAssetStep(AssetStep.transferSettingsEdit);
-              }}
-            />
-          )}
-          {assetStep === AssetStep.transferSettingsEdit && (
-            <TransferSettingsEdit
-              initData={viewPaymentSecurity}
               caHash={caHash || ''}
               originChainId={originChainId}
-              sandboxId={sandboxId}
               networkType={networkType}
-              onBack={transferSettingsEditBack}
+              sandboxId={sandboxId}
+              onBack={() => setAssetStep(AssetStep.transactionLimits)}
               onSuccess={transferSettingsEditBack}
+              initData={viewPaymentSecurity}
             />
           )}
         </div>

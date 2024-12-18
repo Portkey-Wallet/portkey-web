@@ -50,6 +50,7 @@ export * from './ramp';
 export * from './assets';
 export * from './token';
 export * from './transaction';
+export * from './receive';
 export * from './activity';
 export * from './allowance';
 export * from './security';

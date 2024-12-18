@@ -10,8 +10,9 @@ import {
   BalanceTab,
   BaseToken,
   IFaucetConfig,
-  NFTCollectionItemShowType,
   NFTItemBaseExpand,
+  ITokenSectionResponse,
+  NFTCollectionItemShowType,
   TokenItemShowType,
   TokenType,
 } from '../types/assets';
@@ -71,10 +72,12 @@ export function AssetOverviewContent({
   onViewActivityItem,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
-  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, activityMap }, { dispatch }] = usePortkeyAsset();
+  const [{ accountInfo, tokenListInfo, tokenListInfoV2, caInfo, NFTCollection, activityMap }, { dispatch }] =
+    usePortkeyAsset();
+
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
-
+  const [tokenListV2, setTokenListV2] = useState<ITokenSectionResponse[]>();
   const [tokenOpen, setTokenOpen] = useState(false);
   const [assetOpen, setAssetOpen] = useState(false);
 
@@ -144,13 +147,22 @@ export function AssetOverviewContent({
     // }));
     setTokenList(tokenListInfo.list);
 
-    const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
-      // Dealing with the problem of balanceInUsd === ''
-      return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
-    }, ZERO);
+    // const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
+    //   // Dealing with the problem of balanceInUsd === ''
+    //   return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
+    // }, ZERO);
 
-    setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
+    // setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
   }, [networkType, tokenListInfo?.list]);
+
+  useEffect(() => {
+    if (tokenListInfoV2) {
+      setTokenListV2(tokenListInfoV2.list);
+      if (tokenListInfoV2.totalBalanceInUsd) {
+        setAccountBalanceUSD(formatAmountShow(tokenListInfoV2.totalBalanceInUsd, 2));
+      }
+    }
+  }, [tokenListInfoV2]);
 
   const initActivityRef = useRef(false);
 
@@ -192,95 +204,93 @@ export function AssetOverviewContent({
   const [isGetNFTCollectionPending, setIsGetNFTCollection] = useState<boolean>();
   return (
     <div className="portkey-ui-asset-overview" style={{ overflowY: 'auto', height: '100%' }}>
-      <div>
-        <AssetCard
-          isShowRamp={isShowRamp}
-          isShowFaucet={Boolean(faucet?.faucetUrl || faucet?.faucetContractAddress)}
-          networkType={networkType}
-          backIcon={backIcon}
-          nickName={accountInfo?.nickName}
-          walletAvatar={'master1'}
-          onAvatarClick={onAvatarClick}
-          accountBalanceUSD={accountBalanceUSD}
-          caAddressInfos={caAddressInfos}
-          onBuy={() => {
-            if (!isLoginOnChain) {
-              return loadingTip({ msg: loginOptTip });
-            }
-            // TODO select Token
-            if (!supportToken?.[0]) return singleMessage.error('There is no token that meets the requirements');
+      <AssetCard
+        isShowRamp={isShowRamp}
+        isShowFaucet={Boolean(faucet?.faucetUrl || faucet?.faucetContractAddress)}
+        networkType={networkType}
+        backIcon={backIcon}
+        nickName={accountInfo?.nickName}
+        walletAvatar={'master1'}
+        onAvatarClick={onAvatarClick}
+        accountBalanceUSD={accountBalanceUSD}
+        caAddressInfos={caAddressInfos}
+        onBuy={() => {
+          if (!isLoginOnChain) {
+            return loadingTip({ msg: loginOptTip });
+          }
+          // TODO select Token
+          if (!supportToken?.[0]) return singleMessage.error('There is no token that meets the requirements');
 
-            onBuy?.(supportToken[0]);
-          }}
-          onSend={async () => {
-            if (!isLoginOnChain) {
-              return loadingTip({ msg: loginOptTip });
-            }
-            setAssetOpen(true);
-          }}
-          onReceive={() => setTokenOpen(true)}
-          onFaucet={onFaucet}
-          onBack={onBack}
-        />
-        <AssetTabs
-          networkType={networkType}
-          defaultActiveKey={defaultActiveKey}
-          setActiveKey={setActiveKey}
-          accountNFTList={NFTCollection?.list}
-          tokenList={tokenList || tokenListInfo?.list}
-          loadMoreNFT={loadMoreNFT}
-          isGetNFTCollectionPending={isGetNFTCollectionPending}
-          onChange={(v) => {
-            if (!caAddressInfos) return;
-            if (v === BalanceTab.TOKEN) {
-              basicAssetViewAsync
-                .setTokenList({
-                  caAddressInfos,
-                })
-                .then(dispatch);
-            } else if (v === BalanceTab.NFT) {
-              setIsGetNFTCollection(true);
-              basicAssetViewAsync
-                .setNFTCollections({
-                  caAddressInfos,
-                  maxNFTCount: maxNftNum,
-                })
-                .then(dispatch)
-                .finally(() => setIsGetNFTCollection(false));
-            } else if (v === BalanceTab.ACTIVITY) {
-              initActivity();
-            }
-          }}
-          onDataInit={onDataInit}
-          onDataInitEnd={onDataInitEnd}
-          onViewTokenItem={onViewTokenItem}
-          onViewActivityItem={onViewActivityItem}
-          onNFTView={onNFTView}
-          onCollectionView={onCollectionView}
-        />
-        <CustomTokenModal
-          networkType={networkType}
-          open={tokenOpen}
-          tokenList={allTokenList || tokenList || tokenListInfo?.list}
-          title={'Select Token'}
-          searchPlaceHolder={'Search Token'}
-          onClose={() => setTokenOpen(false)}
-          onChange={(v) => {
-            setTokenOpen(false);
-            onReceive?.(v);
-          }}
-        />
-        <CustomAssetModal
-          caAddressInfos={caAddressInfos}
-          networkType={networkType}
-          open={assetOpen}
-          onCancel={() => setAssetOpen(false)}
-          onSelect={(v, type) => {
-            setAssetOpen(false);
-            onSend?.(v, type);
-          }}
-        />
-      </div>
+          onBuy?.(supportToken[0]);
+        }}
+        onSend={async () => {
+          if (!isLoginOnChain) {
+            return loadingTip({ msg: loginOptTip });
+          }
+          setAssetOpen(true);
+        }}
+        onReceive={() => setTokenOpen(true)}
+        onFaucet={onFaucet}
+        onBack={onBack}
+      />
+      <AssetTabs
+        networkType={networkType}
+        defaultActiveKey={defaultActiveKey}
+        setActiveKey={setActiveKey}
+        accountNFTList={NFTCollection?.list}
+        tokenListV2={tokenListV2}
+        loadMoreNFT={loadMoreNFT}
+        isGetNFTCollectionPending={isGetNFTCollectionPending}
+        onChange={(v) => {
+          if (!caAddressInfos) return;
+          if (v === BalanceTab.TOKEN) {
+            basicAssetViewAsync
+              .setTokenList({
+                caAddressInfos,
+              })
+              .then(dispatch);
+          } else if (v === BalanceTab.NFT) {
+            setIsGetNFTCollection(true);
+            basicAssetViewAsync
+              .setNFTCollections({
+                caAddressInfos,
+                maxNFTCount: maxNftNum,
+              })
+              .then(dispatch)
+              .finally(() => setIsGetNFTCollection(false));
+          } else if (v === BalanceTab.ACTIVITY) {
+            initActivity();
+          }
+        }}
+        onDataInit={onDataInit}
+        onDataInitEnd={onDataInitEnd}
+        onViewTokenItem={onViewTokenItem}
+        onViewActivityItem={onViewActivityItem}
+        onNFTView={onNFTView}
+        onCollectionView={onCollectionView}
+      />
+      <CustomTokenModal
+        networkType={networkType}
+        open={tokenOpen}
+        tokenList={allTokenList || tokenList || tokenListInfo?.list}
+        title={'Select Token'}
+        searchPlaceHolder={'Search Token'}
+        onClose={() => setTokenOpen(false)}
+        onChange={(v) => {
+          setTokenOpen(false);
+          onReceive?.(v);
+        }}
+      />
+      <CustomAssetModal
+        caAddressInfos={caAddressInfos}
+        networkType={networkType}
+        open={assetOpen}
+        onCancel={() => setAssetOpen(false)}
+        onSelect={(v, type) => {
+          setAssetOpen(false);
+          onSend?.(v, type);
+        }}
+      />
     </div>
   );
 }
