@@ -52,6 +52,7 @@ import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
 import CollectionDetailMain from '../CollectionDetail/index.component';
+import CommonButton from '../CommonButton';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -624,14 +625,15 @@ function AssetMain({
                 title: 'Settings',
                 onBack: () => setAssetStep(AssetStep.overview),
               }}
-              isShowFooter={showDeletion} // TODO delete w
+              isShowFooter={true} // TODO delete w
               footerElement={
-                <Button
+                <CommonButton
                   className="delete-account-button"
                   type="text"
+                  block
                   onClick={() => setAssetStep(AssetStep.deleteAccount)}>
                   Delete Account
-                </Button>
+                </CommonButton>
               }
             />
           )}

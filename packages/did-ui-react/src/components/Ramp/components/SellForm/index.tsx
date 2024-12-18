@@ -413,13 +413,13 @@ export default function SellFrom({
         <div className="portkey-ui-ramp-input">
           <div className="label">{`I will receive≈`}</div>
           <FiatInput
-            value={receive}
-            readOnly={true}
-            curFiat={fiatSelected}
+            // value={receive}
+            // readOnly={true}
+            // curFiat={fiatSelected}
             defaultCrypto={defaultCrypto}
             supportList={defaultFiatList}
             onSelect={handleFiatSelect}
-            onKeyDown={handleKeyDown}
+            // onKeyDown={handleKeyDown}
           />
         </div>
         {exchange !== '' && !errMsg && <ExchangeRate showRateText={showRateText} rateUpdateTime={updateTime} />}

@@ -205,7 +205,7 @@ export const lightTheme = {
   backgroundWarningTertiary: '#FEFCE8',
   backgroundWarningTertiaryHover: '#FFFBC2',
 
-  backgroundDangerDefault: '#FFFBC2',
+  backgroundDangerDefault: '#E24505',
   backgroundDangerHover: '#B73907',
   backgroundDangerSecondary: '#F6C7B4',
   backgroundDangerSecondaryHover: '#F1A282',
@@ -352,6 +352,7 @@ export function initTheme(themeType?: ThemeType) {
         'linear-gradient(90deg, rgba(65, 65, 66, 0.30) 0%, rgba(98, 98, 100, 0.30) 50%, rgba(65, 65, 66, 0.30) 100%)',
       );
       document.documentElement.style.setProperty('--Border-Brand-Button-Default-Inner', '#062A4B');
+      document.documentElement.style.setProperty('--Border-Default-Subtle', '#414142');
     }
   } else {
     theme = lightTheme;
@@ -362,6 +363,7 @@ export function initTheme(themeType?: ThemeType) {
         'linear-gradient(90deg, rgba(233, 233, 233, 0.30) 0%, rgba(188, 188, 188, 0.30) 50%, rgba(233, 233, 233, 0.30) 100%)',
       );
       document.documentElement.style.setProperty('--Border-Brand-Button-Default-Inner', '#FFFFFF');
+      document.documentElement.style.setProperty('--Border-Default-Subtle', '#E9E9E9');
     }
   }
   setCSSVariables(theme);

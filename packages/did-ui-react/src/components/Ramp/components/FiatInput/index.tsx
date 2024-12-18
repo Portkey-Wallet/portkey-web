@@ -4,35 +4,33 @@ import SelectFiatListWrap from '../SelectList/SelectFiatListWrap';
 import { IKeyDownParams } from '../../../../types';
 import CustomSvg from '../../../CustomSvg';
 import { IRampCryptoDefault, IRampFiatItem } from '@portkey/ramp';
+import { initCrypto } from '../../../../constants/ramp';
 
 export interface IFiatInputProps {
-  value: string;
-  curFiat: IRampFiatItem;
-  readOnly: boolean;
+  // value: string;
+  // curFiat: IRampFiatItem;
+  // readOnly: boolean;
   defaultCrypto: IRampCryptoDefault;
   supportList: IRampFiatItem[];
-  onChange?: (val: string) => void;
-  onKeyDown: (e: IKeyDownParams) => void;
+  // onChange?: (val: string) => void;
+  // onKeyDown: (e: IKeyDownParams) => void;
   onSelect: (v: IRampFiatItem) => void;
 }
 
 const SelectFiat = 'Select Currency';
 const SearchFiat = 'Search currency';
-export default function FiatInput({
-  value,
-  curFiat,
-  readOnly,
-  defaultCrypto,
-  supportList,
-  onChange,
-  onKeyDown,
-  onSelect,
-}: IFiatInputProps) {
+export default function FiatInput({ defaultCrypto, supportList, onSelect }: IFiatInputProps) {
   const [openDrawer, setOpenDrawer] = useState<boolean>(false);
-
+  // const [defaultCrypto, setDefaultCrypto] = useState<IRampCryptoDefault>({
+  //   symbol: crypto || initCrypto.symbol,
+  //   amount: initCrypto.amount,
+  //   network: network || initCrypto.network,
+  //   chainId: chainId || initCrypto.chainId,
+  //   icon: cryptoIcon || initCrypto.icon,
+  // });
   return (
     <>
-      <Input
+      {/* <Input
         value={value}
         autoComplete="off"
         onChange={(e) => onChange?.(e.target.value)}
@@ -47,7 +45,7 @@ export default function FiatInput({
             <CustomSvg type="Down" />
           </div>
         }
-      />
+      /> */}
       <SelectFiatListWrap
         title={SelectFiat}
         searchPlaceHolder={SearchFiat}

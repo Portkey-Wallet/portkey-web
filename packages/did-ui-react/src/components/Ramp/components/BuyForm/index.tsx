@@ -268,14 +268,14 @@ export default function BuyFrom({
         <div className="portkey-ui-ramp-input">
           <div className="label">{`I want to pay`}</div>
           <FiatInput
-            value={fiatAmount}
-            readOnly={false}
-            curFiat={fiatSelected}
+            // value={fiatAmount}
+            // readOnly={false}
+            // curFiat={fiatSelected}
             defaultCrypto={defaultCrypto}
             supportList={fiatList}
-            onChange={handleFiatChange}
+            // onChange={handleFiatChange}
             onSelect={handleFiatSelect}
-            onKeyDown={handleKeyDown}
+            // onKeyDown={handleKeyDown}
           />
           {!!errMsg && <div className="error-text">{t(errMsg)}</div>}
         </div>
