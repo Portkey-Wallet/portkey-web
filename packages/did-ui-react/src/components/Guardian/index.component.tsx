@@ -350,7 +350,7 @@ function GuardianMain({
                     onAddGuardian();
                   }}
                   className="title-add-guardian-btn">
-                  +
+                  <CustomSvg type="Add" style={{ width: 24, height: 24 }} />
                 </div>
               }
             />
@@ -386,7 +386,13 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianEdit && (
         <GuardianEdit
-          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoView)} title={'Edit Guardian'} />}
+          header={
+            <BackHeaderForPage
+              leftElement={renderBackHeaderLeftEle(onGoView)}
+              title={'Edit Guardian'}
+              rightElement={<CustomSvg className="remove-icon" type="Remove" fillColor="#111111" />}
+            />
+          }
           originChainId={originChainId}
           caHash={caHash}
           networkType={networkType}

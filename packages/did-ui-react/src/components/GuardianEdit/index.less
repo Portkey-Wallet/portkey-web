@@ -1,6 +1,7 @@
 @import '../../assets/theme/constants.less';
 
 .portkey-ui-guardian-edit {
+  position: relative;
   height: 100%;
   .guardian-edit-body {
     padding: 0 16px;
@@ -82,10 +83,7 @@
     }
     .guardian-add-btn-wrap {
       gap: 16px;
-      // .guardian-btn-remove {
-      //   color: var(--portkey-ui-font-9);
-      //   border-color: var(--portkey-ui-border-4);
-      // }
+     
     }
   }
   .guardian-edit-error-tip {
@@ -94,6 +92,15 @@
     color: var(--portkey-ui-font-9);
     font-size: 12px;
   }
+   .guardian-btn-remove {
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: var(--portkey-ui-font-9);
+      border-color: var(--portkey-ui-border-4);
+    }
 }
 .portkey-ui-remove-guardian-modal {
   gap: 8px;
