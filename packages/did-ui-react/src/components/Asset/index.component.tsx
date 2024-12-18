@@ -626,7 +626,7 @@ function AssetMain({
                 title: 'Settings',
                 onBack: () => setAssetStep(AssetStep.overview),
               }}
-              isShowFooter={true} // TODO delete w
+              isShowFooter={showDeletion} // TODO delete w
               footerElement={
                 <CommonButton
                   className="delete-account-button"
