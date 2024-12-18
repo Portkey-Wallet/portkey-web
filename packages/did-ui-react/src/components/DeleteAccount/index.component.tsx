@@ -1,17 +1,17 @@
-import { Button } from 'antd';
 import './index.less';
 import CustomSvg from '../CustomSvg';
 import BackHeaderForPage from '../BackHeaderForPage';
 import clsx from 'clsx';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useEffectOnce } from 'react-use';
-import CustomModal from '../CustomModal';
 import { singleMessage } from '../CustomAnt';
 import { did, handleErrorMessage, parseAppleIdentityToken, setLoading, socialLoginAuth } from '../../utils';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import ConfigProvider from '../config-provider';
 import { usePortkey } from '../context';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
+import CommonButton from '../CommonButton';
+import CommonModal from '../CommonModal';
 
 export interface DeleteAccountProps {
   className?: string;
@@ -20,46 +20,48 @@ export interface DeleteAccountProps {
 }
 
 const DeleteAccountConditions = {
-  warning:
-    "Are you sure you want to delete your account?Please note that you won't be able to recover your account once it's deleted. ",
+  warning: 'Are you sure you want to delete your account? This action is irreversible.',
   explanation:
-    'Account deletion is an irreversible operation. Once deleted, your account cannot be recovered. Please carefully consider this before continuing.',
-  summary: 'Please note that your account can only be deleted if it meets the following conditions:',
+    'Deleting your account is a permanent action. Once deleted, your account cannot be recovered. Please consider this carefully before proceeding.',
+  summary: 'To continue with deletion, ensure the following conditions are met:',
   conditions: [
     {
       key: 1,
-      label: 'Asset',
-      content: 'Your account has no balance, including tokens and NFTs.',
+      label: 'Assets',
+      content: 'Transfer all assets, including Tokens and NFTs, out of your account.',
     },
     {
       key: 2,
-      label: 'Guardian',
-      content: 'Your Apple ID is not set as a guardian by any other accounts.',
+      label: 'Guardians',
+      content: 'Other users must have disassociated the Guardian from your current email.',
     },
     {
       key: 3,
       label: 'Login Device',
-      content: 'Your account is only logged in on this device.',
+      content: 'Ensure your account is only logged in on this device.',
     },
   ],
   accountDetection: {
     title: 'Unable to Delete Account',
     content: {
-      assets:
-        'There are still remaining assets in your account. To proceed, please first transfer all assets out of your account.',
+      assets: 'You still have assets in your account. Please transfer them out to continue.',
       guardians:
-        "Your Apple ID is set as a guardian by other accounts. To proceed, please first remove your Apple ID's linked guardian.",
+        'Your account is currently set as a guardian for other accounts. Please disassociate your account as a guardian to proceed.',
       loginDevices:
-        'Your account is logged in on other devices. To proceed, please first log out there or remove the login device.',
+        'Your account is logged in on other devices. Please log out of those devices or remove them to proceed.',
     },
-    okText: 'Ok',
+    okText: 'OK',
   },
 };
 
 export default function DeleteAccountMain({ className, onBack, onDelete }: DeleteAccountProps) {
   const [{ managementAccount, caHash, originChainId }] = usePortkeyAsset();
+  const [openWarningModal, setOpenWarningModal] = useState<boolean>(false);
+  const [openUnableDeleteModal, setOpenUnableDeleteModal] = useState<boolean>(false);
   const [{ networkType }] = usePortkey();
   const _socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
+  const ruleListRef = useRef<string[]>();
+  const passRef = useRef<boolean>();
 
   const deleteAccount = useCallback(async () => {
     if (!caHash || !managementAccount?.address) return;
@@ -121,40 +123,9 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
     }
   }, [_socialLogin, caHash, managementAccount?.address, networkType, onDelete, originChainId]);
 
-  const AccountCancellationModal = useCallback(
-    (pass?: boolean) => {
-      CustomModal({
-        type: 'confirm',
-        okText: 'Continue',
-        cancelText: 'Cancel',
-        className: 'portkey-ui-account-cancellation-modal',
-        content: (
-          <div className="portkey-ui-flex-column">
-            <div className="account-cancellation-modal-title">Warning</div>
-            <div>{DeleteAccountConditions.warning}</div>
-          </div>
-        ),
-        onOk: pass ? deleteAccount : undefined,
-        onCancel: pass ? undefined : onBack,
-      });
-    },
-    [onBack, deleteAccount],
-  );
-
-  const CheckDeleteResultModal = useCallback((list: string[]) => {
-    CustomModal({
-      content: (
-        <>
-          <div className="title">Unable to Delete Account</div>
-          {list.map((tip, index) => (
-            <div key={index}>
-              {list.length > 1 ? `${index + 1}. ` : ''}
-              {tip}
-            </div>
-          ))}
-        </>
-      ),
-    });
+  const AccountCancellationModal = useCallback((pass?: boolean) => {
+    passRef.current = pass;
+    setOpenWarningModal(true);
   }, []);
 
   const onDeleteAccount = useCallback(async () => {
@@ -169,7 +140,8 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
       if (!validatedDevice) ruleList.push(DeleteAccountConditions.accountDetection.content.loginDevices);
       if (!validatedGuardian) ruleList.push(DeleteAccountConditions.accountDetection.content.guardians);
       if (ruleList.length > 0) {
-        return CheckDeleteResultModal(ruleList);
+        ruleListRef.current = ruleList;
+        return setOpenUnableDeleteModal(true);
       }
       AccountCancellationModal(true);
     } catch (error) {
@@ -177,7 +149,7 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
     } finally {
       setLoading(false);
     }
-  }, [AccountCancellationModal, CheckDeleteResultModal, caHash]);
+  }, [caHash, AccountCancellationModal]);
 
   useEffectOnce(() => {
     // show alert after transition animation
@@ -190,9 +162,9 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
   return (
     <div className={clsx('portkey-ui-delete-account', className)}>
       <div className="portkey-ui-flex-1">
-        <BackHeaderForPage title="Delete Account" leftCallBack={onBack} />
+        <BackHeaderForPage title="Account Deletion" leftCallBack={onBack} />
         <div className="portkey-ui-flex-column-center portkey-ui-delete-account-body">
-          <CustomSvg type="WarnRedBackground" style={{ width: 48, height: 48 }} />
+          <CustomSvg type="VectorWarning" style={{ width: 64, height: 64 }} className="warning-icon" />
           <div className="warning-tip">{DeleteAccountConditions.explanation}</div>
           <div className="conditions">
             <div className="conditions-summary">{DeleteAccountConditions.summary}</div>
@@ -208,10 +180,78 @@ export default function DeleteAccountMain({ className, onBack, onDelete }: Delet
         </div>
       </div>
       <div className="portkey-ui-delete-account-footer">
-        <Button type="primary" onClick={onDeleteAccount}>
-          Confirm
-        </Button>
+        <CommonButton type="danger" onClick={onDeleteAccount} block>
+          Confirm account deletion
+        </CommonButton>
       </div>
+      <CommonModal
+        className="deletion-warning-modal"
+        open={openWarningModal}
+        height={'auto'}
+        onClose={() => {
+          setOpenWarningModal(false);
+        }}>
+        <div className="portkey-ui-flex-column deletion-warning-modal-container">
+          <CustomSvg type={'Error'} className="deletion-warning-modal-error" />
+          <div className="account-cancellation-modal-title">Delete Account Warning</div>
+          <div className="account-cancellation-modal-content">{DeleteAccountConditions.warning}</div>
+          <div className="portkey-ui-flex-row-center deletion-warning-modal-bottom-wrapper">
+            <CommonButton
+              type="outline"
+              block
+              onClick={() => {
+                if (!passRef.current) {
+                  onBack?.();
+                }
+                setOpenWarningModal(false);
+              }}>
+              Cancel
+            </CommonButton>
+            <CommonButton
+              type="danger"
+              block
+              onClick={() => {
+                if (passRef.current) {
+                  deleteAccount();
+                }
+                setOpenWarningModal(false);
+              }}>
+              Continue
+            </CommonButton>
+          </div>
+        </div>
+      </CommonModal>
+      <CommonModal
+        className="unable-delete-modal"
+        open={openUnableDeleteModal}
+        height={'auto'}
+        onClose={() => {
+          setOpenUnableDeleteModal(false);
+        }}>
+        <div className="portkey-ui-flex-column unable-delete-modal-container">
+          <CustomSvg type={'Error'} className="unable-delete-modal-error" />
+          <div className="unable-delete-modal-title">Unable to Delete Account</div>
+          <div className="unable-delete-modal-content">
+            <div>Please check the following:</div>
+            {ruleListRef.current?.map((tip, index) => (
+              <div key={index}>
+                {(ruleListRef.current?.length || 0) > 1 ? `. ` : ''}
+                {tip}
+              </div>
+            ))}
+          </div>
+          <div className="portkey-ui-flex-row-center unable-delete-modal-bottom-wrapper">
+            <CommonButton
+              type="primary"
+              block
+              onClick={() => {
+                setOpenUnableDeleteModal(false);
+              }}>
+              {DeleteAccountConditions.accountDetection.okText}
+            </CommonButton>
+          </div>
+        </div>
+      </CommonModal>
     </div>
   );
 }

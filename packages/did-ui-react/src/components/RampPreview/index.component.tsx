@@ -27,6 +27,9 @@ import { AccountTypeKeyEnum } from '@portkey/services';
 import { sleep } from '@portkey/utils';
 import { MAIN_CHAIN_ID } from '../../constants/network';
 import { usePortkey } from '../context';
+import CommonModal from '../CommonModal';
+import CommonButton from '../CommonButton';
+import CommonPromptCard, { PromptCardType } from '../CommonPromptCard';
 
 export default function RampPreviewMain({
   className,
@@ -38,6 +41,7 @@ export default function RampPreviewMain({
   onBack,
 }: IRampPreviewProps) {
   const { t } = useTranslation();
+  const [openDisclaimerTipModal, setOpenDisclaimerTipModal] = useState<boolean>(false);
   const updateRef = useRef(MAX_UPDATE_TIME);
   const [receive, setReceive] = useState('');
   const [providerList, setProviderList] = useState<Array<IGetBuyDetail | IGetSellDetail>>([]);
@@ -204,20 +208,13 @@ export default function RampPreviewMain({
   ]);
 
   const showDisclaimerTipModal = useCallback(() => {
-    CustomModal({
-      content: (
-        <>
-          <div className="title">Disclaimer</div>
-          {providerSelected?.providerInfo.name + DISCLAIMER_TEXT + providerSelected?.providerInfo.name + ' services.'}
-        </>
-      ),
-    });
-  }, [providerSelected?.providerInfo.name]);
+    setOpenDisclaimerTipModal(true);
+  }, []);
 
   const renderProviderList = useMemo(() => {
     return providerList.length > 0 ? (
       <div className="portkey-ui-ramp-provider-card">
-        <div className="portkey-ui-ramp-provider-label">{t('Service provider')}</div>
+        <div className="portkey-ui-ramp-provider-label">{t('Select provider:')}</div>
         {providerList.map((item) => (
           <div
             className={clsx([
@@ -238,7 +235,7 @@ export default function RampPreviewMain({
               ))}
             </div>
             {providerSelected?.providerInfo.key === item?.providerInfo.key && (
-              <CustomSvg type="CardSelected" className="card-selected-icon" />
+              <CustomSvg type="CheckCircle" className="card-selected-icon" />
             )}
           </div>
         ))}
@@ -250,21 +247,34 @@ export default function RampPreviewMain({
     return providerSelected?.providerInfo.name ? (
       // TODO footer
       <div className="portkey-ui-ramp-preview-footer">
-        <div className="portkey-ui-ramp-preview-disclaimer">
+        {/* <div className="portkey-ui-ramp-preview-disclaimer">
           <span>
-            Proceeding with this transaction means that you have read and understood
+            By proceeding, you acknowledge that you have read and understood the
             <span className="highlight" onClick={showDisclaimerTipModal}>
-              &nbsp;the Disclaimer
+              &nbsp;Disclaimer
             </span>
             .
           </span>
-        </div>
-        <ThrottleButton type="primary" htmlType="submit" onClick={goPayPage} disabled={!disabled}>
-          {'Go to ' + providerSelected.providerInfo.name}
+        </div> */}
+        <CommonPromptCard
+          className="portkey-ui-ramp-preview-disclaimer"
+          type={PromptCardType.INFO}
+          description={
+            <span>
+              By proceeding, you acknowledge that you have read and understood the
+              <span className="highlight" onClick={showDisclaimerTipModal}>
+                &nbsp;Disclaimer
+              </span>
+              .
+            </span>
+          }
+        />
+        <ThrottleButton type="primary" htmlType="submit" onClick={goPayPage} disabled={!disabled} block>
+          {initData.side === RampType.BUY ? 'Buy' : 'Sell'}
         </ThrottleButton>
       </div>
     ) : null;
-  }, [disabled, goPayPage, providerSelected.providerInfo.name, showDisclaimerTipModal]);
+  }, [disabled, goPayPage, initData.side, providerSelected?.providerInfo.name, showDisclaimerTipModal]);
 
   return (
     <div className={clsx(['portkey-ui-ramp-preview-frame portkey-ui-flex-column', className])}>
@@ -283,6 +293,28 @@ export default function RampPreviewMain({
         {renderProviderList}
       </div>
       {renderFooter}
+      <CommonModal
+        className="disclaimer-tip-modal"
+        height={'auto'}
+        open={openDisclaimerTipModal}
+        onClose={() => {
+          setOpenDisclaimerTipModal(false);
+        }}>
+        <div className="disclaimer-tip-wrapper">
+          <div className="disclaimer-tip-title">Disclaimer</div>
+          <span className="disclaimer-tip-content">
+            {providerSelected?.providerInfo.name + DISCLAIMER_TEXT + providerSelected?.providerInfo.name + ' services.'}
+          </span>
+          <CommonButton
+            type="primary"
+            block
+            onClick={() => {
+              setOpenDisclaimerTipModal(false);
+            }}>
+            Close
+          </CommonButton>
+        </div>
+      </CommonModal>
     </div>
   );
 }

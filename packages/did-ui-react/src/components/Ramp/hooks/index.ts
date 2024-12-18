@@ -11,8 +11,8 @@ import { usePortkeyAsset } from '../../context/PortkeyAssetProvider';
 import { ChainId } from '@portkey/types';
 
 interface IUpdateReceiveAndIntervalProps {
-  cryptoSelectedRef: MutableRefObject<IRampCryptoItem>;
-  fiatSelectedRef: MutableRefObject<IRampFiatItem>;
+  cryptoSelectedRef: MutableRefObject<IRampCryptoItem | undefined>;
+  fiatSelectedRef: MutableRefObject<IRampFiatItem | undefined>;
   fiatAmountRef?: MutableRefObject<string>;
   cryptoAmountRef?: MutableRefObject<string>;
 }
@@ -44,7 +44,9 @@ export const useUpdateReceiveAndInterval = (type: RampType, params: IUpdateRecei
         }
 
         await checkBuyLimit();
-
+        if (!cryptoSelectedRef.current || !fiatSelectedRef.current) {
+          return;
+        }
         const { cryptoAmount, exchange } = await getBuyPrice({
           network: cryptoSelectedRef.current.network,
           crypto: cryptoSelectedRef.current.symbol,
