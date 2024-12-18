@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.11-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.15.11-alpha.0) (2024-12-18)
+
+### Features
+
+- 🎸 send asset ([0be4bbf](https://github.com/Portkey-Wallet/portkey-web/commit/0be4bbf6a7f9ba6b1b6bb96fb6dfa9e76f037c4d))
+- complete token detail ([41565c7](https://github.com/Portkey-Wallet/portkey-web/commit/41565c760eee6ef615a5be1c22a859a6db1860ab))
+
 ## [2.15.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10-alpha.0...v2.15.10) (2024-11-20)
 
 **Note:** Version bump only for package @portkey/types
