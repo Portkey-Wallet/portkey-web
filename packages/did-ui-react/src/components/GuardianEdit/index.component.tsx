@@ -583,16 +583,16 @@ function GuardianEdit({
       </div>
       <div className="guardian-edit-footer">
         <div className="portkey-ui-flex-between guardian-add-btn-wrap">
-          <ThrottleButton className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
+          {/* <ThrottleButton className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
             {t('Remove')}
-          </ThrottleButton>
+          </ThrottleButton> */}
           <ThrottleButton
             type="primary"
             className="guardian-btn "
             onClick={onConfirm}
             disabled={editBtnDisable || isZK}
             loading={editBtnLoading}>
-            {t('Send Request')}
+            {'Verify with guardian'}
           </ThrottleButton>
         </div>
       </div>
