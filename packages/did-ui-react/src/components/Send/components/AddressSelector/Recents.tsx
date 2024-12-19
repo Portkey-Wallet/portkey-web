@@ -13,6 +13,7 @@ import LoadingMore from '../../../LoadingMore';
 import { NetworkType, PaginationPage } from '../../../../types';
 import { getSkipCount } from '../../../context/utils';
 import singleMessage from '../../../CustomAnt/message';
+import { IRecentItem } from '../../../../utils/recent';
 
 const PAGESIZE = 10;
 
@@ -84,7 +85,12 @@ export default function Recents({
     return recentTx?.list
       .filter((item) => !!item)
       .map((item, index) => (
-        <RecentItem isMainnet={networkType === MAINNET} item={item} key={index} onClick={onChange} />
+        <RecentItem
+          isMainnet={networkType === MAINNET}
+          item={item as unknown as IRecentItem}
+          key={index}
+          onClick={onChange}
+        />
       ));
   }, [networkType, onChange, recentTx?.list]);
 

@@ -17,4 +17,3 @@ export * from './retry';
 export * from './devices.portkey';
 export * from './authentication';
 export * from './time';
-export * as CrossTransferV2 from './withdraw/index';

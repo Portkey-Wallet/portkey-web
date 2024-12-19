@@ -1,12 +1,11 @@
 import { useEffect, useMemo } from 'react';
-
-import { CrossTransferV2 } from '@portkey/utils';
 import { IStorageSuite } from '@portkey/types';
 import { ConfigProvider, usePortkeyAsset } from '../components';
 import { useCurrentChainList } from './useChainInfo';
 import { GlobalConfigProps } from '../components/config-provider/types';
+import { CrossTransfer } from '../utils/withdraw';
 
-const crossChainTransfer = new CrossTransferV2.CrossTransfer();
+const crossChainTransfer = new CrossTransfer();
 
 export const CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL = ['ELF', 'USDT'];
 export class Store implements IStorageSuite {
