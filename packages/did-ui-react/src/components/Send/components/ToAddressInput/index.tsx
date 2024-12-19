@@ -1,52 +1,97 @@
+import { Dispatch, forwardRef, SetStateAction, useCallback } from 'react';
 import { Input } from 'antd';
 import CustomSvg from '../../../CustomSvg';
-import Loading from '../../../Loading';
+import Loading, { LoadingColor } from '../../../Loading';
 import './index.less';
+import { ToAccount } from '../../index.components';
 
-const { TextArea } = Input;
-
-export enum ToAddressInputStep {
-  Editable = 1,
-  ReadOnly = 2,
+export enum InputStepEnum {
+  input = 'input',
+  show = 'show',
 }
 
-interface IToAddressInputProps {
-  step: ToAddressInputStep;
+export interface IToAddressInputRef {
+  onInput: (address: string) => void;
 }
 
-export default function ToAddressInput({ step = ToAddressInputStep.ReadOnly }: IToAddressInputProps) {
-  return (
-    <div className="portkey-ui-to-address-input-wrapper">
-      <div className="portkey-ui-to-address-input-row">
-        <span className="portkey-ui-to-address-input-row-label">To:</span>
-        {step === ToAddressInputStep.Editable ? (
-          <div className="portkey-ui-to-address-input-row-editable">
-            <div className="portkey-ui-to-address-input-row-input-wrapper">
-              <TextArea
-                className="portkey-ui-to-address-input-row-input"
-                placeholder="Address"
-                autoSize={{ minRows: 1, maxRows: 2 }}
-              />
-            </div>
-            <div className="portkey-ui-to-address-input-row-icons-wrapper">
-              <CustomSvg type="Close3" />
-              <Loading width={24} height={24} isDarkThemeWhiteLoading />
-              {/* <CustomSvg className="portkey-ui-to-address-input-row-icon" type="Check" /> */}
-              {/* <CustomSvg className="portkey-ui-to-address-input-row-icon" type="WarningInfoFilled" /> */}
-              {/* <CustomSvg className="portkey-ui-to-address-input-row-icon" type="WarnRedBackground" /> */}
-            </div>
-          </div>
-        ) : (
-          <div className="portkey-ui-to-address-input-row-readonly">
-            <span className="portkey-ui-to-address-input-row-readonly-address-text">0xD101...7A08</span>
-            <CustomSvg type="EditThin" />
-          </div>
-        )}
+export interface IToAddressInput {
+  toAccount: ToAccount;
+  setToAccount: Dispatch<SetStateAction<ToAccount>>;
+}
+
+export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>(function ({
+  toAccount,
+  setToAccount,
+}) {
+  const changeValue = useCallback(
+    (v: string) => {
+      setToAccount((pre) => ({ ...pre, address: v.trim() }));
+    },
+    [setToAccount],
+  );
+
+  const clearValue = useCallback(() => {
+    setToAccount({ address: '' });
+  }, [setToAccount]);
+
+  const pastValue = useCallback(async () => {
+    try {
+      const v = await navigator.clipboard.readText();
+      !!v.trim() && setToAccount({ address: v });
+    } catch (error) {
+      console.warn('pastValue err');
+    }
+  }, [setToAccount]);
+
+  const renderAddressShow = useCallback(() => {
+    return (
+      <div className="flex-row-center address-show">
+        <div className="label">{`To: `}</div>
+        <div className="flex-row-center">
+          <span>
+            {`Olivia Ong`}
+            <span className="gary-color">{`(ELF_22FM...xhWb_tDVV)`}</span>
+          </span>
+          {/* <span>{`ELF_22FM...xhWb_AELF`}</span> */}
+        </div>
       </div>
-      <div className="portkey-ui-to-address-input-tip">
-        <span className="portkey-ui-to-address-input-tip-text">Enter or </span>
-        <span className="portkey-ui-to-address-input-tip-paste">paste a wallet address</span>
+    );
+  }, []);
+
+  // TODO-SA
+  console.log(renderAddressShow);
+  const renderAddressInput = useCallback(() => {
+    return (
+      <div className="flex-between-center address-input">
+        <div className="label">{`To:`}</div>
+        <div className="flex-1 flex-row-center input-content">
+          <Input.TextArea
+            className="address-textarea"
+            placeholder="Address"
+            autoSize={{ minRows: 1, maxRows: 3 }}
+            value={toAccount.address}
+            onChange={(e) => changeValue(e.target.value)}
+          />
+        </div>
+        <div className="flex-row-center input-icon">
+          <CustomSvg className="cursor-pointer" type="Close3" onClick={clearValue} />
+          <Loading width={24} height={24} isDarkThemeWhiteLoading />
+          <CustomSvg className="status-icon" type="WarningInfoFilled" />
+          {/* <CustomSvg className="portkey-ui-to-address-input-row-icon" type="Check" /> */}
+        </div>
+      </div>
+    );
+  }, [changeValue, clearValue, toAccount.address]);
+
+  return (
+    <div className="to-address-input-wrap">
+      <div className="address-input-container">{renderAddressInput()}</div>
+      <div className="paste-container">
+        <span className="show-text">{`Enter or `}</span>
+        <span className="paste-text cursor-pointer" onClick={pastValue}>{`paste a wallet address`}</span>
       </div>
     </div>
   );
-}
+});
+
+export default ToAddressInputRef;

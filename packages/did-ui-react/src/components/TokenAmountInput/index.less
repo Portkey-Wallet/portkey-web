@@ -1,0 +1,71 @@
+.portkey-sdk-token-amount-input-wrap {
+  .top-section,
+  .bottom-section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .top-section {
+    height: 38px;
+
+    .amount-input-wrap,
+    .symbol {
+      display: inline-block;
+      background-color: transparent;
+      height: 38px;
+      line-height: 38px;
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--sds-color-text-default-default);
+      border: none;
+      position: relative;
+    }
+
+    .amount-input-wrap {
+      min-width: 32px;
+
+      .amount-input {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        z-index: 100;
+        background: transparent;
+        border: none;
+        height: 38px;
+        line-height: 38px;
+        font-size: 32px;
+        font-weight: 700;
+        text-align: center;
+      }
+
+      span {
+        text-align: center;
+        height: 38px;
+        line-height: 38px;
+        font-size: 32px;
+        font-weight: 700;
+        color: transparent;
+      }
+    }
+
+    .amount-input::placeholder {
+      color: var(--sds-color-text-default-tertiary);
+    }
+  }
+  .bottom-section {
+    margin-top: 8px;
+    height: 22px;
+    color: var(--sds-color-text-default-secondary);
+    font-size: 16px;
+
+    .switch {
+      width: 16px;
+      height: 16px;
+    }
+  }
+}

@@ -4,11 +4,18 @@ import svgsList from '../../assets/svgs';
 import './index.less';
 
 export interface IImgWithCornerMark {
-  imgSrc: string;
+  mainImgTitle?: string;
+  imgSrc?: string;
   cornerImgSrc: string | keyof typeof svgsList;
 }
 
-export const ImgWithCornerMark = ({ imgSrc, cornerImgSrc }: IImgWithCornerMark) => {
+export const ImgWithCornerMark = ({ mainImgTitle, imgSrc, cornerImgSrc }: IImgWithCornerMark) => {
+  const mainDom = useMemo(() => {
+    if (!imgSrc) return <div className="main-img-title">{mainImgTitle?.[0]}</div>;
+
+    return <img className="main-img" src={imgSrc || ''} />;
+  }, [imgSrc, mainImgTitle]);
+
   const cornerDom = useMemo(() => {
     const isOnlineResources = cornerImgSrc.includes('.');
 
@@ -21,7 +28,7 @@ export const ImgWithCornerMark = ({ imgSrc, cornerImgSrc }: IImgWithCornerMark) 
 
   return (
     <div className="img-with-mask-wrap">
-      <img className="main-img" src={imgSrc || ''} />
+      <>{mainDom}</>
       <div className="corner-icon-wrap">{cornerDom}</div>
     </div>
   );

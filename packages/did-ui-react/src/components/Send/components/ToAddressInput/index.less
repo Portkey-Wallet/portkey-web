@@ -1,84 +1,112 @@
-.portkey-ui-to-address-input-wrapper {
-  .portkey-ui-to-address-input-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 12px 0;
+.to-address-input-wrap {
+  min-width: 375px;
+  font-size: 16px;
+  line-height: 22px;
+  .address-input-container {
     border-bottom: 1px solid var(--sds-color-border-default-default);
-  }
-
-  .portkey-ui-to-address-input-row-label {
-    flex-shrink: 0;
-    font-size: 16px;
-    line-height: 22px;
-    font-weight: 600;
-    color: var(--sds-color-text-default-secondary);
-  }
-
-  .portkey-ui-to-address-input-row-editable {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .portkey-ui-to-address-input-row-input-wrapper {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    height: 32px;
-  }
-
-  .portkey-ui-to-address-input-row-input {
-    flex: 1;
-    padding: 0;
-    border: none;
-    border-radius: 0;
-    background: transparent;
-    resize: none;
-    font-size: 14px;
-    line-height: 22px;
-    &::placeholder {
-      font-size: 16px;
-      line-height: 22px;
+    .address-show {
+      padding: 14px 16px;
+      line-height: 16px;
+      .label {
+        color: var(--sds-color-text-default-secondary);
+      }
+      .gary-color {
+        color: var(--sds-color-text-default-tertiary);
+      }
+      .edit-thin-icon {
+        margin-left: 2px;
+        width: 16px;
+        height: 16px;
+        svg {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+    .address-input {
+      height: 56px;
+      padding: 0 16px;
+      gap: 6px;
+      .label {
+        height: 16px;
+        font-size: 16px;
+        line-height: 16px;
+        color: var(--sds-color-text-default-secondary);
+      }
+      .input-content {
+        .address-textarea {
+          color: var(--sds-color-text-default-default);
+          font-size: 14px;
+          line-height: 16px;
+          min-height: 16px !important;
+          max-height: 42px !important;
+          padding: 0;
+          padding-left: 2px;
+          border: none;
+          box-shadow: none;
+          &:focus,
+          &:hover {
+            border: none;
+            box-shadow: none;
+            outline: none;
+          }
+          &::placeholder {
+            color: var(--sds-color-text-default-tertiary);
+          }
+        }
+      }
+      .input-icon {
+        gap: 12px;
+        .close-circle {
+          width: 16px;
+          height: 16px;
+          svg {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .status-icon {
+          width: 24px;
+          height: 24px;
+          svg {
+            width: 100%;
+            height: 100%;
+          }
+        }
+        .check-icon svg path {
+          fill: var(--sds-color-icon-positive-default);
+        }
+        .error-icon svg path {
+          fill: var(--sds-color-icon-warning-tertiary);
+        }
+      }
     }
   }
-
-  .portkey-ui-to-address-input-row-icons-wrapper {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-
-  .portkey-ui-to-address-input-row-icon {
-    width: 24px;
-    height: 24px;
-  }
-
-  .portkey-ui-to-address-input-tip {
-    padding: 8px 0;
+  .paste-container {
+    padding: 8px 16px;
     font-size: 14px;
+    line-height: 14px;
+    .show-text {
+      color: var(--sds-color-text-default-secondary);
+    }
+    .paste-text {
+      color: var(--sds-color-text-brand-secondary);
+    }
   }
+}
 
-  .portkey-ui-to-address-input-tip-text {
-    color: var(--sds-color-text-default-secondary);
-  }
+.flex-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-  .portkey-ui-to-address-input-tip-paste {
-    color: var(--sds-color-text-brand-secondary);
-    cursor: pointer;
-  }
+.flex-row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
 
-  .portkey-ui-to-address-input-row-readonly {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-  }
-
-  .portkey-ui-to-address-input-row-readonly-address-text {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--sds-color-text-default-default);
-  }
+.flex-1 {
+  flex: 1;
 }

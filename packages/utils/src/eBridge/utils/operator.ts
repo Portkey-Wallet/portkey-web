@@ -1,5 +1,4 @@
 import { getContractBasic } from '@portkey/contracts';
-import { aelf } from '@portkey/utils';
 import { IEBridgeELFChainInfo, IEBridgeEVMChainInfo } from '../types';
 import { VIEW_PRIVATE, ZERO } from '../../constants';
 import { getEVMContract, getHttpProvider } from '../utils/evm';
@@ -12,6 +11,7 @@ import { ChainId, IContract } from '@portkey/types';
 import { getChainIdByMap, getReceiptLimit } from '../utils';
 import type { Contract } from 'web3-eth-contract';
 import { divDecimals, timesDecimals } from '@etransfer/utils';
+import { aelf } from '../../index';
 // import { divDecimals, timesDecimals } from '../../converter';
 
 export const ELF_NATIVE_TOKEN = 'ELF';
@@ -22,9 +22,11 @@ export class EVMBridgeOperator implements IBridgeOperator {
     this.chainInfo = chainInfo;
   }
   checkAllowanceAndApprove(params: ICheckAndApproveParams): Promise<boolean> {
+    console.log('checkAllowanceAndApprove', params);
     throw new Error('Method not implemented.');
   }
   createReceipt(params: ICreateReceiptHandlerParams): Promise<any> {
+    console.log('createReceipt', params);
     throw new Error('Method not implemented.');
   }
 
