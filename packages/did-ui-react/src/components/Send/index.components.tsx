@@ -38,9 +38,11 @@ import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
 import { getContractBasic } from '@portkey/contracts';
 import { AddressTypeEnum, AddressTypeSelect } from '../../components/AddressTypeSelect';
-import ToAddressInput from './components/ToAddressInput';
+import ToAddressInput, { InputStepEnum, SendAssetTypeEnum } from './components/ToAddressInput';
 import SupportedExchange from './components/SupportedExchange';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
+import { WarningKey } from '../../constants/error';
+import { INetworkItem } from './components/SelectNetwork';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -93,6 +95,10 @@ function SendContent({
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
+  const [inputStep, setInputStep] = useState<InputStepEnum>(InputStepEnum.input);
+  const [warning, setWarning] = useState<WarningKey | undefined>();
+  const [chainList, setChainList] = useState<INetworkItem[]>([]);
+  const [isCheckAddressFinish, setIsCheckAddressFinish] = useState(false);
 
   const tokenInfo: AssetTokenExpand = useMemo(
     () => ({
@@ -121,6 +127,7 @@ function SendContent({
   const [tipMsg, setTipMsg] = useState('');
 
   const [amount, setAmount] = useState(extraConfig?.amount || '');
+  const [usdAmount, setUSDAmount] = useState('');
   const [balance, setBalance] = useState(extraConfig?.balance || '');
 
   const defaultToken = useDefaultToken(tokenInfo.chainId);
@@ -131,6 +138,7 @@ function SendContent({
   }, [amount, stage, toAccount.address]);
 
   const isValidSuffix = useCheckSuffix();
+  const caAddress = useMemo(() => caInfo?.[tokenInfo.chainId as ChainId]?.caAddress || '', [caInfo, tokenInfo.chainId]);
 
   const validateToAddress = useCallback(
     (value: { name?: string; address: string } | undefined) => {
@@ -585,7 +593,24 @@ function SendContent({
           StageObj[stage].backFun();
         }}
       />
-      {stage !== Stage.Preview && <ToAddressInput toAccount={toAccount} setToAccount={setToAccount} />}
+      {stage !== Stage.Preview && (
+        <ToAddressInput
+          caAddress={caAddress}
+          toAccount={toAccount}
+          setToAccount={setToAccount}
+          sendType={isNFT ? SendAssetTypeEnum.nft : SendAssetTypeEnum.token}
+          step={inputStep}
+          setStep={setInputStep}
+          warning={warning}
+          setWarning={setWarning}
+          selectedToken={tokenInfo as any}
+          setChainList={setChainList}
+          checkFinish={isCheckAddressFinish}
+          setCheckFinish={setIsCheckAddressFinish}
+          setSendAmount={setAmount}
+          setSendUSDAmount={setUSDAmount}
+        />
+      )}
       <div className="stage-ele">{StageObj[stage].element}</div>
       <div className="btn-wrap">
         <ThrottleButton disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>

@@ -10,9 +10,6 @@
       .label {
         color: var(--sds-color-text-default-secondary);
       }
-      .gary-color {
-        color: var(--sds-color-text-default-tertiary);
-      }
       .edit-thin-icon {
         margin-left: 2px;
         width: 16px;
@@ -44,6 +41,7 @@
           padding-left: 2px;
           border: none;
           box-shadow: none;
+          border-radius: 0;
           &:focus,
           &:hover {
             border: none;
@@ -63,6 +61,11 @@
           svg {
             width: 100%;
             height: 100%;
+          }
+        }
+        .danger-warning {
+          path {
+            fill: var(--sds-color-icon-danger-tertiary);
           }
         }
         .status-icon {
@@ -93,20 +96,4 @@
       color: var(--sds-color-text-brand-secondary);
     }
   }
-}
-
-.flex-between-center {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.flex-row-center {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-}
-
-.flex-1 {
-  flex: 1;
 }
