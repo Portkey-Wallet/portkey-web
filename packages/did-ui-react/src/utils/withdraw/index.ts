@@ -1,17 +1,17 @@
 import { eTransferCore } from '@etransfer/core';
 import { ContractBasic } from '@portkey/contracts';
-import { getWallet } from '../aelf';
+import { getWallet } from '@portkey/utils/src/aelf';
 import { IBlockchainWallet } from '@portkey/types';
 import { PortkeyVersion } from '@etransfer/types';
 import AElf from 'aelf-sdk';
 import { ICrossTransfer, ICrossTransferInitOption, IWithdrawParams, IWithdrawPreviewParams } from './types';
 
-import { timesDecimals } from '../converter';
-import { sleep } from '../index';
+import { timesDecimals } from '@portkey/utils/src/converter';
+import { sleep } from '@portkey/utils/src';
 import { isAuthTokenError } from '@etransfer/utils';
 import { LocalStorageKey } from '@etransfer/utils';
 import { removeDIDAddressSuffix } from '@etransfer/utils';
-import { ZERO } from '../constants';
+import { ZERO } from '../../constants/misc';
 
 export const CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL = ['ELF', 'USDT'];
 const ETRANSFER_VERSION = '2.13.0';
@@ -115,7 +115,7 @@ export class CrossTransfer implements ICrossTransfer {
         isCheckSymbol = true,
       } = params;
       const { pin, walletInfo, chainList, eTransferCA } = this.options;
-      const chainInfo = chainList.find(item => item.chainId === chainId);
+      const chainInfo = chainList.find((item) => item.chainId === chainId);
       if (!pin) throw new Error('No Pin');
       // todo: change it
       if (isCheckSymbol && !CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL.includes(tokenInfo.symbol))
@@ -158,7 +158,7 @@ export class CrossTransfer implements ICrossTransfer {
         network,
         chainId,
         managerAddress,
-        getSignature: async ser => {
+        getSignature: async (ser) => {
           const signObj = manager.keyPair.sign(AElf.utils.sha256(ser));
           return {
             signature: [

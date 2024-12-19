@@ -2,7 +2,7 @@ import Web3 from 'web3';
 import { AbiItem } from 'web3-utils/types';
 import { TChainType, TLimitData } from '../types';
 import { IContract } from '@portkey/types';
-import { CHAIN_ID_MAP } from '../../constants';
+import { CHAIN_ID_MAP } from '../../../constants/eBridge';
 
 export const getHttpProvider = (rpcUrl: string) => {
   return new Web3.providers.HttpProvider(rpcUrl);
