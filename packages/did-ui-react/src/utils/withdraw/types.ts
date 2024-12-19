@@ -1,8 +1,7 @@
 import { TGetWithdrawInfoResult, TCreateWithdrawOrderResult } from '@etransfer/types';
+import { ContractBasic } from '@portkey/contracts';
 import { ChainId } from '@portkey/types';
 import { IStorageSuite } from '@portkey/types';
-import { ContractBasic } from '@portkey/contracts';
-ContractBasic;
 export interface ICrossTransferInitOption {
   walletInfo: any; // TODO:change it
   eTransferUrl: string;
