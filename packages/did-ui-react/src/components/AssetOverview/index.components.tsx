@@ -39,7 +39,7 @@ export interface AssetOverviewProps {
   defaultActiveKey?: string;
   setActiveKey?: (activeKey: string) => void;
   onAvatarClick?: () => void;
-  onReceive?: (selectToken: BaseToken) => void;
+  onReceive?: () => void;
   onBuy?: (selectToken: BaseToken) => void;
   onBack?: () => void;
   onDataInit?: () => void;
@@ -229,7 +229,7 @@ export function AssetOverviewContent({
           }
           setAssetOpen(true);
         }}
-        onReceive={() => setTokenOpen(true)}
+        onReceive={onReceive}
         onFaucet={onFaucet}
         onBack={onBack}
       />
@@ -278,7 +278,7 @@ export function AssetOverviewContent({
         onClose={() => setTokenOpen(false)}
         onChange={(v) => {
           setTokenOpen(false);
-          onReceive?.(v);
+          // onReceive?.(v);
         }}
       />
       <CustomAssetModal

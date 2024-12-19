@@ -164,8 +164,8 @@ export default function TransactionMain({
       return (
         <div className="multi-token-container">
           <div className="token-wrapper">
-            <CoinImage src={top.url} width={42} />
-            <img className="icon bottom" src={bottom.url} />
+            <CoinImage symbol={top.symbol} src={top.url} width={42} />
+            <CoinImage symbol={bottom.symbol} className="icon bottom" src={bottom.url} width={42} />
           </div>
           <div className="token-direction-wrapper">
             <span>{top.symbol}</span>
@@ -180,7 +180,7 @@ export default function TransactionMain({
       return (
         <div className="default-token-container">
           <div className="token-wrapper">
-            <CoinImage src={activityItem?.listIcon} width={60} />
+            <CoinImage symbol={activityItem?.symbol} src={activityItem?.listIcon} width={60} />
             <img className="icon bottom" src={activityItem?.sourceIcon} />
           </div>
         </div>

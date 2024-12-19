@@ -47,6 +47,7 @@ export const InitialTxFee = {
 export enum AssetStep {
   overview = 'overview',
   receive = 'receive',
+  receiveDetail = 'receiveDetail',
   ramp = 'ramp',
   rampPreview = 'rampPreview',
   send = 'send',

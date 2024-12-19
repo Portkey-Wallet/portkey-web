@@ -11,11 +11,12 @@ export interface BaseToken {
   id?: string; // id
   chainId: ChainId;
   decimals: number | string;
-  address: string; // token  contract address
+  address?: string; // token  contract address
   symbol: string;
   label?: string;
   imageUrl?: string;
   chainImageUrl?: string;
+  isNFT?: boolean;
 }
 
 export interface BaseTokenExpand extends BaseToken {

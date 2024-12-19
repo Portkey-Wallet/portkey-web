@@ -7,7 +7,7 @@ export default function RampPage() {
 
   return (
     <div>
-      <PortkeyAssetProvider originChainId="tDVW" pin="111111">
+      <PortkeyAssetProvider originChainId="AELF" pin="111111">
         <Ramp
           onBack={function (): void {
             router.push('/sign');
