@@ -31,7 +31,7 @@ import { useUpdateReceiveAndInterval } from '../../../../hooks';
 import { getBalanceByContract } from '../../../../../../utils/sandboxUtil/getBalance';
 import { fetchTxFeeAsync } from '../../../../../../request/token';
 import { getChain } from '../../../../../../hooks';
-import { ITransferLimitItemWithRoute } from '../../../../../TransferSettingsEdit/index.components';
+import { ITransferLimitItemWithRoute } from '../../../../../../types/transfer';
 import CommonInput from '../../../../../CommonInput';
 import { useDebounce } from '../../../../../../hooks/debounce';
 import AutoWidthInput from '../AutoWidthInput';

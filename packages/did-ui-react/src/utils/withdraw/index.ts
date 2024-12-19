@@ -5,13 +5,12 @@ import { IBlockchainWallet } from '@portkey/types';
 import { PortkeyVersion } from '@etransfer/types';
 import AElf from 'aelf-sdk';
 import { ICrossTransfer, ICrossTransferInitOption, IWithdrawParams, IWithdrawPreviewParams } from './types';
-
-import { timesDecimals } from '@portkey/utils/src/converter';
 import { sleep } from '@portkey/utils/src';
 import { isAuthTokenError } from '@etransfer/utils';
 import { LocalStorageKey } from '@etransfer/utils';
 import { removeDIDAddressSuffix } from '@etransfer/utils';
 import { ZERO } from '../../constants/misc';
+import { timesDecimals } from '../converter';
 
 export const CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL = ['ELF', 'USDT'];
 const ETRANSFER_VERSION = '2.13.0';
