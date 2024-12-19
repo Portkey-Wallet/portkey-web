@@ -1,34 +1,29 @@
 .portkey-ui-send-wrapper {
-  padding-top: 16px;
+  background-color: var(--sds-color-background-default-default);
   height: 100%;
-  background-color: var(--portkey-ui-bg-6);
   display: flex;
   flex-direction: column;
 
   .page-title {
-    padding: 26px 24px;
     align-items: center;
+    height: 44px;
     .title-left-col {
+      flex: 1;
       .portkey-ui-custom-svg {
-        width: 24px;
-        height: 24px;
-        svg {
-          width: 24px;
-          height: 24px;
-          path {
-            fill: var(--portkey-ui-text-primary);
-          }
-        }
+        width: 20px;
+        height: 20px;
       }
     }
     .title-center {
-      flex: 1;
+      flex: 4;
       padding: 0 12px;
       color: var(--portkey-ui-text-primary);
-      line-height: 28px;
-      font-size: 24px;
+      line-height: 22px;
+      text-align: center;
+      font-size: 16px !important;
     }
     .title-right-col {
+      flex: 1;
       .portkey-ui-custom-svg {
         width: 18px;
         height: 18px;
@@ -48,7 +43,6 @@
     flex-direction: column;
     flex: 1;
     overflow: hidden;
-    background-color: var(--portkey-ui-default-bg);
   }
 
   .address-wrap,
@@ -146,52 +140,63 @@
       }
     }
   }
-  .amount-wrap {
-    background-color: var(--portkey-ui-default-bg);
-    padding-top: 16px;
-    border-bottom: none;
-    .asset-selector {
-      display: flex;
-      align-items: center;
-      padding: 7px 15px;
-      .icon {
-        margin-right: 8px;
-        img,
-        .portkey-ui-custom-svg,
-        .custom {
-          width: 36px;
-          height: 36px;
-          svg {
-            width: 36px;
-            height: 36px;
-          }
-        }
-        .custom {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          border: 1px solid var(--portkey-ui-border-1);
-          border-radius: 50%;
-          background-color: var(--portkey-ui-bg-6);
+  .amount-show-wrap {
+    padding: 16px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    .left {
+      width: 42px;
+      height: 42px;
+      margin-right: 8px;
+
+      img,
+      .portkey-ui-custom-svg,
+      .custom,
+      .portkey-ui-nft-image {
+        width: 42px;
+        height: 42px;
+        svg {
+          width: 42px;
+          height: 42px;
         }
       }
-      .center {
-        flex: 1;
+      .custom {
         display: flex;
-        flex-direction: column;
-        gap: 2px;
-        .symbol {
-          line-height: 22px;
-          font-size: 16px;
-          color: var(--portkey-ui-text-primary);
-        }
-        .amount {
-          line-height: 16px;
-          font-size: 12px;
-          color: var(--portkey-ui-text-secondary);
-        }
+        justify-content: center;
+        align-items: center;
+        border: 1px solid var(--portkey-ui-border-1);
+        border-radius: 50%;
+        background-color: var(--portkey-ui-bg-6);
       }
     }
+    .center {
+      margin-right: 8px;
+      flex: 1;
+      .symbol {
+        line-height: 22.4px;
+        font-size: 16px;
+        color: var(--sds-color-text-default-default);
+      }
+      .amount {
+        line-height: 19.6px;
+        font-size: 14px;
+        color: var(--sds-color-text-default-secondary);
+      }
+    }
+
+    .max {
+      border-radius: 999px;
+      font-size: 16px;
+      line-height: 40px;
+      height: 40px;
+      width: 84px;
+      text-align: center;
+      color: var(--sds-color-text-default-default);
+      border: 1px solid var(--sds-color-border-neutral-secondary);
+    }
+
     .asset.nft {
       padding: 8px 16px 24px;
       width: 100vw;
@@ -298,20 +303,19 @@
     }
   }
   .btn-wrap {
-    background-color: var(--portkey-ui-default-bg);
+    background-color: var(--sds-color-background-default-default);
     padding: 16px;
-    border-top: 1px solid var(--portkey-ui-default-border);
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
     padding: 10px;
-    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
     text-align: center;
     .stage-btn {
       border-radius: 100px;
       height: 48px;
+      width: 100%;
     }
   }
 }

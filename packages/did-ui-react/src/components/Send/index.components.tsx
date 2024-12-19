@@ -1,5 +1,5 @@
+import { aelf, wallet } from '@portkey/utils';
 import { IAssetItemType, ITransferLimitItem, OperationTypeEnum } from '@portkey/services';
-import { wallet } from '@portkey/utils';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
@@ -20,6 +20,7 @@ import { useCheckSuffix, useDefaultToken } from '../../hooks/assets';
 import { usePortkey } from '../context';
 import { DEFAULT_DECIMAL } from '../../constants/assets';
 import crossChainTransfer, { intervalCrossChainTransfer } from '../../utils/sandboxUtil/crossChainTransfer';
+import crossChainTransferV2 from '../../utils/sandboxUtil/crossChainTransferV2';
 import { useFeeByChainId } from '../context/PortkeyAssetProvider/hooks/txFee';
 import sameChainTransfer from '../../utils/sandboxUtil/sameChainTransfer';
 import getTransferFee from './utils/getTransferFee';
@@ -35,6 +36,10 @@ import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
+import { getContractBasic } from '@portkey/contracts';
+import { AddressTypeEnum, AddressTypeSelect } from '../../components/AddressTypeSelect';
+import ToAddressInput from './components/ToAddressInput';
+import SupportedExchange from './components/SupportedExchange';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
 
 export interface SendProps {
@@ -56,7 +61,7 @@ export type SendExtraConfig = {
   stage?: Stage;
 };
 
-type ToAccount = { name?: string; address: string };
+export type ToAccount = { name?: string; address: string };
 
 enum Stage {
   'Address',
@@ -84,7 +89,7 @@ function SendContent({
 }: SendProps) {
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId }] = usePortkeyAsset();
   const [{ networkType, chainType, sandboxId }] = usePortkey();
-  const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
+  const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Amount);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
@@ -111,6 +116,7 @@ function SendContent({
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
 
   const [toAccount, setToAccount] = useState<ToAccount>(extraConfig?.toAccount || { address: '' });
+
   const [errorMsg, setErrorMsg] = useState('');
   const [tipMsg, setTipMsg] = useState('');
 
@@ -173,51 +179,6 @@ function SendContent({
     [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo, caAddressInfos],
   );
 
-  const retryCrossChain = useCallback(
-    async ({ transactionId, params }: the2ThFailedActivityItemType) => {
-      try {
-        //
-        const privateKey = managementAccount?.privateKey;
-        if (!privateKey) return;
-        setLoading(true);
-        await intervalCrossChainTransfer({ ...params, privateKey });
-        // TODO
-        // dispatch(removeFailedActivity(transactionId));
-      } catch (error) {
-        console.log('retry addFailedActivity', error);
-        showErrorModal({ transactionId, params });
-      } finally {
-        setLoading(false);
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [managementAccount?.privateKey],
-  );
-
-  const showErrorModal = useCallback(
-    (error: the2ThFailedActivityItemType) => {
-      Modal.error({
-        width: 320,
-        className: 'portkey-ui-transaction-retry-modal',
-        okText: 'Resend',
-        icon: null,
-        closable: false,
-        centered: true,
-        title: (
-          <div className="portkey-ui-flex-column-center transaction-msg">
-            <CustomSvg type="WarnRed" />
-            Transaction failed !
-          </div>
-        ),
-        onOk: () => {
-          console.log('retry modal addFailedActivity', error);
-          retryCrossChain(error);
-        },
-      });
-    },
-    [retryCrossChain],
-  );
-
   const btnOutOfFocus = useCallback(() => {
     // fixed - button focus style when mobile
     if (typeof document !== 'undefined') document.body.focus();
@@ -249,17 +210,29 @@ function SendContent({
 
         setLoading(true);
 
+        const chainId = tokenInfo.chainId;
+        const chainInfo = await getChain(chainId);
+        if (!chainInfo) throw 'Please check network connection and chainId';
+        const account = aelf.getWallet(managementAccount?.privateKey);
+        const tokenContract = await getContractBasic({
+          rpcUrl: chainInfo.endPoint,
+          account,
+          contractAddress: tokenInfo.address,
+          chainType,
+        });
+
         if (isCrossChain(toAccount.address, tokenInfo.chainId)) {
-          await crossChainTransfer({
+          await crossChainTransferV2({
+            tokenContract,
             sandboxId,
+            chainId: tokenInfo.chainId,
             chainType,
             privateKey: managementAccount?.privateKey,
-            managerAddress: managementAccount?.address,
             tokenInfo,
             caHash: caHash || '',
             amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
             toAddress: toAccount.address,
-            crossChainFee: defaultFee.crossChain,
+            toChainId: 'AELF',
             guardiansApproved: oneTimeApprovalList.current,
           });
         } else {
@@ -286,7 +259,6 @@ function SendContent({
         } else if (error.type === 'crossChainTransfer') {
           console.log('addFailedActivity', error);
 
-          showErrorModal(error.data);
           singleMessage.error(handleErrorMessage(error));
         } else {
           singleMessage.error(handleErrorMessage(error));
@@ -301,12 +273,9 @@ function SendContent({
     amount,
     caHash,
     chainType,
-    defaultFee.crossChain,
-    managementAccount?.address,
     managementAccount?.privateKey,
     onSuccess,
     sandboxId,
-    showErrorModal,
     stage,
     toAccount.address,
     tokenInfo,
@@ -526,25 +495,29 @@ function SendContent({
           oneTimeApprovalList.current = [];
         },
         element: (
-          <AmountInput
-            type={isNFT ? 'nft' : 'token'}
-            fromAccount={{
-              address: caInfo?.[tokenInfo.chainId]?.caAddress || '',
-              AESEncryptPrivateKey: managementAccount?.privateKey || '',
-            }}
-            toAccount={{
-              address: toAccount.address,
-            }}
-            value={amount}
-            errorMsg={tipMsg}
-            token={tokenInfo}
-            onChange={({ amount, balance }) => {
-              setAmount(amount);
-              setBalance(balance);
-            }}
-            getTranslationInfo={getTranslationInfo}
-            setErrorMsg={setTipMsg}
-          />
+          <>
+            <AddressTypeSelect value={AddressTypeEnum.NON_EXCHANGE} onChangeValue={() => console.log('aa')} />
+            <SupportedExchange />
+            <AmountInput
+              type={isNFT ? 'nft' : 'token'}
+              fromAccount={{
+                address: caInfo?.[tokenInfo.chainId]?.caAddress || '',
+                AESEncryptPrivateKey: managementAccount?.privateKey || '',
+              }}
+              toAccount={{
+                address: toAccount.address,
+              }}
+              value={amount}
+              errorMsg={tipMsg}
+              token={tokenInfo}
+              onChange={({ amount, balance }) => {
+                setAmount(amount);
+                setBalance(balance);
+              }}
+              getTranslationInfo={getTranslationInfo}
+              setErrorMsg={setTipMsg}
+            />
+          </>
         ),
       },
       2: {
@@ -605,38 +578,14 @@ function SendContent({
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
+        leftElement={<CustomSvg type={'BackLeft'} />}
         className="page-title"
         title={`Send ${!isNFT ? tokenInfo?.label || tokenInfo.symbol : ''}`}
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}
       />
-      {stage !== Stage.Preview && (
-        <div className="address-wrap">
-          <div className="item from">
-            <span className="label">From:</span>
-            <div className={'from-wallet control'}>
-              <div className="name">{accountInfo?.nickName || '--'}</div>
-            </div>
-          </div>
-          <div className="item to">
-            <span className="label">To:</span>
-            <div className="control">
-              <ToAccount value={toAccount} onChange={(v) => setToAccount(v)} focus={stage !== Stage.Amount} />
-              {stage === Stage.Amount && (
-                <CustomSvg
-                  type="Close2"
-                  onClick={() => {
-                    setStage(Stage.Address);
-                    setToAccount({ address: '' });
-                  }}
-                />
-              )}
-            </div>
-          </div>
-          {errorMsg && <span className="error-msg">{errorMsg}</span>}
-        </div>
-      )}
+      {stage !== Stage.Preview && <ToAddressInput toAccount={toAccount} setToAccount={setToAccount} />}
       <div className="stage-ele">{StageObj[stage].element}</div>
       <div className="btn-wrap">
         <ThrottleButton disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
