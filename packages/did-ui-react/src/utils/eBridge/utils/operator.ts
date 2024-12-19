@@ -1,17 +1,18 @@
 import { getContractBasic } from '@portkey/contracts';
 import { IEBridgeELFChainInfo, IEBridgeEVMChainInfo } from '../types';
-import { VIEW_PRIVATE, ZERO } from '../../constants';
-import { getEVMContract, getHttpProvider } from '../utils/evm';
+import { getEVMContract, getHttpProvider } from './evm';
 import { BRIDGE_IN_ABI } from '../abis';
 import { IBridgeOperator, ICheckAndApproveParams, ICreateReceiptHandlerParams } from '../types/bridge';
 import { LIMIT_ABI } from '../abis';
-import { WB3ContractBasic } from '../utils/web3Contract';
+import { WB3ContractBasic } from './web3Contract';
 import Web3 from 'web3';
 import { ChainId, IContract } from '@portkey/types';
-import { getChainIdByMap, getReceiptLimit } from '../utils';
+import { getChainIdByMap, getReceiptLimit } from '.';
 import type { Contract } from 'web3-eth-contract';
-import { divDecimals, timesDecimals } from '@etransfer/utils';
-import { aelf } from '../../index';
+import { divDecimals, timesDecimals, ZERO } from '@etransfer/utils';
+import { VIEW_PRIVATE } from '../../../constants/eBridge';
+import { aelf } from '@portkey/utils';
+
 // import { divDecimals, timesDecimals } from '../../converter';
 
 export const ELF_NATIVE_TOKEN = 'ELF';

@@ -1,4 +1,4 @@
-import { IConfig } from '@portkey/types';
+import { ChainId, IConfig } from '@portkey/types';
 import {
   ISocialLoginConfig,
   NetworkType,
@@ -30,4 +30,8 @@ export interface GlobalConfigProps extends IConfig {
     onSetLoading: (loadingInfo: ScreenLoadingInfo) => void;
   };
   theme?: ThemeType;
+  eTransferUrl?: string;
+  eTransferCA?: {
+    [x in ChainId]?: string;
+  };
 }

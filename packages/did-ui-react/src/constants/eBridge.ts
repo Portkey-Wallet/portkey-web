@@ -2,7 +2,6 @@ import BigNumber from 'bignumber.js';
 
 export const VIEW_PRIVATE = '28805dd286a972f0ff268ba42646d5d952d770141bfec55c98e10619c268ecea';
 
-export const ZERO = new BigNumber(0);
 export const isEffectiveNumber = (v: any) => {
   const val = new BigNumber(v);
   return !val.isNaN() && !val.lte(0);
