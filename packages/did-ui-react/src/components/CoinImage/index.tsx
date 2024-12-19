@@ -25,6 +25,7 @@ export default function CoinImage({ src, symbol = 'ELF', width = 32 }: CoinImage
           key={tokenSrc}
           className="show-image"
           src={tokenSrc}
+          style={{ width, height: width }}
           onLoad={(e) => {
             setError(false);
             if (!(e.target as any).src.includes('brokenImg')) {

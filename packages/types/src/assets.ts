@@ -31,4 +31,8 @@ export interface INftInfoType {
   decimals: number;
   isSeed: boolean;
   seedType: SeedTypeEnum;
+  tokenName?: string;
+  chainId: string;
+  displayChainName?: string;
+  chainImageUrl?: string;
 }

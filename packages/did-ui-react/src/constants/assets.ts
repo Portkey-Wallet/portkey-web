@@ -1,21 +1,30 @@
-import { TokenItemShowType } from '../components/types/assets';
+import { ITokenSectionResponse } from '../components/types/assets';
 
 export const ELF_SYMBOL = 'ELF';
 
 export const DEFAULT_DECIMAL = 8;
 
-export const NEW_CLIENT_DEFAULT_ELF_LIST: TokenItemShowType[] = [
+export const NEW_CLIENT_DEFAULT_ELF_LIST: ITokenSectionResponse[] = [
   {
-    id: '',
-    name: 'AELF',
-    address: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
     balance: '0',
     balanceInUsd: '0.000000',
-    chainId: 'AELF',
+    price: 0,
     decimals: 8,
-    imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf_token_logo.png',
+    imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin-ELF.png',
     symbol: 'ELF',
-    tokenContractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
+    tokens: [
+      {
+        name: 'ELF',
+        address: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
+        balance: '0',
+        balanceInUsd: '0.000000',
+        chainId: 'AELF',
+        decimals: 8,
+        imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin-ELF.png',
+        symbol: 'ELF',
+        tokenContractAddress: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
+      },
+    ],
   },
 ];
 
@@ -47,7 +56,7 @@ export enum AssetStep {
   my = 'my',
   guardians = 'guardians',
   walletSecurity = 'walletSecurity',
-  paymentSecurity = 'paymentSecurity',
+  transactionLimits = 'transactionLimits',
   transferSettings = 'transferSettings',
   transferSettingsEdit = 'transferSettingsEdit',
   deleteAccount = 'deleteAccount',

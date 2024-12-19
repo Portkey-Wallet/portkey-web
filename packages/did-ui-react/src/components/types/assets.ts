@@ -15,6 +15,7 @@ export interface BaseToken {
   symbol: string;
   label?: string;
   imageUrl?: string;
+  chainImageUrl?: string;
 }
 
 export interface BaseTokenExpand extends BaseToken {
@@ -45,6 +46,36 @@ export interface TokenItemShowType extends TokenItemType {
   price?: string | number;
   userTokenId?: string;
 }
+
+export type ITokenSectionResponse = {
+  chainId?: string;
+  symbol: string;
+  price?: number;
+  balance?: string;
+  decimals?: number;
+  balanceInUsd?: string;
+  label?: string;
+  imageUrl?: string;
+  displayStatus?: 'All' | 'Partial' | 'None';
+  tokens?: TokenItemShowType[];
+};
+
+export type IUserTokenItem = Omit<TokenItemShowType, 'name' | 'address'> & { isDisplay?: boolean; address?: string };
+
+export type IUserTokenItemResponse = {
+  symbol: string;
+  price?: number;
+  balance?: string;
+  decimals?: number;
+  balanceInUsd?: string;
+  label?: string;
+  imageUrl?: string;
+  isDefault?: boolean;
+  displayStatus?: 'All' | 'Partial' | 'None';
+  tokens?: IUserTokenItem[];
+  chainImageUrl?: string;
+  displayChainName?: string;
+};
 
 // nft item types
 export type NFTItemBaseType = {

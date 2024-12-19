@@ -84,7 +84,6 @@ export { default as MenuItem } from './MenuItem';
 export { default as MenuList } from './MenuList';
 export { default as PaymentSecurity } from './PaymentSecurity';
 export { default as TransferSettings } from './TransferSettings';
-export { default as TransferSettingsEdit } from './TransferSettingsEdit';
 export { default as ThrottleButton } from './ThrottleButton';
 export { default as AddressTypeSelect } from './AddressTypeSelect';
 

@@ -14,6 +14,7 @@ import { generateNonceAndTimestamp } from '../nonce';
 import AElf from 'aelf-sdk';
 import { getOperationDetails } from '../../components/utils/operation.util';
 import { OperationTypeEnum } from '@portkey/services';
+import { ConfigProvider } from '../../components';
 
 class OpenLogin {
   options: OpenLoginOptions;
@@ -86,8 +87,9 @@ class OpenLogin {
         socialType: VerifyTypeEnum.zklogin,
       };
     }
-
+    const theme = ConfigProvider?.getGlobalConfig()?.theme;
     const dataObject: OpenloginParamConfig = {
+      theme,
       clientId: this.options.clientId,
       ...params,
       actionType: OPENLOGIN_ACTIONS.LOGIN,
@@ -95,6 +97,7 @@ class OpenLogin {
       ...zkParams,
     };
     console.log(dataObject, 'dataObject==');
+
     const result = await this.openloginHandler({
       url: `${this.baseUrl}/social-start`,
       queryParams: dataObject,

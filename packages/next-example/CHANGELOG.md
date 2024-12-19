@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.11-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.15.11-alpha.0) (2024-12-18)
+
+### Features
+
+- add theme ([2330e9e](https://github.com/Portkey-Wallet/portkey-web/commit/2330e9ec13e9ac3585d5222ff1dad9d99798a167))
+- change header for token detail ([ae1b240](https://github.com/Portkey-Wallet/portkey-web/commit/ae1b240226aa8a1610c4c251fcb2d118c4805856))
+- complete transaction limits page ([b9ace32](https://github.com/Portkey-Wallet/portkey-web/commit/b9ace321cca04d09d8f6902814bf9d705868420b))
+- ramp home revamp ([16b60df](https://github.com/Portkey-Wallet/portkey-web/commit/16b60dff6d634dcd7d343f930efab8287b924623))
+- remove old transfer limit edit ([0960842](https://github.com/Portkey-Wallet/portkey-web/commit/0960842a0e30149a9aed51e33a48cbb799a29245))
+
 ## [2.15.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10-alpha.0...v2.15.10) (2024-11-20)
 
 **Note:** Version bump only for package @portkey/next-example

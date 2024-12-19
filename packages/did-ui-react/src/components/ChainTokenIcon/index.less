@@ -1,0 +1,42 @@
+.chain-icon-token {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .symbol {
+    font-weight: 400;
+    line-height: 22.4px;
+    font-size: 16px;
+    color: var(--portkey-ui-text-primary);
+  }
+
+  .unknown-token {
+    width: 40px;
+    height: 40px;
+    background-color: var(--portkey-ui-bg-6);
+    color: var(--portkey-ui-text-primary);
+    border-radius: 9999px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+  }
+
+  .token-image-wrapper {
+    position: relative;
+    width: 45px;
+    height: 42px;
+    .token-image {
+      width: 40px;
+      height: 40px;
+    }
+  }
+
+  .chain-image {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 20px;
+    height: 20px;
+  }
+}

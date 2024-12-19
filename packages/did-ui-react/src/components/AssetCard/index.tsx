@@ -1,4 +1,4 @@
-import { ReactNode, useMemo, useRef } from 'react';
+import { ReactNode, useMemo, useRef, useState } from 'react';
 import { ChainId } from '@portkey/types';
 import BalanceCard from '../BalanceCard';
 import TitleWrapper from '../TitleWrapper';
@@ -46,6 +46,7 @@ export default function AssetCard({
 }: AssetCardProps) {
   const addressCopyModalRef = useRef<IAddressCopyModalRef>(null);
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
+  const [isVisibleBalance, setIsVisibleBalance] = useState(true);
 
   const leftElement = useMemo(() => {
     return (
@@ -63,9 +64,9 @@ export default function AssetCard({
         <CustomSvg
           className="portkey-ui-account-right-element-icon"
           type="Copy"
+          fillColor="var(--sds-color-icon-default-secondary)"
           onClick={() => addressCopyModalRef.current?.open()}
         />
-        <CustomSvg className="portkey-ui-account-right-element-icon" type="Gear" />
       </div>
     );
   }, []);
@@ -83,9 +84,13 @@ export default function AssetCard({
         <div className="portkey-ui-balance-amount">
           {isMainnet ? (
             <>
-              <span className="amount">{`$${accountBalanceUSD ?? '0.00'}`}</span>
-              {/* TODO: visibility off */}
-              <CustomSvg className="portkey-ui-balance-amount-icon" type={'Visibility'} />
+              <span className="amount">{`$${!isVisibleBalance ? '******' : accountBalanceUSD ?? '0.00'}`}</span>
+              <CustomSvg
+                className="portkey-ui-balance-amount-icon"
+                fillColor="var(--sds-color-icon-default-default)"
+                type={!isVisibleBalance ? 'VisibilityOff' : 'Visibility'}
+                onClick={() => setIsVisibleBalance((prev) => !prev)}
+              />
             </>
           ) : (
             <span className="dev-mode amount">Dev Mode</span>
@@ -95,6 +100,7 @@ export default function AssetCard({
           isShowFaucet={isShowFaucet}
           isShowRamp={isShowRamp}
           isMainnet={isMainnet}
+          isShowSwap
           onBuy={onBuy}
           onSend={onSend}
           onReceive={onReceive}

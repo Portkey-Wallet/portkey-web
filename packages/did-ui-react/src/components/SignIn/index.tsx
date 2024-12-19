@@ -30,8 +30,8 @@ import Container from '../Container';
 import { usePortkey } from '../context';
 import useVerifier from '../../hooks/useVerifier';
 import { sleep } from '@portkey/utils';
-// import CommonBaseModal from '../CommonBaseModal';
-import CommonModal from '../CommonModal';
+import CommonModal from '../CommonBaseModal';
+// import CommonModal from '../CommonModal';
 import { PORTKEY_ROOT_ID } from '../../constants';
 import useSignInHandler, { NextStepType } from './hooks/onSignIn';
 import useSendCode from './hooks/useSendCode';
@@ -305,7 +305,6 @@ const SignIn = forwardRef(
 
           if (AllSocialLoginList.includes(accountType)) {
             setLoading(true);
-            console.log('🌈 🌈 🌈 🌈 🌈 🌈 11', '');
             const result = await verifySocialToken({
               accountType,
               token: authenticationInfo?.authToken,

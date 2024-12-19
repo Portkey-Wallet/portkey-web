@@ -3,24 +3,41 @@ import { IMenuItemType } from '../types';
 
 interface useMyMenuListProps {
   onClickGuardians: () => void;
-  onClickWalletSecurity: () => void;
+  onClickTransactionLimits: () => void;
+  onClickTokenAllowances: () => void;
+  onClickBackupEmail: () => void;
 }
 
-export function useMyMenuList({ onClickGuardians, onClickWalletSecurity }: useMyMenuListProps): IMenuItemType[] {
+export function useMyMenuList({
+  onClickGuardians,
+  onClickTransactionLimits,
+  onClickTokenAllowances,
+  onClickBackupEmail,
+}: useMyMenuListProps): IMenuItemType[] {
   return useMemo(
     () => [
       {
         label: 'Guardians',
-        icon: 'Guardians',
+        icon: 'MyGuardians',
         onClick: onClickGuardians,
       },
       {
-        label: 'Wallet Security',
-        icon: 'WalletSecurity',
-        onClick: onClickWalletSecurity,
+        label: 'Transaction limits',
+        icon: 'MyTransactionLimit',
+        onClick: onClickTransactionLimits,
+      },
+      {
+        label: 'Token allowances',
+        icon: 'MyTokenAllowance',
+        onClick: onClickTokenAllowances,
+      },
+      {
+        label: 'Backup email',
+        icon: 'MyMailThin',
+        onClick: onClickBackupEmail,
       },
     ],
-    [onClickGuardians, onClickWalletSecurity],
+    [onClickBackupEmail, onClickGuardians, onClickTokenAllowances, onClickTransactionLimits],
   );
 }
 

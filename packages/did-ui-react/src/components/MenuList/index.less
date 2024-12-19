@@ -2,7 +2,38 @@
   height: 100%;
   position: relative;
   .back-header-page-wrapper {
-    background-color: var(--portkey-ui-default-bg);
-    border-bottom: 1px solid var(--portkey-ui-border-2);
+    background: var(--sds-color-background-default-default);
+    // border-bottom: 1px solid var(--portkey-ui-border-2);
+  }
+  .close-icon {
+    width: 20px;
+    height: 20px;
+    svg {
+      width: 20px;
+      height: 20px;
+      // path {
+
+      // }
+    }
+  }
+  .settings-menu-item {
+    .portkey-ui-menu-item-title {
+      overflow: hidden;
+      color: var(--sds-color-text-default-default);
+      text-overflow: ellipsis;
+  
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      line-height: 140%; /* 22.4px */
+    }
+    svg {
+      width: 24px;
+      height: 24px;
+      path {
+        fill: var(--sds-color-icon-default-default);
+      }
+    }
   }
 }

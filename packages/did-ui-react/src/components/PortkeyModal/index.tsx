@@ -180,7 +180,7 @@ export default function PortkeyModal({
         footer={footer === undefined ? defaultFooter() : footer}
         extra={extra}
         onClose={onClose}
-        height={defaultHeight}
+        // height={defaultHeight}
       />
     ),
     [
@@ -188,7 +188,7 @@ export default function PortkeyModal({
       defaultFooter,
       extra,
       footer,
-      defaultHeight,
+      // defaultHeight,
       maskClassName,
       maskMotion,
       motion,

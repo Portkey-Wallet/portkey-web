@@ -5,14 +5,13 @@ import { DEVICE_INFO_VERSION, DEVICE_TYPE, getDeviceInfo } from '../../constants
 import { useIntervalQueryCAInfo } from '../../hooks/useIntervalQueryCAInfo';
 import { LoginQRData, RegisterType } from '../../types';
 import { TelegramPlatform, did, handleErrorMessage, setLoading } from '../../utils';
-import CustomSvg from '../CustomSvg';
 import { DIDWalletInfo } from '../types';
 import { randomId } from '@portkey/utils';
 import { evokePortkey } from '@portkey/onboarding';
 import './index.less';
 import singleMessage from '../CustomAnt/message';
 import ThrottleButton from '../ThrottleButton';
-import { usePortkey } from '../context';
+import { BlockLoginButton } from '../LoginButton';
 
 export default function WakeUpPortkey({
   type,
@@ -25,7 +24,6 @@ export default function WakeUpPortkey({
   websiteInfo: {};
   onFinish?: (info: Omit<DIDWalletInfo, 'pin'>) => void;
 }) {
-  const [{ theme }] = usePortkey();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
 
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
@@ -103,9 +101,11 @@ export default function WakeUpPortkey({
   }, [deviceInfo, generateKeystore, intervalHandler, networkType, websiteInfo]);
 
   return (
-    <ThrottleButton type="default" className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
-      <CustomSvg type="Portkey-login" fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />
-      {`${type} with Portkey`}
-    </ThrottleButton>
+    // <ThrottleButton type="default" className={clsx('recommend-login-btn')} onClick={onPortkeySuccess}>
+    //   <CustomSvg type="Portkey-login" fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />
+    //   {`${type} with Portkey`}
+    // </ThrottleButton>
+
+    <BlockLoginButton onClickCallback={onPortkeySuccess} iconType="Portkey-login" iconName="Portkey" />
   );
 }

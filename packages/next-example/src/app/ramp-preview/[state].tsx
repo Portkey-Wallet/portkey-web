@@ -18,7 +18,7 @@ export default function RampPreviewPage() {
 
   return (
     <div>
-      <PortkeyAssetProvider originChainId="AELF" pin="111111">
+      <PortkeyAssetProvider originChainId="tDVW" pin="111111">
         {initState && (
           <RampPreview
             isMainnet={true}

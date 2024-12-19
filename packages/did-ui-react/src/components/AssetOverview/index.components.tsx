@@ -10,8 +10,9 @@ import {
   BalanceTab,
   BaseToken,
   IFaucetConfig,
-  NFTCollectionItemShowType,
   NFTItemBaseExpand,
+  ITokenSectionResponse,
+  NFTCollectionItemShowType,
   TokenItemShowType,
   TokenType,
 } from '../types/assets';
@@ -35,6 +36,8 @@ export interface AssetOverviewProps {
   backIcon?: ReactNode;
   faucet?: IFaucetConfig;
   isLoginOnChain?: boolean;
+  defaultActiveKey?: string;
+  setActiveKey?: (activeKey: string) => void;
   onAvatarClick?: () => void;
   onReceive?: (selectToken: BaseToken) => void;
   onBuy?: (selectToken: BaseToken) => void;
@@ -54,6 +57,8 @@ export function AssetOverviewContent({
   faucet,
   backIcon = <></>,
   isLoginOnChain = true,
+  defaultActiveKey,
+  setActiveKey,
   onAvatarClick,
   onBuy,
   onSend,
@@ -67,10 +72,12 @@ export function AssetOverviewContent({
   onViewActivityItem,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
-  const [{ accountInfo, tokenListInfo, caInfo, NFTCollection, activityMap }, { dispatch }] = usePortkeyAsset();
+  const [{ accountInfo, tokenListInfo, tokenListInfoV2, caInfo, NFTCollection, activityMap }, { dispatch }] =
+    usePortkeyAsset();
+
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
-
+  const [tokenListV2, setTokenListV2] = useState<ITokenSectionResponse[]>();
   const [tokenOpen, setTokenOpen] = useState(false);
   const [assetOpen, setAssetOpen] = useState(false);
 
@@ -140,13 +147,22 @@ export function AssetOverviewContent({
     // }));
     setTokenList(tokenListInfo.list);
 
-    const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
-      // Dealing with the problem of balanceInUsd === ''
-      return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
-    }, ZERO);
+    // const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
+    //   // Dealing with the problem of balanceInUsd === ''
+    //   return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
+    // }, ZERO);
 
-    setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
+    // setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
   }, [networkType, tokenListInfo?.list]);
+
+  useEffect(() => {
+    if (tokenListInfoV2) {
+      setTokenListV2(tokenListInfoV2.list);
+      if (tokenListInfoV2.totalBalanceInUsd) {
+        setAccountBalanceUSD(formatAmountShow(tokenListInfoV2.totalBalanceInUsd, 2));
+      }
+    }
+  }, [tokenListInfoV2]);
 
   const initActivityRef = useRef(false);
 
@@ -187,7 +203,7 @@ export function AssetOverviewContent({
 
   const [isGetNFTCollectionPending, setIsGetNFTCollection] = useState<boolean>();
   return (
-    <div className="portkey-ui-asset-overview">
+    <div className="portkey-ui-asset-overview" style={{ overflowY: 'auto', height: '100%' }}>
       <AssetCard
         isShowRamp={isShowRamp}
         isShowFaucet={Boolean(faucet?.faucetUrl || faucet?.faucetContractAddress)}
@@ -219,8 +235,10 @@ export function AssetOverviewContent({
       />
       <AssetTabs
         networkType={networkType}
+        defaultActiveKey={defaultActiveKey}
+        setActiveKey={setActiveKey}
         accountNFTList={NFTCollection?.list}
-        tokenList={tokenList || tokenListInfo?.list}
+        tokenListV2={tokenListV2}
         loadMoreNFT={loadMoreNFT}
         isGetNFTCollectionPending={isGetNFTCollectionPending}
         onChange={(v) => {

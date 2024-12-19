@@ -135,7 +135,7 @@ function Drawer(props: DrawerProps) {
 
   // ============================ Size ============================
   const mergedWidth = React.useMemo(() => width ?? (size === 'large' ? 736 : 378), [width, size]);
-  const mergedHeight = React.useMemo(() => height ?? (size === 'large' ? 736 : 378), [height, size]);
+  // const mergedHeight = React.useMemo(() => height ?? (size === 'large' ? 736 : 378), [height, size]);
 
   // =========================== Motion ===========================
   const maskMotion: CSSMotionProps = {
@@ -167,7 +167,7 @@ function Drawer(props: DrawerProps) {
           mask={mask}
           push={push}
           width={mergedWidth}
-          height={mergedHeight}
+          // height={mergedHeight}
           rootClassName={drawerClassName}
           getContainer={getContainer}
           afterOpenChange={(isOpen) => {

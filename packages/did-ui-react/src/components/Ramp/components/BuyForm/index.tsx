@@ -250,21 +250,32 @@ export default function BuyFrom({
     () => exchange !== '' && !errMsg && <ExchangeRate showRateText={showRateText} rateUpdateTime={updateTime} />,
     [errMsg, exchange, showRateText, updateTime],
   );
+  const [buyCryptoList, setBuyCryptoList] = useState<IRampCryptoItem[]>();
+  const fetchBuyCryptoList = useCallback(async () => {
+    const { buyCryptoList } = await getBuyCrypto({});
+    setBuyCryptoList(buyCryptoList);
+  }, []);
+  useEffectOnce(() => {
+    if (initialized) {
+      startReport('Buy-DataInit');
 
+      fetchBuyCryptoList().finally(() => endReport('Buy-DataInit'));
+    }
+  });
   return (
     <>
       <div className="portkey-ui-ramp-buy-form portkey-ui-flex-column-center">
         <div className="portkey-ui-ramp-input">
           <div className="label">{`I want to pay`}</div>
           <FiatInput
-            value={fiatAmount}
-            readOnly={false}
-            curFiat={fiatSelected}
+            // value={fiatAmount}
+            // readOnly={false}
+            // curFiat={fiatSelected}
             defaultCrypto={defaultCrypto}
             supportList={fiatList}
-            onChange={handleFiatChange}
+            // onChange={handleFiatChange}
             onSelect={handleFiatSelect}
-            onKeyDown={handleKeyDown}
+            // onKeyDown={handleKeyDown}
           />
           {!!errMsg && <div className="error-text">{t(errMsg)}</div>}
         </div>

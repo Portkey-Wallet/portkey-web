@@ -1,6 +1,6 @@
 import TitleWrapper from '../TitleWrapper';
 import CustomSvg from '../CustomSvg';
-import { ReactNode, useMemo } from 'react';
+import { ReactNode, useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 import { transNetworkText } from '../../utils/converter';
 import PortkeyQRCode from '../PortkeyQRCode';
@@ -10,8 +10,11 @@ import { NetworkType } from '../../types';
 import { MAINNET } from '../../constants/network';
 import Copy from '../Copy';
 import { supplementAllAelfAddress } from '../../utils/aelf';
-import TokenImageDisplay from '../TokenImageDisplay';
+import { useReceive } from '../../hooks/useReceive';
+import SourceDestinationPicker from './components/SourceDestinationPicker';
 import './index.less';
+import { IUserTokenItemResponse } from '../types/assets';
+import { ReceiveType } from '@portkey/services';
 
 export interface ReceiveCardProps {
   receiveInfo: QRCodeDataObjType['toInfo'];
@@ -37,51 +40,80 @@ export default function ReceiveCardMain({
   title,
   onBack,
 }: ReceiveCardProps) {
-  const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
-  const receiveAddress = useMemo(
-    () => supplementAllAelfAddress(receiveInfo.address, 'ELF', chainId),
-    [chainId, receiveInfo.address],
-  );
-
-  const value: QRCodeDataObjType = useMemo(
-    () => ({
-      type: 'send',
-      sendType: 'token',
-      networkType: networkType,
-      chainType: 'aelf',
-      toInfo: {
-        name: receiveInfo.name,
-        address: receiveAddress,
+  const tokenInfo = {
+    displayStatus: 'All' as const,
+    imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin-ELF.png',
+    isDefault: true,
+    label: undefined,
+    symbol: 'ELF',
+    tokens: [
+      {
+        address: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
+        chainId: 'AELF',
+        chainImageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/mainChain.png',
+        decimals: 8,
+        displayChainName: 'aelf MainChain',
+        id: '217e0eb3-4df2-8752-046c-3a10e6a9bbe4',
+        imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin-ELF.png',
+        isDefault: true,
+        isDisplay: true,
+        label: undefined,
+        symbol: 'ELF',
       },
-      assetInfo,
-    }),
-    [assetInfo, networkType, receiveAddress, receiveInfo.name],
-  );
+      {
+        address: '7RzVGiuVWkvL4VfVHdZfQF2Tri3sgLe9U991bohHFfSRZXuGX',
+        chainId: 'tDVV',
+        chainImageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/dappChain.png',
+        decimals: 8,
+        // displayChainName: 'aelf dAppChain',
+        id: 'db8c582e-22b5-bd39-9f42-3a10e6a9bbe4',
+        imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/Coin-ELF.png',
+        isDefault: true,
+        isDisplay: true,
+        label: undefined,
+        symbol: 'ELF',
+      },
+    ],
+  } as IUserTokenItemResponse;
+  const {
+    loading,
+    errorMsg,
+    receiveType,
+    destinationChain,
+    destinationChainList,
+    updateDestinationChain,
+    sourceChain,
+    sourceChainList,
+    setSourceChain,
+  } = useReceive(tokenInfo, chainId);
+
+  const showSourceList = useCallback(() => {
+    console.log('showSourceList');
+  }, []);
+  const showDestinationList = useCallback(() => {
+    console.log('showDestinationList');
+  }, []);
+
   return (
-    <div className={clsx('portkey-ui-receive-wrapper', className)}>
-      <div className="portkey-ui-receive-content">
-        <TitleWrapper
-          className="portkey-ui-receive-header"
-          leftElement={backIcon ? backIcon : <CustomSvg type="LeftArrow" onClick={onBack} />}
-          title={title}
-          rightElement={closeIcon}
-        />
-        <div className="portkey-ui-flex-column-center portkey-ui-receive-inner">
-          <h2 className="portkey-ui-receive-title">My Wallet Address to Receive</h2>
-          <div className="portkey-ui-flex-column-center token-info">
-            <TokenImageDisplay width={24} symbol={assetInfo?.symbol?.[0]} src={symbolIcon} />
-            <p className="symbol">{assetInfo?.label || assetInfo.symbol}</p>
-            <p className="network">{transNetworkText(chainId, isMainnet)}</p>
-          </div>
-          <div className="scan-content">
-            <PortkeyQRCode value={JSON.stringify(shrinkSendQrData(value))} />
-          </div>
-          <div className="receive-address">
-            <div className="address">{receiveAddress}</div>
-            <Copy toCopy={receiveAddress} />
-          </div>
-        </div>
-      </div>
+    <div className="portkey-ui-receive-content">
+      <TitleWrapper
+        className="portkey-ui-receive-header"
+        leftElement={backIcon ? backIcon : <CustomSvg type="LeftArrow" onClick={onBack} />}
+        title={`Receive ${tokenInfo.label ?? tokenInfo.symbol}`}
+        rightElement={closeIcon}
+      />
+      {sourceChain && destinationChain && (
+        <>
+          <SourceDestinationPicker
+            sourceChain={sourceChain}
+            destinationChain={destinationChain}
+            onSourceClick={showSourceList}
+            onDestinationClick={showDestinationList}
+          />
+          {receiveType === ReceiveType.Portkey && <div>Portkey</div>}
+          {receiveType === ReceiveType.ETransfer && <div>ETransfer</div>}
+        </>
+      )}
     </div>
   );
 }

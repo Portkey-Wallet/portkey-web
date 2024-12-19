@@ -1,39 +1,53 @@
 .portkey-ui-ramp-frame {
   height: 100%;
+  .portkey-ui-ramp-radio {
+    margin: 16px;
+    .portkey-ant-radio-group-solid {
+      display: flex;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      border-radius: 6px;
+      .portkey-ant-radio-button-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        // margin: 3px 0px;
+        width: 88px;
+        height: 36px;
+        color: var(--sds-color-text-neutral-tertiary);
+        border: none;
 
+        .portkey-ant-radio-button {
+          display: none;
+        }
+      }
+      .portkey-ant-radio-button-wrapper-checked {
+        background: var(--sds-color-background-default-secondary);
+        box-shadow: none;
+        color: var(--sds-color-text-neutral-default);
+        border-radius: 8px;
+      }
+    }
+  }
   .portkey-ui-ramp-content {
     flex: 1;
+    padding: 0px 16px;
+    .crypto-list-item {
+      display: flex;
+      align-items: center;
+      padding: 16px 0px;
+      cursor: pointer;
+      width: 100%;
+      .crypto-name {
+        color: var(--sds-color-text-default-default);
 
-    .portkey-ui-ramp-radio {
-      margin: 16px;
-      .portkey-ant-radio-group-solid {
-        display: flex;
-        font-size: 14px;
-        line-height: 20px;
-        font-weight: 500;
-        background-color: var(--portkey-ui-bg-4);
-        border-radius: 6px;
-        .portkey-ant-radio-button-wrapper {
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 3px;
-          width: 88px;
-          height: 30px;
-          background-color: var(--portkey-ui-bg-4);
-          color: var(--portkey-ui-text-tip);
-          border: none;
-
-          .portkey-ant-radio-button {
-            display: none;
-          }
-        }
-        .portkey-ant-radio-button-wrapper-checked {
-          background-color: var(--portkey-ui-bg-5);
-          box-shadow: none;
-          color: var(--portkey-ui-text-primary);
-          border-radius: 6px;
-        }
+        /* Body Base */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        line-height: 140%; /* 22.4px */
+        margin-left: 8px;
       }
     }
     .portkey-ui-ramp-buy-form,
@@ -118,6 +132,37 @@
       border-radius: 22px;
       font-size: 16px;
       line-height: 22px;
+    }
+  }
+  .right-element {
+    .change-svg {
+      width: 24px;
+      height: 24px;
+      svg {
+        width: 24px;
+        height: 24px;
+        path {
+          fill: var(--sds-color-icon-default-default)
+        }
+      }
+    }
+    .right-fiat-title {
+      overflow: hidden;
+      color: var(--sds-color-text-default-default);
+      text-align: center;
+      text-overflow: ellipsis;
+
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      line-height: 140%; /* 22.4px */
+      margin-left: 4px;
+    }
+  }
+  @media (min-width: 601px){
+    .portkey-ui-ramp-content { 
+    padding: 0px 24px;
     }
   }
 }

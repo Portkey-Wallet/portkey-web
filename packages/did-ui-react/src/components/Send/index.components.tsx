@@ -1,5 +1,5 @@
-import { IAssetItemType, OperationTypeEnum } from '@portkey/services';
 import { aelf, wallet } from '@portkey/utils';
+import { IAssetItemType, ITransferLimitItem, OperationTypeEnum } from '@portkey/services';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
@@ -29,7 +29,6 @@ import { MAINNET } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
-import { ITransferLimitItemWithRoute } from '../TransferSettingsEdit/index.components';
 import { getChain } from '../../hooks/useChainInfo';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
@@ -41,6 +40,7 @@ import { getContractBasic } from '@portkey/contracts';
 import { AddressTypeEnum, AddressTypeSelect } from '../../components/AddressTypeSelect';
 import ToAddressInput from './components/ToAddressInput';
 import SupportedExchange from './components/SupportedExchange';
+import { ITransferLimitItemWithRoute } from '../../types/transfer';
 
 export interface SendProps {
   assetItem: IAssetItemType;
