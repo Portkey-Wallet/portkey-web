@@ -31,12 +31,12 @@ import { useUpdateReceiveAndInterval } from '../../../../hooks';
 import { getBalanceByContract } from '../../../../../../utils/sandboxUtil/getBalance';
 import { fetchTxFeeAsync } from '../../../../../../request/token';
 import { getChain } from '../../../../../../hooks';
-import { ITransferLimitItemWithRoute } from '../../../../../TransferSettingsEdit/index.components';
 import CommonInput from '../../../../../CommonInput';
 import { useDebounce } from '../../../../../../hooks/debounce';
-import AutoWidthInput from '../AutoWidthInput';
-import MaxTokenShortcut from '../MaxTokenShortcut';
 import { ZERO } from '../../../../../../constants/misc';
+import { ITransferLimitItemWithRoute } from '../../../../../../types/transfer';
+import MaxTokenShortcut from '../../../../../MaxTokenShortcut';
+import AutoWidthInput from '../../../../../AutoWidthInput';
 import './index.less';
 
 export interface IRampPreviewProp {
