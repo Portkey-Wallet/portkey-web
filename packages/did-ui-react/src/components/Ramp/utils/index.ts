@@ -15,7 +15,7 @@ export const generateRateText = (crypto: string, exchange: string, fiat: string)
 };
 
 export const generateReceiveText = (receive: string, symbol: string) => {
-  return `I will receive ≈ ${formatAmountShow(receive)} ${symbol}`;
+  return `≈ ${formatAmountShow(receive)} ${symbol}`;
 };
 
 export const mixRampShow = async ({
@@ -71,3 +71,49 @@ export const mixRampSellShow = async ({
     isSellShow: isSellSectionShow && isSellShow,
   };
 };
+
+export function transformAction(action: string) {
+  if (action === 'BUY') return 'Buy';
+  if (action === 'SELL') return 'Sell';
+  return null;
+}
+
+export function isEqual(value: any, other: any): boolean {
+  if (value === other) {
+    return true;
+  }
+
+  if (typeof value !== typeof other) {
+    return false;
+  }
+
+  if (value == null || other == null) {
+    return value === other;
+  }
+
+  if (value instanceof Date && other instanceof Date) {
+    return value.getTime() === other.getTime();
+  }
+
+  if (Array.isArray(value) && Array.isArray(other)) {
+    if (value.length !== other.length) {
+      return false;
+    }
+    return value.every((item, index) => isEqual(item, other[index]));
+  }
+
+  if (typeof value === 'object' && typeof other === 'object') {
+    const valueKeys = Object.keys(value);
+    const otherKeys = Object.keys(other);
+
+    if (valueKeys.length !== otherKeys.length) {
+      return false;
+    }
+
+    return valueKeys.every((key) => {
+      return isEqual(value[key], other[key]);
+    });
+  }
+
+  return false;
+}

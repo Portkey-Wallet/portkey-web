@@ -1,5 +1,4 @@
 import clsx from 'clsx';
-import BackHeaderForPage from '../BackHeaderForPage';
 import MenuItem from '../MenuItem';
 import { List } from 'antd-mobile';
 import { transNetworkText } from '../../utils/converter';
@@ -10,7 +9,6 @@ import { message } from 'antd';
 import { ITransferLimitItem } from '@portkey/services';
 import { NetworkType } from '../../types';
 import { MAINNET } from '../../constants/network';
-import TokenImageDisplay from '../TokenImageDisplay';
 import './index.less';
 import CustomSvg from '../CustomSvg';
 import ChainTokenIcon from '../ChainTokenIcon';
@@ -99,8 +97,6 @@ export default function PaymentSecurityMain({
   useEffect(() => {
     getSecurityList();
   }, [getSecurityList]);
-
-  console.log(securityList);
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-transaction-limits-wrapper', className)}>

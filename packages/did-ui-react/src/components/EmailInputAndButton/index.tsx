@@ -5,7 +5,6 @@ import { handleErrorMessage } from '../../utils';
 import './index.less';
 import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
-import Loading from '../Loading';
 
 interface EmailInputAndButtonProps {
   className?: string;
@@ -52,11 +51,6 @@ export default function EmailInputAndButton({
           }}
         />
       </div>
-
-      {/* TODO */}
-      {/* <div className="email-sign-loading">
-        <Loading width={32} height={32} />
-      </div> */}
 
       <ThrottleButton
         className="login-primary-btn"

@@ -305,7 +305,6 @@ const SignIn = forwardRef(
 
           if (AllSocialLoginList.includes(accountType)) {
             setLoading(true);
-            console.log('🌈 🌈 🌈 🌈 🌈 🌈 11', '');
             const result = await verifySocialToken({
               accountType,
               token: authenticationInfo?.authToken,
@@ -604,7 +603,7 @@ const SignIn = forwardRef(
       () => (extraElement ? [extraElement, ...(extraElementList ?? [])] : extraElementList),
       [extraElement, extraElementList],
     );
-
+    console.log('extra is::', extra);
     const mainContent = useCallback(() => {
       if (LifeCycleMap['SignIn'].includes(lifeCycle))
         return (
@@ -712,6 +711,7 @@ const SignIn = forwardRef(
             className={clsx('portkey-ui-sign-modal', `portkey-ui-sign-modal-${design}`, className)}
             maskStyle={{ backgroundColor: 'rgba(0, 0, 0, 0.3)' }}
             open={open}
+            height={'auto'}
             getContainer={getContainer ? getContainer : `#${PORTKEY_ROOT_ID}`}
             onClose={onModalCancel}>
             {mainContent()}

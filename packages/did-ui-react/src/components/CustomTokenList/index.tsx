@@ -54,7 +54,7 @@ export default function CustomTokenList({
 
     return tokenList?.filter((token) => {
       if (filterSymbol) return token.symbol.toUpperCase().includes(filterSymbol);
-      if (filterAddress) return token.address.toUpperCase() === filterAddress;
+      if (filterAddress) return token.address?.toUpperCase() === filterAddress;
     });
   }, [filterWord, tokenList]);
 

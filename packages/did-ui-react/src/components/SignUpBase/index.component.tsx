@@ -87,7 +87,6 @@ export default function SignUpBase({
     <div className={clsx('register-start-card sign-ui-card', wrapperClassName)}>
       {step === STEP.inputLogin ? (
         <InputLogin
-          type="Sign up"
           isLoading={isEmailLoading}
           phoneCountry={phoneCountry}
           defaultAccountType={defaultKey}

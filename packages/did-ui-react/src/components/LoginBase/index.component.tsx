@@ -77,7 +77,6 @@ export default function LoginCard({
     <div className="portkey-ui-flex-column login-ui-card">
       {step === STEP.inputLogin ? (
         <InputLogin
-          type="Login"
           isLoading={isEmailLoading}
           defaultAccountType={defaultKey}
           phoneCountry={phoneCountry}

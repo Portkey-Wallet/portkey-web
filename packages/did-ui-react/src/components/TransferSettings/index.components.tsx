@@ -1,7 +1,7 @@
 import clsx from 'clsx';
 import { ChangeEvent, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Switch } from 'antd';
-import { AccountType, GuardiansApproved, ITransferLimitItem, OperationTypeEnum, VerifierItem } from '@portkey/services';
+import { AccountType, GuardiansApproved, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { divDecimals, formatAmountShow, timesDecimals } from '../../utils/converter';
 import './index.less';
 import CustomSvg from '../CustomSvg';
@@ -19,6 +19,7 @@ import { setTransferLimit } from '../../utils/sandboxUtil/setTransferLimit';
 import { getVerifierList } from '../../utils/sandboxUtil/getVerifierList';
 import { getChainInfo } from '../../hooks';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
+import CoinImage from '../CoinImage';
 
 export interface TransferSettingsProps {
   className?: string;
@@ -288,7 +289,8 @@ export default function TransferSettingsMain({
         </div>
         <div className="transfer-settings-content">
           <div className="transfer-settings-token">
-            <img className="token-img" src={initData.imageUrl} />
+            <CoinImage src={initData.imageUrl} width={80} className="token-img" />
+            {/* <img className="token-img" src={initData.imageUrl} /> */}
             <span className="token-name">{initData.symbol}</span>
             <span className="token-network">{`${initData.displayChainName} ${networkType}`}</span>
           </div>
@@ -304,7 +306,7 @@ export default function TransferSettingsMain({
             </span>
           </div>
           {limitsOn && (
-            <div className="transfer-limt-content">
+            <div className="transfer-limit-content">
               <div className="row">
                 <span className="label">Limit per transaction</span>
                 <span className="value">

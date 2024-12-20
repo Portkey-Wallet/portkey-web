@@ -122,7 +122,6 @@ const useSignInHandler = ({ isErrorTip = true, onError, beforeLastGuardianApprov
   > = useCallback(
     async (guardianIdentifierInfo: IGuardianIdentifierInfo) => {
       // setLoading(true); // unnecessary
-      console.log('🌈 🌈 🌈 🌈 🌈 🌈 12', '');
       const guardianList: UserGuardianStatus[] | undefined = await getGuardians(guardianIdentifierInfo);
 
       if (!guardianList) {

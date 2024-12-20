@@ -1,5 +1,5 @@
 import { useCallback, useState, useRef, useEffect } from 'react';
-import { errorTip, verifyErrorHandler, setLoading, handleErrorMessage, verification } from '../../utils';
+import { errorTip, verifyErrorHandler, handleErrorMessage, verification } from '../../utils';
 import type { ChainId, TStringJSON } from '@portkey/types';
 import { OperationTypeEnum } from '@portkey/services';
 import { TVerifyCodeInfo } from '../SignStep/types';
@@ -42,6 +42,7 @@ export default function CodeVerify({
   const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
   const uiRef = useRef<ICodeVerifyUIInterface>();
   const [codeError, setCodeError] = useState<boolean>();
+  const [codeVerifyLoading, setCodeVerifyLoading] = useState<boolean>(false);
 
   const setInputError = useCallback(async (isError?: boolean) => {
     if (!isError) return setCodeError(isError);
@@ -55,7 +56,7 @@ export default function CodeVerify({
       try {
         if (code && code.length === 6) {
           if (!verifierSessionId) throw Error(`VerifierSessionId(${verifierSessionId}) is invalid`);
-          setLoading(true);
+          setCodeVerifyLoading(true);
 
           const result = await verification.checkVerificationCode({
             verifierSessionId,
@@ -68,7 +69,7 @@ export default function CodeVerify({
             caHash,
             operationDetails,
           });
-          setLoading(false);
+          setCodeVerifyLoading(false);
           console.log(result, 'verifyErrorHandler==');
 
           if (result.signature) {
@@ -80,7 +81,7 @@ export default function CodeVerify({
           throw Error('Please check if the PIN code is entered correctly');
         }
       } catch (error: any) {
-        setLoading(false);
+        setCodeVerifyLoading(false);
         setPinVal('');
         const _error = verifyErrorHandler(error);
         console.log(error, _error, 'error==verifyErrorHandler=');
@@ -181,6 +182,7 @@ export default function CodeVerify({
       className={className}
       isCountdownNow={isCountdownNow}
       guardianIdentifier={guardianIdentifier}
+      isLoading={codeVerifyLoading}
       onCodeChange={onCodeChange}
       onReSend={resendCode}
       onCodeFinish={onFinish}

@@ -7,7 +7,6 @@ import ConfigProvider from '../config-provider';
 import clsx from 'clsx';
 import ScanCard from '../ScanCard/index.component';
 import TermsOfServiceItem from '../TermsOfServiceItem';
-import CustomSvg from '../CustomSvg';
 import useMedia from '../../hooks/useMedia';
 import { usePortkey } from '../context';
 import './index.less';
@@ -17,9 +16,7 @@ import { devices } from '@portkey/utils';
 import useMobile from '../../hooks/useMobile';
 import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import useSocialLogin from '../../hooks/useSocialLogin';
-import SocialLoginGroup from '../SocialLoginGroup';
 import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
-import UpgradedPortkeyTip from '../UpgradedPortkeyTip';
 import LoginIconAndLabel from '../LoginIconAndLabel';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
@@ -128,7 +125,6 @@ export default function Web2Design({
         if (Web2LoginList.includes(type)) throw Error('Please try social account');
 
         setLoading(true);
-        console.log('🌈 🌈 🌈 🌈 🌈 🌈 17', '');
         const result = await socialLoginHandler(type as ISocialLogin);
         setLoading(false);
         if (result) {

@@ -4,11 +4,11 @@ import { ChainId } from '@portkey/types';
 import { NetworkType } from '../../../../types';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
 import { formatStr2EllipsisStr } from '../../../../utils';
-import { transNetworkText } from '../../../../utils/converter';
-import { MAINNET } from '../../../../constants/network';
+import { transNetworkTextV2 } from '../../../../utils/converter';
+import ImgWithCornerMark from '../../../ImgWithCornerMark';
+import clsx from 'clsx';
 
 export default function MyAddress({
-  networkType,
   chainId,
   onClick,
 }: {
@@ -17,28 +17,35 @@ export default function MyAddress({
   onClick: (account: IClickAddressProps) => void;
 }) {
   const [{ caAddressInfos }] = usePortkeyAsset();
-
   const userAddressInfo = useMemo(
     () => caAddressInfos?.filter((item) => item.chainId !== chainId) || [],
     [caAddressInfos, chainId],
   );
 
   return (
-    <div className="portkey-ui-send-my-address">
-      {userAddressInfo.length === 0 && <p className="no-data">There is no address</p>}
+    <>
       {userAddressInfo?.map((item, idx) => {
         return (
           <div
-            className="my-address-item"
+            className={clsx(['portkey-ui-flex-between-center', 'recent-item'])}
             key={idx + item.caAddress}
             onClick={() => {
               onClick({ chainId: item.chainId, address: item.caAddress });
             }}>
-            <p className="address">{`ELF_${formatStr2EllipsisStr(item.caAddress, [6, 6])}_${item.chainId}`}</p>
-            <p className="network">{transNetworkText(item.chainId, networkType === MAINNET)}</p>
+            <div className="left-section">
+              <ImgWithCornerMark imgSrc={''} cornerImgSrc={''} />
+            </div>
+            <div className="center-section">
+              <div className="address">{formatStr2EllipsisStr(item.caAddress, [8, 8])}</div>
+              <div className="chain-info">
+                {transNetworkTextV2({
+                  chainId: item.chainId,
+                })}
+              </div>
+            </div>
           </div>
         );
       })}
-    </div>
+    </>
   );
 }

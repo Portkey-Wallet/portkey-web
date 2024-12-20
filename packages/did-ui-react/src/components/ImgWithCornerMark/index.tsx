@@ -2,9 +2,10 @@ import { useMemo } from 'react';
 import CustomSvg from '../CustomSvg';
 import svgsList from '../../assets/svgs';
 import './index.less';
+import CoinImage from '../CoinImage';
 
 export interface IImgWithCornerMark {
-  imgSrc: string;
+  imgSrc?: string;
   cornerImgSrc: string | keyof typeof svgsList;
 }
 
@@ -21,7 +22,7 @@ export const ImgWithCornerMark = ({ imgSrc, cornerImgSrc }: IImgWithCornerMark) 
 
   return (
     <div className="img-with-mask-wrap">
-      <img src={imgSrc || ''} width={42} height={42} />
+      <CoinImage src={imgSrc} width={42} />
       <div className="corner-icon-wrap">{cornerDom}</div>
     </div>
   );

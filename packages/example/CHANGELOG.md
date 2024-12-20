@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.15.11-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.15.11-alpha.0) (2024-12-18)
+
+### Features
+
+- add demo css var ([2c893c3](https://github.com/Portkey-Wallet/portkey-web/commit/2c893c39e2cbc5ce1f623707008240e2262b2aa4))
+- remove old transfer limit edit ([0960842](https://github.com/Portkey-Wallet/portkey-web/commit/0960842a0e30149a9aed51e33a48cbb799a29245))
+
 ## [2.15.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10-alpha.0...v2.15.10) (2024-11-20)
 
 **Note:** Version bump only for package @portkey/example

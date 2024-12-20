@@ -17,21 +17,22 @@ export interface ICAInfo {
 export type Status = 'pass' | 'fail' | 'pending';
 
 export type ChainInfo = {
+  caContractAddress: string;
   chainId: ChainId;
+  chainImageUrl: string;
   chainName: string;
+  defaultToken: {
+    address: string;
+    decimals: string;
+    imageUrl: string;
+    issueChainId: number;
+    name: string;
+    symbol: string;
+  };
+  displayChainName: string;
   endPoint: string;
   explorerUrl: string;
-  caContractAddress: string;
   lastModifyTime: string;
-  id: string;
-  defaultToken: {
-    name: string;
-    address: string;
-    imageUrl: string;
-    symbol: string;
-    decimals: string;
-  };
-  chainImageUrl?: string;
 };
 
 export type QueryOptions = {

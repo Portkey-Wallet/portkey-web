@@ -1,15 +1,19 @@
 .portkey-ui-common-base-modal {
   .portkey-ant-modal {
     // height: 100vh;
-    height: 566px;
-    min-height: 566px;
+    // height: 566px;
+    // min-height: 566px;
+    max-height: max-content;
+    overflow: hidden;
+    border: 1px solid var(--sds-color-border-default-default);
+    border-radius: 8px;
+    background: var(--sds-color-background-default-default);
 
     .portkey-ant-modal-content {
       height: 100%;
-      border-radius: 8px;
+      // border-radius: 8px;
       overflow: hidden;
       background: var(--sds-color-background-default-default);
-
 
       .portkey-ant-modal-body {
         padding: 0;
