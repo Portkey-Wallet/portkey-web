@@ -18,8 +18,8 @@ import {
 } from '../types/assets';
 import { formatAmountShow } from '../../utils/converter';
 import CustomTokenModal from '../CustomTokenModal';
-import { ActivityItemType, ChainId } from '@portkey/types';
-import { IAssetItemType, IUserTokenItemNew } from '@portkey/services';
+import { ActivityItemType, ChainId, INftInfoType } from '@portkey/types';
+import { IAssetToken, IUserTokenItemNew } from '@portkey/services';
 import { ELF_SYMBOL } from '../../constants/assets';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
@@ -45,7 +45,7 @@ export interface AssetOverviewProps {
   onBack?: () => void;
   onDataInit?: () => void;
   onDataInitEnd?: () => void;
-  onSend?: (selectToken?: IAssetItemType, type?: TokenType) => void;
+  onSend?: (selectToken?: IAssetToken & INftInfoType & TokenItemShowType & NFTItemBaseExpand, type?: TokenType) => void;
   onViewActivityItem?: (item: ActivityItemType) => void;
   onViewTokenItem?: (v: TokenItemShowType) => void;
   onNFTView?: (item: NFTItemBaseExpand, collectionItem?: NFTCollectionItemShowType) => void;

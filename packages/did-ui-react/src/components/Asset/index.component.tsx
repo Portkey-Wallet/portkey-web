@@ -5,13 +5,12 @@ import ReceiveCard from '../ReceiveCard/index.components';
 import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
-import { ChainId } from '@portkey/types';
+import { ChainId, INftInfoType } from '@portkey/types';
 import { WalletError, did, handleErrorMessage } from '../../utils';
-import { IAssetItemType, ITransferLimitItem, AllowanceItem, IUserTokenItemNew } from '@portkey/services';
+import { ITransferLimitItem, AllowanceItem, IUserTokenItemNew, IAssetToken } from '@portkey/services';
 import {
   BalanceTab,
   BaseToken,
-  ITokenSectionResponse,
   NFTCollectionItemShowType,
   NFTItemBaseExpand,
   TokenItemShowType,
@@ -209,7 +208,7 @@ function AssetMain({
 
   const [selectToken, setSelectToken] = useState<BaseToken>();
 
-  const [sendToken, setSendToken] = useState<IAssetItemType>();
+  const [sendToken, setSendToken] = useState<IAssetToken & INftInfoType & TokenItemShowType & NFTItemBaseExpand>();
   const [sendExtraConfig, setSendExtraConfig] = useState<SendExtraConfig>();
   const [rampExtraConfig, setRampExtraConfig] = useState<TRampInitState | undefined>(rampState);
   const [rampPreview, setRampPreview] = useState<TRampPreviewInitState>();
@@ -335,7 +334,7 @@ function AssetMain({
     [assetStep],
   );
 
-  const onSend = useCallback(async (v?: IAssetItemType) => {
+  const onSend = useCallback(async (v?: IAssetToken & INftInfoType & TokenItemShowType & NFTItemBaseExpand) => {
     if (v) {
       setSendToken(v);
       setAssetStep(AssetStep.send);
@@ -602,23 +601,10 @@ function AssetMain({
                 if (!isLoginOnChain) {
                   return loadingTip({ msg: loginOptTip });
                 }
-                const info: IAssetItemType = {
-                  chainId: token.chainId || 'AELF',
-                  symbol: token.symbol,
-                  label: token?.label,
-                  address: token.tokenContractAddress || token.address || '',
-                  tokenInfo: {
-                    ...token,
-                    balance: token.balance || '0',
-                    decimals: token.decimals.toString(),
-                    balanceInUsd: token.balanceInUsd || '',
-                    imageUrl: token.imageUrl || '',
-                    tokenContractAddress: token.tokenContractAddress || '',
-                  },
-                };
                 preStepRef.current = AssetStep.tokenDetail;
                 setPreStep(AssetStep.tokenDetail);
-                onSend(info);
+                // TODO-SA
+                onSend(token as any);
               }}
             />
           )}
@@ -634,15 +620,10 @@ function AssetMain({
                 if (!isLoginOnChain) {
                   return loadingTip({ msg: loginOptTip });
                 }
-                const info: IAssetItemType = {
-                  chainId: nft.chainId,
-                  symbol: nft.symbol,
-                  address: nft.tokenContractAddress,
-                  nftInfo: nft,
-                };
                 preStepRef.current = AssetStep.NFTDetail;
                 setPreStep(AssetStep.NFTDetail);
-                onSend(info);
+                // TODO-SA
+                onSend(nft as any);
               }}
             />
           )}
