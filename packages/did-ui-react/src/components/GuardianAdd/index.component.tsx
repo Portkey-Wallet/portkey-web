@@ -4,6 +4,8 @@ import { useState, useMemo, useCallback, useEffect, memo, ReactNode, useRef } fr
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
 import { ChainId, ChainType } from '@portkey/types';
+import { Drawer, Modal } from '../CustomAnt';
+
 import {
   EmailError,
   EmailReg,
@@ -148,22 +150,6 @@ function GuardianAdd({
     return [];
   }, [loginMethodsOrder]);
 
-  const customSelectOption = useMemo(
-    () => [
-      {
-        value: 'tip',
-        disabled: true,
-        className: 'portkey-option-tip',
-        label: (
-          <div className="portkey-ui-flex label-item">
-            <CustomSvg type="Warning" />
-            <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
-          </div>
-        ),
-      },
-    ],
-    [],
-  );
   const verifierSelectItems = useMemo(
     () =>
       verifierList?.map((item) => ({
@@ -744,6 +730,9 @@ function GuardianAdd({
     setVerifierVisible(false);
     setApprovalVisible(false);
   }, []);
+
+  const [waringVisible, setWaringVisible] = useState(false);
+
   return (
     <div className={clsx('portkey-ui-guardian-add', 'portkey-ui-flex-column', className)}>
       {header}
@@ -759,6 +748,7 @@ function GuardianAdd({
           />
         </div>
         {selectGuardianType !== undefined && (
+          // <div>{selectGuardianType}</div>
           <div className="input-item">
             <p className="guardian-add-input-item-label">{guardianAccountInput[selectGuardianType].label}</p>
             {guardianAccountInput[selectGuardianType].element}
@@ -766,7 +756,10 @@ function GuardianAdd({
           </div>
         )}
         <div className="input-item">
-          <p className="guardian-add-input-item-label">{t('Verifier')}</p>
+          <p className="guardian-add-input-item-label">
+            <span>{t('Verifier')}</span>
+            <CustomSvg type="Problem" onClick={() => setWaringVisible(true)} />
+          </p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
             className={clsx(
@@ -777,7 +770,6 @@ function GuardianAdd({
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
-            customOptions={customSelectOption}
           />
           {verifierExist && <div className="guardian-error-tip">{verifierExistTip}</div>}
         </div>
@@ -836,6 +828,19 @@ function GuardianAdd({
           })}
         />
       </CommonModal>
+
+      <CommonBaseModal
+        className="waring-modal"
+        centered={true}
+        destroyOnClose
+        open={waringVisible}
+        title="Guardian verifier"
+        onClose={() => setWaringVisible(false)}>
+        <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
+        <ThrottleButton type="primary" className="guardian-btn" onClick={() => setWaringVisible(false)}>
+          OK
+        </ThrottleButton>
+      </CommonBaseModal>
     </div>
   );
 }

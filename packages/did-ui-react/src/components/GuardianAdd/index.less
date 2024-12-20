@@ -9,6 +9,9 @@
     line-height: 20px;
     gap: 24px;
     .guardian-add-input-item-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
       color: var(--portkey-ui-text-primary);
       margin-bottom: 8px;
     }
@@ -98,4 +101,43 @@
     font-weight: 500;
     color: var(--portkey-ui-text-primary);
   }
+}
+.waring-modal {
+  color: var(--sds-color-text-default-default);
+  font-size: 16px;
+  padding: 20px 16px;
+  .portkey-ant-drawer-content-wrapper {
+    background-color: var(--sds-color-background-default-default)!important;
+    z-index: 1111111!important;
+  }
+  .portkey-ant-modal-title {
+    color: var(--sds-color-text-default-default);
+    font-weight: bold;
+    font-size: 20px;
+    padding: 0;
+  }
+  .portkey-ant-modal-header {
+    padding: 0;
+  }
+  .portkey-ant-drawer-title {
+    color: var(--sds-color-text-default-default);
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .portkey-ant-drawer-header{
+    padding: 20px 16px 0px;
+  }
+  .portkey-ant-drawer-body {
+    padding: 0 16px 16px;
+   
+  }
+  .tip {
+    padding: 18px 0 24px;
+    line-height: 24px;
+  }
+  .guardian-btn {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+ 
 }

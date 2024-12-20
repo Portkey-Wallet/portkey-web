@@ -101,24 +101,24 @@ export default function SetAllowanceMain({
         {(dappInfo?.href || dappInfo?.icon) && (
           <div className={`${PrefixCls}-dapp-info-inner`}>
             {dappInfo.icon && <img className={`${PrefixCls}-dapp-icon`} src={dappInfo.icon} />}
-            {dappInfo.href && <span className={`${PrefixCls}-dapp-href`}>{dappInfo.href}</span>}
+            <div>
+              <p className="set-allowance-dapp-title">Approve token allowance</p>
+              {dappInfo.href && <p className={`${PrefixCls}-dapp-href`}>{dappInfo.href}</p>}
+            </div>
           </div>
         )}
       </div>
-      <div className={`${PrefixCls}-header`}>
+      {/* <div className={`${PrefixCls}-header`}>
         <h1 className={`portkey-ui-text-center ${PrefixCls}-title`}>{titleText}</h1>
         <div className={`portkey-ui-text-center ${PrefixCls}-description`}>
           To ensure asset security, please customise an allowance for this dApp. Until this allowance is exhausted, the
           dApp will not request your approval to utilise&nbsp;{approveSymbol}
         </div>
-      </div>
+      </div> */}
 
       <div className={`${PrefixCls}-body`}>
         <div className={`portkey-ui-flex-between-center ${PrefixCls}-body-title`}>
-          <span className={`${PrefixCls}-set`}>{`Set Allowance`}</span>
-          <span className={`${PrefixCls}-use-recommended`} onClick={() => inputChange(recommendedAmount)}>
-            Use Recommended Value
-          </span>
+          <span className={`${PrefixCls}-set`}>{`Token allowance`}</span>
         </div>
         <div className={`${PrefixCls}-input-wrapper`}>
           <Input
@@ -129,34 +129,25 @@ export default function SetAllowanceMain({
             suffix={
               <span>
                 <span className={`${PrefixCls}-approveSymbol`}>{approveSymbol}</span>
-                <span onClick={() => inputChange(max)}>Max</span>
               </span>
             }
           />
           {typeof error !== 'undefined' && <div className="error-text">{error}</div>}
         </div>
-
-        <div className={`${PrefixCls}-notice`}>{noticeText}</div>
-      </div>
-      {checkResult.show && (
-        <div className={`${PrefixCls}-warning ${checkResult.type === 'warning' && `${PrefixCls}-warning-hint`}`}>
-          <CustomSvg
-            type="WarningTriangle"
-            className={`warning-icon`}
-            fillColor={checkResult.type === 'info' ? '#5D42FF' : '#FF9417'}
-          />
-          <div
-            className="warning-title"
-            dangerouslySetInnerHTML={{
-              __html: checkResult.text.replace(/\n/g, '<br/>'),
-            }}
-          />
+        <div className={`${PrefixCls}-use-recommended-box`}>
+          <span className={`${PrefixCls}-use-recommended`} onClick={() => inputChange(recommendedAmount)}>
+            Use Recommended Value
+          </span>
+          <span onClick={() => inputChange(max)}>Max</span>
         </div>
-      )}
+
+        {/* <div className={`${PrefixCls}-notice`}>{noticeText}</div> */}
+      </div>
+
       <div className="portkey-ui-flex-1 portkey-ui-flex-column-reverse">
         <div className="btn-wrapper">
           <ThrottleButton type="outline" onClick={onCancel}>
-            Cancel
+            Reject
           </ThrottleButton>
           <ThrottleButton
             type="primary"
@@ -168,9 +159,24 @@ export default function SetAllowanceMain({
                 allowance,
               });
             }}>
-            Pre-authorize
+            Approve
           </ThrottleButton>
         </div>
+        {checkResult.show && (
+          <div className={`${PrefixCls}-warning ${checkResult.type === 'warning' && `${PrefixCls}-warning-hint`}`}>
+            <CustomSvg
+              type="WarningTriangle"
+              className={`warning-icon`}
+              fillColor={checkResult.type === 'info' ? '#68C3FF' : '#FDD10E'}
+            />
+            <div
+              className="warning-title"
+              dangerouslySetInnerHTML={{
+                __html: checkResult.text.replace(/\n/g, '<br/>'),
+              }}
+            />
+          </div>
+        )}
       </div>
     </div>
   );

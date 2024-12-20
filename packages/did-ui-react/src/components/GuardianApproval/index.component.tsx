@@ -184,10 +184,9 @@ const GuardianApprovalMain = forwardRef(
             : {};
           if (isFirstShowWarning !== SHOW_WARNING_DIALOG && !accessToken) {
             const isConfirm = await modalMethod({
-              width: 400,
               title: (
                 <div>
-                  {/* <CustomSvg className="warning-info" type="WarningInfo" /> */}
+                  <CustomSvg className="warning-info" type="WaringInfo" />
                   <div className="security-notice">Security Notice</div>
                 </div>
               ),
