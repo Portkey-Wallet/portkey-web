@@ -25,6 +25,8 @@ export function TipContent({ title, content, onClose }: ITipContentProps) {
   );
 }
 
+export type ButtonGroupType = 'row' | 'col';
+
 export interface ISendModalTipProps extends ITipContentProps {
   open: boolean;
   buttons: {
@@ -32,7 +34,7 @@ export interface ISendModalTipProps extends ITipContentProps {
     onClick: () => void;
     type: CommonButtonType;
   }[];
-  buttonGroupType?: 'row' | 'col';
+  buttonGroupType?: ButtonGroupType;
 }
 
 export default function SendModalTip({
