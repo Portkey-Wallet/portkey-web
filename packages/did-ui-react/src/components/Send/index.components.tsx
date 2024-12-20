@@ -150,9 +150,8 @@ function SendContent({
   // revamp app logic start
   const price = useTokenPrice(assetItem.symbol);
   const checkManagerSyncState = useCheckManagerSyncState();
-  const [sendNumber, setSendNumber] = useState<string>(''); // tokenNumber  like 100
-  const [sendUsdNumber, setSendUsdNumber] = useState<string>(''); // tokenNumber  like 100
-  const debounceSendNumber = useDebounce(sendNumber, 500);
+  const [amount, setAmount] = useState<string>(extraConfig?.amount || ''); // tokenNumber  like 100
+  const [usdAmount, setUSDAmount] = useState<string>(''); // tokenNumber  like 100
   const [maxAmountSend, setMaxAmountSend] = useState<string>(
     formatAmountShow(divDecimals(tokenInfo?.balance, tokenInfo?.decimals)),
   );
@@ -224,8 +223,8 @@ function SendContent({
         return singleMessage.warn(TransactionError.SYNCHRONIZING);
       }
 
-      setSendNumber(maxAmountSend);
-      setSendUsdNumber(maxAmountSendUsd);
+      setAmount(maxAmountSend);
+      setUSDAmount(maxAmountSendUsd);
       setErrorMessage('');
     } catch (err) {
       console.log('max err!!', err);
@@ -245,8 +244,6 @@ function SendContent({
   const [errorMsg, setErrorMsg] = useState('');
   const [tipMsg, setTipMsg] = useState('');
 
-  const [amount, setAmount] = useState(extraConfig?.amount || '');
-  const [usdAmount, setUSDAmount] = useState('');
   // const [balance, setBalance] = useState(extraConfig?.balance || '');
 
   const defaultToken = useDefaultToken(tokenInfo.chainId);
@@ -634,13 +631,13 @@ function SendContent({
               toAccount={{
                 address: toAccount.address,
               }}
-              value={sendNumber}
-              usdValue={sendUsdNumber}
-              setValue={setSendNumber}
-              setUsdValue={setSendUsdNumber}
+              value={amount}
+              usdValue={usdAmount}
+              setValue={setAmount}
+              setUsdValue={setUSDAmount}
               token={tokenInfo}
               onChange={({ amount, balance }) => {
-                setSendNumber(amount);
+                setAmount(amount);
                 setBalance(balance);
               }}
               getTranslationInfo={getTranslationInfo}
@@ -691,13 +688,12 @@ function SendContent({
       caInfo,
       managementAccount?.privateKey,
       toAccount,
-      sendNumber,
-      sendUsdNumber,
+      amount,
+      usdAmount,
       getTranslationInfo,
       errorMessage,
       onPressMax,
       accountInfo?.nickName,
-      amount,
       defaultFee.crossChain,
       handleCheckPreview,
       isNft,
