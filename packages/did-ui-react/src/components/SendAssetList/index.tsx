@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { CommonModal, CustomSvg, usePortkeyAsset } from '..';
-import { useThrottleFirstCallback } from '../../hooks/throttle';
 import { NetworkType } from '../../types';
 import { CaAddressInfosType, IAssetToken } from '@portkey/services';
 import { TokenType } from '../types/assets';
@@ -31,23 +30,28 @@ export default function SendAssetList({ networkType, caAddressInfos, onSelect }:
   const [filterWord, setFilterWord] = useState<string>('');
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   const [curTab, setCurTab] = useState<SendAssetTabEnum>(SendAssetTabEnum.TOKEN);
+  const [fetching, setFetching] = useState(false);
 
-  const onSearchValChange = useThrottleFirstCallback(
+  const onSearch = useCallback(
     (v: string) => {
       setFilterWord(v);
       if (!caAddressInfos) return;
+      setFetching(true);
       basicAssetViewAsync
         .setAllAssetInfoV2({
           keyword: v,
           caAddressInfos,
         })
-        .then(dispatch);
+        .then(dispatch)
+        .finally(() => {
+          setFetching(false);
+        });
     },
     [caAddressInfos, dispatch],
   );
 
   useEffectOnce(() => {
-    onSearchValChange();
+    onSearch('');
   });
 
   const noDataMessage = useMemo(() => {
@@ -60,8 +64,14 @@ export default function SendAssetList({ networkType, caAddressInfos, onSelect }:
         type="search"
         placeholder="Search"
         value={filterWord}
-        onChange={onSearchValChange}
+        onChange={(e) => {
+          const v = e.target.value.trim();
+          onSearch(v);
+        }}
         className="portkey-ui-send-search"
+        onClear={() => {
+          onSearch('');
+        }}
       />
       <CommonTabs
         className="portkey-ui-send-asset"
@@ -77,7 +87,7 @@ export default function SendAssetList({ networkType, caAddressInfos, onSelect }:
               <SendTokenList
                 onSelect={(v) => onSelect(v, 'TOKEN')}
                 tokenInfos={allAssetV2?.tokenInfos || []}
-                loading={false}
+                loading={fetching}
                 noDataMessage={noDataMessage}
                 isMainnet={isMainnet}
               />
@@ -90,7 +100,7 @@ export default function SendAssetList({ networkType, caAddressInfos, onSelect }:
               <SendNFTList
                 onSelect={(v) => onSelect(v, 'NFT')}
                 nftInfos={allAssetV2?.nftInfos || []}
-                loading={false}
+                loading={fetching}
                 noDataMessage={noDataMessage}
                 isMainnet={isMainnet}
               />
