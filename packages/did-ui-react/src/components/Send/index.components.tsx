@@ -37,7 +37,7 @@ import { useFeeByChainId } from '../context/PortkeyAssetProvider/hooks/txFee';
 import sameChainTransfer from '../../utils/sandboxUtil/sameChainTransfer';
 import getTransferFee from './utils/getTransferFee';
 import { useCheckManagerSyncState } from '../../hooks/wallet';
-import { MAINNET } from '../../constants/network';
+import { MAINNET, MAIN_CHAIN_ID } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
@@ -69,7 +69,8 @@ import { isNFT } from '../../utils/assets';
 import { useGetCrossChainTransferFee } from '../../hooks/useGetCrossChainTransferFee';
 
 import CommonPromptCard, { PromptCardType } from '../CommonPromptCard';
-import SendModalTip from './components/SendModalTip';
+import SendModalTip, { ButtonGroupType } from './components/SendModalTip';
+import { CommonButtonType } from '../CommonButton';
 
 export const AdsCheckWarningTip = {
   [WarningKey.INVALID_ADDRESS]: {
@@ -136,6 +137,12 @@ type TypeStageObj = {
   [key in Stage]: { btnText: string; handler: () => void; backFun: () => void; element: ReactElement };
 };
 
+export enum ModalTipKeyEnum {
+  dAppChainToExchange = 'dAppChainToExchange',
+  eBridge = 'eBridge',
+  unSupportedAsset = 'unSupportedAsset',
+}
+
 function SendContent({
   assetItem,
   className,
@@ -165,7 +172,7 @@ function SendContent({
   const recommendEtransferinfo = {};
 
   const [isCheckAddressFinish, setIsCheckAddressFinish] = useState(false);
-  const [modalTip, setModalTip] = useState<boolean>(false);
+  const [curModalTipKey, setCurModalTipKey] = useState<ModalTipKeyEnum | undefined>();
   const tokenInfo: AssetTokenExpand = useMemo(() => {
     if (isNft) {
       return {
@@ -331,37 +338,100 @@ function SendContent({
 
   const modalTipContent = useMemo(() => {
     return {
-      dAppChainToExchange: {
+      [ModalTipKeyEnum.dAppChainToExchange]: {
         title: `Unsupported: Direct Transfer from dAppChain to Exchange`,
         content: `Currently, ${tokenInfo.symbol} tokens can only be transferred to an exchange via the aelf MainChain. Please transfer them to your MainChain address first before sending them to the exchange.`,
-        buttonGroupType: 'col',
+        buttonGroupType: 'col' as ButtonGroupType,
         buttons: [
           {
-            type: 'primary',
+            type: 'primary' as CommonButtonType,
             onClick: () => {
-              //
+              setToAccount((pre) => ({ ...pre, address: `ELF_${pre.address}_${MAIN_CHAIN_ID}` }));
+              setStage(Stage.Amount);
+              setCurModalTipKey(undefined);
             },
             content: 'Send to my aelf MainChain',
           },
           {
-            type: 'outline',
+            type: 'outline' as CommonButtonType,
             onClick: () => {
-              setModalTip(false);
+              setCurModalTipKey(undefined);
             },
             content: 'Cancel',
           },
         ],
       },
-      eBridge: {
+      [ModalTipKeyEnum.eBridge]: {
         title: `Confirm transfer with eBridge`,
         content: `To protect your assets, this transfer will be processed via eBridge, a 3rd-party decentralized platform. Learn more`,
+        buttonGroupType: 'row' as ButtonGroupType,
         buttons: [
           {
-            type: 'primary',
+            type: 'primary' as CommonButtonType,
             onClick: () => {
-              //
+              // TODO
+              setCurModalTipKey(undefined);
             },
             content: 'Agree and continue',
+          },
+        ],
+      },
+      limit: {
+        title: `Maximum transaction limit exceeded`,
+        content: `Please modify the transfer limit to proceed.`,
+        buttonGroupType: 'row' as ButtonGroupType,
+        buttons: [
+          {
+            type: 'outline' as CommonButtonType,
+            onClick: () => {
+              setCurModalTipKey(undefined);
+            },
+            content: 'Cancel',
+          },
+          {
+            type: 'primary' as CommonButtonType,
+            onClick: () => {
+              //TODO
+              setCurModalTipKey(undefined);
+            },
+            content: 'Modify',
+          },
+        ],
+      },
+      allLimit: {
+        title: `Maximum transaction limit exceeded`,
+        content: `Request one-time guardian approval to proceed, or modify the limit to lift restrictions on future transactions.`,
+        buttonGroupType: 'col' as ButtonGroupType,
+        buttons: [
+          {
+            type: 'primary' as CommonButtonType,
+            onClick: () => {
+              //TODO
+              setCurModalTipKey(undefined);
+            },
+            content: 'Request one-time approval',
+          },
+          {
+            type: 'outline' as CommonButtonType,
+            onClick: () => {
+              //TODO
+              setCurModalTipKey(undefined);
+            },
+            content: 'Modify transfer limit for all',
+          },
+        ],
+      },
+      [ModalTipKeyEnum.unSupportedAsset]: {
+        title: `Unsupported asset`,
+        content: `The asset does not exist on the target chain, so the transfer cannot be completed. Please check the asset and try again with a supported chain.`,
+        buttonGroupType: 'row' as ButtonGroupType,
+        buttons: [
+          {
+            type: 'primary' as CommonButtonType,
+            onClick: () => {
+              setCurModalTipKey(undefined);
+            },
+            content: 'OK',
           },
         ],
       },
@@ -928,25 +998,8 @@ function SendContent({
       0: {
         btnText: adsInputBtnTitle,
         handler: async () => {
-          // const res = validateToAddress(toAccount);
-
-          // if (!res) return;
-          // if (!toAccount) return;
           if (warning === WarningKey.DAPP_CHAIN_TO_NO_AFFIX_ADDRESS_ELF && addressType === AddressTypeEnum.EXCHANGE) {
-            return;
-          }
-          if (isCrossChain(toAccount.address, tokenInfo?.chainId ?? 'AELF')) {
-            return await modalMethod({
-              width: 320,
-              content: 'This is a cross-chain transaction.',
-              className: 'portkey-ui-cross-modal',
-              autoFocusButton: null,
-              icon: null,
-              centered: true,
-              okText: 'Continue',
-              cancelText: 'Cancel',
-              onOk: () => setStage(Stage.Amount),
-            });
+            return setCurModalTipKey(ModalTipKeyEnum.dAppChainToExchange);
           }
           btnOutOfFocus();
           setStage(Stage.Amount);
@@ -1136,27 +1189,26 @@ function SendContent({
       <div className="stage-ele">{StageObj[stage].element}</div>
       {stage === Stage.Address && warning === WarningKey.MAKE_SURE_SUPPORT_PLATFORM ? null : (
         <div className="btn-wrap">
-          <ThrottleButton disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
+          <ThrottleButton
+            block
+            disabled={btnDisabled}
+            className="stage-btn"
+            type="primary"
+            onClick={StageObj[stage].handler}>
             {StageObj[stage].btnText}
           </ThrottleButton>
         </div>
       )}
-      <SendModalTip
-        open={modalTip}
-        onClose={() => setModalTip(false)}
-        title="sss"
-        content="dddd"
-        buttonGroupType="col"
-        buttons={[
-          {
-            type: 'primary',
-            onClick: () => {
-              //
-            },
-            content: 'fas',
-          },
-        ]}
-      />
+      {!!curModalTipKey && (
+        <SendModalTip
+          open={!!curModalTipKey}
+          onClose={() => setCurModalTipKey(undefined)}
+          title={modalTipContent[curModalTipKey].title}
+          content={modalTipContent[curModalTipKey].content}
+          buttonGroupType={modalTipContent[curModalTipKey].buttonGroupType}
+          buttons={modalTipContent[curModalTipKey].buttons}
+        />
+      )}
 
       <GuardianApprovalModal
         open={approvalVisible}
