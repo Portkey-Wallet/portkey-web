@@ -3,7 +3,7 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ActivityItemType, ChainId, TDappOperations, TransactionEnum } from '@portkey/types';
 import { useDefaultToken } from '../../hooks/assets';
 import { AmountSign, TransactionStatus } from '../../types/activity';
-import { SHOW_FROM_TRANSACTION_TYPES } from '../../constants/activity';
+import { SHOW_FROM_TRANSACTION_TYPES, SHOW_TRANSACTION_AMOUNT_TYPES } from '../../constants/activity';
 import {
   addressFormat,
   dateFormatTransTo13,
@@ -53,7 +53,6 @@ export default function TransactionMain({
     [activityItem?.nftInfo, activityItem?.operations?.length, activityItem?.symbol],
   );
   const isDappTx = useMemo(() => !!activityItem?.dappName, [activityItem?.dappName]);
-  const isShowEmptyTokenForDapp = useMemo(() => isEmptyToken && isDappTx, [isDappTx, isEmptyToken]);
   const isShowSystemForDefault = useMemo(() => isEmptyToken && !isDappTx, [isDappTx, isEmptyToken]);
   const isMultiTokenTx = useMemo(
     () => activityItem?.operations?.length && activityItem.operations.length >= 2,
@@ -202,7 +201,7 @@ export default function TransactionMain({
           {renderListIcon(listIcon || '', operations)}
           {renderTokenStatus(statusIcon || '', transactionType)}
         </div>
-        {transactionType && SHOW_FROM_TRANSACTION_TYPES.includes(transactionType) && (
+        {transactionType && SHOW_TRANSACTION_AMOUNT_TYPES.includes(transactionType) && (
           <div
             className={clsx('amount', {
               positive: isReceived,
@@ -226,11 +225,11 @@ export default function TransactionMain({
       <div className="status-container">
         <div className="row">
           <span>Date</span>
-          <span>{dateFormatTransTo13(activityItem?.timestamp)}</span>
+          <span className="value">{dateFormatTransTo13(activityItem?.timestamp)}</span>
         </div>
         <div className="row">
           <span>Status</span>
-          <span className={status.style}>{status.text}</span>
+          <span className={clsx('value', status.style)}>{status.text}</span>
         </div>
       </div>
     );
@@ -275,14 +274,14 @@ export default function TransactionMain({
         <div className="from-to-container">
           <div className="row">
             <span>From</span>
-            <span>{formatStr2EllipsisStr(transFromAddress, [8, 9])}</span>
+            <span className="value">{formatStr2EllipsisStr(transFromAddress, [8, 9])}</span>
           </div>
         </div>
       ) : (
         <div className="from-to-container">
           <div className="row">
             <span>To</span>
-            <span>{formatStr2EllipsisStr(transToAddress, [8, 9])}</span>
+            <span className="value">{formatStr2EllipsisStr(transToAddress, [8, 9])}</span>
           </div>
         </div>
       );
@@ -323,7 +322,6 @@ export default function TransactionMain({
   }, [activityItem?.isDelegated, defaultToken.decimals, feeInfo, isMainnet, noFeeUI]);
 
   const transactionUI = useMemo(() => {
-    console.log(activityItem?.transactionId);
     return (
       <div className="transaction-container">
         {!activityItem?.isReceived && (
@@ -357,19 +355,10 @@ export default function TransactionMain({
   }, [activityItem?.fromChainId, activityItem?.transactionId]);
 
   const dappTXDetailUI = useMemo(() => {
-    const { dappName, transactionType } = activityItem || {};
-    console.log(dappName);
-    console.log(transactionType);
-
-    console.log(activityItem);
-    if (
-      isMultiTokenTx &&
-      activityItem?.dappName &&
-      activityItem?.transactionType &&
-      SHOW_FROM_TRANSACTION_TYPES.includes(activityItem.transactionType)
-    ) {
+    const { dappName, transactionType, operations } = activityItem || {};
+    if (isMultiTokenTx && transactionType && dappName && SHOW_FROM_TRANSACTION_TYPES.includes(transactionType)) {
       let [tokenPaid, tokenReceived] =
-        activityItem.operations?.map((_token) => ({
+        operations?.map((_token) => ({
           symbol: _token.nftInfo ? _token.nftInfo.alias : _token.symbol,
           url: _token.nftInfo ? _token.nftInfo.imageUrl : _token.icon,
           isReceived: _token.isReceived,
@@ -384,11 +373,11 @@ export default function TransactionMain({
         <div className="dappTxDetail-container">
           <div className="row">
             <span>Provider</span>
-            <span>{dappName}</span>
+            <span className="value">{dappName}</span>
           </div>
           <div className="row">
             <span>You paid</span>
-            <span>
+            <span className="value">
               {`${tokenPaid?.isReceived ? '+' : '-'} ${formatAmountShow(
                 divDecimals(tokenPaid?.amount, tokenPaid?.decimals),
                 tokenPaid?.decimals,
@@ -397,7 +386,10 @@ export default function TransactionMain({
           </div>
           <div className="row">
             <span>You received</span>
-            <span>
+            <span
+              className={clsx('value', {
+                success: tokenReceived.isReceived,
+              })}>
               {`${tokenReceived?.isReceived ? '+' : '-'} ${formatAmountShow(
                 divDecimals(tokenReceived?.amount, tokenReceived?.decimals),
                 tokenReceived?.decimals,
@@ -428,9 +420,6 @@ export default function TransactionMain({
       </div>
       <div className="transaction-detail-footer">
         {activityItem?.transactionId && (
-          // <span className="link" onClick={openOnExplorer}>
-          //   View on Explorer
-          // </span>
           <CommonButton className="item-button" type="primary" onClick={openOnExplorer}>
             View on Explorer
           </CommonButton>

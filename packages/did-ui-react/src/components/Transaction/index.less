@@ -40,6 +40,7 @@
         font-size: 20px;
         line-height: 24px;
         letter-spacing: -0.02em;
+        font-family: var(--portkey-font-bricolage-bold);
       }
     }
 
@@ -91,7 +92,17 @@
               display: flex;
               gap: 4px;
               color: var(--portkey-ui-text-primary);
+              font-family: var(--portkey-font-bricolage-bold);
               align-items: center;
+              font-size: 20px;
+              font-weight: 700;
+              line-height: 24px;
+              letter-spacing: -0.02em;
+
+              .arrowright-icon {
+                display: flex;
+                align-items: center;
+              }
             }
           }
 
@@ -133,7 +144,7 @@
             justify-content: center;
             align-items: center;
             border-radius: 9999px;
-            border: 1px solid #414142;
+            border: 1px solid var(--sds-color-border-default-default);
           }
         }
 
@@ -145,6 +156,7 @@
           display: flex;
           flex-direction: column;
           text-align: center;
+          font-family: var(--portkey-font-bricolage-bold);
 
           &.positive {
             color: var(--sds-color-icon-positive-tertiary);
@@ -154,6 +166,7 @@
             font-size: 14px;
             line-height: 19.6px;
             font-weight: 400;
+            color: var(--sds-color-text-default-secondary);
           }
         }
       }
@@ -175,16 +188,45 @@
 
         .row {
           justify-content: space-between;
+          align-items: center;
           display: flex;
           font-size: 16px;
           line-height: 22.4px;
           font-weight: 400;
           padding: 16px 0;
 
+          .right-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-family: var(--portkey-font-schibsted-bold);
+            font-weight: 600;
+            line-height: 22.4px;
+            font-size: 16px;
+
+            .right-usd {
+              font-size: 14px;
+              font-weight: 400;
+              line-height: 19.6px;
+              color: var(--sds-color-text-default-secondary);
+            }
+          }
+
+          .value {
+            font-weight: 600;
+            line-height: 22.4px;
+            font-family: var(--portkey-font-schibsted-bold);
+            font-size: 16px;
+          }
+
           .chain {
             align-items: center;
             display: flex;
             gap: 4px;
+            font-weight: 600;
+            line-height: 22.4px;
+            font-family: var(--portkey-font-schibsted-bold);
+
             .chain-icon {
               width: 18px;
               height: 18px;
@@ -194,12 +236,28 @@
           .txn-display {
             display: flex;
             gap: 4px;
+            font-family: var(--portkey-font-schibsted-bold);
+            font-weight: 600;
+            line-height: 22.4px;
+            font-size: 16px;
           }
         }
       }
 
       .dappTxDetail-container {
-        border-top: 1px solid #414142;
+        border-top: 1px solid var(--sds-color-border-default-default);
+        .row {
+          .value {
+            font-weight: 600;
+            line-height: 22.4px;
+            font-family: var(--portkey-font-schibsted-bold);
+            font-size: 16px;
+
+            &.success {
+              color: var(--portkey-ui-text-success);
+            }
+          }
+        }
       }
     }
   }

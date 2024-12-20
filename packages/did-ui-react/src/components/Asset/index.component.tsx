@@ -70,6 +70,7 @@ export type SelectTokenType = {
   chainId: ChainId;
   symbol: string;
   decimals: number;
+  address: string;
   isNFT?: boolean;
 };
 

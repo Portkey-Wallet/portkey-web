@@ -123,6 +123,7 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
         }}
       />
 
+      <span className="label">Activity</span>
       {activityTotal || currentActivity?.list ? (
         <ActivityList
           networkType={networkType}
