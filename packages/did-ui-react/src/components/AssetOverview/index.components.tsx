@@ -22,13 +22,14 @@ import { ActivityItemType, ChainId } from '@portkey/types';
 import { IAssetItemType, IUserTokenItemNew } from '@portkey/services';
 import { ELF_SYMBOL } from '../../constants/assets';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
-import CustomAssetModal from '../CustomAssetModal';
 import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
 import { useFaucet } from '../../hooks/useFaucet';
 import singleMessage from '../CustomAnt/message';
 import { PAGESIZE_10, loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
 import { getCurrentActivityMapKey } from '../Activity/utils';
+import useMobile from '../../hooks/useMobile';
+import { SendAssetListModal } from '../SendAssetList';
 
 export interface AssetOverviewProps {
   allToken?: IUserTokenItemNew[];
@@ -44,7 +45,7 @@ export interface AssetOverviewProps {
   onBack?: () => void;
   onDataInit?: () => void;
   onDataInitEnd?: () => void;
-  onSend?: (selectToken: IAssetItemType, type: TokenType) => void;
+  onSend?: (selectToken?: IAssetItemType, type?: TokenType) => void;
   onViewActivityItem?: (item: ActivityItemType) => void;
   onViewTokenItem?: (v: TokenItemShowType) => void;
   onNFTView?: (item: NFTItemBaseExpand, collectionItem?: NFTCollectionItemShowType) => void;
@@ -75,6 +76,7 @@ export function AssetOverviewContent({
   const [{ accountInfo, tokenListInfo, tokenListInfoV2, caInfo, NFTCollection, activityMap }, { dispatch }] =
     usePortkeyAsset();
 
+  const isMobile = useMobile();
   const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
   const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
   const [tokenListV2, setTokenListV2] = useState<ITokenSectionResponse[]>();
@@ -227,7 +229,11 @@ export function AssetOverviewContent({
           if (!isLoginOnChain) {
             return loadingTip({ msg: loginOptTip });
           }
-          setAssetOpen(true);
+          if (isMobile) {
+            onSend?.();
+          } else {
+            setAssetOpen(true);
+          }
         }}
         onReceive={onReceive}
         onFaucet={onFaucet}
@@ -281,15 +287,15 @@ export function AssetOverviewContent({
           // onReceive?.(v);
         }}
       />
-      <CustomAssetModal
-        caAddressInfos={caAddressInfos}
+      <SendAssetListModal
         networkType={networkType}
+        caAddressInfos={caAddressInfos}
+        onSelect={(v) => {
+          onSend?.(v as any);
+          setAssetOpen(false);
+        }}
         open={assetOpen}
         onCancel={() => setAssetOpen(false)}
-        onSelect={(v, type) => {
-          setAssetOpen(false);
-          onSend?.(v, type);
-        }}
       />
     </div>
   );

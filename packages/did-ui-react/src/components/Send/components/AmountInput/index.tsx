@@ -1,6 +1,6 @@
+import TokenAmountInput from '../../../TokenAmountInput';
 import { AssetTokenExpand } from '../../../types/assets';
-import NftInput from './NftInput';
-import TokenInput from './TokenInput';
+import TokenAmountShow from './TokenAmountShow';
 
 export default function AmountInput({
   fromAccount,
@@ -23,18 +23,39 @@ export default function AmountInput({
   getTranslationInfo: (v: string) => void;
   setErrorMsg: (v: string) => void;
 }) {
-  return type === 'token' ? (
-    <TokenInput
-      toAccount={toAccount}
-      getTranslationInfo={getTranslationInfo}
-      setErrorMsg={setErrorMsg}
-      fromAccount={fromAccount}
-      value={value}
-      token={token}
-      errorMsg={errorMsg}
-      onChange={onChange}
-    />
-  ) : (
-    <NftInput fromAccount={fromAccount} value={value} token={token} errorMsg={errorMsg} onChange={onChange} />
+  return (
+    <>
+      <TokenAmountShow
+        type={'nft'}
+        fromAccount={{
+          address: '',
+          AESEncryptPrivateKey: '',
+        }}
+        toAccount={{
+          address: '',
+        }}
+        token={token}
+        value={''}
+        errorMsg={''}
+        onChange={function (params: { amount: string; balance: string }): void {
+          throw new Error('Function not implemented.');
+        }}
+        getTranslationInfo={function (num: string) {
+          throw new Error('Function not implemented.');
+        }}
+        setErrorMsg={function (v: string): void {
+          throw new Error('Function not implemented.');
+        }}></TokenAmountShow>
+      <TokenAmountInput
+        symbol={token.symbol}
+        decimals={token.decimals}
+        setValue={function (v: string): void {
+          throw new Error('Function not implemented.');
+        }}
+        setUsdValue={function (v: string): void {
+          throw new Error('Function not implemented.');
+        }}
+      />
+    </>
   );
 }

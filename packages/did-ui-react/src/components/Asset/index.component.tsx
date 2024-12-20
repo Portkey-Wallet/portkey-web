@@ -52,6 +52,7 @@ import { loadingTip } from '../../utils/loadingTip';
 import CollectionDetailMain from '../CollectionDetail/index.component';
 import CommonButton from '../CommonButton';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
+import { SendAssetListPage } from '../SendAssetList';
 import ReceiveList from '../ReceiveList';
 
 export interface AssetMainProps
@@ -333,9 +334,13 @@ function AssetMain({
     [assetStep],
   );
 
-  const onSend = useCallback(async (v: IAssetItemType) => {
-    setSendToken(v);
-    setAssetStep(AssetStep.send);
+  const onSend = useCallback(async (v?: IAssetItemType) => {
+    if (v) {
+      setSendToken(v);
+      setAssetStep(AssetStep.send);
+    } else {
+      setAssetStep(AssetStep.sendAssetList);
+    }
   }, []);
 
   const onBack = useCallback(() => {
@@ -477,6 +482,19 @@ function AssetMain({
                 console.log('wfs====4');
                 setAssetStep(AssetStep.collectionDetail);
                 setCollectionItem(collectionItem);
+              }}
+            />
+          )}
+          {assetStep === AssetStep.sendAssetList && (
+            <SendAssetListPage
+              caAddressInfos={caAddressInfos}
+              networkType={networkType}
+              onCancel={() => {
+                setAssetStep(AssetStep.overview);
+              }}
+              onSelect={(v) => {
+                setSendToken(v as any);
+                setAssetStep(AssetStep.send);
               }}
             />
           )}
@@ -650,7 +668,7 @@ function AssetMain({
                 title: 'Settings',
                 onBack: () => setAssetStep(AssetStep.overview),
               }}
-              isShowFooter={true} // TODO delete w
+              isShowFooter={showDeletion} // TODO delete w
               footerElement={
                 <CommonButton
                   className="delete-account-button"

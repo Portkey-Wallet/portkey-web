@@ -5,7 +5,7 @@ import './index.less';
 import CoinImage from '../CoinImage';
 
 export interface IImgWithCornerMark {
-  imgSrc: string;
+  imgSrc?: string;
   cornerImgSrc: string | keyof typeof svgsList;
 }
 

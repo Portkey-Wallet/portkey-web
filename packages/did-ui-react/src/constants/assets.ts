@@ -65,4 +65,5 @@ export enum AssetStep {
   tokenAllowanceDetail = 'tokenAllowanceDetail',
   setSecondaryMailbox = 'setSecondaryMailbox',
   collectionDetail = 'collectionDetail',
+  sendAssetList = 'sendAssetList',
 }

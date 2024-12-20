@@ -169,7 +169,7 @@ export default function TransactionMain({
           </div>
           <div className="token-direction-wrapper">
             <span>{top.symbol}</span>
-            <CustomSvg type="ArrowRight" />
+            <CustomSvg type="ArrowRight" fillColor="var(--sds-color-icon-default-default)" />
             <span>{bottom.symbol}</span>
           </div>
         </div>

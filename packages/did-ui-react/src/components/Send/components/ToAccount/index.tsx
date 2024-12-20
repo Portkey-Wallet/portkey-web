@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { FocusEventHandler, useState } from 'react';
 import './index.less';
 
-interface ToAccountProps {
+export interface ToAccountProps {
   value?: { name?: string; address: string };
   onChange?: (value: { name?: string; address: string }) => void;
   onBlur?: FocusEventHandler<HTMLInputElement> | undefined;

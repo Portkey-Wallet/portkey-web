@@ -43,6 +43,22 @@ export function transNetworkText(chainId: ChainId, isMainnet?: boolean): string 
   return `aelf ${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN}${isMainnet ? '' : ' ' + TEST_NET}`;
 }
 
+export function transNetworkTextV2({
+  chainId,
+  chainType = 'aelf',
+  isMainnet,
+  networkName,
+}: {
+  chainId?: ChainId;
+  chainType?: string;
+  isMainnet?: boolean;
+  networkName?: string;
+}): string {
+  if (chainType !== 'aelf') return networkName || '';
+
+  return `aelf ${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN}${isMainnet ? '' : ' ' + TEST_NET}`;
+}
+
 export function divDecimalsStr(a?: BigNumber.Value, decimals: string | number = 8, defaultVal = '--') {
   const n = divDecimals(a, decimals);
   return isEffectiveNumber(n) ? n.toFormat() : defaultVal;

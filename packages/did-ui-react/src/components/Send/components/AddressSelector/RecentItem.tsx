@@ -1,43 +1,34 @@
-import { RecentContactItemType } from '@portkey/services';
 import { IClickAddressProps } from '../../../types/assets';
 import clsx from 'clsx';
 import { formatStr2EllipsisStr } from '../../../../utils';
-import { transNetworkText } from '../../../../utils/converter';
+import { transNetworkTextV2 } from '../../../../utils/converter';
+import ImgWithCornerMark from '../../../ImgWithCornerMark';
+import { IRecentItem } from '../../../../utils/recent';
 
 export default function RecentItem({
   item,
   isMainnet,
-  onClick,
 }: {
-  item: RecentContactItemType;
+  item: IRecentItem;
   isMainnet: boolean;
   onClick: (account: IClickAddressProps) => void;
 }) {
-  // const navigate = useNavigate();
-
-  // const goRecentDetail = (
-  //   chainId: ChainId,
-  //   targetAddress: string,
-  //   targetChainId: ChainId,
-  //   name: string,
-  //   index: string,
-  // ) => {
-  // };
-
   return (
     <div className={clsx(['portkey-ui-flex-between-center', 'recent-item'])}>
-      <div
-        className="main-info"
-        onClick={() => {
-          onClick({ ...item, isDisable: false });
-        }}>
-        <p className="address">{`ELF_${formatStr2EllipsisStr(item.address, [6, 6])}_${item.addressChainId}`}</p>
-        <p className="network">{transNetworkText(item.addressChainId, isMainnet)}</p>
+      <div className="left-section">
+        <ImgWithCornerMark imgSrc={''} cornerImgSrc={''} />
       </div>
-
-      {/* <div
-        className="go-detail"
-        onClick={() => goRecentDetail(item.chainId, item.address, item.addressChainId, item.name, item?.index)}>
+      <div className="center-section">
+        <div className="address">{formatStr2EllipsisStr(item.address, [8, 8])}</div>
+        <div className="chain-info">
+          {transNetworkTextV2({
+            chainId: item.chainId,
+            isMainnet,
+          })}
+        </div>
+      </div>
+      {/* TODO: jump to detail */}
+      {/* <div className="go-detail">
         <CustomSvg className="go-detail-icon" type={'Info'} />
       </div> */}
     </div>

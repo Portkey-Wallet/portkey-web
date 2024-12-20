@@ -276,7 +276,7 @@ const fetchAllAssetV2 = async ({
     maxResultCount,
     caAddressInfos,
   });
-  return basicActions(PortkeyAssetActions['setAllAssets'], {
+  return basicActions(PortkeyAssetActions['setAllAssetsV2'], {
     nftInfos: response.nftInfos,
     tokenInfos: response.tokenInfos,
     totalRecordCount: response.totalRecordCount,

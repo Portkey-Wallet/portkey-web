@@ -4822,7 +4822,7 @@ a.portkey-ant-btn-sm {
   z-index: 1000;
   transition: all 0.3s;
   min-width: 360px;
-  max-height: 70vh;
+  max-height: max-content;
 }
 
 .portkey-ant-drawer-content-wrapper-hidden {
