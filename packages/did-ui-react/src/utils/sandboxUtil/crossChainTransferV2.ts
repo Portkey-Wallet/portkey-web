@@ -38,7 +38,7 @@ const crossChainTransferV2 = async ({
   return callCASendMethod({
     sandboxId,
     contractAddress: tokenInfo.address,
-    methodName: '.CrossChain',
+    methodName: '.CrossChainTransfer',
     paramsOption: {
       symbol: tokenInfo.symbol,
       to,

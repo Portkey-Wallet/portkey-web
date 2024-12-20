@@ -1,14 +1,17 @@
+import { ChainId } from '@portkey/types';
 import { TLimitData, TokenInfo } from './index';
 import { ContractBasic } from '@portkey/contracts';
 
 export interface ICreateReceiptParams {
-  tokenContract: ContractBasic;
-  portkeyContract: ContractBasic;
+  tokenContractAddress: string;
+  portkeyContractAddress: string;
   // bridgeContract: ContractBasic;
   targetAddress: string;
   amount: string;
   owner: string;
   caHash: string;
+  privateKey: string;
+  chainId: ChainId;
 }
 
 export interface ICreateReceiptHandlerParams extends ICreateReceiptParams {
@@ -17,13 +20,15 @@ export interface ICreateReceiptHandlerParams extends ICreateReceiptParams {
 }
 
 export interface ICheckAndApproveParams {
-  tokenContract: ContractBasic;
-  portkeyContract: ContractBasic;
+  chainId: ChainId;
+  tokenContractAddress: string;
+  portkeyContractAddress: string;
   symbol: string;
   spender: string;
   owner: string;
   amount: string;
   caHash: string;
+  privateKey: string;
 }
 
 export interface IBridgeOperator {

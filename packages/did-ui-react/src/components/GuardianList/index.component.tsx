@@ -92,7 +92,7 @@ function GuardianList({
           </div>
         ) : (
           <div className="guardian-list-list">
-            <div className="login-guardians-text">{`Login account(s)`}</div>
+            {loginGuardians.length > 0 && <div className="login-guardians-text">{`Login account(s)`}</div>}
             {loginGuardians.map((item, index) => (
               <GuardianItems
                 originChainId={originChainId}

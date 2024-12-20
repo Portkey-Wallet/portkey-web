@@ -205,7 +205,10 @@ export const handleManagerForwardCall = async ({ paramsOption, instance }: Handl
     throw new Error('ManagerForwardCall parameter is missing');
   }
   const methods = await getContractMethods(instance, paramsOption.contractAddress);
-  const inputType = methods[paramsOption.methodName];
+  // adjust some function, just like .CrossChainTransfer
+  const _methodName = methodName.replace('.', '');
+  const inputType = methods[_methodName];
+
   if (!inputType) throw new Error(`Contract ${contractAddress} does not exist ${methodName}`);
   const params = { ...paramsOption };
   if (args) params.args = await encodedParams(inputType, args);

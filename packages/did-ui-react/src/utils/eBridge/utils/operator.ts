@@ -12,6 +12,9 @@ import type { Contract } from 'web3-eth-contract';
 import { divDecimals, timesDecimals, ZERO } from '@etransfer/utils';
 import { VIEW_PRIVATE } from '../../../constants/eBridge';
 import { aelf } from '@portkey/utils';
+import { CustomContractBasic } from '../../sandboxUtil/CustomContractBasic';
+import { getChain } from '../../../hooks';
+import { callCASendMethod } from '../../sandboxUtil/callCASendMethod';
 
 // import { divDecimals, timesDecimals } from '../../converter';
 
@@ -108,46 +111,94 @@ export class ELFBridgeOperator implements IBridgeOperator {
   };
 
   checkAllowanceAndApprove = async ({
-    tokenContract,
-    portkeyContract,
+    chainId,
+    tokenContractAddress,
+    portkeyContractAddress,
     symbol,
     spender,
     owner,
     amount,
     caHash,
+    privateKey,
   }: ICheckAndApproveParams) => {
+    const chainInfo = await getChain(chainId);
+    if (!chainInfo) throw 'Please check network connection and chainId';
+
     const [allowance, info] = await Promise.all([
-      tokenContract.callViewMethod('GetAllowance', { symbol, owner, spender }),
-      tokenContract.callViewMethod('GetTokenInfo', { symbol }),
+      CustomContractBasic.callViewMethod({
+        contractOptions: {
+          rpcUrl: chainInfo?.endPoint,
+          contractAddress: tokenContractAddress,
+        },
+        functionName: 'GetAllowance',
+        paramsOption: {
+          symbol,
+          owner,
+          spender,
+        },
+      }),
+
+      CustomContractBasic.callViewMethod({
+        contractOptions: {
+          rpcUrl: chainInfo?.endPoint,
+          contractAddress: tokenContractAddress,
+        },
+        functionName: 'GetTokenInfo',
+        paramsOption: {
+          symbol,
+        },
+      }),
     ]);
     if (allowance?.error) throw allowance?.error;
     if (info?.error) throw info?.error;
     const allowanceBN = ZERO.plus(allowance.data.allowance ?? allowance.data.amount ?? 0);
     const pivotBalanceBN = timesDecimals(amount, info.data.decimals ?? 8);
-    if (allowanceBN.lt(pivotBalanceBN)) {
-      const approveResult = await portkeyContract.callSendMethod('ManagerApprove', '', {
-        caHash,
-        spender,
-        symbol,
-        amount: pivotBalanceBN.toFixed(),
-      });
-      if (approveResult?.error) throw approveResult?.error;
-      return true;
-    }
+    // if (allowanceBN.lt(pivotBalanceBN)) {
+    //   const approveResult = await callCASendMethod({
+    //     methodName: 'ManagerApprove',
+    //     paramsOption: {
+    //       caHash,
+    //       spender,
+    //       symbol,
+    //       amount: pivotBalanceBN.toFixed(),
+    //     },
+    //     chainId,
+    //     caHash,
+    //     chainType: 'aelf',
+    //           // Check it
+    //     contractAddress: portkeyContractAddress,
+    //     privateKey,
+    //   });
+    //   if (approveResult?.error) throw approveResult?.error;
+    //   return true;
+    // }
     return true;
   };
 
   async createReceipt(params: ICreateReceiptHandlerParams): Promise<any> {
-    const { amount, tokenContract, portkeyContract, owner, caHash, tokenInfo, targetChainId, targetAddress } = params;
+    const {
+      amount,
+      tokenContractAddress,
+      portkeyContractAddress,
+      owner,
+      caHash,
+      tokenInfo,
+      targetChainId,
+      targetAddress,
+      privateKey,
+      chainId,
+    } = params;
     const symbol = tokenInfo.symbol;
     const approveParams = {
-      tokenContract,
-      portkeyContract,
+      tokenContractAddress,
+      portkeyContractAddress,
       symbol,
       spender: this.chainInfo.bridgeContract,
       owner,
       amount,
       caHash,
+      privateKey,
+      chainId,
     };
     const toBridgeChainId = getChainIdByMap(String(targetChainId));
 
@@ -170,11 +221,14 @@ export class ELFBridgeOperator implements IBridgeOperator {
       ...approveParams,
     });
 
-    return portkeyContract.callSendMethod('ManagerForwardCall', '', {
-      caHash,
-      contractAddress: this.chainInfo.bridgeContract,
+    return callCASendMethod({
       methodName: 'CreateReceipt',
-      args: {
+      chainId,
+      caHash,
+      chainType: 'aelf', // TODO: change it
+      contractAddress: this.chainInfo.bridgeContract,
+      privateKey,
+      paramsOption: {
         symbol,
         owner,
         targetAddress,
@@ -182,5 +236,18 @@ export class ELFBridgeOperator implements IBridgeOperator {
         targetChainId: getChainIdByMap(targetChainId),
       },
     });
+
+    // return portkeyContract.callSendMethod('ManagerForwardCall', '', {
+    //   caHash,
+    //   contractAddress: ,
+    //   methodName: 'CreateReceipt',
+    //   args: {
+    //     symbol,
+    //     owner,
+    //     targetAddress,
+    //     amount: timesDecimals(amount, tokenInfo.decimals ?? 8).toFixed(0),
+    //     targetChainId: getChainIdByMap(targetChainId),
+    //   },
+    // });
   }
 }
