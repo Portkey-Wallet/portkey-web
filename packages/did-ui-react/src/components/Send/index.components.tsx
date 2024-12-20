@@ -1,10 +1,17 @@
 import { aelf, wallet } from '@portkey/utils';
-import { IAssetItemType, IAssetToken, ITransferLimitItem, OperationTypeEnum } from '@portkey/services';
+import { IAssetToken, OperationTypeEnum } from '@portkey/services';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
-import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress, isDIDAelfAddress } from '../../utils/aelf';
+import {
+  getAddressChainId,
+  getAelfAddress,
+  getChainIdByAddress,
+  getEntireDIDAelfAddress,
+  isCrossChain,
+  isDIDAddress,
+} from '../../utils/aelf';
 import { AddressCheckError, GuardianApprovedItem } from '../../types';
 import { ChainId, INftInfoType, SeedTypeEnum } from '@portkey/types';
 import ToAccount from './components/ToAccount';
@@ -59,6 +66,7 @@ import { EBridge } from '../../utils/eBridge';
 import Loading from '../Loading';
 import { getLimitTips, getSmallerValue } from '../../utils/send';
 import { isNFT } from '../../utils/assets';
+import { useGetCrossChainTransferFee } from '../../hooks/useGetCrossChainTransferFee';
 
 export interface SendProps {
   assetItem: IAssetToken & INftInfoType & TokenItemShowType & NFTItemBaseExpand;
@@ -162,6 +170,7 @@ function SendContent({
   const price = useTokenPrice(assetItem.symbol);
   const checkManagerSyncState = useCheckManagerSyncState();
   const [amount, setAmount] = useState<string>(extraConfig?.amount || ''); // tokenNumber  like 100
+  const debounceSendNumber = useDebounce(amount, 500);
   const [usdAmount, setUSDAmount] = useState<string>(''); // tokenNumber  like 100
   const [maxAmountSend, setMaxAmountSend] = useState<string>(
     formatAmountShow(divDecimals(tokenInfo?.balance, tokenInfo?.decimals)),
@@ -269,6 +278,7 @@ function SendContent({
   // const [balance, setBalance] = useState(extraConfig?.balance || '');
 
   const defaultToken = useDefaultToken(tokenInfo.chainId);
+  const getCrossChainTransferFee = useGetCrossChainTransferFee();
 
   const btnDisabled = useMemo(() => {
     if (toAccount.address === '' || (stage === Stage.Amount && amount === '')) return true;
@@ -374,7 +384,17 @@ function SendContent({
           account,
           chainType,
         });
-
+        getCrossChainTransferFee({
+          tokenContract,
+          sendAmount: amount ?? debounceSendNumber,
+          decimals: tokenInfo.decimals.toString(),
+          symbol: tokenInfo.symbol,
+          caContract: portkeyContract,
+          tokenContractAddress: tokenInfo.address,
+          toAddress: getEntireDIDAelfAddress(toAccount.address, undefined, tokenInfo.chainId),
+          chainId: tokenInfo.chainId,
+          toChainId: getChainIdByAddress(toAccount.address) as ChainId,
+        });
         if (_transferType === TransferTypeEnum.GENERAL_SAME_CHAIN) {
           await sameChainTransfer({
             sandboxId,

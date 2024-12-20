@@ -5,6 +5,7 @@ import { ChainId } from '@portkey/types';
 import { ContractProps, IPortkeyContract } from './types';
 import { getTxResult, handleContractError, handleContractParams, handleFunctionName } from './utils';
 import { BaseContract } from './baseContract';
+export type AElfCallViewMethod = (functionName: string, paramsOption?: any) => Promise<ViewResult>;
 
 export class AElfContract extends BaseContract implements IPortkeyContract {
   public aelfContract: any;
@@ -16,6 +17,15 @@ export class AElfContract extends BaseContract implements IPortkeyContract {
     this.address = contractAddress;
     this.aelfContract = aelfContract;
     this.aelfInstance = aelfInstance;
+  }
+  public async calculateTransactionFee(functionName: any, paramsOption: any) {
+    try {
+      const { data } = await this.encodedTx(functionName, paramsOption);
+      const req = await this.aelfInstance?.chain.calculateTransactionFee(data);
+      return { data: req };
+    } catch (error) {
+      return { error: handleContractError(error) };
+    }
   }
   public async callViewMethod<T = any>(
     functionName: string,
