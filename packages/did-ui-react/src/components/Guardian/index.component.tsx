@@ -113,7 +113,6 @@ function GuardianMain({
         chainType,
         sandboxId,
       });
-      _guardianList.reverse();
       setGuardianList(_guardianList);
       return _guardianList;
     } catch (error) {
@@ -324,12 +323,15 @@ function GuardianMain({
   const renderBackHeaderLeftEle = useCallback(
     (goBack?: () => void) => (
       <div className="portkey-ui-guardian-left portkey-ui-flex-center">
-        <CustomSvg type="LeftArrow" onClick={goBack} />
-        Guardians
+        <div className="left-icon" onClick={onBack}>
+          <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default)" onClick={goBack} />
+        </div>
       </div>
     ),
     [],
   );
+
+  //<CustomSvg className="portkey-ui-enter-btn" type="ChevronRight" style={{ width: 16, height: 16 }} />
 
   return (
     <div className={clsx('portkey-ui-guardian-page', className)}>
@@ -338,8 +340,9 @@ function GuardianMain({
           header={
             <BackHeaderForPage
               leftElement={renderBackHeaderLeftEle(onBack)}
+              title={<>Guardians</>}
               rightElement={
-                <ThrottleButton
+                <div
                   onClick={() => {
                     if (!isLoginOnChain) {
                       return loadingTip({ msg: loginOptTip });
@@ -347,8 +350,8 @@ function GuardianMain({
                     onAddGuardian();
                   }}
                   className="title-add-guardian-btn">
-                  Add Guardians
-                </ThrottleButton>
+                  <CustomSvg type="Add" style={{ width: 24, height: 24 }} />
+                </div>
               }
             />
           }
@@ -358,7 +361,7 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianView && (
         <GuardianView
-          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} title={'Guardian Details'} />}
           originChainId={originChainId}
           currentGuardian={currentGuardian!}
           onEditGuardian={editable ? onEditGuardian : undefined}
@@ -370,7 +373,7 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianAdd && (
         <GuardianAdd
-          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} />}
+          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} title={'Add Guardian'} />}
           caHash={caHash}
           originChainId={originChainId}
           networkType={networkType}
@@ -383,7 +386,13 @@ function GuardianMain({
       )}
       {step === GuardianStep.guardianEdit && (
         <GuardianEdit
-          header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoView)} />}
+          header={
+            <BackHeaderForPage
+              leftElement={renderBackHeaderLeftEle(onGoView)}
+              title={'Edit Guardian'}
+              rightElement={<CustomSvg className="remove-icon" type="Remove" fillColor="#111111" />}
+            />
+          }
           originChainId={originChainId}
           caHash={caHash}
           networkType={networkType}
