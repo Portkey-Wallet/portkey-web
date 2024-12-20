@@ -51,6 +51,7 @@ export * from './assets';
 export * from './token';
 export * from './transaction';
 export * from './receive';
+export * from './send';
 export * from './activity';
 export * from './allowance';
 export * from './security';

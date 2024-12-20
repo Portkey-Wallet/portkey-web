@@ -119,7 +119,6 @@ export default function PortkeyModal({
     if (open) afterOpenChange?.(true);
     return (
       <Modal
-        {...props}
         open={open}
         centered={centered}
         rootClassName={clsx(`${PORTKEY_MODAL_PREFIX_CLS}-root`, rootClassName)}
@@ -139,6 +138,7 @@ export default function PortkeyModal({
         // mousePosition={mousePosition}
         footer={footer === undefined ? defaultFooter() : footer}
         height={defaultHeight}
+        {...props}
       />
     );
   }, [

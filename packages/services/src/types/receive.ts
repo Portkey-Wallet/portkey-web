@@ -4,6 +4,13 @@ export type GetReceiveNetworkListParams = {
   symbol: string;
 };
 
+export type GetDepositInfoParams = {
+  chainId: string;
+  network: string;
+  symbol: string;
+  toSymbol: string;
+};
+
 export enum ReceiveFromNetworkServiceType {
   ETransfer = 'ETransfer',
   EBridge = 'EBridge',
@@ -42,6 +49,27 @@ export type TReceiveNetworkListResponse = {
   data: TReceiveData;
 };
 
+export type TReceiveDepositInfoResponse = {
+  code: string;
+  message?: string;
+  data: {
+    depositInfo: TDepositInfo;
+  };
+};
+
 export type IReceiveService = {
   getReceiveNetworkList(params: GetReceiveNetworkListParams): Promise<TReceiveNetworkListResponse>;
+  getDepositInfo(params: GetDepositInfoParams, headers: Record<string, string>): Promise<TReceiveDepositInfoResponse>;
+};
+
+export type TDepositInfo = {
+  depositAddress: string;
+  minAmount: string;
+  extraNotes?: string[];
+  minAmountUsd: string;
+  extraInfo?: TDepositExtraInfo;
+};
+
+export type TDepositExtraInfo = {
+  slippage: string;
 };

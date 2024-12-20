@@ -55,7 +55,7 @@ export default function AssetComponent() {
   );
   return (
     <>
-      <PortkeyAssetProvider pin="111111" originChainId="tDVW">
+      <PortkeyAssetProvider pin="111111" originChainId="AELF">
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gridGap: 10 }}>
           <Send
             wrapperStyle={{ height: 600, border: '1px solid gray' }}

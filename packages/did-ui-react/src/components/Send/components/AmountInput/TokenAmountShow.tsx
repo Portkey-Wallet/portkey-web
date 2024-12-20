@@ -23,19 +23,26 @@ export default function TokenAmountShow({
   fromAccount,
   token,
   value,
+  errorMsg,
   onChange,
   getTranslationInfo,
   setErrorMsg,
+  setValue,
+  setUsdValue,
+  onPressMax,
 }: {
   type: 'token' | 'nft';
   fromAccount: { address: string; AESEncryptPrivateKey: string };
   toAccount: { address: string };
   token: AssetTokenExpand;
   value: string;
-  errorMsg: string;
+  errorMsg?: string;
   onChange: (params: { amount: string; balance: string }) => void;
   getTranslationInfo: (num: string) => any;
   setErrorMsg: (v: string) => void;
+  setValue: (v: string) => void;
+  setUsdValue: (v: string) => void;
+  onPressMax: () => void;
 }) {
   const [{ chainType, networkType, sandboxId }] = usePortkey();
   const [{ caHash, managementAccount }] = usePortkeyAsset();
@@ -140,12 +147,11 @@ export default function TokenAmountShow({
       setErrorMsg('Synchronizing on-chain account information...');
     }
   }, [balance, caHash, checkManagerSyncState, managementAccount, maxAmount, onChange, setErrorMsg, token.chainId]);
-
   return (
     <div className="amount-show-wrap">
       <div className="left">
         {type === 'token' ? (
-          <TokenImageDisplay src={token.imageUrl} width={42} symbol={token?.label || token.symbol} />
+          <TokenImageDisplay src={undefined} width={42} symbol={token?.label || token.symbol} />
         ) : (
           <NFTImage name={token.symbol} imageUrl={token.imageUrl} isSeed={token?.isSeed} seedType={token?.seedType} />
         )}
@@ -161,7 +167,9 @@ export default function TokenAmountShow({
           token?.label || token?.symbol
         }`}</p>
       </div>
-      <div className="max">Max</div>
+      <div className="max" onClick={onPressMax}>
+        Max
+      </div>
     </div>
   );
 }

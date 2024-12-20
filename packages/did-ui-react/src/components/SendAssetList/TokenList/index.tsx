@@ -28,7 +28,7 @@ export default function SendTokenList({
       return (
         <div
           key={`${item.symbol}_${item.chainId}`}
-          className="token-item portkey-ui-flex gap-8"
+          className="token-item portkey-ui-flex gap-8 portkey-ui-cursor-pointer"
           onClick={() => onSelect(item)}>
           <div className="token-icon-show">
             <TokenChainImageDisplay tokenSrc={item.imageUrl} chainSrc={item?.chainImageUrl} symbol={item.symbol} />
@@ -58,7 +58,7 @@ export default function SendTokenList({
       {loading ? (
         <Loading />
       ) : tokenInfos.length === 0 ? (
-        <div className="no-data-message flex-center">{noDataMessage}</div>
+        <div className="no-data-message portkey-ui-flex-center">{noDataMessage}</div>
       ) : (
         tokenInfos.map((item) => renderItem(item))
       )}

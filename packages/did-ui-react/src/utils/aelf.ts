@@ -14,6 +14,15 @@ export function isAelfAddress(value?: string) {
   }
 }
 
+/**
+ *
+ * @param address
+ * @returns boolean
+ */
+export const isTronAddress = (address: string) => {
+  return address.length === 34 && address.startsWith('T');
+};
+
 export const getChainNumber = (chainId: string) => {
   return AElf.utils.chainIdConvertor.base58ToChainId(chainId);
 };
@@ -71,13 +80,17 @@ export function isDIDAelfAddress(value?: string) {
     const arr = value.split('_');
     const res = arr[0].length > arr[1].length ? arr[0] : arr[1];
     try {
-      return !!AElf.utils.decodeAddressRep(res);
+      const decodeStr = AElf.utils.decodeAddressRep(res);
+      return !!decodeStr && Buffer.from(decodeStr, 'hex').length === 32 && !isTronAddress(value);
+      // return !!AElf.utils.decodeAddressRep(res);
     } catch {
       return false;
     }
   }
   try {
-    return !!AElf.utils.decodeAddressRep(value);
+    const decodeStr = AElf.utils.decodeAddressRep(value);
+    return !!decodeStr && Buffer.from(decodeStr, 'hex').length === 32 && !isTronAddress(value);
+    // return !!AElf.utils.decodeAddressRep(value);
   } catch {
     return false;
   }
@@ -96,6 +109,14 @@ export function getAelfAddress(value = '') {
   }
   return value;
 }
+
+/**
+ *  check is the same address
+ * @param address1
+ * @param address2
+ * @returns
+ */
+export const isSameAddresses = (address1: string, address2: string): boolean => address1.trim() === address2.trim();
 
 export const getChainIdByAddress = (address: string, chainType: ChainType = 'aelf') => {
   // if (!isAddress(address)) throw Error(`${address} is not address`);

@@ -14,7 +14,7 @@ import { isEqual, mixRampBuyShow } from '../../../../utils';
 import { useReceive } from '../../../../hooks/useReceive';
 import { isPotentialNumber } from '../../../../../../utils/reg';
 import { formatAmountShow } from '../../../../../../utils/converter';
-import AutoWidthInput from '../AutoWidthInput';
+// import AutoWidthInput from '../AutoWidthInput';
 import CommonInput from '../../../../../CommonInput';
 import CommonModal from '../../../../../CommonModal';
 import { useDebounce } from '../../../../../../hooks/debounce';
@@ -22,6 +22,7 @@ import { ChainId } from '@portkey/types';
 import { singleMessage } from '../../../../../CustomAnt';
 import { SERVICE_UNAVAILABLE_TEXT } from '../../../../../../constants/ramp';
 import './index.less';
+import AutoWidthInput from '../../../../../AutoWidthInput';
 
 export interface IRampBuyProp {
   selectedCrypto: IRampCryptoItem;
