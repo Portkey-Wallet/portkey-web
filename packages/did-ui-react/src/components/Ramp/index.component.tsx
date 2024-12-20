@@ -88,7 +88,6 @@ export default function RampMain({
     }
   });
   const list = useMemo(() => {
-    return buyCryptoList;
     if (page === RampType.BUY) {
       return buyCryptoList;
     }
