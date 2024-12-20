@@ -1,11 +1,11 @@
-import { aelf, wallet } from '@portkey/utils';
-import { IAssetItemType, IAssetToken, ITransferLimitItem, OperationTypeEnum } from '@portkey/services';
+import { aelf } from '@portkey/utils';
+import { IAssetToken, OperationTypeEnum } from '@portkey/services';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
-import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress, isDIDAelfAddress } from '../../utils/aelf';
-import { AddressCheckError, GuardianApprovedItem } from '../../types';
+import { isCrossChain } from '../../utils/aelf';
+import { GuardianApprovedItem } from '../../types';
 import { ChainId, INftInfoType, SeedTypeEnum } from '@portkey/types';
 import ToAccount from './components/ToAccount';
 import {
@@ -22,7 +22,7 @@ import { divDecimals, formatAmountShow, timesDecimals } from '../../utils/conver
 import { ZERO } from '../../constants/misc';
 import SendPreview from './components/SendPreview';
 import './index.less';
-import { useCheckSuffix, useDefaultToken } from '../../hooks/assets';
+import { useDefaultToken } from '../../hooks/assets';
 import { usePortkey } from '../context';
 import { DEFAULT_DECIMAL } from '../../constants/assets';
 import crossChainTransferV2 from '../../utils/sandboxUtil/crossChainTransferV2';
@@ -50,8 +50,8 @@ import useLockCallback from '../../hooks/useLockCallback';
 import { getTransactionFee } from '../../utils/sandboxUtil/getTransactionFee';
 import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
 import { useEffectOnce } from 'react-use';
-import { WarningKey } from '../../constants/error';
-import { INetworkItem } from './components/SelectNetwork';
+import { Warning1Arr, WarningKey } from '../../constants/error';
+import SelectNetwork, { INetworkItem } from './components/SelectNetwork';
 import { TransferTypeEnum } from '../../types/send';
 import { useCrossTransferByEtransfer } from '../../hooks/useWithdrawByETransfer';
 import useGetEBridgeConfig from '../../hooks/eBridge';
@@ -59,7 +59,39 @@ import { EBridge } from '../../utils/eBridge';
 import Loading from '../Loading';
 import { getLimitTips, getSmallerValue } from '../../utils/send';
 import { isNFT } from '../../utils/assets';
+import CommonPromptCard, { PromptCardType } from '../CommonPromptCard';
+import SendModalTip from './components/SendModalTip';
 
+export const AdsCheckWarningTip = {
+  [WarningKey.INVALID_ADDRESS]: {
+    type: PromptCardType.ERROR,
+    desc: `You can't send assets to this address because it's not a valid address, or is not supported at the moment.`,
+  },
+  [WarningKey.CROSS_CHAIN]: {
+    type: PromptCardType.WARNING,
+    desc: `You have not used this address recently. Ensure it is the correct address before proceeding.`,
+  },
+  [WarningKey.SAME_ADDRESS]: {
+    type: PromptCardType.ERROR,
+    desc: `You can't send to this address because it's the same as the sending address.`,
+  },
+  [WarningKey.STRANGE_ADDRESS]: {
+    type: PromptCardType.WARNING,
+    desc: `You have not used this address recently. Ensure it is the correct address before proceeding.`,
+  },
+  [WarningKey.DAPP_CHAIN_TO_NO_AFFIX_ADDRESS_ELF]: {
+    type: PromptCardType.WARNING,
+    desc: `The address you've entered appears to be for an exchange. Please confirm before proceeding. Sending tokens to the wrong address may result in the loss of your assets.`,
+  },
+  [WarningKey.MAIN_CHAIN_TO_NO_AFFIX_ADDRESS_ELF]: {
+    type: PromptCardType.WARNING,
+    desc: `The address entered seems to be for an exchange. Please confirm if it's one of the supported ones before continuing to avoid losing your asset.`,
+  },
+  [WarningKey.MAKE_SURE_SUPPORT_PLATFORM]: {
+    type: PromptCardType.INFO,
+    desc: `Make sure that your receiving platform supports the token and network.`,
+  },
+};
 export interface SendProps {
   assetItem: IAssetToken & INftInfoType & TokenItemShowType & NFTItemBaseExpand;
   extraConfig?: SendExtraConfig;
@@ -110,19 +142,21 @@ function SendContent({
     usePortkeyAsset();
   console.log('tokenListInfoV2 is::', tokenListInfoV2, 'assetItem', assetItem, 'extraConfig', extraConfig);
   const [{ networkType, chainType, sandboxId }] = usePortkey();
-  const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Amount);
+  const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNft = useMemo(() => isNFT(assetItem.symbol), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
   const [inputStep, setInputStep] = useState<InputStepEnum>(InputStepEnum.input);
   const [warning, setWarning] = useState<WarningKey | undefined>();
+  // network list
   const [chainList, setChainList] = useState<INetworkItem[]>([]);
   const [targetNetwork, setTargetNetwork] = useState<INetworkItem>();
+  const [addressType, setAddressType] = useState<AddressTypeEnum>(AddressTypeEnum.NON_EXCHANGE);
   const recommendEBridgeInfo = {};
   const recommendEtransferinfo = {};
 
   const [isCheckAddressFinish, setIsCheckAddressFinish] = useState(false);
-
+  const [modalTip, setModalTip] = useState<boolean>(false);
   const tokenInfo: AssetTokenExpand = useMemo(() => {
     if (isNft) {
       return {
@@ -263,7 +297,6 @@ function SendContent({
     extraConfig?.toAccount || { address: '2dsSgFPvvLTwGXZVCzLwgRJFNtusceRAmcwbAmArjHtJjtEG9u' },
   );
 
-  const [errorMsg, setErrorMsg] = useState('');
   const [tipMsg, setTipMsg] = useState('');
 
   // const [balance, setBalance] = useState(extraConfig?.balance || '');
@@ -271,31 +304,60 @@ function SendContent({
   const defaultToken = useDefaultToken(tokenInfo.chainId);
 
   const btnDisabled = useMemo(() => {
-    if (toAccount.address === '' || (stage === Stage.Amount && amount === '')) return true;
-    return false;
-  }, [amount, stage, toAccount.address]);
-
-  const isValidSuffix = useCheckSuffix();
-  const caAddress = useMemo(() => caInfo?.[tokenInfo.chainId as ChainId]?.caAddress || '', [caInfo, tokenInfo.chainId]);
-
-  const validateToAddress = useCallback(
-    (value: { name?: string; address: string } | undefined) => {
-      if (!value) return false;
-      const suffix = getAddressChainId(toAccount.address, tokenInfo.chainId);
-      if (!isDIDAddress(value.address) || !isValidSuffix(suffix)) {
-        setErrorMsg(AddressCheckError.recipientAddressIsInvalid);
-        return false;
-      }
-      const selfAddress = caInfo?.[tokenInfo.chainId as ChainId]?.caAddress || '';
-      if (wallet.isEqAddress(selfAddress, getAelfAddress(toAccount.address)) && suffix === tokenInfo.chainId) {
-        setErrorMsg(AddressCheckError.equalIsValid);
-        return false;
-      }
-      setErrorMsg('');
+    if (
+      toAccount.address === '' ||
+      (stage === Stage.Amount && amount === '') ||
+      (warning && Warning1Arr.includes(warning))
+    )
       return true;
-    },
-    [caInfo, isValidSuffix, toAccount.address, tokenInfo.chainId],
-  );
+    return false;
+  }, [amount, stage, toAccount.address, warning]);
+
+  const adsInputBtnTitle = useMemo(() => {
+    if (warning === WarningKey.MAIN_CHAIN_TO_NO_AFFIX_ADDRESS_ELF) return 'Confirm and continue';
+    return 'Next';
+  }, [warning]);
+
+  const modalTipContent = useMemo(() => {
+    return {
+      dAppChainToExchange: {
+        title: `Unsupported: Direct Transfer from dAppChain to Exchange`,
+        content: `Currently, ${tokenInfo.symbol} tokens can only be transferred to an exchange via the aelf MainChain. Please transfer them to your MainChain address first before sending them to the exchange.`,
+        buttonGroupType: 'col',
+        buttons: [
+          {
+            type: 'primary',
+            onClick: () => {
+              //
+            },
+            content: 'Send to my aelf MainChain',
+          },
+          {
+            type: 'outline',
+            onClick: () => {
+              setModalTip(false);
+            },
+            content: 'Cancel',
+          },
+        ],
+      },
+      eBridge: {
+        title: `Confirm transfer with eBridge`,
+        content: `To protect your assets, this transfer will be processed via eBridge, a 3rd-party decentralized platform. Learn more`,
+        buttons: [
+          {
+            type: 'primary',
+            onClick: () => {
+              //
+            },
+            content: 'Agree and continue',
+          },
+        ],
+      },
+    };
+  }, [tokenInfo.symbol]);
+
+  const caAddress = useMemo(() => caInfo?.[tokenInfo.chainId as ChainId]?.caAddress || '', [caInfo, tokenInfo.chainId]);
 
   const getTranslationInfo = useCallback(
     async (num = ''): Promise<string | void> => {
@@ -355,7 +417,7 @@ function SendContent({
         if (!managementAccount?.privateKey || !caHash) return;
         const _transferType = TransferTypeEnum.GENERAL_SAME_CHAIN;
 
-        setLoading(true);
+        // setLoading(true);
 
         const chainId = tokenInfo.chainId;
         const chainInfo = await getChain(chainId);
@@ -570,7 +632,7 @@ function SendContent({
       try {
         if (!managementAccount?.privateKey || !caHash) return;
         if (!tokenInfo) throw 'No Symbol info';
-        setLoading(true);
+        // setLoading(true);
 
         // transfer limit check
         const limitRes = await handleCheckTransferLimit();
@@ -586,9 +648,9 @@ function SendContent({
   // const checkManagerSyncState = useCheckManagerSyncState();
   const handleCheckPreview = useCallback(async (): Promise<any> => {
     try {
-      setLoading(true);
-      if (!ZERO.plus(amount).toNumber()) return { checkResult: 'Please input amount' };
-      if (!caHash || !managementAccount?.address) return { checkResult: 'Please Login' };
+      // setLoading(true);
+      if (!ZERO.plus(amount).toNumber()) return 'Please input amount';
+      if (!caHash || !managementAccount?.address) return 'Please Login';
 
       // CHECK 1: manager sync
       const _isManagerSynced = await checkManagerSyncState(tokenInfo.chainId, caHash, managementAccount?.address);
@@ -834,15 +896,24 @@ function SendContent({
     transferType,
   ]);
 
+  const adsCheckWarningRender = useMemo(() => {
+    if (!warning) return null;
+    const _tip = AdsCheckWarningTip[warning];
+    return <CommonPromptCard type={_tip.type} description={_tip.desc} />;
+  }, [warning]);
+
   const StageObj: TypeStageObj = useMemo(
     () => ({
       0: {
-        btnText: 'Next',
+        btnText: adsInputBtnTitle,
         handler: async () => {
-          const res = validateToAddress(toAccount);
+          // const res = validateToAddress(toAccount);
 
-          if (!res) return;
-          if (!toAccount) return;
+          // if (!res) return;
+          // if (!toAccount) return;
+          if (warning === WarningKey.DAPP_CHAIN_TO_NO_AFFIX_ADDRESS_ELF && addressType === AddressTypeEnum.EXCHANGE) {
+            return;
+          }
           if (isCrossChain(toAccount.address, tokenInfo?.chainId ?? 'AELF')) {
             return await modalMethod({
               width: 320,
@@ -858,11 +929,29 @@ function SendContent({
           }
           btnOutOfFocus();
           setStage(Stage.Amount);
+          setInputStep(InputStepEnum.show);
         },
         backFun: () => {
           onCancel?.();
         },
-        element: (
+        element: toAccount.address ? (
+          <div className="address-warning-warp portkey-ui-flex-column-center">
+            {isCheckAddressFinish && adsCheckWarningRender}
+            {warning === WarningKey.MAIN_CHAIN_TO_NO_AFFIX_ADDRESS_ELF && <SupportedExchange />}
+            {warning === WarningKey.DAPP_CHAIN_TO_NO_AFFIX_ADDRESS_ELF && (
+              <AddressTypeSelect value={addressType} onChangeValue={setAddressType} />
+            )}
+            {warning === WarningKey.MAKE_SURE_SUPPORT_PLATFORM && (
+              <SelectNetwork
+                networkList={chainList}
+                onSelect={(item) => {
+                  setTargetNetwork(item);
+                  setStage(Stage.Amount);
+                }}
+              />
+            )}
+          </div>
+        ) : (
           <AddressSelector
             networkType={networkType}
             onClick={(account: IClickAddressProps) => {
@@ -902,12 +991,11 @@ function SendContent({
           setStage(Stage.Address);
           setAmount('');
           setTipMsg('');
+          setInputStep(InputStepEnum.input);
           oneTimeApprovalList.current = [];
         },
         element: (
           <>
-            <AddressTypeSelect value={AddressTypeEnum.NON_EXCHANGE} onChangeValue={() => console.log('aa')} />
-            <SupportedExchange />
             <AmountInput
               type={isNft ? 'nft' : 'token'}
               fromAccount={{
@@ -969,26 +1057,30 @@ function SendContent({
       },
     }),
     [
+      adsInputBtnTitle,
+      toAccount,
+      isCheckAddressFinish,
+      adsCheckWarningRender,
+      warning,
+      addressType,
+      chainList,
       networkType,
       tokenInfo,
+      isNft,
       caInfo,
       managementAccount?.privateKey,
-      toAccount,
       amount,
       usdAmount,
       getTranslationInfo,
       errorMessage,
       onPressMax,
       accountInfo?.nickName,
-      defaultFee.crossChain,
-      handleCheckPreview,
-      isNft,
-      onCancel,
-      sendHandler,
-      btnOutOfFocus,
       txFee,
-      validateToAddress,
-      setBalance,
+      defaultFee.crossChain,
+      btnOutOfFocus,
+      onCancel,
+      handleCheckPreview,
+      sendHandler,
     ],
   );
 
@@ -1021,11 +1113,29 @@ function SendContent({
         />
       )}
       <div className="stage-ele">{StageObj[stage].element}</div>
-      <div className="btn-wrap">
-        <ThrottleButton disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
-          {StageObj[stage].btnText}
-        </ThrottleButton>
-      </div>
+      {stage === Stage.Address && warning === WarningKey.MAKE_SURE_SUPPORT_PLATFORM ? null : (
+        <div className="btn-wrap">
+          <ThrottleButton disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
+            {StageObj[stage].btnText}
+          </ThrottleButton>
+        </div>
+      )}
+      <SendModalTip
+        open={modalTip}
+        onClose={() => setModalTip(false)}
+        title="sss"
+        content="dddd"
+        buttonGroupType="col"
+        buttons={[
+          {
+            type: 'primary',
+            onClick: () => {
+              //
+            },
+            content: 'fas',
+          },
+        ]}
+      />
 
       <GuardianApprovalModal
         open={approvalVisible}

@@ -13,7 +13,7 @@ import {
   isSameAddresses,
 } from '../../../../utils';
 import { IAssetToken } from '@portkey/services';
-import { INftInfoType } from '@portkey/types';
+import { ChainId, INftInfoType } from '@portkey/types';
 import { Warning1Arr, WarningKey } from '../../../../constants/error';
 import { useCheckSuffix, useDefaultToken } from '../../../../hooks/assets';
 import { useDebounceCallback } from '../../../../hooks/debounce';
@@ -116,7 +116,8 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
 
       // include chainId
       if (v.includes('_') && selectedToken) {
-        const suffix = getAddressChainId(v, selectedToken?.chainId);
+        const suffix = getAddressChainId(v, selectedToken?.chainId as ChainId);
+        console.log('checkAddressByFE _', v);
 
         // same address
         if (isSameAddresses(getAelfAddress(caAddress), getAelfAddress(v)) && suffix === selectedToken?.chainId) {
@@ -126,7 +127,7 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
           // invalid chainId
           setCheckedPass(false);
           setWarning(WarningKey.INVALID_ADDRESS);
-        } else if (isCrossChain(v, selectedToken?.chainId || MAIN_CHAIN_ID)) {
+        } else if (isCrossChain(v, (selectedToken?.chainId || MAIN_CHAIN_ID) as ChainId)) {
           // cross chain
           setCheckedPass(false);
           setWarning(WarningKey.CROSS_CHAIN);
@@ -165,16 +166,7 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
       setCheckFinish(true);
       return true;
     },
-    [
-      caAddress,
-      defaultToken.symbol,
-      isValidChainId,
-      selectedToken?.chainId,
-      selectedToken?.symbol,
-      setCheckFinish,
-      setToAccount,
-      setWarning,
-    ],
+    [caAddress, defaultToken.symbol, isValidChainId, selectedToken, setCheckFinish, setToAccount, setWarning],
   );
 
   const getNetworkList = useCallback(
@@ -190,7 +182,7 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
         setIsChecking(true);
         const { data, code } = await did.services.send.getSendNetworkList({
           symbol: selectedToken?.symbol || '',
-          chainId: selectedToken?.chainId || 'AELF',
+          chainId: (selectedToken?.chainId || 'AELF') as ChainId,
           toAddress,
         });
 
