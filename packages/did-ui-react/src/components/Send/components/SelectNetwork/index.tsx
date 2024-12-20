@@ -26,7 +26,10 @@ export default function SelectNetwork({
     (item: INetworkItem) => {
       const recommendToolItem = item?.serviceList?.[0];
       return (
-        <div key={item.name} className="network-item portkey-ui-flex-center gap-8" onClick={() => onSelect(item)}>
+        <div
+          key={item.name}
+          className="network-item portkey-ui-flex-center gap-8 portkey-ui-cursor-pointer"
+          onClick={() => onSelect(item)}>
           <TokenImageDisplay className="network-icon" width={42} symbol={item.name} src={item.imageUrl} />
           <div className="network-info portkey-ui-flex-between-center portkey-ui-flex-1 gap-8">
             <div className="info-name">{item.name}</div>
