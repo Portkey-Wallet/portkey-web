@@ -88,10 +88,10 @@ export default function TokenAllowanceDetailMain({
       <div className="approval-token-wrapper">
         {approvedList && approvedList.length > 0 && (
           <>
-            <span className="title">Approvals</span>
-            <span className="subtitle">
+            <div className="title">Approvals</div>
+            <div className="subtitle">
               The dApp won&apos;t ask for your approval for the tokens below until their allowance is used up.
-            </span>
+            </div>
             {approvedList.map((item) => (
               <div key={item.symbol} className="approve-item">
                 <div className="token-detail">
@@ -116,10 +116,10 @@ export default function TokenAllowanceDetailMain({
 
         {revokeList && revokeList.length > 0 && (
           <>
-            <span className="title">Revoked</span>
-            <span className="subtitle">
+            <div className="title">Revoked</div>
+            <div className="subtitle">
               To re-approve token allowance, go to the dApp site and initiate a transaction of the token type.
-            </span>
+            </div>
             {revokeList.map((item) => (
               <div key={item.symbol} className="revoked-item">
                 <div className="token-detail">
