@@ -246,7 +246,7 @@ function SendContent({
 
   const [amount, setAmount] = useState(extraConfig?.amount || '');
   const [usdAmount, setUSDAmount] = useState('');
-  const [balance, setBalance] = useState(extraConfig?.balance || '');
+  // const [balance, setBalance] = useState(extraConfig?.balance || '');
 
   const defaultToken = useDefaultToken(tokenInfo.chainId);
 
@@ -704,6 +704,7 @@ function SendContent({
       btnOutOfFocus,
       onCancel,
       handleCheckPreview,
+      setBalance,
       sendHandler,
     ],
   );
