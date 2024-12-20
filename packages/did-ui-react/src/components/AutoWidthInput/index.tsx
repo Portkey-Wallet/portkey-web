@@ -1,13 +1,14 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useState, useLayoutEffect } from 'react';
 import './index.less';
-import { ErrorType } from '../../../../types';
+import { ErrorType } from '../Ramp/types';
+// import { ErrorType } from '../../../../../../../types';
 
 interface AutoWidthInputProps {
   placeholder?: string;
   onAmountInput?: (value: string) => void;
   amount?: string;
   amountError?: ErrorType;
-  textInputRef?: React.RefObject<HTMLInputElement>;
+  textInputRef: React.RefObject<HTMLInputElement>;
 }
 
 const AutoWidthInput: React.FC<AutoWidthInputProps> = ({
@@ -25,8 +26,12 @@ const AutoWidthInput: React.FC<AutoWidthInputProps> = ({
     if (context && textInputRef?.current) {
       const style = window.getComputedStyle(textInputRef.current);
       context.font = `${style.fontWeight} ${style.fontSize} ${style.fontFamily}`;
-      context.letterSpacing = style.letterSpacing;
-      const textWidth = context.measureText(text).width;
+      const letterSpacing = parseFloat(style.letterSpacing || '0');
+      let textWidth = 0;
+      for (const char of text) {
+        textWidth += context.measureText(char).width + letterSpacing;
+      }
+      // const textWidth = context.measureText(text).width;
       const paddingLeft = parseFloat(style.paddingLeft || '0');
       const paddingRight = parseFloat(style.paddingRight || '0');
       const borderLeftWidth = parseFloat(style.borderLeftWidth || '0');
@@ -36,7 +41,7 @@ const AutoWidthInput: React.FC<AutoWidthInputProps> = ({
     return 0;
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const text = amount || placeholder || '';
     const width = measureTextWidth(text);
     setInputWidth(`${width}px`);

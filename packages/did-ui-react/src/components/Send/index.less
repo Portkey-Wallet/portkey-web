@@ -195,6 +195,7 @@
       text-align: center;
       color: var(--sds-color-text-default-default);
       border: 1px solid var(--sds-color-border-neutral-secondary);
+      cursor: pointer;
     }
 
     .asset.nft {
@@ -281,9 +282,14 @@
 
       &:focus-within,
       &:focus {
+        border-width: 0;
         input {
           display: block;
         }
+      }
+      &:focus-visible {
+        border-width: 0;
+        outline: 0;
       }
       .need-convert {
         transform: translateY(-8px);

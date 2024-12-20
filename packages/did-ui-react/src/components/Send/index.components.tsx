@@ -12,7 +12,7 @@ import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedAct
 import AddressSelector from './components/AddressSelector';
 import AmountInput from './components/AmountInput';
 import { WalletError, handleErrorMessage, modalMethod, setLoading } from '../../utils';
-import { timesDecimals } from '../../utils/converter';
+import { formatAmountShow, timesDecimals } from '../../utils/converter';
 import { ZERO } from '../../constants/misc';
 import SendPreview from './components/SendPreview';
 import './index.less';
@@ -41,6 +41,12 @@ import { AddressTypeEnum, AddressTypeSelect } from '../../components/AddressType
 import ToAddressInput from './components/ToAddressInput';
 import SupportedExchange from './components/SupportedExchange';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
+import { useDebounce } from '../../hooks/debounce';
+import useLockCallback from '../../hooks/useLockCallback';
+import { divDecimals } from '@etransfer/utils';
+import { getTransactionFee } from '../../utils/sandboxUtil/getTransactionFee';
+import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
+import { useEffectOnce } from 'react-use';
 
 export interface SendProps {
   assetItem: IAssetItemType;
@@ -87,12 +93,124 @@ function SendContent({
   onModifyLimit,
   onModifyGuardians,
 }: SendProps) {
-  const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId }] = usePortkeyAsset();
+  const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId, tokenListInfoV2 }] =
+    usePortkeyAsset();
+  console.log('tokenListInfoV2 is::', tokenListInfoV2, 'assetItem', assetItem, 'extraConfig', extraConfig);
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Amount);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
+
+  // revamp app logic start
+  const price = useTokenPrice(assetItem.symbol);
+  const assetInfo: AssetTokenExpand = useMemo(
+    () => ({
+      chainId: assetItem.chainId as ChainId,
+      decimals: isNFT ? assetItem.nftInfo?.decimals || '0' : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
+      address: (isNFT ? assetItem?.nftInfo?.tokenContractAddress : assetItem?.tokenInfo?.tokenContractAddress) || '',
+      symbol: assetItem.symbol,
+      name: assetItem.symbol,
+      imageUrl: isNFT ? assetItem.nftInfo?.imageUrl : '',
+      alias: isNFT ? assetItem.nftInfo?.alias : '',
+      tokenId: isNFT ? assetItem.nftInfo?.tokenId : '',
+      balance: isNFT ? assetItem.nftInfo?.balance : assetItem.tokenInfo?.balance,
+      balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
+      isSeed: assetItem.nftInfo?.isSeed,
+      seedType: assetItem.nftInfo?.seedType,
+      label: assetItem?.label,
+    }),
+    [assetItem, isNFT],
+  );
+  // const assetInfo = useMemo(() => (assetItem.nftInfo ? assetItem.nftInfo : assetItem.tokenInfo), [assetItem]);
+  const checkManagerSyncState = useCheckManagerSyncState();
+  const [sendNumber, setSendNumber] = useState<string>(''); // tokenNumber  like 100
+  const [sendUsdNumber, setSendUsdNumber] = useState<string>(''); // tokenNumber  like 100
+  const debounceSendNumber = useDebounce(sendNumber, 500);
+  const [maxAmountSend, setMaxAmountSend] = useState<string>(
+    formatAmountShow(divDecimals(assetInfo?.balance, assetInfo?.decimals)),
+  );
+  const maxAmountSendUsd = useMemo(() => ZERO.plus(maxAmountSend).times(price).toFixed(2), [maxAmountSend, price]);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [balance, setBalance] = useState<string>(assetInfo?.balance || '');
+  const { max: maxFee, crossChain: crossFee } = useFeeByChainId(assetInfo?.chainId);
+  // const { getEtransferMaxFee } = useEtransferFee(assetInfo?.chainId);
+  const onGetMaxAmount = useLockCallback(async () => {
+    if (!balance) {
+      return setMaxAmountSend('0');
+    }
+
+    const balanceBN = divDecimals(balance, assetInfo?.decimals);
+    const balanceStr = balanceBN.toString();
+
+    // balance 0
+    if (divDecimals(balance, assetInfo?.decimals).isEqualTo(0)) {
+      return setMaxAmountSend('0');
+    }
+
+    // if other tokens
+    if (assetItem?.symbol !== defaultToken.symbol) {
+      return setMaxAmountSend(divDecimals(balance, assetInfo?.decimals || '0').toFixed());
+    }
+
+    // elf <= maxFee
+    if (divDecimals(balance, assetInfo?.decimals).isLessThanOrEqualTo(maxFee)) {
+      return setMaxAmountSend(divDecimals(balance, assetInfo?.decimals || '0').toFixed());
+    }
+
+    // const isAELFCross = !!(selectedToContact.chainId && selectedToContact.chainId !== assetInfo.chainId);
+    let fee;
+    try {
+      fee = await getTranslationInfo();
+      // fee = await getTransactionFee(isAELFCross, divDecimals(balance, assetInfo?.decimals || 0).toFixed());
+    } catch (error) {
+      fee = '0';
+      console.log('FEE ERROR');
+    }
+    const etransferFee = 0;
+    // Todo etransfer logic ?
+    // const etransferFee = await getEtransferMaxFee({ amount: balanceStr, toInfo, tokenInfo: assetInfo });
+
+    const _max = fee
+      ? balanceBN.minus(etransferFee)
+      : ZERO.plus(divDecimals(balance, assetInfo.decimals)).minus(maxFee).minus(etransferFee);
+    console.log('cal max', _max.gt(ZERO) ? _max.toFixed() : '0');
+    setMaxAmountSend(_max.gt(ZERO) ? _max.toFixed() : '0');
+  }, [balance, assetInfo]);
+  const onPressMax = useCallback(async () => {
+    try {
+      // setLoading(true);
+      // check is SYNCHRONIZING
+      const _isManagerSynced = await checkManagerSyncState(
+        (assetItem.chainId as ChainId) || 'AELF',
+        caHash || '',
+        managementAccount?.address || '',
+      );
+      console.log(
+        '_isManagerSynced is::',
+        _isManagerSynced,
+        'maxAmountSend',
+        maxAmountSend,
+        'maxAmountSendUsd',
+        maxAmountSendUsd,
+      );
+      if (!_isManagerSynced) {
+        return singleMessage.warn(TransactionError.SYNCHRONIZING);
+      }
+
+      setSendNumber(maxAmountSend);
+      setSendUsdNumber(maxAmountSendUsd);
+      setErrorMessage('');
+    } catch (err) {
+      console.log('max err!!', err);
+    } finally {
+      // setLoading(false);
+    }
+  }, [checkManagerSyncState, assetItem.chainId, caHash, managementAccount?.address, maxAmountSend, maxAmountSendUsd]);
+  useEffectOnce(() => {
+    onGetMaxAmount();
+  });
+  // revamp app logic end
 
   const tokenInfo: AssetTokenExpand = useMemo(
     () => ({
@@ -121,7 +239,7 @@ function SendContent({
   const [tipMsg, setTipMsg] = useState('');
 
   const [amount, setAmount] = useState(extraConfig?.amount || '');
-  const [balance, setBalance] = useState(extraConfig?.balance || '');
+  // const [balance, setBalance] = useState(extraConfig?.balance || '');
 
   const defaultToken = useDefaultToken(tokenInfo.chainId);
 
@@ -352,7 +470,7 @@ function SendContent({
     await sendTransfer();
   }, [caHash, handleCheckTransferLimit, managementAccount?.privateKey, sendTransfer, tokenInfo]);
 
-  const checkManagerSyncState = useCheckManagerSyncState();
+  // const checkManagerSyncState = useCheckManagerSyncState();
   const handleCheckPreview = useCallback(async () => {
     try {
       setLoading(true);
@@ -507,15 +625,19 @@ function SendContent({
               toAccount={{
                 address: toAccount.address,
               }}
-              value={amount}
-              errorMsg={tipMsg}
+              value={sendNumber}
+              usdValue={sendUsdNumber}
+              setValue={setSendNumber}
+              setUsdValue={setSendUsdNumber}
               token={tokenInfo}
               onChange={({ amount, balance }) => {
-                setAmount(amount);
+                setSendNumber(amount);
                 setBalance(balance);
               }}
               getTranslationInfo={getTranslationInfo}
               setErrorMsg={setTipMsg}
+              warningTip={errorMessage}
+              onPressMax={onPressMax}
             />
           </>
         ),
@@ -555,23 +677,26 @@ function SendContent({
       },
     }),
     [
+      networkType,
+      tokenInfo,
+      isNFT,
+      caInfo,
+      managementAccount?.privateKey,
+      toAccount,
+      sendNumber,
+      sendUsdNumber,
+      getTranslationInfo,
+      errorMessage,
+      onPressMax,
       accountInfo?.nickName,
       amount,
-      caInfo,
-      defaultFee.crossChain,
-      getTranslationInfo,
-      handleCheckPreview,
-      isNFT,
-      managementAccount?.privateKey,
-      networkType,
-      onCancel,
-      sendHandler,
-      btnOutOfFocus,
-      tipMsg,
-      toAccount,
-      tokenInfo,
       txFee,
+      defaultFee.crossChain,
       validateToAddress,
+      btnOutOfFocus,
+      onCancel,
+      handleCheckPreview,
+      sendHandler,
     ],
   );
 
