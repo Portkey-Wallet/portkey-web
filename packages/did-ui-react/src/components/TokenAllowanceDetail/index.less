@@ -27,11 +27,15 @@
   }
 
   .token-info-header-wrapper {
-    margin: 24px 0;
+    margin-bottom: 24px;
     .token-image {
       width: 64px;
       height: 64px;
       border-radius: 32px;
+    }
+    .portkey-ui-show-image {
+      width: 80px;
+      height: 80px;
     }
     .token-name {
       margin-top: 8px;
@@ -68,8 +72,6 @@
   }
 
   .approval-token-wrapper {
-    display: flex;
-    flex-direction: column;
     padding: 0 16px;
 
     .title {
@@ -99,6 +101,7 @@
       background-color: var(--sds-color-background-default-secondary);
       border-radius: 8px;
       padding: 0 16px;
+      margin-top: 8px;
 
       .token-detail {
         display: flex;
@@ -126,11 +129,10 @@
     }
 
     .revoked-item {
-      display: flex;
-      flex-direction: column;
       background-color: var(--sds-color-background-default-secondary);
       border-radius: 8px;
       padding: 0 16px;
+      margin-bottom: 20px;
 
       &:not(:first-child) {
         margin-top: 12px;
