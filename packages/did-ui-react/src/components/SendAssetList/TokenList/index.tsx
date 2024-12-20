@@ -56,7 +56,7 @@ export default function SendTokenList({
   return (
     <div className="select-send-token-list">
       {loading ? (
-        <Loading />
+        <Loading width={24} height={24} isDarkThemeWhiteLoading />
       ) : tokenInfos.length === 0 ? (
         <div className="no-data-message portkey-ui-flex-center">{noDataMessage}</div>
       ) : (

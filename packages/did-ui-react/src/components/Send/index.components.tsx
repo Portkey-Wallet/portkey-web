@@ -1,14 +1,20 @@
 import { aelf, wallet } from '@portkey/utils';
-import { IAssetItemType, ITransferLimitItem, OperationTypeEnum } from '@portkey/services';
+import { IAssetItemType, IAssetToken, ITransferLimitItem, OperationTypeEnum } from '@portkey/services';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { getAddressChainId, getAelfAddress, isCrossChain, isDIDAddress } from '../../utils/aelf';
 import { AddressCheckError, GuardianApprovedItem } from '../../types';
-import { ChainId, SeedTypeEnum } from '@portkey/types';
+import { ChainId, INftInfoType, SeedTypeEnum } from '@portkey/types';
 import ToAccount from './components/ToAccount';
-import { AssetTokenExpand, IClickAddressProps, TransactionError, the2ThFailedActivityItemType } from '../types/assets';
+import {
+  AssetTokenExpand,
+  IClickAddressProps,
+  NFTItemBaseExpand,
+  TokenItemShowType,
+  TransactionError,
+} from '../types/assets';
 import AddressSelector from './components/AddressSelector';
 import AmountInput from './components/AmountInput';
 import { WalletError, handleErrorMessage, modalMethod, setLoading } from '../../utils';
@@ -19,7 +25,6 @@ import './index.less';
 import { useCheckSuffix, useDefaultToken } from '../../hooks/assets';
 import { usePortkey } from '../context';
 import { DEFAULT_DECIMAL } from '../../constants/assets';
-import crossChainTransfer, { intervalCrossChainTransfer } from '../../utils/sandboxUtil/crossChainTransfer';
 import crossChainTransferV2 from '../../utils/sandboxUtil/crossChainTransferV2';
 import { useFeeByChainId } from '../context/PortkeyAssetProvider/hooks/txFee';
 import sameChainTransfer from '../../utils/sandboxUtil/sameChainTransfer';
@@ -32,7 +37,6 @@ import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
 import { getChain } from '../../hooks/useChainInfo';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
-import { Modal } from '../CustomAnt';
 import GuardianApprovalModal from '../GuardianApprovalModal';
 import ThrottleButton from '../ThrottleButton';
 import { getOperationDetails } from '../utils/operation.util';
@@ -43,9 +47,10 @@ import SupportedExchange from './components/SupportedExchange';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
 import { WarningKey } from '../../constants/error';
 import { INetworkItem } from './components/SelectNetwork';
+import { isNFT } from '../../utils/assets';
 
 export interface SendProps {
-  assetItem: IAssetItemType;
+  assetItem: IAssetToken & INftInfoType & TokenItemShowType & NFTItemBaseExpand;
   extraConfig?: SendExtraConfig;
   className?: string;
   wrapperStyle?: React.CSSProperties;
@@ -93,31 +98,48 @@ function SendContent({
   const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Amount);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
-  const isNFT = useMemo(() => Boolean(assetItem.nftInfo), [assetItem]);
+  const isNft = useMemo(() => isNFT(assetItem.symbol), [assetItem]);
   const [txFee, setTxFee] = useState<string>();
   const [inputStep, setInputStep] = useState<InputStepEnum>(InputStepEnum.input);
   const [warning, setWarning] = useState<WarningKey | undefined>();
   const [chainList, setChainList] = useState<INetworkItem[]>([]);
   const [isCheckAddressFinish, setIsCheckAddressFinish] = useState(false);
 
-  const tokenInfo: AssetTokenExpand = useMemo(
-    () => ({
-      chainId: assetItem.chainId as ChainId,
-      decimals: isNFT ? assetItem.nftInfo?.decimals || '0' : assetItem.tokenInfo?.decimals ?? DEFAULT_DECIMAL,
-      address: (isNFT ? assetItem?.nftInfo?.tokenContractAddress : assetItem?.tokenInfo?.tokenContractAddress) || '',
-      symbol: assetItem.symbol,
-      name: assetItem.symbol,
-      imageUrl: isNFT ? assetItem.nftInfo?.imageUrl : '',
-      alias: isNFT ? assetItem.nftInfo?.alias : '',
-      tokenId: isNFT ? assetItem.nftInfo?.tokenId : '',
-      balance: isNFT ? assetItem.nftInfo?.balance : assetItem.tokenInfo?.balance,
-      balanceInUsd: isNFT ? '' : assetItem.tokenInfo?.balanceInUsd,
-      isSeed: assetItem.nftInfo?.isSeed,
-      seedType: assetItem.nftInfo?.seedType,
-      label: assetItem?.label,
-    }),
-    [assetItem, isNFT],
-  );
+  const tokenInfo: AssetTokenExpand = useMemo(() => {
+    if (isNft) {
+      return {
+        chainId: assetItem.chainId as ChainId,
+        decimals: assetItem.decimals || '0',
+        address: assetItem.tokenContractAddress,
+        symbol: assetItem.symbol,
+        name: assetItem.symbol,
+        imageUrl: assetItem.imageUrl,
+        alias: assetItem.alias,
+        tokenId: assetItem.tokenId,
+        balance: assetItem.balance,
+        balanceInUsd: '',
+        isSeed: assetItem.isSeed,
+        seedType: assetItem.seedType,
+        label: assetItem?.label,
+      };
+    } else {
+      return {
+        chainId: assetItem.chainId as ChainId,
+        decimals: assetItem.decimals || DEFAULT_DECIMAL,
+        address: assetItem.tokenContractAddress,
+        symbol: assetItem.symbol,
+        name: assetItem.symbol,
+        imageUrl: assetItem.imageUrl,
+        alias: '',
+        tokenId: '',
+        balance: assetItem.balance,
+        balanceInUsd: assetItem.balanceInUsd,
+        isSeed: false,
+        seedType: undefined,
+        label: assetItem.label,
+      };
+    }
+  }, [assetItem, isNft]);
 
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
 
@@ -383,7 +405,7 @@ function SendContent({
       if (!res) return WalletIsNotSecure;
 
       // CHECK 3: insufficient balance
-      if (!isNFT) {
+      if (!isNft) {
         if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
           return TransactionError.TOKEN_NOT_ENOUGH;
         }
@@ -392,7 +414,7 @@ function SendContent({
             return TransactionError.CROSS_NOT_ENOUGH;
           }
         }
-      } else if (isNFT) {
+      } else if (isNft) {
         if (ZERO.plus(amount).isGreaterThan(balance)) {
           return TransactionError.NFT_NOT_ENOUGH;
         }
@@ -428,7 +450,7 @@ function SendContent({
     defaultToken.symbol,
     getTranslationInfo,
     handleCheckTransferLimit,
-    isNFT,
+    isNft,
     managementAccount?.address,
     onModifyGuardians,
     originChainId,
@@ -507,7 +529,7 @@ function SendContent({
             <AddressTypeSelect value={AddressTypeEnum.NON_EXCHANGE} onChangeValue={() => console.log('aa')} />
             <SupportedExchange />
             <AmountInput
-              type={isNFT ? 'nft' : 'token'}
+              type={isNft ? 'nft' : 'token'}
               fromAccount={{
                 address: caInfo?.[tokenInfo.chainId]?.caAddress || '',
                 AESEncryptPrivateKey: managementAccount?.privateKey || '',
@@ -542,7 +564,7 @@ function SendContent({
             isMainnet={networkType === MAINNET}
             caAddress={caInfo?.[tokenInfo.chainId].caAddress || ''}
             nickname={accountInfo?.nickName}
-            type={!isNFT ? 'token' : 'nft'}
+            type={!isNft ? 'token' : 'nft'}
             toAccount={toAccount}
             amount={amount}
             balanceInUsd={tokenInfo.balanceInUsd}
@@ -569,7 +591,7 @@ function SendContent({
       defaultFee.crossChain,
       getTranslationInfo,
       handleCheckPreview,
-      isNFT,
+      isNft,
       managementAccount?.privateKey,
       networkType,
       onCancel,
@@ -588,7 +610,7 @@ function SendContent({
       <TitleWrapper
         leftElement={<CustomSvg type={'BackLeft'} />}
         className="page-title"
-        title={`Send ${!isNFT ? tokenInfo?.label || tokenInfo.symbol : ''}`}
+        title={`Send ${!isNft ? tokenInfo?.label || tokenInfo.symbol : ''}`}
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}
@@ -598,7 +620,7 @@ function SendContent({
           caAddress={caAddress}
           toAccount={toAccount}
           setToAccount={setToAccount}
-          sendType={isNFT ? SendAssetTypeEnum.nft : SendAssetTypeEnum.token}
+          sendType={isNft ? SendAssetTypeEnum.nft : SendAssetTypeEnum.token}
           step={inputStep}
           setStep={setInputStep}
           warning={warning}
