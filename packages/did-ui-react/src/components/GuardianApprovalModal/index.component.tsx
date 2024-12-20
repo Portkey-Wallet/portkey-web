@@ -2,7 +2,7 @@ import clsx from 'clsx';
 import { forwardRef, memo, useCallback, useEffect, useState } from 'react';
 import GuardianApproval from '../GuardianApproval';
 import { GuardianApprovalModalProps } from '.';
-import { errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { errorTip, handleErrorMessage } from '../../utils';
 import { UserGuardianStatus } from '../../types';
 import { formatGuardianValue } from '../Guardian/utils/formatGuardianValue';
 import { getGuardianList } from '../SignStep/utils/getGuardians';
@@ -36,7 +36,6 @@ const GuardianApprovalModalMain = forwardRef(
     const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>(defaultGuardianList || []);
 
     const getData = useCallback(async () => {
-      setLoading(true);
       try {
         const _guardianList = await getGuardianList({
           caHash,
@@ -55,8 +54,6 @@ const GuardianApprovalModalMain = forwardRef(
           isErrorTip,
           onApprovalError,
         );
-      } finally {
-        setLoading(false);
       }
     }, [caHash, isErrorTip, onApprovalError, originChainId, sandboxId]);
 
