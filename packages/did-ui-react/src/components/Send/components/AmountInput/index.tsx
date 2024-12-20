@@ -7,54 +7,61 @@ export default function AmountInput({
   type = 'token',
   toAccount,
   value,
+  usdValue,
   token,
-  errorMsg,
+  warningTip,
   onChange,
   getTranslationInfo,
   setErrorMsg,
+  setValue,
+  setUsdValue,
+  onPressMax,
 }: {
   fromAccount: { address: string; AESEncryptPrivateKey: string };
   type: 'token' | 'nft';
   toAccount: { address: string };
   value: string;
+  usdValue: string;
   token: AssetTokenExpand;
-  errorMsg: string;
+  warningTip?: string;
   onChange: (params: { amount: string; balance: string }) => void;
   getTranslationInfo: (v: string) => void;
   setErrorMsg: (v: string) => void;
+  setValue: (v: string) => void;
+  setUsdValue: (v: string) => void;
+  onPressMax: () => void;
 }) {
   return (
     <>
       <TokenAmountShow
-        type={'nft'}
+        type={type}
         fromAccount={{
-          address: '',
-          AESEncryptPrivateKey: '',
+          address: fromAccount.address,
+          AESEncryptPrivateKey: fromAccount.AESEncryptPrivateKey,
         }}
         toAccount={{
-          address: '',
+          address: toAccount.address,
         }}
         token={token}
-        value={''}
-        errorMsg={''}
-        onChange={function (params: { amount: string; balance: string }): void {
-          throw new Error('Function not implemented.');
-        }}
-        getTranslationInfo={function (num: string) {
-          throw new Error('Function not implemented.');
-        }}
-        setErrorMsg={function (v: string): void {
-          throw new Error('Function not implemented.');
-        }}></TokenAmountShow>
+        value={value}
+        errorMsg={warningTip}
+        onChange={onChange}
+        getTranslationInfo={getTranslationInfo}
+        setErrorMsg={setErrorMsg}
+        setValue={setValue}
+        setUsdValue={setUsdValue}
+        onPressMax={onPressMax}></TokenAmountShow>
       <TokenAmountInput
+        type={type}
         symbol={token.symbol}
+        showErrorInput
+        label={token.label}
+        warningTip={warningTip}
+        value={value}
+        usdValue={usdValue}
         decimals={token.decimals}
-        setValue={function (v: string): void {
-          throw new Error('Function not implemented.');
-        }}
-        setUsdValue={function (v: string): void {
-          throw new Error('Function not implemented.');
-        }}
+        setValue={setValue}
+        setUsdValue={setUsdValue}
       />
     </>
   );

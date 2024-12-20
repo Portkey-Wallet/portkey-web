@@ -71,6 +71,13 @@ export const useUpdateReceiveAndInterval = (type: RampType, params: IUpdateRecei
     const updateSellReceive = async () => {
       try {
         const { cryptoSelectedRef, fiatSelectedRef, cryptoAmountRef } = params;
+        if (!cryptoSelectedRef.current || !fiatSelectedRef.current) {
+          setReceive('');
+          setErrMsg('');
+          setWarningMsg('');
+          stopInterval();
+          return;
+        }
         if (!cryptoAmountRef?.current) {
           setReceive('');
           setErrMsg('');
@@ -120,6 +127,9 @@ export const useUpdateReceiveAndInterval = (type: RampType, params: IUpdateRecei
 
     const checkBuyLimit = async () => {
       const { cryptoSelectedRef, fiatSelectedRef, fiatAmountRef } = params;
+      if (!cryptoSelectedRef.current || !fiatSelectedRef.current) {
+        return;
+      }
       const { minLimit, maxLimit } = await getBuyLimit({
         crypto: cryptoSelectedRef.current.symbol,
         network: cryptoSelectedRef.current.network,
@@ -137,6 +147,9 @@ export const useUpdateReceiveAndInterval = (type: RampType, params: IUpdateRecei
 
     const checkSellLimit = async () => {
       const { cryptoSelectedRef, fiatSelectedRef, cryptoAmountRef } = params;
+      if (!cryptoSelectedRef.current || !fiatSelectedRef.current) {
+        return;
+      }
       const { minLimit, maxLimit } = await getSellLimit({
         crypto: cryptoSelectedRef.current.symbol,
         network: cryptoSelectedRef.current.network,

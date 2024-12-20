@@ -53,7 +53,11 @@ export default function AssetCard({
       <div className="portkey-ui-account-left-element" onClick={onAvatarClick}>
         <CustomSvg className="portkey-ui-account-avatar" type={walletAvatar} />
         <div className="portkey-ui-account-name">{nickName || '--'}</div>
-        <CustomSvg className="portkey-ui-account-arrow" type="KeyboardArrowDown" />
+        <CustomSvg
+          className="portkey-ui-account-arrow"
+          fillColor="var(--sds-color-icon-default-default)"
+          type="KeyboardArrowDown"
+        />
       </div>
     );
   }, [walletAvatar, onAvatarClick, nickName]);

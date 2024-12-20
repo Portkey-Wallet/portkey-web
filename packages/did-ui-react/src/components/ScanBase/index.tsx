@@ -39,7 +39,7 @@ export default function ScanBase({
       )}>
       <div className={clsx('scan-text-inner')}>
         <BackHeader
-          leftElement={backIcon || undefined}
+          leftElement={undefined}
           onBack={onBack}
           rightElement={
             rightElement ? (

@@ -1,3 +1,5 @@
+import { ChainId } from './chain';
+
 export interface ITokenInfoType {
   balance: string;
   decimals: string;
@@ -10,7 +12,7 @@ export interface IBaseNFTType {
   imageUrl: string;
   alias: string;
   nftId: string;
-  decimals: number;
+  decimals: number | string;
   isSeed: boolean;
   seedType: SeedTypeEnum;
 }
@@ -28,11 +30,11 @@ export interface INftInfoType {
   collectionName: string;
   tokenContractAddress: string;
   balance: string;
-  decimals: number;
+  decimals: number | string;
   isSeed: boolean;
   seedType: SeedTypeEnum;
   tokenName?: string;
-  chainId: string;
+  chainId: ChainId;
   displayChainName?: string;
   chainImageUrl?: string;
   symbol: string;

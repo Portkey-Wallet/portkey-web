@@ -5,12 +5,14 @@ import { parseInputNumberChange } from '../../utils/input';
 import './index.less';
 import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
 import CustomSvg from '../CustomSvg';
+import clsx from 'clsx';
 
 export interface ITokenAmountInput {
   value?: string;
   usdValue?: string;
   label?: string;
   symbol: string;
+  type: 'token' | 'nft';
   decimals: string | number;
   warningTip?: string;
   disabledEdit?: boolean;
@@ -27,8 +29,9 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
     symbol,
     decimals,
     warningTip = '',
-    disabledEdit = true,
+    disabledEdit = false,
     showErrorInput = false,
+    type,
     setValue,
     setUsdValue,
   } = props;
@@ -49,24 +52,21 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
   const onPressRevert = useCallback(() => setIsRevert((pre) => !pre), []);
   const onValueInputChange = useCallback(
     (v: string) => {
-      setValue(v);
-
-      return;
       const _v = parseInputNumberChange(v, Infinity, Number(decimals));
       const _usdV = ZERO.plus(_v || 0)
-        .multipliedBy(10)
+        .multipliedBy(price)
         .toFixed(2);
       setValue(_v);
       setUsdValue(_usdV);
     },
-    [decimals, setUsdValue, setValue],
+    [decimals, price, setUsdValue, setValue],
   );
   const onUsdValueInputChange = useCallback(
     (v: string) => {
       const _usdV = parseInputNumberChange(v, Infinity, 2);
       const _v = parseInputNumberChange(
         ZERO.plus(_usdV || 0)
-          .div(10) // TODO: change it
+          .div(price)
           .valueOf(),
         Infinity,
         Number(decimals),
@@ -74,7 +74,7 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
       setUsdValue(_usdV);
       setValue(_v);
     },
-    [decimals, setUsdValue, setValue],
+    [decimals, price, setUsdValue, setValue],
   );
 
   const existTokenPrice = useMemo(() => {
@@ -90,8 +90,8 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
               <div className="symbol">{'$ '}</div>
               <div className="amount-input-wrap">
                 <input
-                  className="amount-input"
-                  disabled={disabledEdit}
+                  className={clsx(`amount-input`, showErrorInput && warningTip && `amount-error`)}
+                  // disabled={disabledEdit}
                   value={usdValue}
                   onChange={(e) => onUsdValueInputChange(e.target.value)}
                   placeholder="0"
@@ -103,8 +103,8 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
             <>
               <div className="amount-input-wrap">
                 <input
-                  className="amount-input"
-                  disabled={disabledEdit}
+                  className={clsx(`amount-input`, showErrorInput && warningTip && `amount-error`)}
+                  // disabled={disabledEdit}
                   value={value}
                   placeholder="0"
                   onChange={(e) => onValueInputChange(e.target.value)}
@@ -116,7 +116,7 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
           )}
         </>
       </div>
-      {!existTokenPrice && (
+      {!existTokenPrice && type === 'token' && (
         <div className="bottom-section" onClick={onPressRevert}>
           {isRevert ? <div>{`${value || 0} ${label || symbol}`}</div> : <div>{`$${usdValue || 0}`}</div>}
           <CustomSvg type={'Switch'} className="switch" />

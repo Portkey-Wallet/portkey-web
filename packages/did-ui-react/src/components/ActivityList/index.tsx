@@ -164,7 +164,12 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
             {item?.status === contractStatusEnum.PENDING ? (
               loadingStatus
             ) : (
-              <ImgPair imgSrc1={renderTopIconInfo.imageUrl || ''} imgSrc2={renderBottomIconInfo.imageUrl || ''} />
+              <ImgPair
+                imgSrc1Symbol={renderTopIconInfo.title}
+                imgSrc2Symbol={renderBottomIconInfo.title}
+                imgSrc1={renderTopIconInfo.imageUrl || ''}
+                imgSrc2={renderBottomIconInfo.imageUrl || ''}
+              />
             )}
           </div>
           <div className="activity-center-section">
@@ -212,14 +217,14 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
             {item.status === contractStatusEnum.PENDING ? (
               loadingStatus
             ) : item?.nftInfo ? (
-              <img className="nft-img" src={item.nftInfo?.imageUrl} width={42} height={42} />
+              <img className="nft-img" src={item.nftInfo?.imageUrl} />
             ) : isTransferType ? (
               <ImgWithCornerMark
                 imgSrc={item.listIcon || ''}
                 cornerImgSrc={item.isReceived ? 'ReceiveActivity' : 'SendActivity'}
               />
             ) : (
-              <img src={item?.listIcon || ''} width={42} height={42} />
+              <img className="custom-icon" src={item?.listIcon || ''} />
             )}
           </div>
 
