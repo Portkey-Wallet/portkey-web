@@ -34,8 +34,8 @@ export const AddressTypeSelect: React.FC<IAddressTypeSelectProps> = (props) => {
       <div className="gap" />
       <div
         className={clsx(['item-wrap', { 'selected-item': value === AddressTypeEnum.NON_EXCHANGE }])}
-        onClick={() => onChangeValue(AddressTypeEnum.EXCHANGE)}>
-        <span className="left-section">No, it’s a non-exchange address</span>
+        onClick={() => onChangeValue(AddressTypeEnum.NON_EXCHANGE)}>
+        <span className="left-section">{`No, it's a non-exchange address`}</span>
         {value === AddressTypeEnum.NON_EXCHANGE && <div className="selected-wrap">{selectedIcon}</div>}
       </div>
     </div>

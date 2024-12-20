@@ -337,6 +337,7 @@ function SendContent({
             onClick: () => {
               setToAccount((pre) => ({ ...pre, address: `ELF_${pre.address}_${MAIN_CHAIN_ID}` }));
               setStage(Stage.Amount);
+              setCurModalTipKey(undefined);
             },
             content: 'Send to my aelf MainChain',
           },
@@ -357,7 +358,8 @@ function SendContent({
           {
             type: 'primary' as CommonButtonType,
             onClick: () => {
-              //
+              // TODO
+              setCurModalTipKey(undefined);
             },
             content: 'Agree and continue',
           },
@@ -378,7 +380,8 @@ function SendContent({
           {
             type: 'primary' as CommonButtonType,
             onClick: () => {
-              //
+              //TODO
+              setCurModalTipKey(undefined);
             },
             content: 'Modify',
           },
@@ -392,14 +395,16 @@ function SendContent({
           {
             type: 'primary' as CommonButtonType,
             onClick: () => {
-              //
+              //TODO
+              setCurModalTipKey(undefined);
             },
             content: 'Request one-time approval',
           },
           {
             type: 'outline' as CommonButtonType,
             onClick: () => {
-              //
+              //TODO
+              setCurModalTipKey(undefined);
             },
             content: 'Modify transfer limit for all',
           },
@@ -1163,7 +1168,12 @@ function SendContent({
       <div className="stage-ele">{StageObj[stage].element}</div>
       {stage === Stage.Address && warning === WarningKey.MAKE_SURE_SUPPORT_PLATFORM ? null : (
         <div className="btn-wrap">
-          <ThrottleButton disabled={btnDisabled} className="stage-btn" type="primary" onClick={StageObj[stage].handler}>
+          <ThrottleButton
+            block
+            disabled={btnDisabled}
+            className="stage-btn"
+            type="primary"
+            onClick={StageObj[stage].handler}>
             {StageObj[stage].btnText}
           </ThrottleButton>
         </div>
