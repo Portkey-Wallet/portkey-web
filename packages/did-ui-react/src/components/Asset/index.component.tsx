@@ -11,6 +11,7 @@ import { IAssetItemType, ITransferLimitItem, AllowanceItem, IUserTokenItemNew } 
 import {
   BalanceTab,
   BaseToken,
+  ITokenSectionResponse,
   NFTCollectionItemShowType,
   NFTItemBaseExpand,
   TokenItemShowType,
@@ -46,11 +47,13 @@ import useGAReport from '../../hooks/useGAReport';
 
 import { AssetStep } from '../../constants/assets';
 import SetSecondaryMailbox from '../SetSecondaryMailbox';
-import { useIsSecondaryMailSet } from '../SetSecondaryMailbox/hooks';
 import { loginOptTip } from '../../constants';
 import { loadingTip } from '../../utils/loadingTip';
 import CollectionDetailMain from '../CollectionDetail/index.component';
+import CommonButton from '../CommonButton';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
+import { SendAssetListPage } from '../SendAssetList';
+import ReceiveList from '../ReceiveList';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -62,6 +65,14 @@ export interface AssetMainProps
   onDeleteAccount?: () => void;
   onLifeCycleChange?(liftCycle: `${AssetStep}`): void;
 }
+
+export type SelectTokenType = {
+  chainId: ChainId;
+  symbol: string;
+  decimals: number;
+  address: string;
+  isNFT?: boolean;
+};
 
 const InitTransferLimitData: ITransferLimitItemWithRoute = {
   chainId: 'AELF',
@@ -209,10 +220,9 @@ function AssetMain({
   const [tokenDetail, setTokenDetail] = useState<TokenItemShowType>();
   const [viewPaymentSecurity, setViewPaymentSecurity] = useState<ITransferLimitItemWithRoute>(InitTransferLimitData);
 
-  const onAvatarClick = useCallback(async () => {
+  const onAvatarClick = useCallback(() => {
     setAssetStep(AssetStep.my);
   }, []);
-  const { secondaryEmail, getSecondaryMail } = useIsSecondaryMailSet();
   const [activeKey, setActiveKey] = useState<string>(BalanceTab.TOKEN);
 
   // const saveLiftCycleInfo = useCallback(async () => {
@@ -302,18 +312,15 @@ function AssetMain({
     // saveLiftCycleInfo();
   }, [assetStep]);
 
-  const onReceive = useCallback(
-    async (v: any) => {
-      preStepRef.current = assetStep;
-      setSelectToken({
-        ...v,
-        address: v.address || v.tokenContractAddress,
-      });
-      await sleep(50);
-      setAssetStep(AssetStep.receive);
-    },
-    [assetStep],
-  );
+  const onReceive = useCallback(async () => {
+    preStepRef.current = assetStep;
+    // setSelectToken({
+    //   ...v,
+    //   address: v.address || v.tokenContractAddress,
+    // });
+    // await sleep(50);
+    setAssetStep(AssetStep.receive);
+  }, [assetStep]);
 
   const onBuy = useCallback(
     async (v: any) => {
@@ -328,9 +335,13 @@ function AssetMain({
     [assetStep],
   );
 
-  const onSend = useCallback(async (v: IAssetItemType) => {
-    setSendToken(v);
-    setAssetStep(AssetStep.send);
+  const onSend = useCallback(async (v?: IAssetItemType) => {
+    if (v) {
+      setSendToken(v);
+      setAssetStep(AssetStep.send);
+    } else {
+      setAssetStep(AssetStep.sendAssetList);
+    }
   }, []);
 
   const onBack = useCallback(() => {
@@ -345,7 +356,7 @@ function AssetMain({
     },
     onClickTransactionLimits: () => setAssetStep(AssetStep.transactionLimits),
     onClickTokenAllowances: () => setAssetStep(AssetStep.tokenAllowance),
-    onClickBackupEmail: () => setAssetStep(AssetStep.walletSecurity),
+    onClickBackupEmail: () => setAssetStep(AssetStep.setSecondaryMailbox),
     // onClickWalletSecurity: () => setAssetStep(AssetStep.walletSecurity),
   });
 
@@ -353,11 +364,6 @@ function AssetMain({
     onClickPaymentSecurity: () => setAssetStep(AssetStep.transactionLimits),
     onClickTokenAllowance: () => setAssetStep(AssetStep.tokenAllowance),
     onClickSetSecondaryMailbox: async () => {
-      const res = await getSecondaryMail();
-      if (!res) {
-        singleMessage.error('Cannot fetch the secondary email');
-        return;
-      }
       setAssetStep(AssetStep.setSecondaryMailbox);
     },
   });
@@ -416,6 +422,24 @@ function AssetMain({
     [assetStep],
   );
 
+  const filterToken = (tokenList: IUserTokenItemNew[]) => {
+    const filteredMap: Record<string, any> = {};
+
+    for (const item of tokenList) {
+      const { symbol, chainId } = item;
+
+      if (symbol === 'ELF' && chainId === 'AELF') {
+        filteredMap[symbol] = item;
+      } else if (symbol !== 'ELF') {
+        if (!filteredMap[symbol] || chainId === 'tDVW') {
+          filteredMap[symbol] = item;
+        }
+      }
+    }
+
+    return Object.values(filteredMap);
+  };
+
   return (
     <div className={clsx('portkey-ui-asset-wrapper portkey-ui-flex-column-center', className)}>
       <div className="portkey-ui-logo portkey-ui-flex-row-center">
@@ -462,24 +486,36 @@ function AssetMain({
               }}
             />
           )}
-          {assetStep === AssetStep.receive && caInfo && selectToken && (
-            <ReceiveCard
-              receiveInfo={{
-                address: caInfo[selectToken.chainId]?.caAddress,
-                name: '',
-              }}
-              symbolIcon={selectToken.imageUrl}
-              assetInfo={{
-                symbol: selectToken.symbol,
-                label: selectToken?.label,
-                tokenContractAddress: selectToken.address,
-                chainId: selectToken.chainId,
-                decimals: selectToken.decimals,
-              }}
+          {assetStep === AssetStep.sendAssetList && (
+            <SendAssetListPage
+              caAddressInfos={caAddressInfos}
               networkType={networkType}
-              chainId={selectToken.chainId}
+              onCancel={() => {
+                setAssetStep(AssetStep.overview);
+              }}
+              onSelect={(v) => {
+                setSendToken(v as any);
+                setAssetStep(AssetStep.send);
+              }}
+            />
+          )}
+          {assetStep === AssetStep.receive && (
+            <ReceiveList
+              caAddressInfos={caAddressInfos}
+              tokenList={filterToken(allToken || [])}
+              onBack={onBack}
+              onItemClick={(item: SelectTokenType) => {
+                if (!item) return;
+                setSelectToken(item);
+                setAssetStep(AssetStep.receiveDetail);
+              }}
+            />
+          )}
+          {assetStep === AssetStep.receiveDetail && caInfo && selectToken && (
+            <ReceiveCard
+              selectToken={selectToken}
               onBack={() => {
-                onBack();
+                setAssetStep(AssetStep.receive);
               }}
             />
           )}
@@ -488,7 +524,8 @@ function AssetMain({
               initState={rampExtraConfig}
               tokenInfo={{
                 ...selectToken,
-                tokenContractAddress: selectToken.address,
+                chainId: selectToken.chainId || 'AELF',
+                tokenContractAddress: selectToken.address || '',
               }}
               onBack={() => {
                 setRampExtraConfig(undefined);
@@ -507,6 +544,7 @@ function AssetMain({
                 setAssetStep(AssetStep.transferSettingsEdit);
               }}
               onModifyGuardians={() => {
+                if (!selectToken.chainId) return;
                 setAccelerateChainId(selectToken.chainId);
                 setAssetStep(AssetStep.guardians);
               }}
@@ -548,7 +586,7 @@ function AssetMain({
             />
           )}
 
-          {tokenDetail && (
+          {assetStep === AssetStep.tokenDetail && tokenDetail && (
             <TokenDetailMain
               faucet={faucet}
               isShowRamp={isMixShowRamp}
@@ -565,10 +603,10 @@ function AssetMain({
                   return loadingTip({ msg: loginOptTip });
                 }
                 const info: IAssetItemType = {
-                  chainId: token.chainId,
+                  chainId: token.chainId || 'AELF',
                   symbol: token.symbol,
                   label: token?.label,
-                  address: token.tokenContractAddress || token.address,
+                  address: token.tokenContractAddress || token.address || '',
                   tokenInfo: {
                     ...token,
                     balance: token.balance || '0',
@@ -633,12 +671,13 @@ function AssetMain({
               }}
               isShowFooter={showDeletion} // TODO delete w
               footerElement={
-                <Button
+                <CommonButton
                   className="delete-account-button"
                   type="text"
+                  block
                   onClick={() => setAssetStep(AssetStep.deleteAccount)}>
                   Delete Account
-                </Button>
+                </CommonButton>
               }
             />
           )}
@@ -704,12 +743,8 @@ function AssetMain({
           {assetStep === AssetStep.setSecondaryMailbox && (
             <SetSecondaryMailbox
               onBack={() => {
-                setAssetStep(AssetStep.walletSecurity);
+                setAssetStep(AssetStep.my);
               }}
-              onSetSecondaryMailboxSuccess={() => {
-                setAssetStep(AssetStep.walletSecurity);
-              }}
-              defaultValue={secondaryEmail}
             />
           )}
           {assetStep === AssetStep.transferSettings && (
@@ -718,7 +753,7 @@ function AssetMain({
               originChainId={originChainId}
               networkType={networkType}
               sandboxId={sandboxId}
-              onBack={() => setAssetStep(AssetStep.my)}
+              onBack={() => setAssetStep(AssetStep.transactionLimits)}
               onSuccess={transferSettingsEditBack}
               initData={viewPaymentSecurity}
             />

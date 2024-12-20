@@ -2,6 +2,7 @@
 
 import { ConfigProvider, Asset, PortkeyAssetProvider, did } from '@portkey/did-ui-react';
 import { LoginStatusEnum } from '@portkey/types';
+
 import { Button } from 'antd';
 import { useRouter } from 'next/navigation';
 import React from 'react';
@@ -20,6 +21,12 @@ ConfigProvider.setGlobalConfig({
   //   recommendIndexes: [0, 1],
   // },
   globalLoadingHandler: undefined,
+  theme: 'dark',
+  eTransferCA: {
+    AELF: '4xWFvoLvi5anZERDuJvzfMoZsb6WZLATEzqzCVe8sQnCp2XGS',
+    tDVW: '2AgU8BfyKyrxUrmskVCUukw63Wk96MVfVoJzDDbwKszafioCN1',
+  },
+  eTransferUrl: 'https://test-app.etransfer.exchange',
 });
 
 export default function Assets() {

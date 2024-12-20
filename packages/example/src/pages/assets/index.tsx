@@ -12,7 +12,7 @@ ConfigProvider.setGlobalConfig({
 
 export default function Assets() {
   return (
-    <PortkeyAssetProvider pin="111111" originChainId="tDVW">
+    <PortkeyAssetProvider pin="111111" originChainId="AELF">
       <Asset
         faucet={{
           faucetContractAddress: 'faucetContractAddress',

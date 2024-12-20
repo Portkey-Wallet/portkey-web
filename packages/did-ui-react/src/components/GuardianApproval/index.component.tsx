@@ -46,6 +46,7 @@ import './index.less';
 import { Open_Login_Bridge } from '../../constants/telegram';
 import { getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
 import { useAsyncVerifyToken, VerifySocialLoginParams } from '../../hooks/authenticationAsync';
+import CustomSvg from '../CustomSvg';
 
 const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
 
@@ -183,8 +184,13 @@ const GuardianApprovalMain = forwardRef(
             : {};
           if (isFirstShowWarning !== SHOW_WARNING_DIALOG && !accessToken) {
             const isConfirm = await modalMethod({
-              width: 320,
-              title: <div className="security-notice">Security Notice</div>,
+              width: 400,
+              title: (
+                <div>
+                  {/* <CustomSvg className="warning-info" type="WarningInfo" /> */}
+                  <div className="security-notice">Security Notice</div>
+                </div>
+              ),
               closable: false,
               wrapClassName: 'warning-modal-wrapper',
               className: `portkey-ui-common-modals ` + 'confirm-return-modal',

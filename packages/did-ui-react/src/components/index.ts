@@ -1,7 +1,7 @@
 export { default as ScanCard } from './ScanCard';
 export { default as ConfigProvider } from './config-provider';
 export { default as CustomSvg } from './CustomSvg';
-export { default as VerifierSelect } from './VerifierSelect';
+// export { default as VerifierSelect } from './VerifierSelect'; //
 export { default as SetPinAndAddManager } from './SetPinAndAddManager';
 export { default as GuardianList } from './GuardianList';
 export { default as Guardian } from './Guardian';
@@ -25,8 +25,8 @@ export { default as PortkeyBaseNumberKeyboard } from './PortkeyBaseNumberKeyboar
 export { default as PortkeyPasswordInput } from './PortkeyPasswordInput';
 export { default as SetPinMobileBase } from './SetPinMobileBase';
 export { default as VerifierPair } from './VerifierPair';
-export { default as PhoneNumberInput } from './PhoneNumberInput';
-export { default as AreaCode } from './AreaCode';
+// export { default as PhoneNumberInput } from './PhoneNumberInput';
+// export { default as AreaCode } from './AreaCode';
 export { default as ImgLoading } from './ImgLoading';
 export { default as AccountRecommendGroup } from './AccountRecommendGroup';
 export { default as ScanBase } from './ScanBase';
@@ -44,7 +44,7 @@ export { default as EmailInputAndButton } from './EmailInputAndButton';
 export { default as InputInfo } from './EmailLogin';
 export { default as EmailLogin } from './EmailLogin';
 export { default as InputLogin } from './InputLogin';
-export { default as PhoneTab } from './PhoneTab';
+// export { default as PhoneTab } from './PhoneTab';
 export { default as Loading } from './Loading';
 export { default as SocialLogin } from './SocialLogin';
 export { default as WakeUpPortkey } from './WakeUpPortkey';
@@ -67,7 +67,7 @@ export { default as Send } from './Send';
 export { default as AssetOverview } from './AssetOverview';
 export { default as ReceiveCard } from './ReceiveCard';
 export { default as Transaction } from './Transaction';
-export { default as NFTCheckout } from './NFTRamp';
+// export { default as NFTCheckout } from './NFTRamp';
 export * from './NFTRamp/types';
 export { default as ACHCheckout } from './NFTRamp/ACHCheckout';
 export { default as managerApprove } from './ModalMethod/ManagerApprove';
@@ -85,6 +85,7 @@ export { default as MenuList } from './MenuList';
 export { default as PaymentSecurity } from './PaymentSecurity';
 export { default as TransferSettings } from './TransferSettings';
 export { default as ThrottleButton } from './ThrottleButton';
+export { default as AddressTypeSelect } from './AddressTypeSelect';
 
 export type { ManagerApproveInnerProps } from './ManagerApprove/index.component';
 export type { IAllowance } from './SetAllowance/index.component';

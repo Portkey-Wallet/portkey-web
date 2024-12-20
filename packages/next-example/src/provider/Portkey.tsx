@@ -25,6 +25,7 @@ export default function Portkey({ children }: { children?: ReactNode }) {
     } else {
       document.body.classList.remove('dark');
     }
+    ConfigProvider.setGlobalConfig({ theme: dark ? 'dark' : 'light' });
   }, [dark]);
 
   useEffect(() => {

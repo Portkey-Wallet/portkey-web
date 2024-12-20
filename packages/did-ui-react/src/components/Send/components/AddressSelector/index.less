@@ -1,4 +1,6 @@
 .portkey-ui-address-selector {
+  background: var(--sds-color-background-default-default);
+
   .no-data {
     padding-top: 32px;
     padding-bottom: 16px;
@@ -15,20 +17,18 @@
     flex: 1;
 
     .portkey-ant-tabs-nav {
+      height: 64px;
       margin: 0;
       box-shadow: none;
       z-index: 10;
       position: sticky;
-      background: var(--portkey-ui-default-bg);
-      border-bottom: 1px solid var(--portkey-ui-default-border);
+      background: var(--sds-color-background-default-default);
 
       .portkey-ant-tabs-nav-wrap {
         min-width: 100%;
         max-width: 100%;
 
         .portkey-ant-tabs-nav-list {
-          flex: 1;
-          justify-content: space-between;
           padding: 0 24px;
           .portkey-ant-tabs-tab {
             flex: 1;
@@ -36,22 +36,25 @@
             justify-content: center;
             align-items: center;
             padding: 13px 0;
-            margin: 0;
+            margin: 0 8px 0 0;
 
             .portkey-ant-tabs-tab-btn {
               font-weight: 400;
               font-size: 16px;
-              height: 22px;
-              line-height: 22px;
+              line-height: 16px;
+              height: 32px;
+              padding: 8px;
               text-align: center;
-              color: var(--portkey-ui-text-secondary) !important;
               text-shadow: unset;
+              color: var(--sds-color-text-default-tertiary);
             }
           }
 
           .portkey-ant-tabs-tab-active {
             .portkey-ant-tabs-tab-btn {
-              color: var(--portkey-ui-text-primary) !important;
+              border-radius: 8px;
+              color: var(--sds-color-text-default-default);
+              background-color: var(--portkey-ui-background-default-tertiary) !important;
             }
           }
         }
@@ -81,38 +84,45 @@
   }
   // common go-detail style, for Recents and Contacts
   .go-detail-common {
-    width: 32px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    align-self: stretch;
+
     cursor: pointer;
     .go-detail-icon {
-      width: 14px;
-      height: 14px;
+      width: 20px;
+      height: 20px;
     }
   }
 
   // ================ Recent component style ================
-  .portkey-ui-send-recents {
-    .recent-item {
-      border-top: none !important;
-      border-bottom: 1px solid var(--portkey-ui-default-border);
-      padding: 13px 16px 11px 24px;
-      .main-info {
-        flex: 1;
-        margin-right: 24px;
-        font-size: 16px;
-        cursor: pointer;
-        .address-item();
+  .recent-item {
+    border-top: none !important;
+    padding: 8px 16px;
+    cursor: pointer;
+
+    .left-section {
+      font-size: 16px;
+    }
+    .center-section {
+      font-size: 16px;
+      margin-left: 12px;
+      height: 46px;
+      flex: 1;
+      overflow: hidden;
+      .address {
+        font-weight: 600;
+        color: var(--sds-color-icon-default-secondary);
       }
-      .go-detail {
-        .go-detail-common();
+      .chain-info {
+        color: var(--sds-color-icon-default-tertiary);
       }
     }
-    .portkey-ui-contact-card-in-recent {
-      border-bottom: 1px solid var(--portkey-ui-default-border);
+    .go-detail {
+      margin-left: 12px;
+      .go-detail-common();
     }
+  }
+  .portkey-ui-contact-card-in-recent {
+    border-bottom: 1px solid var(--portkey-ui-default-border);
   }
 
   // ================ Contacts component style ================

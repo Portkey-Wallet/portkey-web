@@ -25,7 +25,7 @@ export class Store implements IStorageSuite {
   }
 }
 
-const myStore = new Store();
+export const myStore = new Store();
 
 ConfigProvider.setGlobalConfig({
   storageMethod: myStore,

@@ -7,6 +7,8 @@ import {
   IAssetItemType,
   CaAddressInfosType,
   IActivitiesApiParams,
+  IAssetNftCollection,
+  IAssetToken,
 } from '@portkey/services';
 import { did } from '../../../utils';
 import { NEW_CLIENT_DEFAULT_ELF_LIST, NFT_SMALL_SIZE } from '../../../constants/assets';
@@ -27,6 +29,7 @@ export const PortkeyAssetActions = {
   setNFTItemList: 'setNFTItemList',
   setTokenPrice: 'setTokenPrice',
   setAllAssets: 'setAllAssets',
+  setAllAssetsV2: 'setAllAssetsV2',
   setTxFee: 'setTxFee',
   setActivityList: 'setActivityList',
 };
@@ -79,6 +82,11 @@ export type BalanceInfo = {
     };
   };
   allAsset?: BaseListInfo<IAssetItemType>;
+  allAssetV2?: {
+    nftInfos: IAssetNftCollection[];
+    tokenInfos: IAssetToken[];
+    totalRecordCount: number;
+  };
   activityMap?: ActivityStateMap;
 };
 
@@ -250,6 +258,33 @@ const fetchAllAsset = async ({
   });
 };
 
+const fetchAllAssetV2 = async ({
+  width = NFT_SMALL_SIZE,
+  height = -1,
+  keyword = '',
+  skipCount = 0,
+  maxResultCount = 1000,
+  caAddressInfos,
+}: Partial<Omit<GetAccountAssetsByKeywordsParams, 'caAddressInfos'>> & {
+  caAddressInfos: GetAccountAssetsByKeywordsParams['caAddressInfos'];
+}) => {
+  const response = await did.services.assets.getAccountAssetsByKeywordsV2({
+    width,
+    height,
+    keyword,
+    skipCount,
+    maxResultCount,
+    caAddressInfos,
+  });
+  return basicActions(PortkeyAssetActions['setAllAssetsV2'], {
+    nftInfos: response.nftInfos,
+    tokenInfos: response.tokenInfos,
+    totalRecordCount: response.totalRecordCount,
+    skipCount,
+    maxResultCount,
+  });
+};
+
 const fetchTxFee = async (chainIds: ChainId[]) => {
   const txFee = await fetchTxFeeAsync(chainIds);
   return basicActions(PortkeyAssetActions['setTxFee'], { txFee });
@@ -295,6 +330,7 @@ export const basicAssetViewAsync = {
   setNFTItemList: fetchNFTItemList,
   setTokenPrices: fetchTokenPrices,
   setAllAssetInfo: fetchAllAsset,
+  setAllAssetInfoV2: fetchAllAssetV2,
   setTxFee: fetchTxFee,
   setActivityList: fetchActivityList,
 };

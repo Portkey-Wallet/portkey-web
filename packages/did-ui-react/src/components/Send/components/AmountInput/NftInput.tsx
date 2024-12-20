@@ -34,7 +34,7 @@ export default function NftInput({
     const result = await getBalanceByContract({
       sandboxId,
       chainId: token.chainId,
-      tokenContractAddress: token.address,
+      tokenContractAddress: token.address || '',
       chainType,
       paramsOption: {
         owner: fromAccount.address,

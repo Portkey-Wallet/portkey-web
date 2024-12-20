@@ -72,6 +72,9 @@
       flex-shrink: 0;
       border-radius: var(--portkey-ui-rounded-full);
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       & > .portkey-ui-custom-svg,
       & > img {
         height: 100%;
@@ -79,12 +82,13 @@
       }
       & > img {
         vertical-align: initial;
+        width: 16px;
+        height: 16px;
       }
     }
     .title {
       color: var(--portkey-ui-text-primary);
       font-size: 16px;
-      margin-left: 12px;
     }
   }
 }
