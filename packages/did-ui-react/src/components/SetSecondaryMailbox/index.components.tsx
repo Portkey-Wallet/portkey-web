@@ -32,6 +32,7 @@ export default function SetSecondaryMailboxMain({ onBack }: ISetSecondaryMailbox
       setIsEditable(secondaryEmail === '');
       return true;
     } catch (e) {
+      setIsEditable(true);
       return false;
     } finally {
       setLoading(false);
@@ -68,7 +69,7 @@ export default function SetSecondaryMailboxMain({ onBack }: ISetSecondaryMailbox
         <div className="left-icon" onClick={onBack}>
           <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default)" />
         </div>
-        <div className="secondary-mail-header">{isEditable ? 'Set up Backup Mailbox' : 'Details'}</div>
+        <div className="secondary-mail-header">{isEditable ? 'Set up Backup Mailbox' : 'Backup Email'}</div>
       </div>
 
       <div className="secondary-mail-content">
