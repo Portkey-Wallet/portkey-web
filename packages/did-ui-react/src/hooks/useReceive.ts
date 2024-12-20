@@ -38,7 +38,7 @@ export const useReceive = (token: BaseToken) => {
   const sourceChainList = useMemo(() => {
     if (!destinationMap) return [];
     if (!destinationChain) return [];
-    return destinationMap[destinationChain.chainId as ChainId].filter((item) => {
+    return destinationMap?.[destinationChain.chainId as ChainId].filter((item) => {
       return !(
         item.serviceList &&
         item.serviceList.length === 1 &&

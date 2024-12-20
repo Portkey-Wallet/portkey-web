@@ -13,6 +13,7 @@ import ChainTokenIcon from '../ChainTokenIcon';
 import { formatTimeDifference } from '../../utils/time';
 
 import './index.less';
+import CoinImage from '../CoinImage';
 
 export type ITokenAllowanceDetailProps = AllowanceItem & {
   onBack?: () => void;
@@ -70,7 +71,7 @@ export default function TokenAllowanceDetailMain({
         </div>
       </div>
       <div className="portkey-ui-flex-column portkey-ui-flex-center token-info-header-wrapper">
-        <TokenImageDisplay src={icon} symbol={providedName} width={80} />
+        <CoinImage src={icon} symbol={providedName} width={80} />
         <div className="token-name">{providedName}</div>
         <a href={url} target="_blank" rel="noopener noreferrer" className="token-url-wrapper">
           {url}
@@ -136,32 +137,6 @@ export default function TokenAllowanceDetailMain({
           </>
         )}
       </div>
-
-      {/* {symbolList?.map((item) => (
-        <div className="approve-token-wrapper" key={item.symbol}>
-          <div className="approve-token-title portkey-ui-flex-between-center">
-            <div>{`Approve ${item.symbol}`}</div>
-
-            <SwitchComponent
-              onChange={(checked: boolean) => handleSwitchChange(checked, item.symbol)}
-              checked={checkCanClose(item)}
-            />
-          </div>
-
-          <div className="approve-token-desc">
-            The dApp will not request your approval until the allowance is exhausted.
-          </div>
-
-          {checkCanClose(item) && (
-            <div className="approve-amount-wrapper">
-              <div className="approve-amount-title">Amount approved</div>
-              <div className="approve-amount-text-wrapper portkey-ui-flex-row-center">
-                <div className="approve-amount-text">{formatAmountShow(divDecimals(item.amount, item.decimals))}</div>
-              </div>
-            </div>
-          )}
-        </div>
-      ))} */}
     </div>
   );
 }
