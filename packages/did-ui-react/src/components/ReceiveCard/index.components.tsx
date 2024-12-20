@@ -24,6 +24,7 @@ import CommonPromptCard, { PromptCardType } from '../CommonPromptCard';
 import { isNFT } from '../../utils/assets';
 
 import './index.less';
+import singleMessage from '../CustomAnt/message';
 
 enum SELECTION_TYPE {
   SOURCE = 'Source',
@@ -31,8 +32,15 @@ enum SELECTION_TYPE {
   NFT = 'NFT',
 }
 
+enum CHAIN_ID {
+  AELF = 'AELF',
+  tDVV = 'tDVV',
+  tDVW = 'tDVW',
+}
+
 type NetworkItem = {
   imageUrl: string;
+  chainId: ChainId;
   name: string;
   key: string;
 };
@@ -42,11 +50,13 @@ export type TokenItem = TReceiveFromNetworkItem | ChainInfo | NetworkItem;
 const NETWORK_LIST: NetworkItem[] = [
   {
     imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/dappChain.png',
+    chainId: CHAIN_ID.tDVW,
     name: 'aelf dAppChain',
     key: 'aelf dAppChain',
   },
   {
     imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/mainChain.png',
+    chainId: CHAIN_ID.tDVV,
     name: 'aelf MainChain',
     key: 'aelf MainChain',
   },
@@ -97,7 +107,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
 
   useEffect(() => {
     setLoading(true);
-    if (sourceChain) {
+    if (sourceChain && !selectToken.isNFT) {
       setSelectedSource(sourceChain);
     }
 
@@ -109,10 +119,10 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
       setLoading(false);
     }
 
-    if (isMainChainToMainChain && !selectToken.isNFT) {
+    if (isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF') {
       setIsReceivedExchangeModalOpen(true);
     }
-  }, [sourceChain, destinationChain, isMainChainToMainChain, selectToken.isNFT]);
+  }, [sourceChain, destinationChain, isMainChainToMainChain, selectToken.isNFT, selectToken.symbol]);
 
   const showExchangeTip = useMemo(
     () =>
@@ -129,10 +139,13 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
       return;
     }
     setSelectedDestination(item as ChainInfo);
-    updateDestinationChain(item as ChainInfo);
+
+    if (!selectToken.isNFT) {
+      updateDestinationChain(item as ChainInfo);
+    }
   };
 
-  const renderSelected = (item: TokenItem) => {
+  const renderSelected = (item: TokenItem | NetworkItem) => {
     const selection = (
       <div className="icon-wrapper">
         <CustomSvg type="Check" fillColor="var(--sds-color-background-default-default)" className="selected-icon" />
@@ -144,7 +157,10 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
         return selection;
       }
     } else {
-      if (selectedDestination === item) {
+      if (
+        selectedDestination === item ||
+        (selectToken.isNFT && selectedDestination?.displayChainName === (item as NetworkItem).name)
+      ) {
         return selection;
       }
     }
@@ -201,18 +217,21 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
 
   const generateAddress = () => {
     const address = caInfo?.[destinationChain?.chainId as ChainId]?.caAddress;
-
-    if (selectToken.isNFT && selectedSource) {
-      return {
-        value: `ELF_${address}_${selectedSource.network}`,
-        label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${selectedSource.network}`,
-      };
-    }
-
-    if (currentDepositInfo) {
+    if (currentDepositInfo && selectedSource && !Object.keys(CHAIN_ID).includes(selectedSource?.network)) {
       return {
         value: currentDepositInfo.depositAddress,
         label: formatStr2EllipsisStr(currentDepositInfo.depositAddress, [6, 4]),
+      };
+    }
+
+    if (
+      (selectToken.isNFT && selectedSource) ||
+      (selectedDestination && Object.keys(CHAIN_ID).includes(selectedDestination?.chainId))
+    ) {
+      const network = selectedDestination ? selectedDestination?.chainId : selectedSource?.network;
+      return {
+        value: `ELF_${address}_${network}`,
+        label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${network}`,
       };
     }
 
@@ -262,9 +281,16 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
                     setSelectedType(SELECTION_TYPE.NFT);
                     setIsSelectionModalOpen(true);
                   }}>
-                  <img className="token-img" src={selectedSource?.imageUrl} />
+                  <img
+                    className="token-img"
+                    src={
+                      selectedDestination?.chainImageUrl || (selectedDestination as unknown as NetworkItem)?.imageUrl
+                    }
+                  />
                   <div className="chain-name-container">
-                    <span>{selectedSource?.name}</span>
+                    <span>
+                      {selectedDestination?.displayChainName || (selectedDestination as unknown as NetworkItem)?.name}
+                    </span>
                     <CustomSvg type="ChevronDown2" className="icon" fillColor="var(--sds-color-icon-default-default)" />
                   </div>
                 </div>
@@ -312,7 +338,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
               </>
             )}
           </div>
-          {isMainChainToMainChain && !selectToken.isNFT && (
+          {isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF' && (
             <div className="exchange-selector-container">
               <div className="exchange-selector">
                 <span
@@ -356,7 +382,10 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
                   <span className="address">{generateAddress()?.label}</span>
                   <CustomSvg
                     type="Copy"
-                    onClick={() => setCopied(caInfo?.[destinationChain?.chainId as ChainId]?.caAddress)}
+                    onClick={() => {
+                      singleMessage.success('Address copied');
+                      setCopied(generateAddress()?.value || '');
+                    }}
                     fillColor="var(--sds-color-icon-default-default)"
                   />
                 </>
