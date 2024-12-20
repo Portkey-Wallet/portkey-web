@@ -1,3 +1,5 @@
+import { ChainId } from './chain';
+
 export interface ITokenInfoType {
   balance: string;
   decimals: string;
@@ -32,7 +34,7 @@ export interface INftInfoType {
   isSeed: boolean;
   seedType: SeedTypeEnum;
   tokenName?: string;
-  chainId: string;
+  chainId: ChainId;
   displayChainName?: string;
   chainImageUrl?: string;
   symbol: string;

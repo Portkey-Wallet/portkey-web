@@ -96,6 +96,7 @@ const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos }: IReceiv
                 chainId: 'tDVV',
                 symbol: 'ELF',
                 decimals: 0,
+                address: '',
                 isNFT: true,
               });
               return;

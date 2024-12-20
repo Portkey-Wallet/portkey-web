@@ -1,3 +1,5 @@
+import { ChainId } from '@portkey/types';
+
 export interface RegisterStatusResult extends ICAInfo {
   registerStatus: Status;
   registerMessage: string;
@@ -16,7 +18,7 @@ export type Status = 'pass' | 'fail' | 'pending';
 
 export type ChainInfo = {
   caContractAddress: string;
-  chainId: string;
+  chainId: ChainId;
   chainImageUrl: string;
   chainName: string;
   defaultToken: {

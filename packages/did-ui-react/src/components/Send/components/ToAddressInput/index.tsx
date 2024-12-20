@@ -115,7 +115,7 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
       }
 
       // include chainId
-      if (v.includes('_')) {
+      if (v.includes('_') && selectedToken) {
         const suffix = getAddressChainId(v, selectedToken?.chainId);
 
         // same address

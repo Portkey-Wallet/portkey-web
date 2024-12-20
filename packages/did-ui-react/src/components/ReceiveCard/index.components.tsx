@@ -9,7 +9,7 @@ import { ChainInfo, ReceiveType, TDepositInfo, TReceiveFromNetworkItem } from '@
 import AssetModal from '../AssetModal';
 import { MAIN_CHAIN_ID } from '../../constants/network';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { formatStr2EllipsisStr } from '../../utils';
+import { formatStr2EllipsisStr, setLoading } from '../../utils';
 import CommonButton from '../CommonButton';
 
 import Binance from '../../assets/imgs/binance.png';
@@ -96,12 +96,17 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   }, [depositInfo]);
 
   useEffect(() => {
+    setLoading(true);
     if (sourceChain) {
       setSelectedSource(sourceChain);
     }
 
     if (destinationChain) {
       setSelectedDestination(destinationChain);
+    }
+
+    if (sourceChain && destinationChain) {
+      setLoading(false);
     }
 
     if (isMainChainToMainChain && !selectToken.isNFT) {

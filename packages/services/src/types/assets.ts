@@ -76,7 +76,7 @@ export type FetchAccountNftCollectionListResult = {
 export type INftCollectionItem = {
   alias: string;
   balance: string;
-  chainId: string;
+  chainId: ChainId;
   imageLargeUrl: string;
   imageUrl: string;
   symbol: string;
@@ -205,7 +205,7 @@ export type GetAccountAssetsByKeywordsV2Result = {
   totalRecordCount: number;
 };
 export interface IAssetItemType {
-  chainId: string;
+  chainId: ChainId;
   symbol: string;
   label?: string;
   address: string;
