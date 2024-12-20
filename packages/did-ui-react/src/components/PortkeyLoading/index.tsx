@@ -35,7 +35,7 @@ export default function PortkeyLoading({
       {cancelable && <CustomSvg className="close-icon" type="Close" onClick={onCancel} />}
       <div className="loading-indicator portkey-ui-flex-column-center">
         <Loading />
-        <div className="loading-text">{loadingText}</div>
+        {/* <div className="loading-text">{loadingText}</div> */}
       </div>
     </div>
   ) : null;

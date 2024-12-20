@@ -16,18 +16,28 @@
       margin-bottom: 8px;
     }
     .social-input {
+      min-height: 46px;
       padding: 6px 16px;
       border-radius: 6px;
       border: 1px solid var(--portkey-ui-default-border);
-      .social-name {
-        color: var(--portkey-ui-text-primary);
+      .social-input-info {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        .social-name {
+          font-size: 14px;
+          color: var(--portkey-ui-text-primary);
+        }
+        .social-email {
+          font-size: 12px;
+          line-height: 24px;
+          color: var(--portkey-ui-text-primary);
+        }
       }
-      .social-email {
-        font-size: 16px;
-        line-height: 24px;
-        color: var(--portkey-ui-text-primary);
-      }
+     
       .social-click-text {
+        line-height: 32px;
         font-weight: 500;
         color: var(--sds-color-text-brand-default);
         cursor: pointer;
