@@ -6,6 +6,7 @@ export type TCommonService = {
   verifySecondaryMail(params: SendSecondaryVerificationCodeRequestParams): Promise<TVerifierResult>;
   checkSecondaryMail(params: TSecondaryMailCheckParams): Promise<TCheckVerifierResult>;
   setSecondaryMail(params: TVerifierResult): Promise<string>;
+  getCrossChainSwitch(): Promise<{ isOpen: boolean }>;
 };
 
 export type TSaveDataApiParams = Record<string, any>;

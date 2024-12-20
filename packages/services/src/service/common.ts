@@ -48,4 +48,10 @@ export class Common<T extends IBaseRequest = IBaseRequest> extends BaseService<T
       params,
     });
   }
+  getCrossChainSwitch(): Promise<{ isOpen: boolean }> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/switch?switchName=InlineCrossChainTransfer',
+    });
+  }
 }
