@@ -519,8 +519,13 @@ function GuardianAdd({
       <div className="social input">
         {socialValue?.id ? (
           <div className="portkey-ui-flex-column social-input detail">
-            <span className="social-name">{socialValue?.firstName}</span>
-            <span className="social-email">{socialValue?.isPrivate ? '******' : socialValue?.thirdPartyEmail}</span>
+            <div className="social-input-info">
+              <span className="social-name">{socialValue?.firstName}</span>
+              {(socialValue?.isPrivate || socialValue?.thirdPartyEmail) && (
+                <span className="social-email">{socialValue?.isPrivate ? '******' : socialValue?.thirdPartyEmail}</span>
+              )}
+            </div>
+
             <CustomSvg type="Close2" onClick={handleClearSocialAccount} />
           </div>
         ) : (

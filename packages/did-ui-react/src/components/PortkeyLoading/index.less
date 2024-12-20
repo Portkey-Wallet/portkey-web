@@ -1,5 +1,5 @@
 .portkey-ui-loading-wrapper {
-  background-color: rgb(00 00 00 / 50%);
+  // background-color: rgb(00 00 00 / 50%);
   z-index: var(--portkey-ui-loading-zIndex);
   display: flex;
   justify-content: center;
@@ -9,13 +9,17 @@
   .loading-indicator {
     width: 250px;
     padding: 16px;
-    background-color: var(--portkey-ui-default-bg);
+    // background-color: var(--portkey-ui-default-bg);
     border-radius: var(--portkey-ui-border-radius-1);
     min-height: 120px;
     text-align: center;
     .loading {
-      width: 44px;
-      height: 44px;
+      width: 32px!important;
+      height: 32px!important;
+      svg {
+        width: 32px;
+        height: 32px;
+      }
     }
   }
 
