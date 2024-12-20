@@ -153,25 +153,25 @@ export class ELFBridgeOperator implements IBridgeOperator {
     if (info?.error) throw info?.error;
     const allowanceBN = ZERO.plus(allowance.data.allowance ?? allowance.data.amount ?? 0);
     const pivotBalanceBN = timesDecimals(amount, info.data.decimals ?? 8);
-    // if (allowanceBN.lt(pivotBalanceBN)) {
-    //   const approveResult = await callCASendMethod({
-    //     methodName: 'ManagerApprove',
-    //     paramsOption: {
-    //       caHash,
-    //       spender,
-    //       symbol,
-    //       amount: pivotBalanceBN.toFixed(),
-    //     },
-    //     chainId,
-    //     caHash,
-    //     chainType: 'aelf',
-    //           // Check it
-    //     contractAddress: portkeyContractAddress,
-    //     privateKey,
-    //   });
-    //   if (approveResult?.error) throw approveResult?.error;
-    //   return true;
-    // }
+    if (allowanceBN.lt(pivotBalanceBN)) {
+      const approveResult = await callCASendMethod({
+        methodName: 'ManagerApprove',
+        paramsOption: {
+          caHash,
+          spender,
+          symbol,
+          amount: pivotBalanceBN.toFixed(),
+        },
+        chainId,
+        caHash,
+        chainType: 'aelf',
+        // Check it
+        contractAddress: portkeyContractAddress,
+        privateKey,
+      });
+      if (approveResult?.error) throw approveResult?.error;
+      return true;
+    }
     return true;
   };
 

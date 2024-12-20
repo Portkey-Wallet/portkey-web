@@ -46,9 +46,6 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
     },
   ];
 
-  useEffectOnce(() => {
-    // getTokenPrice(symbol);
-  });
   const onPressRevert = useCallback(() => setIsRevert((pre) => !pre), []);
   const onValueInputChange = useCallback(
     (v: string) => {
@@ -122,7 +119,7 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
           <CustomSvg type={'Switch'} className="switch" />
         </div>
       )}
-      {warningTip && <div>{warningTip}</div>}
+      {warningTip && <div className="tips">{warningTip}</div>}
     </div>
   );
 };

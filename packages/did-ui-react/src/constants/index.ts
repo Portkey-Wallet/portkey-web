@@ -36,3 +36,5 @@ export const WEB_PAGE_TEST = 'https://openlogin-test.portkey.finance';
 // export const WEB_PAGE = 'http://localhost:3000';
 
 export const loginOptTip = `Synchronising data on the blockchain. Please try again in 30 seconds.`;
+
+export const CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL = ['ELF', 'USDT'];
