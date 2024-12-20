@@ -6,7 +6,6 @@ import { GlobalConfigProps } from '../components/config-provider/types';
 import { CrossTransfer } from '../utils/withdraw';
 
 const crossChainTransfer = new CrossTransfer();
-
 export const CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL = ['ELF', 'USDT'];
 export class Store implements IStorageSuite {
   async getItem(key: string) {
@@ -24,16 +23,18 @@ const myStore = new Store();
 export const useCrossTransferByEtransfer = (pin?: string) => {
   // TODO: add it
   const { chainList } = useCurrentChainList();
-  const [{ caHash, managementAccount }] = usePortkeyAsset();
+  const [{ caHash, caAddressInfos, managementAccount }] = usePortkeyAsset();
   const eTransferUrl = ConfigProvider.getConfig('eTransferUrl') as GlobalConfigProps['eTransferUrl'];
   const eTransferCA = ConfigProvider.getConfig('eTransferCA') as GlobalConfigProps['eTransferCA'];
 
+  const caAddress = caAddressInfos?.[0]?.caAddress;
+
   useEffect(() => {
-    if (!eTransferUrl || !pin || !chainList || !eTransferCA) return;
-    crossChainTransfer.init({
+    console.log('crossChainTransfer111', {
       walletInfo: {
         caHash,
         AESEncryptPrivateKey: managementAccount?.privateKey || '',
+        caAddress,
       },
       eTransferUrl,
       pin,
@@ -41,7 +42,22 @@ export const useCrossTransferByEtransfer = (pin?: string) => {
       eTransferCA,
       storage: myStore,
     });
-  }, [caHash, eTransferCA, eTransferUrl, pin, chainList, managementAccount?.privateKey]);
+
+    if (!eTransferUrl || !pin || !chainList || !eTransferCA) return;
+
+    crossChainTransfer.init({
+      walletInfo: {
+        caHash,
+        AESEncryptPrivateKey: managementAccount?.privateKey || '',
+        caAddress,
+      },
+      eTransferUrl,
+      pin,
+      chainList,
+      eTransferCA,
+      storage: myStore,
+    });
+  }, [caHash, eTransferCA, eTransferUrl, pin, chainList, managementAccount?.privateKey, caAddress]);
 
   return useMemo(
     () => ({

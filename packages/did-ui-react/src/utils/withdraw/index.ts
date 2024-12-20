@@ -1,16 +1,19 @@
 import { eTransferCore } from '@etransfer/core';
 import { ContractBasic } from '@portkey/contracts';
-import { getWallet } from '@portkey/utils/src/aelf';
-import { IBlockchainWallet } from '@portkey/types';
+import { ChainId, IBlockchainWallet } from '@portkey/types';
 import { PortkeyVersion } from '@etransfer/types';
 import AElf from 'aelf-sdk';
 import { ICrossTransfer, ICrossTransferInitOption, IWithdrawParams, IWithdrawPreviewParams } from './types';
-import { sleep } from '@portkey/utils/src';
+import { sleep } from '@portkey/utils';
 import { isAuthTokenError } from '@etransfer/utils';
 import { LocalStorageKey } from '@etransfer/utils';
 import { removeDIDAddressSuffix } from '@etransfer/utils';
 import { ZERO } from '../../constants/misc';
 import { timesDecimals } from '../converter';
+import { CustomContractBasic } from '../sandboxUtil/CustomContractBasic';
+import { getChain } from '../../hooks';
+import { callCASendMethod } from '../sandboxUtil/callCASendMethod';
+import { aelf } from '@portkey/utils';
 
 export const CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL = ['ELF', 'USDT'];
 const ETRANSFER_VERSION = '2.13.0';
@@ -38,9 +41,9 @@ export class CrossTransfer implements ICrossTransfer {
     if (!caHash) throw new Error('Can not get user caHash');
     if (!pin) throw new Error('Locked');
 
-    const aesPrivateKey = AElf.wallet.AESDecrypt(walletInfo.AESEncryptPrivateKey, pin);
-    console.log(aesPrivateKey, 'aesPrivateKey==');
-    const manager = getWallet(aesPrivateKey) as IBlockchainWallet;
+    const aesPrivateKey = walletInfo.AESEncryptPrivateKey;
+
+    const manager = aelf.getWallet(aesPrivateKey) as IBlockchainWallet;
     const plainTextOrigin = `Nonce:${Date.now()}`;
     const plainTextHex = Buffer.from(plainTextOrigin).toString('hex').replace('0x', '');
     const plainTextHexSignature = Buffer.from(plainTextHex).toString('hex');
@@ -62,26 +65,53 @@ export class CrossTransfer implements ICrossTransfer {
   };
 
   checkAllowanceAndApprove = async ({
-    tokenContract,
-    portkeyContract,
+    chainId,
+    portkeyContractAddress,
+    tokenContractAddress,
+    privateKey,
     symbol,
     spender,
     owner,
     amount,
     caHash,
   }: {
-    tokenContract: ContractBasic;
-    portkeyContract: ContractBasic;
+    chainId: ChainId;
+    tokenContractAddress: string;
+    portkeyContractAddress: string;
+    privateKey: string;
     symbol: string;
     spender: string;
     owner: string;
     amount: string;
     caHash: string;
   }) => {
-    console.log(tokenContract, symbol, spender, owner);
+    const chainInfo = await getChain(chainId);
+    if (!chainInfo) throw 'Please check network connection and chainId';
+
     const [allowance, info] = await Promise.all([
-      tokenContract.callViewMethod('GetAllowance', { symbol, owner, spender }),
-      tokenContract.callViewMethod('GetTokenInfo', { symbol }),
+      CustomContractBasic.callViewMethod({
+        contractOptions: {
+          rpcUrl: chainInfo?.endPoint,
+          contractAddress: tokenContractAddress,
+        },
+        functionName: 'GetAllowance',
+        paramsOption: {
+          symbol,
+          owner,
+          spender,
+        },
+      }),
+
+      CustomContractBasic.callViewMethod({
+        contractOptions: {
+          rpcUrl: chainInfo?.endPoint,
+          contractAddress: tokenContractAddress,
+        },
+        functionName: 'GetTokenInfo',
+        paramsOption: {
+          symbol,
+        },
+      }),
     ]);
     console.log(allowance, info, '===allowance, info');
     if (allowance?.error) throw allowance?.error;
@@ -89,12 +119,21 @@ export class CrossTransfer implements ICrossTransfer {
     const allowanceBN = ZERO.plus(allowance.data.allowance ?? allowance.data.amount ?? 0);
     const pivotBalanceBN = timesDecimals(amount, info.data.decimals ?? 8);
     if (allowanceBN.lt(pivotBalanceBN)) {
-      const approveResult = await portkeyContract.callSendMethod('ManagerApprove', '', {
+      const approveResult = await callCASendMethod({
+        methodName: 'ManagerApprove',
+        paramsOption: {
+          caHash,
+          spender,
+          symbol,
+          amount: pivotBalanceBN.toFixed(),
+        },
+        chainId,
         caHash,
-        spender,
-        symbol,
-        amount: pivotBalanceBN.toFixed(),
+        chainType: 'aelf',
+        contractAddress: portkeyContractAddress,
+        privateKey,
       });
+
       if (approveResult?.error) throw approveResult?.error;
       return true;
     }
@@ -104,12 +143,13 @@ export class CrossTransfer implements ICrossTransfer {
   withdraw: ICrossTransfer['withdraw'] = async (params: IWithdrawParams) => {
     try {
       const {
-        tokenContract,
+        privateKey,
+        portkeyContractAddress,
+        tokenContractAddress,
         chainId,
         toAddress,
         amount,
         tokenInfo,
-        portkeyContract,
         network,
         isCheckSymbol = true,
       } = params;
@@ -126,8 +166,8 @@ export class CrossTransfer implements ICrossTransfer {
       if (!caAddress) throw new Error('Can not get caAddress');
       if (!eTransferContractAddress) throw new Error('Please eTransferContractAddress!');
 
-      const aesPrivateKey = AElf.wallet.AESDecrypt(walletInfo.AESEncryptPrivateKey, pin);
-      const manager = getWallet(aesPrivateKey) as IBlockchainWallet;
+      const aesPrivateKey = walletInfo.AESEncryptPrivateKey;
+      const manager = AElf.wallet.getWalletByPrivateKey(aesPrivateKey) as IBlockchainWallet;
 
       const managerAddress = manager.address;
       const authParams = this.formatAuthTokenParams();
@@ -136,13 +176,15 @@ export class CrossTransfer implements ICrossTransfer {
       const authToken = await eTransferCore.getAuthToken({ ...authParams, chainId });
       console.log(authToken, 'authToken===');
       await this.checkAllowanceAndApprove({
-        tokenContract,
+        chainId,
+        tokenContractAddress,
         symbol: tokenInfo.symbol,
         spender: eTransferContractAddress,
         owner: caAddress,
         caHash,
         amount,
-        portkeyContract,
+        portkeyContractAddress,
+        privateKey,
       });
 
       const result = await eTransferCore.withdrawOrder({

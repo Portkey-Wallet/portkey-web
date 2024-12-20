@@ -29,6 +29,7 @@ export const useCurrentChainList = (): {
   const getChainList = useCallback(async () => {
     try {
       const chainList = await did.services.getChainsInfo();
+      console.log('chainList', chainList);
       setChainList(chainList);
     } catch (error) {
       console.warn('getChainList error', error);
