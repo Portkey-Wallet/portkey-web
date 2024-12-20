@@ -12,6 +12,8 @@ export const useStateInit = () => {
   const [{ sandboxId, chainType }] = usePortkey();
   const [{ pin, caHash, originChainId, managerPrivateKey, didStorageKeyName }, { dispatch }] = usePortkeyAsset();
 
+  console.log('usePortkeyAsset', { pin, caHash, originChainId, managerPrivateKey, didStorageKeyName });
+
   // const fetchCAAddressByChainId = useCallback(
   //   async (chainIdList: ChainId[], caHash: string) => {
   //     const result = await Promise.all(
@@ -117,6 +119,9 @@ export const useStateInit = () => {
       await did.load(pin, didStorageKeyName);
     }
     const storageCaHash = did.didWallet?.caInfo?.[originChainId]?.['caHash'];
+
+    console.log('storageCaHash', originChainId, did.didWallet);
+
     if (caHash && storageCaHash && storageCaHash !== caHash)
       throw Error('Please check whether the entered caHash is correct');
     const currentCaHash = caHash || storageCaHash;

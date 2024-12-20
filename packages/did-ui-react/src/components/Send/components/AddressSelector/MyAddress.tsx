@@ -17,7 +17,6 @@ export default function MyAddress({
   onClick: (account: IClickAddressProps) => void;
 }) {
   const [{ caAddressInfos }] = usePortkeyAsset();
-
   const userAddressInfo = useMemo(
     () => caAddressInfos?.filter((item) => item.chainId !== chainId) || [],
     [caAddressInfos, chainId],

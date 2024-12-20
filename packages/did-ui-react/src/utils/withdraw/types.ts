@@ -22,9 +22,10 @@ export interface IWithdrawPreviewParams {
 }
 
 export interface IWithdrawParams {
+  privateKey: string;
   chainId: ChainId;
-  tokenContract: ContractBasic;
-  portkeyContract: ContractBasic;
+  portkeyContractAddress: string;
+  tokenContractAddress: string;
   toAddress: string;
   network: string;
   amount: string;
