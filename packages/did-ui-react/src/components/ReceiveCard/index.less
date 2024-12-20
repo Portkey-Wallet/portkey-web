@@ -1,109 +1,451 @@
 @import '../../assets/theme/constants.less';
 
 .portkey-ui-receive-content {
-  background-color: var(--portkey-ui-default-bg);
   height: 100%;
-  width: 440px;
-  margin: auto;
-  padding-bottom: 40px;
-
-  .portkey-ui-receive-header {
-    padding: 24px 16px;
-    .leftarrow-icon {
-      width: 24px;
-      height: 24px;
-      cursor: pointer;
-    }
-  }
-
-  .portkey-ui-receive-inner {
-    padding-top: 48px;
-    text-align: center;
-    .portkey-ui-receive-title {
-      color: var(--portkey-ui-text-primary);
-      text-align: center;
-      font-size: 16px;
-      line-height: 22px;
-    }
-    .token-info {
-      margin: 32px 0 24px;
+  .receive-content-nav {
+    position: relative;
+    align-items: center;
+    display: flex;
+    background-color: var(--sds-color-background-default-default);
+    .left-icon {
+      position: absolute;
+      left: 16px;
 
       .icon {
-        background-color: var(--portkey-ui-bg-6);
-        border: 1px solid var(--portkey-ui-border-1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: var(--portkey-ui-text-primary);
+        width: 20px;
+        height: 20px;
       }
-      .icon,
-      .portkey-ui-custom-svg {
+    }
+
+    .right-icon {
+      position: absolute;
+      right: 16px;
+
+      .icon {
+        width: 20px;
+        height: 20px;
+      }
+    }
+
+    .receive-content-header {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      height: 56px;
+
+      .symbol {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 22.4px;
+        text-align: center;
+        color: var(--sds-color-text-default-default);
+      }
+    }
+  }
+
+  .receive-content-body {
+    padding: 0 16px;
+    .source-destination-select-container {
+      &.is-nft {
+        margin-bottom: 24px;
+      }
+      display: flex;
+      border-radius: 8px;
+      border: 1px solid var(--sds-color-border-default-default);
+      .destination,
+      .source {
+        flex: 1;
+        padding: 8px;
+        color: var(--sds-color-text-default-secondary);
+        gap: 8px;
+        display: flex;
+        flex-direction: column;
+        font-weight: 400;
+        line-height: 12px;
+        font-size: 12px;
+
+        .selected-destination,
+        .selected-source {
+          display: flex;
+          gap: 6px;
+          .token-img {
+            width: 16px;
+            height: 16px;
+          }
+
+          .chain-name-container {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            font-weight: 400;
+            line-height: 14px;
+            font-size: 14px;
+            color: var(--sds-color-text-default-default);
+          }
+        }
+      }
+
+      .destination {
+        border-left: 1px solid var(--sds-color-border-default-default);
+      }
+    }
+
+    .exchange-selector-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 24px;
+
+      .exchange-selector {
+        border: 1px solid var(--sds-color-border-default-default);
+        display: flex;
+        width: 100%;
+        border-radius: 8px;
+        height: 38px;
+        align-items: center;
+        margin-bottom: 24px;
+        padding: 4px;
+        .item {
+          display: flex;
+          flex: 1;
+          justify-content: center;
+          align-items: center;
+          height: 100%;
+          border-radius: 8px;
+          font-weight: 400;
+          line-height: 22.4px;
+          font-size: 16px;
+          color: var(--sds-color-text-default-default);
+
+          &.active {
+            background-color: var(--sds-color-background-default-secondary);
+          }
+        }
+      }
+      .exchange-list {
+        display: flex;
+        gap: 2px;
+        margin-bottom: 12px;
+        .exchange-icon {
+          width: 32px;
+          height: 32px;
+        }
+      }
+    }
+
+    .portkey-qrcode-container {
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      margin: 24px 0;
+      flex-direction: column;
+
+      &.mainchain {
+        margin-top: 0;
+      }
+      #portkey-qr-code {
+        width: 100% !important;
+        height: 100% !important;
+        max-width: 320px;
+      }
+
+      .address-container {
+        margin-top: 16px;
+        display: flex;
+        gap: 4px;
+        .address {
+          font-weight: 600;
+          line-height: 16px;
+          font-size: 16px;
+          color: var(--sds-color-text-default-default);
+        }
+      }
+    }
+
+    .minimum-deposit-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px;
+      border-radius: 16px;
+      color: var(--sds-color-text-default-default);
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+      border: 1px solid var(--sds-color-border-default-default);
+      margin-bottom: 16px;
+
+      .minimum-deposit {
+        display: flex;
+        flex-direction: column;
+        text-align: right;
+
+        .usd {
+          font-size: 14px;
+          color: var(--sds-color-text-default-secondary);
+        }
+      }
+    }
+
+    .reminder-container {
+      display: flex;
+      padding: 16px;
+      border-radius: 16px;
+      border: 1px solid var(--sds-color-border-default-default);
+      gap: 12px;
+      font-weight: 400;
+      line-height: 19.6px;
+      font-size: 14px;
+      color: var(--sds-color-text-default-secondary);
+
+      .info-icon {
+        height: 22px;
+        width: 100%;
+        max-width: 20px;
+      }
+
+      .chain {
+        color: var(--sds-color-text-default-default);
+      }
+    }
+
+    .exchange-tip {
+      margin-top: 16px;
+    }
+
+    .powered-by-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 24px;
+      gap: 4px;
+      font-weight: 400;
+      line-height: 12px;
+      font-size: 12px;
+      color: var(--sds-color-text-default-tertiary);
+
+      .etransfer-icon {
+        width: 70px;
+      }
+    }
+  }
+}
+
+.portkey-ui-receive-exchange-modals {
+  .received-exchange-modals-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+
+    .title {
+      font-weight: 700;
+      line-height: 24px;
+      letter-spacing: -0.02em;
+      font-size: 20px;
+      font-family: var(--portkey-font-bricolage-bold);
+    }
+  }
+
+  .received-exchange-modals-body {
+    padding: 0 16px 16px 16px;
+
+    .exchange-list {
+      display: flex;
+      gap: 2px;
+      margin-bottom: 12px;
+      .exchange-icon {
+        width: 32px;
+        height: 32px;
+      }
+    }
+
+    .description {
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+      color: var(--sds-color-text-default-secondary);
+    }
+
+    .item-button {
+      margin-bottom: 16px;
+      width: 100%;
+
+      &:first-of-type {
+        margin-top: 24px;
+      }
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.portkey-ui-receive-modals {
+  .received-modals-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+
+    .title {
+      font-weight: 700;
+      line-height: 24px;
+      letter-spacing: -0.02em;
+      font-size: 20px;
+      font-family: var(--portkey-font-bricolage-bold);
+    }
+  }
+
+  .received-modals-body {
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px;
+    gap: 12px;
+    margin-bottom: 16px;
+    .source-item {
+      display: flex;
+      gap: 12px;
+      padding: 12px 0;
+
+      .source-img {
         width: 24px;
         height: 24px;
-        margin-bottom: 9px;
-        svg {
-          width: 24px;
-          height: 24px;
+      }
+
+      .source-name-container {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        align-items: center;
+        .source-name {
+          font-weight: 400;
+          line-height: 22.4px;
+          font-size: 16px;
         }
-      }
-      .symbol {
-        line-height: 20px;
-        font-size: 14px;
-        color: var(--portkey-ui-text-primary);
-        margin-bottom: 2px;
-      }
-      .network {
-        line-height: 16px;
-        font-size: 12px;
-        color: var(--portkey-ui-text-secondary);
-      }
-    }
-    .scan-content {
-      width: 100%;
-      #portkey-qr-code {
-        width: 180px !important;
-        height: 180px !important;
-      }
-      canvas {
-        margin: auto;
-        border: var(--portkey-ui-scan-border);
-      }
-    }
-    .receive-address {
-      margin-left: 64px;
-      margin-right: 64px;
-      margin-top: 32px;
-      background-color: var(--portkey-ui-bg-4);
-      border-radius: 6px;
-      padding: 10px;
-      position: relative;
 
-      .address {
-        font-size: 12px;
-        text-align: center;
-        word-break: break-all;
-        color: var(--portkey-ui-text-primary);
-        line-height: 16px;
-      }
+        .icon-wrapper {
+          background-color: var(--sds-color-icon-brand-secondary);
+          border-radius: 9999px;
+          width: 20px;
+          height: 20px;
+          justify-content: center;
+          align-items: center;
+          display: flex;
 
-      .copy-icon {
-        position: absolute;
-        top: 50%;
-        right: -38px;
-        transform: translateY(-50%);
-
-        .portkey-ui-custom-svg {
-          width: 14px;
-          height: 14px;
+          .selected-icon {
+            width: 12px;
+            height: 12px;
+          }
         }
       }
     }
   }
 }
+//   background-color: var(--portkey-ui-default-bg);
+//   height: 100%;
+//   width: 440px;
+//   margin: auto;
+//   padding-bottom: 40px;
 
-@media screen and (max-width: @screen-max-w-768) {
-  .portkey-ui-receive-content {
-    width: auto;
-  }
-}
+//   .portkey-ui-receive-header {
+//     padding: 24px 16px;
+//     .leftarrow-icon {
+//       width: 24px;
+//       height: 24px;
+//       cursor: pointer;
+//     }
+//   }
+
+//   .portkey-ui-receive-inner {
+//     padding-top: 48px;
+//     text-align: center;
+//     .portkey-ui-receive-title {
+//       color: var(--portkey-ui-text-primary);
+//       text-align: center;
+//       font-size: 16px;
+//       line-height: 22px;
+//     }
+//     .token-info {
+//       margin: 32px 0 24px;
+
+//       .icon {
+//         background-color: var(--portkey-ui-bg-6);
+//         border: 1px solid var(--portkey-ui-border-1);
+//         border-radius: 50%;
+//         display: flex;
+//         align-items: center;
+//         justify-content: center;
+//         color: var(--portkey-ui-text-primary);
+//       }
+//       .icon,
+//       .portkey-ui-custom-svg {
+//         width: 24px;
+//         height: 24px;
+//         margin-bottom: 9px;
+//         svg {
+//           width: 24px;
+//           height: 24px;
+//         }
+//       }
+//       .symbol {
+//         line-height: 20px;
+//         font-size: 14px;
+//         color: var(--portkey-ui-text-primary);
+//         margin-bottom: 2px;
+//       }
+//       .network {
+//         line-height: 16px;
+//         font-size: 12px;
+//         color: var(--portkey-ui-text-secondary);
+//       }
+//     }
+//     .scan-content {
+//       width: 100%;
+//       #portkey-qr-code {
+//         width: 180px !important;
+//         height: 180px !important;
+//       }
+//       canvas {
+//         margin: auto;
+//         border: var(--portkey-ui-scan-border);
+//       }
+//     }
+//     .receive-address {
+//       margin-left: 64px;
+//       margin-right: 64px;
+//       margin-top: 32px;
+//       background-color: var(--portkey-ui-bg-4);
+//       border-radius: 6px;
+//       padding: 10px;
+//       position: relative;
+
+//       .address {
+//         font-size: 12px;
+//         text-align: center;
+//         word-break: break-all;
+//         color: var(--portkey-ui-text-primary);
+//         line-height: 16px;
+//       }
+
+//       .copy-icon {
+//         position: absolute;
+//         top: 50%;
+//         right: -38px;
+//         transform: translateY(-50%);
+
+//         .portkey-ui-custom-svg {
+//           width: 14px;
+//           height: 14px;
+//         }
+//       }
+//     }
+//   }
+// }
+
+// @media screen and (max-width: @screen-max-w-768) {
+//   .portkey-ui-receive-content {
+//     width: auto;
+//   }
+// }
