@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
-import { ISocialLogin } from '../../types';
+import { TotalAccountType } from '../../types';
 import { useRef, useState } from 'react';
 import './index.less';
 import { TotalAccountsInfo } from '../../constants/socialLogin';
@@ -9,16 +9,15 @@ import { useComputeIconCountPreRow } from '../../hooks/login';
 import { CircleLoginButton } from '../LoginButton';
 
 const MinIconGap = 18;
-
 interface SocialLoginGroupProps {
-  supportAccounts?: Array<ISocialLogin>;
+  supportAccounts?: Array<TotalAccountType>;
   isShowScan?: boolean;
   className?: string;
-  onAccountTypeChange?: (type: ISocialLogin) => void;
+  onAccountTypeChange?: (type: TotalAccountType) => void;
 }
 
 export default function SocialLoginGroup({
-  supportAccounts = SocialLoginList as ISocialLogin[],
+  supportAccounts = SocialLoginList as TotalAccountType[],
   className,
   onAccountTypeChange,
 }: SocialLoginGroupProps) {

@@ -5,6 +5,7 @@
   flex-direction: column;
 
   .page-title {
+    padding: 24px;
     align-items: center;
     height: 44px;
     .title-left-col {
@@ -43,6 +44,14 @@
     flex-direction: column;
     flex: 1;
     overflow: hidden;
+
+    .address-warning-warp {
+      padding: 16px;
+      gap: 16px;
+      .portkey-ui-common-prompt-card {
+        width: 100%;
+      }
+    }
   }
 
   .address-wrap,
@@ -311,18 +320,6 @@
   .btn-wrap {
     background-color: var(--sds-color-background-default-default);
     padding: 16px;
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    z-index: 1000;
-    padding: 10px;
-    text-align: center;
-    .stage-btn {
-      border-radius: 100px;
-      height: 48px;
-      width: 100%;
-    }
   }
 }
 
@@ -374,10 +371,9 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
   .portkey-ui-send-wrapper .page-title {
-    padding-left: 16px;
-    padding-right: 16px;
+    padding: 16px;
     .title-center {
       font-size: 20px;
     }

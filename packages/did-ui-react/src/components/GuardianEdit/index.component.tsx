@@ -556,6 +556,7 @@ function GuardianEdit({
   return (
     <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
       {header}
+      <div className="guardian-btn guardian-btn-remove" onClick={onClickRemove}></div>
       <div className="guardian-edit-body portkey-ui-flex-column portkey-ui-flex-1">
         <div className="input-item">
           <div className="guardian-edit-input-item-label">{`Guardian ${currentGuardian?.guardianType}`}</div>
@@ -583,16 +584,13 @@ function GuardianEdit({
       </div>
       <div className="guardian-edit-footer">
         <div className="portkey-ui-flex-between guardian-add-btn-wrap">
-          <ThrottleButton className="guardian-btn guardian-btn-remove" onClick={onClickRemove}>
-            {t('Remove')}
-          </ThrottleButton>
           <ThrottleButton
             type="primary"
             className="guardian-btn "
             onClick={onConfirm}
             disabled={editBtnDisable || isZK}
             loading={editBtnLoading}>
-            {t('Send Request')}
+            {'Verify with guardian'}
           </ThrottleButton>
         </div>
       </div>

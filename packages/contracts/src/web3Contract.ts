@@ -2,8 +2,12 @@ import { CallOptions, ChainId, SendOptions, SendResult, ViewResult } from '@port
 
 import { IPortkeyContract } from './types';
 import { BaseContract } from './baseContract';
+import { CallViewMethod } from './contract';
 
 export class Web3Contract extends BaseContract implements IPortkeyContract {
+  calculateTransactionFee(_functionName: any, _paramsOption: any): CallViewMethod {
+    throw new Error('Method not implemented.');
+  }
   chainId?: ChainId;
 
   encodedTx<T = any>(_functionName: string, _paramsOption?: any): Promise<ViewResult<T>> {

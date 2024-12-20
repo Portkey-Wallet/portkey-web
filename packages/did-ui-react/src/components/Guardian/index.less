@@ -1,27 +1,54 @@
-@import '../../assets/theme/constants.less';
 .portkey-ui-guardian-page {
   height: 100%;
   .back-header-page-wrapper {
-    background-color: var(--portkey-ui-default-bg);
-    border-bottom: 1px solid var(--portkey-ui-border-2);
+    background-color: var(--sds-color-background-default-default);
+    // border-bottom: 1px solid var(--portkey-ui-border-2);
+    .title-center  {
+      font-size: 16px;
+    }
+    .portkey-ui-custom-svg {
+      width: auto;
+      height: auto;
+    }
+   
     .title-left-col {
       cursor: auto;
-      .leftarrow-icon {
+      .left-icon {
         cursor: pointer;
+        svg {
+          width: 16px;
+          height: 16px;
+        }
       }
     }
     .portkey-ui-guardian-left {
       gap: 12px;
       line-height: 28px;
-      font-size: 24px;
+      font-size: 16px;
       color: var(--portkey-ui-text-primary);
       text-align: left;
     }
-    .title-add-guardian-btn {
-      padding: 12px 8px;
-      border-radius: var(--portkey-ui-primary-border-radius);
-      border: 1px solid var(--portkey-ui-border-7);
+
+    .title-right-col .add-icon svg {
+      width: 24px!important;
+      height: 24px!important;
     }
+
+    .title-right-col .remove-icon svg {
+      width: 24px!important;
+      height: 24px!important;
+    }
+    // .title-add-guardian-btn {
+    //   width: 24px;
+    //   height: 24px;
+    //   .add-icon svg {
+    //     width: 24px!important;
+    //     height: 24px!important;
+    //   }
+      // padding: 12px 8px;
+      // border-radius: var(--portkey-ui-primary-border-radius);
+      // border: 1px solid var(--portkey-ui-border-7);
+    // }
 
     @media screen and (max-width: 768px) {
       .portkey-ui-guardian-left {
