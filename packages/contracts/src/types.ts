@@ -12,6 +12,7 @@ import { IAELFContractOptions } from '@portkey/types';
 
 export interface IPortkeyContract extends IContract {
   encodedTx<T = any>(functionName: string, paramsOption?: any, callOptions?: CallOptions): Promise<ViewResult<T>>;
+  calculateTransactionFee(functionName, paramsOption): any;
 }
 
 export interface BaseContractOptions {
