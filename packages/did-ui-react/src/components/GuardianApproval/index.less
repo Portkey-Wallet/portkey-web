@@ -3,9 +3,52 @@
 }
 .warning-modal-wrapper{
   padding: 24px 20px 16px;
+  .portkey-ant-modal {
+    width: 100%!important;
+  }
+  .waring-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .portkey-ant-btn-default{
+    margin-left: 20px;
+    margin-right: 6px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-radius: 24px; 
+    width: 100%; 
+    height: 48px!important; 
+    line-height:normal!important;
+    background-color: transparent!important;
+    color: var(--portkey-ui-text-primary);
+    border: 1px solid var(--sds-color-border-neutral-secondary)!important;
+    margin: 0;
+  }
+  .portkey-ant-btn-primary{
+    margin-left: 6px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-radius: 24px; 
+    width: 100%; 
+    height: 48px!important; 
+    line-height:normal!important; 
+    background-color: var(--sds-color-background-brand-default)!important;
+    margin: 0;
+    border: none;
+    color: var(--sds-color-text-brand-on-brand);
+  }
+  .portkey-ant-modal-confirm-btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: none!important;
+    padding-top: 24px!important;
+  }
 }
 .portkey-ant-modal-content {
   background-color: var(--sds-color-background-default-default)!important;
+
 }
 .warning-info {
   width: 32px!important;
@@ -17,7 +60,7 @@
   font-size: 20px;
   line-height: 22px;
   text-align: left;
-  padding: 0 18px;
+  padding: 0 16px 16px;
   color: var(--portkey-ui-text-primary);
 }
 
@@ -25,17 +68,17 @@
 .modal-content-v2 {
   font-weight: 400;
   font-size: 16px;
-  line-height: 22px;
+  line-height: 23px;
   text-align: left;
   color: var(--sds-color-text-default-default);
   border-bottom: none;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 .official-website {
   font-weight: 500;
   font-size: 16px;
-  line-height: 22px;
+  line-height: 23px;
   text-align: center;
   color: var(--portkey-ui-font-17);
 }
@@ -54,30 +97,10 @@
   flex-direction: row;
   width: 100%;
 }
-// .portkey-ant-btn-default{
-//   margin-left: 20px;
-//   margin-right: 6px;
-//   margin-bottom: 20px;
-//   margin-top: 20px;
-//   border-radius: 24px; 
-//   width: 100%; 
-//   height: 48px!important; 
-//   line-height:normal!important;
-//   background-color: transparent!important;
-//   color: var(--portkey-ui-text-primary);
-//   border: 1px solid var(--sds-color-border-neutral-secondary)!important;
-// }
-// .portkey-ant-btn-primary{
-//   margin-left: 6px;
-//   margin-right: 20px;
-//   margin-bottom: 20px;
-//   margin-top: 20px;
-//   border-radius: 24px; 
-//   width: 100%; 
-//   height: 48px!important; 
-//   line-height:normal!important; 
-//   background-color: transparent!important;
-// }
-.portkey-ant-modal-confirm-btns {
-  border: none!important;
+@media (min-width: 600px){
+  .warning-modal-wrapper{
+    .portkey-ant-modal {
+      width: 400px!important;
+    }
+  }
 }
