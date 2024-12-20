@@ -63,7 +63,7 @@ export default function SendNFTList({
   return (
     <div className="send-select-nft">
       {loading ? (
-        <Loading />
+        <Loading width={24} height={24} isDarkThemeWhiteLoading />
       ) : nftInfos.length === 0 ? (
         <div className="no-data-message portkey-ui-flex-center">{noDataMessage}</div>
       ) : (
