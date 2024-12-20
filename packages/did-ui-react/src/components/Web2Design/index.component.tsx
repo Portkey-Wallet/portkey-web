@@ -18,6 +18,7 @@ import { errorTip, handleErrorMessage, setLoading } from '../../utils';
 import useSocialLogin from '../../hooks/useSocialLogin';
 import { SocialLoginList, Web2LoginList } from '../../constants/guardian';
 import LoginIconAndLabel from '../LoginIconAndLabel';
+import SocialLoginGroup from '../SocialLoginGroup';
 
 export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
@@ -38,7 +39,7 @@ export default function Web2Design({
   extraElementList,
   termsOfService,
   privacyPolicy,
-  loginMethodsOrder,
+  loginMethodsOrder = [],
   onError,
   onClose,
   onSuccess,
@@ -118,7 +119,7 @@ export default function Web2Design({
   const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
 
   const onSocialChange = useCallback(
-    async (type: ISocialLogin) => {
+    async (type: TotalAccountType) => {
       try {
         onSocialStart?.(type);
         if (!SocialLoginList.includes(type)) return setShowQRCode(true);
@@ -197,9 +198,14 @@ export default function Web2Design({
           </div>
           <DividerCenter />
 
-          {/* <div className="portkey-ui-web2design-social-wrapper">
-            <SocialLoginGroup supportAccounts={loginMethodsOrderWithoutEmail} onAccountTypeChange={onSocialChange} />
-          </div> */}
+          <div className="portkey-ui-web2design-social-wrapper">
+            {/*<SocialLoginGroup supportAccounts={loginMethodsOrderWithoutEmail} onAccountTypeChange={onSocialChange} />*/}
+            <SocialLoginGroup
+              // supportAccounts={['Telegram', 'Google', 'Apple', 'Scan']}
+              supportAccounts={loginMethodsOrderWithoutEmail}
+              onAccountTypeChange={onSocialChange}
+            />
+          </div>
 
           {(extraElement as ReactElement)?.props?.children && (
             <>
