@@ -394,16 +394,41 @@ function GuardianView({
     setVerifierVisible(false);
     setApprovalVisible(false);
   }, [currentGuardian]);
+
+  console.log('currentGuardian', currentGuardian);
   return (
     <div className={clsx('portkey-ui-guardian-view', 'portkey-ui-flex-column', className)}>
       <>
         {header}
+
         <div className="guardian-view-body portkey-ui-flex-column portkey-ui-flex-1">
+          <div className="guardian-view-login-content portkey-ui-flex-column">
+            <div className="guardian-view-login-desc">
+              <span className="guardian-view-login-content-label">{t('Login account')}</span>
+              <div className="guardian-view-switch-status-wrap">
+                <Switch
+                  loading={switchDisable}
+                  className="guardian-view-switch-login-switch"
+                  checked={currentGuardian?.isLoginGuardian}
+                  onChange={checkSwitch}
+                />
+              </div>
+            </div>
+            <span className="guardian-view-login-content-value">
+              {t('The login account will be able to log in and control all your assets')}
+            </span>
+          </div>
           <div className="guardian-view-input-content portkey-ui-flex-column">
             <div className="guardian-view-input-item">
-              <div className="guardian-view-input-item-label">{`Guardian ${currentGuardian.guardianType}`}</div>
+              <div className="guardian-view-input-item-label">{`Guardian`}</div>
               <div className="guardian-view-input-item-control portkey-ui-flex">
                 <GuardianTypeIcon type={guardianIconMap[currentGuardian?.guardianType || 'Email']} />
+                <span>{currentGuardian.guardianType}</span>
+              </div>
+            </div>
+            <div className="guardian-view-input-item">
+              <div className="guardian-view-input-item-label">{'Guardian account'}</div>
+              <div className="guardian-view-input-item-control">
                 <GuardianAccountShow guardian={currentGuardian} />
               </div>
             </div>
@@ -416,21 +441,6 @@ function GuardianView({
                 />
                 <span className="name">{isZK ? zkLoginVerifierItem.name : currentGuardian?.verifier?.name ?? ''}</span>
               </div>
-            </div>
-          </div>
-          <div className="guardian-view-login-content portkey-ui-flex-column">
-            <span className="guardian-view-login-content-label">{t('Login account')}</span>
-            <span className="guardian-view-login-content-value">
-              {t('The login account will be able to log in and control all your assets')}
-            </span>
-            <div className="guardian-view-switch-status-wrap">
-              <Switch
-                loading={switchDisable}
-                className="guardian-view-switch-login-switch"
-                checked={currentGuardian?.isLoginGuardian}
-                onChange={checkSwitch}
-              />
-              <span className="guardian-view-switch-status">{currentGuardian?.isLoginGuardian ? 'Open' : 'Close'}</span>
             </div>
           </div>
         </div>

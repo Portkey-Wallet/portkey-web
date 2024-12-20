@@ -7,14 +7,14 @@
     flex: 1;
   }
   .verifier-item {
-    margin-top: 4px;
-    padding: 24px;
+    padding: 16px;
     cursor: pointer;
     &:last-of-type {
-      border-bottom: 1px solid var(--portkey-ui-default-border);
+      // border-bottom: 1px solid var(--portkey-ui-default-border);
     }
     .login-icon {
       left: 24px;
+      margin-bottom: 10px;
     }
     .leftarrow-icon {
       transform: rotate(180deg);
@@ -32,9 +32,20 @@
       }
     }
   }
+
+  .item-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .item-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
   @media screen and (max-width: 768px) {
     .verifier-item {
-      padding: 24px 20px;
+      padding: 16px;
     }
   }
 }

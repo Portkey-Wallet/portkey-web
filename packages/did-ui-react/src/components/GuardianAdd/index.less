@@ -1,9 +1,10 @@
 @import '../../assets/theme/constants.less';
 
+
 .portkey-ui-guardian-add {
   height: 100%;
   .guardian-add-body {
-    padding: 24px;
+    padding: 0 24px;
     font-size: 14px;
     line-height: 20px;
     gap: 24px;
@@ -12,20 +13,20 @@
       margin-bottom: 8px;
     }
     .social-input {
-      padding: 14px 16px;
+      padding: 6px 16px;
       border-radius: 6px;
       border: 1px solid var(--portkey-ui-default-border);
       .social-name {
-        color: var(--portkey-ui-font-6);
+        color: var(--portkey-ui-text-primary);
       }
       .social-email {
-        font-size: 12px;
-        line-height: 16px;
-        color: var(--portkey-ui-font-6-8);
+        font-size: 16px;
+        line-height: 24px;
+        color: var(--portkey-ui-text-primary);
       }
       .social-click-text {
         font-weight: 500;
-        color: var(--portkey-ui-font-13);
+        color: var(--sds-color-text-brand-default);
         cursor: pointer;
       }
       &.detail {
@@ -43,6 +44,12 @@
       }
     }
 
+    .portkey-ant-select-selector {
+      background-color: transparent!important;
+      border: 1px solid var(--sds-color-border-default-default)!important;
+      border-radius: 8px!important;
+    }
+
     .verifier-select.verifier-select-disabled {
       pointer-events: none;
       .portkey-ant-select-selector {
@@ -51,10 +58,11 @@
     }
   }
   .guardian-add-footer {
+    width: 100%;
     margin-top: 16px;
     padding: 16px;
-    border-top: 1px solid var(--portkey-ui-default-border);
     .guardian-btn {
+      width: 100%;
       padding: 0 16px;
       line-height: var(--portkey-ui-default-btn-h);
       border-radius: var(--portkey-ui-primary-border-radius);
@@ -72,6 +80,14 @@
     line-height: 16px;
     color: var(--portkey-ui-font-9);
     font-size: 12px;
+  }
+  .base-guardian-type-icon {
+    width: 16px!important;
+    height: 16px!important;
+    .portkey-ui-custom-svg svg{
+      width: 8px!important;
+      height: 8px!important;
+    }
   }
 }
 .portkey-ui-remove-guardian-modal {
