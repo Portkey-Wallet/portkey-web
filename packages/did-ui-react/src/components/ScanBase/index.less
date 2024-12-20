@@ -33,13 +33,24 @@
   }
   .scan-card-content {
     min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
   }
 
   .scan-content {
-    width: 100%;
+    // width: 100%;
+    width: 320px;
+    height: 320px;
     canvas {
       margin: auto;
       border: var(--portkey-ui-scan-border);
+    }
+    #portkey-qr-code {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 320px;
     }
   }
   .description {
@@ -68,6 +79,10 @@
   .scan-card-wrapper {
     .scan-card-content {
       padding: 0 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
     }
     .description {
       margin-bottom: 32px;
