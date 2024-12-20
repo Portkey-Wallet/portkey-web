@@ -17,28 +17,41 @@
   }
   .set-allowance-body {
     padding: 24px;
-    background: var(--portkey-ui-bg-6);
+    .set-allowance-body-title {
+      font-size: 16px;
+      color: var(--sds-color-text-default-default);
+    }
   }
   .set-allowance-warning {
     border-radius: 8px;
-    border: 1px solid #B2B0FF;
-    background: #EFECFF;
-    padding: 9px 12px;
-    margin-top: 16px;
+    border: 1px solid var(--sds-color-border-default-default);
+    color: var(--sds-color-text-default-secondary);
+    background: transparent;
+    padding: 16px;
+    border-radius: 16px;
+    line-height: 20px;
     margin-right: 24px;
     margin-left: 24px;
+    margin-bottom: 10px;
+    font-size: 14px;
     display: flex;
     .warning-icon {
-      width: 32px;
-      height: 16px;
-      margin-right: 8px;
+      width: 50px;
+      height: 22px;
+      margin-right: 16px;
       color: #000;
     }
   }
   .set-allowance-warning-hint {
-    border-radius: 8px;
-    border: 1px solid#FFD4A2;
-    background: #FFF4E8;  
+    border-radius: 16px;
+    color: var(--sds-color-text-warning-on-warning-tertiary);
+    background: transparent;
+    margin-bottom: 10px;
+    font-size: 14px;
+    line-height: 20px;
+    background-color: var(--sds-color-background-warning-tertiary);
+    border-color: var(--sds-color-border-warning-tertiary);
+    
   }
   .set-allowance-body-title {
     color: var(--portkey-ui-input-text);
@@ -48,12 +61,25 @@
     line-height: 20px;
     margin-bottom: 8px;
   }
+
+  .set-allowance-use-recommended-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 10px;
+    color: var(--sds-color-text-brand-default);
+    font-size: 16px;
+  }
+
   .set-allowance-use-recommended {
-    color: var(--portkey-ui-font-4);
+    color: var(--sds-color-text-brand-default);
     cursor: pointer;
   }
   .portkey-ant-input-suffix {
     cursor: pointer;
+  }
+  .set-allowance-input-wrapper {
+    border-radius: 8px;
   }
 
   .set-allowance-input-wrapper .portkey-ant-input {
@@ -96,7 +122,8 @@
 
 .set-allowance-dapp-info {
   width: 100%;
-  padding-top: 40px;
+  padding: 40px 16px 0;
+  justify-content: left;
 }
 
 .set-allowance-approveSymbol {
@@ -104,17 +131,20 @@
   font-size: 14px;
   line-height: 20px;
   color: var(--portkey-ui-input-text);
-  margin-right: 12px;
   cursor: auto;
 }
 
 .set-allowance-dapp-info-inner {
-  border-radius: 24px;
-  border: 1px solid var(--portkey-ui-default-btn-border);
-  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  .set-allowance-dapp-title {
+    color: var(--sds-color-text-default-default);
+    font-size: 20px;
+  }
   .set-allowance-dapp-icon {
-    width: 24px;
-    height: 24px;
+    width: 48px;
+    height: 48px;
     border-radius: 100%;
     margin-right: 8px;
   }
@@ -126,6 +156,9 @@
     font-weight: 400;
     line-height: 20px;
   }
+}
+.portkey-ant-btn-default {
+  border-color: var(--sds-color-border-neutral-secondary)!important;
 }
 
 @media screen and (max-width: 768px) {
