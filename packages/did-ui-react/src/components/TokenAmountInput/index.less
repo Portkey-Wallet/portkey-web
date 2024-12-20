@@ -41,6 +41,10 @@
         font-size: 32px;
         font-weight: 700;
         text-align: center;
+        outline: none;
+        &.amount-error {
+          color: var(--sds-color-text-danger-default);
+        }
       }
 
       span {
@@ -66,6 +70,13 @@
     .switch {
       width: 16px;
       height: 16px;
+      svg {
+        width: 16px;
+        height: 16px;
+        path {
+          fill: var(--sds-color-icon-default-secondary);
+        }
+      }
     }
   }
 }
