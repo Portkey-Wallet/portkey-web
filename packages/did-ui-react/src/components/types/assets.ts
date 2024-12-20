@@ -125,6 +125,7 @@ export enum TransactionError {
   NFT_NOT_ENOUGH = 'Insufficient quantity',
   FEE_NOT_ENOUGH = 'Insufficient funds for transaction fee',
   CROSS_NOT_ENOUGH = 'Insufficient funds for cross-chain transaction fee',
+  SYNCHRONIZING = 'Synchronizing on-chain account information...',
 }
 
 export type the2ThFailedActivityItemType = {

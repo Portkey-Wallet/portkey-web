@@ -341,9 +341,6 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionD
         {renderCollectionInfo}
         {/* {renderPicture} */}
         {renderDetail}
-        {renderDetail}
-        {renderDetail}
-        {renderDetail}
       </div>
     </div>
   );
