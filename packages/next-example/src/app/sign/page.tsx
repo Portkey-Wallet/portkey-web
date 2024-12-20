@@ -22,7 +22,7 @@ import { FetchRequest } from '@portkey/request';
 import { useRouter } from 'next/navigation';
 
 const PIN = '111111';
-let CHAIN_ID: ChainId = 'tDVW';
+let CHAIN_ID: ChainId = 'AELF';
 
 setTimeout(() => {
   ConfigProvider.setGlobalConfig({

@@ -39,7 +39,7 @@ export function timesDecimals(a?: BigNumber.Value, decimals: string | number = 1
   return bigA.times(`1e${decimals}`);
 }
 
-export function transNetworkText(chainId: string, isMainnet?: boolean): string {
+export function transNetworkText(chainId: ChainId, isMainnet?: boolean): string {
   return `aelf ${chainId === MAIN_CHAIN_ID ? MAIN_CHAIN : SIDE_CHAIN}${isMainnet ? '' : ' ' + TEST_NET}`;
 }
 

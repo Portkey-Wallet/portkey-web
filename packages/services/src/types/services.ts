@@ -9,6 +9,7 @@ import {
   ITransactionService,
   TCommonService,
   IReceiveService,
+  ISendService,
 } from './index';
 
 export interface IServices extends ICommunityRecoveryService {
@@ -22,4 +23,5 @@ export interface IServices extends ICommunityRecoveryService {
   readonly allowance: IAllowanceService;
   readonly common: TCommonService;
   readonly receive: IReceiveService;
+  readonly send: ISendService;
 }

@@ -24,9 +24,17 @@ export default function SendNFTList({
   const renderItem = useCallback(
     (nft: INftInfoType) => {
       return (
-        <div className="nft-item flex-row-center gap-8" onClick={() => onSelect(nft)}>
-          <NFTImage imageUrl={nft.imageUrl} name={nft.alias} isSeed={nft.isSeed} seedType={nft.seedType} />
-          <div className="nft-item-info flex-between-center flex-1">
+        <div
+          className="nft-item portkey-ui-flex-row-center gap-8 portkey-ui-cursor-pointer"
+          onClick={() => onSelect(nft)}>
+          <NFTImage
+            className="nft-item-img"
+            imageUrl={nft.imageUrl}
+            name={nft.alias}
+            isSeed={nft.isSeed}
+            seedType={nft.seedType}
+          />
+          <div className="nft-item-info portkey-ui-flex-between-center portkey-ui-flex-1">
             <div>
               <div>{`${nft.alias} #${nft.tokenId}`}</div>
               <div className="nft-item-chain">{`${nft.displayChainName || ''} ${isMainnet ? '' : 'Testnet'}`}</div>
@@ -42,7 +50,7 @@ export default function SendNFTList({
     (item: IAssetNftCollection) => {
       return (
         <>
-          <div className="nft-collection flex-row-center gap-8" key={item.collectionName}>
+          <div className="nft-collection portkey-ui-flex-row-center gap-8" key={item.collectionName}>
             <NFTImage imageUrl={item.imageUrl} name={item.collectionName} />
             <div>{item.collectionName}</div>
           </div>
@@ -57,7 +65,7 @@ export default function SendNFTList({
       {loading ? (
         <Loading />
       ) : nftInfos.length === 0 ? (
-        <div className="no-data-message flex-center">{noDataMessage}</div>
+        <div className="no-data-message portkey-ui-flex-center">{noDataMessage}</div>
       ) : (
         nftInfos.map((item) => renderCollection(item))
       )}

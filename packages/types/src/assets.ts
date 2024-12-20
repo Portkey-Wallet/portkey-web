@@ -35,4 +35,5 @@ export interface INftInfoType {
   chainId: string;
   displayChainName?: string;
   chainImageUrl?: string;
+  symbol: string;
 }

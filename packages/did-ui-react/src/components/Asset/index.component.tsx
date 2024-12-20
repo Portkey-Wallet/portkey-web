@@ -11,6 +11,7 @@ import { IAssetItemType, ITransferLimitItem, AllowanceItem, IUserTokenItemNew } 
 import {
   BalanceTab,
   BaseToken,
+  ITokenSectionResponse,
   NFTCollectionItemShowType,
   NFTItemBaseExpand,
   TokenItemShowType,
@@ -51,6 +52,8 @@ import { loadingTip } from '../../utils/loadingTip';
 import CollectionDetailMain from '../CollectionDetail/index.component';
 import CommonButton from '../CommonButton';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
+import { SendAssetListPage } from '../SendAssetList';
+import ReceiveList from '../ReceiveList';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -62,6 +65,13 @@ export interface AssetMainProps
   onDeleteAccount?: () => void;
   onLifeCycleChange?(liftCycle: `${AssetStep}`): void;
 }
+
+export type SelectTokenType = {
+  chainId: ChainId;
+  symbol: string;
+  decimals: number;
+  isNFT?: boolean;
+};
 
 const InitTransferLimitData: ITransferLimitItemWithRoute = {
   chainId: 'AELF',
@@ -301,18 +311,15 @@ function AssetMain({
     // saveLiftCycleInfo();
   }, [assetStep]);
 
-  const onReceive = useCallback(
-    async (v: any) => {
-      preStepRef.current = assetStep;
-      setSelectToken({
-        ...v,
-        address: v.address || v.tokenContractAddress,
-      });
-      await sleep(50);
-      setAssetStep(AssetStep.receive);
-    },
-    [assetStep],
-  );
+  const onReceive = useCallback(async () => {
+    preStepRef.current = assetStep;
+    // setSelectToken({
+    //   ...v,
+    //   address: v.address || v.tokenContractAddress,
+    // });
+    // await sleep(50);
+    setAssetStep(AssetStep.receive);
+  }, [assetStep]);
 
   const onBuy = useCallback(
     async (v: any) => {
@@ -327,9 +334,13 @@ function AssetMain({
     [assetStep],
   );
 
-  const onSend = useCallback(async (v: IAssetItemType) => {
-    setSendToken(v);
-    setAssetStep(AssetStep.send);
+  const onSend = useCallback(async (v?: IAssetItemType) => {
+    if (v) {
+      setSendToken(v);
+      setAssetStep(AssetStep.send);
+    } else {
+      setAssetStep(AssetStep.sendAssetList);
+    }
   }, []);
 
   const onBack = useCallback(() => {
@@ -410,6 +421,24 @@ function AssetMain({
     [assetStep],
   );
 
+  const filterToken = (tokenList: IUserTokenItemNew[]) => {
+    const filteredMap: Record<string, any> = {};
+
+    for (const item of tokenList) {
+      const { symbol, chainId } = item;
+
+      if (symbol === 'ELF' && chainId === 'AELF') {
+        filteredMap[symbol] = item;
+      } else if (symbol !== 'ELF') {
+        if (!filteredMap[symbol] || chainId === 'tDVW') {
+          filteredMap[symbol] = item;
+        }
+      }
+    }
+
+    return Object.values(filteredMap);
+  };
+
   return (
     <div className={clsx('portkey-ui-asset-wrapper portkey-ui-flex-column-center', className)}>
       <div className="portkey-ui-logo portkey-ui-flex-row-center">
@@ -456,25 +485,36 @@ function AssetMain({
               }}
             />
           )}
-          {assetStep === AssetStep.receive && caInfo && selectToken && (
-            <ReceiveCard
-              receiveInfo={{
-                address: caInfo[selectToken.chainId]?.caAddress,
-                name: '',
-              }}
-              symbolIcon={selectToken.imageUrl}
-              assetInfo={{
-                symbol: selectToken.symbol,
-                label: selectToken?.label,
-                tokenContractAddress: selectToken.address,
-                chainId: selectToken.chainId,
-                decimals: selectToken.decimals,
-              }}
+          {assetStep === AssetStep.sendAssetList && (
+            <SendAssetListPage
+              caAddressInfos={caAddressInfos}
               networkType={networkType}
-              chainId={selectToken.chainId}
-              // selectToken={selectToken}
+              onCancel={() => {
+                setAssetStep(AssetStep.overview);
+              }}
+              onSelect={(v) => {
+                setSendToken(v as any);
+                setAssetStep(AssetStep.send);
+              }}
+            />
+          )}
+          {assetStep === AssetStep.receive && (
+            <ReceiveList
+              caAddressInfos={caAddressInfos}
+              tokenList={filterToken(allToken || [])}
+              onBack={onBack}
+              onItemClick={(item: SelectTokenType) => {
+                if (!item) return;
+                setSelectToken(item);
+                setAssetStep(AssetStep.receiveDetail);
+              }}
+            />
+          )}
+          {assetStep === AssetStep.receiveDetail && caInfo && selectToken && (
+            <ReceiveCard
+              selectToken={selectToken}
               onBack={() => {
-                onBack();
+                setAssetStep(AssetStep.receive);
               }}
             />
           )}
@@ -483,7 +523,8 @@ function AssetMain({
               initState={rampExtraConfig}
               tokenInfo={{
                 ...selectToken,
-                tokenContractAddress: selectToken.address,
+                chainId: selectToken.chainId || 'AELF',
+                tokenContractAddress: selectToken.address || '',
               }}
               onBack={() => {
                 setRampExtraConfig(undefined);
@@ -502,6 +543,7 @@ function AssetMain({
                 setAssetStep(AssetStep.transferSettingsEdit);
               }}
               onModifyGuardians={() => {
+                if (!selectToken.chainId) return;
                 setAccelerateChainId(selectToken.chainId);
                 setAssetStep(AssetStep.guardians);
               }}
@@ -560,10 +602,10 @@ function AssetMain({
                   return loadingTip({ msg: loginOptTip });
                 }
                 const info: IAssetItemType = {
-                  chainId: token.chainId,
+                  chainId: token.chainId || 'AELF',
                   symbol: token.symbol,
                   label: token?.label,
-                  address: token.tokenContractAddress || token.address,
+                  address: token.tokenContractAddress || token.address || '',
                   tokenInfo: {
                     ...token,
                     balance: token.balance || '0',
