@@ -117,7 +117,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
           {item?.status === contractStatusEnum.PENDING ? (
             loadingStatus
           ) : item?.sourceIcon ? (
-            <ImgWithCornerMark imgSrc={item.listIcon || ''} cornerImgSrc={item?.sourceIcon || ''} />
+            <ImgWithCornerMark mainImgSrc={item.listIcon || ''} cornerImgSrc={item?.sourceIcon || ''} />
           ) : (
             <img className="left-img" src={item?.listIcon || ''} />
           )}
@@ -220,7 +220,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
               <img className="nft-img" src={item.nftInfo?.imageUrl} />
             ) : isTransferType ? (
               <ImgWithCornerMark
-                imgSrc={item.listIcon || ''}
+                mainImgSrc={item.listIcon || ''}
                 cornerImgSrc={item.isReceived ? 'ReceiveActivity' : 'SendActivity'}
               />
             ) : (
@@ -249,7 +249,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
             <img className="nft-img" src={item.nftInfo?.imageUrl} width={42} height={42} />
           ) : isTransferType ? (
             <ImgWithCornerMark
-              imgSrc={item.listIcon || ''}
+              mainImgSrc={item.listIcon || ''}
               cornerImgSrc={item.isReceived ? 'ReceiveActivity' : 'SendActivity'}
             />
           ) : (
