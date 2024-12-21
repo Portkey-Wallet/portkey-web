@@ -284,6 +284,46 @@
   }
 }
 
+.portkey-ui-modal-method {
+  border-radius: 8px;
+  border: 1px solid var(--sds-color-border-default-secondary);
+  .ant-btn {
+    height: 48px;
+    border-radius: 24px;
+  }
+  .portkey-btn-outline {
+    color: var(--sds-color-text-default-default);
+    background: var(--sds-color-background-default-default);
+    border: 1.5px solid var(--sds-color-border-neutral-secondary);
+    &:hover {
+      background: var(--sds-color-background-default-default-hover);
+      border-color: var(--sds-color-border-neutral-tertiary);
+    }
+    &:disabled,
+    &:disabled:hover {
+      color: var(--sds-color-text-disabled-on-disabled);
+      background-color: var(--sds-color-background-disabled-default);
+      border-color: transparent;
+    }
+  }
+  .portkey-btn-primary {
+    color: var(--sds-color-text-brand-on-brand);
+    background: var(--sds-color-background-brand-default);
+    border: none;
+    &:hover {
+      color: var(--sds-color-text-brand-on-brand);
+      background: var(--sds-color-background-brand-hover);
+    }
+    &:disabled,
+    &:disabled:hover {
+      color: var(--sds-color-text-disabled-on-disabled);
+      background-color: var(--sds-color-background-disabled-default);
+      border-color: transparent;
+      opacity: 1;
+    }
+  }
+}
+
 .portkey-ant-message {
   z-index: var(--portkey-ui-message-zIndex);
   top: 16px;

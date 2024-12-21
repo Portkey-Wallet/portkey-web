@@ -1,11 +1,12 @@
-import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
+import { TipContent } from '../Send/components/SendModalTip';
+import ButtonGroup from '../ButtonGroup';
+import { CommonButtonType } from '../CommonButton';
 import './index.less';
-import ThrottleButton from '../ThrottleButton';
 
 export interface SecurityCheckAndAccelerateProps {
   className?: string;
-  onConfirm?: (res: any) => void;
+  onConfirm?: (res?: any) => void;
   onClose?: () => void;
 }
 
@@ -17,25 +18,27 @@ export default function SecurityCheckAndAccelerateMain({
   onClose,
 }: SecurityCheckAndAccelerateProps) {
   return (
-    <div className={clsx('portkey-ui-text-center', `${PrefixCls}-wrapper`, className)}>
-      {onClose && <CustomSvg type="Close2" onClick={onClose} />}
-      <div className={`${PrefixCls}-body`}>
-        <div className={`${PrefixCls}-banner`}>
-          <CustomSvg type="Security" />
-        </div>
-        <div className={`${PrefixCls}-title`}>Wallet Security Level Upgrade in Progress</div>
-        <div className={`${PrefixCls}-description`}>
-          {`You can click "OK" to complete the addition of guardian immediately. Alternatively, you have the option to close this window and wait for the completion, which will take around 1-3 minutes.`}
-        </div>
-      </div>
-
-      <div className={`${PrefixCls}-footer`}>
-        <div className="portkey-ui-btn-wrapper">
-          <ThrottleButton type="primary" onClick={onConfirm}>
-            OK
-          </ThrottleButton>
-        </div>
-      </div>
+    <div className={clsx(`${PrefixCls}-wrapper`, className)}>
+      <TipContent
+        title={`Wallet security level upgrade in progress`}
+        content={`Click “Complete now” to immediately complete the addition of a guardian, or close this window and wait for completion, which will take about 1-3 minutes.`}
+        onClose={() => onClose?.()}
+      />
+      <ButtonGroup
+        type="row"
+        buttons={[
+          {
+            type: 'outline' as CommonButtonType,
+            onClick: () => onClose?.(),
+            content: 'Close',
+          },
+          {
+            type: 'primary' as CommonButtonType,
+            onClick: () => onConfirm?.(),
+            content: 'Complete now',
+          },
+        ]}
+      />
     </div>
   );
 }
