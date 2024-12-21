@@ -4,14 +4,7 @@ import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } fr
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
 import { ChainId, ChainType } from '@portkey/types';
-import {
-  errorTip,
-  handleErrorMessage,
-  handleVerificationDoc,
-  setLoading,
-  socialLoginAuth,
-  verification,
-} from '../../utils';
+import { errorTip, handleErrorMessage, handleVerificationDoc, socialLoginAuth, verification } from '../../utils';
 import {
   ISocialLogin,
   ITelegramInfo,
@@ -327,7 +320,7 @@ function GuardianEdit({
   );
   const sendCode = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const _guardian = preGuardianRef.current;
       const result = await verification.sendVerificationCode(
         {
@@ -368,7 +361,7 @@ function GuardianEdit({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [originChainId, operationType, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
@@ -398,7 +391,7 @@ function GuardianEdit({
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
-        setLoading(true);
+        // setLoading(true);
         if (step === GuardianEditStatus.EditGuardian) {
           let _cur = curGuardian.current;
           if (_cur?.guardianType && zkGuardianType.includes(_cur.guardianType)) {
@@ -428,7 +421,7 @@ function GuardianEdit({
           onError,
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [
@@ -461,7 +454,7 @@ function GuardianEdit({
   }, [preGuardian?.guardianIdentifier, preGuardian?.guardianType, preGuardian?.verifier?.name, sendCode]);
   const handleSocialVerify = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const res = await socialVerify?.(preGuardian!);
 
       preGuardianRef.current = {
@@ -484,7 +477,7 @@ function GuardianEdit({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [isErrorTip, onError, preGuardian, socialVerify]);
 

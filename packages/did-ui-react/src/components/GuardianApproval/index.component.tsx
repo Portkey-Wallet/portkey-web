@@ -20,7 +20,6 @@ import {
   handleErrorMessage,
   handleVerificationDoc,
   modalMethod,
-  setLoading,
 } from '../../utils';
 import type { ChainId, TStringJSON } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
@@ -114,6 +113,7 @@ const GuardianApprovalMain = forwardRef(
     const onErrorRef = useRef<GuardianApprovalProps['onError']>(onError);
     const onConfirmRef = useRef<GuardianApprovalProps['onConfirm']>(onConfirm);
     console.log(originChainId, targetChainId, defaultGuardianList, 'defaultGuardianList===');
+    // const [loading, setLoading] = useState(false);
 
     useEffect(() => {
       onErrorRef.current = onError;
@@ -235,7 +235,7 @@ const GuardianApprovalMain = forwardRef(
             approveDetail: approveDetail,
             caHash,
           };
-          setLoading(true);
+          // setLoading(true);
           if (isAsyncVerify) {
             const rst = await asyncVerifyToken(accountType, { ...verifyParams, customLoginHandler });
 
@@ -282,7 +282,7 @@ const GuardianApprovalMain = forwardRef(
             onError,
           );
         } finally {
-          setLoading(false);
+          // setLoading(false);
         }
       },
       [
@@ -332,7 +332,7 @@ const GuardianApprovalMain = forwardRef(
     const onAsyncVerifying = useCallback(
       async (_item: UserGuardianStatus, index: number) => {
         try {
-          setLoading(true);
+          // setLoading(true);
 
           const accountType = _item.guardianType as ISocialLogin;
           if (!_item?.asyncVerifyInfoParams) throw new Error('asyncVerifyInfoParams is required');
@@ -358,11 +358,11 @@ const GuardianApprovalMain = forwardRef(
             };
             return [...v];
           });
-          setLoading(false);
+          // setLoading(false);
 
           setVerifyAccountIndex(undefined);
         } catch (error) {
-          setLoading(false);
+          // setLoading(false);
           return errorTip(
             {
               errorFields: 'GuardianApproval',
@@ -372,7 +372,7 @@ const GuardianApprovalMain = forwardRef(
             onError,
           );
         } finally {
-          setLoading(false);
+          // setLoading(false);
         }
       },
       [isErrorTip, onError, verifyToken],

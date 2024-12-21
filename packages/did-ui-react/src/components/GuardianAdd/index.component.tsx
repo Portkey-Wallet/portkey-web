@@ -21,7 +21,6 @@ import {
   parseTelegramToken,
   parseTwitterToken,
   randomId,
-  setLoading,
   socialLoginAuth,
   verification,
 } from '../../utils';
@@ -402,7 +401,7 @@ function GuardianAdd({
           onError,
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [
@@ -489,7 +488,7 @@ function GuardianAdd({
   const handleSocialAuth = useCallback(
     async (v: ISocialLogin) => {
       try {
-        setLoading(true);
+        // setLoading(true);
         const info = await socialAuth(v);
         setSocialValue(info as ISocialInput);
       } catch (error) {
@@ -502,7 +501,7 @@ function GuardianAdd({
           onError,
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [isErrorTip, onError, socialAuth],
@@ -593,7 +592,7 @@ function GuardianAdd({
 
   const sendCode = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const _guardian = curGuardian?.current;
       const result = await verification.sendVerificationCode(
         {
@@ -634,7 +633,7 @@ function GuardianAdd({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [originChainId, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
@@ -652,7 +651,7 @@ function GuardianAdd({
         _cur = Object.assign(_cur, { verifierId: defaultSelectedVerifier?.id, verifier: defaultSelectedVerifier });
       }
       try {
-        setLoading(true);
+        // setLoading(true);
         await handleAddGuardian?.(_cur!, approvalInfo);
       } catch (e) {
         errorTip(
@@ -664,7 +663,7 @@ function GuardianAdd({
           onError,
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [defaultSelectedVerifier, handleAddGuardian, isErrorTip, onError],
@@ -682,7 +681,7 @@ function GuardianAdd({
     if (_valid) {
       if (socialValue?.id) {
         try {
-          setLoading(true);
+          // setLoading(true);
           const res = await socialVerify(curGuardian.current!);
           const { guardianIdentifier, verifierInfo, zkLoginInfo } = res || {};
           if (guardianIdentifier) {
@@ -713,7 +712,7 @@ function GuardianAdd({
             onError,
           );
         } finally {
-          setLoading(false);
+          // setLoading(false);
         }
       } else {
         CustomModal({
