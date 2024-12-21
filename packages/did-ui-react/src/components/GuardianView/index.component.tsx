@@ -31,6 +31,8 @@ import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
+import CustomSvg from '../CustomSvg';
+import CommonButton from '../CommonButton';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -330,24 +332,17 @@ function GuardianView({
         loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
       });
       setSwitchDisable(false);
-      CustomModal({
-        type: 'info',
-        okText: 'Close',
-        content: <>{t('This account address is already a login account and cannot be used')}</>,
-      });
+
+      setTip1Visible(true);
     } catch (error: any) {
       setSwitchDisable(false);
       if (error?.error?.code?.toString() === '3002') {
         handleSwitch();
       } else {
-        CustomModal({
-          type: 'info',
-          okText: 'Close',
-          content: <>{t('This account address is already a login account and cannot be used')}</>,
-        });
+        setTip1Visible(true);
       }
     }
-  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, originChainId, t]);
+  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, originChainId]);
 
   const checkUnsetLoginGuardian = useCallback(async () => {
     setSwitchDisable(true);
@@ -358,14 +353,10 @@ function GuardianView({
     if (loginAccountNum > 1) {
       handleSwitch();
     } else {
-      CustomModal({
-        type: 'info',
-        okText: 'Close',
-        content: <>{t('This guardian is the only login account and cannot be turned off')}</>,
-      });
+      setTipVisible(true);
     }
     setSwitchDisable(false);
-  }, [guardianList, handleSwitch, t]);
+  }, [guardianList, handleSwitch]);
 
   const checkSwitch = useCallback(
     async (status: boolean) => {
@@ -388,6 +379,10 @@ function GuardianView({
   }, [currentGuardian]);
 
   console.log('currentGuardian', currentGuardian);
+
+  const [tipVisible, setTipVisible] = useState(false);
+  const [tip1Visible, setTip1Visible] = useState(false);
+
   return (
     <div className={clsx('portkey-ui-guardian-view', 'portkey-ui-flex-column', className)}>
       <>
@@ -491,6 +486,58 @@ function GuardianView({
           // guardianIdentifier={curGuardian?.current?.guardianIdentifier}
           // firstName={curGuardian?.current?.firstName}
         />
+      </CommonBaseModal>
+
+      <CommonBaseModal open={tipVisible} onClose={() => setTipVisible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-view-guardian-modal">
+          <div className="view-guardian-title-box">
+            <CustomSvg
+              type="WarningTriangle"
+              fillColor="var(--sds-color-icon-default-default)"
+              style={{ width: 32, height: 32 }}
+            />
+            <CustomSvg
+              type="Close"
+              strokeColor="var(--sds-color-icon-default-default)"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              onClick={() => setTipVisible(false)}
+            />
+          </div>
+          <div className="view-guardian-title">
+            {t('This guardian is the only login account and cannot be turned off')}
+          </div>
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={() => setTipVisible(false)}>
+              Close
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal open={tip1Visible} onClose={() => setTip1Visible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-view-guardian-modal">
+          <div className="view-guardian-title-box">
+            <CustomSvg
+              type="WarningTriangle"
+              fillColor="var(--sds-color-icon-default-default)"
+              style={{ width: 32, height: 32 }}
+            />
+            <CustomSvg
+              type="Close"
+              strokeColor="var(--sds-color-icon-default-default)"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              onClick={() => setTip1Visible(false)}
+            />
+          </div>
+          <div className="view-guardian-title">
+            {t('This account address is already a login account and cannot be used')}
+          </div>
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={() => setTip1Visible(false)}>
+              Close
+            </CommonButton>
+          </div>
+        </div>
       </CommonBaseModal>
     </div>
   );
