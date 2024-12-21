@@ -94,7 +94,13 @@ export default function CommonSelect({
                     }
                   }}>
                   {list.label}
-                  {selectValue == list.value && <CustomSvg className="selected-icon" type="SelectedList" />}
+                  {selectValue == list.value && (
+                    <CustomSvg
+                      className="selected-icon"
+                      fillColor="var(--sds-color-icon-brand-secondary)"
+                      type="SelectedList"
+                    />
+                  )}
                 </div>
               );
             })}

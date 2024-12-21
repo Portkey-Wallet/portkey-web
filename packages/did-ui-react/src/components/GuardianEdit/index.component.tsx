@@ -532,6 +532,7 @@ function GuardianEdit({
         type: 'confirm',
         okText: 'Yes',
         cancelText: 'No',
+        className: 'remove-sure',
         content: (
           <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
             <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
