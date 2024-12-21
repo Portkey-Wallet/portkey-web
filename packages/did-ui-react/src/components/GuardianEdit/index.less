@@ -104,6 +104,11 @@
 }
 .portkey-ui-remove-guardian-modal {
   gap: 8px;
+  .remove-guardian-title-box {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+  }
   .remove-guardian-title {
     font-size: 18px;
     line-height: 22px;
@@ -144,4 +149,26 @@
       color: var(--sds-color-text-brand-on-brand);
     }
   }
+}
+.portkey-ui-remove-guardian-modal {
+  padding: 16px;
+  .remove-guardian-desc {
+    font-size: 14px;
+    color: var(--sds-color-text-default-default);
+  }
+  .btn-box{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    .portkey-btn-default {
+      background-color: transparent!important;
+      color: var(--sds-color-text-default-default);
+    }
+    button {
+      width: 100%;
+    }
+  }
+
 }
