@@ -27,7 +27,7 @@ const LoadingIndicator = (props: LoadingType) => {
     if (color === LoadingColor.WHITE) return animationWhiteData;
     if (color === LoadingColor.DARK) return animationDarkData;
     if (isDarkThemeWhiteLoading) {
-      return theme === 'dark' ? animationDarkData : animationWhiteData;
+      return theme !== 'dark' ? animationDarkData : animationWhiteData;
     }
     return theme !== 'dark' ? animationDarkData : animationWhiteData;
   }, [color, isDarkThemeWhiteLoading, theme]);
