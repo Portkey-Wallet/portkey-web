@@ -12,6 +12,7 @@ import { MAINNET } from '../../constants/network';
 import './index.less';
 import CustomSvg from '../CustomSvg';
 import ChainTokenIcon from '../ChainTokenIcon';
+import Loading from '../Loading';
 
 export interface IPaymentSecurityProps {
   className?: string;
@@ -41,14 +42,13 @@ export default function PaymentSecurityMain({
   onClickItem,
 }: IPaymentSecurityProps) {
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
-
+  const [isLoading, setIsLoading] = useState(true);
   const [securityList, setSecurityList] = useState<ITransferLimitItem[]>([]);
   const [totalCount, setTotalCount] = useState<number>(0);
   const loadingFlag = useRef(false);
 
   const getSecurityList = useCallback(async () => {
     try {
-      setLoading(true);
       loadingFlag.current = true;
 
       const res: ISecurityListResponse = await did.services.security.getPaymentSecurityList({
@@ -60,7 +60,7 @@ export default function PaymentSecurityMain({
       res?.data && setSecurityList(res.data);
       res?.totalRecordCount && setTotalCount(res.totalRecordCount);
 
-      setLoading(false);
+      setIsLoading(false);
       loadingFlag.current = false;
     } catch (error) {
       const msg = handleErrorMessage(error, 'get security error');
@@ -108,37 +108,49 @@ export default function PaymentSecurityMain({
           <p className="symbol">Transaction Limits</p>
         </div>
       </div>
-      {securityList.length > 0 && (
+      {isLoading ? (
+        <div className="loading-container">
+          <Loading width={32} height={32} />
+        </div>
+      ) : (
         <>
-          <List className="portkey-ui-transaction-limits-list">
-            {securityList?.map((item, index) => (
-              <List.Item
-                key={`transactionLimits_${item.chainId}_${index}`}
-                className="portkey-ui-transaction-limits-item-wrap">
-                <MenuItem
-                  key={item.chainId + index}
-                  icon={
-                    <ChainTokenIcon
-                      symbol={item.symbol}
-                      imageUrl={item.imageUrl || ''}
-                      chainImageUrl={item.chainImageUrl || ''}
-                    />
-                  }
-                  onClick={() => onClickItem?.(item)}
-                  className="portkey-ui-transaction-limits-item"
-                  iconClassName="portkey-ui-transaction-limits-item-icon">
-                  <div className="token-info">
-                    <div className="token-symbol">{item.symbol}</div>
-                    <div className="token-network">{transNetworkText(item.chainId, isMainnet)}</div>
-                  </div>
-                </MenuItem>
-              </List.Item>
-            ))}
-          </List>
-          <LoadingMore hasMore={securityList?.length < totalCount} loadMore={loadMoreSecurity} className="load-more" />
+          {securityList.length > 0 && (
+            <>
+              <List className="portkey-ui-transaction-limits-list">
+                {securityList?.map((item, index) => (
+                  <List.Item
+                    key={`transactionLimits_${item.chainId}_${index}`}
+                    className="portkey-ui-transaction-limits-item-wrap">
+                    <MenuItem
+                      key={item.chainId + index}
+                      icon={
+                        <ChainTokenIcon
+                          symbol={item.symbol}
+                          imageUrl={item.imageUrl || ''}
+                          chainImageUrl={item.chainImageUrl || ''}
+                        />
+                      }
+                      onClick={() => onClickItem?.(item)}
+                      className="portkey-ui-transaction-limits-item"
+                      iconClassName="portkey-ui-transaction-limits-item-icon">
+                      <div className="token-info">
+                        <div className="token-symbol">{item.symbol}</div>
+                        <div className="token-network">{transNetworkText(item.chainId, isMainnet)}</div>
+                      </div>
+                    </MenuItem>
+                  </List.Item>
+                ))}
+              </List>
+              <LoadingMore
+                hasMore={securityList?.length < totalCount}
+                loadMore={loadMoreSecurity}
+                className="load-more"
+              />
+            </>
+          )}
+          {!securityList || (securityList?.length === 0 && <div className="no-data-text">{`No asset`}</div>)}
         </>
       )}
-      {!securityList || (securityList?.length === 0 && <div className="no-data-text">{`No asset`}</div>)}
     </div>
   );
 }
