@@ -16,7 +16,7 @@ export default function RecentItem({
   return (
     <div className={clsx(['portkey-ui-flex-between-center', 'recent-item'])}>
       <div className="left-section">
-        <ImgWithCornerMark mainImgSrc={item.address} cornerImgSrc={item.networkIcon || ''} />
+        <ImgWithCornerMark mainImgTitle={item.address} cornerImgSrc={item.networkIcon || ''} />
       </div>
       <div className="center-section">
         <div className="address">{formatStr2EllipsisStr(item.address, [8, 8])}</div>

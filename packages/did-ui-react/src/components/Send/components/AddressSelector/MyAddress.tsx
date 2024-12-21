@@ -3,7 +3,7 @@ import { IClickAddressProps } from '../../../types/assets';
 import { ChainId } from '@portkey/types';
 import { NetworkType } from '../../../../types';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
-import { formatStr2EllipsisStr } from '../../../../utils';
+import { formatStr2EllipsisStr, getAelfAddress } from '../../../../utils';
 import { transNetworkTextV2 } from '../../../../utils/converter';
 import ImgWithCornerMark from '../../../ImgWithCornerMark';
 import clsx from 'clsx';
@@ -40,10 +40,10 @@ export default function MyAddress({
               onClick({ chainId: item.chainId, address: item.caAddress });
             }}>
             <div className="left-section">
-              <ImgWithCornerMark mainImgTitle={item.caAddress} cornerImgSrc={chainImageUrl || ''} />
+              <ImgWithCornerMark mainImgTitle={getAelfAddress(item.caAddress)} cornerImgSrc={chainImageUrl || ''} />
             </div>
             <div className="center-section">
-              <div className="address">{formatStr2EllipsisStr(item.caAddress, [8, 8])}</div>
+              <div className="address">{`ELF_${formatStr2EllipsisStr(item.caAddress, [8, 8])}_${item.chainId}`}</div>
               <div className="chain-info">
                 {transNetworkTextV2({
                   chainId: item.chainId,

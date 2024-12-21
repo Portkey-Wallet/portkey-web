@@ -182,10 +182,12 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
             <div className="below-show">{EstimateAmount?.estimateAmountUsd}</div>
           </div>
         </div>
-        <div className="portkey-ui-flex-between-center content-row-info">
-          <div>{`Estimated duration`}</div>
-          <div className="value-show">{estimatedTime}</div>
-        </div>
+        {(transferType === TransferTypeEnum.E_BRIDGE || transferType === TransferTypeEnum.E_TRANSFER) && (
+          <div className="portkey-ui-flex-between-center content-row-info">
+            <div>{`Estimated duration`}</div>
+            <div className="value-show">{estimatedTime}</div>
+          </div>
+        )}
         {(transferType === TransferTypeEnum.E_BRIDGE || transferType === TransferTypeEnum.E_TRANSFER) && (
           <div className="portkey-ui-flex-center powered-by gap-4">
             <div>{`Powered by`}</div>
