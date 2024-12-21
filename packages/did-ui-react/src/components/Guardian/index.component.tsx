@@ -116,6 +116,8 @@ function GuardianMain({
         chainType,
         sandboxId,
       });
+
+      console.log('_guardianList', _guardianList);
       setGuardianList(_guardianList);
       return _guardianList;
     } catch (error) {
