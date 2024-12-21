@@ -530,8 +530,8 @@ function GuardianEdit({
     } else {
       CustomModal({
         type: 'confirm',
-        okText: 'Yes',
-        cancelText: 'No',
+        okText: 'Close',
+        cancelText: 'Send Request',
         className: 'remove-sure',
         content: (
           <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
