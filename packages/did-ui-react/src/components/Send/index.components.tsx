@@ -393,51 +393,6 @@ function SendContent({
           },
         ],
       },
-      limit: {
-        title: `Maximum transaction limit exceeded`,
-        content: `Please modify the transfer limit to proceed.`,
-        buttonGroupType: 'row' as ButtonGroupType,
-        buttons: [
-          {
-            type: 'outline' as CommonButtonType,
-            onClick: () => {
-              setCurModalTipKey(undefined);
-            },
-            content: 'Cancel',
-          },
-          {
-            type: 'primary' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Modify',
-          },
-        ],
-      },
-      allLimit: {
-        title: `Maximum transaction limit exceeded`,
-        content: `Request one-time guardian approval to proceed, or modify the limit to lift restrictions on future transactions.`,
-        buttonGroupType: 'col' as ButtonGroupType,
-        buttons: [
-          {
-            type: 'primary' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Request one-time approval',
-          },
-          {
-            type: 'outline' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Modify transfer limit for all',
-          },
-        ],
-      },
       [ModalTipKeyEnum.unSupportedAsset]: {
         title: `Unsupported asset`,
         content: `The asset does not exist on the target chain, so the transfer cannot be completed. Please check the asset and try again with a supported chain.`,
