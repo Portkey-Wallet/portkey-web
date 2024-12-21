@@ -22,6 +22,10 @@ function GuardianPageList({
   tipContainer,
   onViewGuardian,
 }: GuardianListProps) {
+  const loginAccount = guardianList.filter((item) => item.isLoginGuardian);
+  const otherGuardian = guardianList.filter((item) => !item.isLoginGuardian);
+
+  console.log('guardianList', guardianList);
   return (
     <div className={clsx('guardian-list-wrapper guardian-page-list-wrapper portkey-ui-flex-column', className)}>
       {header}
@@ -32,9 +36,24 @@ function GuardianPageList({
           </div>
         ) : (
           <ul className="guardian-list">
-            {guardianList.map((item) => (
-              <GuardianItems key={item.key} item={item} onClick={onViewGuardian} />
+            {loginAccount.map((item) => (
+              <div key={item.key}>
+                <div className="login-icon">{`Login Account(s)`}</div>
+                <GuardianItems item={item} onClick={onViewGuardian} />
+              </div>
             ))}
+            {otherGuardian.length > 0 && <div className="login-icon">{`Other guardian(s)`}</div>}
+            {otherGuardian.map((item) => (
+              <div key={item.key}>
+                <GuardianItems item={item} onClick={onViewGuardian} />
+              </div>
+            ))}
+            <div className="link">
+              <a
+                href="https://doc.portkey.finance/docs/What-are-guardians-and-verifiers"
+                target="_blank"
+                rel="noreferrer">{`Learn more about account guardians`}</a>
+            </div>
           </ul>
         )}
 

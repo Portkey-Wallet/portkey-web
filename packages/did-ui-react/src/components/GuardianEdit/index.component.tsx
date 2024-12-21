@@ -129,22 +129,6 @@ function GuardianEdit({
     [isExist, preGuardian?.verifier?.id, selectVerifierId],
   );
   const reCaptchaHandler = useReCaptchaModal();
-  const customSelectOption = useMemo(
-    () => [
-      {
-        value: 'tip',
-        disabled: true,
-        className: 'portkey-option-tip',
-        label: (
-          <div className="portkey-ui-flex label-item">
-            <CustomSvg type="Warning" />
-            <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
-          </div>
-        ),
-      },
-    ],
-    [],
-  );
   const verifierSelectItems = useMemo(
     () =>
       verifierList?.map((item) => {
@@ -513,6 +497,8 @@ function GuardianEdit({
     }
   }, [currentGuardian?.isLoginGuardian, guardianList]);
 
+  const [waringVisible, setWaringVisible] = useState(false);
+
   return (
     <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
       {header}
@@ -526,7 +512,10 @@ function GuardianEdit({
           </div>
         </div>
         <div className="input-item">
-          <p className="guardian-edit-input-item-label">{t('Verifier')}</p>
+          <p className="guardian-edit-input-item-label">
+            <span>{t('Verifier')}</span>
+            <CustomSvg type="Problem" onClick={() => setWaringVisible(true)} />
+          </p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
             className={clsx(
@@ -537,7 +526,7 @@ function GuardianEdit({
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
-            customOptions={customSelectOption}
+            disabled={selectVerifierId === zkLoginVerifierItem.id}
           />
           {isExist && <div className="guardian-edit-error-tip">{verifierExistTip}</div>}
         </div>
@@ -700,6 +689,19 @@ function GuardianEdit({
             </CommonButton>
           </div>
         </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal
+        className="waring-modal"
+        centered={true}
+        destroyOnClose
+        open={waringVisible}
+        title="Guardian verifier"
+        onClose={() => setWaringVisible(false)}>
+        <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
+        <ThrottleButton type="primary" className="guardian-btn" onClick={() => setWaringVisible(false)}>
+          OK
+        </ThrottleButton>
       </CommonBaseModal>
     </div>
   );

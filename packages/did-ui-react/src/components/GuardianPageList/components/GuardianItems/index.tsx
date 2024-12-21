@@ -40,7 +40,6 @@ function GuardianItems({ item, onClick }: GuardianItemProps) {
 
   return (
     <li className={clsx('verifier-item')} onClick={() => onClick?.(item)}>
-      {item.isLoginGuardian && <div className="login-icon">{t('Login Account')}</div>}
       <div className="item-box">
         <div className="portkey-ui-w-100 item-left">
           <VerifierPair

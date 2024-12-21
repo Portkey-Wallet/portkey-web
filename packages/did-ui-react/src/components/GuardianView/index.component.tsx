@@ -431,7 +431,7 @@ function GuardianView({
             </div>
           </div>
         </div>
-        {onEditGuardian && (
+        {onEditGuardian && !currentGuardian.isLoginGuardian && (
           <div className="guardian-view-footer">
             <ThrottleButton type="primary" className="guardian-btn" onClick={onEditGuardian}>
               {t('Edit')}
@@ -491,11 +491,9 @@ function GuardianView({
       <CommonBaseModal open={tipVisible} onClose={() => setTipVisible(false)} destroyOnClose>
         <div className="portkey-ui-flex-column portkey-ui-view-guardian-modal">
           <div className="view-guardian-title-box">
-            <CustomSvg
-              type="WarningTriangle"
-              fillColor="var(--sds-color-icon-default-default)"
-              style={{ width: 32, height: 32 }}
-            />
+            <div className="view-guardian-title">
+              {t('This guardian is the only login account and cannot be turned off')}
+            </div>
             <CustomSvg
               type="Close"
               strokeColor="var(--sds-color-icon-default-default)"
@@ -503,9 +501,7 @@ function GuardianView({
               onClick={() => setTipVisible(false)}
             />
           </div>
-          <div className="view-guardian-title">
-            {t('This guardian is the only login account and cannot be turned off')}
-          </div>
+
           <div className="btn-box">
             <CommonButton type="primary" onClick={() => setTipVisible(false)}>
               Close
@@ -529,8 +525,9 @@ function GuardianView({
               onClick={() => setTip1Visible(false)}
             />
           </div>
-          <div className="view-guardian-title">
-            {t('This account address is already a login account and cannot be used')}
+          <div className="view-guardian-title">{`Already used as login account`}</div>
+          <div className="view-guardian-desc">
+            {`This account is already set as a login account for other wallet(s) and can't be used for this purpose.`}
           </div>
           <div className="btn-box">
             <CommonButton type="primary" onClick={() => setTip1Visible(false)}>

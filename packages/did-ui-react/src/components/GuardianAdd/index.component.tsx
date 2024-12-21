@@ -774,6 +774,7 @@ function GuardianAdd({
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
+            disabled={selectVerifierId === zkLoginVerifierItem.id}
           />
           {verifierExist && <div className="guardian-error-tip">{verifierExistTip}</div>}
         </div>
