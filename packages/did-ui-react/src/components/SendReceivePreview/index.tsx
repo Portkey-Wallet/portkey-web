@@ -3,7 +3,6 @@ import { ZERO } from '../../constants/misc';
 import { TransferTypeEnum } from '../../types/send';
 import { formatStr2EllipsisStr } from '../../utils';
 import { formatAmountShow, formatAmountUSDShow } from '../../utils/converter';
-import CommonButton from '../CommonButton';
 import { CommonModalTip } from '../CommonModalTip';
 import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
 import CustomSvg from '../CustomSvg';
@@ -27,7 +26,6 @@ export interface ISendReceivePreviewProps {
   toAccount: {
     address: string;
   };
-  onSend: () => void;
   isShowHeader?: boolean;
 }
 
@@ -44,7 +42,6 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
     targetNetwork,
     tokenInfo,
     toAccount,
-    onSend,
     isShowHeader,
   } = props;
 
@@ -193,9 +190,6 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
             <CustomSvg type={transferType === TransferTypeEnum.E_BRIDGE ? 'pb-ebridge' : 'pb-eTransfer'} />
           </div>
         )}
-      </div>
-      <div className="preview-footer">
-        <CommonButton onClick={onSend} block type="primary">{`Send`}</CommonButton>
       </div>
     </div>
   );
