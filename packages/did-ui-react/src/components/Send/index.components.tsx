@@ -511,7 +511,7 @@ function SendContent({
       try {
         let isV2CrossChainTransfer = true;
         if (!managementAccount?.privateKey || !caHash) return;
-        const _transferType = TransferTypeEnum.GENERAL_SAME_CHAIN;
+        const _transferType = transferType || TransferTypeEnum.GENERAL_SAME_CHAIN;
 
         setLoading(true);
         try {
@@ -948,6 +948,8 @@ function SendContent({
       const isAELFCross =
         isDIDAelfAddress(toAccount.address) && getAddressChainId(toAccount.address, 'AELF') !== tokenInfo.chainId;
 
+      console.log('isAELFCross', isAELFCross);
+
       // SameChain or CrossChain in aelf
       // TODO: change it
       try {
@@ -974,7 +976,20 @@ function SendContent({
               _receiveAmount = withdrawInfo?.receiveAmount;
               _receiveAmountUsd = withdrawInfo?.receiveAmountUsd;
               _transferType = TransferTypeEnum.E_TRANSFER;
+
+              return {
+                checkResult: CheckPass,
+                networkFee: _networkFee,
+                networkFeeUnit: _networkFeeUnit,
+                receiveAmount: _receiveAmount,
+                receiveAmountUsd: _receiveAmountUsd,
+                transactionFee: _transactionFee,
+                transactionUnit: _transactionUnit,
+                transferType: _transferType,
+              };
             }
+
+            console.log('isEtransferCrossInLimit', isAELFCross);
           } catch (error) {
             console.log('isEtransferCrossInLimit', error);
             isEtransferCrossInLimit = false;
@@ -1000,6 +1015,7 @@ function SendContent({
       }
 
       return {
+        checkResult: CheckPass,
         networkFee: _networkFee,
         networkFeeUnit: _networkFeeUnit,
         receiveAmount: _receiveAmount,
