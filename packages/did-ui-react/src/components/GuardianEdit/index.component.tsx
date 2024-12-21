@@ -608,7 +608,7 @@ function GuardianEdit({
             <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
             <CustomSvg
               type="Close"
-              style={{ width: 24, height: 24 }}
+              style={{ width: 24, height: 24, flexShrink: 0 }}
               strokeColor="var(--sds-color-icon-default-default)"
               onClick={() => setRemoveVisible(false)}
             />
@@ -636,7 +636,7 @@ function GuardianEdit({
             </div>
             <CustomSvg
               type="Close"
-              style={{ width: 24, height: 24 }}
+              style={{ width: 24, height: 24, flexShrink: 0 }}
               strokeColor="var(--sds-color-icon-default-default)"
               onClick={() => setCanNotRemoveVisible(false)}
             />
