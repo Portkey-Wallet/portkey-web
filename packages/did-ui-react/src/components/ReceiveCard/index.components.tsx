@@ -9,7 +9,7 @@ import { ChainInfo, ReceiveType, TDepositInfo, TReceiveFromNetworkItem } from '@
 import AssetModal from '../AssetModal';
 import { MAIN_CHAIN_ID } from '../../constants/network';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { formatStr2EllipsisStr, setLoading } from '../../utils';
+import { formatStr2EllipsisStr } from '../../utils';
 import CommonButton from '../CommonButton';
 
 import Binance from '../../assets/imgs/binance.png';
@@ -25,6 +25,7 @@ import { isNFT } from '../../utils/assets';
 
 import './index.less';
 import singleMessage from '../CustomAnt/message';
+import Loading from '../Loading';
 
 enum SELECTION_TYPE {
   SOURCE = 'Source',
@@ -69,6 +70,7 @@ export interface ReceiveCardProps {
 
 export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProps) {
   const {
+    loading,
     receiveType,
     destinationChain,
     destinationChainList,
@@ -88,7 +90,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   const [currentDepositInfo, setCurrentDepositInfo] = useState<TDepositInfo>();
   const [{ caInfo }] = usePortkeyAsset();
 
-  const { depositInfo } = useReceiveByETransfer({
+  const { loading: eTransferLoading, depositInfo } = useReceiveByETransfer({
     toChainId: destinationChain?.chainId as ChainId,
     toSymbol: selectToken.symbol,
     fromNetwork: selectedSource?.network || '',
@@ -106,17 +108,12 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   }, [depositInfo]);
 
   useEffect(() => {
-    setLoading(true);
     if (sourceChain && !selectToken.isNFT) {
       setSelectedSource(sourceChain);
     }
 
     if (destinationChain) {
       setSelectedDestination(destinationChain);
-    }
-
-    if (sourceChain && destinationChain) {
-      setLoading(false);
     }
 
     if (isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF') {
@@ -338,88 +335,99 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
               </>
             )}
           </div>
-          {isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF' && (
-            <div className="exchange-selector-container">
-              <div className="exchange-selector">
-                <span
-                  className={clsx('item', {
-                    active: isExchangeSelected,
-                  })}
-                  onClick={() => {
-                    setIsExchangeSelected(true);
-                  }}>
-                  Exchange
-                </span>
-                <span
-                  className={clsx('item', {
-                    active: !isExchangeSelected,
-                  })}
-                  onClick={() => {
-                    setIsExchangeSelected(false);
-                  }}>
-                  Non-exchange
-                </span>
-              </div>
-              {isExchangeSelected && (
-                <div className="exchange-list">
-                  <img className="exchange-icon" src={Binance} />
-                  <img className="exchange-icon" src={OKX} />
-                  <img className="exchange-icon" src={Upbit} />
-                  <img className="exchange-icon" src={BitThumb} />
-                  <img className="exchange-icon" src={GateIo} />
-                  <img className="exchange-icon" src={Mexc} />
-                  <img className="exchange-icon" src={Hotcoin} />
+
+          {loading || eTransferLoading ? (
+            <div className="loading-container">
+              <Loading width={32} height={32} />
+            </div>
+          ) : (
+            <>
+              {isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF' && (
+                <div className="exchange-selector-container">
+                  <div className="exchange-selector">
+                    <span
+                      className={clsx('item', {
+                        active: isExchangeSelected,
+                      })}
+                      onClick={() => {
+                        setIsExchangeSelected(true);
+                      }}>
+                      Exchange
+                    </span>
+                    <span
+                      className={clsx('item', {
+                        active: !isExchangeSelected,
+                      })}
+                      onClick={() => {
+                        setIsExchangeSelected(false);
+                      }}>
+                      Non-exchange
+                    </span>
+                  </div>
+                  {isExchangeSelected && (
+                    <div className="exchange-list">
+                      <img className="exchange-icon" src={Binance} />
+                      <img className="exchange-icon" src={OKX} />
+                      <img className="exchange-icon" src={Upbit} />
+                      <img className="exchange-icon" src={BitThumb} />
+                      <img className="exchange-icon" src={GateIo} />
+                      <img className="exchange-icon" src={Mexc} />
+                      <img className="exchange-icon" src={Hotcoin} />
+                    </div>
+                  )}
                 </div>
               )}
-            </div>
-          )}
 
-          <div className={clsx('portkey-qrcode-container', isMainChainToMainChain && 'mainchain')}>
-            <PortkeyQRCode value={generateAddress()?.value} ecLevel="H" />
-            <div className="address-container">
-              {caInfo?.[destinationChain?.chainId as ChainId]?.caAddress && (
-                <>
-                  <span className="address">{generateAddress()?.label}</span>
-                  <CustomSvg
-                    type="Copy"
-                    onClick={() => {
-                      singleMessage.success('Address copied');
-                      setCopied(generateAddress()?.value || '');
-                    }}
-                    fillColor="var(--sds-color-icon-default-default)"
-                  />
-                </>
-              )}
-            </div>
-          </div>
-          {receiveType === ReceiveType.ETransfer && currentDepositInfo && Number(currentDepositInfo?.minAmount) > 0 && (
-            <div className="minimum-deposit-container">
-              <span>Minimum deposit</span>
-              <div className="minimum-deposit">
-                <span>{`${currentDepositInfo.minAmount} ${selectToken.symbol}`}</span>
-                <span className="usd">{`$${currentDepositInfo.minAmountUsd}`}</span>
+              <div className={clsx('portkey-qrcode-container', isMainChainToMainChain && 'mainchain')}>
+                <PortkeyQRCode value={generateAddress()?.value} ecLevel="H" />
+                <div className="address-container">
+                  {caInfo?.[destinationChain?.chainId as ChainId]?.caAddress && (
+                    <>
+                      <span className="address">{generateAddress()?.label}</span>
+                      <CustomSvg
+                        type="Copy"
+                        onClick={() => {
+                          singleMessage.success('Address copied');
+                          setCopied(generateAddress()?.value || '');
+                        }}
+                        fillColor="var(--sds-color-icon-default-default)"
+                      />
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+              {receiveType === ReceiveType.ETransfer &&
+                currentDepositInfo &&
+                Number(currentDepositInfo?.minAmount) > 0 && (
+                  <div className="minimum-deposit-container">
+                    <span>Minimum deposit</span>
+                    <div className="minimum-deposit">
+                      <span>{`${currentDepositInfo.minAmount} ${selectToken.symbol}`}</span>
+                      <span className="usd">{`$${currentDepositInfo.minAmountUsd}`}</span>
+                    </div>
+                  </div>
+                )}
 
-          <div className="reminder-container">
-            <CustomSvg type="InfoFilled" className="info-icon" fillColor="var(--sds-color-border-brand-tertiary)" />
-            {renderTip()}
-          </div>
+              <div className="reminder-container">
+                <CustomSvg type="InfoFilled" className="info-icon" fillColor="var(--sds-color-border-brand-tertiary)" />
+                {renderTip()}
+              </div>
 
-          {showExchangeTip && (
-            <CommonPromptCard
-              className="exchange-tip"
-              type={PromptCardType.WARNING}
-              description={'If you\'re transferring from an exchange, set the destination to "aelf MainChain"'}
-            />
-          )}
+              {showExchangeTip && (
+                <CommonPromptCard
+                  className="exchange-tip"
+                  type={PromptCardType.WARNING}
+                  description={'If you\'re transferring from an exchange, set the destination to "aelf MainChain"'}
+                />
+              )}
 
-          {receiveType === ReceiveType.ETransfer && (
-            <div className="powered-by-container">
-              <span>Powered by</span>
-              <CustomSvg fillColor="var(--sds-color-icon-default-default)" type="ETransfer" />
-            </div>
+              {receiveType === ReceiveType.ETransfer && (
+                <div className="powered-by-container">
+                  <span>Powered by</span>
+                  <CustomSvg fillColor="var(--sds-color-icon-default-default)" type="ETransfer" />
+                </div>
+              )}
+            </>
           )}
         </div>
         <AssetModal open={isSelectionModalOpen} height="max-content" wrapClassName="portkey-ui-receive-modals">
@@ -440,6 +448,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
                     className="source-item"
                     onClick={() => {
                       if (!item) return;
+
                       onSelectedChange(item);
                       setIsSelectionModalOpen(false);
                     }}>

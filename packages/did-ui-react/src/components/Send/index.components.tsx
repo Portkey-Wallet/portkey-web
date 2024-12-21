@@ -110,6 +110,7 @@ export interface SendProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   isErrorTip?: boolean;
+  mode?: 'dark' | 'light';
   onCancel?: () => void;
   onSuccess?: (address: string) => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
@@ -151,6 +152,7 @@ function SendContent({
   wrapperStyle,
   isErrorTip = true,
   extraConfig,
+  mode,
   onCancel,
   onSuccess,
   onModifyLimit,
@@ -159,7 +161,8 @@ function SendContent({
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId, tokenListInfoV2, pin }] =
     usePortkeyAsset();
   console.log('tokenListInfoV2 is::', tokenListInfoV2, 'assetItem', assetItem, 'extraConfig', extraConfig);
-  const [{ networkType, chainType, sandboxId }] = usePortkey();
+  const [{ networkType, chainType, sandboxId, theme: providerTheme }] = usePortkey();
+  const isDarkMode = useMemo(() => (mode || providerTheme) === 'dark', [mode, providerTheme]);
   const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNft = useMemo(() => isNFT(assetItem.symbol), [assetItem]);
@@ -1191,8 +1194,9 @@ function SendContent({
       2: {
         btnText: 'Send',
         handler: () => {
-          sendHandler();
-          btnOutOfFocus();
+          sendTransfer();
+          // sendHandler();
+          // btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Amount);
@@ -1200,7 +1204,6 @@ function SendContent({
         element: (
           <SendReceivePreview
             isShowHeader={false}
-            onSend={sendTransfer}
             sendAmount={amount}
             networkFee={networkFee}
             networkFeeUnit={networkFeeUnit}
@@ -1246,14 +1249,13 @@ function SendContent({
       btnOutOfFocus,
       onCancel,
       handleCheckPreview,
-      sendHandler,
     ],
   );
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
-        leftElement={<CustomSvg type={'BackLeft'} />}
+        leftElement={<CustomSvg fillColor={isDarkMode ? 'white' : '#151318'} type={'BackLeft'} />}
         className="page-title"
         title={`Send ${!isNft ? tokenInfo?.label || tokenInfo.symbol : ''}`}
         leftCallBack={() => {

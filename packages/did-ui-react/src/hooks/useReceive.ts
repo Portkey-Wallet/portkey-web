@@ -79,25 +79,26 @@ export const useReceive = (token: BaseToken) => {
   useEffect(() => {
     if (!chainList.length) return;
     setErrorMsg('');
-    setLoading(true);
-    did.services.receive
-      .getReceiveNetworkList({
-        symbol: token.symbol,
-      })
-      .then((data) => {
-        if (data && data.data && data.data.destinationMap) {
-          setDestinationMap(data.data.destinationMap);
-        } else {
-          setErrorMsg(data.message ?? 'Response data error');
-        }
-        setLoading(false);
-      })
-      .catch((e) => {
-        console.log('destinationMap error: ', e);
-        setErrorMsg(e.message);
-        setLoading(false);
-      });
-  }, [token.symbol, chainList]);
+    if (loading) {
+      did.services.receive
+        .getReceiveNetworkList({
+          symbol: token.symbol,
+        })
+        .then((data) => {
+          if (data && data.data && data.data.destinationMap) {
+            setDestinationMap(data.data.destinationMap);
+          } else {
+            setErrorMsg(data.message ?? 'Response data error');
+          }
+          setLoading(false);
+        })
+        .catch((e) => {
+          console.log('destinationMap error: ', e);
+          setErrorMsg(e.message);
+          setLoading(false);
+        });
+    }
+  }, [token.symbol, chainList, loading]);
 
   useEffect(() => {
     if (!destinationMap) return;
@@ -129,6 +130,7 @@ export const useReceive = (token: BaseToken) => {
 
   return {
     loading,
+    setLoading,
     errorMsg,
     destinationChain,
     updateDestinationChain,
