@@ -61,7 +61,8 @@ export default function CollectionDetailMain({
       const { skipCount, maxResultCount, totalRecordCount, children } = targetNFTCollection;
       // has cache data
       if ((pageNum + 1) * maxResultCount <= children.length) return;
-
+      // no more data
+      if (skipCount >= Number(totalRecordCount)) return;
       const caAddressInfos = Object.entries(caInfo ?? {})
         .map(([chainId, info]) => ({
           chainId: chainId as ChainId,
@@ -93,7 +94,7 @@ export default function CollectionDetailMain({
       if (!ticking.current) {
         window.requestAnimationFrame(() => {
           console.log('lastKnownScrollPosition.current is:', lastKnownScrollPosition.current);
-          if (lastKnownScrollPosition.current >= (devices.isMobileDevices() ? 618 - 60 : 618)) {
+          if (lastKnownScrollPosition.current >= (devices.isMobileDevices() ? 80 : 95)) {
             setOpacity(1);
           } else {
             setOpacity(0);

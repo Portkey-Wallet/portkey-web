@@ -20,9 +20,10 @@
     height: 48px!important; 
     line-height:normal!important;
     background-color: transparent!important;
-    color: var(--portkey-ui-text-primary);
+    color: var(--sds-color-text-default-default);
     border: 1px solid var(--sds-color-border-neutral-secondary)!important;
     margin: 0;
+    font-family: var(--portkey-font-schibsted-regular);
   }
   .portkey-ant-btn-primary{
     margin-left: 6px;
@@ -54,24 +55,34 @@
   width: 32px!important;
   height: 32px!important;
   margin: 16px!important;
+  svg {
+    path {
+      fill: var(--sds-color-icon-default-default);
+    }
+  }
 }
 .security-notice {
-  font-weight: 500;
-  font-size: 20px;
-  line-height: 22px;
   text-align: left;
   padding: 0 16px 16px;
-  color: var(--portkey-ui-text-primary);
+  color: var(--sds-color-text-default-default);
+  /* Heading */
+  font-family: var(--portkey-font-bricolage-bold);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 24px */
+  letter-spacing: -0.4px;
 }
 
 
 .modal-content-v2 {
-  font-weight: 400;
-  font-size: 16px;
-  line-height: 23px;
-  text-align: left;
   color: var(--sds-color-text-default-default);
-  border-bottom: none;
+
+  /* Body Base */
+  font-family: var(--portkey-font-schibsted-regular);
+  font-size: 16px;
+  font-style: normal;
+  line-height: 140%; /* 22.4px */
   padding: 0 20px;
 }
 
@@ -80,7 +91,7 @@
   font-size: 16px;
   line-height: 23px;
   text-align: center;
-  color: var(--portkey-ui-font-17);
+  color: var(--sds-color-text-warning-default);
 }
 
 .go-to-verify {
