@@ -326,9 +326,7 @@ function SendContent({
 
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
 
-  const [toAccount, setToAccount] = useState<ToAccount>(
-    extraConfig?.toAccount || { address: '2dsSgFPvvLTwGXZVCzLwgRJFNtusceRAmcwbAmArjHtJjtEG9u' },
-  );
+  const [toAccount, setToAccount] = useState<ToAccount>(extraConfig?.toAccount || { address: '' });
 
   const [tipMsg, setTipMsg] = useState('');
 
