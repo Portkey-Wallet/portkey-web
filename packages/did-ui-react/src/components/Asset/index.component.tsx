@@ -2,7 +2,7 @@ import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import AssetOverviewMain, { AssetOverviewProps } from '../AssetOverview/index.components';
 import ReceiveCard from '../ReceiveCard/index.components';
-import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
+import { basicAssetView, basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
 import useNFTMaxCount from '../../hooks/useNFTMaxCount';
 import { usePortkey } from '../context';
 import { ChainId, INftInfoType } from '@portkey/types';
@@ -53,6 +53,7 @@ import CommonButton from '../CommonButton';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
 import { SendAssetListPage } from '../SendAssetList';
 import ReceiveList from '../ReceiveList';
+import Completed from '../Completed';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -98,8 +99,10 @@ function AssetMain({
   onLifeCycleChange,
 }: AssetMainProps) {
   const [{ networkType, sandboxId }] = usePortkey();
-  const [{ caInfo, initialized, originChainId, caHash, managementAccount, isLoginOnChain = true }, { dispatch }] =
-    usePortkeyAsset();
+  const [
+    { caInfo, initialized, originChainId, caHash, managementAccount, isLoginOnChain = true, completedTransferDesc },
+    { dispatch },
+  ] = usePortkeyAsset();
 
   const [assetStep, setAssetStep] = useState<AssetStep>(AssetStep.overview);
   const [, setPreStep] = useState<AssetStep>(AssetStep.overview);
@@ -570,8 +573,10 @@ function AssetMain({
                 setSendExtraConfig(undefined);
                 onBack();
               }}
-              onSuccess={() => {
-                setAssetStep(AssetStep.overview);
+              onSuccess={(address: string) => {
+                const params = `Your request to send to ${address} has been successfully submitted.`;
+                dispatch(basicAssetView.setCompletedDesc.actions(params));
+                setAssetStep(AssetStep.transferFinish);
               }}
               onModifyLimit={async (data) => {
                 const res = await getLimitFromContract(data);
@@ -581,6 +586,15 @@ function AssetMain({
               onModifyGuardians={() => {
                 setAccelerateChainId(sendToken.chainId as ChainId);
                 setAssetStep(AssetStep.guardians);
+              }}
+            />
+          )}
+
+          {assetStep === AssetStep.transferFinish && (
+            <Completed
+              description={completedTransferDesc}
+              onClose={() => {
+                setAssetStep(AssetStep.overview);
               }}
             />
           )}

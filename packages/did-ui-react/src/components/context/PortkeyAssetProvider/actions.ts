@@ -32,6 +32,7 @@ export const PortkeyAssetActions = {
   setAllAssetsV2: 'setAllAssetsV2',
   setTxFee: 'setTxFee',
   setActivityList: 'setActivityList',
+  setCompletedDesc: 'setCompletedDesc',
 };
 
 export type WalletInfo = {
@@ -93,6 +94,7 @@ export type BalanceInfo = {
 export interface AssetState extends WalletInfo, BaseAssetProps, BalanceInfo {
   initialized?: boolean;
   txFee: TxFeeType;
+  completedTransferDesc: string;
 }
 
 export const basicAssetView = {
@@ -111,6 +113,10 @@ export const basicAssetView = {
   setGuardianList: {
     type: PortkeyAssetActions['setGuardianList'],
     actions: (guardianList: Guardian[]) => basicActions(PortkeyAssetActions['setGuardianList'], { guardianList }),
+  },
+  setCompletedDesc: {
+    type: PortkeyAssetActions['setCompletedDesc'],
+    actions: (desc: string) => basicActions(PortkeyAssetActions['setCompletedDesc'], { completedTransferDesc: desc }),
   },
   destroy: {
     type: PortkeyAssetActions['destroy'],
