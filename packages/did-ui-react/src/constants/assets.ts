@@ -51,6 +51,7 @@ export enum AssetStep {
   ramp = 'ramp',
   rampPreview = 'rampPreview',
   send = 'send',
+  transferFinish = 'transferFinish',
   transactionDetail = 'transactionDetail',
   tokenDetail = 'tokenDetail',
   NFTDetail = 'NFTDetail',

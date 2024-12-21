@@ -111,7 +111,7 @@ export interface SendProps {
   wrapperStyle?: React.CSSProperties;
   isErrorTip?: boolean;
   onCancel?: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (address: string) => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
   onModifyGuardians?: () => void;
 }
@@ -170,11 +170,11 @@ function SendContent({
   const [chainList, setChainList] = useState<INetworkItem[]>([]);
   const [targetNetwork, setTargetNetwork] = useState<INetworkItem>();
   const [addressType, setAddressType] = useState<AddressTypeEnum>(AddressTypeEnum.NON_EXCHANGE);
+  const [eBridgeFeeNotEnough, setEBridgeFeeNotEnough] = useState(false);
   // const recommendETransfer = useMemo(
   //   () => targetNetwork?.serviceList?.find((ele) => ele?.serviceName?.toLocaleLowerCase()?.includes('transfer')),
   //   [targetNetwork?.serviceList],
   // );
-
   const recommendETransfer = false;
 
   const recommendEBridge = useMemo(
@@ -541,6 +541,8 @@ function SendContent({
           chainType,
         });
 
+        console.log('_transferType', _transferType);
+
         if (_transferType === TransferTypeEnum.GENERAL_SAME_CHAIN) {
           await sameChainTransfer({
             sandboxId,
@@ -619,7 +621,7 @@ function SendContent({
           });
 
           console.log('crossTransferByEtransferResult', crossTransferByEtransferResult);
-        } else if (transferType === TransferTypeEnum.E_BRIDGE) {
+        } else if (_transferType === TransferTypeEnum.E_BRIDGE) {
           const fromChainInfo = getAELFChainInfoConfig(tokenInfo.chainId);
           const toChainInfo = getEVMChainInfoConfig(targetNetwork?.network || '');
 
@@ -647,7 +649,10 @@ function SendContent({
               symbol: tokenInfo.symbol,
             },
           });
-          if (ZERO.plus(needElfBalance).isGreaterThan(result.balance)) {
+          const elfBalance = timesDecimals(result.balance, 8);
+
+          console.log('balance result', result);
+          if (ZERO.plus(needElfBalance).isGreaterThan(elfBalance)) {
             return 'no enough elf';
           }
 
@@ -661,14 +666,14 @@ function SendContent({
             amount: String(amount),
             owner: caInfo?.[tokenInfo.chainId]?.caAddress || '',
             caHash,
-            portkeyContractAddress: '',
+            portkeyContractAddress: chainInfo.caContractAddress,
             privateKey: managementAccount.privateKey || '',
           });
           console.log(createReceiptResult, 'createReceiptResult===EBridge');
         }
 
         singleMessage.success('success');
-        onSuccess?.();
+        onSuccess?.(toAccount.address);
       } catch (error: any) {
         console.log('sendHandler==error', error);
         if (!error?.type) return singleMessage.error(handleErrorMessage(error));

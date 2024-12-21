@@ -29,6 +29,7 @@ export interface ISendReceivePreviewProps {
   };
   onSend: () => void;
   isShowHeader?: boolean;
+  eBridgeFeeNotEnough?: boolean;
 }
 
 export default function SendReceivePreview(props: ISendReceivePreviewProps) {
@@ -46,6 +47,7 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
     toAccount,
     onSend,
     isShowHeader,
+    eBridgeFeeNotEnough,
   } = props;
 
   console.log('SendReceivePreview props', props);
@@ -101,7 +103,7 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
   const [isShowNetworkFee, isShowTransactionFee] = useMemo(() => {
     return [
       transferType === TransferTypeEnum.GENERAL_CROSS_CHAIN || transferType === TransferTypeEnum.GENERAL_SAME_CHAIN,
-      transferType === TransferTypeEnum.GENERAL_CROSS_CHAIN || transferType === TransferTypeEnum.GENERAL_SAME_CHAIN,
+      transferType === TransferTypeEnum.E_BRIDGE || transferType === TransferTypeEnum.E_TRANSFER,
     ];
   }, [transferType]);
 
@@ -153,11 +155,11 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
                   content="Fee applied by the cross-chain bridge to process your transaction on blockchains."
                 />
               </div>
-              <div className="below-show text-color-danger">{`Not enough ELF`}</div>
+              {eBridgeFeeNotEnough && <div className="below-show text-color-danger">{`Not enough ELF`}</div>}
             </div>
             <div className="value-show">
-              <div className="text-color-danger">{`${networkFee} ${networkFeeUnit}`}</div>
-              <div className="below-show text-color-danger">{`$ `}</div>
+              <div className="text-color-danger">{`${transactionFee} ${transactionUnit}`}</div>
+              {/* <div className="below-show text-color-danger">{`$ `}</div> */}
             </div>
           </div>
         )}
@@ -171,7 +173,7 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
               />
             </div>
             <div className="value-show">
-              <div>{`${transactionFee} ${transactionUnit}`}</div>
+              <div>{`${networkFee} ${networkFeeUnit}`}</div>
               <div className="below-show">{`$0`}</div>
             </div>
           </div>
