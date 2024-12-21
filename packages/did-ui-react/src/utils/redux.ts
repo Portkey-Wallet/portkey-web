@@ -1,5 +1,5 @@
 import { ChainId } from '@portkey/types';
-import { isEqAddress } from '@portkey/utils/dist/commonjs/wallet';
+import { wallet } from '@portkey/utils';
 
 export const isMyPayTransactionFee = (caInfo: any, address: string, chainId?: ChainId) => {
   // manager transaction fee hide
@@ -10,12 +10,12 @@ export const isMyPayTransactionFee = (caInfo: any, address: string, chainId?: Ch
   if (chainId) {
     const currentCaInfo = caInfo?.[chainId];
     if (!currentCaInfo) return false;
-    return currentCaInfo.caAddress && isEqAddress(currentCaInfo.caAddress, address);
+    return currentCaInfo.caAddress && wallet.isEqAddress(currentCaInfo.caAddress, address);
   }
 
   const addressList = Object.values(caInfo || {})
     .map((item: any) => item?.caAddress)
     .filter((i) => !!i);
 
-  return addressList.some((i) => isEqAddress(i, address));
+  return addressList.some((i) => wallet.isEqAddress(i, address));
 };
