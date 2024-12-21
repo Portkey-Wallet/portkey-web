@@ -161,8 +161,7 @@ function SendContent({
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId, tokenListInfoV2, pin }] =
     usePortkeyAsset();
   console.log('tokenListInfoV2 is::', tokenListInfoV2, 'assetItem', assetItem, 'extraConfig', extraConfig);
-  const [{ networkType, chainType, sandboxId, theme: providerTheme }] = usePortkey();
-  const isDarkMode = useMemo(() => (mode || providerTheme) === 'dark', [mode, providerTheme]);
+  const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNft = useMemo(() => isNFT(assetItem.symbol), [assetItem]);
@@ -1210,7 +1209,7 @@ function SendContent({
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
-        leftElement={<CustomSvg fillColor={isDarkMode ? 'white' : '#151318'} type={'BackLeft'} />}
+        leftElement={<CustomSvg fillColor="var(--sds-color-icon-default-default)" type={'BackLeft'} />}
         className="page-title"
         title={`Send ${!isNft ? tokenInfo?.label || tokenInfo.symbol : ''}`}
         leftCallBack={() => {
