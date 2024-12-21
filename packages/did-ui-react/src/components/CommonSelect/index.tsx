@@ -77,10 +77,11 @@ export default function CommonSelect({
         <CommonBaseModal className="select-modal" title={props.placeholder} open={showList}>
           <CustomSvg
             className="select-close"
-            fillColor="var(--sds-color-icon-default-default)"
-            type="Close"
+            type="Select-close"
+            strokeColor="var(--sds-color-icon-default-default)"
             onClick={() => setShowList(false)}
           />
+
           <div className="select-lists">
             {combineOptions.map((list, index) => {
               return (
