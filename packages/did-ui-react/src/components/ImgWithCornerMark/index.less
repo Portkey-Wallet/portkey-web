@@ -3,8 +3,21 @@
   height: 42px;
   position: relative;
 
-  .token-img {
-    border-radius: 9999px;
+  .main-icon-wrap {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+
+    .inner-dom {
+      width: 42px;
+      height: 42px;
+      background-color: var(--sds-color-background-brand-default);
+      font-size: 16px;
+      text-align: center;
+      line-height: 42px;
+      border-radius: 999px;
+      color: var(--sds-color-text-brand-on-brand);
+    }
   }
 
   .corner-icon-wrap {
@@ -18,18 +31,18 @@
     border: 1px solid var(--sds-color-border-default-default);
 
     img {
-      width: 20px;
-      height: 20px;
       position: absolute;
       left: 0;
       right: 0;
-      bottom: 0;
       top: 0;
+      bottom: 0;
+      width: 18px;
+      height: 18px;
     }
 
     .custom-svg {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
     }
   }
 }

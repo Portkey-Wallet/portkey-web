@@ -12,12 +12,14 @@ import SendNFTList from './NFTList';
 import CommonInput from '../CommonInput';
 import TitleWrapper from '../TitleWrapper';
 import { useEffectOnce } from 'react-use';
+import { usePortkey } from '../context';
 import './index.less';
 
 export interface ISendAssetListProps {
   networkType: NetworkType;
   caAddressInfos?: CaAddressInfosType;
   onSelect: (v: IAssetToken | INftInfoType, type: TokenType) => void;
+  mode?: 'dark' | 'light';
 }
 
 export enum SendAssetTabEnum {
@@ -116,7 +118,12 @@ export function SendAssetListPage({ onCancel, ...props }: ISendAssetListProps & 
   return (
     <div className="portkey-ui-send-asset-list-page">
       <div className="send-select-asset-header portkey-ui-flex-between-center">
-        <CustomSvg type="ArrowLeft" className="portkey-ui-cursor-pointer" onClick={onCancel} />
+        <CustomSvg
+          type="ArrowLeft"
+          fillColor="var(--sds-color-icon-default-default)"
+          className="portkey-ui-cursor-pointer"
+          onClick={onCancel}
+        />
         <div>{`Select asset to send`}</div>
         <div></div>
       </div>
@@ -130,12 +137,14 @@ export function SendAssetListModal({
   onCancel,
   ...props
 }: ISendAssetListProps & { open: boolean; onCancel: () => void }) {
+  const [{ theme: providerTheme }] = usePortkey();
+  const isDarkMode = useMemo(() => (props.mode || providerTheme) === 'dark', [props.mode, providerTheme]);
   return (
     <CommonModal open={open} type="modal" className="send-select-asset-modal">
       <TitleWrapper
         className="send-select-asset-header"
         leftElement={<div className="header-title">{`Select asset to send`}</div>}
-        rightElement={<CustomSvg type="Close" onClick={onCancel} />}
+        rightElement={<CustomSvg type="Close" className={isDarkMode ? '' : 'light-mode'} onClick={onCancel} />}
       />
       <SendAssetList {...props} />
     </CommonModal>

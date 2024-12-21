@@ -7,6 +7,7 @@ import { formatStr2EllipsisStr } from '../../../../utils';
 import { transNetworkTextV2 } from '../../../../utils/converter';
 import ImgWithCornerMark from '../../../ImgWithCornerMark';
 import clsx from 'clsx';
+import { useCurrentChainList } from '../../../../hooks';
 
 export default function MyAddress({
   chainId,
@@ -16,10 +17,16 @@ export default function MyAddress({
   networkType: NetworkType;
   onClick: (account: IClickAddressProps) => void;
 }) {
+  const { chainList } = useCurrentChainList();
   const [{ caAddressInfos }] = usePortkeyAsset();
   const userAddressInfo = useMemo(
     () => caAddressInfos?.filter((item) => item.chainId !== chainId) || [],
     [caAddressInfos, chainId],
+  );
+
+  const chainImageUrl = useMemo(
+    () => chainList.find((item) => item.chainId !== chainId)?.chainImageUrl,
+    [chainId, chainList],
   );
 
   return (
@@ -33,7 +40,7 @@ export default function MyAddress({
               onClick({ chainId: item.chainId, address: item.caAddress });
             }}>
             <div className="left-section">
-              <ImgWithCornerMark imgSrc={''} cornerImgSrc={''} />
+              <ImgWithCornerMark mainImgTitle={item.caAddress} cornerImgSrc={chainImageUrl || ''} />
             </div>
             <div className="center-section">
               <div className="address">{formatStr2EllipsisStr(item.caAddress, [8, 8])}</div>

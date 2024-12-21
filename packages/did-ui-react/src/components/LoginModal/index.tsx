@@ -16,6 +16,12 @@ export default function LoginModal({
   onCancel?: () => void;
   onConfirm?: () => void;
 }) {
+  const title = type === 'Login' ? 'You already have an account' : 'You don’t have an account';
+  const content =
+    type === 'Login' ? 'Do you want to log in with this account instead?' : 'Would you like to create one account?';
+  // ? 'Do you want to log in with username@email.com instead?'
+  // : 'Would you like to create one with username@email.com ?';
+  const btn = type === 'Login' ? 'Log in' : 'Sign up';
   return (
     <CommonModal
       maskClosable={maskClosable}
@@ -26,15 +32,20 @@ export default function LoginModal({
       type={'modal'}
       className="portkey-ui-signup-confirm-modal"
       onClose={onCancel}>
-      <p className="modal-content">
-        {type === 'Login' && 'This account has not been registered yet. Click "Confirm" to complete the registration.'}
-        {type === 'SignUp' && 'This account already exists. Click "Confirm" to log in.'}
-      </p>
-      <div className="btn-wrapper">
-        <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton>
-        <ThrottleButton type="primary" onClick={onConfirm}>
-          Confirm
-        </ThrottleButton>
+      <div className="warning-modal-wrapper">
+        <div className="modal-title">{title}</div>
+        <p className="modal-content-v2">
+          {content}
+          {/*{type === 'Login' &&*/}
+          {/*  'This account has not been registered yet. Click "Confirm" to complete the registration.'}*/}
+          {/*{type === 'SignUp' && 'This account already exists. Click "Confirm" to log in.'}*/}
+        </p>
+        <div className="btn-warning-wrapper">
+          <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton>
+          <ThrottleButton type="primary" onClick={onConfirm}>
+            {btn}
+          </ThrottleButton>
+        </div>
       </div>
     </CommonModal>
   );

@@ -104,10 +104,71 @@
 }
 .portkey-ui-remove-guardian-modal {
   gap: 8px;
+  .remove-guardian-title-box {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+  }
   .remove-guardian-title {
     font-size: 18px;
     line-height: 22px;
     font-weight: 500;
     color: var(--portkey-ui-text-primary);
   }
+  
+}
+.remove-sure {
+  .portkey-ant-modal-confirm-btns {
+    border: none!important;
+    .portkey-ant-btn-default{
+      margin-left: 20px;
+      margin-right: 6px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      border-radius: 24px; 
+      width: 100%; 
+      height: 48px!important; 
+      line-height:normal!important;
+      background-color: transparent!important;
+      color: var(--portkey-ui-text-primary);
+      border: 1px solid var(--sds-color-border-neutral-secondary)!important;
+      margin: 0;
+    }
+    .portkey-ant-btn-primary{
+      margin-left: 6px;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      border-radius: 24px; 
+      width: 100%; 
+      height: 48px!important; 
+      line-height:normal!important; 
+      background-color: var(--sds-color-background-brand-default)!important;
+      margin: 0;
+      border: none;
+      color: var(--sds-color-text-brand-on-brand);
+    }
+  }
+}
+.portkey-ui-remove-guardian-modal {
+  padding: 16px;
+  .remove-guardian-desc {
+    font-size: 14px;
+    color: var(--sds-color-text-default-default);
+  }
+  .btn-box{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    .portkey-btn-default {
+      background-color: transparent!important;
+      color: var(--sds-color-text-default-default);
+    }
+    button {
+      width: 100%;
+    }
+  }
+
 }

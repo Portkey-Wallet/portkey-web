@@ -138,6 +138,11 @@ function reducer(state: AssetState, { type, payload }: any) {
       if (!payload) return state;
       return Object.assign({}, { ...state, allAssetV2: payload });
     }
+    case PortkeyAssetActions.setCompletedDesc: {
+      if (!payload) return state;
+      console.log('PortkeyAssetActions.setCompletedDesc', payload);
+      return Object.assign({}, { ...state, completedTransferDesc: payload.completedTransferDesc });
+    }
 
     case PortkeyAssetActions.destroy: {
       return INITIAL_STATE;

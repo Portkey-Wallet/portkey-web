@@ -3,7 +3,6 @@ import { ZERO } from '../../constants/misc';
 import { TransferTypeEnum } from '../../types/send';
 import { formatStr2EllipsisStr } from '../../utils';
 import { formatAmountShow, formatAmountUSDShow } from '../../utils/converter';
-import CommonButton from '../CommonButton';
 import { CommonModalTip } from '../CommonModalTip';
 import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
 import CustomSvg from '../CustomSvg';
@@ -27,8 +26,8 @@ export interface ISendReceivePreviewProps {
   toAccount: {
     address: string;
   };
-  onSend: () => void;
   isShowHeader?: boolean;
+  eBridgeFeeNotEnough?: boolean;
 }
 
 export default function SendReceivePreview(props: ISendReceivePreviewProps) {
@@ -44,8 +43,8 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
     targetNetwork,
     tokenInfo,
     toAccount,
-    onSend,
     isShowHeader,
+    eBridgeFeeNotEnough,
   } = props;
 
   console.log('SendReceivePreview props', props);
@@ -101,7 +100,7 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
   const [isShowNetworkFee, isShowTransactionFee] = useMemo(() => {
     return [
       transferType === TransferTypeEnum.GENERAL_CROSS_CHAIN || transferType === TransferTypeEnum.GENERAL_SAME_CHAIN,
-      transferType === TransferTypeEnum.GENERAL_CROSS_CHAIN || transferType === TransferTypeEnum.GENERAL_SAME_CHAIN,
+      transferType === TransferTypeEnum.E_BRIDGE || transferType === TransferTypeEnum.E_TRANSFER,
     ];
   }, [transferType]);
 
@@ -153,11 +152,11 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
                   content="Fee applied by the cross-chain bridge to process your transaction on blockchains."
                 />
               </div>
-              <div className="below-show text-color-danger">{`Not enough ELF`}</div>
+              {eBridgeFeeNotEnough && <div className="below-show text-color-danger">{`Not enough ELF`}</div>}
             </div>
             <div className="value-show">
-              <div className="text-color-danger">{`${networkFee} ${networkFeeUnit}`}</div>
-              <div className="below-show text-color-danger">{`$ `}</div>
+              <div className="text-color-danger">{`${transactionFee} ${transactionUnit}`}</div>
+              {/* <div className="below-show text-color-danger">{`$ `}</div> */}
             </div>
           </div>
         )}
@@ -171,7 +170,7 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
               />
             </div>
             <div className="value-show">
-              <div>{`${transactionFee} ${transactionUnit}`}</div>
+              <div>{`${networkFee} ${networkFeeUnit}`}</div>
               <div className="below-show">{`$0`}</div>
             </div>
           </div>
@@ -190,12 +189,12 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
         {(transferType === TransferTypeEnum.E_BRIDGE || transferType === TransferTypeEnum.E_TRANSFER) && (
           <div className="portkey-ui-flex-center powered-by gap-4">
             <div>{`Powered by`}</div>
-            <CustomSvg type={transferType === TransferTypeEnum.E_BRIDGE ? 'pb-ebridge' : 'pb-eTransfer'} />
+            <CustomSvg
+              fillColor="var(--sds-color-icon-default-default)"
+              type={transferType === TransferTypeEnum.E_BRIDGE ? 'pb-ebridge' : 'pb-eTransfer'}
+            />
           </div>
         )}
-      </div>
-      <div className="preview-footer">
-        <CommonButton onClick={onSend} block type="primary">{`Send`}</CommonButton>
       </div>
     </div>
   );

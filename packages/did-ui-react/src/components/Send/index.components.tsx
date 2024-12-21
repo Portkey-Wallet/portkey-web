@@ -110,8 +110,9 @@ export interface SendProps {
   className?: string;
   wrapperStyle?: React.CSSProperties;
   isErrorTip?: boolean;
+  mode?: 'dark' | 'light';
   onCancel?: () => void;
-  onSuccess?: () => void;
+  onSuccess?: (address: string) => void;
   onModifyLimit?: (data: ITransferLimitItemWithRoute) => void;
   onModifyGuardians?: () => void;
 }
@@ -151,6 +152,7 @@ function SendContent({
   wrapperStyle,
   isErrorTip = true,
   extraConfig,
+  mode,
   onCancel,
   onSuccess,
   onModifyLimit,
@@ -170,11 +172,11 @@ function SendContent({
   const [chainList, setChainList] = useState<INetworkItem[]>([]);
   const [targetNetwork, setTargetNetwork] = useState<INetworkItem>();
   const [addressType, setAddressType] = useState<AddressTypeEnum>(AddressTypeEnum.NON_EXCHANGE);
+  const [eBridgeFeeNotEnough, setEBridgeFeeNotEnough] = useState(false);
   // const recommendETransfer = useMemo(
   //   () => targetNetwork?.serviceList?.find((ele) => ele?.serviceName?.toLocaleLowerCase()?.includes('transfer')),
   //   [targetNetwork?.serviceList],
   // );
-
   const recommendETransfer = false;
 
   const recommendEBridge = useMemo(
@@ -326,9 +328,7 @@ function SendContent({
 
   const defaultFee = useFeeByChainId(tokenInfo.chainId);
 
-  const [toAccount, setToAccount] = useState<ToAccount>(
-    extraConfig?.toAccount || { address: '2dsSgFPvvLTwGXZVCzLwgRJFNtusceRAmcwbAmArjHtJjtEG9u' },
-  );
+  const [toAccount, setToAccount] = useState<ToAccount>(extraConfig?.toAccount || { address: '' });
 
   const [tipMsg, setTipMsg] = useState('');
 
@@ -389,51 +389,6 @@ function SendContent({
               setCurModalTipKey(undefined);
             },
             content: 'Agree and continue',
-          },
-        ],
-      },
-      limit: {
-        title: `Maximum transaction limit exceeded`,
-        content: `Please modify the transfer limit to proceed.`,
-        buttonGroupType: 'row' as ButtonGroupType,
-        buttons: [
-          {
-            type: 'outline' as CommonButtonType,
-            onClick: () => {
-              setCurModalTipKey(undefined);
-            },
-            content: 'Cancel',
-          },
-          {
-            type: 'primary' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Modify',
-          },
-        ],
-      },
-      allLimit: {
-        title: `Maximum transaction limit exceeded`,
-        content: `Request one-time guardian approval to proceed, or modify the limit to lift restrictions on future transactions.`,
-        buttonGroupType: 'col' as ButtonGroupType,
-        buttons: [
-          {
-            type: 'primary' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Request one-time approval',
-          },
-          {
-            type: 'outline' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Modify transfer limit for all',
           },
         ],
       },
@@ -513,7 +468,7 @@ function SendContent({
       try {
         let isV2CrossChainTransfer = true;
         if (!managementAccount?.privateKey || !caHash) return;
-        const _transferType = TransferTypeEnum.GENERAL_SAME_CHAIN;
+        const _transferType = transferType || TransferTypeEnum.GENERAL_SAME_CHAIN;
 
         setLoading(true);
         try {
@@ -542,6 +497,8 @@ function SendContent({
           account,
           chainType,
         });
+
+        console.log('_transferType', _transferType);
 
         if (_transferType === TransferTypeEnum.GENERAL_SAME_CHAIN) {
           await sameChainTransfer({
@@ -621,7 +578,7 @@ function SendContent({
           });
 
           console.log('crossTransferByEtransferResult', crossTransferByEtransferResult);
-        } else if (transferType === TransferTypeEnum.E_BRIDGE) {
+        } else if (_transferType === TransferTypeEnum.E_BRIDGE) {
           const fromChainInfo = getAELFChainInfoConfig(tokenInfo.chainId);
           const toChainInfo = getEVMChainInfoConfig(targetNetwork?.network || '');
 
@@ -649,7 +606,10 @@ function SendContent({
               symbol: tokenInfo.symbol,
             },
           });
-          if (ZERO.plus(needElfBalance).isGreaterThan(result.balance)) {
+          const elfBalance = timesDecimals(result.balance, 8);
+
+          console.log('balance result', result);
+          if (ZERO.plus(needElfBalance).isGreaterThan(elfBalance)) {
             return 'no enough elf';
           }
 
@@ -663,14 +623,14 @@ function SendContent({
             amount: String(amount),
             owner: caInfo?.[tokenInfo.chainId]?.caAddress || '',
             caHash,
-            portkeyContractAddress: '',
+            portkeyContractAddress: chainInfo.caContractAddress,
             privateKey: managementAccount.privateKey || '',
           });
           console.log(createReceiptResult, 'createReceiptResult===EBridge');
         }
 
         singleMessage.success('success');
-        onSuccess?.();
+        onSuccess?.(toAccount.address);
       } catch (error: any) {
         console.log('sendHandler==error', error);
         if (!error?.type) return singleMessage.error(handleErrorMessage(error));
@@ -950,6 +910,8 @@ function SendContent({
       const isAELFCross =
         isDIDAelfAddress(toAccount.address) && getAddressChainId(toAccount.address, 'AELF') !== tokenInfo.chainId;
 
+      console.log('isAELFCross', isAELFCross);
+
       // SameChain or CrossChain in aelf
       // TODO: change it
       try {
@@ -976,7 +938,20 @@ function SendContent({
               _receiveAmount = withdrawInfo?.receiveAmount;
               _receiveAmountUsd = withdrawInfo?.receiveAmountUsd;
               _transferType = TransferTypeEnum.E_TRANSFER;
+
+              return {
+                checkResult: CheckPass,
+                networkFee: _networkFee,
+                networkFeeUnit: _networkFeeUnit,
+                receiveAmount: _receiveAmount,
+                receiveAmountUsd: _receiveAmountUsd,
+                transactionFee: _transactionFee,
+                transactionUnit: _transactionUnit,
+                transferType: _transferType,
+              };
             }
+
+            console.log('isEtransferCrossInLimit', isAELFCross);
           } catch (error) {
             console.log('isEtransferCrossInLimit', error);
             isEtransferCrossInLimit = false;
@@ -1002,6 +977,7 @@ function SendContent({
       }
 
       return {
+        checkResult: CheckPass,
         networkFee: _networkFee,
         networkFeeUnit: _networkFeeUnit,
         receiveAmount: _receiveAmount,
@@ -1172,8 +1148,9 @@ function SendContent({
       2: {
         btnText: 'Send',
         handler: () => {
-          sendHandler();
-          btnOutOfFocus();
+          sendTransfer();
+          // sendHandler();
+          // btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Amount);
@@ -1181,7 +1158,6 @@ function SendContent({
         element: (
           <SendReceivePreview
             isShowHeader={false}
-            onSend={sendTransfer}
             sendAmount={amount}
             networkFee={networkFee}
             networkFeeUnit={networkFeeUnit}
@@ -1227,14 +1203,13 @@ function SendContent({
       btnOutOfFocus,
       onCancel,
       handleCheckPreview,
-      sendHandler,
     ],
   );
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
-        leftElement={<CustomSvg type={'BackLeft'} />}
+        leftElement={<CustomSvg fillColor="var(--sds-color-icon-default-default)" type={'BackLeft'} />}
         className="page-title"
         title={`Send ${!isNft ? tokenInfo?.label || tokenInfo.symbol : ''}`}
         leftCallBack={() => {
