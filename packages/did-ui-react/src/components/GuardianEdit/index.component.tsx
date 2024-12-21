@@ -40,6 +40,7 @@ import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
+import CommonButton from '../CommonButton';
 
 enum GuardianEditStatus {
   UnsetLoginGuardian = 'UnsetLoginGuardian',
@@ -505,6 +506,8 @@ function GuardianEdit({
     }
   }, [checkValid]);
 
+  const [removeVisible, setRemoveVisible] = useState(false);
+
   const onClickRemove = useCallback(() => {
     const isLoginAccountList = guardianList?.filter((item) => item.isLoginGuardian) || [];
     if (currentGuardian?.isLoginGuardian) {
@@ -528,22 +531,23 @@ function GuardianEdit({
         });
       }
     } else {
-      CustomModal({
-        type: 'confirm',
-        okText: 'Close',
-        cancelText: 'Send Request',
-        className: 'remove-sure',
-        content: (
-          <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
-            <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
-            <div>Removing a guardian requires guardian approval</div>
-          </div>
-        ),
-        onOk: () => {
-          setStep(GuardianEditStatus.RemoveGuardian);
-          setApprovalVisible(true);
-        },
-      });
+      setRemoveVisible(true);
+      // CustomModal({
+      //   type: 'confirm',
+      //   okText: 'Send Request',
+      //   cancelText: 'Close',
+      //   className: 'remove-sure',
+      //   content: (
+      //     <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+      //       <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
+      //       <div>Removing a guardian requires guardian approval</div>
+      //     </div>
+      //   ),
+      //   onOk: () => {
+      //     setStep(GuardianEditStatus.RemoveGuardian);
+      //     setApprovalVisible(true);
+      //   },
+      // });
     }
   }, [currentGuardian?.isLoginGuardian, guardianList, handleUnsetLoginGuardian, t]);
 
@@ -634,6 +638,27 @@ function GuardianEdit({
             newVerifierId: curGuardian.current?.verifierId,
           })}
         />
+      </CommonBaseModal>
+
+      <CommonBaseModal open={removeVisible} onClose={() => setRemoveVisible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+          <div className="remove-guardian-title-box">
+            <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
+            <CustomSvg type="Close" style={{ width: 24, height: 24 }} onClick={() => setRemoveVisible(false)} />
+          </div>
+          <div className="remove-guardian-desc">Removing a guardian requires guardian approval</div>
+          <div className="btn-box">
+            <CommonButton onClick={() => setRemoveVisible(false)}>Close</CommonButton>
+            <CommonButton
+              type="primary"
+              onClick={() => {
+                setStep(GuardianEditStatus.RemoveGuardian);
+                setApprovalVisible(true);
+              }}>
+              Send Request
+            </CommonButton>
+          </div>
+        </div>
       </CommonBaseModal>
     </div>
   );
