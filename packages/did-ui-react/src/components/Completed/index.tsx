@@ -18,13 +18,13 @@ export default function Completed({
   onClose,
 }: ICompletedProps) {
   return (
-    <div className="completed-wrapper flex-column">
-      <div className="completed-content flex-1 flex-column-center">
+    <div className="completed-wrapper portkey-ui-flex-column">
+      <div className="completed-content portkey-ui-flex-1 portkey-ui-flex-column-center">
         <CustomSvg type="Activity-status-success" />
         <div className="content-main">{title}</div>
         <div className="content-desc">{description}</div>
       </div>
-      <div className="completed-button flex">
+      <div className="completed-button portkey-ui-flex">
         <CommonButton type={buttonType} onClick={onClose} block>
           {iconTitle}
         </CommonButton>
