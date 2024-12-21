@@ -437,22 +437,11 @@ function GuardianEdit({
     ],
   );
 
+  const [showType, setShowType] = useState(false);
+
   const handleCommonVerify = useCallback(() => {
-    CustomModal({
-      type: 'confirm',
-      okText: 'Confirm',
-      content: (
-        <p>
-          {`${preGuardian?.verifier?.name ?? ''} will send a verification code to `}
-          <strong>{preGuardian?.guardianIdentifier}</strong>
-          {` to verify your ${
-            preGuardian?.guardianType === AccountTypeEnum[AccountTypeEnum.Phone] ? 'phone number' : 'email address'
-          }.`}
-        </p>
-      ),
-      onOk: sendCode,
-    });
-  }, [preGuardian?.guardianIdentifier, preGuardian?.guardianType, preGuardian?.verifier?.name, sendCode]);
+    setShowType(true);
+  }, []);
   const handleSocialVerify = useCallback(async () => {
     try {
       // setLoading(true);
@@ -508,48 +497,21 @@ function GuardianEdit({
 
   const [removeVisible, setRemoveVisible] = useState(false);
 
+  const [canNotRemoveVisible, setCanNotRemoveVisible] = useState(false);
+  const [tipVisible, setTipVisible] = useState(false);
+
   const onClickRemove = useCallback(() => {
     const isLoginAccountList = guardianList?.filter((item) => item.isLoginGuardian) || [];
     if (currentGuardian?.isLoginGuardian) {
       if (isLoginAccountList.length === 1) {
-        CustomModal({
-          type: 'info',
-          content: <>{t('This guardian is the only login account and cannot be removed')}</>,
-        });
+        setCanNotRemoveVisible(true);
       } else {
-        CustomModal({
-          type: 'confirm',
-          okText: 'confirm',
-          content: (
-            <>
-              {t(
-                'This guardian is currently set as a login account. You need to unset its login account identity before removing it. Please click "Confirm" to proceed.',
-              )}
-            </>
-          ),
-          onOk: handleUnsetLoginGuardian,
-        });
+        setTipVisible(true);
       }
     } else {
       setRemoveVisible(true);
-      // CustomModal({
-      //   type: 'confirm',
-      //   okText: 'Send Request',
-      //   cancelText: 'Close',
-      //   className: 'remove-sure',
-      //   content: (
-      //     <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
-      //       <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
-      //       <div>Removing a guardian requires guardian approval</div>
-      //     </div>
-      //   ),
-      //   onOk: () => {
-      //     setStep(GuardianEditStatus.RemoveGuardian);
-      //     setApprovalVisible(true);
-      //   },
-      // });
     }
-  }, [currentGuardian?.isLoginGuardian, guardianList, handleUnsetLoginGuardian, t]);
+  }, [currentGuardian?.isLoginGuardian, guardianList]);
 
   return (
     <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
@@ -644,7 +606,12 @@ function GuardianEdit({
         <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
           <div className="remove-guardian-title-box">
             <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
-            <CustomSvg type="Close" style={{ width: 24, height: 24 }} onClick={() => setRemoveVisible(false)} />
+            <CustomSvg
+              type="Close"
+              style={{ width: 24, height: 24 }}
+              strokeColor="var(--sds-color-icon-default-default)"
+              onClick={() => setRemoveVisible(false)}
+            />
           </div>
           <div className="remove-guardian-desc">Removing a guardian requires guardian approval</div>
           <div className="btn-box">
@@ -656,6 +623,80 @@ function GuardianEdit({
                 setApprovalVisible(true);
               }}>
               Send Request
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal open={canNotRemoveVisible} onClose={() => setCanNotRemoveVisible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+          <div className="remove-guardian-title-box">
+            <div className="remove-guardian-title">
+              {t('This guardian is the only login account and cannot be removed')}
+            </div>
+            <CustomSvg
+              type="Close"
+              style={{ width: 24, height: 24 }}
+              strokeColor="var(--sds-color-icon-default-default)"
+              onClick={() => setCanNotRemoveVisible(false)}
+            />
+          </div>
+
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={() => setCanNotRemoveVisible(false)}>
+              Close
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal open={tipVisible} onClose={() => setTipVisible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+          <div className="remove-guardian-title-box">
+            <div className="remove-guardian-title">{t('This guardian is currently set as a login account.')}</div>
+            <CustomSvg
+              type="Close"
+              strokeColor="var(--sds-color-icon-default-default)"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              onClick={() => setTipVisible(false)}
+            />
+          </div>
+          <div className="remove-guardian-desc">{`You need to unset its login account identity before removing it. Please click "Confirm" to proceed.`}</div>
+
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={handleUnsetLoginGuardian}>
+              confirm
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal open={showType} onClose={() => setShowType(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+          <div className="remove-guardian-title-box">
+            <div className="remove-guardian-title">
+              <p>
+                {`${preGuardian?.verifier?.name ?? ''} will send a verification code to `}
+                <strong>{preGuardian?.guardianIdentifier}</strong>
+                {` to verify your ${
+                  preGuardian?.guardianType === AccountTypeEnum[AccountTypeEnum.Phone]
+                    ? 'phone number'
+                    : 'email address'
+                }.`}
+              </p>
+            </div>
+            <CustomSvg
+              type="Close"
+              strokeColor="var(--sds-color-icon-default-default)"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              onClick={() => setShowType(false)}
+            />
+          </div>
+          {/* <div className="remove-guardian-desc">{`You need to unset its login account identity before removing it. Please click "Confirm" to proceed.`}</div> */}
+
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={sendCode}>
+              confirm
             </CommonButton>
           </div>
         </div>
