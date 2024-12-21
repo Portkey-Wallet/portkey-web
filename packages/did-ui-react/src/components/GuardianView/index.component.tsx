@@ -15,15 +15,7 @@ import GuardianAccountShow from '../GuardianAccountShow';
 import BaseVerifierIcon from '../BaseVerifierIcon';
 import { Switch } from 'antd';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
-import {
-  did,
-  errorTip,
-  handleErrorMessage,
-  handleVerificationDoc,
-  setLoading,
-  socialLoginAuth,
-  verification,
-} from '../../utils';
+import { did, errorTip, handleErrorMessage, handleVerificationDoc, socialLoginAuth, verification } from '../../utils';
 import CustomModal from '../CustomModal';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
@@ -194,7 +186,7 @@ function GuardianView({
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
-        setLoading(true);
+        // setLoading(true);
         await handleSetLoginGuardian?.({ ...curGuardian.current, ...currentGuardian }, approvalInfo);
         setApprovalVisible(false);
       } catch (e) {
@@ -207,7 +199,7 @@ function GuardianView({
           onError,
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [currentGuardian, handleSetLoginGuardian, isErrorTip, onError],
@@ -215,7 +207,7 @@ function GuardianView({
 
   const sendCode = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const result = await verification.sendVerificationCode(
         {
           params: {
@@ -255,7 +247,7 @@ function GuardianView({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [currentGuardian, originChainId, operationType, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
@@ -285,7 +277,7 @@ function GuardianView({
   }, [currentGuardian?.guardianIdentifier, currentGuardian.guardianType, currentGuardian?.verifier?.name, sendCode]);
   const handleSocialVerify = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const res = await socialVerify?.(currentGuardian);
 
       curGuardian.current = {
@@ -307,7 +299,7 @@ function GuardianView({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [currentGuardian, isErrorTip, onError, socialVerify]);
 

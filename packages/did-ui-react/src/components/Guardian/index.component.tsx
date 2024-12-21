@@ -4,7 +4,7 @@ import GuardianEdit from '../GuardianEdit';
 import GuardianAdd from '../GuardianAdd';
 import { GuardiansApproved } from '@portkey/services';
 import GuardianView from '../GuardianView';
-import { AuthServe, errorTip, handleErrorMessage, setLoading } from '../../utils';
+import { AuthServe, errorTip, handleErrorMessage } from '../../utils';
 import { ChainId, ChainType } from '@portkey/types';
 import { NetworkType, OnErrorFunc, UserGuardianStatus } from '../../types';
 import { getChainInfo } from '../../hooks/useChainInfo';
@@ -25,6 +25,7 @@ import './index.less';
 import ThrottleButton from '../ThrottleButton';
 import { loadingTip } from '../../utils/loadingTip';
 import { loginOptTip } from '../../constants';
+import { Loading } from '..';
 
 export enum GuardianStep {
   guardianList = 'guardianList',
@@ -72,6 +73,8 @@ function GuardianMain({
   const [preGuardian, setPreGuardian] = useState<UserGuardianStatus>();
   const [verifierList, setVerifierList] = useState<VerifierItem[] | undefined>();
   const verifierMap = useRef<{ [x: string]: VerifierItem }>();
+  const [loading, setLoading] = useState(false);
+
   useThrottleFirstEffect(() => {
     AuthServe.addRequestAuthCheck(originChainId);
   }, []);
@@ -156,6 +159,7 @@ function GuardianMain({
     setStep(GuardianStep.guardianEdit);
   }, [currentGuardian]);
   const onGoBackList = useCallback(() => {
+    console.log('32121321');
     setStep(GuardianStep.guardianList);
     setCurrentGuardian(undefined);
   }, []);
@@ -320,16 +324,15 @@ function GuardianMain({
     [sandboxId, originChainId, caHash, fetchGuardianList, isErrorTip, onError],
   );
 
-  const renderBackHeaderLeftEle = useCallback(
-    (goBack?: () => void) => (
+  const renderBackHeaderLeftEle = useCallback((goBackFun?: () => void) => {
+    return (
       <div className="portkey-ui-guardian-left portkey-ui-flex-center">
-        <div className="left-icon" onClick={onBack}>
-          <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default)" onClick={goBack} />
+        <div className="left-icon" onClick={goBackFun}>
+          <CustomSvg type="ArrowLeft" fillColor="var(--sds-color-icon-default-default)" onClick={goBackFun} />
         </div>
       </div>
-    ),
-    [],
-  );
+    );
+  }, []);
 
   //<CustomSvg className="portkey-ui-enter-btn" type="ChevronRight" style={{ width: 16, height: 16 }} />
 
@@ -357,8 +360,10 @@ function GuardianMain({
           }
           guardianList={guardianList}
           onViewGuardian={onViewGuardian}
+          isLoading={loading}
         />
       )}
+
       {step === GuardianStep.guardianView && (
         <GuardianView
           header={<BackHeaderForPage leftElement={renderBackHeaderLeftEle(onGoBackList)} title={'Guardian Details'} />}
