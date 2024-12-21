@@ -4,6 +4,8 @@ import { ValidatorHandler } from '../../types';
 import EmailInputAndButton from '../EmailInputAndButton';
 import { GuardianInputInfo } from '../types/signIn';
 import './index.less';
+import BackHeader from '../BackHeader';
+import CustomSvg from '../CustomSvg';
 
 export interface EmailLoginProps {
   confirmText?: string;
@@ -11,6 +13,9 @@ export interface EmailLoginProps {
   isLoading?: boolean;
   validateEmail?: ValidatorHandler;
   onFinish?: (v: GuardianInputInfo) => void;
+  onBack?: () => void;
+  onClose?: () => void;
+  rightElement?: React.ReactNode;
 }
 
 export interface EmailLoginRef {
@@ -18,7 +23,19 @@ export interface EmailLoginRef {
 }
 
 const EmailLogin = forwardRef(
-  ({ confirmText = 'Continue', type = 'Login', isLoading = false, onFinish, validateEmail }: EmailLoginProps, ref) => {
+  (
+    {
+      confirmText = 'Continue',
+      type = 'Login',
+      isLoading = false,
+      onFinish,
+      onClose,
+      onBack,
+      validateEmail,
+      rightElement,
+    }: EmailLoginProps,
+    ref,
+  ) => {
     const [currentType, setCurrentType] = useState(type);
     useImperativeHandle(
       ref,
@@ -38,8 +55,28 @@ const EmailLogin = forwardRef(
 
     return (
       <div className="input-info-wrapper email-login">
+        <BackHeader
+          leftElement={undefined}
+          // onBack={() => setType('Login')}
+          onBack={onBack}
+          rightElement={
+            rightElement ? (
+              rightElement
+            ) : (
+              <CustomSvg
+                type="X"
+                onClick={onClose}
+                style={{
+                  width: 20,
+                  height: 20,
+                  cursor: 'pointer',
+                }}
+              />
+            )
+          }
+        />
         <div className="email-login-title">{currentType === 'Login' ? 'Log in via email' : 'Create your account'}</div>
-        <div className="email-login-email-text">Email</div>
+        <div className="email-login-email-text" />
         <EmailInputAndButton
           confirmText={confirmText}
           isLoading={isLoading}
@@ -55,14 +92,14 @@ const EmailLogin = forwardRef(
           <div className="email-login-footer">
             <span>Don’t have an account?&nbsp;</span>
             <span className="email-login-footer-action" onClick={handleLoginAction}>
-              Log in
+              Sign up
             </span>
           </div>
         ) : (
           <div className="email-login-footer">
             <span>Already have an account?&nbsp;</span>
             <span className="email-login-footer-action" onClick={handleSignUpAction}>
-              Sign up
+              Log in
             </span>
           </div>
         )}

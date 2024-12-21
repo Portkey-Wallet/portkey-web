@@ -131,6 +131,7 @@ function SocialDesign({
           validatePhone={validatePhone}
           onFinish={onInputFinish}
           onBack={() => setAccountType(null)}
+          onClose={onClose}
         />
       )}
 
