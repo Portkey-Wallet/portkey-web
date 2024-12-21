@@ -395,7 +395,9 @@ function GuardianMain({
             <BackHeaderForPage
               leftElement={renderBackHeaderLeftEle(onGoView)}
               title={'Edit Guardian'}
-              rightElement={<CustomSvg className="remove-icon" type="Remove" fillColor="#111111" />}
+              rightElement={
+                <CustomSvg className="remove-icon" type="Remove" fillColor="var(--sds-color-icon-danger-secondary)" />
+              }
             />
           }
           originChainId={originChainId}
