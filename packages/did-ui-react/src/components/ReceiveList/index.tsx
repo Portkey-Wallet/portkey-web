@@ -13,6 +13,7 @@ import { did } from '../../utils';
 import { useDebounce } from '../../hooks/debounce';
 import CommonInput from '../CommonInput';
 import { SelectTokenType } from '../Asset/index.component';
+import Loading from '../Loading';
 
 interface IReceiveListProps {
   onBack?: () => void;
@@ -28,6 +29,7 @@ interface IReceiveListProps {
 
 const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos }: IReceiveListProps) => {
   const [currentTokenList, setCurrentTokenList] = useState(tokenList);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchVal, setSearchVal] = useState<string>('');
 
   const debounce = useDebounce(searchVal, 500);
@@ -42,6 +44,7 @@ const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos }: IReceiv
       });
       if (!result?.items) return;
       setCurrentTokenList(filterToken(result.items));
+      setIsLoading(false);
     },
     [caAddressInfos],
   );
@@ -107,14 +110,20 @@ const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos }: IReceiv
               <CustomSvg type="ChevronRight" fillColor="var(--sds-color-icon-default-default)" />
             </div>
           </div>
-          <div className="token-list">
-            {currentTokenList.map((item: IUserTokenItemNew) => (
-              <div key={item.symbol} className="item" onClick={() => onItemClick(item)}>
-                <CoinImage symbol={item.symbol} src={item.imageUrl} width={42} />
-                <span>{item.symbol}</span>
-              </div>
-            ))}
-          </div>
+          {isLoading ? (
+            <div className="loading-container">
+              <Loading width={32} height={32} />
+            </div>
+          ) : (
+            <div className="token-list">
+              {currentTokenList.map((item: IUserTokenItemNew) => (
+                <div key={item.symbol} className="item" onClick={() => onItemClick(item)}>
+                  <CoinImage symbol={item.symbol} src={item.imageUrl} width={42} />
+                  <span>{item.symbol}</span>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </PortkeyStyleProvider>
