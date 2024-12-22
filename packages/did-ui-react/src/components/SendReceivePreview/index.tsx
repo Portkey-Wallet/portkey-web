@@ -155,7 +155,7 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
               {eBridgeFeeNotEnough && <div className="below-show text-color-danger">{`Not enough ELF`}</div>}
             </div>
             <div className="value-show">
-              <div className="text-color-danger">{`${transactionFee} ${transactionUnit}`}</div>
+              <div>{`${transactionFee} ${transactionUnit}`}</div>
               {/* <div className="below-show text-color-danger">{`$ `}</div> */}
             </div>
           </div>
