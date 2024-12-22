@@ -176,11 +176,10 @@ function SendContent({
   const [targetNetwork, setTargetNetwork] = useState<INetworkItem>();
   const [addressType, setAddressType] = useState<AddressTypeEnum>(AddressTypeEnum.NON_EXCHANGE);
   const [eBridgeFeeNotEnough, setEBridgeFeeNotEnough] = useState(false);
-  // const recommendETransfer = useMemo(
-  //   () => targetNetwork?.serviceList?.find((ele) => ele?.serviceName?.toLocaleLowerCase()?.includes('transfer')),
-  //   [targetNetwork?.serviceList],
-  // );
-  const recommendETransfer = false;
+  const recommendETransfer = useMemo(
+    () => targetNetwork?.serviceList?.find((ele) => ele?.serviceName?.toLocaleLowerCase()?.includes('transfer')),
+    [targetNetwork?.serviceList],
+  );
 
   const recommendEBridge = useMemo(
     () => targetNetwork?.serviceList?.find((ele) => ele?.serviceName?.toLocaleLowerCase()?.includes('bridge')),
@@ -627,6 +626,7 @@ function SendContent({
 
           console.log('crossTransferByEtransferResult', crossTransferByEtransferResult);
         } else if (_transferType === TransferTypeEnum.E_BRIDGE) {
+          setEBridgeFeeNotEnough(false);
           const fromChainInfo = getAELFChainInfoConfig(tokenInfo.chainId);
           const toChainInfo = getEVMChainInfoConfig(targetNetwork?.network || '');
 
@@ -658,6 +658,7 @@ function SendContent({
 
           console.log('balance result', result);
           if (ZERO.plus(needElfBalance).isGreaterThan(elfBalance)) {
+            setEBridgeFeeNotEnough(true);
             return 'no enough elf';
           }
 
@@ -1234,6 +1235,7 @@ function SendContent({
             targetNetwork={targetNetwork}
             tokenInfo={tokenInfo}
             toAccount={toAccount}
+            eBridgeFeeNotEnough={eBridgeFeeNotEnough}
           />
         ),
       },
@@ -1256,7 +1258,6 @@ function SendContent({
       getTranslationInfo,
       errorMessage,
       onPressMax,
-      sendTransfer,
       networkFee,
       networkFeeUnit,
       receiveAmount,
@@ -1265,9 +1266,11 @@ function SendContent({
       transactionUnit,
       transferType,
       targetNetwork,
+      eBridgeFeeNotEnough,
       btnOutOfFocus,
       onCancel,
       handleCheckPreview,
+      sendTransfer,
     ],
   );
 
