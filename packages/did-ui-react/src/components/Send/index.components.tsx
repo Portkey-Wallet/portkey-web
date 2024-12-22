@@ -39,7 +39,7 @@ import { MAINNET, MAIN_CHAIN_ID } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
-import { getChain } from '../../hooks/useChainInfo';
+import { getChain, useCurrentChainList } from '../../hooks/useChainInfo';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
 import GuardianApprovalModal from '../GuardianApprovalModal';
@@ -73,6 +73,7 @@ import SendReceivePreview from '../SendReceivePreview';
 import crossChainTransfer from '../../utils/sandboxUtil/crossChainTransfer';
 import { CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL } from '../../constants';
 import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
+import { addRecentItem } from '../../utils/recent';
 
 export const AdsCheckWarningTip = {
   [WarningKey.INVALID_ADDRESS]: {
@@ -158,6 +159,7 @@ function SendContent({
   onModifyLimit,
   onModifyGuardians,
 }: SendProps) {
+  const { chainList: aelfChainList } = useCurrentChainList();
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId, tokenListInfoV2, pin }] =
     usePortkeyAsset();
   console.log('tokenListInfoV2 is::', tokenListInfoV2, 'assetItem', assetItem, 'extraConfig', extraConfig);
@@ -173,11 +175,10 @@ function SendContent({
   const [targetNetwork, setTargetNetwork] = useState<INetworkItem>();
   const [addressType, setAddressType] = useState<AddressTypeEnum>(AddressTypeEnum.NON_EXCHANGE);
   const [eBridgeFeeNotEnough, setEBridgeFeeNotEnough] = useState(false);
-  // const recommendETransfer = useMemo(
-  //   () => targetNetwork?.serviceList?.find((ele) => ele?.serviceName?.toLocaleLowerCase()?.includes('transfer')),
-  //   [targetNetwork?.serviceList],
-  // );
-  const recommendETransfer = false;
+  const recommendETransfer = useMemo(
+    () => targetNetwork?.serviceList?.find((ele) => ele?.serviceName?.toLocaleLowerCase()?.includes('transfer')),
+    [targetNetwork?.serviceList],
+  );
 
   const recommendEBridge = useMemo(
     () => targetNetwork?.serviceList?.find((ele) => ele?.serviceName?.toLocaleLowerCase()?.includes('bridge')),
@@ -579,6 +580,7 @@ function SendContent({
 
           console.log('crossTransferByEtransferResult', crossTransferByEtransferResult);
         } else if (_transferType === TransferTypeEnum.E_BRIDGE) {
+          setEBridgeFeeNotEnough(false);
           const fromChainInfo = getAELFChainInfoConfig(tokenInfo.chainId);
           const toChainInfo = getEVMChainInfoConfig(targetNetwork?.network || '');
 
@@ -610,6 +612,7 @@ function SendContent({
 
           console.log('balance result', result);
           if (ZERO.plus(needElfBalance).isGreaterThan(elfBalance)) {
+            setEBridgeFeeNotEnough(true);
             return 'no enough elf';
           }
 
@@ -624,13 +627,27 @@ function SendContent({
             owner: caInfo?.[tokenInfo.chainId]?.caAddress || '',
             caHash,
             portkeyContractAddress: chainInfo.caContractAddress,
-            privateKey: managementAccount.privateKey || '',
+            privateKey: managementAccount?.privateKey || '',
           });
           console.log(createReceiptResult, 'createReceiptResult===EBridge');
         }
 
         singleMessage.success('success');
         onSuccess?.(toAccount.address);
+        const _chainId = getAddressChainId(toAccount.address, 'AELF');
+
+        const aelfChainIcon = aelfChainList.find((ele) => ele.chainId === _chainId)?.chainImageUrl;
+
+        addRecentItem({
+          item: {
+            address: toAccount.address,
+            chainId: _chainId || 'AELF',
+            network: isDIDAelfAddress(toAccount.address) ? 'aelf' : targetNetwork?.network || '',
+            networkIcon: isDIDAelfAddress(toAccount.address) ? aelfChainIcon : targetNetwork?.imageUrl || '',
+            transferTime: Date.now(),
+          },
+          network: networkType,
+        });
       } catch (error: any) {
         console.log('sendHandler==error', error);
         if (!error?.type) return singleMessage.error(handleErrorMessage(error));
@@ -650,6 +667,7 @@ function SendContent({
 
     return { onApprovalSuccess, sendTransfer };
   }, [
+    aelfChainList,
     amount,
     caHash,
     caInfo,
@@ -665,9 +683,11 @@ function SendContent({
     getTokenConfig,
     managementAccount?.address,
     managementAccount?.privateKey,
+    networkType,
     onSuccess,
     sandboxId,
     stage,
+    targetNetwork?.imageUrl,
     targetNetwork?.network,
     toAccount.address,
     tokenInfo,
@@ -1169,6 +1189,7 @@ function SendContent({
             targetNetwork={targetNetwork}
             tokenInfo={tokenInfo}
             toAccount={toAccount}
+            eBridgeFeeNotEnough={eBridgeFeeNotEnough}
           />
         ),
       },
@@ -1191,7 +1212,6 @@ function SendContent({
       getTranslationInfo,
       errorMessage,
       onPressMax,
-      sendTransfer,
       networkFee,
       networkFeeUnit,
       receiveAmount,
@@ -1200,18 +1220,26 @@ function SendContent({
       transactionUnit,
       transferType,
       targetNetwork,
+      eBridgeFeeNotEnough,
       btnOutOfFocus,
       onCancel,
       handleCheckPreview,
+      sendTransfer,
     ],
   );
+
+  const title = useMemo(() => {
+    if (stage === Stage.Preview) return 'Preview';
+
+    return `Send ${!isNft ? tokenInfo?.label || tokenInfo.symbol : ''}`;
+  }, [isNft, stage, tokenInfo?.label, tokenInfo.symbol]);
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
         leftElement={<CustomSvg fillColor="var(--sds-color-icon-default-default)" type={'BackLeft'} />}
         className="page-title"
-        title={`Send ${!isNft ? tokenInfo?.label || tokenInfo.symbol : ''}`}
+        title={title}
         leftCallBack={() => {
           StageObj[stage].backFun();
         }}

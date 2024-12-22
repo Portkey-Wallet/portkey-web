@@ -8,6 +8,8 @@ import RecentItem from './RecentItem';
 import { MAINNET } from '../../../../constants/network';
 import { NetworkType, PaginationPage } from '../../../../types';
 import { getTransformedRecentList, IRecentItem } from '../../../../utils/recent';
+import { getAelfAddress } from '../../../../utils';
+import MyAddress from './MyAddress';
 
 export default function Recents({
   networkType,
@@ -18,6 +20,8 @@ export default function Recents({
   onChange: (account: IClickAddressProps) => void;
   chainId: ChainId;
 }) {
+  const [{ caAddressInfos }] = usePortkeyAsset();
+
   const [currentRecentList, setCurrentRecentList] = useState<IRecentItem[]>([]);
 
   useEffect(() => {
@@ -28,15 +32,23 @@ export default function Recents({
   const recentTxDomList = useMemo(() => {
     return currentRecentList
       ?.filter((item) => !!item)
-      .map((item, index) => (
-        <RecentItem
-          isMainnet={networkType === MAINNET}
-          item={item as unknown as IRecentItem}
-          key={index}
-          onClick={onChange}
-        />
-      ));
-  }, [currentRecentList, networkType, onChange]);
+      .map((item, index) => {
+        if (getAelfAddress(item.address) === caAddressInfos?.[0]?.caAddress) {
+          return (
+            <MyAddress key={index} chainId={item.chainId || 'AELF'} networkType={networkType} onClick={onChange} />
+          );
+        } else {
+          return (
+            <RecentItem
+              isMainnet={networkType === MAINNET}
+              item={item as unknown as IRecentItem}
+              key={index}
+              onClick={onChange}
+            />
+          );
+        }
+      });
+  }, [caAddressInfos, currentRecentList, networkType, onChange]);
 
   return (
     <div className="portkey-ui-send-recents">

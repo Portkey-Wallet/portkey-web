@@ -168,27 +168,32 @@ export function AssetOverviewContent({
 
   const initActivityRef = useRef(false);
 
-  const initActivity = useCallback(() => {
-    if (activityMap?.[getCurrentActivityMapKey(undefined, undefined)]?.list.length) {
-      return;
-    }
-    if (!caAddressInfos) return;
-    if (initActivityRef.current) return;
+  const initActivity = useCallback(
+    (forceInit?: boolean) => {
+      if (!forceInit && activityMap?.[getCurrentActivityMapKey(undefined, undefined)]?.list.length) {
+        return;
+      }
 
-    onDataInit?.();
-    initActivityRef.current = true;
-    basicAssetViewAsync
-      .setActivityList({
-        maxResultCount: PAGESIZE_10,
-        caAddressInfos,
-        skipCount: 0,
-      })
-      .then(dispatch)
-      .catch((e) => {
-        initActivityRef.current = false;
-      });
-    onDataInitEnd?.();
-  }, [activityMap, caAddressInfos, dispatch, onDataInit, onDataInitEnd]);
+      if (!caAddressInfos) return;
+      if (initActivityRef.current) return;
+
+      onDataInit?.();
+      initActivityRef.current = true;
+
+      basicAssetViewAsync
+        .setActivityList({
+          maxResultCount: PAGESIZE_10,
+          caAddressInfos,
+          skipCount: 0,
+        })
+        .then(dispatch)
+        .finally(() => {
+          initActivityRef.current = false;
+        });
+      onDataInitEnd?.();
+    },
+    [activityMap, caAddressInfos, dispatch, onDataInit, onDataInitEnd],
+  );
 
   useEffect(() => {
     initActivity();
@@ -265,7 +270,8 @@ export function AssetOverviewContent({
               .then(dispatch)
               .finally(() => setIsGetNFTCollection(false));
           } else if (v === BalanceTab.ACTIVITY) {
-            initActivity();
+            console.log('!!!!!ACTIVITY');
+            initActivity(true);
           }
         }}
         onDataInit={onDataInit}
