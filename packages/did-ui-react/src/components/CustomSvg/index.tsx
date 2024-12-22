@@ -7,13 +7,16 @@ export interface CustomSvgProps {
   type: keyof typeof svgsList;
   className?: string;
   fillColor?: string;
+  strokeColor?: string;
   style?: CSSProperties;
   onClick?: () => void;
 }
-export default function CustomSvg({ type, className, fillColor, ...props }: CustomSvgProps) {
+export default function CustomSvg({ type, className, fillColor, strokeColor, ...props }: CustomSvgProps) {
   let svgContent = svgsList[type];
-  if (fillColor && type !== 'Google') {
-    svgContent = svgContent.replace(/fill="[^"]*"/g, `fill="${fillColor}"`);
+  if ((strokeColor || fillColor) && type !== 'Google') {
+    svgContent = svgContent
+      .replace(/fill="[^"]*"/g, `fill="${fillColor}"`)
+      .replace(/stroke="[^"]*"/g, `stroke="${strokeColor}"`);
   }
   return (
     <div

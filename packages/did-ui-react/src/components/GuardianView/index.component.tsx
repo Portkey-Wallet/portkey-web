@@ -15,15 +15,7 @@ import GuardianAccountShow from '../GuardianAccountShow';
 import BaseVerifierIcon from '../BaseVerifierIcon';
 import { Switch } from 'antd';
 import VerifierPage from '../GuardianApproval/components/VerifierPage';
-import {
-  did,
-  errorTip,
-  handleErrorMessage,
-  handleVerificationDoc,
-  setLoading,
-  socialLoginAuth,
-  verification,
-} from '../../utils';
+import { did, errorTip, handleErrorMessage, handleVerificationDoc, socialLoginAuth, verification } from '../../utils';
 import CustomModal from '../CustomModal';
 import useReCaptchaModal from '../../hooks/useReCaptchaModal';
 import { TVerifyCodeInfo } from '../SignStep/types';
@@ -39,6 +31,8 @@ import { getOperationDetails } from '../utils/operation.util';
 import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
+import CustomSvg from '../CustomSvg';
+import CommonButton from '../CommonButton';
 
 export interface GuardianViewProps {
   header?: ReactNode;
@@ -194,7 +188,7 @@ function GuardianView({
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
-        setLoading(true);
+        // setLoading(true);
         await handleSetLoginGuardian?.({ ...curGuardian.current, ...currentGuardian }, approvalInfo);
         setApprovalVisible(false);
       } catch (e) {
@@ -207,7 +201,7 @@ function GuardianView({
           onError,
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [currentGuardian, handleSetLoginGuardian, isErrorTip, onError],
@@ -215,7 +209,7 @@ function GuardianView({
 
   const sendCode = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const result = await verification.sendVerificationCode(
         {
           params: {
@@ -255,7 +249,7 @@ function GuardianView({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [currentGuardian, originChainId, operationType, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
@@ -285,7 +279,7 @@ function GuardianView({
   }, [currentGuardian?.guardianIdentifier, currentGuardian.guardianType, currentGuardian?.verifier?.name, sendCode]);
   const handleSocialVerify = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const res = await socialVerify?.(currentGuardian);
 
       curGuardian.current = {
@@ -307,7 +301,7 @@ function GuardianView({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [currentGuardian, isErrorTip, onError, socialVerify]);
 
@@ -338,24 +332,17 @@ function GuardianView({
         loginGuardianIdentifier: currentGuardian?.guardianIdentifier,
       });
       setSwitchDisable(false);
-      CustomModal({
-        type: 'info',
-        okText: 'Close',
-        content: <>{t('This account address is already a login account and cannot be used')}</>,
-      });
+
+      setTip1Visible(true);
     } catch (error: any) {
       setSwitchDisable(false);
       if (error?.error?.code?.toString() === '3002') {
         handleSwitch();
       } else {
-        CustomModal({
-          type: 'info',
-          okText: 'Close',
-          content: <>{t('This account address is already a login account and cannot be used')}</>,
-        });
+        setTip1Visible(true);
       }
     }
-  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, originChainId, t]);
+  }, [currentGuardian?.guardianIdentifier, guardianList, handleSwitch, originChainId]);
 
   const checkUnsetLoginGuardian = useCallback(async () => {
     setSwitchDisable(true);
@@ -366,14 +353,10 @@ function GuardianView({
     if (loginAccountNum > 1) {
       handleSwitch();
     } else {
-      CustomModal({
-        type: 'info',
-        okText: 'Close',
-        content: <>{t('This guardian is the only login account and cannot be turned off')}</>,
-      });
+      setTipVisible(true);
     }
     setSwitchDisable(false);
-  }, [guardianList, handleSwitch, t]);
+  }, [guardianList, handleSwitch]);
 
   const checkSwitch = useCallback(
     async (status: boolean) => {
@@ -396,6 +379,10 @@ function GuardianView({
   }, [currentGuardian]);
 
   console.log('currentGuardian', currentGuardian);
+
+  const [tipVisible, setTipVisible] = useState(false);
+  const [tip1Visible, setTip1Visible] = useState(false);
+
   return (
     <div className={clsx('portkey-ui-guardian-view', 'portkey-ui-flex-column', className)}>
       <>
@@ -444,7 +431,7 @@ function GuardianView({
             </div>
           </div>
         </div>
-        {onEditGuardian && (
+        {onEditGuardian && !currentGuardian.isLoginGuardian && (
           <div className="guardian-view-footer">
             <ThrottleButton type="primary" className="guardian-btn" onClick={onEditGuardian}>
               {t('Edit')}
@@ -499,6 +486,55 @@ function GuardianView({
           // guardianIdentifier={curGuardian?.current?.guardianIdentifier}
           // firstName={curGuardian?.current?.firstName}
         />
+      </CommonBaseModal>
+
+      <CommonBaseModal open={tipVisible} onClose={() => setTipVisible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-view-guardian-modal">
+          <div className="view-guardian-title-box">
+            <div className="view-guardian-title">
+              {t('This guardian is the only login account and cannot be turned off')}
+            </div>
+            <CustomSvg
+              type="Close"
+              strokeColor="var(--sds-color-icon-default-default)"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              onClick={() => setTipVisible(false)}
+            />
+          </div>
+
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={() => setTipVisible(false)}>
+              Close
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal open={tip1Visible} onClose={() => setTip1Visible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-view-guardian-modal">
+          <div className="view-guardian-title-box">
+            <CustomSvg
+              type="WarningTriangle"
+              fillColor="var(--sds-color-icon-default-default)"
+              style={{ width: 32, height: 32 }}
+            />
+            <CustomSvg
+              type="Close"
+              strokeColor="var(--sds-color-icon-default-default)"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              onClick={() => setTip1Visible(false)}
+            />
+          </div>
+          <div className="view-guardian-title">{`Already used as login account`}</div>
+          <div className="view-guardian-desc">
+            {`This account is already set as a login account for other wallet(s) and can't be used for this purpose.`}
+          </div>
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={() => setTip1Visible(false)}>
+              Close
+            </CommonButton>
+          </div>
+        </div>
       </CommonBaseModal>
     </div>
   );

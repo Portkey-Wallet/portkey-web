@@ -191,7 +191,10 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
         {(transferType === TransferTypeEnum.E_BRIDGE || transferType === TransferTypeEnum.E_TRANSFER) && (
           <div className="portkey-ui-flex-center powered-by gap-4">
             <div>{`Powered by`}</div>
-            <CustomSvg type={transferType === TransferTypeEnum.E_BRIDGE ? 'pb-ebridge' : 'pb-eTransfer'} />
+            <CustomSvg
+              fillColor="var(--sds-color-icon-default-default)"
+              type={transferType === TransferTypeEnum.E_BRIDGE ? 'pb-ebridge' : 'pb-eTransfer'}
+            />
           </div>
         )}
       </div>

@@ -6,16 +6,19 @@
     height: 100%;
     flex: 1;
   }
+  .login-icon {
+    padding: 16px;
+    padding-bottom: 8px;
+    color: var(--sds-color-text-default-secondary);
+    font-size: 14px;
+  }
   .verifier-item {
     padding: 16px;
     cursor: pointer;
     &:last-of-type {
       // border-bottom: 1px solid var(--portkey-ui-default-border);
     }
-    .login-icon {
-      left: 24px;
-      margin-bottom: 10px;
-    }
+   
     .leftarrow-icon {
       transform: rotate(180deg);
     }
@@ -46,6 +49,18 @@
   @media screen and (max-width: 768px) {
     .verifier-item {
       padding: 16px;
+    }
+  }
+  .loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 20%;
+  }
+  .link {
+    margin: 20px 16px;
+    a {
+      color: var(--sds-color-text-brand-default);
     }
   }
 }

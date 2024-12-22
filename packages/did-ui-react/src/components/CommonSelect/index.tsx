@@ -40,20 +40,15 @@ export default function CommonSelect({
   );
   const [showList, setShowList] = useState(false);
 
-  console.log('combineOptions', combineOptions, props);
-  const [select, setSelect] = useState<DefaultOptionType>(combineOptions[0]);
+  const [select, setSelect] = useState<DefaultOptionType>();
 
-  const [selectValue, setSelectValue] = useState(combineOptions[0].value);
+  const [selectValue, setSelectValue] = useState();
 
   useEffect(() => {
     setSelectValue(value);
-  }, [value]);
-
-  useEffect(() => {
-    if (onChange) {
-      onChange(combineOptions[0].value, combineOptions[0]);
-    }
-  }, [combineOptions]);
+    const selected = combineOptions.filter((list) => list.value == value)[0];
+    setSelect(selected);
+  }, [value, combineOptions]);
 
   const selectOption = (option: any) => {
     setSelect(option);
@@ -66,21 +61,24 @@ export default function CommonSelect({
   return (
     <>
       <div className={clsx('portkey-ui-common-select-new', className)} onClick={() => setShowList(true)}>
-        <div>{select?.label || combineOptions[0].label}</div>
-        <CustomSvg
-          className="portkey-ui-account-arrow"
-          fillColor="var(--sds-color-icon-default-default)"
-          type="KeyboardArrowDown"
-        />
+        <div>{select?.label || props.placeholder}</div>
+        {!props.disabled && (
+          <CustomSvg
+            className="portkey-ui-account-arrow"
+            fillColor="var(--sds-color-icon-default-default)"
+            type="KeyboardArrowDown"
+          />
+        )}
       </div>
       {showList && (
         <CommonBaseModal className="select-modal" title={props.placeholder} open={showList}>
           <CustomSvg
             className="select-close"
-            fillColor="var(--sds-color-icon-default-default)"
-            type="Close"
+            type="Select-close"
+            strokeColor="var(--sds-color-icon-default-default)"
             onClick={() => setShowList(false)}
           />
+
           <div className="select-lists">
             {combineOptions.map((list, index) => {
               return (
@@ -92,8 +90,17 @@ export default function CommonSelect({
                       selectOption(list);
                     }
                   }}>
-                  {list.label}
-                  {selectValue == list.value && <CustomSvg className="selected-icon" type="SelectedList" />}
+                  <div className="select-label">
+                    <span>{list.label}</span>
+                    {selectValue == list.value && <span className="current">Current</span>}
+                  </div>
+                  {selectValue == list.value && (
+                    <CustomSvg
+                      className="selected-icon"
+                      fillColor="var(--sds-color-icon-brand-secondary)"
+                      type="SelectedList"
+                    />
+                  )}
                 </div>
               );
             })}

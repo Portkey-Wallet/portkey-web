@@ -4,14 +4,7 @@ import { useState, useMemo, useCallback, memo, ReactNode, useRef, useEffect } fr
 import CommonSelect from '../CommonSelect';
 import { VerifierItem } from '@portkey/did';
 import { ChainId, ChainType } from '@portkey/types';
-import {
-  errorTip,
-  handleErrorMessage,
-  handleVerificationDoc,
-  setLoading,
-  socialLoginAuth,
-  verification,
-} from '../../utils';
+import { errorTip, handleErrorMessage, handleVerificationDoc, socialLoginAuth, verification } from '../../utils';
 import {
   ISocialLogin,
   ITelegramInfo,
@@ -47,6 +40,7 @@ import { getSocialConfig } from '../utils/social.utils';
 import GuardianTypeIcon from '../GuardianTypeIcon';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import './index.less';
+import CommonButton from '../CommonButton';
 
 enum GuardianEditStatus {
   UnsetLoginGuardian = 'UnsetLoginGuardian',
@@ -135,22 +129,6 @@ function GuardianEdit({
     [isExist, preGuardian?.verifier?.id, selectVerifierId],
   );
   const reCaptchaHandler = useReCaptchaModal();
-  const customSelectOption = useMemo(
-    () => [
-      {
-        value: 'tip',
-        disabled: true,
-        className: 'portkey-option-tip',
-        label: (
-          <div className="portkey-ui-flex label-item">
-            <CustomSvg type="Warning" />
-            <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
-          </div>
-        ),
-      },
-    ],
-    [],
-  );
   const verifierSelectItems = useMemo(
     () =>
       verifierList?.map((item) => {
@@ -327,7 +305,7 @@ function GuardianEdit({
   );
   const sendCode = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const _guardian = preGuardianRef.current;
       const result = await verification.sendVerificationCode(
         {
@@ -368,7 +346,7 @@ function GuardianEdit({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [originChainId, operationType, reCaptchaHandler, isErrorTip, onError]);
   const reSendCode = useCallback(({ verifierSessionId }: TVerifyCodeInfo) => {
@@ -398,7 +376,7 @@ function GuardianEdit({
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
-        setLoading(true);
+        // setLoading(true);
         if (step === GuardianEditStatus.EditGuardian) {
           let _cur = curGuardian.current;
           if (_cur?.guardianType && zkGuardianType.includes(_cur.guardianType)) {
@@ -428,7 +406,7 @@ function GuardianEdit({
           onError,
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
       }
     },
     [
@@ -443,25 +421,14 @@ function GuardianEdit({
     ],
   );
 
+  const [showType, setShowType] = useState(false);
+
   const handleCommonVerify = useCallback(() => {
-    CustomModal({
-      type: 'confirm',
-      okText: 'Confirm',
-      content: (
-        <p>
-          {`${preGuardian?.verifier?.name ?? ''} will send a verification code to `}
-          <strong>{preGuardian?.guardianIdentifier}</strong>
-          {` to verify your ${
-            preGuardian?.guardianType === AccountTypeEnum[AccountTypeEnum.Phone] ? 'phone number' : 'email address'
-          }.`}
-        </p>
-      ),
-      onOk: sendCode,
-    });
-  }, [preGuardian?.guardianIdentifier, preGuardian?.guardianType, preGuardian?.verifier?.name, sendCode]);
+    setShowType(true);
+  }, []);
   const handleSocialVerify = useCallback(async () => {
     try {
-      setLoading(true);
+      // setLoading(true);
       const res = await socialVerify?.(preGuardian!);
 
       preGuardianRef.current = {
@@ -484,7 +451,7 @@ function GuardianEdit({
         onError,
       );
     } finally {
-      setLoading(false);
+      // setLoading(false);
     }
   }, [isErrorTip, onError, preGuardian, socialVerify]);
 
@@ -512,46 +479,25 @@ function GuardianEdit({
     }
   }, [checkValid]);
 
+  const [removeVisible, setRemoveVisible] = useState(false);
+
+  const [canNotRemoveVisible, setCanNotRemoveVisible] = useState(false);
+  const [tipVisible, setTipVisible] = useState(false);
+
   const onClickRemove = useCallback(() => {
     const isLoginAccountList = guardianList?.filter((item) => item.isLoginGuardian) || [];
     if (currentGuardian?.isLoginGuardian) {
       if (isLoginAccountList.length === 1) {
-        CustomModal({
-          type: 'info',
-          content: <>{t('This guardian is the only login account and cannot be removed')}</>,
-        });
+        setCanNotRemoveVisible(true);
       } else {
-        CustomModal({
-          type: 'confirm',
-          okText: 'confirm',
-          content: (
-            <>
-              {t(
-                'This guardian is currently set as a login account. You need to unset its login account identity before removing it. Please click "Confirm" to proceed.',
-              )}
-            </>
-          ),
-          onOk: handleUnsetLoginGuardian,
-        });
+        setTipVisible(true);
       }
     } else {
-      CustomModal({
-        type: 'confirm',
-        okText: 'Yes',
-        cancelText: 'No',
-        content: (
-          <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
-            <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
-            <div>Removing a guardian requires guardian approval</div>
-          </div>
-        ),
-        onOk: () => {
-          setStep(GuardianEditStatus.RemoveGuardian);
-          setApprovalVisible(true);
-        },
-      });
+      setRemoveVisible(true);
     }
-  }, [currentGuardian?.isLoginGuardian, guardianList, handleUnsetLoginGuardian, t]);
+  }, [currentGuardian?.isLoginGuardian, guardianList]);
+
+  const [waringVisible, setWaringVisible] = useState(false);
 
   return (
     <div className={clsx('portkey-ui-guardian-edit', 'portkey-ui-flex-column', className)}>
@@ -566,7 +512,10 @@ function GuardianEdit({
           </div>
         </div>
         <div className="input-item">
-          <p className="guardian-edit-input-item-label">{t('Verifier')}</p>
+          <p className="guardian-edit-input-item-label">
+            <span>{t('Verifier')}</span>
+            <CustomSvg type="Problem" onClick={() => setWaringVisible(true)} />
+          </p>
           <CommonSelect
             placeholder="Select Guardians Verifier"
             className={clsx(
@@ -577,7 +526,7 @@ function GuardianEdit({
             value={selectVerifierId}
             onChange={handleVerifierChange}
             items={verifierSelectItems}
-            customOptions={customSelectOption}
+            disabled={selectVerifierId === zkLoginVerifierItem.id}
           />
           {isExist && <div className="guardian-edit-error-tip">{verifierExistTip}</div>}
         </div>
@@ -640,6 +589,119 @@ function GuardianEdit({
             newVerifierId: curGuardian.current?.verifierId,
           })}
         />
+      </CommonBaseModal>
+
+      <CommonBaseModal open={removeVisible} onClose={() => setRemoveVisible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+          <div className="remove-guardian-title-box">
+            <div className="remove-guardian-title">Are you sure you want to remove this guardian?</div>
+            <CustomSvg
+              type="Close"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              strokeColor="var(--sds-color-icon-default-default)"
+              onClick={() => setRemoveVisible(false)}
+            />
+          </div>
+          <div className="remove-guardian-desc">Removing a guardian requires guardian approval</div>
+          <div className="btn-box">
+            <CommonButton onClick={() => setRemoveVisible(false)}>Close</CommonButton>
+            <CommonButton
+              type="primary"
+              onClick={() => {
+                setStep(GuardianEditStatus.RemoveGuardian);
+                setApprovalVisible(true);
+              }}>
+              Send Request
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal open={canNotRemoveVisible} onClose={() => setCanNotRemoveVisible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+          <div className="remove-guardian-title-box">
+            <div className="remove-guardian-title">
+              {t('This guardian is the only login account and cannot be removed')}
+            </div>
+            <CustomSvg
+              type="Close"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              strokeColor="var(--sds-color-icon-default-default)"
+              onClick={() => setCanNotRemoveVisible(false)}
+            />
+          </div>
+
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={() => setCanNotRemoveVisible(false)}>
+              Close
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal open={tipVisible} onClose={() => setTipVisible(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+          <div className="remove-guardian-title-box">
+            <div className="remove-guardian-title">{t('This guardian is currently set as a login account.')}</div>
+            <CustomSvg
+              type="Close"
+              strokeColor="var(--sds-color-icon-default-default)"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              onClick={() => setTipVisible(false)}
+            />
+          </div>
+          <div className="remove-guardian-desc">{`You need to unset its login account identity before removing it. Please click "Confirm" to proceed.`}</div>
+
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={handleUnsetLoginGuardian}>
+              confirm
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal open={showType} onClose={() => setShowType(false)} destroyOnClose>
+        <div className="portkey-ui-flex-column portkey-ui-remove-guardian-modal">
+          <div className="remove-guardian-title-box">
+            <div className="remove-guardian-title">
+              <p>
+                {`${preGuardian?.verifier?.name ?? ''} will send a verification code to `}
+                <strong>{preGuardian?.guardianIdentifier}</strong>
+                {` to verify your ${
+                  preGuardian?.guardianType === AccountTypeEnum[AccountTypeEnum.Phone]
+                    ? 'phone number'
+                    : 'email address'
+                }.`}
+              </p>
+            </div>
+            <CustomSvg
+              type="Close"
+              strokeColor="var(--sds-color-icon-default-default)"
+              style={{ width: 24, height: 24, flexShrink: 0 }}
+              onClick={() => setShowType(false)}
+            />
+          </div>
+          {/* <div className="remove-guardian-desc">{`You need to unset its login account identity before removing it. Please click "Confirm" to proceed.`}</div> */}
+
+          <div className="btn-box">
+            <CommonButton type="primary" onClick={sendCode}>
+              confirm
+            </CommonButton>
+          </div>
+        </div>
+      </CommonBaseModal>
+
+      <CommonBaseModal
+        className="waring-modal"
+        centered={true}
+        destroyOnClose
+        open={waringVisible}
+        title="Guardian verifier"
+        onClose={() => setWaringVisible(false)}>
+        <div className="tip">{`Except for zkLogin, used verifiers cannot be selected. To choose ZkLogin, the guardian type must be either a Google account or an Apple ID.`}</div>
+        <ThrottleButton type="primary" className="guardian-btn" onClick={() => setWaringVisible(false)}>
+          OK
+        </ThrottleButton>
       </CommonBaseModal>
     </div>
   );

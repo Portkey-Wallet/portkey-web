@@ -115,14 +115,12 @@ export default function SendAssetList({ networkType, caAddressInfos, onSelect }:
 }
 
 export function SendAssetListPage({ onCancel, ...props }: ISendAssetListProps & { onCancel: () => void }) {
-  const [{ theme: providerTheme }] = usePortkey();
-  const isDarkMode = useMemo(() => (props.mode || providerTheme) === 'dark', [props.mode, providerTheme]);
   return (
     <div className="portkey-ui-send-asset-list-page">
       <div className="send-select-asset-header portkey-ui-flex-between-center">
         <CustomSvg
           type="ArrowLeft"
-          fillColor={isDarkMode ? 'white' : '#151318'}
+          fillColor="var(--sds-color-icon-default-default)"
           className="portkey-ui-cursor-pointer"
           onClick={onCancel}
         />

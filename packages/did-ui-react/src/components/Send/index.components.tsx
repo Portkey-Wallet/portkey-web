@@ -163,8 +163,7 @@ function SendContent({
   const [{ accountInfo, managementAccount, caInfo, caHash, caAddressInfos, originChainId, tokenListInfoV2, pin }] =
     usePortkeyAsset();
   console.log('tokenListInfoV2 is::', tokenListInfoV2, 'assetItem', assetItem, 'extraConfig', extraConfig);
-  const [{ networkType, chainType, sandboxId, theme: providerTheme }] = usePortkey();
-  const isDarkMode = useMemo(() => (mode || providerTheme) === 'dark', [mode, providerTheme]);
+  const [{ networkType, chainType, sandboxId }] = usePortkey();
   const [stage, setStage] = useState<Stage>(extraConfig?.stage || Stage.Address);
   const [approvalVisible, setApprovalVisible] = useState<boolean>(false);
   const isNft = useMemo(() => isNFT(assetItem.symbol), [assetItem]);
@@ -391,51 +390,6 @@ function SendContent({
               setCurModalTipKey(undefined);
             },
             content: 'Agree and continue',
-          },
-        ],
-      },
-      limit: {
-        title: `Maximum transaction limit exceeded`,
-        content: `Please modify the transfer limit to proceed.`,
-        buttonGroupType: 'row' as ButtonGroupType,
-        buttons: [
-          {
-            type: 'outline' as CommonButtonType,
-            onClick: () => {
-              setCurModalTipKey(undefined);
-            },
-            content: 'Cancel',
-          },
-          {
-            type: 'primary' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Modify',
-          },
-        ],
-      },
-      allLimit: {
-        title: `Maximum transaction limit exceeded`,
-        content: `Request one-time guardian approval to proceed, or modify the limit to lift restrictions on future transactions.`,
-        buttonGroupType: 'col' as ButtonGroupType,
-        buttons: [
-          {
-            type: 'primary' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Request one-time approval',
-          },
-          {
-            type: 'outline' as CommonButtonType,
-            onClick: () => {
-              //TODO
-              setCurModalTipKey(undefined);
-            },
-            content: 'Modify transfer limit for all',
           },
         ],
       },
@@ -1283,7 +1237,7 @@ function SendContent({
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
       <TitleWrapper
-        leftElement={<CustomSvg fillColor={isDarkMode ? 'white' : '#151318'} type={'BackLeft'} />}
+        leftElement={<CustomSvg fillColor="var(--sds-color-icon-default-default)" type={'BackLeft'} />}
         className="page-title"
         title={title}
         leftCallBack={() => {

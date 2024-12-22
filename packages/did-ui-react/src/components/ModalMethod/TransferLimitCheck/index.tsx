@@ -4,21 +4,16 @@ import { checkTransferLimit } from '../../../utils/sandboxUtil/checkTransferLimi
 import { modalMethod } from './modalMethod';
 import type { ModalFuncProps } from 'antd';
 import { ZERO } from '../../../constants/misc';
-import {
-  ApproveExceedDailyLimit,
-  ApproveExceedSingleLimit,
-  ExceedDailyLimit,
-  ExceedSingleLimit,
-  LimitType,
-  MAX_TRANSACTION_FEE,
-} from '../../../constants/security';
+import { LimitType, MAX_TRANSACTION_FEE } from '../../../constants/security';
 import { divDecimals } from '../../../utils/converter';
-import CustomSvg from '../../CustomSvg';
 import { getBalanceByContract } from '../../../utils/sandboxUtil/getBalance';
-import './index.less';
 import { TRampPreviewInitState } from '../../../types';
 import { SendExtraConfig } from '../../Send/index.components';
 import { IBusinessFrom, ITransferLimitItemWithRoute } from '../../../types/transfer';
+import { TipContent } from '../../Send/components/SendModalTip';
+import ButtonGroup from '../../ButtonGroup';
+import { CommonButtonType } from '../../CommonButton';
+import './index.less';
 
 interface ITransferLimitCheckProps {
   wrapClassName?: string;
@@ -145,6 +140,34 @@ const transferLimitCheck = async ({
   }
   return true;
 };
+
+export function TransferLimitMain({ onOk, onCancel }: { onOk: () => void; onCancel: () => void }) {
+  return (
+    <div className="transfer-limit-content">
+      <TipContent
+        title={`Maximum transaction limit exceeded`}
+        content={`Please modify the transfer limit to proceed.`}
+        onClose={onCancel}
+      />
+      <ButtonGroup
+        type="row"
+        buttons={[
+          {
+            type: 'outline' as CommonButtonType,
+            onClick: onCancel,
+            content: 'Cancel',
+          },
+          {
+            type: 'primary' as CommonButtonType,
+            onClick: onOk,
+            content: 'Modify',
+          },
+        ]}
+      />
+    </div>
+  );
+}
+
 export function TransferLimitModal({
   wrapClassName,
   className,
@@ -159,23 +182,47 @@ export function TransferLimitModal({
       wrapClassName: 'portkey-ui-common-modals portkey-ui-transfer-limit-wrapper ' + wrapClassName,
       className: 'portkey-ui-transfer-limit-modal ' + className,
       content: (
-        <div className="portkey-ui-common-modals-only-content">
-          {limitType === LimitType.Daily ? ExceedDailyLimit : ExceedSingleLimit}
-        </div>
+        <TransferLimitMain
+          onOk={() => {
+            resolve(true);
+            onOk?.(data);
+            modal.destroy();
+          }}
+          onCancel={() => {
+            resolve(false);
+            modal.destroy();
+          }}
+        />
       ),
-      okText: 'Modify',
-      cancelText: 'Cancel',
-      onOk: () => {
-        resolve(true);
-        onOk?.(data);
-        modal.destroy();
-      },
-      onCancel: () => {
-        resolve(false);
-        modal.destroy();
-      },
     });
   });
+}
+
+export function TransferLimitApprovalMain({ onOk, onCancel }: { onOk: () => void; onCancel: () => void }) {
+  return (
+    <div className="transfer-limit-content">
+      <TipContent
+        title={`Maximum transaction limit exceeded`}
+        content={`Request one-time guardian approval to proceed, or modify the limit to lift restrictions on future transactions.`}
+        onClose={onCancel}
+      />
+      <ButtonGroup
+        type="col"
+        buttons={[
+          {
+            type: 'primary' as CommonButtonType,
+            onClick: onOk,
+            content: 'Request one-time approval',
+          },
+          {
+            type: 'outline' as CommonButtonType,
+            onClick: onCancel,
+            content: 'Modify transfer limit for all',
+          },
+        ]}
+      />
+    </div>
+  );
 }
 
 export function TransferLimitApprovalModal({
@@ -193,31 +240,19 @@ export function TransferLimitApprovalModal({
       wrapClassName: 'portkey-ui-common-modals portkey-ui-transfer-limit-approval-wrapper ' + wrapClassName,
       className: 'portkey-ui-transfer-limit-approval-modal ' + className,
       content: (
-        <div>
-          <div
-            className="portkey-ui-flex-center close-icon"
-            onClick={() => {
-              resolve(false);
-              modal.destroy();
-            }}>
-            <CustomSvg type="Close2" />
-          </div>
-
-          <span>{limitType === LimitType.Daily ? ApproveExceedDailyLimit : ApproveExceedSingleLimit}</span>
-        </div>
+        <TransferLimitApprovalMain
+          onOk={() => {
+            resolve(true);
+            onOneTimeApproval?.(data);
+            modal.destroy();
+          }}
+          onCancel={() => {
+            resolve(true);
+            onModifyTransferLimit?.(data);
+            modal.destroy();
+          }}
+        />
       ),
-      okText: 'Request One-Time Approval',
-      cancelText: 'Modify Transfer Limit for All',
-      onOk: () => {
-        resolve(true);
-        onOneTimeApproval?.(data);
-        modal.destroy();
-      },
-      onCancel: () => {
-        resolve(true);
-        onModifyTransferLimit?.(data);
-        modal.destroy();
-      },
     });
   });
 }
