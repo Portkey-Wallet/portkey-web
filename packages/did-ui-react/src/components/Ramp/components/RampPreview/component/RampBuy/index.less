@@ -77,23 +77,36 @@
  }
 }
 .change-currency-modal-list {
-  .change-currency-modal-list-title {
-    color: var(--sds-color-text-default-default);
-
-    /* Heading */
-    font-family: 'Bricolage Grotesque';
-    font-size: 20px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: 120%; /* 24px */
-    letter-spacing: -0.4px;
-
-    margin: 16px 16px 0px;
+  .close-icon {
+    z-index: 999;
   }
-  .change-currency-modal-list-search {
-    margin: 20px 16px 0;
-    width: calc(100%-32px);
+  .portkey-ant-drawer-content-wrapper {
+    height: 582px;
   }
+  .change-currency-modal-list-top-wrapper {
+    position: sticky;
+    top: 0;
+    left: 0;
+    padding-top: 16px;
+    background: var(--sds-color-background-default-default);
+    .change-currency-modal-list-title {
+      color: var(--sds-color-text-default-default);
+  
+      /* Heading */
+      font-family: 'Bricolage Grotesque';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 120%; /* 24px */
+      letter-spacing: -0.4px;
+      margin: 0px 16px 0px;
+    }
+    .change-currency-modal-list-search {
+      margin: 20px 16px 0;
+      width: calc(100%-32px);
+    }
+  }
+
   .fiat-list-item {
     display: flex;
     flex-direction: row;
