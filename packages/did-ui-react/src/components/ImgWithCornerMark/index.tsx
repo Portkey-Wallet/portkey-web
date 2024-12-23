@@ -14,11 +14,11 @@ export const ImgWithCornerMark = ({ mainImgSrc, mainImgTitle, cornerImgSrc }: II
 
   const MainDom = useMemo(() => {
     return !mainImgErr && mainImgSrc ? (
-      <img src={cornerImgSrc || ''} className="inner-dom" onError={() => setMainImgErr(true)} />
+      <img src={mainImgSrc || ''} className="inner-dom" onError={() => setMainImgErr(true)} />
     ) : (
       <div className="inner-dom">{mainImgTitle?.[0]}</div>
     );
-  }, [cornerImgSrc, mainImgErr, mainImgSrc, mainImgTitle]);
+  }, [mainImgErr, mainImgSrc, mainImgTitle]);
 
   const CornerDom = useMemo(() => {
     const isOnlineResources = cornerImgSrc.includes('.');
