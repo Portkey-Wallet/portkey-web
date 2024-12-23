@@ -634,7 +634,7 @@ function SendContent({
 
         singleMessage.success('success');
         onSuccess?.(toAccount.address);
-        const _chainId = getAddressChainId(toAccount.address, 'AELF');
+        const _chainId = getAddressChainId(toAccount.address, 'AELF') as ChainId;
 
         const aelfChainIcon = aelfChainList.find((ele) => ele.chainId === _chainId)?.chainImageUrl;
 
