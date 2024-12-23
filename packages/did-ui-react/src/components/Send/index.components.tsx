@@ -900,18 +900,13 @@ function SendContent({
               transferType: _transferType,
             };
           } else {
-            setErrorMessage(getLimitTips(tokenInfo.label || tokenInfo.symbol, minAmount, maxAmount));
-
             return {
-              checkResult: 'etansfer err',
+              checkResult: getLimitTips(tokenInfo.label || tokenInfo.symbol, minAmount, maxAmount),
             };
           }
         } catch (error) {
-          console.log('etansfer err', error);
-          console.log('checkCanPreview 14');
-          return { status: false };
-        } finally {
-          // Loading.hide();
+          console.log('eTransfer err', error);
+          return { checkResult: 'Please Try again later' };
         }
       }
 
@@ -1155,7 +1150,7 @@ function SendContent({
         handler: async () => {
           const res = await handleCheckPreview();
           console.log('handleCheckPreview res', res);
-          if (res?.checkResult === ExceedLimit || res?.checkResult === WalletIsNotSecure) return;
+
           if (res?.checkResult === CheckPass) {
             console.log('res checkResult', res);
 
