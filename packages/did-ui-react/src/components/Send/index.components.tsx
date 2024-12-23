@@ -331,8 +331,6 @@ function SendContent({
 
   const [toAccount, setToAccount] = useState<ToAccount>(extraConfig?.toAccount || { address: '' });
 
-  const [tipMsg, setTipMsg] = useState('');
-
   // const [balance, setBalance] = useState(extraConfig?.balance || '');
 
   const defaultToken = useDefaultToken(tokenInfo.chainId);
@@ -439,6 +437,49 @@ function SendContent({
     },
     [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo, caAddressInfos],
   );
+
+  const getCrossChainTransferFeeV2 = useCallback(async () => {
+    const chainId = tokenInfo.chainId;
+    const chainInfo = await getChain(chainId);
+    if (!chainInfo) throw 'Please check network connection and chainId';
+    const account = aelf.getWallet(managementAccount?.privateKey || '');
+    const tokenContract = await getContractBasic({
+      rpcUrl: chainInfo.endPoint,
+      account,
+      contractAddress: tokenInfo.address,
+      chainType,
+    });
+
+    const portkeyContract = await getContractBasic({
+      rpcUrl: chainInfo.endPoint,
+      contractAddress: chainInfo.caContractAddress,
+      account,
+      chainType,
+    });
+
+    return getCrossChainTransferFee({
+      tokenContract,
+      sendAmount: amount ?? debounceSendNumber,
+      decimals: tokenInfo.decimals.toString(),
+      symbol: tokenInfo.symbol,
+      caContract: portkeyContract,
+      tokenContractAddress: tokenInfo.address,
+      toAddress: getEntireDIDAelfAddress(toAccount.address, undefined, tokenInfo.chainId),
+      chainId: tokenInfo.chainId,
+      toChainId: getChainIdByAddress(toAccount.address) as ChainId,
+    });
+  }, [
+    amount,
+    chainType,
+    debounceSendNumber,
+    getCrossChainTransferFee,
+    managementAccount?.privateKey,
+    toAccount.address,
+    tokenInfo.address,
+    tokenInfo.chainId,
+    tokenInfo.decimals,
+    tokenInfo.symbol,
+  ]);
 
   const btnOutOfFocus = useCallback(() => {
     // fixed - button focus style when mobile
@@ -943,7 +984,7 @@ function SendContent({
               address: toAccount.address,
               chainId: tokenInfo.chainId,
               amount: amount,
-              network: 'tDVW', // TODO: change it
+              network: getAddressChainId(toAccount.address, 'AELF'),
             });
 
             _transactionFee = withdrawInfo?.aelfTransactionFee;
@@ -981,12 +1022,13 @@ function SendContent({
             _transferType = TransferTypeEnum.GENERAL_CROSS_CHAIN;
             //       TODO: change it
             // _networkFee = await getTransactionFee(isAELFCross, amount);
+
             _networkFeeUnit = 'ELF';
           }
         } else {
           // TODO: change it
-          // _networkFee = await getTransactionFee(isAELFCross, amount);
-          _networkFee = (await getTranslationInfo()) || '';
+          _networkFee = isAELFCross ? await getCrossChainTransferFeeV2() : (await getTranslationInfo()) || '';
+          console.log('_networkFee', _networkFee);
           _networkFeeUnit = 'ELF';
           _transferType = isAELFCross ? TransferTypeEnum.GENERAL_CROSS_CHAIN : TransferTypeEnum.GENERAL_SAME_CHAIN;
         }
@@ -1032,6 +1074,7 @@ function SendContent({
     defaultToken.decimals,
     defaultToken.symbol,
     getAELFChainInfoConfig,
+    getCrossChainTransferFeeV2,
     getEVMChainInfoConfig,
     getTokenConfig,
     getTranslationInfo,
@@ -1123,17 +1166,18 @@ function SendContent({
             res?.transactionFee && setTransactionFee(res?.transactionFee);
             res?.transactionUnit && setTransactionUnit(res?.transactionUnit);
             res?.transferType && setTransferType(res?.transferType);
-            setTipMsg('');
+            setErrorMessage('');
             setStage(Stage.Preview);
           } else {
-            setTipMsg(res?.checkResult);
+            setErrorMessage(res?.checkResult);
           }
           btnOutOfFocus();
         },
         backFun: () => {
           setStage(Stage.Address);
           setAmount('');
-          setTipMsg('');
+          setErrorMessage('');
+          setEBridgeFeeNotEnough(false);
           setInputStep(InputStepEnum.input);
           oneTimeApprovalList.current = [];
         },
@@ -1158,7 +1202,7 @@ function SendContent({
                 setBalance(balance);
               }}
               getTranslationInfo={getTranslationInfo}
-              setErrorMsg={setTipMsg}
+              setErrorMsg={setErrorMessage}
               warningTip={errorMessage}
               onPressMax={onPressMax}
             />
