@@ -88,7 +88,8 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
     setSendAmount('');
     setSendUSDAmount('');
     setWarning(undefined);
-  }, [setSendAmount, setSendUSDAmount, setStep, setToAccount, setWarning]);
+    setChainList([]);
+  }, [setChainList, setSendAmount, setSendUSDAmount, setStep, setToAccount, setWarning]);
 
   const onClickEdit = useCallback(() => {
     setStep(InputStepEnum.input);
