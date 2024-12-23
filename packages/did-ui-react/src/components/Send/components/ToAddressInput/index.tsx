@@ -51,6 +51,7 @@ export interface IToAddressInput {
   setSendAmount: Dispatch<SetStateAction<string>>;
   setSendUSDAmount: Dispatch<SetStateAction<string>>;
   setChainList: Dispatch<SetStateAction<INetworkItem[]>>;
+  setTargetNetwork: Dispatch<SetStateAction<INetworkItem | undefined>>;
 }
 
 export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>(function ({
@@ -68,6 +69,7 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
   setSendAmount,
   setSendUSDAmount,
   setChainList,
+  setTargetNetwork,
 }) {
   const [isChecking, setIsChecking] = useState(false);
   const [checkedPass, setCheckedPass] = useState(false);
@@ -87,9 +89,10 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
     setStep(InputStepEnum.input);
     setSendAmount('');
     setSendUSDAmount('');
+    setTargetNetwork(undefined);
     setWarning(undefined);
     setChainList([]);
-  }, [setChainList, setSendAmount, setSendUSDAmount, setStep, setToAccount, setWarning]);
+  }, [setChainList, setSendAmount, setSendUSDAmount, setStep, setTargetNetwork, setToAccount, setWarning]);
 
   const onClickEdit = useCallback(() => {
     setStep(InputStepEnum.input);
@@ -240,6 +243,7 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
         <div className="label">{`To:`}</div>
         <div className="portkey-ui-flex-1 portkey-ui-flex-row-center input-content">
           <Input.TextArea
+            disabled={step === InputStepEnum.show}
             className="address-textarea"
             placeholder="Address"
             autoSize={{ minRows: 1, maxRows: 3 }}
@@ -248,7 +252,7 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
           />
         </div>
         <div className="portkey-ui-flex-row-center input-icon">
-          {toAccount.address && !isChecking && (
+          {toAccount.address && !isChecking && step === InputStepEnum.input && (
             <CustomSvg className="cursor-pointer" type="Close3" onClick={clearValue} />
           )}
           {isChecking && <Loading width={24} height={24} isDarkThemeWhiteLoading />}
@@ -261,7 +265,7 @@ export const ToAddressInputRef = forwardRef<IToAddressInputRef, IToAddressInput>
         </div>
       </div>
     );
-  }, [toAccount.address, isChecking, clearValue, checkFinish, checkedPass, isDangerWarning, changeValue]);
+  }, [step, toAccount.address, isChecking, clearValue, checkFinish, checkedPass, isDangerWarning, changeValue]);
 
   return (
     <div className="to-address-input-wrap">

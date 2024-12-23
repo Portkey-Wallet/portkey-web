@@ -1299,6 +1299,7 @@ function SendContent({
           setCheckFinish={setIsCheckAddressFinish}
           setSendAmount={setAmount}
           setSendUSDAmount={setUSDAmount}
+          setTargetNetwork={setTargetNetwork}
         />
       )}
       <div className="stage-ele">{StageObj[stage].element}</div>
