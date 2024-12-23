@@ -78,7 +78,7 @@ export interface GuardianApprovalProps {
 }
 
 export interface IGuardianApprovalInstance {
-  setVerifyAccountIndex: Dispatch<SetStateAction<number | undefined>>;
+  setVerifyAccountKey: Dispatch<SetStateAction<string | undefined>>;
 }
 
 const GuardianApprovalMain = forwardRef(
@@ -107,20 +107,23 @@ const GuardianApprovalMain = forwardRef(
     }: GuardianApprovalProps,
     ref,
   ) => {
-    const [verifyAccountIndex, setVerifyAccountIndex] = useState<number | undefined>();
     const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>([]);
     const [expiredTime, setExpiredTime] = useState<number>();
     const onErrorRef = useRef<GuardianApprovalProps['onError']>(onError);
     const onConfirmRef = useRef<GuardianApprovalProps['onConfirm']>(onConfirm);
     console.log(originChainId, targetChainId, defaultGuardianList, 'defaultGuardianList===');
-    // const [loading, setLoading] = useState(false);
+    const [verifyAccountKey, setVerifyAccountKey] = useState<string | undefined>();
+    const curVerifyingGuardian: UserGuardianStatus | undefined = useMemo(() => {
+      if (verifyAccountKey) return guardianList.find((item) => item.key === verifyAccountKey);
+      return undefined;
+    }, [guardianList, verifyAccountKey]);
 
     useEffect(() => {
       onErrorRef.current = onError;
       onConfirmRef.current = onConfirm;
     });
 
-    useImperativeHandle(ref, () => ({ setVerifyAccountIndex }));
+    useImperativeHandle(ref, () => ({ setVerifyAccountKey }));
 
     useUpdateEffect(() => {
       onGuardianListChange?.(guardianList);
@@ -131,19 +134,22 @@ const GuardianApprovalMain = forwardRef(
     }, [defaultGuardianList]);
 
     const onSendCodeHandler = useCallback(
-      async (item: UserGuardianStatus, index: number) => {
+      async (_guardian: UserGuardianStatus, key: string) => {
         try {
           if (!expiredTime) setExpiredTime(getExpiredTime());
           setGuardianList((v) => {
-            v[index] = {
-              ...item,
-              status: VerifyStatus.Verifying,
-              isInitStatus: true,
-            };
-
-            return [...v];
+            return v.map((item) => {
+              if (item.key === key) {
+                return {
+                  ..._guardian,
+                  status: VerifyStatus.Verifying,
+                  isInitStatus: true,
+                };
+              }
+              return item;
+            });
           });
-          setVerifyAccountIndex(index);
+          setVerifyAccountKey(key);
         } catch (error: any) {
           console.error(error, 'error===');
           return errorTip(
@@ -163,7 +169,7 @@ const GuardianApprovalMain = forwardRef(
     const asyncVerifyToken = useAsyncVerifyToken();
 
     const socialVerifyHandler = useCallback(
-      async (item: UserGuardianStatus, index: number) => {
+      async (item: UserGuardianStatus, key: string) => {
         try {
           const accountType = item.guardianType as ISocialLogin;
           const accessToken =
@@ -240,14 +246,18 @@ const GuardianApprovalMain = forwardRef(
             const rst = await asyncVerifyToken(accountType, { ...verifyParams, customLoginHandler });
 
             setGuardianList((v) => {
-              v[index] = {
-                ...v[index],
-                status: VerifyStatus.Verifying,
-                asyncVerifyInfoParams: rst,
-              };
-              return [...v];
+              return v.map((item) => {
+                if (item.key === key) {
+                  return {
+                    ...item,
+                    status: VerifyStatus.Verifying,
+                    asyncVerifyInfoParams: rst,
+                  };
+                }
+                return item;
+              });
             });
-            setVerifyAccountIndex(undefined);
+            setVerifyAccountKey(undefined);
             return;
           }
           const rst = await verifyToken(accountType, { ...verifyParams, customLoginHandler });
@@ -261,17 +271,21 @@ const GuardianApprovalMain = forwardRef(
             : handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
 
           setGuardianList((v) => {
-            v[index] = {
-              ...v[index],
-              status: VerifyStatus.Verified,
-              verificationDoc: verifierInfo.verificationDoc,
-              signature: verifierInfo.signature,
-              identifierHash: guardianIdentifier,
-              zkLoginInfo: rst.zkLoginInfo,
-            };
-            return [...v];
+            return v.map((item) => {
+              if (item.key === key) {
+                return {
+                  ...item,
+                  status: VerifyStatus.Verified,
+                  verificationDoc: verifierInfo.verificationDoc,
+                  signature: verifierInfo.signature,
+                  identifierHash: guardianIdentifier,
+                  zkLoginInfo: rst.zkLoginInfo,
+                };
+              }
+              return item;
+            });
           });
-          setVerifyAccountIndex(undefined);
+          setVerifyAccountKey(undefined);
         } catch (error) {
           return errorTip(
             {
@@ -305,15 +319,22 @@ const GuardianApprovalMain = forwardRef(
     );
 
     const onVerifyingHandler = useCallback(
-      async (_item: UserGuardianStatus, index: number) => {
+      async (_item: UserGuardianStatus, key: string) => {
         const isSocialLogin = AllSocialLoginList.includes(_item.guardianType);
-        if (isSocialLogin) return socialVerifyHandler(_item, index);
+        if (isSocialLogin) return socialVerifyHandler(_item, key);
 
         try {
-          setVerifyAccountIndex(index);
+          setVerifyAccountKey(key);
           setGuardianList((v) => {
-            v[index].isInitStatus = false;
-            return [...v];
+            return v.map((item) => {
+              if (item.key === key) {
+                return {
+                  ...item,
+                  isInitStatus: false,
+                };
+              }
+              return item;
+            });
           });
         } catch (error: any) {
           return errorTip(
@@ -330,7 +351,7 @@ const GuardianApprovalMain = forwardRef(
     );
 
     const onAsyncVerifying = useCallback(
-      async (_item: UserGuardianStatus, index: number) => {
+      async (_item: UserGuardianStatus, key: string) => {
         try {
           // setLoading(true);
 
@@ -348,19 +369,23 @@ const GuardianApprovalMain = forwardRef(
             : handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
 
           setGuardianList((v) => {
-            v[index] = {
-              ...v[index],
-              status: VerifyStatus.Verified,
-              verificationDoc: verifierInfo.verificationDoc,
-              signature: verifierInfo.signature,
-              identifierHash: guardianIdentifier,
-              zkLoginInfo: rst.zkLoginInfo,
-            };
-            return [...v];
+            return v.map((item) => {
+              if (item.key === key) {
+                return {
+                  ...item,
+                  status: VerifyStatus.Verified,
+                  verificationDoc: verifierInfo.verificationDoc,
+                  signature: verifierInfo.signature,
+                  identifierHash: guardianIdentifier,
+                  zkLoginInfo: rst.zkLoginInfo,
+                };
+              }
+              return item;
+            });
           });
           // setLoading(false);
 
-          setVerifyAccountIndex(undefined);
+          setVerifyAccountKey(undefined);
         } catch (error) {
           // setLoading(false);
           return errorTip(
@@ -379,17 +404,21 @@ const GuardianApprovalMain = forwardRef(
     );
 
     const onCodeVerifyHandler = useCallback(
-      (res: { verificationDoc?: string; signature?: string; verifierId: string }, index: number) => {
+      (res: { verificationDoc?: string; signature?: string; verifierId: string }, key: string) => {
         setGuardianList((v) => {
-          v[index] = {
-            ...v[index],
-            status: VerifyStatus.Verified,
-            verificationDoc: res.verificationDoc,
-            signature: res.signature,
-          };
-          return [...v];
+          return v.map((item) => {
+            if (item.key === key) {
+              return {
+                ...item,
+                status: VerifyStatus.Verified,
+                verificationDoc: res.verificationDoc,
+                signature: res.signature,
+              };
+            }
+            return item;
+          });
         });
-        setVerifyAccountIndex(undefined);
+        setVerifyAccountKey(undefined);
       },
       [],
     );
@@ -437,14 +466,17 @@ const GuardianApprovalMain = forwardRef(
       setFetching(false);
     }, [guardianList, isAsyncVerify]);
 
-    const onReSendVerifyHandler = useCallback(({ verifierSessionId }: TVerifyCodeInfo, verifyAccountIndex: number) => {
+    const onReSendVerifyHandler = useCallback(({ verifierSessionId }: TVerifyCodeInfo, verifyAccountKey: string) => {
       setGuardianList((v) => {
-        const list = [...v];
-        if (list[verifyAccountIndex]) {
-          list[verifyAccountIndex].verifierInfo = { sessionId: verifierSessionId };
-        } else {
-          return list;
-        }
+        const list = v.map((item) => {
+          if (item.key === verifyAccountKey) {
+            return {
+              ...item,
+              verifierInfo: { sessionId: verifierSessionId },
+            };
+          }
+          return item;
+        });
         return list;
       });
     }, []);
@@ -469,24 +501,24 @@ const GuardianApprovalMain = forwardRef(
 
     return (
       <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
-        {typeof verifyAccountIndex === 'number' ? (
+        {typeof verifyAccountKey === 'string' ? (
           <VerifierPage
             targetChainId={targetChainId}
             originChainId={originChainId}
             operationType={operationType}
             operationDetails={operationDetails}
-            onBack={() => setVerifyAccountIndex(undefined)}
-            guardianIdentifier={guardianList[verifyAccountIndex].identifier || ''}
-            verifierSessionId={guardianList[verifyAccountIndex].verifierInfo?.sessionId || ''}
-            isLoginGuardian={guardianList[verifyAccountIndex].isLoginGuardian}
-            isCountdownNow={guardianList[verifyAccountIndex].isInitStatus}
-            accountType={guardianList[verifyAccountIndex].guardianType}
+            onBack={() => setVerifyAccountKey(undefined)}
+            guardianIdentifier={curVerifyingGuardian?.identifier || ''}
+            verifierSessionId={curVerifyingGuardian?.verifierInfo?.sessionId || ''}
+            isLoginGuardian={curVerifyingGuardian?.isLoginGuardian}
+            isCountdownNow={curVerifyingGuardian?.isInitStatus}
+            accountType={curVerifyingGuardian?.guardianType}
             isErrorTip={isErrorTip}
-            verifier={guardianList[verifyAccountIndex].verifier as TVerifierItem}
+            verifier={curVerifyingGuardian?.verifier as TVerifierItem}
             caHash={caHash}
-            onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountIndex)}
+            onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountKey)}
             onError={onError}
-            onReSend={(result) => onReSendVerifyHandler(result, verifyAccountIndex)}
+            onReSend={(result) => onReSendVerifyHandler(result, verifyAccountKey)}
           />
         ) : (
           <>

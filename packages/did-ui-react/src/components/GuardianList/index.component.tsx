@@ -26,9 +26,9 @@ export interface GuardianListProps {
   isFetching: boolean;
   onError?: OnErrorFunc;
   onConfirm?: () => void;
-  onSend?: (item: UserGuardianStatus, index: number) => void;
-  onVerifying?: (item: UserGuardianStatus, index: number) => void;
-  onAsyncVerifying?: (item: UserGuardianStatus, index: number) => void;
+  onSend?: (item: UserGuardianStatus, key: string) => void;
+  onVerifying?: (item: UserGuardianStatus, key: string) => void;
+  onAsyncVerifying?: (item: UserGuardianStatus, key: string) => void;
   onExpiredRetry?: () => void;
   onExpiredCancel?: () => void;
 }
@@ -93,7 +93,7 @@ function GuardianList({
         ) : (
           <div className="guardian-list-list">
             {loginGuardians.length > 0 && <div className="login-guardians-text">{`Login account(s)`}</div>}
-            {loginGuardians.map((item, index) => (
+            {loginGuardians.map((item) => (
               <GuardianItems
                 originChainId={originChainId}
                 targetChainId={targetChainId}
@@ -105,15 +105,15 @@ function GuardianList({
                 item={item}
                 isErrorTip={isErrorTip}
                 onError={onError}
-                onSend={(res) => onSend?.(res, index)}
-                onVerifying={(res) => onVerifying?.(res, index)}
-                onAsyncVerifying={(res) => onAsyncVerifying?.(res, index)}
+                onSend={(res) => onSend?.(res, item.key)}
+                onVerifying={(res) => onVerifying?.(res, item.key)}
+                onAsyncVerifying={(res) => onAsyncVerifying?.(res, item.key)}
               />
             ))}
             {otherGuardians.length ? (
               <>
                 <div className="other-guardians-text">{`Other account(s)`}</div>
-                {otherGuardians.map((item, index) => (
+                {otherGuardians.map((item) => (
                   <GuardianItems
                     originChainId={originChainId}
                     targetChainId={targetChainId}
@@ -125,9 +125,9 @@ function GuardianList({
                     item={item}
                     isErrorTip={isErrorTip}
                     onError={onError}
-                    onSend={(res) => onSend?.(res, index)}
-                    onVerifying={(res) => onVerifying?.(res, index)}
-                    onAsyncVerifying={(res) => onAsyncVerifying?.(res, index)}
+                    onSend={(res) => onSend?.(res, item.key)}
+                    onVerifying={(res) => onVerifying?.(res, item.key)}
+                    onAsyncVerifying={(res) => onAsyncVerifying?.(res, item.key)}
                   />
                 ))}
               </>
