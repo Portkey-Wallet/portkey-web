@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { ZERO } from '../../constants/misc';
 import { TransferTypeEnum } from '../../types/send';
-import { formatStr2EllipsisStr } from '../../utils';
+import { formatStr2EllipsisStr, getAddressChainId, getChainIdByAddress, isDIDAelfAddress } from '../../utils';
 import { formatAmountShow, formatAmountUSDShow } from '../../utils/converter';
 import { CommonModalTip } from '../CommonModalTip';
 import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
@@ -11,6 +11,9 @@ import { AssetTokenExpand } from '../types/assets';
 import './index.less';
 import { getEstimatedTime } from '../../utils/send';
 import { usePortkey } from '../context';
+import { useCurrentChainList } from '../../hooks';
+import { chainShowText } from '../../utils/assets';
+import { ChainId } from '@portkey/types';
 
 export interface ISendReceivePreviewProps {
   sendAmount: string;
@@ -51,6 +54,13 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
 
   const price = useTokenPrice(tokenInfo?.symbol);
   const [{ networkType }] = usePortkey();
+  const { chainList } = useCurrentChainList();
+
+  const toChainId = useMemo(() => getAddressChainId(toAccount.address, 'AELF'), [toAccount.address]);
+  const aelfChainImg = useMemo(
+    () => chainList.find((ele) => ele.chainId === toChainId)?.chainImageUrl,
+    [chainList, toChainId],
+  );
 
   const EstimateAmount = useMemo(() => {
     let _amount = sendAmount;
@@ -128,18 +138,15 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
         <div className="portkey-ui-flex-between-center content-row-info">
           <div>{`Destination network`}</div>
           <div className="value-show portkey-ui-flex-row-center gap-4">
-            {transferType === TransferTypeEnum.GENERAL_SAME_CHAIN ||
-            transferType === TransferTypeEnum.GENERAL_CROSS_CHAIN ? (
-              <>
-                <CustomSvg type="ELF" className="chain-image" />
-                {`aelf dAppChain`}
-              </>
-            ) : (
-              <>
-                <img src={targetNetwork?.imageUrl} className="chain-image" />
-                {targetNetwork?.name}
-              </>
-            )}
+            <>
+              <img
+                src={isDIDAelfAddress(toAccount.address) ? aelfChainImg : targetNetwork?.imageUrl}
+                className="chain-image"
+              />
+              {isDIDAelfAddress(toAccount.address)
+                ? `aelf ${chainShowText(toChainId as ChainId)}`
+                : targetNetwork?.name}
+            </>
           </div>
         </div>
         {isShowTransactionFee && (
