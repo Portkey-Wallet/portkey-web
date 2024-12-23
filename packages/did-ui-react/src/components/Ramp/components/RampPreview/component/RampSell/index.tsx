@@ -542,18 +542,21 @@ export default function RampSell({
       <CommonModal
         className="change-currency-modal-list"
         open={openFiatModal}
+        height={582}
         onClose={() => {
           setOpenFiatModal(false);
         }}>
-        <div className="change-currency-modal-list-title">Change currency</div>
-        <CommonInput
-          type="search"
-          className="change-currency-modal-list-search"
-          placeholder="Search"
-          onChange={(e) => {
-            onSearchInputChange(e.target.value);
-          }}
-        />
+        <div className="change-currency-modal-list-top-wrapper">
+          <div className="change-currency-modal-list-title">Change currency</div>
+          <CommonInput
+            type="search"
+            className="change-currency-modal-list-search"
+            placeholder="Search"
+            onChange={(e) => {
+              onSearchInputChange(e.target.value);
+            }}
+          />
+        </div>
         <ul style={{ width: '100%', marginTop: 16, overflowY: 'auto' }}>
           {filteredList?.map((item, index) => (
             <li
