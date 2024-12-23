@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.11-alpha.0...v2.17.0-alpha.0) (2024-12-23)
+
+### Features
+
+- complete revamp receive page ([c29a6dc](https://github.com/Portkey-Wallet/portkey-web/commit/c29a6dc51e65ecdcab1892cc76a2d494ef4d2120))
+
 ## [2.15.11-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.15.11-alpha.0) (2024-12-18)
 
 ### Features

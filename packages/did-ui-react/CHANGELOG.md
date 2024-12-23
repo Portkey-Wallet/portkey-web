@@ -3,6 +3,60 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.11-alpha.0...v2.17.0-alpha.0) (2024-12-23)
+
+### Features
+
+- 🎸 add send Modal tip ([e696b99](https://github.com/Portkey-Wallet/portkey-web/commit/e696b99492347dcda743ab667c7fd4d14e90cc30))
+- 🎸 new 4 login type for Web2Design ([2cd12b4](https://github.com/Portkey-Wallet/portkey-web/commit/2cd12b496427484b9794b30d1fd8e7a2e6ee890d))
+- 🎸 new style for login ([bc3c417](https://github.com/Portkey-Wallet/portkey-web/commit/bc3c417edc08c0a9a90a5838a973642cacb5a272))
+- 🎸 security & send transfer limit ([a9f5826](https://github.com/Portkey-Wallet/portkey-web/commit/a9f582638631177e61575cb7556e29eb1a2d75ab))
+- 🎸 select send asset ([fc7c47b](https://github.com/Portkey-Wallet/portkey-web/commit/fc7c47b19351775d3a7c3dce507a6eab89f374fd))
+- 🎸 send address check ([bb8c9b4](https://github.com/Portkey-Wallet/portkey-web/commit/bb8c9b4635a5dfe7f47e1d47d5c2d58be3635808))
+- 🎸 send format token data ([a6bbe31](https://github.com/Portkey-Wallet/portkey-web/commit/a6bbe3171f41dabb9246d50eb7b595a45dd176e4))
+- 🎸 send preview & completed & etransfer & ebridge ui ([915617c](https://github.com/Portkey-Wallet/portkey-web/commit/915617ca003e58d0710b81e975c5a4994799c980))
+- 🎸 send to address ([0f791fd](https://github.com/Portkey-Wallet/portkey-web/commit/0f791fd138797726ef8c7349d82942b7c81c8527))
+- 🎸 UI style ([843c688](https://github.com/Portkey-Wallet/portkey-web/commit/843c688bdb4d904b0c323311847c8c5a23591264))
+- 🎸 update amount ([7964b2f](https://github.com/Portkey-Wallet/portkey-web/commit/7964b2f3815d214529aa6c4b6f9013ece4c02669))
+- 1. ramp revamp 2.delete account revamp ([235b438](https://github.com/Portkey-Wallet/portkey-web/commit/235b438386e1123726f1e111a425bea3c45e3445))
+- add send component ([0bd4d19](https://github.com/Portkey-Wallet/portkey-web/commit/0bd4d19be7c057a76343e523384021b470377b0f))
+- add showDeletion switch ([e57cd0c](https://github.com/Portkey-Wallet/portkey-web/commit/e57cd0c3d79a09118b651079ffad55a3bfb1179a))
+- cal cross fee ([f26cb8e](https://github.com/Portkey-Wallet/portkey-web/commit/f26cb8e690d4647b80a804dcecd5cffbd49e1a1d))
+- change loading effect ([6091987](https://github.com/Portkey-Wallet/portkey-web/commit/60919876d91c4df43b6aaabf5d10a560d95faefa))
+- complete revamp receive page ([c29a6dc](https://github.com/Portkey-Wallet/portkey-web/commit/c29a6dc51e65ecdcab1892cc76a2d494ef4d2120))
+- enhance receive page ([26c9e4d](https://github.com/Portkey-Wallet/portkey-web/commit/26c9e4d85ae5697d422806d95c0bae42bb346b78))
+- enhance ui for token detail ([5e31998](https://github.com/Portkey-Wallet/portkey-web/commit/5e319981fd9db9013b968696bdbf6437aa86b81a))
+- guardian bug fix ([01651b4](https://github.com/Portkey-Wallet/portkey-web/commit/01651b473a962d02d7efd645d052ad23d531038e))
+- guardian bug fix ([ee02a75](https://github.com/Portkey-Wallet/portkey-web/commit/ee02a755242f015196a0e32c9bf8fe4718195af2))
+- guardian bug fix ([444b20f](https://github.com/Portkey-Wallet/portkey-web/commit/444b20f70c0ffd2d4543be90619dd6e63aae8309))
+- guardian bug fix ([7599081](https://github.com/Portkey-Wallet/portkey-web/commit/75990812b9f1cd19694d32ee2cc9451b296d61ed))
+- guardian bug fix ([7ec3ceb](https://github.com/Portkey-Wallet/portkey-web/commit/7ec3ceb98ddb6320b1ba42ca1092e0f8915cff34))
+- guardian bug fix ([c8b3664](https://github.com/Portkey-Wallet/portkey-web/commit/c8b36641383c19805710aae533176ce8aded6ad9))
+- guardian bug fix ([b407cb6](https://github.com/Portkey-Wallet/portkey-web/commit/b407cb6aefc0091bbfdcaeef3eaf36bce8212663))
+- guardian bug fix ([cc33c06](https://github.com/Portkey-Wallet/portkey-web/commit/cc33c06814bd9853dcb47037b29ae2ab3f4181a9))
+- guardian bug fix ([9eb9173](https://github.com/Portkey-Wallet/portkey-web/commit/9eb917395f135eb5975ebf09fdce3783b2658ab1))
+- my-guardian ([484dcf1](https://github.com/Portkey-Wallet/portkey-web/commit/484dcf1bc688e2646dcbb6f452dd8838167c900b))
+- my-guardian ([9c8ce14](https://github.com/Portkey-Wallet/portkey-web/commit/9c8ce14756cb467612682cb4f876491e3e386d6c))
+- my-guardian ([43a28d4](https://github.com/Portkey-Wallet/portkey-web/commit/43a28d45709e46188506794ee4da55595592a403))
+- my-guardian ([075af96](https://github.com/Portkey-Wallet/portkey-web/commit/075af962dc040f157f7d4765e3023fec362c38c4))
+- my-guardian ([5335ccd](https://github.com/Portkey-Wallet/portkey-web/commit/5335ccdbf37104c08a23a195bef1f441cb08c25d))
+- my-guardian ([85ee153](https://github.com/Portkey-Wallet/portkey-web/commit/85ee15351d0f7f2bccb3becb91ad7aae84365881))
+- sendHome amount show & amount input revamp ([a763c73](https://github.com/Portkey-Wallet/portkey-web/commit/a763c731b418722d64cfeebe9b6e7361171fce54))
+- svg bug fix ([1c16d7d](https://github.com/Portkey-Wallet/portkey-web/commit/1c16d7d3ebccf07b1021bec32768843f1e09090e))
+
+### Bug Fixes
+
+- 🐛 guardian approve ([6fb27dc](https://github.com/Portkey-Wallet/portkey-web/commit/6fb27dc29a3525f4fbdd4b06e62fcfa22810be15))
+- 🐛 loading show ([cd0caff](https://github.com/Portkey-Wallet/portkey-web/commit/cd0caff8ad27530a5fe2577d5d03c246450d0764))
+- 🐛 send fix ([e8f600b](https://github.com/Portkey-Wallet/portkey-web/commit/e8f600b11a54dc16bc543895552e6a086e65a5cc))
+- 🐛 useless height define, auto height; ([c304be2](https://github.com/Portkey-Wallet/portkey-web/commit/c304be27ffd75632e98d8243aae36d33728ddabb))
+- 1. ramp bug 2.change finder url ([a6550f9](https://github.com/Portkey-Wallet/portkey-web/commit/a6550f964c8b67a1e08034f80ce73ee02ca9507d))
+- build error ([207adde](https://github.com/Portkey-Wallet/portkey-web/commit/207adde4d114f5a4bdc3954a89150885f22b2c67))
+- build type error ([749dd97](https://github.com/Portkey-Wallet/portkey-web/commit/749dd97d377de024b3de472a9ad03d48ae4ff76f))
+- ramp ui ([fd51523](https://github.com/Portkey-Wallet/portkey-web/commit/fd51523aa50c58d61802a3b4e3944ebdd4d38227))
+- revamp nft & revamp login bug ([7f33e21](https://github.com/Portkey-Wallet/portkey-web/commit/7f33e213f6f31e05e0954e723ce8ed4e9d92a380))
+- sign in ui ([bf47dc5](https://github.com/Portkey-Wallet/portkey-web/commit/bf47dc54dd6f618327ffb0834ca23ce23780d6a6))
+
 ## [2.15.11-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.15.11-alpha.0) (2024-12-18)
 
 ### Features

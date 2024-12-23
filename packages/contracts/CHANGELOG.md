@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.11-alpha.0...v2.17.0-alpha.0) (2024-12-23)
+
+### Features
+
+- 🎸 adjust some methodName just like .CrossChainTransfer ([e501de3](https://github.com/Portkey-Wallet/portkey-web/commit/e501de35ce9f3bcab81cccfc1ff86e0c5680be5e))
+- cal cross fee ([f26cb8e](https://github.com/Portkey-Wallet/portkey-web/commit/f26cb8e690d4647b80a804dcecd5cffbd49e1a1d))
+
 ## [2.15.11-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.15.11-alpha.0) (2024-12-18)
 
 **Note:** Version bump only for package @portkey/contracts

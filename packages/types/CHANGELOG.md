@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.11-alpha.0...v2.17.0-alpha.0) (2024-12-23)
+
+### Features
+
+- 🎸 send to address ([0f791fd](https://github.com/Portkey-Wallet/portkey-web/commit/0f791fd138797726ef8c7349d82942b7c81c8527))
+- enhance ui for token detail ([5e31998](https://github.com/Portkey-Wallet/portkey-web/commit/5e319981fd9db9013b968696bdbf6437aa86b81a))
+- sendHome amount show & amount input revamp ([a763c73](https://github.com/Portkey-Wallet/portkey-web/commit/a763c731b418722d64cfeebe9b6e7361171fce54))
+
+### Bug Fixes
+
+- build type error ([749dd97](https://github.com/Portkey-Wallet/portkey-web/commit/749dd97d377de024b3de472a9ad03d48ae4ff76f))
+
 ## [2.15.11-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.10...v2.15.11-alpha.0) (2024-12-18)
 
 ### Features
