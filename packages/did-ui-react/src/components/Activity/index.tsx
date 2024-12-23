@@ -42,6 +42,8 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
   const activityTotal = useMemo(() => currentActivity?.totalRecordCount ?? 0, [currentActivity?.totalRecordCount]);
   const [pending, setPending] = useState<boolean>();
 
+  const [isHasMore, setIsHasMore] = useState(true);
+
   const caAddressInfos = useMemo(() => {
     if (!caInfo) return;
     return Object.entries(caInfo ?? {}).map(([chainId, info]) => ({
@@ -73,11 +75,12 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
           symbol,
         });
         dispatch(res);
-        setPending(false);
+        setIsHasMore(!!res?.payload?.hasNextPage);
       } catch (error) {
         singleMessage.error(handleErrorMessage(error));
       } finally {
         setLoading(false);
+        setPending(false);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -106,11 +109,6 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
       return { ...v, page };
     });
   }, [pending, getList]);
-
-  const isHasMore = useMemo(() => {
-    if (!activityList) return true;
-    return !activityList?.slice(-1)[0] && activityTotal !== 0;
-  }, [activityList, activityTotal]);
 
   return (
     <div className="portkey-ui-activity-wrapper">
