@@ -176,7 +176,6 @@ function TokenDetailMain({
         </div>
         <div className="token-detail-history">
           <Activity
-            key={new Date().toString()}
             chainId={chainId}
             symbol={tokenInfo.symbol}
             onDataInit={onDataInit}

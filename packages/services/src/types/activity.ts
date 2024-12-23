@@ -15,6 +15,7 @@ export interface IActivitiesApiParams {
 
 export interface IActivitiesApiResponse {
   data: ActivityItemType[];
+  hasNextPage: boolean;
   totalRecordCount: number;
 }
 

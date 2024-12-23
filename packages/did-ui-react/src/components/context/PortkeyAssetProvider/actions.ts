@@ -65,6 +65,7 @@ export interface ActivityStateMapAttributes extends BaseListInfo<ActivityItemTyp
   chainId?: string;
   symbol?: string;
   isUpdate?: boolean;
+  hasNextPage?: boolean;
 }
 
 type Symbol_ChainId = string;
@@ -325,6 +326,7 @@ const fetchActivityList = async ({
     chainId,
     symbol,
     isUpdate,
+    hasNextPage: response.hasNextPage,
   };
   return basicActions<string, typeof payload>(PortkeyAssetActions['setActivityList'], payload);
 };
