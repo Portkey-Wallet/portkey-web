@@ -35,7 +35,7 @@ function Step2OfSkipGuardianApprove({
     const guardian = guardianList?.[0];
     if (guardianList?.length === 1 && guardian && guardian.verifierInfo?.sessionId) {
       guardian.isInitStatus = true;
-      ref.current?.setVerifyAccountIndex(0);
+      ref.current?.setVerifyAccountKey(guardian.key);
     }
   });
 
