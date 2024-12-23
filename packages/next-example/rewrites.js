@@ -27,7 +27,7 @@ module.exports = [
   // { source: '/connect/:path*', destination: 'https://auth-aa-portkey.portkey.finance/connect/:path*' },
   // {
   //   source: '/graphql/:path*',
-  //   destination: 'https://dapp-aa-portkey.portkey.finance/Portkey_V2_DID/PortKeyIndexerCASchema/graphql/:path*',
+  //   destination: 'https://indexer-api.aefinder.io/api/app/graphql/portkey/:path*',
   // },
 
   // testnet
@@ -35,6 +35,6 @@ module.exports = [
   { source: '/connect/:path*', destination: 'https://auth-aa-portkey-test.portkey.finance/connect/:path*' },
   {
     source: '/graphql/:path*',
-    destination: 'https://dapp-aa-portkey-test.portkey.finance/Portkey_V2_DID/PortKeyIndexerCASchema/graphql/:path*',
+    destination: 'https://test-indexer-api.aefinder.io/api/app/graphql/portkey/:path*',
   },
 ];

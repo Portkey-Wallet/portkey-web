@@ -503,7 +503,7 @@ export default function RampSell({
                   textInputRef.current.focus();
                 }
               }}>
-              {currency.fiat?.symbol}
+              {currency.crypto?.symbol}
             </div>
           </div>
 
