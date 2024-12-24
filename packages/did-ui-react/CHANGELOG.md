@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.0-alpha.0...v2.17.0-alpha.1) (2024-12-24)
+
+### Features
+
+- export receive list component ([a2f279c](https://github.com/Portkey-Wallet/portkey-web/commit/a2f279ceff275114c7e85d7b6e8cbf68df65a06c))
+
 ## [2.17.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.11-alpha.0...v2.17.0-alpha.0) (2024-12-23)
 
 ### Features

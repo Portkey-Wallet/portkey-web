@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.0-alpha.0...v2.17.0-alpha.1) (2024-12-24)
+
+**Note:** Version bump only for package @portkey/services
+
 ## [2.17.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.15.11-alpha.0...v2.17.0-alpha.0) (2024-12-23)
 
 ### Features
