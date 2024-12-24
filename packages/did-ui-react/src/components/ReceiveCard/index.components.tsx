@@ -221,10 +221,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
       };
     }
 
-    if (
-      (selectToken.isNFT && selectedSource) ||
-      (selectedDestination && Object.keys(CHAIN_ID).includes(selectedDestination?.chainId))
-    ) {
+    if (selectToken.isNFT && selectedSource) {
       const network = selectedDestination ? selectedDestination?.chainId : selectedSource?.network;
       return {
         value: `ELF_${address}_${network}`,
@@ -233,7 +230,10 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
     }
 
     if (address && selectedDestination) {
-      if (isMainChainToMainChain) {
+      if (
+        isMainChainToMainChain ||
+        !(selectedDestination && Object.keys(CHAIN_ID).includes(selectedDestination?.chainId))
+      ) {
         if (isExchangeSelected) {
           return {
             value: address,
