@@ -66,6 +66,7 @@ export { default as NFTDetail } from './NFTDetail';
 export { default as Send } from './Send';
 export { default as AssetOverview } from './AssetOverview';
 export { default as ReceiveCard } from './ReceiveCard';
+export { default as ReceiveList } from './ReceiveList';
 export { default as Transaction } from './Transaction';
 // export { default as NFTCheckout } from './NFTRamp';
 export * from './NFTRamp/types';

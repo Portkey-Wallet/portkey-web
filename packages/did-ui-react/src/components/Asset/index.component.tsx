@@ -52,7 +52,7 @@ import CollectionDetailMain from '../CollectionDetail/index.component';
 import CommonButton from '../CommonButton';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
 import { SendAssetListPage } from '../SendAssetList';
-import ReceiveList from '../ReceiveList';
+import ReceiveList from '../ReceiveList/index.components';
 import Completed from '../Completed';
 
 export interface AssetMainProps
