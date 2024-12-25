@@ -1,6 +1,5 @@
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
-import { BaseToken } from '../types/assets';
 import { Dispatch, SetStateAction } from 'react';
 import { ChainInfo, ReceiveType, TDepositInfo, TReceiveFromNetworkItem } from '@portkey/services';
 import { ChainId } from '@portkey/types';
@@ -20,10 +19,11 @@ import { useCopyToClipboard } from 'react-use';
 import CommonButton from '../CommonButton';
 import CommonPromptCard, { PromptCardType } from '../CommonPromptCard';
 import { TokenItem } from './index.components';
+import { BaseToken, IUserTokenItemResponse } from '../types/assets';
 
 export interface IPureProps {
   onBack?: () => void;
-  selectToken: BaseToken;
+  selectToken: IUserTokenItemResponse & { isNFT: boolean };
   setSelectedType: Dispatch<SetStateAction<string>>;
   setIsSelectionModalOpen: Dispatch<SetStateAction<boolean>>;
   selectedDestination: ChainInfo | undefined;

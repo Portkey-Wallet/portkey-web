@@ -3,18 +3,17 @@ import PortkeyStyleProvider from '../PortkeyStyleProvider';
 import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
 import CoinImage from '../CoinImage';
-import { IUserTokenItemNew } from '@portkey/services';
 import CommonInput from '../CommonInput';
-import { SelectTokenType } from '../Asset/index.component';
 import Loading from '../Loading';
 import './index.less';
+import { BaseToken, IUserTokenItemResponse } from '../types/assets';
 
 export interface IPureProps {
   onBack?: () => void;
   onInputChange?: (e: ChangeEvent<HTMLInputElement>) => void;
-  onItemClick: (item: SelectTokenType) => void;
+  onItemClick: (item: IUserTokenItemResponse & { isNFT: boolean }) => void;
   isLoading?: boolean;
-  currentTokenList: IUserTokenItemNew[];
+  currentTokenList: IUserTokenItemResponse[];
 }
 export default function ReceiveListPureComponent(props: IPureProps) {
   const { onBack, onInputChange, onItemClick, isLoading, currentTokenList } = props;
@@ -39,10 +38,10 @@ export default function ReceiveListPureComponent(props: IPureProps) {
             className="nft-wrapper"
             onClick={() => {
               onItemClick({
-                chainId: 'tDVV',
+                // chainId: 'tDVV',
                 symbol: 'ELF',
                 decimals: 0,
-                address: '',
+                // address: '',
                 isNFT: true,
               });
               return;
@@ -59,8 +58,8 @@ export default function ReceiveListPureComponent(props: IPureProps) {
             </div>
           ) : (
             <div className="token-list">
-              {currentTokenList.map((item: IUserTokenItemNew) => (
-                <div key={item.symbol} className="item" onClick={() => onItemClick(item)}>
+              {currentTokenList.map((item: IUserTokenItemResponse) => (
+                <div key={item.symbol} className="item" onClick={() => onItemClick({ ...item, isNFT: false })}>
                   <CoinImage symbol={item.symbol} src={item.imageUrl} width={42} />
                   <span>{item.symbol}</span>
                 </div>
