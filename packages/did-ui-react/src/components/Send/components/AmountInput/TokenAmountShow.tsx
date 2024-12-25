@@ -24,6 +24,7 @@ export default function TokenAmountShow({
   token,
   value,
   errorMsg,
+  isAelfCrossChain,
   onChange,
   getTranslationInfo,
   setErrorMsg,
@@ -37,8 +38,9 @@ export default function TokenAmountShow({
   token: AssetTokenExpand;
   value: string;
   errorMsg?: string;
+  isAelfCrossChain?: boolean;
   onChange: (params: { amount: string; balance: string }) => void;
-  getTranslationInfo: (num: string) => any;
+  getTranslationInfo: (isAelfCrossChain: boolean, num: string) => any;
   setErrorMsg: (v: string) => void;
   setValue: (v: string) => void;
   setUsdValue: (v: string) => void;
@@ -102,7 +104,7 @@ export default function TokenAmountShow({
       const _isManagerSynced = await checkManagerSyncState(token.chainId, caHash, managementAccount.address);
       setIsManagerSynced(_isManagerSynced);
       if (!_isManagerSynced) return;
-      const fee = await getTranslationInfo(divDecimals(balance, token.decimals).toString());
+      const fee = await getTranslationInfo(!!isAelfCrossChain, divDecimals(balance, token.decimals).toString());
       if (fee) {
         setMaxAmount(divDecimals(balance, token.decimals).toString());
       } else {
@@ -117,7 +119,8 @@ export default function TokenAmountShow({
     checkManagerSyncState,
     defaultToken.symbol,
     getTranslationInfo,
-    managementAccount,
+    isAelfCrossChain,
+    managementAccount?.address,
     maxFee,
     token.chainId,
     token.decimals,

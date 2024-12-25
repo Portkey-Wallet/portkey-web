@@ -30,12 +30,11 @@ import './index.less';
 import { useDefaultToken } from '../../hooks/assets';
 import { usePortkey } from '../context';
 import { DEFAULT_DECIMAL } from '../../constants/assets';
-import crossChainTransferV2 from '../../utils/sandboxUtil/crossChainTransferV2';
 import { useFeeByChainId } from '../context/PortkeyAssetProvider/hooks/txFee';
 import sameChainTransfer from '../../utils/sandboxUtil/sameChainTransfer';
 import getTransferFee from './utils/getTransferFee';
 import { useCheckManagerSyncState } from '../../hooks/wallet';
-import { MAINNET, MAIN_CHAIN_ID } from '../../constants/network';
+import { MAIN_CHAIN_ID } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
@@ -52,7 +51,6 @@ import SupportedExchange from './components/SupportedExchange';
 import { ITransferLimitItemWithRoute } from '../../types/transfer';
 import { useDebounce } from '../../hooks/debounce';
 import useLockCallback from '../../hooks/useLockCallback';
-import { getTransactionFee } from '../../utils/sandboxUtil/getTransactionFee';
 import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
 import { useEffectOnce } from 'react-use';
 import { Warning1Arr, WarningKey } from '../../constants/error';
@@ -264,17 +262,19 @@ function SendContent({
       return setMaxAmountSend(divDecimals(balance, tokenInfo?.decimals || '0').toFixed());
     }
 
-    // const isAELFCross = !!(selectedToContact.chainId && selectedToContact.chainId !== tokenInfo.chainId);
+    const _chainId = getAddressChainId(toAccount.address, 'AELF');
+
+    const isAELFCross = !!(_chainId && _chainId !== tokenInfo.chainId);
     let fee;
     try {
       fee = await getTranslationInfo();
-      // fee = await getTransactionFee(isAELFCross, divDecimals(balance, tokenInfo?.decimals || 0).toFixed());
+      fee = await getTranslationInfo(isAELFCross, divDecimals(balance, tokenInfo?.decimals || 0).toFixed());
     } catch (error) {
       fee = '0';
       console.log('FEE ERROR');
     }
     const etransferFee = 0;
-    // Todo etransfer logic ?
+    // TODO:  etransfer logic ?
     // const etransferFee = await getEtransferMaxFee({ amount: balanceStr, toInfo, tokenInfo: tokenInfo });
 
     const _max = fee
@@ -411,7 +411,7 @@ function SendContent({
   const caAddress = useMemo(() => caInfo?.[tokenInfo.chainId as ChainId]?.caAddress || '', [caInfo, tokenInfo.chainId]);
 
   const getTranslationInfo = useCallback(
-    async (num = ''): Promise<string | void> => {
+    async (isAelfCrossChain = false, num = ''): Promise<string | void> => {
       try {
         if (!toAccount?.address) throw 'No toAccount';
         const privateKey = managementAccount?.privateKey;
@@ -419,6 +419,7 @@ function SendContent({
         if (!caHash) throw 'Please login';
         const _caAddress = caAddressInfos?.filter((caAdd) => caAdd.chainId === tokenInfo?.chainId)?.[0];
         const feeRes = await getTransferFee({
+          isAelfCrossChain,
           caAddress: _caAddress?.caAddress || '',
           chainId: tokenInfo.chainId,
           managerAddress: managementAccount.address,
@@ -437,49 +438,6 @@ function SendContent({
     },
     [amount, caHash, chainType, managementAccount, toAccount?.address, tokenInfo, caAddressInfos],
   );
-
-  const getCrossChainTransferFeeV2 = useCallback(async () => {
-    const chainId = tokenInfo.chainId;
-    const chainInfo = await getChain(chainId);
-    if (!chainInfo) throw 'Please check network connection and chainId';
-    const account = aelf.getWallet(managementAccount?.privateKey || '');
-    const tokenContract = await getContractBasic({
-      rpcUrl: chainInfo.endPoint,
-      account,
-      contractAddress: tokenInfo.address,
-      chainType,
-    });
-
-    const portkeyContract = await getContractBasic({
-      rpcUrl: chainInfo.endPoint,
-      contractAddress: chainInfo.caContractAddress,
-      account,
-      chainType,
-    });
-
-    return getCrossChainTransferFee({
-      tokenContract,
-      sendAmount: amount ?? debounceSendNumber,
-      decimals: tokenInfo.decimals.toString(),
-      symbol: tokenInfo.symbol,
-      caContract: portkeyContract,
-      tokenContractAddress: tokenInfo.address,
-      toAddress: getEntireDIDAelfAddress(toAccount.address, undefined, tokenInfo.chainId),
-      chainId: tokenInfo.chainId,
-      toChainId: getChainIdByAddress(toAccount.address) as ChainId,
-    });
-  }, [
-    amount,
-    chainType,
-    debounceSendNumber,
-    getCrossChainTransferFee,
-    managementAccount?.privateKey,
-    toAccount.address,
-    tokenInfo.address,
-    tokenInfo.chainId,
-    tokenInfo.decimals,
-    tokenInfo.symbol,
-  ]);
 
   const btnOutOfFocus = useCallback(() => {
     // fixed - button focus style when mobile
@@ -508,17 +466,8 @@ function SendContent({
 
     const sendTransfer = async () => {
       try {
-        let isV2CrossChainTransfer = true;
         if (!managementAccount?.privateKey || !caHash) return;
         const _transferType = transferType || TransferTypeEnum.GENERAL_SAME_CHAIN;
-
-        setLoading(true);
-        try {
-          const { isOpen } = await getCrossChainTransferVersion();
-          isV2CrossChainTransfer = isOpen;
-        } catch (error) {
-          return;
-        }
 
         setLoading(true);
 
@@ -567,32 +516,18 @@ function SendContent({
             toChainId: getChainIdByAddress(toAccount.address) as ChainId,
           });
 
-          isV2CrossChainTransfer
-            ? await crossChainTransferV2({
-                tokenContract,
-                sandboxId,
-                chainId: tokenInfo.chainId,
-                chainType,
-                privateKey: managementAccount?.privateKey,
-                tokenInfo,
-                caHash: caHash || '',
-                amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
-                toAddress: toAccount.address,
-                toChainId: 'AELF',
-                guardiansApproved: oneTimeApprovalList.current,
-              })
-            : await crossChainTransfer({
-                sandboxId,
-                chainType,
-                privateKey: managementAccount?.privateKey,
-                managerAddress: managementAccount?.address,
-                tokenInfo,
-                caHash: caHash || '',
-                amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
-                toAddress: toAccount.address,
-                crossChainFee: defaultFee.crossChain,
-                guardiansApproved: oneTimeApprovalList.current,
-              });
+          await crossChainTransfer({
+            sandboxId,
+            chainType,
+            privateKey: managementAccount?.privateKey,
+            managerAddress: managementAccount?.address,
+            tokenInfo,
+            caHash: caHash || '',
+            amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
+            toAddress: toAccount.address,
+            crossChainFee: defaultFee.crossChain,
+            guardiansApproved: oneTimeApprovalList.current,
+          });
         } else if (_transferType === TransferTypeEnum.E_TRANSFER) {
           // TODO: change it
           let network = '';
@@ -1016,13 +951,13 @@ function SendContent({
           if (!isEtransferCrossInLimit) {
             _transferType = TransferTypeEnum.GENERAL_CROSS_CHAIN;
             //       TODO: change it
-            // _networkFee = await getTransactionFee(isAELFCross, amount);
+            _networkFee = (await getTranslationInfo(isAELFCross, amount)) || '';
 
             _networkFeeUnit = 'ELF';
           }
         } else {
           // TODO: change it
-          _networkFee = isAELFCross ? await getCrossChainTransferFeeV2() : (await getTranslationInfo()) || '';
+          _networkFee = (await getTranslationInfo(isAELFCross)) || '0';
           console.log('_networkFee', _networkFee);
           _networkFeeUnit = 'ELF';
           _transferType = isAELFCross ? TransferTypeEnum.GENERAL_CROSS_CHAIN : TransferTypeEnum.GENERAL_SAME_CHAIN;
@@ -1069,7 +1004,6 @@ function SendContent({
     defaultToken.decimals,
     defaultToken.symbol,
     getAELFChainInfoConfig,
-    getCrossChainTransferFeeV2,
     getEVMChainInfoConfig,
     getTokenConfig,
     getTranslationInfo,
@@ -1207,8 +1141,7 @@ function SendContent({
       2: {
         btnText: 'Send',
         handler: () => {
-          sendTransfer();
-          // sendHandler();
+          sendHandler();
           // btnOutOfFocus();
         },
         backFun: () => {
@@ -1263,7 +1196,7 @@ function SendContent({
       btnOutOfFocus,
       onCancel,
       handleCheckPreview,
-      sendTransfer,
+      sendHandler,
     ],
   );
 

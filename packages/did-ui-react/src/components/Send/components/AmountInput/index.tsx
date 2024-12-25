@@ -25,7 +25,7 @@ export default function AmountInput({
   token: AssetTokenExpand;
   warningTip?: string;
   onChange: (params: { amount: string; balance: string }) => void;
-  getTranslationInfo: (v: string) => void;
+  getTranslationInfo: (isAelfCrossChain: boolean, v: string) => void;
   setErrorMsg: (v: string) => void;
   setValue: (v: string) => void;
   setUsdValue: (v: string) => void;

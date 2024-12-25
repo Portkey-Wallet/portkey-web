@@ -26,7 +26,7 @@ let CHAIN_ID: ChainId = 'AELF';
 
 setTimeout(() => {
   ConfigProvider.setGlobalConfig({
-    connectUrl: 'https://auth-aa-portkey-test.portkey.finance',
+    connectUrl: 'https://auth-aa-portkey.portkey.finance',
     socialLogin: {
       Portkey: {
         websiteName: 'website demo',
@@ -39,9 +39,9 @@ setTimeout(() => {
     },
     requestDefaults: {
       timeout: 30000,
-      baseURL: 'https://aa-portkey-test.portkey.finance',
+      baseURL: 'https://aa-portkey.portkey.finance',
     },
-    serviceUrl: 'https://aa-portkey-test.portkey.finance',
+    serviceUrl: 'https://aa-portkey.portkey.finance',
     /** By default, reCaptcha's siteKey of portkey is used, if it is a self-built service, please use your own siteKey */
     // reCaptchaConfig: {
     //   siteKey: '',

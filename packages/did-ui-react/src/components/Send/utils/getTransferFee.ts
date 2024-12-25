@@ -1,5 +1,4 @@
 import { ChainId, ChainType } from '@portkey/types';
-import { isCrossChain } from '../../../utils/aelf';
 import { BaseToken } from '../../types/assets';
 import { DEFAULT_TOKEN } from '../../../constants/assets';
 import { getChain } from '../../../hooks/useChainInfo';
@@ -19,7 +18,9 @@ const getTransferFee = async ({
   caHash,
   amount,
   memo = '',
+  isAelfCrossChain,
 }: {
+  isAelfCrossChain: boolean;
   caAddress: string;
   managerAddress: string;
   chainType: ChainType;
@@ -34,7 +35,7 @@ const getTransferFee = async ({
   const chainInfo = await getChain(chainId);
   if (!chainInfo) throw 'Please check network connection and chainId';
 
-  if (isCrossChain(toAddress, chainId)) {
+  if (isAelfCrossChain) {
     const firstTxResult = await getTransactionFee({
       contractAddress: chainInfo.caContractAddress,
       rpcUrl: chainInfo.endPoint,

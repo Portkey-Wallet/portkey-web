@@ -8,25 +8,36 @@ import { useRouter } from 'next/navigation';
 import React from 'react';
 import { useEffectOnce } from 'react-use';
 
-ConfigProvider.setGlobalConfig({
-  // storageMethod: myStore,
-  serviceUrl: 'https://aa-portkey-test.portkey.finance',
+const mainnetConfig = {
+  serviceUrl: 'https://aa-portkey.portkey.finance',
+  eTransferUrl: 'https://app.etransfer.exchange',
+  eTransferCA: {
+    AELF: '2w13DqbuuiadvaSY2ZyKi2UoXg354zfHLM3kwRKKy85cViw4ZF',
+    tDVV: 'x4CTSuM8typUbpdfxRZDTqYVa42RdxrwwPkXX7WUJHeRmzE6k',
+  },
+};
 
+const testnetConfig = {
+  serviceUrl: 'https://aa-portkey-test.portkey.finance',
+  eTransferCA: {
+    AELF: '4xWFvoLvi5anZERDuJvzfMoZsb6WZLATEzqzCVe8sQnCp2XGS',
+    tDVW: '2AgU8BfyKyrxUrmskVCUukw63Wk96MVfVoJzDDbwKszafioCN1',
+  },
+  eTransferUrl: 'https://test-app.etransfer.exchange',
+};
+
+ConfigProvider.setGlobalConfig({
   requestDefaults: {
     timeout: 30000,
   },
-  // serviceUrl: 'https://aa-portkey-test.portkey.finance',
+  // storageMethod: myStore,
   // loginConfig: {
   //   loginMethodsOrder: ['Email', 'Google', 'Phone', 'Apple', 'Scan'],
   //   recommendIndexes: [0, 1],
   // },
   globalLoadingHandler: undefined,
   theme: 'dark',
-  eTransferCA: {
-    AELF: '4xWFvoLvi5anZERDuJvzfMoZsb6WZLATEzqzCVe8sQnCp2XGS',
-    tDVW: '2AgU8BfyKyrxUrmskVCUukw63Wk96MVfVoJzDDbwKszafioCN1',
-  },
-  eTransferUrl: 'https://test-app.etransfer.exchange',
+  ...mainnetConfig,
 });
 
 export default function Assets() {
