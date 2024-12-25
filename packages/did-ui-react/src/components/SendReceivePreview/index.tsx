@@ -3,7 +3,7 @@ import { ZERO } from '../../constants/misc';
 import { TransferTypeEnum } from '../../types/send';
 import { formatStr2EllipsisStr, getAddressChainId, getChainIdByAddress, isDIDAelfAddress } from '../../utils';
 import { formatAmountShow, formatAmountUSDShow } from '../../utils/converter';
-import { CommonModalTip } from '../CommonModalTip';
+import CommonModalTip from '../CommonModalTip';
 import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
 import CustomSvg from '../CustomSvg';
 import { INetworkItem } from '../Send/components/SelectNetwork';

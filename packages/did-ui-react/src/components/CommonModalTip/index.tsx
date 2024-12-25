@@ -10,7 +10,7 @@ export interface ICommonModalTip {
   className?: string;
 }
 
-export function CommonModalTip({ title, content, className }: ICommonModalTip) {
+export default function CommonModalTip({ title, content, className }: ICommonModalTip) {
   const [open, setOpen] = useState(false);
   return (
     <>
