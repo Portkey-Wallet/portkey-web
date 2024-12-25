@@ -66,5 +66,5 @@ export const getRecentListMap = (
 
 export const getTransformedRecentList = (network: NetworkType): IRecentItem[] => {
   const { targetRecentList } = getRecentListMap(network);
-  return targetRecentList;
+  return targetRecentList || [];
 };

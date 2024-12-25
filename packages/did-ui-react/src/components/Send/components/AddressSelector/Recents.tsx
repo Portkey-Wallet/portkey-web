@@ -53,8 +53,8 @@ export default function Recents({
   return (
     <div className="portkey-ui-send-recents">
       {recentTxDomList}
-      {currentRecentList.length > 0 && <div style={{ height: 20, width: '100%' }}></div>}
-      {currentRecentList.length === 0 && <p className="no-data">There is no recents</p>}
+      {currentRecentList?.length > 0 && <div style={{ height: 20, width: '100%' }}></div>}
+      {currentRecentList?.length === 0 && <p className="no-data">There is no recents</p>}
     </div>
   );
 }
