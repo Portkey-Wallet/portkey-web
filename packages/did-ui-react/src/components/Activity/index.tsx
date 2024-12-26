@@ -1,5 +1,5 @@
 import { ActivityItemType, ChainId } from '@portkey/types';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getCurrentActivityMapKey } from './utils';
 import { handleErrorMessage, setLoading } from '../../utils';
@@ -87,16 +87,13 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
     [caAddressInfos, chainId, activityTotal, symbol],
   );
 
-  const isOnce = useRef<boolean>();
-
   // init State
   useThrottleFirstEffect(() => {
-    if (activityList?.length) return;
-    if (!caAddressInfos || isOnce.current) return;
+    console.log('chainId', chainId, activityList?.length);
+    if (activityList?.length || !caAddressInfos) return;
     onDataInit?.();
     getList().then(() => {
       onDataInitEnd?.();
-      isOnce.current = true;
     });
   }, [caAddressInfos, getList, chainId]);
 

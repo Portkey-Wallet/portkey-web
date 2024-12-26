@@ -154,7 +154,7 @@ export default function TokenAmountShow({
     <div className="amount-show-wrap">
       <div className="left">
         {type === 'token' ? (
-          <TokenImageDisplay src={undefined} width={42} symbol={token?.label || token.symbol} />
+          <TokenImageDisplay src={token.imageUrl || ''} width={42} symbol={token?.label || token.symbol} />
         ) : (
           <NFTImage name={token.symbol} imageUrl={token.imageUrl} isSeed={token?.isSeed} seedType={token?.seedType} />
         )}
