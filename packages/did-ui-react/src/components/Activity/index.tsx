@@ -2,7 +2,7 @@ import { ActivityItemType, ChainId } from '@portkey/types';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { getCurrentActivityMapKey } from './utils';
-import { handleErrorMessage, setLoading } from '../../utils';
+import { handleErrorMessage } from '../../utils';
 import ActivityList from '../ActivityList';
 import { PAGESIZE_10 } from '../../constants';
 import { getSkipCount } from '../context/utils';
@@ -62,7 +62,6 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
       if (!caAddressInfos) return;
 
       try {
-        setLoading(true);
         const skipCount = getSkipCount(pageSize, page - 1);
         if (skipCount > activityTotal) return;
         const _caAddressInfos = chainId ? caAddressInfos.filter((item) => item.chainId === chainId) : caAddressInfos;
@@ -79,7 +78,6 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
       } catch (error) {
         singleMessage.error(handleErrorMessage(error));
       } finally {
-        setLoading(false);
         setPending(false);
       }
     },
@@ -90,7 +88,7 @@ export default function Activity({ chainId, symbol, onDataInit, onDataInitEnd }:
   // init State
   useThrottleFirstEffect(() => {
     console.log('chainId', chainId, activityList?.length);
-    if (activityList?.length || !caAddressInfos) return;
+    if (!caAddressInfos) return;
     onDataInit?.();
     getList().then(() => {
       onDataInitEnd?.();
