@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.0-alpha.3...v2.17.0-alpha.4) (2024-12-25)
+
+### Bug Fixes
+
+- pure component ([d1b9a0f](https://github.com/Portkey-Wallet/portkey-web/commit/d1b9a0fb7dd6a20c3121e9945f07f10b58ba86e2))
+
+## [2.17.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.0-alpha.2...v2.17.0-alpha.3) (2024-12-25)
+
+### Features
+
+- receive module add pure component ([a3ab773](https://github.com/Portkey-Wallet/portkey-web/commit/a3ab773420364060999887fcbe9dde6595bf5b08))
+
 ## [2.17.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.0-alpha.1...v2.17.0-alpha.2) (2024-12-25)
 
 ### Bug Fixes

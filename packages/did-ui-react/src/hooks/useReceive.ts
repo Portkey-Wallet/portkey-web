@@ -102,14 +102,14 @@ export const useReceive = (token: BaseToken) => {
 
   useEffect(() => {
     if (!destinationMap) return;
-    const toChainId: ChainId = token.symbol === 'ELF' ? 'AELF' : 'tDVW';
+    const toChainId: ChainId = token.chainId;
     setDestinationChain(getChainInfo(toChainId));
     if (destinationMap[toChainId]?.length) {
       setSourceChain(
         destinationMap[toChainId].find((item) => item.network == toChainId) ?? destinationMap[toChainId][0],
       ); // set same network as source chain
     }
-  }, [destinationMap, getChainInfo, token.symbol]);
+  }, [destinationMap, getChainInfo, token.chainId]);
 
   const updateDestinationChain = useCallback(
     (targetChain?: ChainInfo) => {
