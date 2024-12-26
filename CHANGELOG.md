@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.0-alpha.4...v2.17.0) (2024-12-26)
+
+### Bug Fixes
+
+- receive card bug ([2a4bdcb](https://github.com/Portkey-Wallet/portkey-web/commit/2a4bdcb31ae7c355fc65b4fcac21feb2f4aaee0b))
+
 ## [2.17.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.0-alpha.3...v2.17.0-alpha.4) (2024-12-25)
 
 ### Bug Fixes
