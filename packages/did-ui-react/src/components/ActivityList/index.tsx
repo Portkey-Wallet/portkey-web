@@ -250,6 +250,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
           ) : isTransferType ? (
             <ImgWithCornerMark
               mainImgSrc={item.listIcon || ''}
+              mainImgTitle={item.symbol}
               cornerImgSrc={item.isReceived ? 'ReceiveActivity' : 'SendActivity'}
             />
           ) : (
@@ -284,7 +285,7 @@ export const ActivityItem = ({ isMainnet, preItem, item, onSelect }: ActivityIte
           {item?.status === contractStatusEnum.PENDING ? (
             loadingStatus
           ) : (
-            <img src={item?.sourceIcon || ''} width={42} height={42} />
+            <img src={item?.dappIcon || ''} width={42} height={42} />
           )}
         </div>
 
