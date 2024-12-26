@@ -20,10 +20,11 @@ import CommonButton from '../CommonButton';
 import CommonPromptCard, { PromptCardType } from '../CommonPromptCard';
 import { TokenItem } from './index.components';
 import { BaseToken, IUserTokenItemResponse } from '../types/assets';
+import './index.less';
 
 export interface IPureProps {
   onBack?: () => void;
-  selectToken: IUserTokenItemResponse & { isNFT: boolean };
+  selectToken: (IUserTokenItemResponse & { isNFT: boolean }) | BaseToken;
   setSelectedType: Dispatch<SetStateAction<string>>;
   setIsSelectionModalOpen: Dispatch<SetStateAction<boolean>>;
   selectedDestination: ChainInfo | undefined;

@@ -6,7 +6,7 @@ import CoinImage from '../CoinImage';
 import CommonInput from '../CommonInput';
 import Loading from '../Loading';
 import './index.less';
-import { BaseToken, IUserTokenItemResponse } from '../types/assets';
+import { IUserTokenItemResponse } from '../types/assets';
 
 export interface IPureProps {
   onBack?: () => void;
