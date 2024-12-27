@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.2-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.1...v2.17.2-alpha.2) (2024-12-27)
+
+### Features
+
+- export sandbox prop ([d240a29](https://github.com/Portkey-Wallet/portkey-web/commit/d240a296b3a5001e587176aedf6e3fcf9c79dbb1))
+
 ## [2.17.2-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.0...v2.17.2-alpha.1) (2024-12-27)
 
 ### Features
