@@ -27,7 +27,7 @@ export interface IRampSellPureCompProps {
   maxAmount: string;
   amount: string;
   amountError: ErrorType;
-  textInputRef: RefObject<HTMLInputElement>;
+  textInputRef: React.RefObject<HTMLInputElement>;
   receiveAmountText: string;
   buttonLoading: boolean;
   isAllowAmount: boolean;
