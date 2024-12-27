@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.2-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.1...v2.17.2-alpha.0) (2024-12-27)
+
+### Features
+
+- export ramp pure component ([348aab2](https://github.com/Portkey-Wallet/portkey-web/commit/348aab2548405f79d304f01e8d3361cf9c923558))
+
 ## [2.17.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.0-alpha.4...v2.17.1) (2024-12-26)
 
 ### Bug Fixes
