@@ -91,7 +91,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   }, [depositInfo]);
 
   useEffect(() => {
-    if (sourceChain && !selectToken.isNFT) {
+    if (sourceChain) {
       setSelectedSource(sourceChain);
     }
 
@@ -113,7 +113,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   );
 
   const onSelectedChange = (item: TokenItem) => {
-    if (selectedType === SELECTION_TYPE.SOURCE) {
+    if (selectedType === SELECTION_TYPE.SOURCE || selectedType === SELECTION_TYPE.NFT) {
       setSourceChain(item as TReceiveFromNetworkItem);
       setSelectedSource(item as TReceiveFromNetworkItem);
       return;
