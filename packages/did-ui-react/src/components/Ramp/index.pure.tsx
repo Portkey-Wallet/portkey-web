@@ -7,6 +7,7 @@ import CommonInput from '../CommonInput';
 import TokenImageDisplay from '../TokenImageDisplay';
 import { useMemo, useState } from 'react';
 import './index.less';
+import PortkeyStyleProvider from '../PortkeyStyleProvider';
 
 export interface IRampHomePureCompProps {
   className?: string;
@@ -25,45 +26,47 @@ export default function RampHomePureComponent(props: IRampHomePureCompProps) {
     [keyword, list],
   );
   return (
-    <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column', className])} id="portkey-ui-ramp">
-      <BackHeaderForPage
-        title={
-          <div className="portkey-ui-ramp-radio">
-            <Radio.Group defaultValue={RampType.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
-              <Radio.Button value={RampType.BUY} style={{ cursor: 'pointer' }}>
-                {t('Buy')}
-              </Radio.Button>
-              <Radio.Button value={RampType.SELL} style={{ cursor: 'pointer' }}>
-                {t('Sell')}
-              </Radio.Button>
-            </Radio.Group>
-          </div>
-        }
-        leftCallBack={onBack}
-      />
-      <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
-        <CommonInput
-          type="search"
-          placeholder="Search"
-          onChange={(e) => {
-            const v = e.target.value.trim();
-            setKeyword(v);
-          }}
+    <PortkeyStyleProvider>
+      <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column', className])} id="portkey-ui-ramp">
+        <BackHeaderForPage
+          title={
+            <div className="portkey-ui-ramp-radio">
+              <Radio.Group defaultValue={RampType.BUY} buttonStyle="solid" value={page} onChange={handlePageChange}>
+                <Radio.Button value={RampType.BUY} style={{ cursor: 'pointer' }}>
+                  {t('Buy')}
+                </Radio.Button>
+                <Radio.Button value={RampType.SELL} style={{ cursor: 'pointer' }}>
+                  {t('Sell')}
+                </Radio.Button>
+              </Radio.Group>
+            </div>
+          }
+          leftCallBack={onBack}
         />
-        <ul style={{ width: '100%', marginTop: 16 }}>
-          {filterList?.map((item, index) => (
-            <li
-              key={index + '_' + item.symbol}
-              className="crypto-list-item"
-              onClick={() => {
-                onItemClick?.(item);
-              }}>
-              <TokenImageDisplay src={item.icon} symbol={item.symbol} />
-              <span className="crypto-name">{item.symbol}</span>
-            </li>
-          ))}
-        </ul>
+        <div className="portkey-ui-ramp-content portkey-ui-flex-column-center">
+          <CommonInput
+            type="search"
+            placeholder="Search"
+            onChange={(e) => {
+              const v = e.target.value.trim();
+              setKeyword(v);
+            }}
+          />
+          <ul style={{ width: '100%', marginTop: 16 }}>
+            {filterList?.map((item, index) => (
+              <li
+                key={index + '_' + item.symbol}
+                className="crypto-list-item"
+                onClick={() => {
+                  onItemClick?.(item);
+                }}>
+                <TokenImageDisplay src={item.icon} symbol={item.symbol} />
+                <span className="crypto-name">{item.symbol}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </PortkeyStyleProvider>
   );
 }
