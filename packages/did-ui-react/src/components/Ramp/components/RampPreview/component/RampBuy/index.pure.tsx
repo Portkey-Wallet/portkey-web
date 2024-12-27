@@ -6,7 +6,7 @@ import CommonInput from '../../../../../CommonInput';
 import CommonModal from '../../../../../CommonModal';
 import CustomSvg from '../../../../../CustomSvg';
 import clsx from 'clsx';
-import { Dispatch, RefObject, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { ErrorType } from '../../../../types';
 import './index.less';
 import PortkeyStyleProvider from '../../../../../PortkeyStyleProvider';
@@ -21,7 +21,7 @@ export interface IRampBuyPureCompProps {
   openFiatModal: boolean;
   amount: string;
   amountError: ErrorType;
-  textInputRef: RefObject<HTMLInputElement>;
+  textInputRef: React.RefObject<HTMLInputElement>;
   receiveAmountText: string;
   buttonLoading: boolean;
   isAllowAmount: boolean;

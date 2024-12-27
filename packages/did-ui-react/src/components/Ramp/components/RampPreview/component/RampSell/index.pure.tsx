@@ -18,6 +18,7 @@ import { timesDecimals } from '@etransfer/utils';
 import PortkeyStyleProvider from '../../../../../PortkeyStyleProvider';
 export interface IRampSellPureCompProps {
   className?: string;
+  sandboxId?: string;
   selectedCrypto: IRampCryptoItem;
   currency: {
     crypto?: IRampCryptoItem;
@@ -52,6 +53,7 @@ export interface IRampSellPureCompProps {
 export default function RampSellPureComponent(props: IRampSellPureCompProps) {
   const {
     className,
+    sandboxId = 'sandbox',
     selectedCrypto,
     currency,
     maxAmount,
@@ -134,6 +136,7 @@ export default function RampSellPureComponent(props: IRampSellPureCompProps) {
           </CommonButton>
         </div>
         <GuardianApprovalModal
+          sandboxId={sandboxId}
           open={approvalVisible}
           networkType={networkType}
           caHash={caHash || ''}
