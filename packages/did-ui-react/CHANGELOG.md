@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.2-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.3...v2.17.2-alpha.4) (2024-12-27)
+
+### Features
+
+- export pure loading component ([a8d064b](https://github.com/Portkey-Wallet/portkey-web/commit/a8d064bb0faa843849a99fc259382944b49592ed))
+
 ## [2.17.2-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.2...v2.17.2-alpha.3) (2024-12-27)
 
 **Note:** Version bump only for package @portkey/did-ui-react
