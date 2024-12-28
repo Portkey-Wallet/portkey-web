@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.4...v2.17.2) (2024-12-28)
+
+### Bug Fixes
+
+- 🐛 theme ([a8827a7](https://github.com/Portkey-Wallet/portkey-web/commit/a8827a799c841e992e04bb01316337cd57ff00de))
+
 ## [2.17.2-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.3...v2.17.2-alpha.4) (2024-12-27)
 
 ### Features
