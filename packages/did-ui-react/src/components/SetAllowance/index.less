@@ -51,7 +51,6 @@
     line-height: 20px;
     background-color: var(--sds-color-background-warning-tertiary);
     border-color: var(--sds-color-border-warning-tertiary);
-    
   }
   .set-allowance-body-title {
     color: var(--portkey-ui-input-text);
@@ -86,7 +85,7 @@
     font-size: 14px;
     line-height: 20px;
     font-weight: 500;
-    color: var(--portkey-ui-input-text);
+    color: var(--sds-color-text-default-default);
     border-color: none;
   }
   .portkey-ant-input-suffix {
@@ -94,15 +93,15 @@
   }
 
   .portkey-ant-input-affix-wrapper {
-    border-radius: var(--portkey-ui-border-radius-1);
+    border-radius: 8px;
     padding: 12px 16px;
   }
   .portkey-ant-input-affix-wrapper-focused {
-    border-color: var(--portkey-ui-border-7) !important;
+    border-color: var(--sds-color-border-neutral-secondary) !important;
     &:not(.portkey-ant-input-affix-wrapper-disabled) {
-      border-color: var(--portkey-ui-border-7) !important;
+      border-color: var(--sds-color-border-neutral-secondary) !important;
       &:hover {
-        border-color: var(--portkey-ui-border-7) !important;
+        border-color: var(--sds-color-border-neutral-secondary) !important;
       }
     }
   }
@@ -130,7 +129,7 @@
   font-weight: 500;
   font-size: 14px;
   line-height: 20px;
-  color: var(--portkey-ui-input-text);
+  color: var(--sds-color-text-default-default);
   cursor: auto;
 }
 
@@ -151,14 +150,14 @@
 
   .set-allowance-dapp-href {
     flex: 1;
-    color: var(--portkey-ui-text-secondary);
+    color: var(--sds-color-text-default-secondary);
     font-size: 14px;
     font-weight: 400;
     line-height: 20px;
   }
 }
 .portkey-ant-btn-default {
-  border-color: var(--sds-color-border-neutral-secondary)!important;
+  border-color: var(--sds-color-border-neutral-secondary) !important;
 }
 
 @media screen and (max-width: 768px) {
