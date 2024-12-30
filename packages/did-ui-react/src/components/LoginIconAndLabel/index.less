@@ -3,11 +3,12 @@
     padding-bottom: 40px;
     text-align: center;
     line-height: 28px;
-    color: var(--portkey-ui-text-primary);
-    font-size: 24px;
-    line-height: 38px;
+    color: var(--sds-color-text-default-default);
+    font-size: 32px;
+    line-height: 120%;
+    letter-spacing: -0.64px;
     font-weight: 700;
-    font-family: Bricolage Grotesque;
+    font-family: var(--portkey-font-bricolage-bold);
     .title {
       display: flex;
       flex-direction: column;
@@ -15,6 +16,11 @@
       gap: 16px;
       width: 100%;
       text-align: center;
+      svg {
+        path {
+          fill: var(--sds-color-icon-brand-default);
+        }
+      }
     }
     .backleft-icon {
       cursor: pointer;

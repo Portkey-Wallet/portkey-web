@@ -5,6 +5,7 @@ import { handleErrorMessage } from '../../utils';
 import './index.less';
 import clsx from 'clsx';
 import ThrottleButton from '../ThrottleButton';
+import CommonButton from '../CommonButton';
 
 interface EmailInputAndButtonProps {
   className?: string;

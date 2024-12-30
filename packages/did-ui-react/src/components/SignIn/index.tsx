@@ -443,6 +443,7 @@ const SignIn = forwardRef(
 
     const onStep3Cancel = useCallback(
       (v?: AddManagerType) => {
+        console.log('onStep3Cancel', v, guardianIdentifierInfo);
         if (v === 'register') {
           changeLifeCycle('SignUp', null);
           setApprovedList(undefined);

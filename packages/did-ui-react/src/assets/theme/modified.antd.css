@@ -1600,9 +1600,13 @@ html {
 
 .portkey-ant-btn:hover,
 .portkey-ant-btn:focus {
-  color: var(--portkey-ant-primary-color-hover);
+  /* color: var(--portkey-ant-primary-color-hover);
   border-color: var(--portkey-ant-primary-color-hover);
   background: #fff;
+  border: 1.5px solid var(--sds-color-border-neutral); */
+  border-radius: 24px;
+  border: 1.5px solid var(--sds-color-border-neutral-tertiary);
+  background: var(--sds-color-background-default-default-hover);
 }
 
 .portkey-ant-btn:hover>a:only-child,
@@ -1672,7 +1676,6 @@ html {
   content: '';
 }
 
-.portkey-ant-btn:hover,
 .portkey-ant-btn:focus,
 .portkey-ant-btn:active {
   text-decoration: none;
@@ -1997,8 +2000,8 @@ html {
 
 .portkey-ant-btn-danger {
   color: #fff;
-  border-color: var(--portkey-ant-error-color);
-  background: var(--portkey-ant-error-color);
+  border-color: var(--sds-color-border-danger-default);
+  background: var(--sds-color-border-danger-default);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
@@ -2367,8 +2370,8 @@ html {
 }
 
 .portkey-ant-btn-dangerous {
-  color: var(--portkey-ant-error-color);
-  border-color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
+  border-color: var(--sds-color-border-danger-default);
   background: #fff;
 }
 
@@ -2462,8 +2465,8 @@ html {
 
 .portkey-ant-btn-dangerous.portkey-ant-btn-primary {
   color: #fff;
-  border-color: var(--portkey-ant-error-color);
-  background: var(--portkey-ant-error-color);
+  border-color: var(--sds-color-border-danger-default);
+  background: var(--sds-color-border-danger-default);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.12);
   box-shadow: 0 2px 0 rgba(0, 0, 0, 0.045);
 }
@@ -2557,7 +2560,7 @@ html {
 }
 
 .portkey-ant-btn-dangerous.portkey-ant-btn-link {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
   border-color: transparent;
   background: transparent;
   box-shadow: none;
@@ -2726,7 +2729,7 @@ html {
 }
 
 .portkey-ant-btn-dangerous.portkey-ant-btn-text {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
   border-color: transparent;
   background: transparent;
   box-shadow: none;
@@ -3325,8 +3328,8 @@ a.portkey-ant-btn-icon-only>.anticon {
 }
 
 .portkey-ant-btn-background-ghost.portkey-ant-btn-danger {
-  color: var(--portkey-ant-error-color);
-  border-color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
+  border-color: var(--sds-color-border-danger-default);
   text-shadow: none;
 }
 
@@ -3419,8 +3422,8 @@ a.portkey-ant-btn-icon-only>.anticon {
 }
 
 .portkey-ant-btn-background-ghost.portkey-ant-btn-dangerous {
-  color: var(--portkey-ant-error-color);
-  border-color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
+  border-color: var(--sds-color-border-danger-default);
   text-shadow: none;
 }
 
@@ -3513,7 +3516,7 @@ a.portkey-ant-btn-icon-only>.anticon {
 }
 
 .portkey-ant-btn-background-ghost.portkey-ant-btn-dangerous.portkey-ant-btn-link {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
   border-color: transparent;
   text-shadow: none;
 }
@@ -4695,7 +4698,7 @@ a.portkey-ant-btn-sm {
   top: 50%;
   width: 50%;
   border-top: 1px solid transparent;
-  border-top-color: inherit;
+  border-top-color: var(--Border-Default-Subtle, #414142);
   border-bottom: 0;
   transform: translateY(50%);
   content: '';
@@ -5108,12 +5111,12 @@ a.portkey-ant-btn-sm {
 }
 
 .portkey-ant-dropdown-menu-item.portkey-ant-dropdown-menu-item-danger {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-dropdown-menu-item.portkey-ant-dropdown-menu-item-danger:hover {
   color: #fff;
-  background-color: var(--portkey-ant-error-color);
+  background-color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-dropdown {
@@ -5893,7 +5896,7 @@ a.portkey-ant-btn-sm {
 }
 
 .portkey-ant-form-item-explain-error {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-form-item-explain-warning {
@@ -5909,7 +5912,7 @@ a.portkey-ant-btn-sm {
 }
 
 .portkey-ant-form-item-has-error .portkey-ant-form-item-split {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-form {
@@ -6156,7 +6159,7 @@ a.portkey-ant-btn-sm {
 }
 
 .portkey-ant-form-item-feedback-icon-error {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-form-item-feedback-icon-warning {
@@ -13208,7 +13211,7 @@ textarea.portkey-ant-input-affix-wrapper {
 .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(.portkey-ant-input-borderless).portkey-ant-input,
 .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(.portkey-ant-input-borderless).portkey-ant-input:hover {
   background: #fff;
-  border-color: var(--portkey-ant-error-color);
+  border-color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-status-error:not(.portkey-ant-input-disabled):not(.portkey-ant-input-borderless).portkey-ant-input:focus,
@@ -13220,7 +13223,7 @@ textarea.portkey-ant-input-affix-wrapper {
 }
 
 .portkey-ant-input-status-error .portkey-ant-input-prefix {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-status-warning:not(.portkey-ant-input-disabled):not(.portkey-ant-input-borderless).portkey-ant-input,
@@ -13244,7 +13247,7 @@ textarea.portkey-ant-input-affix-wrapper {
 .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(.portkey-ant-input-affix-wrapper-borderless).portkey-ant-input-affix-wrapper,
 .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(.portkey-ant-input-affix-wrapper-borderless).portkey-ant-input-affix-wrapper:hover {
   background: #fff;
-  border-color: var(--portkey-ant-error-color);
+  border-color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-affix-wrapper-status-error:not(.portkey-ant-input-affix-wrapper-disabled):not(.portkey-ant-input-affix-wrapper-borderless).portkey-ant-input-affix-wrapper:focus,
@@ -13256,7 +13259,7 @@ textarea.portkey-ant-input-affix-wrapper {
 }
 
 .portkey-ant-input-affix-wrapper-status-error .portkey-ant-input-prefix {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-affix-wrapper-status-warning:not(.portkey-ant-input-affix-wrapper-disabled):not(.portkey-ant-input-affix-wrapper-borderless).portkey-ant-input-affix-wrapper,
@@ -13285,8 +13288,8 @@ textarea.portkey-ant-input-affix-wrapper {
 }
 
 .portkey-ant-input-group-wrapper-status-error .portkey-ant-input-group-addon {
-  color: var(--portkey-ant-error-color);
-  border-color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
+  border-color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-group-wrapper-status-warning .portkey-ant-input-group-addon {
@@ -14278,7 +14281,7 @@ textarea.portkey-ant-input-number-affix-wrapper {
 .portkey-ant-input-number-status-error:not(.portkey-ant-input-number-disabled):not(.portkey-ant-input-number-borderless).portkey-ant-input-number,
 .portkey-ant-input-number-status-error:not(.portkey-ant-input-number-disabled):not(.portkey-ant-input-number-borderless).portkey-ant-input-number:hover {
   background: #fff;
-  border-color: var(--portkey-ant-error-color);
+  border-color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-number-status-error:not(.portkey-ant-input-number-disabled):not(.portkey-ant-input-number-borderless).portkey-ant-input-number:focus,
@@ -14290,7 +14293,7 @@ textarea.portkey-ant-input-number-affix-wrapper {
 }
 
 .portkey-ant-input-number-status-error .portkey-ant-input-number-prefix {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-number-status-warning:not(.portkey-ant-input-number-disabled):not(.portkey-ant-input-number-borderless).portkey-ant-input-number,
@@ -14314,7 +14317,7 @@ textarea.portkey-ant-input-number-affix-wrapper {
 .portkey-ant-input-number-affix-wrapper-status-error:not(.portkey-ant-input-number-affix-wrapper-disabled):not(.portkey-ant-input-number-affix-wrapper-borderless).portkey-ant-input-number-affix-wrapper,
 .portkey-ant-input-number-affix-wrapper-status-error:not(.portkey-ant-input-number-affix-wrapper-disabled):not(.portkey-ant-input-number-affix-wrapper-borderless).portkey-ant-input-number-affix-wrapper:hover {
   background: #fff;
-  border-color: var(--portkey-ant-error-color);
+  border-color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-number-affix-wrapper-status-error:not(.portkey-ant-input-number-affix-wrapper-disabled):not(.portkey-ant-input-number-affix-wrapper-borderless).portkey-ant-input-number-affix-wrapper:focus,
@@ -14326,7 +14329,7 @@ textarea.portkey-ant-input-number-affix-wrapper {
 }
 
 .portkey-ant-input-number-affix-wrapper-status-error .portkey-ant-input-number-prefix {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-number-affix-wrapper-status-warning:not(.portkey-ant-input-number-affix-wrapper-disabled):not(.portkey-ant-input-number-affix-wrapper-borderless).portkey-ant-input-number-affix-wrapper,
@@ -14348,8 +14351,8 @@ textarea.portkey-ant-input-number-affix-wrapper {
 }
 
 .portkey-ant-input-number-group-wrapper-status-error .portkey-ant-input-number-group-addon {
-  color: var(--portkey-ant-error-color);
-  border-color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
+  border-color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-number-group-wrapper-status-warning .portkey-ant-input-number-group-addon {
@@ -15140,7 +15143,7 @@ textarea.portkey-ant-input-number {
 }
 
 .portkey-ant-input-number-out-of-range input {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-input-number-compact-item:not(.portkey-ant-input-number-compact-last-item):not(.portkey-ant-input-number-compact-item-rtl) {
@@ -15257,7 +15260,7 @@ textarea.portkey-ant-input-number {
 }
 
 .portkey-ant-message-error .anticon {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-message-warning .anticon {
@@ -15547,7 +15550,7 @@ textarea.portkey-ant-input-number {
 }
 
 .portkey-ant-modal-confirm-error .portkey-ant-modal-confirm-body>.anticon {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 .portkey-ant-modal-confirm-warning .portkey-ant-modal-confirm-body>.anticon,
@@ -18129,7 +18132,7 @@ textarea.portkey-ant-input-number {
 }
 
 .portkey-ant-typography.portkey-ant-typography-danger {
-  color: var(--portkey-ant-error-color);
+  color: var(--sds-color-border-danger-default);
 }
 
 a.portkey-ant-typography.portkey-ant-typography-danger:active,

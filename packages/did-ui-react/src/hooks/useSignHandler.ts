@@ -111,7 +111,7 @@ export const useSignHandler = ({
   const onFinish = useThrottleFirstCallback(
     async (value: GuardianInputInfo) => {
       onChainIdChange?.(originChainIdRef.current);
-      onSuccess?.(
+      await onSuccess?.(
         { ...value, isLoginGuardian: isHasAccount.current, chainId: originChainIdRef.current },
         { ...caInfoRef.current, originChainId: originChainIdRef.current },
       );
@@ -122,6 +122,7 @@ export const useSignHandler = ({
   const onSocialFinish: SocialLoginFinishHandler = useCallback(
     async ({ type, data }) => {
       try {
+        setLoading(true);
         // setLoading(true, LoadingText.CheckingAccount);
         if (!data) throw 'Action error';
 
@@ -151,7 +152,7 @@ export const useSignHandler = ({
         }
 
         await validateIdentifier(userId);
-        onFinish({
+        await onFinish({
           identifier: userId,
           accountType: type,
           authenticationInfo: {
@@ -161,6 +162,7 @@ export const useSignHandler = ({
             timestamp: data?.timestamp,
           },
         });
+        setLoading(false);
       } catch (error) {
         // setLoading(false);
 
@@ -169,6 +171,8 @@ export const useSignHandler = ({
           errorFields: 'onSocialFinish',
           error: msg,
         });
+      } finally {
+        setLoading(false);
       }
     },
     [onError, onFinish, validateIdentifier],

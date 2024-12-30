@@ -65,33 +65,38 @@ function Step1({
   const onSuccess = useCallback(
     async (value: IGuardianIdentifierInfo) => {
       signInSuccessRef.current = value;
-      if (!value.isLoginGuardian) {
-        setLoading(false);
-        const isContinue = await onSignUpHandlerRef.current?.({
-          identifier: value.identifier,
-          accountType: value.accountType,
-          authenticationInfo: {
-            authToken: value.authenticationInfo?.authToken,
-            idToken: value.authenticationInfo?.idToken,
-            nonce: value.authenticationInfo?.nonce,
-            timestamp: value.authenticationInfo?.timestamp,
+      try {
+        // setLoading(true);
+        if (!value.isLoginGuardian) {
+          // setLoading(false)
+          const isContinue = await onSignUpHandlerRef.current?.({
+            identifier: value.identifier,
+            accountType: value.accountType,
+            authenticationInfo: {
+              authToken: value.authenticationInfo?.authToken,
+              idToken: value.authenticationInfo?.idToken,
+              nonce: value.authenticationInfo?.nonce,
+              timestamp: value.authenticationInfo?.timestamp,
+            },
+          });
+          if (isContinue === SignUpValue.otherSeverRegisterButContinue) return onConfirm();
+          if (isContinue === SignUpValue.cancelRegister) return;
+          if (createType !== 'SignUp') return setOpen(true);
+        }
+
+        if (value.isLoginGuardian && createType !== 'Login') return setOpen(true);
+
+        await onSignInFinished?.({
+          isFinished: false,
+          result: {
+            type: createType,
+            value,
           },
         });
-        if (isContinue === SignUpValue.otherSeverRegisterButContinue) return onConfirm();
-        if (isContinue === SignUpValue.cancelRegister) return;
-        if (createType !== 'SignUp') return setOpen(true);
+        setOpen(false);
+      } finally {
+        // setLoading(false);
       }
-
-      if (value.isLoginGuardian && createType !== 'Login') return setOpen(true);
-
-      onSignInFinished?.({
-        isFinished: false,
-        result: {
-          type: createType,
-          value,
-        },
-      });
-      setOpen(false);
     },
     [createType, onConfirm, onSignInFinished],
   );
@@ -124,7 +129,7 @@ function Step1({
   //   // Get phoneCountry by service, update phoneCountry
   //   getPhoneCountry();
   // }, [getPhoneCountry]);
-
+  console.log('design ====', design);
   return (
     <>
       {design === Design.SocialDesign && (

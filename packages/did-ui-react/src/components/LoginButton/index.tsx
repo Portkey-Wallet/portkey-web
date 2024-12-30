@@ -27,6 +27,7 @@ const BlockLoginButton = ({ onClickCallback, iconType, iconName, key }: IBlockLo
 
 const CircleLoginButton = ({ onClickCallback, iconType, key }: ICircleLoginButton) => {
   const [{ theme }] = usePortkey();
+  console.log('theme is:', theme);
   return (
     <div className="login-circle-btn" key={key} onClick={onClickCallback}>
       <CustomSvg type={iconType} fillColor={theme === 'light' ? '#1F1F21' : '#FFFFFF'} />

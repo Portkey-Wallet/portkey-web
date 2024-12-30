@@ -342,7 +342,7 @@ function setCSSVariables(theme: { [key: string]: string }) {
 
 export function initTheme(themeType?: ThemeType) {
   let theme = undefined;
-  console.log('wfs==inject themeType', themeType);
+  console.log('wfs==inject themeType', themeType, typeof document);
   if (themeType === 'dark') {
     theme = darkTheme;
     // inject custom properties

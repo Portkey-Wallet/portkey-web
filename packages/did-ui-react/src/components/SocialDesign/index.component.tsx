@@ -77,7 +77,7 @@ function SocialDesign({
         setLoading(true);
         const result = await socialLoginHandler(type as any);
 
-        setLoading(false);
+        // setLoading(false);
         if (result) {
           await onSocialFinish(result);
         }

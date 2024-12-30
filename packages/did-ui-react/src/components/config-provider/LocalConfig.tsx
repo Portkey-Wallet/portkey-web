@@ -30,7 +30,7 @@ class LocalConfigProvider {
     return this.config?.[key];
   };
 
-  setGlobalConfig = (_config: Partial<GlobalConfigProps>) => {
+  setGlobalConfig = (_config: Omit<Partial<GlobalConfigProps>, 'theme'>) => {
     if (('storageMethod' in _config && _config.storageMethod) || !this.config.storageMethod) {
       const storageMethod = _config.storageMethod || new BaseAsyncStorage();
       setVerification(storageMethod);
@@ -68,13 +68,20 @@ class LocalConfigProvider {
         referralInfo: _config['referralInfo'],
       });
     }
-    if ('theme' in _config) {
-      const theme: ThemeType = _config['theme'] || DEFAULT_THEME;
-      initTheme(theme);
-    }
+    // if ('theme' in _config && !this.config.theme) {
+    //   const theme: ThemeType = _config['theme'] || DEFAULT_THEME;
+    //   initTheme(theme);
+    // } else {
+    //   delete _config.theme;
+    // }
     this.config = { ...this.config, ..._config };
   };
-
+  setTheme = (theme: 'dark' | 'light') => {
+    // if (!this.config.theme) {
+    initTheme(theme);
+    this.config.theme = theme;
+    // }
+  };
   getSocialLoginConfig = () => {
     return this.config.socialLogin;
   };

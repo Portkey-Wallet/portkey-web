@@ -17,7 +17,11 @@ const INITIAL_STATE = {
 const PortkeyContext = createContext<any>(INITIAL_STATE);
 
 export function usePortkey(): [PortkeyState, BasicActions] {
-  return useContext(PortkeyContext);
+  const context = useContext(PortkeyContext);
+  if (context?.[0]) {
+    context[0].theme = ConfigProvider.getGlobalConfig().theme;
+  }
+  return context;
 }
 
 //reducer
@@ -44,6 +48,7 @@ export interface ProviderProps {
 }
 export default function Provider({ theme, chainType, sandboxId, networkType, children }: ProviderProps) {
   const [state, dispatch] = useReducer(reducer, INITIAL_STATE);
+  console.log('setGlobalConfig BaseConfigProvider=>Provider theme', theme);
   useEffectOnce(() => {
     initConfig();
     if (did.config.storageMethod) {
@@ -55,8 +60,8 @@ export default function Provider({ theme, chainType, sandboxId, networkType, chi
     ConfigProvider.setGlobalConfig({ networkType });
   }, [networkType]);
   useEffect(() => {
-    ConfigProvider.setGlobalConfig({ theme });
-    initTheme(theme);
+    console.log('setGlobalConfig1', theme);
+    theme && ConfigProvider.setTheme(theme);
   }, [theme]);
 
   return (
