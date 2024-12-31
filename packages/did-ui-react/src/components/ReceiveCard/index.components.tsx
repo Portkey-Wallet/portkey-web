@@ -211,11 +211,8 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
     [currentAddressInfo?.caAddress, selectedDestination?.chainId],
   );
   const generateAddress = () => {
-    // return 'fengfeiyang';
     const address = caInfo?.[destinationChain?.chainId as ChainId]?.caAddress;
-    console.log('generateAddress 0', currentDepositInfo, selectedSource);
     if (currentDepositInfo && selectedSource && !Object.keys(CHAIN_ID).includes(selectedSource?.network)) {
-      console.log('generateAddress 1');
       return {
         value: currentDepositInfo.depositAddress,
         label: formatStr2EllipsisStr(currentDepositInfo.depositAddress, [6, 4]),
@@ -224,7 +221,6 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
 
     if (selectToken.isNFT && selectedSource) {
       const network = selectedDestination ? selectedDestination?.chainId : selectedSource?.network;
-      console.log('generateAddress 2');
       return {
         value: `ELF_${address}_${network}`,
         label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${network}`,
@@ -237,14 +233,12 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
         !(selectedDestination && Object.keys(CHAIN_ID).includes(selectedDestination?.chainId))
       ) {
         if (isExchangeSelected) {
-          console.log('generateAddress 3');
           return {
             value: address,
             label: formatStr2EllipsisStr(address, [6, 4]),
           };
         }
       }
-      console.log('generateAddress 4', address, selectedDestination, isMainChainToMainChain);
       const info: QRCodeDataObjType = {
         address: toCaAddress,
         networkType: networkType,
@@ -263,7 +257,6 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
         },
       };
       const data = JSON.stringify(shrinkSendQrData(info));
-      console.log('generateAddress 3-4');
       return {
         value: data,
         addressValue: toCaAddress,
