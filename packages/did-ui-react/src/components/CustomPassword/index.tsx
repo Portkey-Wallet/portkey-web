@@ -9,9 +9,9 @@ export default function CustomPassword({ maxLength, placeholder, iconRender, ...
   const defaultIconRender = useCallback(
     (visible: boolean) =>
       visible ? (
-        <CustomSvg style={{ cursor: 'pointer' }} type="EyeOutlined" />
+        <CustomSvg style={{ cursor: 'pointer' }} type="Visibility" />
       ) : (
-        <CustomSvg style={{ cursor: 'pointer' }} type="EyeInvisibleOutlined" />
+        <CustomSvg style={{ cursor: 'pointer' }} type="VisibilityOff" />
       ),
     [],
   );

@@ -1626,9 +1626,9 @@ html {
 }
 
 .portkey-ant-btn:active {
-  color: var(--portkey-ant-primary-color-active);
+  /* color: var(--portkey-ant-primary-color-active); */
   border-color: var(--portkey-ant-primary-color-active);
-  background: #fff;
+  background: var(--sds-color-background-default-default-hover);
 }
 
 .portkey-ant-btn:active>a:only-child {
@@ -1679,7 +1679,7 @@ html {
 .portkey-ant-btn:focus,
 .portkey-ant-btn:active {
   text-decoration: none;
-  background: #fff;
+  background: var(--sds-color-background-default-default-hover);
 }
 
 .portkey-ant-btn>span {
@@ -12989,7 +12989,7 @@ a.portkey-ant-btn-sm {
   display: inline-block;
   width: 100%;
   min-width: 0;
-  padding: 4px 11px;
+  padding: 8px 12px;
   color: rgba(0, 0, 0, 0.85);
   font-size: 14px;
   line-height: 1.5715;
