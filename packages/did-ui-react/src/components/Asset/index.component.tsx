@@ -516,6 +516,7 @@ function AssetMain({
           {assetStep === AssetStep.receiveDetail && caInfo && selectToken && (
             <ReceiveCard
               selectToken={selectToken}
+              networkType={networkType}
               onBack={() => {
                 setAssetStep(AssetStep.receive);
               }}

@@ -11,6 +11,7 @@ export type QrCodeDataArrType = [
   ChainId,
   string | number,
   number | undefined,
+  string | undefined,
 ];
 
 export type QRCodeDataObjType = {
@@ -46,5 +47,6 @@ export const shrinkSendQrData = (data: QRCodeDataObjType): QrCodeDataArrType => 
     data.assetInfo.chainId,
     data.assetInfo.decimals,
     data.deviceType,
+    data.assetInfo?.label,
   ];
 };

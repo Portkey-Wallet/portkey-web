@@ -8,6 +8,8 @@ import { MAIN_CHAIN_ID } from '../../constants/network';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { formatStr2EllipsisStr } from '../../utils';
 import ReceiveCardPureComponent from './index.pure';
+import { QRCodeDataObjType, shrinkSendQrData } from '../../utils/qrCode';
+import { NetworkType } from '../../types';
 
 enum SELECTION_TYPE {
   SOURCE = 'Source',
@@ -48,9 +50,10 @@ const NETWORK_LIST: NetworkItem[] = [
 export interface ReceiveCardProps {
   onBack?: () => void;
   selectToken: BaseToken;
+  networkType: NetworkType;
 }
 
-export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProps) {
+export default function ReceiveCardMain({ onBack, selectToken, networkType }: ReceiveCardProps) {
   const {
     loading,
     receiveType,
@@ -71,7 +74,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   const [isSelectionModalOpen, setIsSelectionModalOpen] = useState(false);
   const [isReceivedExchangeModalOpen, setIsReceivedExchangeModalOpen] = useState(false);
   const [currentDepositInfo, setCurrentDepositInfo] = useState<TDepositInfo>();
-  const [{ caInfo }] = usePortkeyAsset();
+  const [{ caInfo, caAddressInfos }] = usePortkeyAsset();
 
   const { loading: eTransferLoading, depositInfo } = useReceiveByETransfer({
     toChainId: destinationChain?.chainId as ChainId,
@@ -113,6 +116,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   );
 
   const onSelectedChange = (item: TokenItem) => {
+    console.log('onSelectedChange==>', item);
     if (selectedType === SELECTION_TYPE.SOURCE) {
       setSourceChain(item as TReceiveFromNetworkItem);
       setSelectedSource(item as TReceiveFromNetworkItem);
@@ -198,10 +202,20 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
       </span>
     );
   };
-
+  const currentAddressInfo = useMemo(
+    () => caAddressInfos?.find((item) => item.chainId === destinationChain?.chainId),
+    [caAddressInfos, destinationChain?.chainId],
+  );
+  const toCaAddress = useMemo(
+    () => `ELF_${currentAddressInfo?.caAddress}_${selectedDestination?.chainId}`,
+    [currentAddressInfo?.caAddress, selectedDestination?.chainId],
+  );
   const generateAddress = () => {
+    // return 'fengfeiyang';
     const address = caInfo?.[destinationChain?.chainId as ChainId]?.caAddress;
+    console.log('generateAddress 0', currentDepositInfo, selectedSource);
     if (currentDepositInfo && selectedSource && !Object.keys(CHAIN_ID).includes(selectedSource?.network)) {
+      console.log('generateAddress 1');
       return {
         value: currentDepositInfo.depositAddress,
         label: formatStr2EllipsisStr(currentDepositInfo.depositAddress, [6, 4]),
@@ -210,6 +224,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
 
     if (selectToken.isNFT && selectedSource) {
       const network = selectedDestination ? selectedDestination?.chainId : selectedSource?.network;
+      console.log('generateAddress 2');
       return {
         value: `ELF_${address}_${network}`,
         label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${network}`,
@@ -222,16 +237,41 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
         !(selectedDestination && Object.keys(CHAIN_ID).includes(selectedDestination?.chainId))
       ) {
         if (isExchangeSelected) {
+          console.log('generateAddress 3');
           return {
             value: address,
             label: formatStr2EllipsisStr(address, [6, 4]),
           };
         }
       }
+      console.log('generateAddress 4', address, selectedDestination, isMainChainToMainChain);
+      const info: QRCodeDataObjType = {
+        address: toCaAddress,
+        networkType: networkType,
+        chainType: 'aelf',
+        type: 'send',
+        toInfo: {
+          name: '',
+          address: toCaAddress,
+        },
+        assetInfo: {
+          symbol: selectToken.symbol,
+          label: selectToken.label,
+          tokenContractAddress: selectedDestination.defaultToken?.address || '',
+          chainId: selectedDestination.chainId,
+          decimals: selectedDestination.defaultToken.decimals || 0,
+        },
+      };
+      const data = JSON.stringify(shrinkSendQrData(info));
+      console.log('generateAddress 3-4');
       return {
-        value: `ELF_${address}_${selectedDestination.chainId}`,
+        value: data,
         label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${selectedDestination.chainId}`,
       };
+      // return {
+      //   value: `ELF_${address}_${selectedDestination.chainId}`,
+      //   label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${selectedDestination.chainId}`,
+      // };
     }
   };
 
