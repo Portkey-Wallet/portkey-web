@@ -266,6 +266,7 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
       console.log('generateAddress 3-4');
       return {
         value: data,
+        addressValue: toCaAddress,
         label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${selectedDestination.chainId}`,
       };
       // return {

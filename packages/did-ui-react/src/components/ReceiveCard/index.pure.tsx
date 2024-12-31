@@ -37,6 +37,7 @@ export interface IPureProps {
   generateAddress: () =>
     | {
         value: string;
+        addressValue: string;
         label: string;
       }
     | undefined;
@@ -245,7 +246,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                         type="Copy"
                         onClick={() => {
                           singleMessage.success('Address copied');
-                          setCopied(generateAddress()?.value || '');
+                          setCopied(generateAddress()?.addressValue || generateAddress()?.value || '');
                         }}
                         fillColor="var(--sds-color-icon-default-default)"
                       />
