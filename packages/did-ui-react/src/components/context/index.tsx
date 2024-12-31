@@ -8,7 +8,6 @@ import { useEffectOnce } from 'react-use';
 import { did } from '../../utils';
 import ConfigProvider from '../config-provider';
 import { initConfig } from './initConfig';
-import { initTheme } from '../../assets/theme';
 
 const INITIAL_STATE = {
   theme: 'light',
@@ -18,9 +17,6 @@ const PortkeyContext = createContext<any>(INITIAL_STATE);
 
 export function usePortkey(): [PortkeyState, BasicActions] {
   const context = useContext(PortkeyContext);
-  if (context?.[0]) {
-    context[0].theme = ConfigProvider.getGlobalConfig().theme;
-  }
   return context;
 }
 
