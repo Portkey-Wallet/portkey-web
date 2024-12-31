@@ -166,6 +166,7 @@ export default function CryptoDesignBaseCom({
           onStep={LoginCardOnStep}
           onSocialLoginFinish={onSocialFinish}
           onError={onError}
+          onClose={onClose}
         />
       )}
     </div>
