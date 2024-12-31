@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2...v2.17.3) (2024-12-31)
+
+### Features
+
+- approve input style ([dd5dc1c](https://github.com/Portkey-Wallet/portkey-web/commit/dd5dc1ccd267a0085740a672ee77c61c345d6060))
+
+### Bug Fixes
+
+- context ([5a18378](https://github.com/Portkey-Wallet/portkey-web/commit/5a18378319183c1696d647af9928fbbd2c5e1de2))
+- login ui ([f8972aa](https://github.com/Portkey-Wallet/portkey-web/commit/f8972aaba678481fd9ac3e301bae287294f7a1c7))
+- ui bug ([c05095e](https://github.com/Portkey-Wallet/portkey-web/commit/c05095ee24525aeffbe5b6bc8a14faab53ea137a))
+
 ## [2.17.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.4...v2.17.2) (2024-12-28)
 
 ### Bug Fixes
