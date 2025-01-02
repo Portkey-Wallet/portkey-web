@@ -1,4 +1,4 @@
-import React, { useRef, useState, useLayoutEffect } from 'react';
+import React, { useRef, useState, useLayoutEffect, useCallback } from 'react';
 import './index.less';
 import { ErrorType } from '../Ramp/types';
 // import { ErrorType } from '../../../../../../../types';
@@ -9,6 +9,7 @@ interface AutoWidthInputProps {
   amount?: string;
   amountError?: ErrorType;
   textInputRef: React.RefObject<HTMLInputElement>;
+  maxWidth?: number;
 }
 
 const AutoWidthInput: React.FC<AutoWidthInputProps> = ({
@@ -17,10 +18,11 @@ const AutoWidthInput: React.FC<AutoWidthInputProps> = ({
   amount,
   amountError,
   textInputRef,
+  maxWidth,
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(document.createElement('canvas'));
   const [inputWidth, setInputWidth] = useState('auto');
-
+  const [fontSize, setFontSize] = useState(32);
   const measureTextWidth = (text: string) => {
     const context = canvasRef.current.getContext('2d');
     if (context && textInputRef?.current) {
@@ -47,7 +49,20 @@ const AutoWidthInput: React.FC<AutoWidthInputProps> = ({
     setInputWidth(`${width}px`);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [amount, placeholder]);
-
+  const onInputChange = useCallback(
+    (e: { target: { value: string } }) => {
+      const content = e.target.value;
+      if (content.length <= 12) {
+        setFontSize(32);
+      } else if (content.length <= 18) {
+        setFontSize(24);
+      } else {
+        setFontSize(20);
+      }
+      onAmountInput?.(content);
+    },
+    [onAmountInput],
+  );
   return (
     <div className="auto-width-input-wrapper">
       <input
@@ -55,8 +70,8 @@ const AutoWidthInput: React.FC<AutoWidthInputProps> = ({
         type="text"
         placeholder={placeholder}
         value={amount}
-        onChange={(e) => onAmountInput?.(e.target.value)}
-        style={{ width: inputWidth, paddingLeft: 0, paddingRight: 0 }}
+        onChange={onInputChange}
+        style={{ width: inputWidth, paddingLeft: 0, paddingRight: 0, fontSize: fontSize, maxWidth }}
         className={`fiatInput input-style ${amountError?.isError ? 'amountErrorText' : ''}`}
       />
     </div>

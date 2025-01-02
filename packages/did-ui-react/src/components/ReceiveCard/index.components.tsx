@@ -25,23 +25,31 @@ enum CHAIN_ID {
 
 type NetworkItem = {
   imageUrl: string;
-  chainId: ChainId;
+  chainId?: ChainId;
   name: string;
   key: string;
 };
 
 export type TokenItem = TReceiveFromNetworkItem | ChainInfo | NetworkItem;
+const getNetworkList = (networkType: NetworkType) => {
+  NETWORK_LIST.forEach((item) => {
+    if (item.key === 'aelf dAppChain') {
+      item.chainId = networkType === 'MAINNET' ? 'tDVV' : 'tDVW';
+    } else {
+      item.chainId = 'AELF';
+    }
+  });
+  return NETWORK_LIST;
+};
 
 const NETWORK_LIST: NetworkItem[] = [
   {
     imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/dappChain.png',
-    chainId: CHAIN_ID.tDVW,
     name: 'aelf dAppChain',
     key: 'aelf dAppChain',
   },
   {
     imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/mainChain.png',
-    chainId: CHAIN_ID.tDVV,
     name: 'aelf MainChain',
     key: 'aelf MainChain',
   },
@@ -105,7 +113,16 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
     if (isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF') {
       setIsReceivedExchangeModalOpen(true);
     }
-  }, [sourceChain, destinationChain, isMainChainToMainChain, selectToken.isNFT, selectToken.symbol]);
+  }, [
+    sourceChain,
+    destinationChain,
+    isMainChainToMainChain,
+    selectToken.isNFT,
+    selectToken.symbol,
+    selectedType,
+    selectedDestination,
+    networkType,
+  ]);
 
   const showExchangeTip = useMemo(
     () =>
@@ -116,15 +133,15 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
   );
 
   const onSelectedChange = (item: TokenItem) => {
-    console.log('onSelectedChange==>', item);
+    console.log('wfs onSelectedChange==>', item);
     if (selectedType === SELECTION_TYPE.SOURCE) {
       setSourceChain(item as TReceiveFromNetworkItem);
       setSelectedSource(item as TReceiveFromNetworkItem);
       return;
     }
     if (selectedType === SELECTION_TYPE.NFT) {
-      setSelectedSource(item as TReceiveFromNetworkItem);
-      setSelectedDestination(item as ChainInfo);
+      setSourceChain(item as TReceiveFromNetworkItem);
+      updateDestinationChain(item as ChainInfo);
       return;
     }
     if (selectedType === SELECTION_TYPE.DESITNATION) {
@@ -158,15 +175,15 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
 
   const renderSelectionList = useMemo(() => {
     if (selectedType === SELECTION_TYPE.NFT) {
-      return NETWORK_LIST;
+      return getNetworkList(networkType);
     }
     if (selectedType === SELECTION_TYPE.SOURCE) {
       return sourceChainList;
     }
 
     return destinationChainList || [];
-  }, [destinationChainList, selectedType, sourceChainList]);
-
+  }, [destinationChainList, networkType, selectedType, sourceChainList]);
+  console.log('wfs selectedSource', selectedSource);
   const renderTip = () => {
     if (selectToken.isNFT) {
       return (

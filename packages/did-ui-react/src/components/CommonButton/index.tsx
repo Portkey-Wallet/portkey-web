@@ -26,16 +26,15 @@ export type CommonButtonProps = {
 export default function CommonButton(props: CommonButtonProps) {
   const { loadingWidth, loadingHeight, className, loading, children, type = 'default', ...prop } = props;
   const btnClsName = useMemo(() => `portkey-btn-${type}`, [type]);
-  const [{ theme: providerTheme }] = usePortkey();
-  const theme = useMemo(() => ConfigProvider?.getGlobalConfig()?.theme || providerTheme, [providerTheme]);
+  const theme = useMemo(() => ConfigProvider?.getGlobalConfig()?.theme, []);
   const color = useMemo(() => {
-    if (theme == 'dark') {
+    if (theme == 'light') {
       if (type === 'primary' || type === 'primaryOutline' || type === 'danger') {
-        return LoadingColor.DARK;
+        return LoadingColor.WHITE;
       }
     } else {
       if (type === 'primary' || type === 'primaryOutline' || type === 'danger') {
-        return LoadingColor.WHITE;
+        return LoadingColor.DARK;
       }
     }
     return undefined;

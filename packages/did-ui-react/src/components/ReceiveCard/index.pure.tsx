@@ -72,7 +72,6 @@ enum SELECTION_TYPE {
 
 type NetworkItem = {
   imageUrl: string;
-  chainId: ChainId;
   name: string;
   key: string;
 };

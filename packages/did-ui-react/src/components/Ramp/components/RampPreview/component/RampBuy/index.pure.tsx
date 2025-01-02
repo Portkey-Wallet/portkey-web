@@ -6,7 +6,7 @@ import CommonInput from '../../../../../CommonInput';
 import CommonModal from '../../../../../CommonModal';
 import CustomSvg from '../../../../../CustomSvg';
 import clsx from 'clsx';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from 'react';
 import { ErrorType } from '../../../../types';
 import './index.less';
 import PortkeyStyleProvider from '../../../../../PortkeyStyleProvider';
@@ -27,6 +27,7 @@ export interface IRampBuyPureCompProps {
   isAllowAmount: boolean;
   filteredList: IRampFiatItem[];
   selectedItem: IRampFiatItem;
+  init: boolean;
   setOpenFiatModal: Dispatch<SetStateAction<boolean>>;
   onBack?: () => void;
   onChangeCurrency: () => void;
@@ -49,6 +50,7 @@ export default function RampBuyPureComponent(props: IRampBuyPureCompProps) {
     isAllowAmount,
     filteredList,
     selectedItem,
+    init,
     setOpenFiatModal,
     onBack,
     onChangeCurrency,
@@ -57,6 +59,38 @@ export default function RampBuyPureComponent(props: IRampBuyPureCompProps) {
     onSearchInputChange,
     onFiatChange,
   } = props;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const fiatTextRef = useRef<HTMLDivElement>(null);
+  const [maxWidth, setMaxWidth] = useState(0);
+
+  useEffect(() => {
+    if (!init) {
+      return;
+    }
+    const res = setTimeout(() => {
+      if (containerRef.current && fiatTextRef.current) {
+        const style = window.getComputedStyle(containerRef.current);
+        const fiatTextStyle = window.getComputedStyle(fiatTextRef.current);
+        const paddingLeft = parseFloat(style.paddingLeft || '0');
+        const paddingRight = parseFloat(style.paddingRight || '0');
+        const marginLeft = parseFloat(fiatTextStyle.marginLeft || '0');
+        const paddingWidth = paddingLeft + paddingRight;
+        console.log(
+          containerRef.current.clientWidth,
+          paddingLeft,
+          paddingRight,
+          fiatTextRef.current.clientWidth,
+          marginLeft,
+        );
+        const noPaddingWidth =
+          containerRef.current.clientWidth - paddingWidth - fiatTextRef.current.clientWidth - marginLeft;
+        setMaxWidth(noPaddingWidth);
+      }
+    }, 100);
+    return () => {
+      clearTimeout(res);
+    };
+  }, [init]);
   return (
     <PortkeyStyleProvider>
       <div className={clsx(['portkey-ui-ramp-frame portkey-ui-flex-column', className])} id="portkey-ui-ramp">
@@ -74,7 +108,7 @@ export default function RampBuyPureComponent(props: IRampBuyPureCompProps) {
           }
           rightCallback={onChangeCurrency}
         />
-        <div className="portkey-ui-ramp-content portkey-ui-flex-column-center ramp-buy">
+        <div className="portkey-ui-ramp-content portkey-ui-flex-column-center ramp-buy" ref={containerRef}>
           <div className="ramp-buy-pageWrap">
             {/* Fiat Input Section */}
             <div className="fiatWrap">
@@ -85,10 +119,12 @@ export default function RampBuyPureComponent(props: IRampBuyPureCompProps) {
                 amount={amount}
                 amountError={amountError}
                 textInputRef={textInputRef}
+                maxWidth={maxWidth}
               />
               {/* Fiat Symbol */}
               <div
                 className="fiatText"
+                ref={fiatTextRef}
                 onClick={() => {
                   if (textInputRef.current) {
                     textInputRef.current.focus();
