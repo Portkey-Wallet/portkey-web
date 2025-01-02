@@ -114,7 +114,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
             <CustomSvg type="ArrowLeft" className="icon" fillColor="var(--sds-color-icon-default-default)" />
           </div>
           <div className="receive-content-header">
-            <p className="symbol">Receive {selectToken.isNFT ? 'NFTs' : selectToken.symbol}</p>
+            <p className="symbol">Receive {selectToken.isNFT ? 'NFTs' : selectToken.label || selectToken.symbol}</p>
           </div>
           <div
             className="right-icon"

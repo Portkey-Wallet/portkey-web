@@ -179,8 +179,9 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
     if (isMainChainToMainChain && isExchangeSelected) {
       return (
         <span>
-          Send {selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> from exchange to this
-          address and receive on the <span className="chain">{destinationChain?.displayChainName}</span>
+          Send {selectToken.label || selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> from
+          exchange to this address and receive on the{' '}
+          <span className="chain">{destinationChain?.displayChainName}</span>
         </span>
       );
     }
@@ -188,17 +189,17 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
     if (receiveType === ReceiveType.ETransfer) {
       return (
         <span>
-          Send {selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> to this address and receive
-          on the <span className="chain">{selectedDestination?.displayChainName}</span>. Transfers from both exchange
-          and non-exchange addresses are accepted.
+          Send {selectToken.label || selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> to
+          this address and receive on the <span className="chain">{selectedDestination?.displayChainName}</span>.
+          Transfers from both exchange and non-exchange addresses are accepted.
         </span>
       );
     }
 
     return (
       <span>
-        Send {selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> to this address and receive
-        on the <span className="chain">{selectedDestination?.displayChainName}</span>.
+        Send {selectToken.label || selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> to this
+        address and receive on the <span className="chain">{selectedDestination?.displayChainName}</span>.
       </span>
     );
   };

@@ -61,7 +61,7 @@ export default function ReceiveListPureComponent(props: IPureProps) {
               {currentTokenList.map((item: IUserTokenItemResponse) => (
                 <div key={item.symbol} className="item" onClick={() => onItemClick({ ...item, isNFT: false })}>
                   <CoinImage symbol={item.symbol} src={item.imageUrl} width={42} />
-                  <span>{item.symbol}</span>
+                  <span>{item.label || item.symbol}</span>
                 </div>
               ))}
             </div>
