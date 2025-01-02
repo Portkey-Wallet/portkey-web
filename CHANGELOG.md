@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.4...v2.17.5) (2025-01-02)
+
+### Features
+
+- approve add loading ([0167590](https://github.com/Portkey-Wallet/portkey-web/commit/0167590889802c654b4d548b6f02aa4175f01eac))
+
+### Bug Fixes
+
+- 🐛 build error ([f1119f4](https://github.com/Portkey-Wallet/portkey-web/commit/f1119f48eb5609c1cc3fe80e3898bfb9eb08e093))
+- delete unused code ([f6d943d](https://github.com/Portkey-Wallet/portkey-web/commit/f6d943daa6a0ba55e9e1b8d76198080bfb03b6fe))
+- receive card bug ([a25602d](https://github.com/Portkey-Wallet/portkey-web/commit/a25602d4eacd00332b9d787c75f31b8c53abc648))
+
 ## [2.17.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.3...v2.17.4) (2024-12-31)
 
 ### Bug Fixes
