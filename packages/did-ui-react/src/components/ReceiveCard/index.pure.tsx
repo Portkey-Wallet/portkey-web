@@ -37,7 +37,7 @@ export interface IPureProps {
   generateAddress: () =>
     | {
         value: string;
-        addressValue: string;
+        addressValue?: string;
         label: string;
       }
     | undefined;
