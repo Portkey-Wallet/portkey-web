@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.5...v2.17.6) (2025-01-02)
+
+### Bug Fixes
+
+- receive symbol on display ([d954ae1](https://github.com/Portkey-Wallet/portkey-web/commit/d954ae1386fb730fca60a244d78859fd31df710d))
+- sdk ui bug ([aa5b930](https://github.com/Portkey-Wallet/portkey-web/commit/aa5b9304144c87b8baa94c0ba0241b5d89728ff2))
+
 ## [2.17.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.4...v2.17.5) (2025-01-02)
 
 ### Features
