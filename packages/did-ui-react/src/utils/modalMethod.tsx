@@ -29,7 +29,7 @@ export function modalMethod({
       width: 320,
       icon: null,
       centered: true,
-      okText: 'Confirm222',
+      okText: 'Confirm',
       ...props,
       wrapClassName: 'portkey-ui-wrapper portkey-ui-modal-method-wrapper ' + wrapClassName,
       className: 'portkey-ui-modal-method ' + className,
