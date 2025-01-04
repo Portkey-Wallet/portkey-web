@@ -82,7 +82,7 @@
     font-size: 16px;
     background: var(--sds-color-background-default-default);
     &::placeholder {
-      font-size: 14px;
+      font-size: 16px;
       line-height: 20px;
       color: var(--sds-color-text-default-tertiary);
     }
@@ -273,6 +273,11 @@
     .portkey-ant-btn {
       flex: 1;
       border-radius: var(--portkey-ui-rounded-full);
+      border-radius: 24px;
+      font-family: var(--portkey-font-schibsted-bold);
+      font-size: 16px;
+      font-weight: 600;
+      height: 48px;
     }
     .portkey-ant-btn-default {
       line-height: var(--portkey-ui-default-btn-h);
@@ -346,6 +351,13 @@
   .portkey-ant-message-custom-content-icon-wrapper {
     width: 20px;
     height: 20px;
+    .checkcircle-icon {
+      svg {
+        path {
+          fill: var(--sds-color-icon-positive-default);
+        }
+      }
+    }
   }
   .portkey-ant-message-custom-content-text-wrapper {
     display: flex;

@@ -16,12 +16,12 @@ export default function LoginModal({
   onCancel?: () => void;
   onConfirm?: () => void;
 }) {
-  const title = type === 'Login' ? 'You already have an account' : 'You don’t have an account';
+  const title = type !== 'Login' ? 'You already have an account' : 'You don’t have an account';
   const content =
-    type === 'Login' ? 'Do you want to log in with this account instead?' : 'Would you like to create one account?';
+    type !== 'Login' ? 'Do you want to log in with this account instead?' : 'Would you like to create one account?';
   // ? 'Do you want to log in with username@email.com instead?'
   // : 'Would you like to create one with username@email.com ?';
-  const btn = type === 'Login' ? 'Log in' : 'Sign up';
+  const btn = type !== 'Login' ? 'Log in' : 'Sign up';
   return (
     <CommonModal
       maskClosable={maskClosable}

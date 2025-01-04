@@ -42,6 +42,7 @@ function SocialDesign({
   onSocialStart,
   onChainIdChange,
   onLoginFinishWithoutPin,
+  onSignTypeChange,
 }: SocialDesignProps) {
   const [accountType, setAccountType] = useState<SocialDesignType>(type);
   const validateEmailRef = useRef<SocialDesignProps['validateEmail']>(defaultValidateEmail);
@@ -132,6 +133,7 @@ function SocialDesign({
           onFinish={onInputFinish}
           onBack={() => setAccountType(null)}
           onClose={onClose}
+          switchType={onSignTypeChange}
         />
       )}
 

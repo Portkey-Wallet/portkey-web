@@ -51,7 +51,7 @@ function Step1({
   const onConfirm = useCallback(() => {
     if (!signInSuccessRef.current) return setOpen(false);
     const createType = signInSuccessRef.current.isLoginGuardian ? 'Login' : 'SignUp';
-    setCreateType(createType);
+    // setCreateType(createType);
     onSignInFinished?.({
       isFinished: false,
       result: {
@@ -79,9 +79,15 @@ function Step1({
               timestamp: value.authenticationInfo?.timestamp,
             },
           });
-          if (isContinue === SignUpValue.otherSeverRegisterButContinue) return onConfirm();
-          if (isContinue === SignUpValue.cancelRegister) return;
-          if (createType !== 'SignUp') return setOpen(true);
+          if (isContinue === SignUpValue.otherSeverRegisterButContinue) {
+            return onConfirm();
+          }
+          if (isContinue === SignUpValue.cancelRegister) {
+            return;
+          }
+          if (createType !== 'SignUp') {
+            return setOpen(true);
+          }
         }
 
         if (value.isLoginGuardian && createType !== 'Login') return setOpen(true);
@@ -129,7 +135,6 @@ function Step1({
   //   // Get phoneCountry by service, update phoneCountry
   //   getPhoneCountry();
   // }, [getPhoneCountry]);
-  console.log('design ====', design);
   return (
     <>
       {design === Design.SocialDesign && (
@@ -141,6 +146,7 @@ function Step1({
           isErrorTip={isErrorTip}
           onError={onError}
           onSuccess={onSuccess}
+          onSignTypeChange={setCreateType}
         />
       )}
 

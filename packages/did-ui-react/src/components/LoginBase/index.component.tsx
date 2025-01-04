@@ -87,6 +87,7 @@ export default function LoginCard({
           onFinish={onInputFinish}
           onBack={() => setStep(STEP.socialLogin)}
           onClose={onClose}
+          switchType={onStep}
         />
       ) : (
         <SocialLogin

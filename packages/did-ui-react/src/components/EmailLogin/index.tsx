@@ -1,11 +1,12 @@
 import { AccountType, AccountTypeEnum } from '@portkey/services';
-import { forwardRef, useCallback, useImperativeHandle, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useState } from 'react';
 import { ValidatorHandler } from '../../types';
 import EmailInputAndButton from '../EmailInputAndButton';
 import { GuardianInputInfo } from '../types/signIn';
 import './index.less';
 import BackHeader from '../BackHeader';
 import CustomSvg from '../CustomSvg';
+import { CreateWalletType } from '../types';
 
 export interface EmailLoginProps {
   confirmText?: string;
@@ -15,6 +16,7 @@ export interface EmailLoginProps {
   onFinish?: (v: GuardianInputInfo) => void;
   onBack?: () => void;
   onClose?: () => void;
+  switchType?: (type: CreateWalletType) => void;
   rightElement?: React.ReactNode;
 }
 
@@ -32,6 +34,7 @@ const EmailLogin = forwardRef(
       onClose,
       onBack,
       validateEmail,
+      switchType,
       rightElement,
     }: EmailLoginProps,
     ref,
@@ -44,7 +47,9 @@ const EmailLogin = forwardRef(
       }),
       [],
     );
-
+    useEffect(() => {
+      switchType?.(currentType);
+    }, [currentType, switchType]);
     const handleLoginAction = useCallback(() => {
       setCurrentType('SignUp');
     }, []);
@@ -85,6 +90,7 @@ const EmailLogin = forwardRef(
             onFinish?.({
               accountType: AccountTypeEnum[AccountTypeEnum.Email] as AccountType,
               identifier: v,
+              type: currentType,
             })
           }
         />

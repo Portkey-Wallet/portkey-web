@@ -9,7 +9,7 @@ interface TokenImageDisplayProps {
   className?: string;
 }
 
-export default function TokenImageDisplay({ src, symbol = 'ELF', width = 32, className }: TokenImageDisplayProps) {
+export default function TokenImageDisplay({ src, symbol = 'ELF', width = 42, className }: TokenImageDisplayProps) {
   const [isError, setError] = useState<boolean>(false);
 
   const tokenSrc = useMemo(() => src, [src]);

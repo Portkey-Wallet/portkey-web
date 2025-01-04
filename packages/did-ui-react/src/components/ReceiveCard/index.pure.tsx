@@ -135,18 +135,30 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                     setSelectedType(SELECTION_TYPE.NFT);
                     setIsSelectionModalOpen(true);
                   }}>
-                  <img
-                    className="token-img"
-                    src={
-                      selectedDestination?.chainImageUrl || (selectedDestination as unknown as NetworkItem)?.imageUrl
-                    }
-                  />
-                  <div className="chain-name-container">
-                    <span>
-                      {selectedDestination?.displayChainName || (selectedDestination as unknown as NetworkItem)?.name}
-                    </span>
-                    <CustomSvg type="ChevronDown2" className="icon" fillColor="var(--sds-color-icon-default-default)" />
-                  </div>
+                  {loading ? (
+                    <div className="token-img-skeleton" />
+                  ) : (
+                    <img
+                      className="token-img"
+                      src={
+                        selectedDestination?.chainImageUrl || (selectedDestination as unknown as NetworkItem)?.imageUrl
+                      }
+                    />
+                  )}
+                  {loading ? (
+                    <div className="chain-name-container-skeleton" />
+                  ) : (
+                    <div className="chain-name-container">
+                      <span>
+                        {selectedDestination?.displayChainName || (selectedDestination as unknown as NetworkItem)?.name}
+                      </span>
+                      <CustomSvg
+                        type="ChevronDown2"
+                        className="icon"
+                        fillColor="var(--sds-color-icon-default-default)"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -159,15 +171,23 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                       setSelectedType(SELECTION_TYPE.SOURCE);
                       setIsSelectionModalOpen(true);
                     }}>
-                    <img className="token-img" src={selectedSource?.imageUrl} />
-                    <div className="chain-name-container">
-                      <span>{selectedSource?.name}</span>
-                      <CustomSvg
-                        type="ChevronDown2"
-                        className="icon"
-                        fillColor="var(--sds-color-icon-default-default)"
-                      />
-                    </div>
+                    {loading ? (
+                      <div className="token-img-skeleton" />
+                    ) : (
+                      <img className="token-img" src={selectedSource?.imageUrl} />
+                    )}
+                    {loading ? (
+                      <div className="chain-name-container-skeleton" />
+                    ) : (
+                      <div className="chain-name-container">
+                        <span>{selectedSource?.name}</span>
+                        <CustomSvg
+                          type="ChevronDown2"
+                          className="icon"
+                          fillColor="var(--sds-color-icon-default-default)"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="destination">
@@ -178,15 +198,23 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                       setSelectedType(SELECTION_TYPE.DESITNATION);
                       setIsSelectionModalOpen(true);
                     }}>
-                    <img className="token-img" src={selectedDestination?.chainImageUrl} />
-                    <div className="chain-name-container">
-                      <span>{selectedDestination?.displayChainName}</span>
-                      <CustomSvg
-                        type="ChevronDown2"
-                        className="icon"
-                        fillColor="var(--sds-color-icon-default-default)"
-                      />
-                    </div>
+                    {loading ? (
+                      <div className="token-img-skeleton" />
+                    ) : (
+                      <img className="token-img" src={selectedDestination?.chainImageUrl} />
+                    )}
+                    {loading ? (
+                      <div className="chain-name-container-skeleton" />
+                    ) : (
+                      <div className="chain-name-container">
+                        <span>{selectedDestination?.displayChainName}</span>
+                        <CustomSvg
+                          type="ChevronDown2"
+                          className="icon"
+                          fillColor="var(--sds-color-icon-default-default)"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </>

@@ -1,6 +1,6 @@
 import { ValidatorHandler } from '../../types';
 import EmailLogin, { EmailLoginProps } from '../EmailLogin';
-import type { IPhoneCountry } from '../types';
+import type { CreateWalletType, IPhoneCountry } from '../types';
 import './index.less';
 import { AccountType } from '@portkey/services';
 import clsx from 'clsx';
@@ -12,6 +12,7 @@ export default function InputLogin({
   onClose,
   onFinish,
   validateEmail,
+  switchType,
 }: {
   className?: string;
   isLoading?: boolean;
@@ -22,6 +23,7 @@ export default function InputLogin({
   onFinish?: EmailLoginProps['onFinish'];
   validateEmail?: ValidatorHandler;
   validatePhone?: ValidatorHandler; // deprecated
+  switchType?: (type: CreateWalletType) => void;
 }) {
   return (
     <div className={clsx('login-content', className)}>
@@ -31,6 +33,7 @@ export default function InputLogin({
         onFinish={onFinish}
         onBack={onBack}
         onClose={onClose}
+        switchType={switchType}
       />
     </div>
   );

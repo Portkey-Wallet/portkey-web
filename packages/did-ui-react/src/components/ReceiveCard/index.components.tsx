@@ -10,6 +10,7 @@ import { formatStr2EllipsisStr } from '../../utils';
 import ReceiveCardPureComponent from './index.pure';
 import { QRCodeDataObjType, shrinkSendQrData } from '../../utils/qrCode';
 import { NetworkType } from '../../types';
+import { useEffectOnce } from 'react-use';
 
 enum SELECTION_TYPE {
   SOURCE = 'Source',
@@ -109,10 +110,6 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
     if (destinationChain) {
       setSelectedDestination(destinationChain);
     }
-
-    if (isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF') {
-      setIsReceivedExchangeModalOpen(true);
-    }
   }, [
     sourceChain,
     destinationChain,
@@ -123,7 +120,11 @@ export default function ReceiveCardMain({ onBack, selectToken, networkType }: Re
     selectedDestination,
     networkType,
   ]);
-
+  useEffect(() => {
+    if (isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF') {
+      setIsReceivedExchangeModalOpen(true);
+    }
+  }, [isMainChainToMainChain, selectToken.isNFT, selectToken.symbol]);
   const showExchangeTip = useMemo(
     () =>
       selectToken?.symbol === 'ELF' &&

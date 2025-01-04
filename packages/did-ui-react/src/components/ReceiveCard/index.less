@@ -82,7 +82,12 @@
             width: 16px;
             height: 16px;
           }
-
+          .token-img-skeleton{
+            width: 16px;
+            height: 16px;
+            border-radius: 9999;
+            background: var(--sds-color-background-default-tertiary);
+          }
           .chain-name-container {
             display: flex;
             width: 100%;
@@ -91,6 +96,13 @@
             line-height: 14px;
             font-size: 14px;
             color: var(--sds-color-text-default-default);
+          }
+          .chain-name-container-skeleton {
+            width: 80px;
+            height: 12px;
+            border-radius: 4px;
+            background: var(--sds-color-background-default-tertiary);
+            align-self: center;
           }
         }
       }
@@ -246,7 +258,7 @@
   .received-exchange-modals-header {
     display: flex;
     justify-content: space-between;
-    padding: 16px;
+    padding: 16px 16px 12px 16px;
 
     .title {
       font-weight: 700;
@@ -293,6 +305,7 @@
 }
 
 .portkey-ui-receive-modals {
+  max-height: 724px;
   .received-modals-header {
     display: flex;
     justify-content: space-between;
