@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
-import { usePortkey } from './index';
+import { useWebWallet } from '../index';
 
 export function useWalletDispatch() {
-  const [, { dispatch }] = usePortkey();
+  const [, { dispatch }] = useWebWallet();
   return useCallback(dispatch, [dispatch]);
 }

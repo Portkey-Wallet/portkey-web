@@ -5,6 +5,7 @@ import './index.css';
 import PortkeyProvider from '@/provider/Portkey';
 import Script from 'next/script';
 import '@portkey/did-ui-react/dist/assets/index.css';
+import WebWalletProvider from '@/provider/WebWalletProvider';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -18,7 +19,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body className={inter.className}>
         <Script src="https://telegram.org/js/telegram-web-app.js" />
-        <PortkeyProvider>{children}</PortkeyProvider>
+        <WebWalletProvider>
+          <PortkeyProvider>{children}</PortkeyProvider>
+        </WebWalletProvider>
       </body>
     </html>
   );

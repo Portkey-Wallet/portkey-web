@@ -16,4 +16,6 @@ export * from './crypto/utils';
 export * from './retry';
 export * from './devices.portkey';
 export * from './authentication';
+export * as browser from './browser';
+
 export * from './time';
