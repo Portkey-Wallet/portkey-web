@@ -89,7 +89,7 @@
     top: 0;
     left: 0;
     padding-top: 16px;
-    padding-bottom: 16px;
+    padding-bottom: 12px;
     background: var(--sds-color-background-default-default);
     .change-currency-modal-list-title {
       color: var(--sds-color-text-default-default);
@@ -118,6 +118,9 @@
     margin: 12px 0px;
     cursor: pointer;
     width: 100%;
+    &:first-child {
+      margin-top: 0;
+    }
     &:hover {
       background: var(--sds-color-background-default-default-hover);
     }
