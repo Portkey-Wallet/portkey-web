@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.7-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.4...v2.17.7-alpha.5) (2025-01-07)
+
+### Bug Fixes
+
+- ui style ([eac4972](https://github.com/Portkey-Wallet/portkey-web/commit/eac49723638c096ae9fafec47f975dd6ae7854a1))
+
 ## [2.17.7-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.3...v2.17.7-alpha.4) (2025-01-04)
 
 ### Bug Fixes
