@@ -208,7 +208,7 @@ export default function RampSellPureComponent(props: IRampSellPureCompProps) {
               }}
             />
           </div>
-          <ul style={{ width: '100%', marginTop: 16, overflowY: 'auto' }}>
+          <ul style={{ width: '100%', overflowY: 'auto' }}>
             {filteredList?.map((item, index) => (
               <li
                 key={index + '_' + item.symbol}
