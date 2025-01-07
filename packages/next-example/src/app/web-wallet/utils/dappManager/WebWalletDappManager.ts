@@ -3,8 +3,8 @@ import { DappManager } from './index';
 import { ApproveMethod } from '../../constants/dapp';
 
 export class WebWalletDappManager extends DappManager {
-  constructor() {
-    super();
+  constructor(options: { appId: string }) {
+    super(options);
   }
 
   isActive() {

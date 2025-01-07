@@ -29,10 +29,13 @@ export function ServiceWorker() {
   const serviceRef = useRef<ServiceWorkerInstantiate>();
 
   useEffect(() => {
-    serviceRef.current = new ServiceWorkerInstantiate();
-  }, []);
-  useEffect(() => {
-    serviceRef.current = new ServiceWorkerInstantiate();
+    const options: any = qs.parse(window.location.search.replace('?', ''));
+    console.log(options, 'options===');
+    Object.values(options).length > 0 && dispatch(basicWebWalletView.setWalletOptions.actions(options));
+    const networkType = (options.networkType ?? 'MAINNET') as keyof typeof LOGIN_CONFIG;
+    ConfigProvider.setGlobalConfig({ ...(LOGIN_CONFIG[networkType] as any) });
+
+    serviceRef.current = new ServiceWorkerInstantiate({ appId: options.appId });
   }, []);
 
   useEffect(() => {
@@ -83,36 +86,33 @@ export function ServiceWorker() {
     pageStream = new ContentPostStream({ name: CONTENT_TARGET });
 
     pageStream.on('data', (data: Buffer) => {
-      const params = JSON.parse(data.toString());
-      console.log('IframePage----onData', params);
-      const url = new URL(window.parent.location.href);
-      const icon = browser.getFaviconUrl(url.href, 50);
+      try {
+        const params = JSON.parse(data.toString());
+        console.log('IframePage----onData=1', params);
+        const url = new URL(params.origin);
+        const icon = browser.getFaviconUrl(url.href, 50);
+        console.log(url, 'url===');
+        const message = Object.assign({}, params, {
+          hostname: url.hostname,
+          origin: url.origin,
+          href: url.href,
+          icon,
+          payload: params,
+        });
+        const method = message.method;
 
-      const message = Object.assign({}, params, {
-        hostname: url.hostname,
-        origin: url.origin,
-        href: url.href,
-        icon,
-        payload: params,
-      });
-      const method = message.method;
-
-      if (!methodCheck(method)) {
-        return pageStream.send(
-          new ProviderError(ResponseMessagePreset['UNKNOWN_METHOD'], ResponseCode.UNKNOWN_METHOD) as any,
-        );
+        if (!methodCheck(method)) {
+          return pageStream.send(
+            new ProviderError(ResponseMessagePreset['UNKNOWN_METHOD'], ResponseCode.UNKNOWN_METHOD) as any,
+          );
+        }
+        console.log(message, 'message====');
+        setupInternalMessaging(message);
+      } catch (error) {
+        console.error('ContentPostStream', error);
       }
-      setupInternalMessaging(message);
     });
   }, [setupInternalMessaging]);
-
-  useEffect(() => {
-    const options: any = qs.parse(window.location.search.replace('?', ''));
-    console.log(options, 'options===');
-    Object.values(options).length > 0 && dispatch(basicWebWalletView.setWalletOptions.actions(options));
-    const networkType = (options.networkType ?? 'MAINNET') as keyof typeof LOGIN_CONFIG;
-    ConfigProvider.setGlobalConfig({ ...(LOGIN_CONFIG[networkType] as any) });
-  }, []);
 
   return null;
 }

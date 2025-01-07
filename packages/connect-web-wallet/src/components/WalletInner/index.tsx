@@ -34,7 +34,7 @@ export default function WalletInner() {
   return (
     <iframe
       ref={iframeRef}
-      src={`https://192.168.1.6:3000/web-wallet?${qs.stringify(options)}`}
+      src={`http://192.168.1.6:3000/web-wallet?${qs.stringify(options)}`}
       style={{ width: '100%', height: '700px' }}
       onLoad={onLoad}
     />

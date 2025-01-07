@@ -14,6 +14,7 @@ export interface IConnectState {
   options: {
     theme?: ThemeType;
     networkType: NetworkType;
+    appId: string;
   };
 
   provider: IPortkeyProvider | null;

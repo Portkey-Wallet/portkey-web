@@ -3939,13 +3939,13 @@
     "@portkey/utils" "^2.17.1"
     "@portkey/validator" "^2.17.1"
 
-"@portkey/chain@^2.4.0-alpha.3":
-  version "2.4.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@portkey/chain/-/chain-2.4.0-alpha.3.tgz#19c824237a9ba44dd512e91ffae861fffca18bb2"
-  integrity sha512-j4Q9e80/mIu30QldkFK4kUTnNWKdrQxGzUIMIweMcV1nVToLFmB2QvQYN2HYjFoBIQI+qEVx29Y1FopDPcpf6Q==
+"@portkey/chain@^2.4.0-alpha.4":
+  version "2.4.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@portkey/chain/-/chain-2.4.0-alpha.4.tgz#4282aab40fc5fccb93fa440f465e0512116bc7a1"
+  integrity sha512-iwZIGYBIegzlkMvOPP3ypIBc82BEA3CLdkcss8i8XIhHLNzuva2q43LjAiPMNkFUwZfV9rEFw5bcuoegHrKKrQ==
   dependencies:
     "@portkey/contracts" "^2.0.4"
-    "@portkey/provider-types" "^2.4.0-alpha.3"
+    "@portkey/provider-types" "^2.4.0-alpha.4"
     aelf-sdk "^3.2.45-beta.0"
 
 "@portkey/contracts@^2.0.4", "@portkey/contracts@^2.17.0-alpha.1", "@portkey/contracts@^2.17.1":
@@ -3987,13 +3987,13 @@
     graphql "^16.6.0"
     subscriptions-transport-ws "^0.11.0"
 
-"@portkey/iframe-provider@^2.4.0-alpha.3":
-  version "2.4.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@portkey/iframe-provider/-/iframe-provider-2.4.0-alpha.3.tgz#275157f0ddc2fe83e280e734c919c3505be91871"
-  integrity sha512-rUJP0mzftCBwkrw089tbguu9dI2QsCCkA3nWsLpELw0+1rC/4MYlrOoawfT4Mz4q41ty6F/Fmnizx7RT3+sRjA==
+"@portkey/iframe-provider@^2.4.0-alpha.4":
+  version "2.4.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@portkey/iframe-provider/-/iframe-provider-2.4.0-alpha.4.tgz#938ed725061ae56846771539668c101396ecbf20"
+  integrity sha512-G2wjeiHd8kOSbGF+LaMcNJZ/QGXtZE18SNqqnXYFZO4AdxBKS2FJ71dOhamu3oe6H/e3fx1sLMeW/t+KXUz8eA==
   dependencies:
-    "@portkey/provider-types" "^2.4.0-alpha.3"
-    "@portkey/providers" "^2.4.0-alpha.3"
+    "@portkey/provider-types" "^2.4.0-alpha.4"
+    "@portkey/providers" "^2.4.0-alpha.4"
     "@types/elliptic" "^6.4.14"
     readable-stream "^4.4.0"
 
@@ -4024,29 +4024,29 @@
     "@portkey/types" "^2.0.0-alpha.0"
     "@types/readable-stream" "^2.3.15"
 
-"@portkey/provider-types@^2.4.0-alpha.3":
-  version "2.4.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@portkey/provider-types/-/provider-types-2.4.0-alpha.3.tgz#524ad32c269bef1e745ce40138c929a94c1f7f29"
-  integrity sha512-c32c0NyHs+x1TlLwp+G/IihQ39YXUABEqu0Y9SfWeOLIC0X//hNCMDJv+IcfHZiHPoIcZnUWhtFUwEyCjWW+pw==
+"@portkey/provider-types@^2.4.0-alpha.4":
+  version "2.4.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@portkey/provider-types/-/provider-types-2.4.0-alpha.4.tgz#ed8fb4abbd119f347a80754612bfef0b0241f854"
+  integrity sha512-caTGQTNiasCvrtU4Oc0xgh9iqceV/Wq6u2YDirQQ3jlJy4kjDWm5PZcsyIS5GC4Huv3Su7YSAyVNHnkgp5ivUQ==
   dependencies:
     "@portkey/types" "^2.0.0-alpha.0"
     "@types/readable-stream" "^2.3.15"
 
-"@portkey/provider-utils@^2.4.0-alpha.3":
-  version "2.4.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@portkey/provider-utils/-/provider-utils-2.4.0-alpha.3.tgz#9fb36fa15c7f5a1916eaddd6e4919995f29710d2"
-  integrity sha512-o9Mm/5dshc33c172gEl4IViqx8+kEe50hHM+XwOg4yw/GsZpAP3S7cNWDyHxCUvzPN15n1lwhknBWkIseYTuHg==
+"@portkey/provider-utils@^2.4.0-alpha.4":
+  version "2.4.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@portkey/provider-utils/-/provider-utils-2.4.0-alpha.4.tgz#76c091ca3ddeb474d67f4d81c1fccaf5f1e54d5d"
+  integrity sha512-DFA7/CRjUt5nsSvr4p9V/Zb9xOZxjwAz136ZfHu6ekCzpuvX80FiyNgRP+j48/YxatXj+C8ardCNuoJVVkzx5A==
   dependencies:
-    "@portkey/provider-types" "^2.4.0-alpha.3"
+    "@portkey/provider-types" "^2.4.0-alpha.4"
 
-"@portkey/providers@^2.4.0-alpha.3":
-  version "2.4.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/@portkey/providers/-/providers-2.4.0-alpha.3.tgz#ebb19c2ff05554752f8c2b2a08c89757e23074bf"
-  integrity sha512-HC2RUgqMoyN1+kn++yOcZQo5NPRC+aYhMfftzA06kMSSM5b7e50cVZw5emAhZbLJ1IHW2687fNQSSZ2Z204/5w==
+"@portkey/providers@^2.4.0-alpha.4":
+  version "2.4.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@portkey/providers/-/providers-2.4.0-alpha.4.tgz#f44239c0b6c680a2ca50383951369c4b0924204c"
+  integrity sha512-bWwB5RhZt2y7Tq/fz6jx+SzHqIFigAqQbIgaC6Sx20TUdd8LZ5nBNuU7bLzz8SrHKUxxGB6pSh/sYXf8djjW/w==
   dependencies:
-    "@portkey/chain" "^2.4.0-alpha.3"
-    "@portkey/provider-types" "^2.4.0-alpha.3"
-    "@portkey/provider-utils" "^2.4.0-alpha.3"
+    "@portkey/chain" "^2.4.0-alpha.4"
+    "@portkey/provider-types" "^2.4.0-alpha.4"
+    "@portkey/provider-utils" "^2.4.0-alpha.4"
     "@types/readable-stream" "^2.3.15"
     lodash "^4.17.21"
     readable-stream "^4.4.0"

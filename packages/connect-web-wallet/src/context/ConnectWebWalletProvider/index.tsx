@@ -9,6 +9,7 @@ const INITIAL_STATE: IConnectState = {
   options: {
     theme: 'light',
     networkType: 'MAINNET',
+    appId: 'wallet-appId',
   },
   provider: null,
 };

@@ -44,7 +44,7 @@ export default class SWEventController {
   // public static dispatchEvent(params: DappEventPack<'networkChanged', NetworkType>): void;
   public static dispatchEvent(params: DappEventPack<'connected', ConnectInfo>): void;
   public static dispatchEvent(params: DappEventPack<'disconnected', ProviderErrorType>): void;
-  static async dispatchEvent({ eventName, data, origin = window.parent.location.origin }: DappEventPack) {
+  static async dispatchEvent({ eventName, data, origin }: DappEventPack) {
     const event: IResponseType = {
       eventName,
       info: {

@@ -4,10 +4,13 @@ import { WalletPageType } from '../types';
 import { OpenPageService } from '../service/OpenPageService';
 import { did } from '@portkey/did';
 import errorHandler from '../utils/errorHandler';
+import { getWebWalletStorageKey } from '../utils/wallet';
 export default class PermissionController {
   whitelist: string[];
-  constructor({ whitelist = [] }: { whitelist?: string[] }) {
+  appId: string;
+  constructor({ whitelist = [], appId }: { whitelist?: string[]; appId: string }) {
     this.whitelist = whitelist;
+    this.appId = appId;
   }
 
   // async checkIsLock(): Promise<PortkeyResultType> {
@@ -42,8 +45,7 @@ export default class PermissionController {
   }
 
   checkCurrentNetworkIsRegister() {
-    const parentOrigin = window.parent?.location?.origin ?? 'portkey-web-wallet';
-    const walletStorage = localStorage.getItem(parentOrigin);
+    const walletStorage = localStorage.getItem(getWebWalletStorageKey(this.appId));
     return Boolean(walletStorage);
   }
 

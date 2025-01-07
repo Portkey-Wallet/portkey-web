@@ -24,15 +24,20 @@ export default class ServiceWorkerInstantiate {
   protected aelfMethodController: AELFMethodController;
   protected approvalController: ApprovalController;
   protected pin: string | null = null;
-  constructor() {
+  protected appId: string;
+
+  constructor({ appId }: { appId: string }) {
+    this.appId = appId;
     this.permissionController = new PermissionController({
       whitelist: permissionWhitelist,
+      appId: this.appId,
     });
     // Controller that handles user authorization
     this.approvalController = new ApprovalController();
     this.aelfMethodController = new AELFMethodController({
       approvalController: this.approvalController,
       getPassword: () => this.pin,
+      appId: this.appId,
     });
   }
 
@@ -92,7 +97,7 @@ export default class ServiceWorkerInstantiate {
         },
         { onMethod: 'transactionHash' },
       );
-      localStorage.removeItem(getWebWalletStorageKey());
+      localStorage.removeItem(getWebWalletStorageKey(this.appId));
     }
     did.reset();
     SWEventController.dispatchEvent({

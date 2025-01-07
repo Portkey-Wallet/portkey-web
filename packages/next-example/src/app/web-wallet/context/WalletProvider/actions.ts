@@ -18,6 +18,7 @@ export interface IWebWalletState {
 export interface IWalletOptions {
   theme?: ThemeType;
   networkType: NetworkType;
+  appId: string;
 }
 
 export const basicWebWalletView = {

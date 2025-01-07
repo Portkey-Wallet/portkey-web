@@ -8,6 +8,7 @@ const INITIAL_STATE: IWebWalletState = {
   options: {
     theme: 'dark',
     networkType: 'MAINNET',
+    appId: 'wallet-appId',
   },
 };
 const PortkeyContext = createContext<any>(INITIAL_STATE);

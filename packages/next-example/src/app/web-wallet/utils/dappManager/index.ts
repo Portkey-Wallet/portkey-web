@@ -12,6 +12,10 @@ export interface IBaseDappManagerProps {
 }
 
 export abstract class DappManager implements IDappManager {
+  protected appId: string;
+  constructor({ appId }: { appId: string }) {
+    this.appId = appId;
+  }
   protected AAInfo?: { caHash: string; caAddress: string; chainId: ChainId }[];
   async caHash(): Promise<string> {
     const currentAAInfo = await this.getAAInfo();
@@ -86,7 +90,7 @@ export abstract class DappManager implements IDappManager {
   }
 
   isLogged() {
-    return Boolean(localStorage.getItem(getWebWalletStorageKey()));
+    return Boolean(localStorage.getItem(getWebWalletStorageKey(this.appId)));
   }
 
   async accounts() {

@@ -8,6 +8,7 @@ export default function WebWalletProvider({ children }: { children: React.ReactN
       options={{
         networkType: 'TESTNET',
         theme: 'light',
+        appId: 'appId',
       }}>
       {children}
     </PortkeyWebWalletProvider>

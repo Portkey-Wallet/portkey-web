@@ -16,15 +16,15 @@ const PIN = '111111';
 let CHAIN_ID: ChainId = 'tDVW';
 
 function WebPageInner() {
-  const [{ pageState, pin }] = useWebWallet();
-  console.log(pageState, window.parent.location, 'pageState====');
+  const [{ pageState, pin, options }] = useWebWallet();
+  console.log(pageState, 'pageState====');
   const dispatch = useWalletDispatch();
   const [password, setPassword] = useState<string>('');
 
   const onSignInFinish = useCallback(
     async (res: DIDWalletInfo) => {
       CHAIN_ID = res.chainId;
-      did.save(res.pin, getWebWalletStorageKey());
+      did.save(res.pin, getWebWalletStorageKey(options?.appId));
       dispatch(basicWebWalletView.setWalletPin.actions(res.pin));
       pageState && OpenPageService.closePage(pageState.eventName);
       SWEventController.dispatchEvent({ eventName: 'connected', data: { chainIds: [res.chainId] } });
@@ -33,7 +33,7 @@ function WebPageInner() {
   );
   const onUnlock = useCallback(
     async (pin: string) => {
-      const wallet = await did.load(pin, getWebWalletStorageKey());
+      const wallet = await did.load(pin, getWebWalletStorageKey(options?.appId));
       if (wallet.didWallet.aaInfo.accountInfo?.caAddress) {
         dispatch(basicWebWalletView.setWalletPin.actions(pin));
         pageState && OpenPageService.closePage(pageState.eventName);

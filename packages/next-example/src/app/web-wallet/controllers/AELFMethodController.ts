@@ -26,6 +26,7 @@ const aelfMethodList = [
 ];
 interface AELFMethodControllerProps {
   approvalController: ApprovalController;
+  appId: string;
   getPassword: () => string | null;
 }
 export default class AELFMethodController {
@@ -35,11 +36,11 @@ export default class AELFMethodController {
   protected approvalController: ApprovalController;
   public aelfMethodList: string[];
   public config: { [key: string]: { [key: string]: boolean } };
-  constructor({ approvalController, getPassword }: AELFMethodControllerProps) {
+  constructor({ approvalController, getPassword, appId }: AELFMethodControllerProps) {
     this.approvalController = approvalController;
     this.getPassword = getPassword;
     this.aelfMethodList = aelfMethodList;
-    this.dappManager = new WebWalletDappManager();
+    this.dappManager = new WebWalletDappManager({ appId });
     this.config = {};
   }
 
