@@ -382,7 +382,6 @@ export default function RampBuy({
       <CommonModal
         className="change-currency-modal-list"
         open={openFiatModal}
-        height={582}
         onClose={() => {
           setOpenFiatModal(false);
         }}>

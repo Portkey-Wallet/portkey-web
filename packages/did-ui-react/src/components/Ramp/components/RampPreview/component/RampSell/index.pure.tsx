@@ -193,7 +193,6 @@ export default function RampSellPureComponent(props: IRampSellPureCompProps) {
         <CommonModal
           className="change-currency-modal-list"
           open={openFiatModal}
-          height={582}
           onClose={() => {
             setOpenFiatModal(false);
           }}>
