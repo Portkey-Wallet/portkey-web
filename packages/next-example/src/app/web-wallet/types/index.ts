@@ -1,3 +1,5 @@
+import { IVerifyInfo, TVerifierItem } from '@portkey/did-ui-react';
+
 export interface IRequestPayload {
   method: string;
   eventName: string;
@@ -9,4 +11,33 @@ export enum WalletPageType {
   Login = 'Login',
   Assets = 'Assets',
   UnLock = 'UnLock',
+  GuardianApproveForLogin = 'GuardianApproveForLogin',
+  SocialLogin = 'SocialLogin',
+}
+
+export type TSignUpVerifier = { verifier: TVerifierItem } & IVerifyInfo;
+
+export enum SocialLoginType {
+  APPLE = 'Apple',
+  GOOGLE = 'Google',
+  TELEGRAM = 'Telegram',
+}
+
+export enum OperationTypeEnum {
+  // unknown
+  unknown = 0,
+  // register
+  register = 1,
+  // community recovery
+  communityRecovery = 2,
+  // add guardian
+  addGuardian = 3,
+  // delete guardian
+  deleteGuardian = 4,
+  // edit guardian
+  editGuardian = 5,
+  // remove other manager
+  removeOtherManager = 6,
+  // set login account
+  setLoginAccount = 7,
 }

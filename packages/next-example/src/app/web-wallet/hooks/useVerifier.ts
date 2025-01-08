@@ -21,6 +21,9 @@ interface IUseVerifier {
     chainId: ChainId;
     operationType: OperationTypeEnum;
     operationDetails: string;
+    idToken?: string;
+    nonce?: string;
+    timestamp?: number;
   }) => any;
 }
 const useVerifier: () => IUseVerifier = () => {
@@ -45,6 +48,9 @@ const useVerifier: () => IUseVerifier = () => {
       chainId,
       operationType,
       operationDetails,
+      idToken,
+      nonce,
+      timestamp,
     }: {
       guardianIdentifier: string;
       accountType: AccountType;
@@ -53,6 +59,9 @@ const useVerifier: () => IUseVerifier = () => {
       chainId: ChainId;
       operationType: OperationTypeEnum;
       operationDetails: string;
+      idToken?: string;
+      nonce?: string;
+      timestamp?: number;
     }) => {
       let accessToken;
       let clientId;
@@ -80,6 +89,9 @@ const useVerifier: () => IUseVerifier = () => {
       if (!verifier?.id) throw 'Verifier is not missing';
       return verifyToken(accountType, {
         accessToken,
+        idToken,
+        nonce,
+        timestamp,
         id: guardianIdentifier,
         verifierId: verifier.id,
         chainId,
