@@ -1,10 +1,18 @@
-import { MethodsBase, ResponseCode, MethodsWallet } from '@portkey/provider-types';
+import { MethodsBase, ResponseCode, MethodsWallet, ChainId, NetworkType } from '@portkey/provider-types';
 import { RequestCommonHandler, SendResponseFun } from '../service/types';
 import { IRequestPayload } from '../types';
 import errorHandler from '../utils/errorHandler';
 import { WebWalletDappManager } from '../utils/dappManager/WebWalletDappManager';
 import ApprovalController from './ApprovalController';
 import SWEventController from './EventController/SWEventController';
+import { checkIsCipherText } from '../utils';
+import { getContract, getManager, getManagerSignature, getSignature, getTransactionSignature } from '../utils/wallet';
+import { randomId } from '@portkey/utils';
+import { ChainInfo } from '@portkey/services';
+import { customFetch } from '../utils/fetch';
+import { getNetworkConfig } from '../utils/config';
+import { CheckSecurityResult } from '../types/security';
+import { CA_METHOD_WHITELIST } from '../constants/dapp';
 
 const aelfMethodList = [
   MethodsBase.CA_HASH,
@@ -28,40 +36,46 @@ interface AELFMethodControllerProps {
   approvalController: ApprovalController;
   appId: string;
   getPassword: () => string | null;
+  networkType: NetworkType;
 }
 export default class AELFMethodController {
   protected getPassword: () => string | null;
   protected dappManager: WebWalletDappManager;
+  protected networkType: NetworkType;
 
   protected approvalController: ApprovalController;
   public aelfMethodList: string[];
   public config: { [key: string]: { [key: string]: boolean } };
-  constructor({ approvalController, getPassword, appId }: AELFMethodControllerProps) {
+  constructor({ approvalController, getPassword, appId, networkType }: AELFMethodControllerProps) {
     this.approvalController = approvalController;
     this.getPassword = getPassword;
     this.aelfMethodList = aelfMethodList;
     this.dappManager = new WebWalletDappManager({ appId });
     this.config = {};
+    this.networkType = networkType;
   }
 
-  // handleRequest = async ({ params, method, callBack }: { params: any; method: any; callBack: any }) => {
-  //   // TODO
-  //   // if (!REMEMBER_ME_ACTION_WHITELIST.includes(method)) {
-  //   //   return await callBack(params);
-  //   // }
+  handleRequest = async ({ params, method, callBack }: { params: any; method: any; callBack: any }) => {
+    // TODO
+    // if (!REMEMBER_ME_ACTION_WHITELIST.includes(method)) {
+    //   return await callBack(params);
+    // }
 
-  //   const validSession = await this.verifySessionInfo(params.origin);
-  //   let result;
-  //   if (validSession) {
-  //     result = await this.approvalController.authorizedToAutoExecute({
-  //       ...params,
-  //       method,
-  //     });
-  //   } else {
-  //     result = await callBack(params);
-  //   }
-  //   return result;
-  // };
+    // TODO: check is validSession
+    // const validSession = await this.verifySessionInfo(params.origin);
+    const validSession = false;
+    let result;
+    if (validSession) {
+      // result = await this.approvalController.authorizedToAutoExecute({
+      //   ...params,
+      //   method,
+      // });
+    } else {
+      result = await callBack(params);
+    }
+
+    return result;
+  };
 
   dispenseMessage = (message: IRequestPayload, sendResponse: SendResponseFun) => {
     switch (message.method) {
@@ -80,42 +94,42 @@ export default class AELFMethodController {
       case MethodsBase.CHAINS_INFO:
         this.getChainsInfo(sendResponse, message.payload);
         break;
-      // case MethodsBase.SEND_TRANSACTION:
-      //   this.sendTransaction(sendResponse, message.payload);
-      //   break;
+      case MethodsBase.SEND_TRANSACTION:
+        this.sendTransaction(sendResponse, message.payload);
+        break;
       case MethodsBase.REQUEST_ACCOUNTS:
         this.requestAccounts(sendResponse, message.payload);
         break;
 
-      // case MethodsBase.NETWORK:
-      //   this.getNetwork(sendResponse, message.payload);
-      //   break;
-      // case MethodsBase.CA_HASH:
-      //   this.getCAHash(sendResponse, message.payload);
-      //   break;
-      // case MethodsWallet.GET_WALLET_SIGNATURE: {
-      //   const isCipherText = checkIsCipherText(message.payload.payload.data);
-      //   message.payload.payload.isCipherText = isCipherText;
-      //   this.getSignature(sendResponse, message.payload);
-      //   break;
-      // }
-      // case MethodsWallet.GET_WALLET_TRANSACTION_SIGNATURE: {
-      //   if (message.payload.payload) message.payload.payload.autoSha256 = true;
-      //   const { hexData, data } = message.payload.payload;
-      //   if (!data && hexData) message.payload.payload.data = hexData;
-      //   message.payload.payload.isCipherText = true;
-      //   this.getSignature(sendResponse, message.payload);
-      //   break;
-      // }
-      // case MethodsWallet.GET_WALLET_MANAGER_SIGNATURE: {
-      //   if (message.payload.payload) message.payload.payload.autoSha256 = true;
-      //   const { hexData, data } = message.payload.payload;
-      //   if (!data && hexData) message.payload.payload.data = hexData;
-      //   // message.payload.payload.isCipherText = true;
-      //   message.payload.payload.isManagerSignature = true;
-      //   this.getSignature(sendResponse, message.payload);
-      //   break;
-      // }
+      case MethodsBase.NETWORK:
+        this.getNetwork(sendResponse, message.payload);
+        break;
+      case MethodsBase.CA_HASH:
+        this.getCAHash(sendResponse, message.payload);
+        break;
+      case MethodsWallet.GET_WALLET_SIGNATURE: {
+        const isCipherText = checkIsCipherText(message.payload.payload.data);
+        message.payload.payload.isCipherText = isCipherText;
+        this.getSignature(sendResponse, message.payload);
+        break;
+      }
+      case MethodsWallet.GET_WALLET_TRANSACTION_SIGNATURE: {
+        if (message.payload.payload) message.payload.payload.autoSha256 = true;
+        const { hexData, data } = message.payload.payload;
+        if (!data && hexData) message.payload.payload.data = hexData;
+        message.payload.payload.isCipherText = true;
+        this.getTransactionSignature(sendResponse, message.payload);
+        break;
+      }
+      case MethodsWallet.GET_WALLET_MANAGER_SIGNATURE: {
+        if (message.payload.payload) message.payload.payload.autoSha256 = true;
+        const { hexData, data } = message.payload.payload;
+        if (!data && hexData) message.payload.payload.data = hexData;
+        // message.payload.payload.isCipherText = true;
+        message.payload.payload.isManagerSignature = true;
+        this.getManagerSignature(sendResponse, message.payload);
+        break;
+      }
       case MethodsWallet.GET_WALLET_STATE:
         this.getWalletState(sendResponse, message.payload);
         break;
@@ -181,14 +195,14 @@ export default class AELFMethodController {
 
   getCurrentManagerAddress: RequestCommonHandler = async (sendResponse, message) => {
     try {
-      const isActive = await this.dappManager.isActive();
-      if (!isActive)
-        return sendResponse({
-          ...errorHandler(400001),
-          data: {
-            code: ResponseCode.UNAUTHENTICATED,
-          },
-        });
+      // const isActive = await this.dappManager.isActive();
+      // if (!isActive)
+      //   return sendResponse({
+      //     ...errorHandler(400001),
+      //     data: {
+      //       code: ResponseCode.UNAUTHENTICATED,
+      //     },
+      //   });
 
       const managerAddress = await this.dappManager.currentManagerAddress();
       if (!managerAddress)
@@ -377,6 +391,8 @@ export default class AELFMethodController {
 
   requestAccounts: RequestCommonHandler = async (sendResponse, message) => {
     try {
+      console.log('requestAccounts');
+
       SWEventController.dispatchEvent({
         eventName: 'connected',
         data: { chainIds: await this.dappManager.chainIds(), origin: message.origin },
@@ -415,267 +431,351 @@ export default class AELFMethodController {
     }
   };
 
-  // checkWalletSecurity = async (checkTransferSafeChainId: ChainId) => {
-  //   try {
-  //     const networkType = await this.dappManager.networkType();
-  //     const caHash = await getCurrentCaHash();
+  checkWalletSecurity = async (checkTransferSafeChainId: ChainId) => {
+    try {
+      const caHash = await this.dappManager.caHash();
 
-  //     const currentNetwork = NetworkList.filter(item => item.networkType === networkType)[0];
-  //     const result = await customFetch(`${currentNetwork.apiUrl}/api/app/user/security/balanceCheck`, {
-  //       method: 'GET',
-  //       params: {
-  //         caHash,
-  //         checkTransferSafeChainId,
-  //       },
-  //     });
-  //     return result;
-  //   } catch (error) {
-  //     throw 'checkWalletSecurity error';
-  //   }
-  // };
+      const currentNetwork = getNetworkConfig(this.networkType);
+      const result = await customFetch(`${currentNetwork.serviceUrl}/api/app/user/security/balanceCheck`, {
+        method: 'GET',
+        params: {
+          caHash,
+          checkTransferSafeChainId,
+        },
+      });
+      return result;
+    } catch (error) {
+      console.log('checkWalletSecurity error', error);
+      throw 'checkWalletSecurity error';
+    }
+  };
 
-  // sendTransaction: RequestCommonHandler = async (sendResponse, message) => {
-  //   try {
-  //     if (!message?.payload?.params)
-  //       return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
+  sendTransaction: RequestCommonHandler = async (sendResponse, message) => {
+    try {
+      if (!message?.payload?.params)
+        return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
 
-  //     if (!(await this.dappManager.isActive(message.origin)))
-  //       return sendResponse({
-  //         ...errorHandler(200004),
-  //         data: {
-  //           code: ResponseCode.UNAUTHENTICATED,
-  //         },
-  //       });
-  //     const { payload, origin } = message;
-  //     console.log(message, 'message====sendTransaction');
-  //     const chainInfo = await this.dappManager.getChainInfo(payload.chainId);
-  //     const caInfo = await this.dappManager.getCaInfo(payload.chainId);
-  //     const originChainId = await this.dappManager.getOriginChainId();
+      const { payload, origin } = message;
+      console.log(message, 'message====sendTransaction');
+      const chainInfo = await this.dappManager.getChainInfo(payload.chainId);
+      // TODO: change to caInfo
+      const caHash = await this.dappManager.caHash();
+      const originChainId = await this.dappManager.getOriginChainId();
 
-  //     if (!chainInfo || !chainInfo.endPoint || !caInfo)
-  //       return sendResponse({
-  //         ...errorHandler(200005),
-  //         data: {
-  //           code: ResponseCode.ERROR_IN_PARAMS,
-  //           msg: 'invalid chain id',
-  //         },
-  //       });
+      if (!chainInfo || !chainInfo.endPoint || !caHash)
+        return sendResponse({
+          ...errorHandler(200005),
+          data: {
+            code: ResponseCode.ERROR_IN_PARAMS,
+            msg: 'invalid chain id',
+          },
+        });
 
-  //     if (!payload?.contractAddress)
-  //       return sendResponse({
-  //         ...errorHandler(200005),
-  //         data: {
-  //           code: ResponseCode.ERROR_IN_PARAMS,
-  //           msg: 'Invalid contractAddress',
-  //         },
-  //       });
-  //     const safeRes: CheckSecurityResult = await this.checkWalletSecurity(payload.chainId);
-  //     const isOriginChainId = originChainId === payload.chainId;
+      if (!payload?.contractAddress)
+        return sendResponse({
+          ...errorHandler(200005),
+          data: {
+            code: ResponseCode.ERROR_IN_PARAMS,
+            msg: 'Invalid contractAddress',
+          },
+        });
+      const safeRes: CheckSecurityResult = await this.checkWalletSecurity(payload.chainId);
+      console.log('CheckSecurityResult result', safeRes);
 
-  //     const isSafe = safeRes.isTransferSafe || (isOriginChainId && safeRes.isOriginChainSafe);
-  //     const showGuardian =
-  //       (isOriginChainId && !safeRes.isOriginChainSafe) ||
-  //       (!isOriginChainId && !safeRes.isSynchronizing) ||
-  //       (!isOriginChainId && safeRes.isSynchronizing && !safeRes.isOriginChainSafe);
-  //     const showSync = !isOriginChainId && safeRes.isSynchronizing && safeRes.isOriginChainSafe;
+      const isOriginChainId = originChainId === payload.chainId;
 
-  //     if (!isSafe && (showGuardian || showSync)) {
-  //       // Open Prompt to approve add guardian
+      const isSafe = safeRes.isTransferSafe || (isOriginChainId && safeRes.isOriginChainSafe);
+      const showGuardian =
+        (isOriginChainId && !safeRes.isOriginChainSafe) ||
+        (!isOriginChainId && !safeRes.isSynchronizing) ||
+        (!isOriginChainId && safeRes.isSynchronizing && !safeRes.isOriginChainSafe);
+      const showSync = !isOriginChainId && safeRes.isSynchronizing && safeRes.isOriginChainSafe;
 
-  //       let _txId;
-  //       if (Array.isArray(safeRes.accelerateGuardians)) {
-  //         const _accelerateGuardian = safeRes.accelerateGuardians.find(
-  //           item => item.transactionId && item.chainId === originChainId,
-  //         );
-  //         _txId = _accelerateGuardian?.transactionId;
-  //       }
+      if (!isSafe && (showGuardian || showSync)) {
+        // Open Prompt to approve add guardian
 
-  //       this.approvalController.authorizedToCheckWalletSecurity({
-  //         showSync,
-  //         showGuardian,
-  //         accelerateChainId: payload.chainId,
-  //         accelerateGuardianTxId: _txId,
-  //       });
-  //       return sendResponse({
-  //         ...errorHandler(400001),
-  //         data: {
-  //           code: ResponseCode.USER_DENIED,
-  //           msg: 'There are security risks in the current wallet status',
-  //         },
-  //       });
-  //     }
+        let _txId;
+        if (Array.isArray(safeRes.accelerateGuardians)) {
+          const _accelerateGuardian = safeRes.accelerateGuardians.find(
+            item => item.transactionId && item.chainId === originChainId,
+          );
+          _txId = _accelerateGuardian?.transactionId;
+        }
 
-  //     const key = randomId();
-  //     // is approve
-  //     const isApprove = await this.dappManager.isApprove({
-  //       contractAddress: payload.contractAddress,
-  //       method: payload?.method,
-  //       chainId: payload.chainId,
-  //     });
-  //     let result;
+        // TODO: show ADD guardian
+        // this.approvalController.authorizedToCheckWalletSecurity({
+        //   showSync,
+        //   showGuardian,
+        //   accelerateChainId: payload.chainId,
+        //   accelerateGuardianTxId: _txId,
+        // });
+        return sendResponse({
+          ...errorHandler(400001),
+          data: {
+            code: ResponseCode.USER_DENIED,
+            msg: 'There are security risks in the current wallet status',
+          },
+        });
+      }
 
-  //     if (isApprove) {
-  //       if (payload.params.paramsOption.symbol == '*') {
-  //         return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
-  //       }
+      const key = randomId();
+      // is approve
+      const isApprove = await this.dappManager.isApprove({
+        contractAddress: payload.contractAddress,
+        method: payload?.method,
+        chainId: payload.chainId,
+      });
+      let result;
 
-  //       setLocalStorage({ txPayload: { [key]: JSON.stringify(payload) } });
-  //       delete message.payload?.params;
-  //       const _config = this.config?.[origin];
-  //       result = await this.approvalController.authorizedToAllowanceApprove({
-  //         origin,
-  //         transactionInfoId: key,
-  //         icon: message.icon,
-  //         method: payload?.method,
-  //         chainId: payload.chainId,
-  //         batchApproveNFT: _config?.batchApproveNFT,
-  //       });
+      if (isApprove) {
+        if (payload?.params?.paramsOption.symbol == '*') {
+          return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
+        }
+        // TODO: change it
+        // setLocalStorage({ txPayload: { [key]: JSON.stringify(payload) } });
+        // delete message.payload?.params;
+        // const _config = this.config?.[origin];
+        // TODO: allowance approve
+        // result = await this.approvalController.authorizedToAllowanceApprove({
+        //   origin,
+        //   transactionInfoId: key,
+        //   icon: message.icon,
+        //   method: payload?.method,
+        //   chainId: payload.chainId,
+        //   batchApproveNFT: _config?.batchApproveNFT,
+        // });
 
-  //       removeLocalStorage('txPayload');
-  //     } else {
-  //       const isForward = chainInfo?.caContractAddress !== payload.contractAddress;
-  //       const method = isForward ? 'ManagerForwardCall' : payload?.method;
+        // TODO: how to change it?
+        // removeLocalStorage('txPayload');
+      } else {
+        const isForward = chainInfo?.caContractAddress !== payload.contractAddress;
+        const method = isForward ? 'ManagerForwardCall' : payload?.method;
 
-  //       if (!CA_METHOD_WHITELIST.includes(method))
-  //         return sendResponse({
-  //           ...errorHandler(400001),
-  //           data: {
-  //             code: ResponseCode.CONTRACT_ERROR,
-  //             msg: 'The current method is not supported',
-  //           },
-  //         });
-  //       setLocalStorage({ txPayload: { [key]: JSON.stringify(payload.params) } });
-  //       delete message.payload?.params;
+        if (!CA_METHOD_WHITELIST.includes(method))
+          return sendResponse({
+            ...errorHandler(400001),
+            data: {
+              code: ResponseCode.CONTRACT_ERROR,
+              msg: 'The current method is not supported',
+            },
+          });
+        // TODO: how to change it?
+        // setLocalStorage({ txPayload: { [key]: JSON.stringify(payload.params) } });
+        delete message.payload?.params;
+      }
 
-  //       result = await this.handleRequest({
-  //         params: {
-  //           origin,
-  //           transactionInfoId: key,
-  //           payload: message.payload,
-  //         },
-  //         method: MethodsBase.SEND_TRANSACTION,
-  //         callBack: (params: any) => this.approvalController.authorizedToSendTransactions(params),
-  //       });
-  //       // TODO Only support open a window
-  //       removeLocalStorage('txPayload');
-  //     }
+      // transfer start
+      console.log('transfer 111', payload);
+      const contract: any = await this.getCAContract(chainInfo);
+      if (!contract) return;
+      const isForward = chainInfo.caContractAddress !== payload.contractAddress;
 
-  //     if (result.error === 200003)
-  //       return sendResponse({
-  //         ...errorHandler(200003),
-  //         data: {
-  //           code: ResponseCode.USER_DENIED,
-  //         },
-  //       });
-  //     if (result.error) {
-  //       console.log('error', result);
+      let paramsOption = (payload.params as { paramsOption: object }).paramsOption,
+        functionName = payload.method;
 
-  //       return sendResponse({
-  //         ...errorHandler(700002),
-  //         data: {
-  //           code: ResponseCode.CONTRACT_ERROR,
-  //         },
-  //       });
-  //     }
-  //     sendResponse(result);
-  //   } catch (error) {
-  //     console.log('sendTransaction===', error);
-  //     sendResponse({
-  //       ...errorHandler(100001),
-  //       data: {
-  //         code: ResponseCode.INTERNAL_ERROR,
-  //       },
-  //     });
-  //   }
-  // };
+      console.log('transfer 222');
 
-  // getSignature: RequestCommonHandler = async (sendResponse, message) => {
-  //   const autoSha256 = message?.payload.autoSha256;
-  //   const isManagerSignature = message?.payload.isManagerSignature;
+      if (isForward) {
+        paramsOption = {
+          caHash,
+          methodName: payload.method,
+          contractAddress: payload.contractAddress,
+          args: paramsOption,
+        };
+        functionName = 'ManagerForwardCall';
+      }
+      console.log('transfer 333');
 
-  //   if (isManagerSignature) delete message.payload.isManagerSignature;
-  //   if (autoSha256) delete message.payload.autoSha256;
-  //   try {
-  //     if (
-  //       !message?.payload?.data ||
-  //       (typeof message.payload.data !== 'string' && typeof message.payload.data !== 'number') // The problem left over from the browser history needs to pass the number type
-  //     )
-  //       return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
+      const data = await contract!.callSendMethod(functionName, '', paramsOption, { onMethod: 'transactionHash' });
 
-  //     if (!(await this.dappManager.isActive(message.origin)))
-  //       return sendResponse({
-  //         ...errorHandler(200004),
-  //         data: {
-  //           code: ResponseCode.UNAUTHENTICATED,
-  //         },
-  //       });
+      console.log('transfer 444');
 
-  //     const result = await this.handleRequest({
-  //       params: {
-  //         origin: message.origin,
-  //         payload: {
-  //           data: message.payload.data,
-  //           origin: message.origin,
-  //           isCipherText: message.payload.isCipherText,
-  //         },
-  //       },
-  //       method: MethodsWallet.GET_WALLET_SIGNATURE,
-  //       callBack: (params: any) =>
-  //         this.approvalController.authorizedToGetSignature(params, autoSha256, isManagerSignature),
-  //     });
+      //  transfer finish
 
-  //     if (result.error === 200003)
-  //       return sendResponse({
-  //         ...errorHandler(200003),
-  //         data: {
-  //           code: ResponseCode.USER_DENIED,
-  //         },
-  //       });
-  //     if (result.error)
-  //       return sendResponse({
-  //         ...errorHandler(700002),
-  //         data: {
-  //           code: ResponseCode.CONTRACT_ERROR,
-  //         },
-  //       });
-  //     sendResponse(result);
-  //   } catch (error) {
-  //     console.log('getSignature===', error);
-  //     sendResponse({
-  //       ...errorHandler(100001),
-  //       data: {
-  //         code: ResponseCode.INTERNAL_ERROR,
-  //       },
-  //     });
-  //   }
-  // };
+      sendResponse({ ...errorHandler(0), data });
+    } catch (error) {
+      console.log('sendTransaction===', error);
+      sendResponse({
+        ...errorHandler(100001),
+        data: {
+          code: ResponseCode.INTERNAL_ERROR,
+        },
+      });
+    }
+  };
 
-  // getNetwork: RequestCommonHandler = async sendResponse => {
-  //   try {
-  //     const networkType = await this.dappManager.networkType();
-  //     sendResponse({ ...errorHandler(0), data: networkType });
-  //   } catch (error) {
-  //     console.log('getNetwork===', error);
-  //     sendResponse({
-  //       ...errorHandler(100001),
-  //       data: {
-  //         code: ResponseCode.INTERNAL_ERROR,
-  //       },
-  //     });
-  //   }
-  // };
-  // getCAHash: RequestCommonHandler = async sendResponse => {
-  //   try {
-  //     const caHash = await this.dappManager.caHash();
-  //     sendResponse({ ...errorHandler(0), data: caHash });
-  //   } catch (error) {
-  //     console.log('getCAHash===', error);
-  //     sendResponse({
-  //       ...errorHandler(100001),
-  //       data: {
-  //         code: ResponseCode.INTERNAL_ERROR,
-  //       },
-  //     });
-  //   }
-  // };
+  getSignature: RequestCommonHandler = async (sendResponse, message) => {
+    const autoSha256 = message?.payload.autoSha256;
+    const isManagerSignature = message?.payload.isManagerSignature;
+
+    if (isManagerSignature) delete message.payload.isManagerSignature;
+    if (autoSha256) delete message.payload.autoSha256;
+    try {
+      if (
+        !message?.payload?.data ||
+        (typeof message.payload.data !== 'string' && typeof message.payload.data !== 'number') // The problem left over from the browser history needs to pass the number type
+      ) {
+        return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
+      }
+
+      // if (!(await this.dappManager.isActive(message.origin)))
+      //   return sendResponse({
+      //     ...errorHandler(200004),
+      //     data: {
+      //       code: ResponseCode.UNAUTHENTICATED,
+      //     },
+      //   });
+
+      // const result = await this.handleRequest({
+      //   params: {
+      //     origin: message.origin,
+      //     payload: {
+      //       data: message.payload.data,
+      //       origin: message.origin,
+      //       isCipherText: message.payload.isCipherText,
+      //     },
+      //   },
+      //   method: MethodsWallet.GET_WALLET_SIGNATURE,
+      //   callBack: (params: any) =>
+      //     this.approvalController.authorizedToGetSignature(params, autoSha256, isManagerSignature),
+      // });
+
+      const pin = this.getPassword() || '';
+      const manager = await getManager(this.dappManager.getDid(), pin);
+      const data = getSignature(manager, message.payload.data);
+      console.log('==== signature', message, data);
+
+      // if (result.error === 200003)
+      //   return sendResponse({
+      //     ...errorHandler(200003),
+      //     data: {
+      //       code: ResponseCode.USER_DENIED,
+      //     },
+      //   });
+      // if (result.error)
+      //   return sendResponse({
+      //     ...errorHandler(700002),
+      //     data: {
+      //       code: ResponseCode.CONTRACT_ERROR,
+      //     },
+      //   });
+      sendResponse({ ...errorHandler(0), data });
+    } catch (error) {
+      console.log('getSignature===', error);
+      sendResponse({
+        ...errorHandler(100001),
+        data: {
+          code: ResponseCode.INTERNAL_ERROR,
+        },
+      });
+    }
+  };
+
+  getTransactionSignature: RequestCommonHandler = async (sendResponse, message) => {
+    const autoSha256 = message?.payload.autoSha256;
+    const isManagerSignature = message?.payload.isManagerSignature;
+
+    if (isManagerSignature) delete message.payload.isManagerSignature;
+    if (autoSha256) delete message.payload.autoSha256;
+    try {
+      if (
+        !message?.payload?.data ||
+        (typeof message.payload.data !== 'string' && typeof message.payload.data !== 'number') // The problem left over from the browser history needs to pass the number type
+      ) {
+        return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
+      }
+
+      const pin = this.getPassword() || '';
+      const manager = await getManager(this.dappManager.getDid(), pin);
+
+      const data = getTransactionSignature(manager, message.payload.data);
+      console.log('==== transaction signature', message, data);
+
+      sendResponse({ ...errorHandler(0), data });
+    } catch (error) {
+      console.log('getSignature===', error);
+      sendResponse({
+        ...errorHandler(100001),
+        data: {
+          code: ResponseCode.INTERNAL_ERROR,
+        },
+      });
+    }
+  };
+
+  getManagerSignature: RequestCommonHandler = async (sendResponse, message) => {
+    const autoSha256 = message?.payload.autoSha256;
+    const isManagerSignature = message?.payload.isManagerSignature;
+
+    if (isManagerSignature) delete message.payload.isManagerSignature;
+    if (autoSha256) delete message.payload.autoSha256;
+    try {
+      if (
+        !message?.payload?.data ||
+        (typeof message.payload.data !== 'string' && typeof message.payload.data !== 'number') // The problem left over from the browser history needs to pass the number type
+      ) {
+        return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
+      }
+
+      const pin = this.getPassword() || '';
+      const manager = await getManager(this.dappManager.getDid(), pin);
+
+      const data = getManagerSignature(manager, message.payload.data);
+      console.log('==== manager signature', message, data);
+
+      sendResponse({ ...errorHandler(0), data });
+    } catch (error) {
+      console.log('getSignature===', error);
+      sendResponse({
+        ...errorHandler(100001),
+        data: {
+          code: ResponseCode.INTERNAL_ERROR,
+        },
+      });
+    }
+  };
+
+  getNetwork: RequestCommonHandler = async sendResponse => {
+    try {
+      const networkType = this.networkType;
+      sendResponse({ ...errorHandler(0), data: networkType });
+    } catch (error) {
+      console.log('getNetwork===', error);
+      sendResponse({
+        ...errorHandler(100001),
+        data: {
+          code: ResponseCode.INTERNAL_ERROR,
+        },
+      });
+    }
+  };
+  getCAHash: RequestCommonHandler = async sendResponse => {
+    try {
+      const caHash = await this.dappManager.caHash();
+      sendResponse({ ...errorHandler(0), data: caHash });
+    } catch (error) {
+      console.log('getCAHash===', error);
+      sendResponse({
+        ...errorHandler(100001),
+        data: {
+          code: ResponseCode.INTERNAL_ERROR,
+        },
+      });
+    }
+  };
+
+  async getCAContract(chainInfo: ChainInfo) {
+    const manager = await this.getManager();
+    return await getContract({
+      manager,
+      rpcUrl: chainInfo?.endPoint || '',
+      contractAddress: chainInfo?.caContractAddress || '',
+    });
+  }
+
+  async getManager() {
+    const pin = this.getPassword() || '';
+    const manager = await getManager(this.dappManager.getDid(), pin);
+    return manager;
+  }
 }

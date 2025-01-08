@@ -127,6 +127,11 @@ export abstract class DappManager implements IDappManager {
     return (await this.getChainInfo(chainId))?.endPoint;
   }
 
+  async getNetwork(): Promise<any> {
+    const wallet = await this.getWallet();
+    console.log('getNetwork', wallet);
+  }
+
   // async getRememberMeBlackList(): Promise<string[] | undefined> {
   //   const [currentNetwork, state] = await Promise.all([this.networkType(), this.getState()]);
   //   return state.cms.rememberMeBlackListMap?.[currentNetwork]?.map(({ url }) => url);

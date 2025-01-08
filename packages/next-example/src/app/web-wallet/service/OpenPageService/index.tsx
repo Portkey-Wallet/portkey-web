@@ -37,3 +37,5 @@ export class OpenPageService {
     eventBus.removeListener(SetPageEvent.CLOSE_PAGE, callback);
   }
 }
+
+export default OpenPageService;

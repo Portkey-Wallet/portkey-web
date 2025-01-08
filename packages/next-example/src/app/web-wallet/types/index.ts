@@ -1,3 +1,5 @@
+import { PortkeyResultType } from './error';
+
 export interface IRequestPayload {
   method: string;
   eventName: string;
@@ -10,3 +12,5 @@ export enum WalletPageType {
   Assets = 'Assets',
   UnLock = 'UnLock',
 }
+
+export type SendResponseParams = PortkeyResultType & { data?: any };

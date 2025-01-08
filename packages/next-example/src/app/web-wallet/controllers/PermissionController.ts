@@ -46,6 +46,7 @@ export default class PermissionController {
 
   checkCurrentNetworkIsRegister() {
     const walletStorage = localStorage.getItem(getWebWalletStorageKey(this.appId));
+    console.log('this.appId', this.appId, getWebWalletStorageKey(this.appId), walletStorage);
     return Boolean(walletStorage);
   }
 
@@ -69,6 +70,8 @@ export default class PermissionController {
         error: 0,
         message: 'no check',
       };
+
+    console.log('checkRegister', methodName);
     return await this.registerWallet();
   }
 }

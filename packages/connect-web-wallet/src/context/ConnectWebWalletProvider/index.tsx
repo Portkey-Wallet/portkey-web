@@ -8,7 +8,7 @@ import Modals from '../../Modals';
 const INITIAL_STATE: IConnectState = {
   options: {
     theme: 'light',
-    networkType: 'MAINNET',
+    networkType: 'TESTNET',
     appId: 'wallet-appId',
   },
   provider: null,

@@ -1,5 +1,5 @@
 import PermissionController from '../controllers/PermissionController';
-import { MethodsWallet, MethodsBase } from '@portkey/provider-types';
+import { MethodsWallet, MethodsBase, NetworkType } from '@portkey/provider-types';
 import { IRequestPayload } from '../types';
 import { SendResponseFun } from './types';
 import AELFMethodController from '../controllers/AELFMethodController';
@@ -25,9 +25,12 @@ export default class ServiceWorkerInstantiate {
   protected approvalController: ApprovalController;
   protected pin: string | null = null;
   protected appId: string;
+  protected networkType: NetworkType;
 
-  constructor({ appId }: { appId: string }) {
+  constructor({ appId, networkType }: { appId: string; networkType: NetworkType }) {
     this.appId = appId;
+    this.networkType = networkType;
+
     this.permissionController = new PermissionController({
       whitelist: permissionWhitelist,
       appId: this.appId,
@@ -38,6 +41,7 @@ export default class ServiceWorkerInstantiate {
       approvalController: this.approvalController,
       getPassword: () => this.pin,
       appId: this.appId,
+      networkType: this.networkType,
     });
   }
 
@@ -54,12 +58,19 @@ export default class ServiceWorkerInstantiate {
       //   sendResponse(errorHandler(0));
       //   return;
       // }
+
+      console.log('setupInternalMessaging 111', request);
       const registerRes = await this.permissionController.checkRegister(request.method);
+      console.log('setupInternalMessaging 222', request);
       console.log(registerRes, 'registerRes===');
       if (registerRes.error !== 0) return sendResponse(registerRes);
 
+      console.log('setupInternalMessaging 333', request);
+
       const isLocked = await this.permissionController.checkIsLockOtherwiseUnlock(request.method);
       if (isLocked.error !== 0) return sendResponse(isLocked);
+      console.log('setupInternalMessaging 444', request);
+
       this.dispenseMessage(sendResponse, request);
     } catch (error) {
       console.log(error);
@@ -81,6 +92,7 @@ export default class ServiceWorkerInstantiate {
 
       default:
         if (this.aelfMethodController.aelfMethodList.includes(message.method)) {
+          console.log('serviceWorker dispenseMessage ', message);
           this.aelfMethodController.dispenseMessage(message, sendResponse);
           break;
         }

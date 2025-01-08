@@ -170,6 +170,8 @@ export default function ConnectWallet() {
           try {
             if (!tokenContract) return;
 
+            console.log('====tokenContract', tokenContract);
+
             const balance = await tokenContract.callSendMethod('Transfer', '', {
               symbol: 'ELF',
               to: 'LSWoBaeoXRp9QW75mCVJgNP4YurGi2oEJDYu3iAxtDH8R6UGy',
@@ -283,7 +285,7 @@ ${Date.now()}`;
             const rpcUrl = 'https://aelf-test-node.aelf.io';
             const instance = aelf.getAelfInstance(rpcUrl);
             const caHash = await provider.request({
-              method: 'caHash',
+              method: MethodsBase.CA_HASH,
             });
             const [managerForwardCall, managerAddress] = await Promise.all([
               createManagerForwardCall({
