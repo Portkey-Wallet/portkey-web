@@ -1,7 +1,6 @@
 'use client';
-import React, { useCallback, useState } from 'react';
-import { did, PortkeyAssetProvider, Asset, Unlock, DIDWalletInfo } from '@portkey/did-ui-react';
-import { ChainId } from '@portkey/types';
+import React, { useCallback } from 'react';
+import { did, PortkeyAssetProvider, Asset, DIDWalletInfo } from '@portkey/did-ui-react';
 import { Button } from 'antd';
 import { useWebWallet, WalletProvider } from './context/WalletProvider';
 import { WalletPageType } from './types';
@@ -11,19 +10,15 @@ import { useWalletDispatch } from './context/WalletProvider/hooks';
 import { basicWebWalletView } from './context/WalletProvider/actions';
 import SWEventController from './controllers/EventController/SWEventController';
 import SignInInner from './components/SignInInner';
-
-const PIN = '111111';
-let CHAIN_ID: ChainId = 'tDVW';
+import UnlockInner from './components/UnlockInner';
 
 function WebPageInner() {
   const [{ pageState, pin, options }] = useWebWallet();
   console.log(pageState, 'pageState====');
   const dispatch = useWalletDispatch();
-  const [password, setPassword] = useState<string>('');
 
   const onSignInFinish = useCallback(
     async (res: DIDWalletInfo) => {
-      CHAIN_ID = res.chainId;
       did.save(res.pin, getWebWalletStorageKey(options?.appId));
       dispatch(basicWebWalletView.setWalletPin.actions(res.pin));
       pageState && OpenPageService.closePage(pageState.eventName);
@@ -33,18 +28,25 @@ function WebPageInner() {
   );
   const onUnlock = useCallback(
     async (pin: string) => {
-      const wallet = await did.load(pin, getWebWalletStorageKey(options?.appId));
-      if (wallet.didWallet.aaInfo.accountInfo?.caAddress) {
-        dispatch(basicWebWalletView.setWalletPin.actions(pin));
-        pageState && OpenPageService.closePage(pageState.eventName);
-        SWEventController.dispatchEvent({
-          eventName: 'connected',
-          data: { chainIds: [wallet.didWallet.originChainId] },
-        });
-      }
+      dispatch(basicWebWalletView.setWalletPin.actions(pin));
+      pageState && OpenPageService.closePage(pageState.eventName);
+      SWEventController.dispatchEvent({
+        eventName: 'connected',
+        data: { chainIds: [did.didWallet.originChainId] },
+      });
     },
-    [dispatch, options?.appId, pageState],
+    [dispatch, pageState],
   );
+
+  const onDisconnect = useCallback(() => {
+    localStorage.removeItem(getWebWalletStorageKey(options?.appId));
+    did.reset();
+    SWEventController.dispatchEvent({
+      eventName: 'disconnected',
+      data: { message: 'user logout' },
+    });
+    pageState && OpenPageService.closePage(pageState.eventName);
+  }, [options?.appId, pageState]);
   return (
     <div>
       <div>-----------</div>
@@ -85,28 +87,18 @@ function WebPageInner() {
               faucetContractAddress: '233wFn5JbyD4i8R5Me4cW4z6edfFGRn5bpWnGuY8fjR7b2kRsD',
             }}
             onDeleteAccount={async () => {
-              const wallet = await did.load(PIN);
-
-              await did.logout({ chainId: wallet.didWallet.originChainId ?? CHAIN_ID });
-              // setLoginFinish(false);
+              const wallet = await did.load(pin);
+              try {
+                await did.logout({ chainId: wallet.didWallet.originChainId ?? 'tDVV' });
+              } catch (error) {}
+              did.reset();
+              onDisconnect();
             }}
           />
         </PortkeyAssetProvider>
       )}
       <div>---------</div>
-      {pageState?.pageType === WalletPageType.UnLock && (
-        <Unlock
-          uiType="Full"
-          value={password}
-          isWrongPassword
-          keyboard
-          onChange={v => {
-            console.log(v, 'setPassword===');
-            setPassword(v);
-          }}
-          onUnlock={onUnlock}
-        />
-      )}
+      {pageState?.pageType === WalletPageType.UnLock && <UnlockInner onUnlock={onUnlock} onForgetPin={onDisconnect} />}
     </div>
   );
 }

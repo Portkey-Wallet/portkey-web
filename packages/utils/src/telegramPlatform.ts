@@ -55,7 +55,7 @@ export class TelegramPlatform {
         TelegramPlatform.setTGScript();
         const initParams = TelegramPlatform.urlParseHashParams(locationHash);
         const webAppPlatform = initParams?.tgWebAppPlatform;
-        return webAppPlatform && webAppPlatform !== 'unknown';
+        return Boolean(webAppPlatform && webAppPlatform !== 'unknown');
       }
       return !!(Telegram && Telegram.WebApp.platform && Telegram.WebApp.platform !== 'unknown');
     } catch (error) {

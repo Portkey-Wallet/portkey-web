@@ -1,0 +1,19 @@
+.web-wallet-unlock-wrapper > div:nth-child(2) {
+  height: 100%;
+}
+
+.unlock-footer-text {
+  color: var(--sds-color-text-default-secondary);
+  font-size: 14px;
+  font-weight: 400;
+  text-align: center;
+  line-height: 20px;
+  margin-left: 14px;
+  margin-right: 14px;
+}
+
+.unlock-footer-text .unlock-footer-text-href {
+  color: var(--sds-color-text-brand-default);
+  padding: 0 4px;
+  cursor: pointer;
+}
