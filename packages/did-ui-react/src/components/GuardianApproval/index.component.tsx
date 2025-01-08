@@ -542,6 +542,7 @@ const GuardianApprovalMain = forwardRef(
               onError={onError}
               onExpiredRetry={onResetGuardianList}
               onExpiredCancel={onExpiredCancel}
+              header={!!header}
             />
           </>
         )}
