@@ -1,5 +1,19 @@
-import { handleContractError } from '@portkey/contracts';
 import { textProcessor } from './textProcessor';
+
+export function handleContractError(error?: any, req?: any) {
+  if (typeof error === 'string') return { message: error };
+  if (error?.message) return error;
+  if (error?.Error) {
+    return {
+      message: error.Error.Details || error.Error.Message || error.Error || error.Status,
+      code: error.Error.Code,
+    };
+  }
+  return {
+    code: req?.error?.message?.Code || req?.error,
+    message: req?.errorMessage?.message || req?.error?.message?.Message,
+  };
+}
 
 export const verifyErrorHandler = (error: any) => {
   // let _error = isVerifyApiError(error);
