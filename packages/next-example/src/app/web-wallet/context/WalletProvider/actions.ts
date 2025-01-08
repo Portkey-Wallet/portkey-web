@@ -19,6 +19,7 @@ export interface IWalletOptions {
   theme?: ThemeType;
   networkType: NetworkType;
   appId: string;
+  isTelegram?: boolean;
 }
 
 export const basicWebWalletView = {

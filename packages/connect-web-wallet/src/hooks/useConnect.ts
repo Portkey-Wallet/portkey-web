@@ -1,14 +1,13 @@
 import { useCallback, useMemo } from 'react';
 import { useWebWallet } from '../context/ConnectWebWalletProvider';
 import { IConnectParams } from '../context/types';
-import { basicModalView } from '../context/useModal/actions';
-import { useModalDispatch } from '../context/useModal/hooks';
 import { MethodsBase, MethodsWallet } from '@portkey/provider-types';
 import { useRequestMethod } from './useRequestMethod';
 
 export const useConnect = () => {
   const [{ provider }] = useWebWallet();
-  const dispatch = useModalDispatch();
+  // const dispatch = useModalDispatch();
+  // const checkIdentifier = useCheckIdentifier();
   // connect: (options?: IConnectParams) => Promise<IUserInfo | undefined>;
   // disconnect: () => Promise<void>;
 
@@ -20,16 +19,16 @@ export const useConnect = () => {
       const isConnected = provider?.isConnected();
       console.log(isConnected, 'isConnected==');
       if (isConnected) return requestMethod({ method: MethodsBase.ACCOUNTS });
-      dispatch(basicModalView.setWalletDialog.actions(true));
+
       const result = await requestMethod({
         method: MethodsBase.REQUEST_ACCOUNTS,
-        payload: { a: 124 },
+        payload: options,
       });
-      dispatch(basicModalView.setWalletDialog.actions(false));
+      // dispatch(basicModalView.setWalletDialog.actions(false));
       console.log(result, 'result===useConnect==connect');
       return result;
     },
-    [dispatch, provider, requestMethod],
+    [provider, requestMethod],
   );
 
   const disconnect = useCallback(async () => {

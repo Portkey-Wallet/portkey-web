@@ -19,3 +19,5 @@ export * from './authentication';
 export * as browser from './browser';
 
 export * from './time';
+export * from './telegramPlatform';
+export * from './errorHandler';

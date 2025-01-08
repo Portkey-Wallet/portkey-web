@@ -10,7 +10,13 @@ import { generateErrorResponse, generateNormalResponse } from '@portkey/provider
 import { SendResponseFun } from '@/app/web-wallet/service/types';
 import { browser } from '@portkey/utils';
 import { isMethodsBase, isMethodsUnimplemented } from '@portkey/providers';
-import { MethodsType, ProviderError, ResponseMessagePreset, ResponseCode } from '@portkey/provider-types';
+import {
+  MethodsType,
+  ProviderError,
+  ResponseMessagePreset,
+  ResponseCode,
+  NotificationEvents,
+} from '@portkey/provider-types';
 import { eventBus } from '@/app/web-wallet/utils/lib';
 import { WEB_WALLET_DISPATCH_EVENT } from '@/app/web-wallet/constants/events';
 import { ConfigProvider, NetworkType } from '@portkey/did-ui-react';
@@ -36,7 +42,7 @@ export function ServiceWorker() {
     ConfigProvider.setGlobalConfig({ ...(LOGIN_CONFIG[networkType] as any) });
 
     serviceRef.current = new ServiceWorkerInstantiate({ appId: options.appId });
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const eventHandler = (message: any) => {
@@ -48,19 +54,6 @@ export function ServiceWorker() {
       eventBus.removeListener(WEB_WALLET_DISPATCH_EVENT, eventHandler);
     };
   }, []);
-
-  useEffect(() => {
-    // init service
-    //
-    // init change page event
-    const openPageHandler = (pageState: IPageState) => {
-      dispatch(basicWebWalletView.setWalletPageState.actions(pageState));
-    };
-    OpenPageService.onOpenPage(openPageHandler);
-    return () => {
-      OpenPageService.removeOpenPageListener(openPageHandler);
-    };
-  }, [dispatch]);
 
   const setupInternalMessaging = useCallback((request: IRequestPayload) => {
     const sendResponse: SendResponseFun = result => {
@@ -113,6 +106,39 @@ export function ServiceWorker() {
       }
     });
   }, [setupInternalMessaging]);
+
+  useEffect(() => {
+    // init service
+    //
+    // init change page event
+    const openPageHandler = (pageState: IPageState) => {
+      dispatch(basicWebWalletView.setWalletPageState.actions(pageState));
+      pageStream.send({
+        eventName: NotificationEvents.WALLET_VISIBLE,
+        info: {
+          code: 0,
+          data: true,
+        },
+      });
+    };
+
+    const closePageHandler = () => {
+      pageStream.send({
+        eventName: NotificationEvents.WALLET_VISIBLE,
+        info: {
+          code: 0,
+          data: false,
+        },
+      });
+    };
+    OpenPageService.onOpenPage(openPageHandler);
+    OpenPageService.onClosePage(closePageHandler);
+
+    return () => {
+      OpenPageService.removeOpenPageListener(openPageHandler);
+      OpenPageService.removeClosePageListener(closePageHandler);
+    };
+  }, [dispatch]);
 
   return null;
 }

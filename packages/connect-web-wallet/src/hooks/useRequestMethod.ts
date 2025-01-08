@@ -12,7 +12,7 @@ export const useRequestMethod = (): IProvider['request'] => {
     <T>(params: any) => {
       if (!provider) throw 'Wallet not init';
       const isConnected = provider?.isConnected();
-      if (!isConnected) dispatch(basicModalView.setWalletDialog.actions(true));
+      // if (!isConnected) dispatch(basicModalView.setWalletDialog.actions(true));
 
       return provider?.request<T>(params);
     },

@@ -1,9 +1,12 @@
+import { TSocialResponseData } from '../types/signIn';
+
 export type ISocialLogin = 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter';
 
 export type IWeb2Login = 'Email';
 
 export interface IConnectParams {
-  socialType: ISocialLogin | IWeb2Login;
+  socialType: ISocialLogin;
+  socialData: TSocialResponseData;
 }
 
 export interface IUserInfo {

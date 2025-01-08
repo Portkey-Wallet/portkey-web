@@ -29,7 +29,7 @@ function WebPageInner() {
       pageState && OpenPageService.closePage(pageState.eventName);
       SWEventController.dispatchEvent({ eventName: 'connected', data: { chainIds: [res.chainId] } });
     },
-    [pageState],
+    [dispatch, options?.appId, pageState],
   );
   const onUnlock = useCallback(
     async (pin: string) => {
@@ -43,7 +43,7 @@ function WebPageInner() {
         });
       }
     },
-    [pageState],
+    [dispatch, options?.appId, pageState],
   );
   return (
     <div>

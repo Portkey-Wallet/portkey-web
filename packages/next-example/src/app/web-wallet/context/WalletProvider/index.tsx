@@ -9,6 +9,7 @@ const INITIAL_STATE: IWebWalletState = {
     theme: 'dark',
     networkType: 'MAINNET',
     appId: 'wallet-appId',
+    isTelegram: false,
   },
 };
 const PortkeyContext = createContext<any>(INITIAL_STATE);
@@ -24,7 +25,7 @@ function reducer(state: IWebWalletState, { type, payload }: any) {
       return INITIAL_STATE;
     }
     case WebWalletActions.setWalletOptions: {
-      state.options = { ...state.options, ...payload };
+      state.options = { ...state.options, ...payload.options };
       return Object.assign({}, state);
     }
     default: {

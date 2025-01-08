@@ -2,7 +2,6 @@ import { randomId } from '@portkey/utils';
 import { eventBus } from '../../utils/lib';
 import { IOpenPageParams, IPageState } from '../../context/types';
 import { PortkeyResultType } from '../../types/error';
-import { WalletPageType } from '../../types';
 
 export enum SetPageEvent {
   OPEN_PAGE = 'OPEN_PAGE',
@@ -22,15 +21,19 @@ export class OpenPageService {
   }
   static closePage(eventName: string) {
     eventBus.emit(eventName, { error: 0 });
-    eventBus.emit(SetPageEvent.OPEN_PAGE, {
-      eventName,
-      pageType: WalletPageType.Assets,
-    });
+    eventBus.emit(SetPageEvent.CLOSE_PAGE);
   }
   static onOpenPage(callback: (params: IPageState) => void) {
     eventBus.addListener(SetPageEvent.OPEN_PAGE, callback);
   }
+
+  static onClosePage(callback: () => void) {
+    eventBus.addListener(SetPageEvent.CLOSE_PAGE, callback);
+  }
   static removeOpenPageListener(callback: (params: IPageState) => void) {
     eventBus.removeListener(SetPageEvent.OPEN_PAGE, callback);
+  }
+  static removeClosePageListener(callback: () => void) {
+    eventBus.removeListener(SetPageEvent.CLOSE_PAGE, callback);
   }
 }
