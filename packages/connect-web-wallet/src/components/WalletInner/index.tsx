@@ -14,6 +14,8 @@ export default function WalletInner() {
   const dispatch = useWalletDispatch();
   const modalDispatch = useModalDispatch();
   const [{ options, provider }] = useWebWallet();
+
+  console.log('WalletInner options', options);
   const onLoad = useCallback(() => {
     if (!iframeRef.current) return console.error('webPage load error');
     const portkeyStream = new InpagePostStream({
@@ -73,7 +75,7 @@ export default function WalletInner() {
   return (
     <iframe
       ref={iframeRef}
-      src={`http://192.168.1.6:3000/web-wallet?${qs.stringify(walletOptions)}`}
+      src={`http://localhost:3000/web-wallet?${qs.stringify(walletOptions)}`}
       style={{ width: '100%', height: '700px' }}
       onLoad={onLoad}
     />

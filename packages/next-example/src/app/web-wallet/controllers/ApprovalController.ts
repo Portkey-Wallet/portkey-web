@@ -1,3 +1,6 @@
+import { SendResponseParams } from '../types';
+import OpenPageService from '../service/OpenPageService';
+
 export default class ApprovalController {
   constructor() {}
 

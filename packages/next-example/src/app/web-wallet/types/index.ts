@@ -1,4 +1,5 @@
 import { IVerifyInfo, TVerifierItem } from '@portkey/did-ui-react';
+import { PortkeyResultType } from './error';
 
 export interface IRequestPayload {
   method: string;
@@ -41,3 +42,5 @@ export enum OperationTypeEnum {
   // set login account
   setLoginAccount = 7,
 }
+
+export type SendResponseParams = PortkeyResultType & { data?: any };

@@ -36,12 +36,12 @@ export function ServiceWorker() {
 
   useEffect(() => {
     const options: any = qs.parse(window.location.search.replace('?', ''));
-    console.log(options, 'options===');
+
     Object.values(options).length > 0 && dispatch(basicWebWalletView.setWalletOptions.actions(options));
     const networkType = (options.networkType ?? 'MAINNET') as keyof typeof LOGIN_CONFIG;
     ConfigProvider.setGlobalConfig({ ...(LOGIN_CONFIG[networkType] as any) });
 
-    serviceRef.current = new ServiceWorkerInstantiate({ appId: options.appId });
+    serviceRef.current = new ServiceWorkerInstantiate({ appId: options.appId, networkType: options.networkType });
   }, [dispatch]);
 
   useEffect(() => {
