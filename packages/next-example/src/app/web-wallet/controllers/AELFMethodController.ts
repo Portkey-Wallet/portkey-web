@@ -1,18 +1,20 @@
 import { MethodsBase, ResponseCode, MethodsWallet, ChainId, NetworkType } from '@portkey/provider-types';
 import { RequestCommonHandler, SendResponseFun } from '../service/types';
-import { IRequestPayload } from '../types';
+import { IRequestPayload, WalletPageType } from '../types';
 import errorHandler from '../utils/errorHandler';
 import { WebWalletDappManager } from '../utils/dappManager/WebWalletDappManager';
 import ApprovalController from './ApprovalController';
 import SWEventController from './EventController/SWEventController';
 import { checkIsCipherText } from '../utils';
 import { getContract, getManager, getManagerSignature, getSignature, getTransactionSignature } from '../utils/wallet';
-import { randomId } from '@portkey/utils';
+import { randomId, TelegramPlatform } from '@portkey/utils';
 import { ChainInfo } from '@portkey/services';
 import { customFetch } from '../utils/fetch';
 import { getNetworkConfig } from '../utils/config';
 import { CheckSecurityResult } from '../types/security';
 import { CA_METHOD_WHITELIST } from '../constants/dapp';
+import { getContractBasic } from '@portkey/contracts';
+import OpenPageService from '../service/OpenPageService';
 
 const aelfMethodList = [
   MethodsBase.CA_HASH,
@@ -42,10 +44,10 @@ export default class AELFMethodController {
   protected getPassword: () => string | null;
   protected dappManager: WebWalletDappManager;
   protected networkType: NetworkType;
-
   protected approvalController: ApprovalController;
   public aelfMethodList: string[];
   public config: { [key: string]: { [key: string]: boolean } };
+
   constructor({ approvalController, getPassword, appId, networkType }: AELFMethodControllerProps) {
     this.approvalController = approvalController;
     this.getPassword = getPassword;
@@ -54,6 +56,22 @@ export default class AELFMethodController {
     this.config = {};
     this.networkType = networkType;
   }
+
+  checkIsReadOnly = async (chainId: ChainId) => {
+    const caHash = this.dappManager.caHash();
+    const chainInfo = await this.dappManager.getChainInfo(chainId);
+    const managerAddress = await this.dappManager.currentManagerAddress();
+    if (!chainInfo) return;
+    const contract: any = await this.getCAContract(chainInfo);
+
+    const rs = await contract.callViewMethod('IsManagerReadOnly', {
+      caHash,
+      manager: managerAddress,
+    });
+
+    // TODO: set state in store
+    return !!rs?.data;
+  };
 
   handleRequest = async ({ params, method, callBack }: { params: any; method: any; callBack: any }) => {
     // TODO
@@ -140,8 +158,8 @@ export default class AELFMethodController {
       case MethodsWallet.GET_WALLET_CURRENT_MANAGER_ADDRESS:
         this.getCurrentManagerAddress(sendResponse, message.payload);
         break;
-        // case MethodsWallet.GET_WALLET_MANAGER_SYNC_STATUS:
-        //   this.getWalletManagerSyncStatus(sendResponse, message.payload);
+      case MethodsWallet.GET_WALLET_MANAGER_SYNC_STATUS:
+        this.getWalletManagerSyncStatus(sendResponse, message.payload);
         break;
       default:
         sendResponse(
@@ -161,49 +179,8 @@ export default class AELFMethodController {
     sendResponse({ ...errorHandler(0), data: true });
   };
 
-  // verifySessionInfo = async (origin: string) => {
-  //   try {
-  //     const rememberMeBlackList = await this.dappManager.getRememberMeBlackList();
-  //     // is remember me black list
-  //     if (checkSiteIsInBlackList(rememberMeBlackList || [], origin)) return false;
-
-  //     const sessionInfo = await this.dappManager.getSessionInfo(origin);
-  //     const wallet = await getWalletState();
-  //     if (!wallet.walletInfo) return false;
-  //     const pin = this.getPassword();
-  //     if (!pin) return false;
-  //     const manager = await getManager(pin);
-  //     const caHash = await getCurrentCaHash();
-  //     if (!manager?.keyPair || !caHash || !sessionInfo) return false;
-  //     const valid = verifySession({
-  //       keyPair: manager.keyPair,
-  //       origin,
-  //       managerAddress: manager.address,
-  //       caHash,
-  //       expiredPlan: sessionInfo.expiredPlan,
-  //       expiredTime: sessionInfo.expiredTime,
-  //       signature: sessionInfo.signature,
-  //     });
-  //     if (!valid) return valid;
-  //     const isExpired = hasSessionInfoExpired(sessionInfo);
-  //     return !isExpired;
-  //   } catch (error) {
-  //     console.log('verifySessionInfo error');
-  //     return false;
-  //   }
-  // };
-
   getCurrentManagerAddress: RequestCommonHandler = async (sendResponse, message) => {
     try {
-      // const isActive = await this.dappManager.isActive();
-      // if (!isActive)
-      //   return sendResponse({
-      //     ...errorHandler(400001),
-      //     data: {
-      //       code: ResponseCode.UNAUTHENTICATED,
-      //     },
-      //   });
-
       const managerAddress = await this.dappManager.currentManagerAddress();
       if (!managerAddress)
         return sendResponse({
@@ -225,68 +202,45 @@ export default class AELFMethodController {
     }
   };
 
-  // checkManagerSyncStatus = async (chainId: ChainId) => {
-  //   const [caInfo, managerAddress, networkType] = await Promise.all([
-  //     this.dappManager.getAAInfo(),
-  //     this.dappManager.currentManagerAddress(),
-  //     this.dappManager.networkType(),
-  //   ]);
+  checkManagerSyncStatus = async (chainId: ChainId) => {
+    const managerAddress = await this.dappManager.currentManagerAddress();
+    const caHash = await this.dappManager.caHash();
+    return this.dappManager.checkManagerIsExist({ chainId, caHash, managementAddress: managerAddress || '' });
+  };
 
-  //   if (!caInfo?.isSync) {
-  //     const { caHolderManagerInfo } = await contractQueries.getCAHolderByManager(networkType, {
-  //       manager: managerAddress,
-  //       chainId,
-  //       caHash: caInfo?.caHash,
-  //     });
-  //     const info = caHolderManagerInfo[0];
-  //     if (!info) return false;
-  //     const managerInfos = info.managerInfos;
-  //     return managerInfos?.some(manager => manager?.address === managerAddress);
-  //   }
-  //   return caInfo?.isSync;
-  // };
+  getWalletManagerSyncStatus: RequestCommonHandler = async (sendResponse: SendResponseFun, message) => {
+    try {
+      const chainId = message.payload?.chainId;
 
-  // getWalletManagerSyncStatus: RequestCommonHandler = async (sendResponse: SendResponseFun, message) => {
-  //   try {
-  //     const isActive = await this.dappManager.isActive(message.origin);
-  //     if (!isActive)
-  //       return sendResponse({
-  //         ...errorHandler(400001),
-  //         data: {
-  //           code: ResponseCode.UNAUTHENTICATED,
-  //         },
-  //       });
-  //     const chainId = message.payload?.chainId;
+      if (!(await this.dappManager.getChainInfo(chainId)))
+        throw sendResponse({
+          ...errorHandler(400001),
+          data: {
+            code: ResponseCode.ERROR_IN_PARAMS,
+            msg: 'Invalid chain id',
+          },
+        });
 
-  //     if (!(await this.dappManager.getChainInfo(chainId)))
-  //       throw sendResponse({
-  //         ...errorHandler(400001),
-  //         data: {
-  //           code: ResponseCode.ERROR_IN_PARAMS,
-  //           msg: 'Invalid chain id',
-  //         },
-  //       });
-
-  //     if (!chainId)
-  //       return sendResponse({
-  //         ...errorHandler(400001),
-  //         data: {
-  //           code: ResponseCode.ERROR_IN_PARAMS,
-  //         },
-  //       });
-  //     return sendResponse({
-  //       ...errorHandler(0),
-  //       data: Boolean(await this.checkManagerSyncStatus(chainId)),
-  //     });
-  //   } catch (error) {
-  //     return sendResponse({
-  //       ...errorHandler(500001),
-  //       data: {
-  //         code: ResponseCode.INTERNAL_ERROR,
-  //       },
-  //     });
-  //   }
-  // };
+      if (!chainId)
+        return sendResponse({
+          ...errorHandler(400001),
+          data: {
+            code: ResponseCode.ERROR_IN_PARAMS,
+          },
+        });
+      return sendResponse({
+        ...errorHandler(0),
+        data: Boolean(await this.checkManagerSyncStatus(chainId)),
+      });
+    } catch (error) {
+      return sendResponse({
+        ...errorHandler(500001),
+        data: {
+          code: ResponseCode.INTERNAL_ERROR,
+        },
+      });
+    }
+  };
 
   getWalletName: RequestCommonHandler = async (sendResponse: SendResponseFun, message) => {
     try {
@@ -455,10 +409,9 @@ export default class AELFMethodController {
       if (!message?.payload?.params)
         return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
 
-      const { payload, origin } = message;
+      const { payload } = message;
       console.log(message, 'message====sendTransaction');
       const chainInfo = await this.dappManager.getChainInfo(payload.chainId);
-      // TODO: change to caInfo
       const caHash = await this.dappManager.caHash();
       const originChainId = await this.dappManager.getOriginChainId();
 
@@ -479,6 +432,26 @@ export default class AELFMethodController {
             msg: 'Invalid contractAddress',
           },
         });
+
+      // readOnly check
+      if (TelegramPlatform.isTelegramPlatform() && (await this.checkIsReadOnly(payload.chainId))) {
+        const result = await OpenPageService.openPage({
+          pageType: WalletPageType.GuardianApproveForLogin,
+          data: {
+            caHash,
+            networkType: this.networkType,
+            originChainId,
+            targetChainId: payload.chainId,
+          },
+        });
+
+        // TODO: continue
+        if (result) {
+          console.log('result', result);
+        }
+      }
+      // readOnly check finish
+
       const safeRes: CheckSecurityResult = await this.checkWalletSecurity(payload.chainId);
       console.log('CheckSecurityResult result', safeRes);
 
@@ -561,19 +534,16 @@ export default class AELFMethodController {
           });
         // TODO: how to change it?
         // setLocalStorage({ txPayload: { [key]: JSON.stringify(payload.params) } });
-        delete message.payload?.params;
+        // delete message.payload?.params;
       }
 
       // transfer start
-      console.log('transfer 111', payload);
       const contract: any = await this.getCAContract(chainInfo);
       if (!contract) return;
       const isForward = chainInfo.caContractAddress !== payload.contractAddress;
 
       let paramsOption = (payload.params as { paramsOption: object }).paramsOption,
         functionName = payload.method;
-
-      console.log('transfer 222');
 
       if (isForward) {
         paramsOption = {
@@ -584,12 +554,8 @@ export default class AELFMethodController {
         };
         functionName = 'ManagerForwardCall';
       }
-      console.log('transfer 333');
 
       const data = await contract!.callSendMethod(functionName, '', paramsOption, { onMethod: 'transactionHash' });
-
-      console.log('transfer 444');
-
       //  transfer finish
 
       sendResponse({ ...errorHandler(0), data });

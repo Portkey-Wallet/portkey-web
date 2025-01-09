@@ -59,17 +59,11 @@ export default class ServiceWorkerInstantiate {
       //   return;
       // }
 
-      console.log('setupInternalMessaging 111', request);
       const registerRes = await this.permissionController.checkRegister(request.method);
-      console.log('setupInternalMessaging 222', request);
       console.log(registerRes, 'registerRes===');
       if (registerRes.error !== 0) return sendResponse(registerRes);
-
-      console.log('setupInternalMessaging 333', request);
-
       const isLocked = await this.permissionController.checkIsLockOtherwiseUnlock(request.method);
       if (isLocked.error !== 0) return sendResponse(isLocked);
-      console.log('setupInternalMessaging 444', request);
 
       this.dispenseMessage(sendResponse, request);
     } catch (error) {

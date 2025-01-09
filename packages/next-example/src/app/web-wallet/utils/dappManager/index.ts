@@ -1,5 +1,5 @@
 import { IDappManager } from '../../types/dapp';
-import { DIDWallet } from '@portkey/did';
+import { CheckManagerParams, DIDWallet } from '@portkey/did';
 import { portkey } from '@portkey/accounts';
 import { did, getChain } from '@portkey/did-ui-react';
 import { ChainInfo, GetCAHolderByManagerParams } from '@portkey/services';
@@ -127,9 +127,8 @@ export abstract class DappManager implements IDappManager {
     return (await this.getChainInfo(chainId))?.endPoint;
   }
 
-  async getNetwork(): Promise<any> {
-    const wallet = await this.getWallet();
-    console.log('getNetwork', wallet);
+  async checkManagerIsExist(props: CheckManagerParams): Promise<boolean | undefined> {
+    return await this.getWallet().checkManagerIsExist(props);
   }
 
   // async getRememberMeBlackList(): Promise<string[] | undefined> {
