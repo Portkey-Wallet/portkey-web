@@ -22,6 +22,7 @@ export default function CustomPassword({ maxLength, placeholder, iconRender, ...
       maxLength={maxLength ?? 16}
       placeholder={placeholder ?? 'Must be at least 8 characters'}
       iconRender={iconRender ?? defaultIconRender}
+      // allowClear={{ clearIcon: <CustomSvg type="X" /> }}
     />
   );
 }

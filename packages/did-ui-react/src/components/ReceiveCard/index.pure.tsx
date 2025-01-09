@@ -315,7 +315,11 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
             </>
           )}
         </div>
-        <AssetModal open={isSelectionModalOpen} height="max-content" wrapClassName="portkey-ui-receive-modals">
+        <AssetModal
+          open={isSelectionModalOpen}
+          height="max-content"
+          wrapClassName="portkey-ui-receive-modals"
+          maskClosable>
           <div className="received-modals-header">
             <span className="title">{selectedType} network</span>
             <CustomSvg
@@ -355,7 +359,8 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
         <AssetModal
           open={isReceivedExchangeModalOpen}
           height="max-content"
-          wrapClassName="portkey-ui-receive-exchange-modals">
+          wrapClassName="portkey-ui-receive-exchange-modals"
+          maskClosable>
           <div className="received-exchange-modals-header">
             <span className="title">Receive from an exchange?</span>
             <CustomSvg
