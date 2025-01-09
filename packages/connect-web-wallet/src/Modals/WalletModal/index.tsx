@@ -1,5 +1,4 @@
 import { Drawer, Modal } from 'antd';
-import { basicModalView } from '../../context/useModal/actions';
 import { useModal } from '../../context/useModal';
 import './index.less';
 import WalletInner from '../../components/WalletInner';
@@ -7,17 +6,19 @@ import useMobile from '../../hooks/useMobile';
 import { useMemo } from 'react';
 
 export default function WalletModal() {
-  const [{ dialogVisible }, { dispatch }] = useModal();
-
-  const closeModal = () => dispatch(basicModalView.setWalletDialog.actions(false));
-  console.log(dialogVisible, 'dialogVisible==');
+  const [{ dialogVisible }] = useModal();
 
   const isMobile = useMobile();
 
   const inner = useMemo(() => <WalletInner />, []);
 
   return isMobile ? (
-    <Drawer placement="bottom" height={'70vh'} forceRender open={dialogVisible}>
+    <Drawer
+      className="portkey-connect-wallet-modal"
+      placement="bottom"
+      height={'70vh'}
+      forceRender
+      open={dialogVisible}>
       {inner}
     </Drawer>
   ) : (
@@ -29,9 +30,7 @@ export default function WalletModal() {
       open={dialogVisible}
       style={{ height: 700 }}
       footer={null}
-      closable={false}
-      // onCancel={closeModal}
-    >
+      closable={false}>
       {inner}
     </Modal>
   );

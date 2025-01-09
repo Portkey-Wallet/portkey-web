@@ -19,7 +19,7 @@ import {
 } from '@portkey/provider-types';
 import { eventBus } from '@/app/web-wallet/utils/lib';
 import { WEB_WALLET_DISPATCH_EVENT } from '@/app/web-wallet/constants/events';
-import { ConfigProvider, NetworkType } from '@portkey/did-ui-react';
+import { ConfigProvider } from '@portkey/did-ui-react';
 import qs from 'qs';
 import { LOGIN_CONFIG } from '@/app/web-wallet/constants/config';
 let pageStream: ContentPostStream;
@@ -84,7 +84,6 @@ export function ServiceWorker() {
         console.log('IframePage----onData=1', params);
         const url = new URL(params.origin);
         const icon = browser.getFaviconUrl(url.href, 50);
-        console.log(url, 'url===');
         const message = Object.assign({}, params, {
           hostname: url.hostname,
           origin: url.origin,
@@ -111,25 +110,25 @@ export function ServiceWorker() {
     // init service
     //
     // init change page event
-    const openPageHandler = (pageState: IPageState) => {
-      dispatch(basicWebWalletView.setWalletPageState.actions(pageState));
+    const pageVisibleChange = (visible: boolean) => {
+      console.log(visible, 'visible===pageVisibleChange');
       pageStream.send({
         eventName: NotificationEvents.WALLET_VISIBLE,
         info: {
           code: 0,
-          data: true,
+          data: visible,
         },
       });
     };
+    const openPageHandler = (pageState: IPageState) => {
+      dispatch(basicWebWalletView.setWalletPageState.actions(pageState));
+      pageVisibleChange(true);
+    };
 
     const closePageHandler = () => {
-      pageStream.send({
-        eventName: NotificationEvents.WALLET_VISIBLE,
-        info: {
-          code: 0,
-          data: false,
-        },
-      });
+      dispatch(basicWebWalletView.setWalletPageState.actions(null));
+
+      pageVisibleChange(false);
     };
     OpenPageService.onOpenPage(openPageHandler);
     OpenPageService.onClosePage(closePageHandler);

@@ -9,7 +9,6 @@ export const RESPONSE_ERROR_MAP = {
   200003: 'You closed the prompt without any action.',
   200004: 'The user is not connected to Portkey, please connect the user first',
   200005: 'Please check your chain connection is correct',
-  200006: 'Chrome extension serviceWorker is invalid',
   // 3xxxxx Temporarily only used for internal redirects
   300000: '',
   // [40000, 41000) is a dynamic error
