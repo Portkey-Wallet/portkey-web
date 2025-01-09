@@ -288,7 +288,7 @@ function WebPageInner() {
   return (
     <div>
       <div>-----------</div>
-      {(pageState?.pageType || innerPage) === WalletPageType.Login || (
+      {(pageState?.pageType || innerPage) === WalletPageType.Login && (
         <SignInInner
           beforeCreatePending={beforeCreatePending}
           onCreatePending={onCreatePending}
