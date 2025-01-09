@@ -59,7 +59,7 @@ export default class ServiceWorkerInstantiate {
       //   return;
       // }
 
-      const registerRes = await this.permissionController.checkRegister(request.method);
+      const registerRes = await this.permissionController.checkRegister(request.method, request?.payload);
       console.log(registerRes, 'registerRes===');
       if (registerRes.error !== 0) return sendResponse(registerRes);
       const isLocked = await this.permissionController.checkIsLockOtherwiseUnlock(request.method);

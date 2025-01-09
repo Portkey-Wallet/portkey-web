@@ -50,21 +50,24 @@ export default class PermissionController {
     return Boolean(walletStorage);
   }
 
-  async registerWallet(): Promise<PortkeyResultType> {
+  async registerWallet(payload: any): Promise<PortkeyResultType> {
     if (this.checkCurrentNetworkIsRegister())
       return {
         error: 0,
         message: 'The current network has completed login',
       };
     // Not yet registered or logged in
-    return OpenPageService.openPage({ pageType: WalletPageType.Login });
+    return OpenPageService.openPage({
+      pageType: !!payload ? WalletPageType.CustomLogin : WalletPageType.Login,
+      data: payload,
+    });
   }
 
   checkAllowMethod(methodName: string) {
     return this.whitelist.includes(methodName) || isNotificationEvents(methodName);
   }
 
-  async checkRegister(methodName: string): Promise<PortkeyResultType> {
+  async checkRegister(methodName: string, payload: any): Promise<PortkeyResultType> {
     if (this.checkAllowMethod(methodName))
       return {
         error: 0,
@@ -72,6 +75,6 @@ export default class PermissionController {
       };
 
     console.log('checkRegister', methodName);
-    return await this.registerWallet();
+    return await this.registerWallet(payload);
   }
 }

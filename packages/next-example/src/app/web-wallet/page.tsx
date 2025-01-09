@@ -246,7 +246,7 @@ function WebPageInner() {
   });
 
   useEffectOnce(() => {
-    if (pageState && pageState.pageType === 'Login') {
+    if (pageState && pageState.pageType === WalletPageType.CustomLogin) {
       signHandle.onSocialFinish({
         type: pageState.data.type,
         data: pageState.data.data,
@@ -298,10 +298,11 @@ function WebPageInner() {
       )}
 
       <div>-----------</div>
-      {pageState?.pageType === WalletPageType.SocialLogin && <Loading />}
+      {pageState?.pageType === WalletPageType.CustomLogin && <Loading />}
 
       <div>-----------</div>
-      {pageState?.pageType === WalletPageType.GuardianApproveForLogin && isTelegramPlatform && pageState.data && (
+      {/* TODO: just for telegram */}
+      {pageState?.pageType === WalletPageType.GuardianApproveForLogin && pageState.data && (
         <GuardianApproval
           guardianList={guardianList}
           networkType={pageState.data.network as NetworkType}
