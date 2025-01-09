@@ -1,5 +1,5 @@
 'use client';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   did,
   PortkeyAssetProvider,
@@ -31,9 +31,7 @@ import { useWalletDispatch } from './context/WalletProvider/hooks';
 import { basicWebWalletView } from './context/WalletProvider/actions';
 import SWEventController from './controllers/EventController/SWEventController';
 import SignInInner from './components/SignInInner';
-import { isTelegramPlatform } from './utils/common';
 import { AccountType, GuardiansApproved } from '@portkey/services';
-import { useEffectOnce } from 'react-use';
 import useVerifier from './hooks/useVerifier';
 
 const PIN = '111111';
@@ -53,8 +51,18 @@ function WebPageInner() {
   const { getRecommendationVerifier, verifySocialToken } = useVerifier();
   const guardianList = JSON.parse(localStorage.getItem('guardianListForLogin') || '[]');
 
+  const onDisconnect = useCallback(() => {
+    localStorage.removeItem(getWebWalletStorageKey(options?.appId));
+    did.reset();
+    SWEventController.dispatchEvent({
+      eventName: 'disconnected',
+      data: { message: 'user logout' },
+    });
+    pageState && OpenPageService.closePage(pageState.eventName);
+  }, [options?.appId, pageState]);
+
   const beforeCreatePending = useCallback(() => {
-    if (isTelegramPlatform && extraDataRef.current?.originChainId) {
+    if (options?.isTelegram && extraDataRef.current?.originChainId) {
       dispatch(basicWebWalletView.setWalletPin.actions(PIN));
       pageState && OpenPageService.closePage(pageState.eventName);
       SWEventController.dispatchEvent({
@@ -62,18 +70,23 @@ function WebPageInner() {
         data: { chainIds: [extraDataRef.current.originChainId] },
       });
     }
-  }, [dispatch, pageState]);
+  }, [dispatch, options?.isTelegram, pageState]);
 
   const onCreatePending = useCallback(
     async (createPendingInfo: CreatePendingInfo) => {
       if (createPendingInfo.createType === 'register') {
         return;
       }
-      if (isTelegramPlatform) {
+      if (options?.isTelegram) {
         did.save(PIN, getWebWalletStorageKey(options?.appId));
+        pageState && OpenPageService.closePage(pageState.eventName);
+        SWEventController.dispatchEvent({
+          eventName: 'connected',
+          data: { chainIds: [createPendingInfo.didWallet?.chainId] },
+        });
       }
     },
-    [options?.appId],
+    [options?.appId, options?.isTelegram, pageState],
   );
 
   const onSignInFinish = useCallback(
@@ -107,7 +120,7 @@ function WebPageInner() {
           zkLoginInfo: res.zkLoginInfo,
         },
       ];
-      if (isTelegramPlatform) {
+      if (options?.isTelegram) {
         const params = {
           pin: PIN,
           type: 'register' as AddManagerType,
@@ -131,7 +144,7 @@ function WebPageInner() {
         setInnerPage(WalletPageType.Login);
       }
     },
-    [createWallet, dispatch, options?.appId, pageState],
+    [createWallet, dispatch, options?.appId, options?.isTelegram, pageState],
   );
   const onSignUp = useCallback(
     async (value: IGuardianIdentifierInfo) => {
@@ -181,61 +194,77 @@ function WebPageInner() {
 
   const onSignInHandler = useSignInHandler({ isErrorTip: true });
 
-  const handleSocialStep1Success = async (value: IGuardianIdentifierInfo, extraData?: TOnSuccessExtraData) => {
-    if (extraData) extraDataRef.current = extraData;
-    if (!did.didWallet.managementAccount) did.create();
-    if (!value.isLoginGuardian) {
-      await onSignUp(value as IGuardianIdentifierInfo);
-    } else {
-      const signResult = await onSignInHandler(value);
-      if (!signResult) return;
-      if (signResult.nextStep === 'SetPinAndAddManager' && isTelegramPlatform) {
-        try {
-          const guardianIdentifierInfo = signResult.value.guardianIdentifierInfo;
-          const approvedList = signResult.value.approvedList;
-          if (!approvedList) return;
-          const type: AddManagerType = guardianIdentifierInfo?.isLoginGuardian ? 'recovery' : 'register';
-          const params = {
-            pin: PIN,
-            type,
-            chainId: guardianIdentifierInfo.chainId,
-            accountType: guardianIdentifierInfo.accountType,
-            guardianIdentifier: guardianIdentifierInfo?.identifier,
-            guardianApprovedList: approvedList,
-          };
-          await createWallet(params);
-        } catch (e) {
-          console.log('wallet is: error', e, new Date());
-        }
+  const handleSocialStep1Success = useCallback(
+    async (value: IGuardianIdentifierInfo, extraData?: TOnSuccessExtraData) => {
+      if (extraData) extraDataRef.current = extraData;
+      if (!did.didWallet.managementAccount) did.create();
+      if (!value.isLoginGuardian) {
+        await onSignUp(value as IGuardianIdentifierInfo);
       } else {
-        if (isTelegramPlatform) {
-          const guardianListFromSignResult = signResult.value.guardianList ?? [];
-          const resetGuardianList = guardianListFromSignResult.map(ele => {
-            return {
-              ...ele,
-              status: null,
+        const signResult = await onSignInHandler(value);
+        if (!signResult) return;
+        if (signResult.nextStep === 'SetPinAndAddManager' && options?.isTelegram) {
+          try {
+            const guardianIdentifierInfo = signResult.value.guardianIdentifierInfo;
+            const approvedList = signResult.value.approvedList;
+            if (!approvedList) return;
+            const type: AddManagerType = guardianIdentifierInfo?.isLoginGuardian ? 'recovery' : 'register';
+            const params = {
+              pin: PIN,
+              type,
+              chainId: guardianIdentifierInfo.chainId,
+              accountType: guardianIdentifierInfo.accountType,
+              guardianIdentifier: guardianIdentifierInfo?.identifier,
+              guardianApprovedList: approvedList,
             };
+            const res = await createWallet(params);
+          } catch (e) {
+            onDisconnect();
+            console.log('wallet is: error', e, new Date());
+          }
+        } else {
+          if (options?.isTelegram) {
+            const guardianListFromSignResult = signResult.value.guardianList ?? [];
+            const resetGuardianList = guardianListFromSignResult.map(ele => {
+              return {
+                ...ele,
+                status: null,
+              };
+            });
+            localStorage.setItem('guardianListForLogin', JSON.stringify(resetGuardianList));
+            const params = {
+              pin: PIN,
+              type: 'recovery' as AddManagerType,
+              chainId: extraData?.originChainId || CHAIN_ID,
+              accountType: signResult.value.guardianIdentifierInfo?.accountType,
+              // accountType: pageState?.data.socialType,
+              guardianIdentifier: signResult.value.guardianIdentifierInfo?.identifier,
+              guardianApprovedList: signResult.value.approvedList ?? [],
+              source: 5,
+            };
+            try {
+              const res = await createWallet(params);
+              console.log('handleSocialStep1Success multiply res', res);
+              return;
+            } catch (error) {
+              onDisconnect();
+              console.log('error', error);
+            }
+          }
+          console.log('multiply guardian login for web', signResult);
+
+          setCurrentLifeCircle({
+            [signResult.nextStep as any]: signResult.value,
           });
-          localStorage.setItem('guardianListForLogin', JSON.stringify(resetGuardianList));
-          const params = {
-            pin: PIN,
-            type: 'recovery' as AddManagerType,
-            chainId: extraData?.originChainId || CHAIN_ID,
-            accountType: 'Telegram' as AccountType,
-            guardianIdentifier: signResult.value.guardianIdentifierInfo?.identifier,
-            guardianApprovedList: signResult.value.approvedList ?? [],
-            source: 5,
-          };
-          await createWallet(params);
-          return;
+          setInnerPage(WalletPageType.Login);
+          console.log('multiply guardian login');
         }
-        setCurrentLifeCircle({
-          [signResult.nextStep as any]: signResult.value,
-        });
-        setInnerPage(WalletPageType.Login);
       }
-    }
-  };
+    },
+    [createWallet, onDisconnect, onSignInHandler, onSignUp, options?.isTelegram],
+  );
+  console.log('multiply guardian login', currentLifeCircle, innerPage, options?.isTelegram);
+
   const signHandle = useSignHandler({
     onSuccess: handleSocialStep1Success,
     defaultChainId: CHAIN_ID,
@@ -245,14 +274,16 @@ function WebPageInner() {
     onError: undefined,
   });
 
-  useEffectOnce(() => {
+  useEffect(() => {
     if (pageState && pageState.pageType === WalletPageType.CustomLogin) {
+      console.log('handleSocialStep1Success pageState', pageState);
       signHandle.onSocialFinish({
-        type: pageState.data.type,
-        data: pageState.data.data,
+        type: pageState.data.payload.socialType,
+        data: pageState.data.payload.socialData,
       });
     }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pageState]);
 
   const onTGSignInApprovalSuccess = useCallback(
     async (guardianApproved: GuardiansApproved[]) => {
@@ -276,15 +307,6 @@ function WebPageInner() {
     [dispatch, pageState],
   );
 
-  const onDisconnect = useCallback(() => {
-    localStorage.removeItem(getWebWalletStorageKey(options?.appId));
-    did.reset();
-    SWEventController.dispatchEvent({
-      eventName: 'disconnected',
-      data: { message: 'user logout' },
-    });
-    pageState && OpenPageService.closePage(pageState.eventName);
-  }, [options?.appId, pageState]);
   return (
     <div>
       <div>-----------</div>

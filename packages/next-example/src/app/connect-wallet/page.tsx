@@ -20,6 +20,9 @@ import AElf from 'aelf-sdk';
 import { scheme, sigObjToStr, aelf } from '@portkey/utils';
 import { createManagerForwardCall, getTxResult } from '@portkey/contracts';
 import { getRawParams } from './decodeTx';
+import { SocialLoginType } from '../web-wallet/types';
+import { ConfigProvider, socialLoginAuth } from '@portkey/did-ui-react';
+import { useEffectOnce } from 'react-use';
 
 const TokenContractAddressMap = {
   AELF: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
@@ -91,6 +94,48 @@ export default function ConnectWallet() {
       removeListener();
     };
   }, [provider]);
+
+  useEffectOnce(() => {
+    ConfigProvider.setGlobalConfig({
+      // storageMethod: new Store(),
+      // requestDefaults: {
+      //   baseURL: res.data.portkeyServer,
+      // },
+      serviceUrl: 'https://aa-portkey-test.portkey.finance',
+      // graphQLUrl: res.data.graphqlServer,
+      socialLogin: {
+        Telegram: {
+          botId: '7402003725',
+        },
+      },
+    });
+  });
+
+  const loginInWeb = useCallback(
+    async (type: SocialLoginType) => {
+      const tokenRes = await socialLoginAuth({
+        type,
+        network: 'TESTNET',
+      });
+      if (!tokenRes) return;
+      console.log('tokenRes===tokenRes', tokenRes);
+
+      await connect({
+        socialType: tokenRes.provider,
+        socialData:
+          type === SocialLoginType.TELEGRAM
+            ? { accessToken: tokenRes.token }
+            : {
+                accessToken: tokenRes.token,
+                idToken: tokenRes.idToken,
+                nonce: tokenRes.nonce,
+                timestamp: tokenRes.timestamp,
+              },
+      });
+    },
+    [connect],
+  );
+
   return (
     <div>
       {Object.entries(state).map(([key, value]) => {
@@ -102,6 +147,8 @@ export default function ConnectWallet() {
           </p>
         );
       })}
+      <Button onClick={() => loginInWeb(SocialLoginType.TELEGRAM)}>Login TG in web</Button>
+      <Button onClick={() => loginInWeb(SocialLoginType.GOOGLE)}>Custom Login with multiply guardians </Button>
       <Button onClick={initProvider}>init provider</Button>
 
       <Button

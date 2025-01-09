@@ -58,7 +58,7 @@ export default class PermissionController {
       };
     // Not yet registered or logged in
     return OpenPageService.openPage({
-      pageType: !!payload ? WalletPageType.CustomLogin : WalletPageType.Login,
+      pageType: !!payload?.payload ? WalletPageType.CustomLogin : WalletPageType.Login,
       data: payload,
     });
   }
