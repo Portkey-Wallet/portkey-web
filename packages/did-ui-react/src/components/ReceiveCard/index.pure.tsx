@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useCallback } from 'react';
 import { ChainInfo, ReceiveType, TDepositInfo, TReceiveFromNetworkItem } from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import singleMessage from '../CustomAnt/message';
@@ -105,6 +105,12 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
     setIsReceivedExchangeModalOpen,
   } = props;
   const [, setCopied] = useCopyToClipboard();
+  const handleSelectionModalClose = useCallback(() => {
+    setIsSelectionModalOpen(false);
+  }, [setIsSelectionModalOpen]);
+  const handleReceivedExchangeModalClose = useCallback(() => {
+    setIsReceivedExchangeModalOpen(false);
+  }, [setIsReceivedExchangeModalOpen]);
   return (
     <>
       <div className="portkey-ui-receive-content">
@@ -319,14 +325,16 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
           open={isSelectionModalOpen}
           height="max-content"
           wrapClassName="portkey-ui-receive-modals"
+          onClose={handleSelectionModalClose}
+          closable
           maskClosable>
           <div className="received-modals-header">
             <span className="title">{selectedType} network</span>
-            <CustomSvg
+            {/* <CustomSvg
               fillColor="var(--sds-color-icon-default-default)"
               type="Close2"
               onClick={() => setIsSelectionModalOpen(false)}
-            />
+            /> */}
           </div>
           <div className="received-modals-body">
             {renderSelectionList?.map(
@@ -360,14 +368,16 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
           open={isReceivedExchangeModalOpen}
           height="max-content"
           wrapClassName="portkey-ui-receive-exchange-modals"
+          onClose={handleReceivedExchangeModalClose}
+          closable
           maskClosable>
           <div className="received-exchange-modals-header">
             <span className="title">Receive from an exchange?</span>
-            <CustomSvg
+            {/* <CustomSvg
               fillColor="var(--sds-color-icon-default-default)"
               type="Close2"
               onClick={() => setIsReceivedExchangeModalOpen(false)}
-            />
+            /> */}
           </div>
           <div className="received-exchange-modals-body">
             <div className="exchange-list">

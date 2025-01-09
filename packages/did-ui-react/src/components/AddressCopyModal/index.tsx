@@ -38,7 +38,14 @@ const AddressCopyModal = forwardRef(({ isMainnet, caAddressInfos }: IAddressCopy
   }));
 
   return (
-    <CommonModal className="portkey-ui-address-copy-modal" width={400} height={232} open={open} onClose={handleClose}>
+    <CommonModal
+      className="portkey-ui-address-copy-modal"
+      width={400}
+      height={232}
+      open={open}
+      onClose={handleClose}
+      closable
+      maskClosable>
       <div className="portkey-ui-address-copy-modal-title">Your addresses</div>
       {caAddressInfos?.map((item, index) => (
         <div key={index} className="portkey-ui-address-copy-modal-item">
