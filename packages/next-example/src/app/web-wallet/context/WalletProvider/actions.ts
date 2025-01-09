@@ -25,7 +25,7 @@ export interface IWalletOptions {
 export const basicWebWalletView = {
   setWalletPageState: {
     type: WebWalletActions['setWalletPageState'],
-    actions: (pageState: IPageState) => {
+    actions: (pageState: IPageState | null) => {
       return basicActions(WebWalletActions['setWalletPageState'], {
         pageState,
       });

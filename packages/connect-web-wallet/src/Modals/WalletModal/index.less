@@ -1,11 +1,24 @@
-.portkey-connect-wallet-modal {
-  iframe {
-    height: 100%;
-    width: 100%;
-    margin: auto;
-    border: none;
-  }
+.portkey-connect-wallet-modal iframe {
+  height: 100%;
+  width: 100%;
+  margin: auto;
+  border: none;
 }
 .portkey-connect-wallet-modal .portkey-connect-modal-body {
   height: 700px !important;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--sds-color-border-default-secondary);
+}
+
+.portkey-connect-wallet-modal-wrapper .portkey-connect-modal-content {
+  padding: 0 !important;
+}
+
+.portkey-connect-wallet-modal .portkey-connect-drawer-header {
+  display: none;
+}
+
+.portkey-connect-wallet-modal .portkey-connect-drawer-body {
+  padding: 0 !important;
 }

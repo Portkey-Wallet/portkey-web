@@ -3,7 +3,6 @@ import { ConfigProvider, NetworkType, PortkeyProvider } from '@portkey/did-ui-re
 import { ReactNode, useEffect, useState } from 'react';
 import '@portkey/did-ui-react/dist/assets/index.css';
 import { Button } from 'antd';
-import '@portkey/did-ui-react/dist/assets/index.css';
 
 ConfigProvider.setGlobalConfig({
   // https://test3-applesign-v2.portkey.finance

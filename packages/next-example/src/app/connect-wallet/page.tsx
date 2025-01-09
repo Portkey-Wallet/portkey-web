@@ -1,5 +1,5 @@
 'use client';
-import { DialogExample, useConnect } from '@portkey/connect-web-wallet';
+import { useConnect } from '@portkey/connect-web-wallet';
 import { Button } from 'antd';
 import React, { useCallback, useEffect, useState } from 'react';
 import { Actions, State, useExampleState } from './hooks';
@@ -23,6 +23,7 @@ import { getRawParams } from './decodeTx';
 import { SocialLoginType } from '../web-wallet/types';
 import { ConfigProvider, socialLoginAuth } from '@portkey/did-ui-react';
 import { useEffectOnce } from 'react-use';
+import '@portkey/connect-web-wallet/dist/assets/index.css';
 
 const TokenContractAddressMap = {
   AELF: 'JRmBduh4nXWi1aXgdUsj5gJrzeZb2LxmrAbf7W99faZSvoAaE',
@@ -35,8 +36,12 @@ export default function ConnectWallet() {
   const [state, dispatch] = useExampleState();
 
   const onConnect = useCallback(async () => {
-    const result = await connect();
-    console.log(result, 'result=====onConnect');
+    try {
+      const result = await connect();
+      console.log(result, 'result=====onConnect');
+    } catch (error: any) {
+      console.log('onConnect error', error.message);
+    }
   }, [connect]);
 
   const initProvider = useCallback(async () => {
