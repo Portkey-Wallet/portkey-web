@@ -20,6 +20,8 @@ import {
   GuardianApproval,
   getOperationDetails,
   NetworkType,
+  SetAllowance,
+  GuardianAdd,
 } from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
 import { Button } from 'antd';
@@ -314,6 +316,29 @@ function WebPageInner() {
           onConfirm={onTGSignInApprovalSuccess}
         />
       )}
+
+      <div>-----------</div>
+      {/* TODO: just for telegram */}
+      {pageState?.pageType === WalletPageType.GuardianApproveForLogin && pageState.data && (
+        <GuardianApproval
+          guardianList={guardianList}
+          networkType={pageState.data.network as NetworkType}
+          caHash={pageState.data.caHash}
+          originChainId={pageState.data.originChainId}
+          targetChainId={pageState.data.targetChainId}
+          operationType={OperationTypeEnum.communityRecovery}
+          operationDetails={getOperationDetails(OperationTypeEnum.communityRecovery)}
+          onConfirm={onTGSignInApprovalSuccess}
+        />
+      )}
+
+      <div>-----------</div>
+      {pageState?.pageType === WalletPageType.AddGuardian && (
+        <GuardianAdd caHash={''} originChainId={'AELF'} networkType={'MAINNET'} />
+      )}
+
+      <div>-----------</div>
+      {pageState?.pageType === WalletPageType.SetAllowance && <SetAllowance symbol={''} amount={''} />}
 
       <div>-----------</div>
       {/* 

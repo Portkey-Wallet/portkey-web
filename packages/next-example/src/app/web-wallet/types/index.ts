@@ -14,6 +14,8 @@ export enum WalletPageType {
   UnLock = 'UnLock',
   GuardianApproveForLogin = 'GuardianApproveForLogin',
   CustomLogin = 'CustomLogin',
+  AddGuardian = 'AddGuardian',
+  SetAllowance = 'SetAllowance',
 }
 
 export type TSignUpVerifier = { verifier: TVerifierItem } & IVerifyInfo;
