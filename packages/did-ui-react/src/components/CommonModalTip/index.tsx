@@ -14,7 +14,12 @@ export default function CommonModalTip({ title, content, className }: ICommonMod
   const [open, setOpen] = useState(false);
   return (
     <>
-      <CustomSvg type="help" onClick={() => setOpen(true)} className={className} />
+      <CustomSvg
+        type="help"
+        onClick={() => setOpen(true)}
+        className={className}
+        fillColor="var(--sds-color-icon-default-secondary)"
+      />
       <CommonModal open={open} type="modal" className="portkey-ui-common-modal-tip">
         <div className="common-modal-tip">
           <div className="portkey-ui-flex-between-center">

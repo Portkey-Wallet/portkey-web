@@ -50,13 +50,13 @@ const EmailLogin = forwardRef(
     useEffect(() => {
       switchType?.(currentType);
     }, [currentType, switchType]);
-    const handleLoginAction = useCallback(() => {
-      setCurrentType('SignUp');
-    }, []);
+    // const handleLoginAction = useCallback(() => {
+    //   setCurrentType('SignUp');
+    // }, []);
 
-    const handleSignUpAction = useCallback(() => {
-      setCurrentType('Login');
-    }, []);
+    // const handleSignUpAction = useCallback(() => {
+    //   setCurrentType('Login');
+    // }, []);
 
     return (
       <div className="input-info-wrapper email-login">
@@ -94,7 +94,7 @@ const EmailLogin = forwardRef(
             })
           }
         />
-        {currentType === 'Login' ? (
+        {/* {currentType === 'Login' ? (
           <div className="email-login-footer">
             <span>Don’t have an account?&nbsp;</span>
             <span className="email-login-footer-action" onClick={handleLoginAction}>
@@ -108,7 +108,7 @@ const EmailLogin = forwardRef(
               Log in
             </span>
           </div>
-        )}
+        )} */}
       </div>
     );
   },

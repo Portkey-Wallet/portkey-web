@@ -68,6 +68,8 @@ export type TDepositInfo = {
   extraNotes?: string[];
   minAmountUsd: string;
   extraInfo?: TDepositExtraInfo;
+  serviceFee?: string;
+  serviceFeeUsd?: string;
 };
 
 export type TDepositExtraInfo = {
