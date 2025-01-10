@@ -40,6 +40,7 @@ let CHAIN_ID: ChainId = 'tDVW';
 import UnlockInner from './components/UnlockInner';
 import { ProviderError, ResponseCode, ResponseMessagePreset } from '@portkey/provider-types';
 import errorHandler from './utils/errorHandler';
+import { clearManagerReadOnly } from './utils/clearManagerReadOnly';
 
 function WebPageInner() {
   const [{ pageState, pin, options }] = useWebWallet();
@@ -270,7 +271,6 @@ function WebPageInner() {
     },
     [createWallet, onDisconnect, onSignInHandler, onSignUp, options?.isTelegram],
   );
-  console.log('multiply guardian login', currentLifeCircle, innerPage, options?.isTelegram);
 
   const signHandle = useSignHandler({
     onSuccess: handleSocialStep1Success,
@@ -293,13 +293,17 @@ function WebPageInner() {
   }, [pageState]);
 
   const onTGSignInApprovalSuccess = useCallback(
-    async (guardianApproved: GuardiansApproved[]) => {
-      pageState && OpenPageService.closePage(pageState.eventName, { error: 0, data: guardianApproved });
-      console.log('guardianApproved', guardianApproved);
+    async (guardiansApproved: GuardiansApproved[]) => {
+      console.log('guardiansApproved', guardiansApproved);
+      const caHash = pageState?.data.caHash;
+      const targetChainId = pageState?.data.targetChainId;
+      const res = await clearManagerReadOnly({ caHash, chainId: targetChainId, guardiansApproved, pin: pin || PIN });
+      console.log('clearManagerReadOnly', res);
+      pageState && OpenPageService.closePage(pageState.eventName, { error: 0, data: {} });
       // SWEventController.dispatchEvent({ eventName: 'connected', data: { chainIds: [res.chainId] } });
       // clearManagerReadonlyStatus
     },
-    [pageState],
+    [pageState, pin],
   );
 
   const onUnlock = useCallback(
@@ -329,7 +333,15 @@ function WebPageInner() {
         close page
       </div>
 
-      {(pageState?.pageType || innerPage) === WalletPageType.Login && (
+      {pageState?.pageType === WalletPageType.Login && (
+        <SignInInner
+          beforeCreatePending={beforeCreatePending}
+          onCreatePending={onCreatePending}
+          onSignInFinish={onSignInFinish}
+        />
+      )}
+
+      {innerPage === WalletPageType.Login && (
         <SignInInner
           beforeCreatePending={beforeCreatePending}
           onCreatePending={onCreatePending}

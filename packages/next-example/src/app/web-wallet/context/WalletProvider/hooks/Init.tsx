@@ -37,7 +37,13 @@ export function ServiceWorker() {
   useEffect(() => {
     const options: any = qs.parse(window.location.search.replace('?', ''));
 
-    Object.values(options).length > 0 && dispatch(basicWebWalletView.setWalletOptions.actions(options));
+    Object.values(options).length > 0 &&
+      dispatch(
+        basicWebWalletView.setWalletOptions.actions({
+          ...options,
+          isTelegram: typeof options.isTelegram === 'boolean' ? options.isTelegram : options.isTelegram === 'true',
+        }),
+      );
     const networkType = (options.networkType ?? 'MAINNET') as keyof typeof LOGIN_CONFIG;
     ConfigProvider.setGlobalConfig({ ...(LOGIN_CONFIG[networkType] as any) });
 

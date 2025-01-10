@@ -68,6 +68,7 @@ export default class AELFMethodController {
       caHash,
       manager: managerAddress,
     });
+    console.log('checkIsReadOnly', rs, caHash, managerAddress);
 
     // TODO: set state in store
     return !!rs?.data;
