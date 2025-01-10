@@ -23,6 +23,7 @@ import {
   SetAllowance,
   GuardianAdd,
   CustomSvg,
+  formatGuardianValue,
 } from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
 import { Button } from 'antd';
@@ -48,7 +49,6 @@ function WebPageInner() {
   const [{ pageState, pin, options }] = useWebWallet();
   console.log(pageState, 'pageState====');
   const dispatch = useWalletDispatch();
-  const [password, setPassword] = useState<string>('');
   const extraDataRef = useRef<TOnSuccessExtraData>();
   const [innerPage, setInnerPage] = useState<WalletPageType>();
   const [currentLifeCircle, setCurrentLifeCircle] = useState<
@@ -228,6 +228,7 @@ function WebPageInner() {
               guardianApprovedList: approvedList,
             };
             const res = await createWallet(params);
+            console.log('single guardian login in tg', res);
           } catch (e) {
             onDisconnect();
             console.log('wallet is: error', e, new Date());
@@ -247,22 +248,20 @@ function WebPageInner() {
               type: 'recovery' as AddManagerType,
               chainId: extraData?.originChainId || CHAIN_ID,
               accountType: signResult.value.guardianIdentifierInfo?.accountType,
-              // accountType: pageState?.data.socialType,
               guardianIdentifier: signResult.value.guardianIdentifierInfo?.identifier,
               guardianApprovedList: signResult.value.approvedList ?? [],
               source: 5,
             };
             try {
               const res = await createWallet(params);
-              console.log('handleSocialStep1Success multiply res', res);
+              console.log('multiply guardian login in tg', res);
               return;
             } catch (error) {
               onDisconnect();
               console.log('error', error);
             }
           }
-          console.log('multiply guardian login for web', signResult);
-
+          console.log('login for web', signResult);
           setCurrentLifeCircle({
             [signResult.nextStep as any]: signResult.value,
           });
@@ -297,15 +296,26 @@ function WebPageInner() {
   const onTGSignInApprovalSuccess = useCallback(
     async (guardiansApproved: GuardiansApproved[]) => {
       console.log('guardiansApproved', guardiansApproved);
+      const formatGuardianApprove = formatGuardianValue(guardiansApproved);
       const caHash = pageState?.data.caHash;
       const targetChainId = pageState?.data.targetChainId;
-      const res = await clearManagerReadOnly({ caHash, chainId: targetChainId, guardiansApproved, pin: pin || PIN });
-      console.log('clearManagerReadOnly', res);
-      pageState && OpenPageService.closePage(pageState.eventName, { error: 0, data: {} });
-      // SWEventController.dispatchEvent({ eventName: 'connected', data: { chainIds: [res.chainId] } });
-      // clearManagerReadonlyStatus
+      const chainIds = Object.keys(did.didWallet.chainsInfo || {});
+      const otherChainId = chainIds.find(item => item !== targetChainId);
+      const res = await clearManagerReadOnly({
+        caHash,
+        chainId: targetChainId,
+        guardiansApproved: formatGuardianApprove,
+      });
+      if (otherChainId) {
+        await clearManagerReadOnly({
+          caHash,
+          chainId: otherChainId as ChainId,
+          guardiansApproved: formatGuardianApprove,
+        });
+      }
+      pageState && OpenPageService.closePage(pageState.eventName, { error: 0, data: res });
     },
-    [pageState, pin],
+    [pageState],
   );
 
   const onUnlock = useCallback(
@@ -360,7 +370,7 @@ function WebPageInner() {
       {pageState?.pageType === WalletPageType.GuardianApproveForLogin && pageState.data && (
         <GuardianApproval
           guardianList={guardianList}
-          networkType={pageState.data.network as NetworkType}
+          networkType={pageState.data.networkType as NetworkType}
           caHash={pageState.data.caHash}
           originChainId={pageState.data.originChainId}
           targetChainId={pageState.data.targetChainId}
