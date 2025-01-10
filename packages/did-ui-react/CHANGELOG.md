@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.18.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.13...v2.18.0-alpha.0) (2025-01-10)
+
+### Features
+
+- 1. offline email 2.add etransfer service fee ([999b5a3](https://github.com/Portkey-Wallet/portkey-web/commit/999b5a3fdd024a8e78187c0a071b798cc5f3633d))
+
 ## [2.17.7-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.12...v2.17.7-alpha.13) (2025-01-09)
 
 ### Bug Fixes
