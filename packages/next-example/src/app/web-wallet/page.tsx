@@ -313,6 +313,7 @@ function WebPageInner() {
           guardiansApproved: formatGuardianApprove,
         });
       }
+      localStorage.removeItem('guardianListForLogin');
       pageState && OpenPageService.closePage(pageState.eventName, { error: 0, data: res });
     },
     [pageState],
