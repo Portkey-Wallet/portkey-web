@@ -25,10 +25,12 @@ export abstract class DappManager implements IDappManager {
     return did;
   }
   isLocked(): boolean {
+    console.log('=====isLocked', !did?.didWallet?.aaInfo?.accountInfo?.caHash);
     return Boolean(!did?.didWallet?.aaInfo?.accountInfo?.caHash);
   }
 
   getWallet() {
+    console.log('getWallet did', this.getDid());
     return this.getDid()?.didWallet as DIDWallet<portkey.WalletAccount>;
   }
 
@@ -52,7 +54,7 @@ export abstract class DappManager implements IDappManager {
   }
 
   isActive() {
-    return this.isLocked();
+    return true;
   }
 
   // async updateManagerSyncState(chainId: ChainId) {

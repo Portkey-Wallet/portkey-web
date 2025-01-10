@@ -7,10 +7,6 @@ export class WebWalletDappManager extends DappManager {
     super(options);
   }
 
-  isActive() {
-    return super.isActive() && !this.isLocked();
-  }
-
   isApprove = async (payload: { contractAddress: string; method: string; chainId: ChainId }) => {
     const { contractAddress, method: contractMethod, chainId } = payload || {};
     const chainInfo = await this.getChainInfo(chainId);

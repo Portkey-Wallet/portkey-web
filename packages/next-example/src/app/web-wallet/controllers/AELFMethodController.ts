@@ -1,19 +1,28 @@
-import { MethodsBase, ResponseCode, MethodsWallet, ChainId, NetworkType } from '@portkey/provider-types';
+import {
+  MethodsBase,
+  ResponseCode,
+  MethodsWallet,
+  ChainId,
+  NetworkType,
+  IRequestParams,
+} from '@portkey/provider-types';
 import { RequestCommonHandler, SendResponseFun } from '../service/types';
 import { IRequestPayload, WalletPageType } from '../types';
 import errorHandler from '../utils/errorHandler';
 import { WebWalletDappManager } from '../utils/dappManager/WebWalletDappManager';
 import ApprovalController from './ApprovalController';
 import SWEventController from './EventController/SWEventController';
-import { checkIsCipherText } from '../utils';
+import { checkIsCipherText, getApproveSymbol } from '../utils';
 import { getContract, getManager, getManagerSignature, getSignature, getTransactionSignature } from '../utils/wallet';
 import { randomId } from '@portkey/utils';
 import { ChainInfo } from '@portkey/services';
 import { customFetch } from '../utils/fetch';
 import { getNetworkConfig } from '../utils/config';
 import { CheckSecurityResult } from '../types/security';
-import { CA_METHOD_WHITELIST } from '../constants/dapp';
+import { ApproveMethod, CA_METHOD_WHITELIST } from '../constants/dapp';
 import OpenPageService from '../service/OpenPageService';
+import { ZERO } from '@portkey/did-ui-react/src/constants/misc';
+import { getGuardiansApprovedByApprove } from '../utils/guardian';
 
 const aelfMethodList = [
   MethodsBase.CA_HASH,
@@ -63,8 +72,7 @@ export default class AELFMethodController {
     const chainInfo = await this.dappManager.getChainInfo(chainId);
     const managerAddress = await this.dappManager.currentManagerAddress();
     if (!chainInfo) return;
-
-    const contract: any = await this.getTokenContract(chainInfo);
+    const contract: any = await this.getCaContract(chainInfo);
 
     const rs = await contract.callViewMethod('IsManagerReadOnly', {
       caHash,
@@ -75,62 +83,67 @@ export default class AELFMethodController {
     return !!rs?.data;
   };
 
-  // protected handleApprove = async (request: IRequestParams) => {
-  //   const { payload, eventName } = request || {};
-  //   const { params } = payload || {};
+  protected handleApprove = async (sendResponse: SendResponseFun, request: IRequestParams) => {
+    const { payload, eventName } = request || {};
+    const { params } = payload || {};
+    const chainId = request.payload?.chainId;
+    const chainInfo = await this.dappManager.getChainInfo(chainId);
 
-  //   const { symbol, amount, spender } = params?.paramsOption || {};
-  //   // check approve input && check valid amount
-  //   if (!(symbol && amount && spender) || ZERO.plus(amount).isNaN() || ZERO.plus(amount).lte(0)) {
-  //     return;
-  //     // return generateErrorResponse({ eventName, code: ResponseCode.ERROR_IN_PARAMS });
-  //   }
+    const { symbol, amount, spender } = params?.paramsOption || {};
+    // check approve input && check valid amount
+    if (!(symbol && amount && spender) || ZERO.plus(amount).isNaN() || ZERO.plus(amount).lte(0)) {
+      return;
+      // return generateErrorResponse({ eventName, code: ResponseCode.ERROR_IN_PARAMS });
+    }
 
-  //   const tokenContract = await this.getTokenContract(payload.chainId);
+    const tokenContract = await this.getCaContract(payload.chainId);
 
-  //   const tokenInfo = await tokenContract?.callViewMethod('GetTokenInfo', { symbol });
+    const tokenInfo = await tokenContract?.callViewMethod('GetTokenInfo', { symbol });
 
-  //   if (tokenInfo?.error || isNaN(tokenInfo?.data.decimals)) {
-  //     return;
-  //     // return generateErrorResponse({ eventName, code: ResponseCode.ERROR_IN_PARAMS, msg: `${symbol} error` });
-  //   }
+    if (tokenInfo?.error || isNaN(tokenInfo?.data.decimals)) {
+      return;
+      // return generateErrorResponse({ eventName, code: ResponseCode.ERROR_IN_PARAMS, msg: `${symbol} error` });
+    }
 
-  //   // TODO: show info modal
-  //   // const info = await this.dappOverlay.approve(this.dapp, {
-  //   //   approveInfo: {
-  //   //     ...params?.paramsOption,
-  //   //     decimals: tokenInfo?.data.decimals,
-  //   //     targetChainId: payload.chainId,
-  //   //     contractAddress,
-  //   //   },
-  //   //   isDiscover: this.isDiscover,
-  //   //   eventName,
-  //   //   batchApproveNFT: this.config?.batchApproveNFT,
-  //   // });
+    // TODO: show info modal
+    const { data } = await OpenPageService.openPage({
+      pageType: WalletPageType.SetAllowance,
+      data: {
+        approveInfo: {
+          ...params?.paramsOption,
+          decimals: tokenInfo?.data.decimals,
+          targetChainId: payload.chainId,
+          contractAddress: chainInfo?.caContractAddress,
+        },
+        eventName,
+        batchApproveNFT: this.config?.batchApproveNFT,
+      },
+    });
 
-  //   // if (!info) {
-  //   //   return this.userDenied(eventName);
-  //   // }
-  //   // const { guardiansApproved, approveInfo } = info;
+    if (!data) {
+      // TODO: change it
+      // return this.userDenied(eventName);
+    }
 
-  //   const finallyApproveSymbol = this.config?.batchApproveNFT ? getApproveSymbol(approveInfo.symbol) : symbol;
+    const { guardiansApproved, approveInfo } = data;
+    const finallyApproveSymbol = this.config?.batchApproveNFT ? getApproveSymbol(approveInfo.symbol) : symbol;
 
-  //   const caHash = this.dappManager.caHash();
-  //   return this.sendTransaction(eventName, {
-  //     ...payload,
-  //     method: ApproveMethod.ca,
-  //     contractAddress: chainInfo?.caContractAddress,
-  //     params: {
-  //       paramsOption: {
-  //         caHash,
-  //         spender: approveInfo.spender,
-  //         symbol: finallyApproveSymbol,
-  //         amount: approveInfo.amount,
-  //         guardiansApproved: getGuardiansApprovedByApprove(guardiansApproved),
-  //       },
-  //     },
-  //   });
-  // };
+    const caHash = this.dappManager.caHash();
+    return this.sendTransaction(sendResponse, {
+      ...payload,
+      method: ApproveMethod.ca,
+      contractAddress: chainInfo?.caContractAddress,
+      params: {
+        paramsOption: {
+          caHash,
+          spender: approveInfo.spender,
+          symbol: finallyApproveSymbol,
+          amount: approveInfo.amount,
+          guardiansApproved: getGuardiansApprovedByApprove(guardiansApproved),
+        },
+      },
+    });
+  };
 
   handleRequest = async ({ params, method, callBack }: { params: any; method: any; callBack: any }) => {
     // TODO
@@ -304,8 +317,8 @@ export default class AELFMethodController {
   getWalletName: RequestCommonHandler = async (sendResponse: SendResponseFun, message) => {
     try {
       // TODO: change
-      const isActive = await this.dappManager.isActive();
-      if (!isActive)
+      const isLocked = await this.dappManager.isLocked();
+      if (isLocked)
         return sendResponse({
           ...errorHandler(400001),
           data: {
@@ -328,7 +341,7 @@ export default class AELFMethodController {
     try {
       let data: any = {
         isUnlocked: !this.dappManager.isLocked(),
-        isConnected: this.dappManager.isActive(),
+        isConnected: !this.dappManager.isLocked(),
         isLogged: this.dappManager.isLogged(),
       };
       if (data.isConnected) {
@@ -415,24 +428,7 @@ export default class AELFMethodController {
         eventName: 'chainChanged',
         data: await this.dappManager.chainIds(),
       });
-      // const result = await this.approvalController.authorizedToConnect({
-      //   ...message,
-      //   appLogo: message?.icon || '',
-      // });
-      // if (result.error === 200003)
-      //   return sendResponse({
-      //     ...errorHandler(200003, 'User denied'),
-      //     data: {
-      //       code: ResponseCode.USER_DENIED,
-      //     },
-      //   });
-      // if (result.error !== 0)
-      //   return sendResponse({
-      //     ...errorHandler(700002),
-      //     data: {
-      //       code: ResponseCode.CONTRACT_ERROR,
-      //     },
-      //   });
+
       sendResponse({ ...errorHandler(0), data: await this.dappManager.accounts() });
     } catch (error) {
       console.log('requestAccounts===', error);
@@ -539,7 +535,6 @@ export default class AELFMethodController {
           _txId = _accelerateGuardian?.transactionId;
         }
 
-        // TODO: show ADD guardian
         await OpenPageService.openPage({
           pageType: WalletPageType.AddGuardian,
           data: {
@@ -563,17 +558,7 @@ export default class AELFMethodController {
           return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
         }
         const _config = this.config?.[origin];
-        await OpenPageService.openPage({
-          pageType: WalletPageType.SetAllowance,
-          data: {
-            origin,
-            transactionInfoId: key,
-            icon: message.icon,
-            method: payload?.method,
-            chainId: payload.chainId,
-            batchApproveNFT: _config?.batchApproveNFT,
-          },
-        });
+        this.handleApprove(sendResponse, payload);
       } else {
         const isForward = chainInfo?.caContractAddress !== payload.contractAddress;
         const method = isForward ? 'ManagerForwardCall' : payload?.method;
@@ -589,7 +574,7 @@ export default class AELFMethodController {
       }
 
       // transfer start
-      const contract: any = await this.getTokenContract(chainInfo);
+      const contract: any = await this.getCaContract(chainInfo);
       if (!contract) return;
       const isForward = chainInfo.caContractAddress !== payload.contractAddress;
 
@@ -781,12 +766,21 @@ export default class AELFMethodController {
     }
   };
 
-  async getTokenContract(chainInfo: ChainInfo) {
+  async getCaContract(chainInfo: ChainInfo) {
     const manager = await this.getManager();
     return await getContract({
       manager,
       rpcUrl: chainInfo?.endPoint || '',
       contractAddress: chainInfo?.caContractAddress || '',
+    });
+  }
+
+  async getTokenContract(chainInfo: ChainInfo) {
+    const manager = await this.getManager();
+    return await getContract({
+      manager,
+      rpcUrl: chainInfo?.endPoint || '',
+      contractAddress: chainInfo?.defaultToken?.address || '',
     });
   }
 
