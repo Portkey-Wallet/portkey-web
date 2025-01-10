@@ -17,8 +17,8 @@ export abstract class DappManager implements IDappManager {
     this.appId = appId;
   }
   protected AAInfo?: { caHash: string; caAddress: string; chainId: ChainId }[];
-  async caHash(): Promise<string> {
-    const currentAAInfo = await this.getAAInfo();
+  caHash(): string {
+    const currentAAInfo = this.getAAInfo();
     return currentAAInfo.accountInfo?.caHash || '';
   }
   getDid() {
@@ -42,7 +42,7 @@ export abstract class DappManager implements IDappManager {
     return this.getWallet()?.managementAccount?.address;
   }
 
-  async getAAInfo() {
+  getAAInfo() {
     const wallet = this.getWallet();
     return wallet.aaInfo;
   }

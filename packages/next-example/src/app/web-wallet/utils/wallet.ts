@@ -1,20 +1,18 @@
-import { DID } from '@portkey/did';
 import { WEB_WALLET_DEFAULT_STORAGE_KEY } from '../constants/wallet';
 import { COMMON_PRIVATE } from '../constants/wallet';
 import AElf from 'aelf-sdk';
 import { getContractBasic } from '@portkey/contracts';
-
+import { did } from '@portkey/did-ui-react';
+import { aelf } from '@portkey/utils';
 export const getWebWalletStorageKey = (appId?: string) =>
   `${WEB_WALLET_DEFAULT_STORAGE_KEY}:${appId ?? 'wallet-appId'}`;
 
-export const getManager = async (did: DID, pin: string) => {
-  const { didWallet } = await did.load(pin);
-  if (!didWallet || !didWallet?.managementAccount || !didWallet?.managementAccount?.privateKey) return;
-  return getWallet(didWallet?.managementAccount?.privateKey);
+export const getManager = async () => {
+  return getWallet(did.didWallet?.managementAccount?.privateKey);
 };
 
 export function getWallet(privateKey = COMMON_PRIVATE) {
-  return AElf.wallet.getWalletByPrivateKey(privateKey);
+  return aelf.getWallet(privateKey);
 }
 
 export function getSignature(manager: any, data: any) {

@@ -7,7 +7,7 @@ import ApprovalController from './ApprovalController';
 import SWEventController from './EventController/SWEventController';
 import { checkIsCipherText } from '../utils';
 import { getContract, getManager, getManagerSignature, getSignature, getTransactionSignature } from '../utils/wallet';
-import { randomId, TelegramPlatform } from '@portkey/utils';
+import { randomId } from '@portkey/utils';
 import { ChainInfo } from '@portkey/services';
 import { customFetch } from '../utils/fetch';
 import { getNetworkConfig } from '../utils/config';
@@ -63,6 +63,7 @@ export default class AELFMethodController {
     const chainInfo = await this.dappManager.getChainInfo(chainId);
     const managerAddress = await this.dappManager.currentManagerAddress();
     if (!chainInfo) return;
+
     const contract: any = await this.getTokenContract(chainInfo);
 
     const rs = await contract.callViewMethod('IsManagerReadOnly', {
@@ -493,7 +494,7 @@ export default class AELFMethodController {
         });
 
       // readOnly check
-      if (TelegramPlatform.isTelegramPlatform() && this.managerReadOnly) {
+      if (this.managerReadOnly) {
         const managerReadOnly = await this.checkIsReadOnly(payload.chainId);
         this.managerReadOnly = !!managerReadOnly;
         if (this.managerReadOnly) {
@@ -657,7 +658,7 @@ export default class AELFMethodController {
       // });
 
       const pin = this.getPassword() || '';
-      const manager = await getManager(this.dappManager.getDid(), pin);
+      const manager = await getManager();
       const data = getSignature(manager, message.payload.data);
       console.log('==== signature', message, data);
 
@@ -702,7 +703,7 @@ export default class AELFMethodController {
       }
 
       const pin = this.getPassword() || '';
-      const manager = await getManager(this.dappManager.getDid(), pin);
+      const manager = await getManager();
 
       const data = getTransactionSignature(manager, message.payload.data);
       console.log('==== transaction signature', message, data);
@@ -734,7 +735,7 @@ export default class AELFMethodController {
       }
 
       const pin = this.getPassword() || '';
-      const manager = await getManager(this.dappManager.getDid(), pin);
+      const manager = await getManager();
 
       const data = getManagerSignature(manager, message.payload.data);
       console.log('==== manager signature', message, data);
@@ -790,8 +791,7 @@ export default class AELFMethodController {
   }
 
   async getManager() {
-    const pin = this.getPassword() || '';
-    const manager = await getManager(this.dappManager.getDid(), pin);
+    const manager = await getManager();
     return manager;
   }
 }

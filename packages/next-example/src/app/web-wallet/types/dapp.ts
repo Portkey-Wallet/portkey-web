@@ -13,7 +13,7 @@ export interface IDappManager {
   getChainInfo(chainId: ChainId): Promise<ChainInfo | undefined>;
   isLocked(): boolean;
   getRpcUrl(chainId: ChainId): Promise<string | undefined>;
-  caHash(): Promise<string>;
+  caHash(): string;
   walletName(): Promise<WalletName>;
   currentManagerAddress(): Promise<Address | undefined>;
   // getRememberMeBlackList(): Promise<string[] | undefined>;
