@@ -13,7 +13,6 @@ import { customFetch } from '../utils/fetch';
 import { getNetworkConfig } from '../utils/config';
 import { CheckSecurityResult } from '../types/security';
 import { CA_METHOD_WHITELIST } from '../constants/dapp';
-import { getContractBasic } from '@portkey/contracts';
 import OpenPageService from '../service/OpenPageService';
 
 const aelfMethodList = [
@@ -44,6 +43,7 @@ export default class AELFMethodController {
   protected getPassword: () => string | null;
   protected dappManager: WebWalletDappManager;
   protected networkType: NetworkType;
+  protected managerReadOnly: boolean;
   protected approvalController: ApprovalController;
   public aelfMethodList: string[];
   public config: { [key: string]: { [key: string]: boolean } };
@@ -55,6 +55,7 @@ export default class AELFMethodController {
     this.dappManager = new WebWalletDappManager({ appId });
     this.config = {};
     this.networkType = networkType;
+    this.managerReadOnly = true;
   }
 
   checkIsReadOnly = async (chainId: ChainId) => {
@@ -62,7 +63,7 @@ export default class AELFMethodController {
     const chainInfo = await this.dappManager.getChainInfo(chainId);
     const managerAddress = await this.dappManager.currentManagerAddress();
     if (!chainInfo) return;
-    const contract: any = await this.getCAContract(chainInfo);
+    const contract: any = await this.getTokenContract(chainInfo);
 
     const rs = await contract.callViewMethod('IsManagerReadOnly', {
       caHash,
@@ -70,9 +71,65 @@ export default class AELFMethodController {
     });
     console.log('checkIsReadOnly', rs, caHash, managerAddress);
 
-    // TODO: set state in store
     return !!rs?.data;
   };
+
+  // protected handleApprove = async (request: IRequestParams) => {
+  //   const { payload, eventName } = request || {};
+  //   const { params } = payload || {};
+
+  //   const { symbol, amount, spender } = params?.paramsOption || {};
+  //   // check approve input && check valid amount
+  //   if (!(symbol && amount && spender) || ZERO.plus(amount).isNaN() || ZERO.plus(amount).lte(0)) {
+  //     return;
+  //     // return generateErrorResponse({ eventName, code: ResponseCode.ERROR_IN_PARAMS });
+  //   }
+
+  //   const tokenContract = await this.getTokenContract(payload.chainId);
+
+  //   const tokenInfo = await tokenContract?.callViewMethod('GetTokenInfo', { symbol });
+
+  //   if (tokenInfo?.error || isNaN(tokenInfo?.data.decimals)) {
+  //     return;
+  //     // return generateErrorResponse({ eventName, code: ResponseCode.ERROR_IN_PARAMS, msg: `${symbol} error` });
+  //   }
+
+  //   // TODO: show info modal
+  //   // const info = await this.dappOverlay.approve(this.dapp, {
+  //   //   approveInfo: {
+  //   //     ...params?.paramsOption,
+  //   //     decimals: tokenInfo?.data.decimals,
+  //   //     targetChainId: payload.chainId,
+  //   //     contractAddress,
+  //   //   },
+  //   //   isDiscover: this.isDiscover,
+  //   //   eventName,
+  //   //   batchApproveNFT: this.config?.batchApproveNFT,
+  //   // });
+
+  //   // if (!info) {
+  //   //   return this.userDenied(eventName);
+  //   // }
+  //   // const { guardiansApproved, approveInfo } = info;
+
+  //   const finallyApproveSymbol = this.config?.batchApproveNFT ? getApproveSymbol(approveInfo.symbol) : symbol;
+
+  //   const caHash = this.dappManager.caHash();
+  //   return this.sendTransaction(eventName, {
+  //     ...payload,
+  //     method: ApproveMethod.ca,
+  //     contractAddress: chainInfo?.caContractAddress,
+  //     params: {
+  //       paramsOption: {
+  //         caHash,
+  //         spender: approveInfo.spender,
+  //         symbol: finallyApproveSymbol,
+  //         amount: approveInfo.amount,
+  //         guardiansApproved: getGuardiansApprovedByApprove(guardiansApproved),
+  //       },
+  //     },
+  //   });
+  // };
 
   handleRequest = async ({ params, method, callBack }: { params: any; method: any; callBack: any }) => {
     // TODO
@@ -245,6 +302,7 @@ export default class AELFMethodController {
 
   getWalletName: RequestCommonHandler = async (sendResponse: SendResponseFun, message) => {
     try {
+      // TODO: change
       const isActive = await this.dappManager.isActive();
       if (!isActive)
         return sendResponse({
@@ -435,20 +493,24 @@ export default class AELFMethodController {
         });
 
       // readOnly check
-      if (TelegramPlatform.isTelegramPlatform() && (await this.checkIsReadOnly(payload.chainId))) {
-        const result = await OpenPageService.openPage({
-          pageType: WalletPageType.GuardianApproveForLogin,
-          data: {
-            caHash,
-            networkType: this.networkType,
-            originChainId,
-            targetChainId: payload.chainId,
-          },
-        });
+      if (TelegramPlatform.isTelegramPlatform() && this.managerReadOnly) {
+        const managerReadOnly = await this.checkIsReadOnly(payload.chainId);
+        this.managerReadOnly = !!managerReadOnly;
+        if (this.managerReadOnly) {
+          const result = await OpenPageService.openPage({
+            pageType: WalletPageType.GuardianApproveForLogin,
+            data: {
+              caHash,
+              networkType: this.networkType,
+              originChainId,
+              targetChainId: payload.chainId,
+            },
+          });
 
-        // TODO: continue
-        if (result) {
-          console.log('result', result);
+          // TODO: continue
+          if (result) {
+            this.managerReadOnly = false;
+          }
         }
       }
       // readOnly check finish
@@ -477,50 +539,40 @@ export default class AELFMethodController {
         }
 
         // TODO: show ADD guardian
-        // this.approvalController.authorizedToCheckWalletSecurity({
-        //   showSync,
-        //   showGuardian,
-        //   accelerateChainId: payload.chainId,
-        //   accelerateGuardianTxId: _txId,
-        // });
-        return sendResponse({
-          ...errorHandler(400001),
+        await OpenPageService.openPage({
+          pageType: WalletPageType.AddGuardian,
           data: {
-            code: ResponseCode.USER_DENIED,
-            msg: 'There are security risks in the current wallet status',
+            showGuardian,
+            accelerateChainId: payload.chainId,
+            accelerateGuardianTxId: _txId,
           },
         });
       }
 
-      const key = randomId();
       // is approve
       const isApprove = await this.dappManager.isApprove({
         contractAddress: payload.contractAddress,
         method: payload?.method,
         chainId: payload.chainId,
       });
-      let result;
 
+      const key = randomId();
       if (isApprove) {
         if (payload?.params?.paramsOption.symbol == '*') {
           return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
         }
-        // TODO: change it
-        // setLocalStorage({ txPayload: { [key]: JSON.stringify(payload) } });
-        // delete message.payload?.params;
-        // const _config = this.config?.[origin];
-        // TODO: allowance approve
-        // result = await this.approvalController.authorizedToAllowanceApprove({
-        //   origin,
-        //   transactionInfoId: key,
-        //   icon: message.icon,
-        //   method: payload?.method,
-        //   chainId: payload.chainId,
-        //   batchApproveNFT: _config?.batchApproveNFT,
-        // });
-
-        // TODO: how to change it?
-        // removeLocalStorage('txPayload');
+        const _config = this.config?.[origin];
+        await OpenPageService.openPage({
+          pageType: WalletPageType.SetAllowance,
+          data: {
+            origin,
+            transactionInfoId: key,
+            icon: message.icon,
+            method: payload?.method,
+            chainId: payload.chainId,
+            batchApproveNFT: _config?.batchApproveNFT,
+          },
+        });
       } else {
         const isForward = chainInfo?.caContractAddress !== payload.contractAddress;
         const method = isForward ? 'ManagerForwardCall' : payload?.method;
@@ -533,13 +585,10 @@ export default class AELFMethodController {
               msg: 'The current method is not supported',
             },
           });
-        // TODO: how to change it?
-        // setLocalStorage({ txPayload: { [key]: JSON.stringify(payload.params) } });
-        // delete message.payload?.params;
       }
 
       // transfer start
-      const contract: any = await this.getCAContract(chainInfo);
+      const contract: any = await this.getTokenContract(chainInfo);
       if (!contract) return;
       const isForward = chainInfo.caContractAddress !== payload.contractAddress;
 
@@ -731,7 +780,7 @@ export default class AELFMethodController {
     }
   };
 
-  async getCAContract(chainInfo: ChainInfo) {
+  async getTokenContract(chainInfo: ChainInfo) {
     const manager = await this.getManager();
     return await getContract({
       manager,

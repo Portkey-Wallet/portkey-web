@@ -20,6 +20,8 @@ import {
   GuardianApproval,
   getOperationDetails,
   NetworkType,
+  SetAllowance,
+  GuardianAdd,
   CustomSvg,
 } from '@portkey/did-ui-react';
 import { ChainId } from '@portkey/types';
@@ -368,6 +370,15 @@ function WebPageInner() {
         />
       )}
 
+      <div>-----------</div>
+      {pageState?.pageType === WalletPageType.AddGuardian && (
+        <GuardianAdd caHash={''} originChainId={'AELF'} networkType={'MAINNET'} />
+      )}
+
+      <div>-----------</div>
+      {pageState?.pageType === WalletPageType.SetAllowance && <SetAllowance symbol={''} amount={''} />}
+
+      <div>-----------</div>
       {/* 
       <Button
         onClick={async () => {
