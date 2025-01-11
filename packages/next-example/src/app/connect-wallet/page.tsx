@@ -152,8 +152,7 @@ export default function ConnectWallet() {
           </p>
         );
       })}
-      <Button onClick={() => loginInWeb(SocialLoginType.TELEGRAM)}>Login TG in web</Button>
-      <Button onClick={() => loginInWeb(SocialLoginType.GOOGLE)}>Custom Login with multiply guardians </Button>
+      <Button onClick={() => loginInWeb(SocialLoginType.TELEGRAM)}>Custom Login with TG</Button>
       <Button onClick={initProvider}>init provider</Button>
 
       <Button
