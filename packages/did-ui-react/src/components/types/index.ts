@@ -1,7 +1,7 @@
 import { CAInfo } from '@portkey/did';
 import { AccountType } from '@portkey/services';
 import { ChainId, IBlockchainWallet } from '@portkey/types';
-import { CSSProperties, ReactNode } from 'react';
+import { CSSProperties, ReactNode, Ref } from 'react';
 import { IGuardianIdentifierInfo, IPhoneCountry } from './signIn';
 import { OnErrorFunc, ThemeType, TotalAccountType, ValidatorHandler } from '../../types';
 import { TAllLoginKey } from '../../utils/googleAnalytics';
@@ -101,6 +101,7 @@ export interface IBaseGetGuardianProps {
   extraElementList?: ReactNode[]; // extra element
   loginMethodsOrder?: TotalAccountType[];
   recommendIndexes?: number[];
+  cryptoDesignRef?: Ref<unknown> | undefined;
   onError?: OnErrorFunc;
   validateEmail?: ValidatorHandler; // validate email
   validatePhone?: ValidatorHandler; // validate phone

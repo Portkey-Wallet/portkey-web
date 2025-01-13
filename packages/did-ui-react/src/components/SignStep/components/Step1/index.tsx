@@ -7,9 +7,11 @@ import { useUpdateEffect } from 'react-use';
 import LoginModal from '../../../LoginModal';
 import SocialDesign from '../../../SocialDesign/index.component';
 import Web2Design from '../../../Web2Design/index.component';
-import { ISocialLogin } from '../../../../types';
-import { setLoading } from '../../../../utils';
 
+export enum STEP {
+  socialLogin,
+  inputLogin,
+}
 export type OnSignInFinishedFun = (values: {
   isFinished: boolean;
   result: {
@@ -39,6 +41,8 @@ function Step1({
   onError,
   ...props
 }: Step1Props) {
+  const socialDesignRef = useRef<{ setAccountType: (type: string | null) => void }>(null);
+  const cryptoDesignRef = useRef<{ setStep: (step: STEP) => void }>(null);
   const [createType, setCreateType] = useState<SignInLifeCycleType>(type || 'Login');
   const [open, setOpen] = useState<boolean>();
   const signInSuccessRef = useRef<IGuardianIdentifierInfo>();
@@ -147,6 +151,7 @@ function Step1({
           onError={onError}
           onSuccess={onSuccess}
           onSignTypeChange={setCreateType}
+          ref={socialDesignRef}
         />
       )}
 
@@ -174,10 +179,21 @@ function Step1({
           onError={onError}
           onSignTypeChange={setCreateType}
           onSuccess={onSuccess}
+          cryptoDesignRef={cryptoDesignRef}
         />
       )}
 
-      <LoginModal open={open} type={createType} onCancel={() => setOpen(false)} onConfirm={onConfirm} />
+      <LoginModal
+        open={open}
+        type={createType}
+        onCancel={() => {
+          setOpen(false);
+          socialDesignRef?.current?.setAccountType(null);
+          cryptoDesignRef?.current?.setStep(STEP.socialLogin);
+          // setCreateType('Login');
+        }}
+        onConfirm={onConfirm}
+      />
     </>
   );
 }
