@@ -3,6 +3,7 @@ import { useWebWallet } from '../context/ConnectWebWalletProvider';
 import { IConnectParams } from '../context/types';
 import { MethodsBase, MethodsWallet } from '@portkey/provider-types';
 import { useRequestMethod } from './useRequestMethod';
+import { TWalletInfo, WalletInfoControl } from '../utils/localWalletInfo';
 
 export const useConnect = () => {
   const [{ provider }] = useWebWallet();
@@ -24,6 +25,13 @@ export const useConnect = () => {
         method: MethodsBase.REQUEST_ACCOUNTS,
         payload: options,
       });
+
+      const walletInfo = await requestMethod({
+        method: MethodsWallet.WALLET_INFO,
+      });
+
+      WalletInfoControl.setWalletInfo(walletInfo as TWalletInfo);
+
       // dispatch(basicModalView.setWalletDialog.actions(false));
       console.log(result, 'result===useConnect==connect');
       return result;
@@ -38,6 +46,9 @@ export const useConnect = () => {
     const result = await requestMethod({
       method: MethodsWallet.WALLET_DISCONNECT,
     });
+
+    WalletInfoControl.resetWalletInfo();
+
     console.log(result, 'result==');
     return result;
   }, [provider, requestMethod]);
