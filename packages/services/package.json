@@ -1,6 +1,6 @@
 {
   "name": "@portkey/services",
-  "version": "2.17.2-alpha.1",
+  "version": "2.17.8",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,10 +41,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "@portkey/graphql": "^2.17.2-alpha.1",
-    "@portkey/request": "^2.17.2-alpha.1",
-    "@portkey/types": "^2.17.2-alpha.1",
-    "@portkey/utils": "^2.17.2-alpha.1"
+    "@portkey/graphql": "^2.17.8",
+    "@portkey/request": "^2.17.8",
+    "@portkey/types": "^2.17.8",
+    "@portkey/utils": "^2.17.8"
   },
   "devDependencies": {
     "@jest/globals": "^29.3.1",
@@ -56,5 +56,5 @@
     "aelf-sdk": "^3.4.7",
     "query-string": "^7.1.1"
   },
-  "gitHead": "dc404b8027cfc47c9a1588d0a092ab0469b6ee97"
+  "gitHead": "5987857c1fc0e12775425f3d876188be78421ca7"
 }

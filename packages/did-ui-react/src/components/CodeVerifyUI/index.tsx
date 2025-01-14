@@ -17,6 +17,7 @@ export interface ICodeVerifyUIInterface {
 export interface BaseCodeVerifyUIProps extends BaseCodeVerifyProps {
   code?: string;
   error?: boolean;
+  errorMsg?: string;
   isLoading?: boolean;
   onCodeChange?: (code: string) => void;
   onReSend?: () => void;
@@ -29,6 +30,7 @@ const CodeVerifyUI = forwardRef(
       verifier,
       className,
       error = false,
+      errorMsg,
       isCountdownNow,
       guardianIdentifier,
       code,
@@ -92,7 +94,9 @@ const CodeVerifyUI = forwardRef(
             onFill={onCodeFinish}
           />
           {error && (
-            <div className="portkey-ui-code-verify-passcode-error-message">{`Incorrect code, please try again.`}</div>
+            <div className="portkey-ui-code-verify-passcode-error-message">
+              {errorMsg || `Incorrect code, please try again.`}
+            </div>
           )}
 
           {isLoading ? (

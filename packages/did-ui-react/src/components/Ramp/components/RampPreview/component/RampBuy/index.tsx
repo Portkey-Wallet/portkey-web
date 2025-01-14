@@ -42,6 +42,39 @@ export default function RampBuy({
   onShowPreview,
   onBack,
 }: IRampBuyProp) {
+  const [init, setInit] = useState(false);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const fiatTextRef = useRef<HTMLDivElement>(null);
+  const [maxWidth, setMaxWidth] = useState(0);
+
+  useEffect(() => {
+    if (!init) {
+      return;
+    }
+    const res = setTimeout(() => {
+      if (containerRef.current && fiatTextRef.current) {
+        const style = window.getComputedStyle(containerRef.current);
+        const fiatTextStyle = window.getComputedStyle(fiatTextRef.current);
+        const paddingLeft = parseFloat(style.paddingLeft || '0');
+        const paddingRight = parseFloat(style.paddingRight || '0');
+        const marginLeft = parseFloat(fiatTextStyle.marginLeft || '0');
+        const paddingWidth = paddingLeft + paddingRight;
+        console.log(
+          containerRef.current.clientWidth,
+          paddingLeft,
+          paddingRight,
+          fiatTextRef.current.clientWidth,
+          marginLeft,
+        );
+        const noPaddingWidth =
+          containerRef.current.clientWidth - paddingWidth - fiatTextRef.current.clientWidth - marginLeft;
+        setMaxWidth(noPaddingWidth);
+      }
+    }, 100);
+    return () => {
+      clearTimeout(res);
+    };
+  }, [init]);
   const { symbol, icon, network, chainId } = selectedCrypto;
   const textInputRef = useRef<HTMLInputElement>(null);
   const [buttonLoading, setButtonLoading] = useState(false);
@@ -85,6 +118,7 @@ export default function RampBuy({
       console.log('buyForm refreshList error', error);
     } finally {
       setLoading(false);
+      setInit(true);
       if (textInputRef.current) {
         textInputRef.current.focus();
       }
@@ -305,7 +339,7 @@ export default function RampBuy({
         }
         rightCallback={onChangeCurrency}
       />
-      <div className="portkey-ui-ramp-content portkey-ui-flex-column-center ramp-buy">
+      <div className="portkey-ui-ramp-content portkey-ui-flex-column-center ramp-buy" ref={containerRef}>
         <div className="ramp-buy-pageWrap">
           {/* Fiat Input Section */}
           <div className="fiatWrap">
@@ -316,10 +350,12 @@ export default function RampBuy({
               amount={amount}
               amountError={amountError}
               textInputRef={textInputRef}
+              maxWidth={maxWidth}
             />
             {/* Fiat Symbol */}
             <div
               className="fiatText"
+              ref={fiatTextRef}
               onClick={() => {
                 if (textInputRef.current) {
                   textInputRef.current.focus();
@@ -346,7 +382,6 @@ export default function RampBuy({
       <CommonModal
         className="change-currency-modal-list"
         open={openFiatModal}
-        height={582}
         onClose={() => {
           setOpenFiatModal(false);
         }}>
@@ -361,7 +396,7 @@ export default function RampBuy({
             }}
           />
         </div>
-        <ul style={{ width: '100%', marginTop: 16, overflowY: 'auto' }}>
+        <ul style={{ width: '100%', overflowY: 'auto' }}>
           {filteredList?.map((item, index) => (
             <li
               key={index + '_' + item.symbol}

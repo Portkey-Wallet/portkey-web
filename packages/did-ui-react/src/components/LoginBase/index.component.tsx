@@ -38,6 +38,7 @@ export interface LoginBaseProps {
   onSocialLoginFinish?: SocialLoginFinishHandler;
   onStep?: (value: CreateWalletType) => void;
   onError?: OnErrorFunc;
+  onClose?: () => void;
 }
 
 enum STEP {
@@ -60,6 +61,7 @@ export default function LoginCard({
   isEmailLoading,
   onStep,
   onError,
+  onClose,
   onInputFinish,
   validateEmail,
   onSocialStart,
@@ -84,6 +86,8 @@ export default function LoginCard({
           validatePhone={validatePhone}
           onFinish={onInputFinish}
           onBack={() => setStep(STEP.socialLogin)}
+          onClose={onClose}
+          switchType={onStep}
         />
       ) : (
         <SocialLogin

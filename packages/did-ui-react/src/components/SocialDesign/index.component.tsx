@@ -42,6 +42,7 @@ function SocialDesign({
   onSocialStart,
   onChainIdChange,
   onLoginFinishWithoutPin,
+  onSignTypeChange,
 }: SocialDesignProps) {
   const [accountType, setAccountType] = useState<SocialDesignType>(type);
   const validateEmailRef = useRef<SocialDesignProps['validateEmail']>(defaultValidateEmail);
@@ -77,7 +78,7 @@ function SocialDesign({
         setLoading(true);
         const result = await socialLoginHandler(type as any);
 
-        setLoading(false);
+        // setLoading(false);
         if (result) {
           await onSocialFinish(result);
         }
@@ -132,6 +133,7 @@ function SocialDesign({
           onFinish={onInputFinish}
           onBack={() => setAccountType(null)}
           onClose={onClose}
+          switchType={onSignTypeChange}
         />
       )}
 

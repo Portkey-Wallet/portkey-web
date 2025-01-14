@@ -55,7 +55,7 @@ export default function UnLock({
   const mainContent = useCallback(() => {
     return (
       <div id="portkey-ui-unlock-body" className="unlock-body">
-        <CustomSvg type="Portkey" style={{ width: '80px', height: '80px' }} />
+        <CustomSvg type="Portkey" style={{ width: '48px', height: '48px' }} />
         <h1 className="unlock-title">Welcome back!</h1>
         <div className="password-wrap">
           {keyboard ? (
@@ -69,7 +69,7 @@ export default function UnLock({
             />
           ) : (
             <>
-              <span className="label-tip">{t('Set PIN')}</span>
+              <span className="label-tip">{t('PIN')}</span>
               <CustomPassword
                 value={value}
                 placeholder={t('Enter Pin')}
@@ -101,7 +101,7 @@ export default function UnLock({
       {uiType === 'Full' ? (
         <div className="portkey-sign-full-wrapper">{mainContent()}</div>
       ) : (
-        <CommonBaseModal destroyOnClose className={className} open={open} onClose={onCancel} height={668}>
+        <CommonBaseModal destroyOnClose className={className} open={open} onClose={onCancel}>
           {mainContent()}
         </CommonBaseModal>
       )}

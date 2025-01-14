@@ -23,6 +23,7 @@ export default function BaseConfigProvider({
   chainType?: ChainType;
   children: ReactNode;
 }) {
+  console.log('setGlobalConfig BaseConfigProvider theme', theme);
   return (
     <PortkeyProvider sandboxId={sandboxId} chainType={chainType} networkType={networkType} theme={theme}>
       <div id={PORTKEY_ROOT_ID} className={clsx('portkey-ui-wrapper', theme === 'dark' && 'portkey-ui-dark-wrapper')}>

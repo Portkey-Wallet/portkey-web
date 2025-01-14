@@ -12,6 +12,7 @@ export interface GuardianInputInfo {
     nonce?: string;
     timestamp?: number;
   };
+  type?: 'Login' | 'SignUp';
 }
 
 export interface IGuardianIdentifierInfo extends GuardianInputInfo {

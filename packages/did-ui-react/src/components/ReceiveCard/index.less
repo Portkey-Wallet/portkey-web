@@ -82,7 +82,12 @@
             width: 16px;
             height: 16px;
           }
-
+          .token-img-skeleton{
+            width: 16px;
+            height: 16px;
+            border-radius: 9999;
+            background: var(--sds-color-background-default-tertiary);
+          }
           .chain-name-container {
             display: flex;
             width: 100%;
@@ -91,6 +96,13 @@
             line-height: 14px;
             font-size: 14px;
             color: var(--sds-color-text-default-default);
+          }
+          .chain-name-container-skeleton {
+            width: 80px;
+            height: 12px;
+            border-radius: 4px;
+            background: var(--sds-color-background-default-tertiary);
+            align-self: center;
           }
         }
       }
@@ -126,10 +138,11 @@
           font-weight: 400;
           line-height: 22.4px;
           font-size: 16px;
-          color: var(--sds-color-text-default-default);
+          color: var(--sds-color-text-neutral-tertiary);
 
           &.active {
             background-color: var(--sds-color-background-default-secondary);
+            color: var(--sds-color-text-neutral-default);
           }
         }
       }
@@ -137,6 +150,7 @@
         display: flex;
         gap: 2px;
         margin-bottom: 12px;
+        margin-top: 0;
         .exchange-icon {
           width: 32px;
           height: 32px;
@@ -246,7 +260,7 @@
   .received-exchange-modals-header {
     display: flex;
     justify-content: space-between;
-    padding: 16px;
+    padding: 16px 16px 12px 16px;
 
     .title {
       font-weight: 700;

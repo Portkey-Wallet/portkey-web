@@ -9,11 +9,15 @@
     display: flex;
     flex-direction: column;
     padding: 16px;
+    &.haveHeader{
+      padding: 0 16px 16px;
+    }
     .guardian-list-title {
       font-size: 20px;
       line-height: 24px;
       font-weight: 700;
       color: var(--sds-color-text-default-default);
+      font-family: 'Bricolage Grotesque Bold'
     }
     .guardian-list-description {
       margin-top: 16px;
@@ -91,7 +95,7 @@
       flex: 1;
       .login-guardians-text,
       .other-guardians-text {
-        padding: 40px 0 0 0;
+        padding: 16px 0 0 0;
         font-size: 14px;
         line-height: 20px;
         color: var(--sds-color-text-default-secondary);

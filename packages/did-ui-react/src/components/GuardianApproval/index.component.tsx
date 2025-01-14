@@ -20,6 +20,7 @@ import {
   handleErrorMessage,
   handleVerificationDoc,
   modalMethod,
+  setLoading,
 } from '../../utils';
 import type { ChainId, TStringJSON } from '@portkey/types';
 import { HOUR, MINUTE } from '../../constants';
@@ -241,7 +242,7 @@ const GuardianApprovalMain = forwardRef(
             approveDetail: approveDetail,
             caHash,
           };
-          // setLoading(true);
+          setLoading(true);
           if (isAsyncVerify) {
             const rst = await asyncVerifyToken(accountType, { ...verifyParams, customLoginHandler });
 
@@ -296,7 +297,7 @@ const GuardianApprovalMain = forwardRef(
             onError,
           );
         } finally {
-          // setLoading(false);
+          setLoading(false);
         }
       },
       [
@@ -353,7 +354,7 @@ const GuardianApprovalMain = forwardRef(
     const onAsyncVerifying = useCallback(
       async (_item: UserGuardianStatus, key: string) => {
         try {
-          // setLoading(true);
+          setLoading(true);
 
           const accountType = _item.guardianType as ISocialLogin;
           if (!_item?.asyncVerifyInfoParams) throw new Error('asyncVerifyInfoParams is required');
@@ -383,11 +384,11 @@ const GuardianApprovalMain = forwardRef(
               return item;
             });
           });
-          // setLoading(false);
+          setLoading(false);
 
           setVerifyAccountKey(undefined);
         } catch (error) {
-          // setLoading(false);
+          setLoading(false);
           return errorTip(
             {
               errorFields: 'GuardianApproval',
@@ -397,7 +398,7 @@ const GuardianApprovalMain = forwardRef(
             onError,
           );
         } finally {
-          // setLoading(false);
+          setLoading(false);
         }
       },
       [isErrorTip, onError, verifyToken],
@@ -541,6 +542,7 @@ const GuardianApprovalMain = forwardRef(
               onError={onError}
               onExpiredRetry={onResetGuardianList}
               onExpiredCancel={onExpiredCancel}
+              header={!!header}
             />
           </>
         )}

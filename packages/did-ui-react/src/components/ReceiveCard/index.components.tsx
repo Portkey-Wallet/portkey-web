@@ -8,6 +8,9 @@ import { MAIN_CHAIN_ID } from '../../constants/network';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import { formatStr2EllipsisStr } from '../../utils';
 import ReceiveCardPureComponent from './index.pure';
+import { QRCodeDataObjType, shrinkSendQrData } from '../../utils/qrCode';
+import { NetworkType } from '../../types';
+import { useEffectOnce } from 'react-use';
 
 enum SELECTION_TYPE {
   SOURCE = 'Source',
@@ -23,23 +26,31 @@ enum CHAIN_ID {
 
 type NetworkItem = {
   imageUrl: string;
-  chainId: ChainId;
+  chainId?: ChainId;
   name: string;
   key: string;
 };
 
 export type TokenItem = TReceiveFromNetworkItem | ChainInfo | NetworkItem;
+const getNetworkList = (networkType: NetworkType) => {
+  NETWORK_LIST.forEach((item) => {
+    if (item.key === 'aelf dAppChain') {
+      item.chainId = networkType === 'MAINNET' ? 'tDVV' : 'tDVW';
+    } else {
+      item.chainId = 'AELF';
+    }
+  });
+  return NETWORK_LIST;
+};
 
 const NETWORK_LIST: NetworkItem[] = [
   {
     imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/dappChain.png',
-    chainId: CHAIN_ID.tDVW,
     name: 'aelf dAppChain',
     key: 'aelf dAppChain',
   },
   {
     imageUrl: 'https://portkey-did.s3.ap-northeast-1.amazonaws.com/img/aelf/mainChain.png',
-    chainId: CHAIN_ID.tDVV,
     name: 'aelf MainChain',
     key: 'aelf MainChain',
   },
@@ -48,9 +59,10 @@ const NETWORK_LIST: NetworkItem[] = [
 export interface ReceiveCardProps {
   onBack?: () => void;
   selectToken: BaseToken;
+  networkType: NetworkType;
 }
 
-export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProps) {
+export default function ReceiveCardMain({ onBack, selectToken, networkType }: ReceiveCardProps) {
   const {
     loading,
     receiveType,
@@ -71,7 +83,7 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   const [isSelectionModalOpen, setIsSelectionModalOpen] = useState(false);
   const [isReceivedExchangeModalOpen, setIsReceivedExchangeModalOpen] = useState(false);
   const [currentDepositInfo, setCurrentDepositInfo] = useState<TDepositInfo>();
-  const [{ caInfo }] = usePortkeyAsset();
+  const [{ caInfo, caAddressInfos }] = usePortkeyAsset();
 
   const { loading: eTransferLoading, depositInfo } = useReceiveByETransfer({
     toChainId: destinationChain?.chainId as ChainId,
@@ -98,12 +110,21 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
     if (destinationChain) {
       setSelectedDestination(destinationChain);
     }
-
+  }, [
+    sourceChain,
+    destinationChain,
+    isMainChainToMainChain,
+    selectToken.isNFT,
+    selectToken.symbol,
+    selectedType,
+    selectedDestination,
+    networkType,
+  ]);
+  useEffect(() => {
     if (isMainChainToMainChain && !selectToken.isNFT && selectToken.symbol === 'ELF') {
       setIsReceivedExchangeModalOpen(true);
     }
-  }, [sourceChain, destinationChain, isMainChainToMainChain, selectToken.isNFT, selectToken.symbol]);
-
+  }, [isMainChainToMainChain, selectToken.isNFT, selectToken.symbol]);
   const showExchangeTip = useMemo(
     () =>
       selectToken?.symbol === 'ELF' &&
@@ -113,14 +134,19 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
   );
 
   const onSelectedChange = (item: TokenItem) => {
-    if (selectedType === SELECTION_TYPE.SOURCE || selectedType === SELECTION_TYPE.NFT) {
+    console.log('wfs onSelectedChange==>', item);
+    if (selectedType === SELECTION_TYPE.SOURCE) {
       setSourceChain(item as TReceiveFromNetworkItem);
       setSelectedSource(item as TReceiveFromNetworkItem);
       return;
     }
-    setSelectedDestination(item as ChainInfo);
-
-    if (!selectToken.isNFT) {
+    if (selectedType === SELECTION_TYPE.NFT) {
+      setSourceChain(item as TReceiveFromNetworkItem);
+      updateDestinationChain(item as ChainInfo);
+      return;
+    }
+    if (selectedType === SELECTION_TYPE.DESITNATION) {
+      setSelectedDestination(item as ChainInfo);
       updateDestinationChain(item as ChainInfo);
     }
   };
@@ -150,15 +176,15 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
 
   const renderSelectionList = useMemo(() => {
     if (selectedType === SELECTION_TYPE.NFT) {
-      return NETWORK_LIST;
+      return getNetworkList(networkType);
     }
     if (selectedType === SELECTION_TYPE.SOURCE) {
       return sourceChainList;
     }
 
     return destinationChainList || [];
-  }, [destinationChainList, selectedType, sourceChainList]);
-
+  }, [destinationChainList, networkType, selectedType, sourceChainList]);
+  console.log('wfs selectedSource', selectedSource);
   const renderTip = () => {
     if (selectToken.isNFT) {
       return (
@@ -171,8 +197,9 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
     if (isMainChainToMainChain && isExchangeSelected) {
       return (
         <span>
-          Send {selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> from exchange to this
-          address and receive on the <span className="chain">{destinationChain?.displayChainName}</span>
+          Send {selectToken.label || selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> from
+          exchange to this address and receive on the{' '}
+          <span className="chain">{destinationChain?.displayChainName}</span>
         </span>
       );
     }
@@ -180,21 +207,28 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
     if (receiveType === ReceiveType.ETransfer) {
       return (
         <span>
-          Send {selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> to this address and receive
-          on the <span className="chain">{selectedDestination?.displayChainName}</span>. Transfers from both exchange
-          and non-exchange addresses are accepted.
+          Send {selectToken.label || selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> to
+          this address and receive on the <span className="chain">{selectedDestination?.displayChainName}</span>.
+          Transfers from both exchange and non-exchange addresses are accepted.
         </span>
       );
     }
 
     return (
       <span>
-        Send {selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> to this address and receive
-        on the <span className="chain">{selectedDestination?.displayChainName}</span>.
+        Send {selectToken.label || selectToken.symbol} on <span className="chain">{selectedSource?.name}</span> to this
+        address and receive on the <span className="chain">{selectedDestination?.displayChainName}</span>.
       </span>
     );
   };
-
+  const currentAddressInfo = useMemo(
+    () => caAddressInfos?.find((item) => item.chainId === destinationChain?.chainId),
+    [caAddressInfos, destinationChain?.chainId],
+  );
+  const toCaAddress = useMemo(
+    () => `ELF_${currentAddressInfo?.caAddress}_${selectedDestination?.chainId}`,
+    [currentAddressInfo?.caAddress, selectedDestination?.chainId],
+  );
   const generateAddress = () => {
     const address = caInfo?.[destinationChain?.chainId as ChainId]?.caAddress;
     if (currentDepositInfo && selectedSource && !Object.keys(CHAIN_ID).includes(selectedSource?.network)) {
@@ -224,10 +258,33 @@ export default function ReceiveCardMain({ onBack, selectToken }: ReceiveCardProp
           };
         }
       }
+      const info: QRCodeDataObjType = {
+        address: toCaAddress,
+        networkType: networkType,
+        chainType: 'aelf',
+        type: 'send',
+        toInfo: {
+          name: '',
+          address: toCaAddress,
+        },
+        assetInfo: {
+          symbol: selectToken.symbol,
+          label: selectToken.label,
+          tokenContractAddress: selectedDestination.defaultToken?.address || '',
+          chainId: selectedDestination.chainId,
+          decimals: selectedDestination.defaultToken.decimals || 0,
+        },
+      };
+      const data = JSON.stringify(shrinkSendQrData(info));
       return {
-        value: `ELF_${address}_${selectedDestination.chainId}`,
+        value: data,
+        addressValue: toCaAddress,
         label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${selectedDestination.chainId}`,
       };
+      // return {
+      //   value: `ELF_${address}_${selectedDestination.chainId}`,
+      //   label: `ELF_${formatStr2EllipsisStr(address, [4, 4])}_${selectedDestination.chainId}`,
+      // };
     }
   };
 

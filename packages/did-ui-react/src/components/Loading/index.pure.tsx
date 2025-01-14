@@ -2,7 +2,6 @@ import { useRef, useEffect, useMemo } from 'react';
 import lottie, { AnimationItem } from 'lottie-web';
 import animationDarkData from './spinnerDark';
 import animationWhiteData from './spinnerWhite';
-import ConfigProvider from '../config-provider';
 
 export enum LoadingColor {
   WHITE = 'white',
@@ -13,22 +12,17 @@ export type LoadingType = {
   width?: number;
   height?: number;
   color?: LoadingColor;
-  isDarkThemeWhiteLoading?: boolean;
 };
 
-const LoadingIndicator = (props: LoadingType) => {
-  const { width = 16, height = 16, color, isDarkThemeWhiteLoading = false } = props;
+const PureLoadingIndicator = (props: LoadingType) => {
+  const { width = 16, height = 16, color = false } = props;
   const containerRef = useRef<HTMLDivElement>(null);
   const animation = useRef<AnimationItem | null>(null);
-  const theme = useMemo(() => ConfigProvider?.getGlobalConfig()?.theme, []);
   const animationData = useMemo(() => {
     if (color === LoadingColor.WHITE) return animationWhiteData;
     if (color === LoadingColor.DARK) return animationDarkData;
-    if (isDarkThemeWhiteLoading) {
-      return theme !== 'dark' ? animationDarkData : animationWhiteData;
-    }
-    return theme !== 'dark' ? animationDarkData : animationWhiteData;
-  }, [color, isDarkThemeWhiteLoading, theme]);
+    return animationDarkData;
+  }, [color]);
 
   useEffect(() => {
     if (!animation.current) {
@@ -45,9 +39,9 @@ const LoadingIndicator = (props: LoadingType) => {
       animation.current?.destroy();
       animation.current = null;
     };
-  }, [animationData, theme]);
+  }, [animationData]);
 
   return <div className="loading" style={{ width, height }} ref={containerRef}></div>;
 };
 
-export default LoadingIndicator;
+export default PureLoadingIndicator;

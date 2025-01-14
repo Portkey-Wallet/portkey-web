@@ -61,7 +61,7 @@ export default function SetPinBase({ className, onFinish, onFinishFailed }: SetP
           }}
           onFinishFailed={onFinishFailed}
           autoComplete="off">
-          <FormItem name="pin" style={{ marginBottom: 40 }}>
+          <FormItem name="pin" style={{ marginBottom: 16 }}>
             <ConfirmPassword validateFields={form.validateFields} isPasswordLengthTipShow={false} />
           </FormItem>
 

@@ -5,6 +5,7 @@
   }
  .ramp-sell-pageWrap {
   width: 100%;
+  margin-top: 48px;
   .flex {
     flex: 1;
   }
@@ -88,6 +89,7 @@
     top: 0;
     left: 0;
     padding-top: 16px;
+    padding-bottom: 12px;
     background: var(--sds-color-background-default-default);
     .change-currency-modal-list-title {
       color: var(--sds-color-text-default-default);
@@ -102,7 +104,7 @@
       margin: 0px 16px 0px;
     }
     .change-currency-modal-list-search {
-      margin: 20px 16px 0;
+      margin: 18px 16px 0;
       width: calc(100%-32px);
     }
   }
@@ -116,6 +118,12 @@
     margin: 12px 0px;
     cursor: pointer;
     width: 100%;
+    &:first-child {
+      margin-top: 0;
+    }
+    &:hover {
+      background: var(--sds-color-background-default-default-hover);
+    }
     .fiat-name {
       color: var(--sds-color-text-default-default);
       /* Body Base */

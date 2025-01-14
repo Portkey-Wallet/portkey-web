@@ -3,6 +3,151 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.17.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7...v2.17.8) (2025-01-13)
+
+**Note:** Version bump only for package root
+
+## [2.17.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.13...v2.17.7) (2025-01-13)
+
+**Note:** Version bump only for package root
+
+## [2.17.7-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.12...v2.17.7-alpha.13) (2025-01-09)
+
+### Bug Fixes
+
+- modal auto close ([746f982](https://github.com/Portkey-Wallet/portkey-web/commit/746f982a5ba9105d70faf504396d271c4a5e0e87))
+
+## [2.17.7-alpha.12](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.11...v2.17.7-alpha.12) (2025-01-09)
+
+**Note:** Version bump only for package root
+
+## [2.17.7-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.10...v2.17.7-alpha.11) (2025-01-09)
+
+### Bug Fixes
+
+- modal ui style ([a4ef648](https://github.com/Portkey-Wallet/portkey-web/commit/a4ef64811444352ba8474955aae517ecedde0265))
+
+## [2.17.7-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.9...v2.17.7-alpha.10) (2025-01-08)
+
+### Bug Fixes
+
+- ui style ([c1cda7a](https://github.com/Portkey-Wallet/portkey-web/commit/c1cda7a8711e7da4eceff54cd46dd081de67c51c))
+- ui styles ([729ac79](https://github.com/Portkey-Wallet/portkey-web/commit/729ac796110443ca2f119f4bd1aa703373589ddd))
+
+## [2.17.7-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.8...v2.17.7-alpha.9) (2025-01-07)
+
+### Bug Fixes
+
+- ui style ([84e6349](https://github.com/Portkey-Wallet/portkey-web/commit/84e6349c0e9f39c355f5aa357740c90ea3c8d7e7))
+
+## [2.17.7-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.7...v2.17.7-alpha.8) (2025-01-07)
+
+### Bug Fixes
+
+- ui styles ([567ed2a](https://github.com/Portkey-Wallet/portkey-web/commit/567ed2af0a60f2d1084ee021335efc644cfe4d89))
+
+## [2.17.7-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.6...v2.17.7-alpha.7) (2025-01-07)
+
+### Bug Fixes
+
+- ui style ([53be899](https://github.com/Portkey-Wallet/portkey-web/commit/53be899fd086427caab8cc385bbe658a2d76dd6f))
+
+## [2.17.7-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.5...v2.17.7-alpha.6) (2025-01-07)
+
+**Note:** Version bump only for package root
+
+## [2.17.7-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.4...v2.17.7-alpha.5) (2025-01-07)
+
+### Bug Fixes
+
+- ui style ([eac4972](https://github.com/Portkey-Wallet/portkey-web/commit/eac49723638c096ae9fafec47f975dd6ae7854a1))
+
+## [2.17.7-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.3...v2.17.7-alpha.4) (2025-01-04)
+
+### Bug Fixes
+
+- ui bug ([a59705f](https://github.com/Portkey-Wallet/portkey-web/commit/a59705f56858e0c78b74ec1ea1625e7f209b6847))
+
+## [2.17.7-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.2...v2.17.7-alpha.3) (2025-01-03)
+
+### Bug Fixes
+
+- confirm default text ([3e07b3d](https://github.com/Portkey-Wallet/portkey-web/commit/3e07b3d2d5d4217faa6c2130b5939175c351716f))
+
+## [2.17.7-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.1...v2.17.7-alpha.2) (2025-01-03)
+
+**Note:** Version bump only for package root
+
+## [2.17.7-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.0...v2.17.7-alpha.1) (2025-01-03)
+
+**Note:** Version bump only for package root
+
+## [2.17.7-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.6...v2.17.7-alpha.0) (2025-01-03)
+
+### Features
+
+- 🎸 add code verify error msg ([cf5835c](https://github.com/Portkey-Wallet/portkey-web/commit/cf5835cfc35af1e93442ade75847ebbdd7e67b60))
+
+## [2.17.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.5...v2.17.6) (2025-01-02)
+
+### Bug Fixes
+
+- receive symbol on display ([d954ae1](https://github.com/Portkey-Wallet/portkey-web/commit/d954ae1386fb730fca60a244d78859fd31df710d))
+- sdk ui bug ([aa5b930](https://github.com/Portkey-Wallet/portkey-web/commit/aa5b9304144c87b8baa94c0ba0241b5d89728ff2))
+
+## [2.17.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.4...v2.17.5) (2025-01-02)
+
+### Features
+
+- approve add loading ([0167590](https://github.com/Portkey-Wallet/portkey-web/commit/0167590889802c654b4d548b6f02aa4175f01eac))
+
+### Bug Fixes
+
+- 🐛 build error ([f1119f4](https://github.com/Portkey-Wallet/portkey-web/commit/f1119f48eb5609c1cc3fe80e3898bfb9eb08e093))
+- delete unused code ([f6d943d](https://github.com/Portkey-Wallet/portkey-web/commit/f6d943daa6a0ba55e9e1b8d76198080bfb03b6fe))
+- receive card bug ([a25602d](https://github.com/Portkey-Wallet/portkey-web/commit/a25602d4eacd00332b9d787c75f31b8c53abc648))
+
+## [2.17.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.3...v2.17.4) (2024-12-31)
+
+### Bug Fixes
+
+- sdk receive bug ([177cddf](https://github.com/Portkey-Wallet/portkey-web/commit/177cddfa6306e2e5156ad97dec9779ba29ad11bd))
+- ui bug ([15e7f1d](https://github.com/Portkey-Wallet/portkey-web/commit/15e7f1db84ebb5fa8556dbb30eb6dee7c36fd4e5))
+
+## [2.17.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2...v2.17.3) (2024-12-31)
+
+### Features
+
+- approve input style ([dd5dc1c](https://github.com/Portkey-Wallet/portkey-web/commit/dd5dc1ccd267a0085740a672ee77c61c345d6060))
+
+### Bug Fixes
+
+- context ([5a18378](https://github.com/Portkey-Wallet/portkey-web/commit/5a18378319183c1696d647af9928fbbd2c5e1de2))
+- login ui ([f8972aa](https://github.com/Portkey-Wallet/portkey-web/commit/f8972aaba678481fd9ac3e301bae287294f7a1c7))
+- ui bug ([c05095e](https://github.com/Portkey-Wallet/portkey-web/commit/c05095ee24525aeffbe5b6bc8a14faab53ea137a))
+
+## [2.17.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.4...v2.17.2) (2024-12-28)
+
+### Bug Fixes
+
+- 🐛 theme ([a8827a7](https://github.com/Portkey-Wallet/portkey-web/commit/a8827a799c841e992e04bb01316337cd57ff00de))
+
+## [2.17.2-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.3...v2.17.2-alpha.4) (2024-12-27)
+
+### Features
+
+- export pure loading component ([a8d064b](https://github.com/Portkey-Wallet/portkey-web/commit/a8d064bb0faa843849a99fc259382944b49592ed))
+
+## [2.17.2-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.2...v2.17.2-alpha.3) (2024-12-27)
+
+**Note:** Version bump only for package root
+
+## [2.17.2-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.1...v2.17.2-alpha.2) (2024-12-27)
+
+### Features
+
+- export sandbox prop ([d240a29](https://github.com/Portkey-Wallet/portkey-web/commit/d240a296b3a5001e587176aedf6e3fcf9c79dbb1))
+
 ## [2.17.2-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.2-alpha.0...v2.17.2-alpha.1) (2024-12-27)
 
 ### Features

@@ -23,6 +23,14 @@ export const useReceive = (token: BaseToken) => {
   const [sourceChain, setSourceChain] = useState<TReceiveFromNetworkItem>();
   const [chainList, setChainList] = useState<ChainInfo[]>([]);
 
+  // const nftDestinationChainId =
+  //   selectedType === SELECTION_TYPE.NFT
+  //     ? (selectedDestination as unknown as NetworkItem).key === 'aelf dAppChain'
+  //       ? networkType === 'MAINNET'
+  //         ? 'tDVV'
+  //         : 'tDVW'
+  //       : 'AELF'
+  //     : undefined;
   const getChainInfo = useCallback(
     (chainId: ChainId) => {
       return chainList.find((chain) => chain.chainId === chainId);

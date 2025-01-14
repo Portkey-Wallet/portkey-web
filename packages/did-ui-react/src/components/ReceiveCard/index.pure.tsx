@@ -1,6 +1,6 @@
 import clsx from 'clsx';
 import CustomSvg from '../CustomSvg';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useCallback } from 'react';
 import { ChainInfo, ReceiveType, TDepositInfo, TReceiveFromNetworkItem } from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import singleMessage from '../CustomAnt/message';
@@ -37,6 +37,7 @@ export interface IPureProps {
   generateAddress: () =>
     | {
         value: string;
+        addressValue?: string;
         label: string;
       }
     | undefined;
@@ -71,7 +72,6 @@ enum SELECTION_TYPE {
 
 type NetworkItem = {
   imageUrl: string;
-  chainId: ChainId;
   name: string;
   key: string;
 };
@@ -105,6 +105,12 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
     setIsReceivedExchangeModalOpen,
   } = props;
   const [, setCopied] = useCopyToClipboard();
+  const handleSelectionModalClose = useCallback(() => {
+    setIsSelectionModalOpen(false);
+  }, [setIsSelectionModalOpen]);
+  const handleReceivedExchangeModalClose = useCallback(() => {
+    setIsReceivedExchangeModalOpen(false);
+  }, [setIsReceivedExchangeModalOpen]);
   return (
     <>
       <div className="portkey-ui-receive-content">
@@ -113,7 +119,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
             <CustomSvg type="ArrowLeft" className="icon" fillColor="var(--sds-color-icon-default-default)" />
           </div>
           <div className="receive-content-header">
-            <p className="symbol">Receive {selectToken.isNFT ? 'NFTs' : selectToken.symbol}</p>
+            <p className="symbol">Receive {selectToken.isNFT ? 'NFTs' : selectToken.label || selectToken.symbol}</p>
           </div>
           <div
             className="right-icon"
@@ -135,18 +141,30 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                     setSelectedType(SELECTION_TYPE.NFT);
                     setIsSelectionModalOpen(true);
                   }}>
-                  <img
-                    className="token-img"
-                    src={
-                      selectedDestination?.chainImageUrl || (selectedDestination as unknown as NetworkItem)?.imageUrl
-                    }
-                  />
-                  <div className="chain-name-container">
-                    <span>
-                      {selectedDestination?.displayChainName || (selectedDestination as unknown as NetworkItem)?.name}
-                    </span>
-                    <CustomSvg type="ChevronDown2" className="icon" fillColor="var(--sds-color-icon-default-default)" />
-                  </div>
+                  {loading ? (
+                    <div className="token-img-skeleton" />
+                  ) : (
+                    <img
+                      className="token-img"
+                      src={
+                        selectedDestination?.chainImageUrl || (selectedDestination as unknown as NetworkItem)?.imageUrl
+                      }
+                    />
+                  )}
+                  {loading ? (
+                    <div className="chain-name-container-skeleton" />
+                  ) : (
+                    <div className="chain-name-container">
+                      <span>
+                        {selectedDestination?.displayChainName || (selectedDestination as unknown as NetworkItem)?.name}
+                      </span>
+                      <CustomSvg
+                        type="ChevronDown2"
+                        className="icon"
+                        fillColor="var(--sds-color-icon-default-default)"
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
             ) : (
@@ -159,15 +177,23 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                       setSelectedType(SELECTION_TYPE.SOURCE);
                       setIsSelectionModalOpen(true);
                     }}>
-                    <img className="token-img" src={selectedSource?.imageUrl} />
-                    <div className="chain-name-container">
-                      <span>{selectedSource?.name}</span>
-                      <CustomSvg
-                        type="ChevronDown2"
-                        className="icon"
-                        fillColor="var(--sds-color-icon-default-default)"
-                      />
-                    </div>
+                    {loading ? (
+                      <div className="token-img-skeleton" />
+                    ) : (
+                      <img className="token-img" src={selectedSource?.imageUrl} />
+                    )}
+                    {loading ? (
+                      <div className="chain-name-container-skeleton" />
+                    ) : (
+                      <div className="chain-name-container">
+                        <span>{selectedSource?.name}</span>
+                        <CustomSvg
+                          type="ChevronDown2"
+                          className="icon"
+                          fillColor="var(--sds-color-icon-default-default)"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="destination">
@@ -178,15 +204,23 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                       setSelectedType(SELECTION_TYPE.DESITNATION);
                       setIsSelectionModalOpen(true);
                     }}>
-                    <img className="token-img" src={selectedDestination?.chainImageUrl} />
-                    <div className="chain-name-container">
-                      <span>{selectedDestination?.displayChainName}</span>
-                      <CustomSvg
-                        type="ChevronDown2"
-                        className="icon"
-                        fillColor="var(--sds-color-icon-default-default)"
-                      />
-                    </div>
+                    {loading ? (
+                      <div className="token-img-skeleton" />
+                    ) : (
+                      <img className="token-img" src={selectedDestination?.chainImageUrl} />
+                    )}
+                    {loading ? (
+                      <div className="chain-name-container-skeleton" />
+                    ) : (
+                      <div className="chain-name-container">
+                        <span>{selectedDestination?.displayChainName}</span>
+                        <CustomSvg
+                          type="ChevronDown2"
+                          className="icon"
+                          fillColor="var(--sds-color-icon-default-default)"
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </>
@@ -245,7 +279,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                         type="Copy"
                         onClick={() => {
                           singleMessage.success('Address copied');
-                          setCopied(generateAddress()?.value || '');
+                          setCopied(generateAddress()?.addressValue || generateAddress()?.value || '');
                         }}
                         fillColor="var(--sds-color-icon-default-default)"
                       />
@@ -287,14 +321,20 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
             </>
           )}
         </div>
-        <AssetModal open={isSelectionModalOpen} height="max-content" wrapClassName="portkey-ui-receive-modals">
+        <AssetModal
+          open={isSelectionModalOpen}
+          height="max-content"
+          wrapClassName="portkey-ui-receive-modals"
+          onClose={handleSelectionModalClose}
+          closable
+          maskClosable>
           <div className="received-modals-header">
             <span className="title">{selectedType} network</span>
-            <CustomSvg
+            {/* <CustomSvg
               fillColor="var(--sds-color-icon-default-default)"
               type="Close2"
               onClick={() => setIsSelectionModalOpen(false)}
-            />
+            /> */}
           </div>
           <div className="received-modals-body">
             {renderSelectionList?.map(
@@ -327,14 +367,17 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
         <AssetModal
           open={isReceivedExchangeModalOpen}
           height="max-content"
-          wrapClassName="portkey-ui-receive-exchange-modals">
+          wrapClassName="portkey-ui-receive-exchange-modals"
+          onClose={handleReceivedExchangeModalClose}
+          closable
+          maskClosable>
           <div className="received-exchange-modals-header">
             <span className="title">Receive from an exchange?</span>
-            <CustomSvg
+            {/* <CustomSvg
               fillColor="var(--sds-color-icon-default-default)"
               type="Close2"
               onClick={() => setIsReceivedExchangeModalOpen(false)}
-            />
+            /> */}
           </div>
           <div className="received-exchange-modals-body">
             <div className="exchange-list">

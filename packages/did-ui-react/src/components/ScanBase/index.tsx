@@ -59,7 +59,7 @@ export default function ScanBase({
           }
         />
         <h2 className={clsx('font-medium scan-title')}>Log in with QR code</h2>
-        <p className="description">Please use the portkey Dapp to scan the QR code</p>
+        <p className="description">Use the Portkey Wallet app on another device to scan the QR code.</p>
       </div>
 
       <div className="scan-card-content">

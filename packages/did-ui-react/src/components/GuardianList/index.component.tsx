@@ -24,6 +24,7 @@ export interface GuardianListProps {
   operationType?: OperationTypeEnum;
   operationDetails?: TStringJSON;
   isFetching: boolean;
+  header?: boolean;
   onError?: OnErrorFunc;
   onConfirm?: () => void;
   onSend?: (item: UserGuardianStatus, key: string) => void;
@@ -44,6 +45,7 @@ function GuardianList({
   approvalLength,
   alreadyApprovalLength,
   operationDetails,
+  header = false,
   onError,
   onSend,
   onVerifying,
@@ -74,7 +76,10 @@ function GuardianList({
 
   const renderGuardianList = useMemo(() => {
     return (
-      <div className="guardian-list-content">
+      <div
+        className={clsx('guardian-list-content', {
+          haveHeader: header,
+        })}>
         <div className="guardian-list-title">{t('Guardian Approval')}</div>
         <div className="guardian-list-description">
           {t('Complete the required guardian approvals below. Note: approvals expire after 1 hour.')}

@@ -43,6 +43,7 @@ export default function AssetCard({
   onSend,
   onReceive,
   onFaucet,
+  onBack,
 }: AssetCardProps) {
   const addressCopyModalRef = useRef<IAddressCopyModalRef>(null);
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
@@ -50,17 +51,25 @@ export default function AssetCard({
 
   const leftElement = useMemo(() => {
     return (
-      <div className="portkey-ui-account-left-element" onClick={onAvatarClick}>
-        <CustomSvg className="portkey-ui-account-avatar" type={walletAvatar} />
-        <div className="portkey-ui-account-name">{nickName || '--'}</div>
+      <div className="portkey-ui-account-left-element">
         <CustomSvg
-          className="portkey-ui-account-arrow"
           fillColor="var(--sds-color-icon-default-default)"
-          type="KeyboardArrowDown"
+          type={'BackLeft'}
+          onClick={onBack}
+          className="left-back"
         />
+        <div onClick={onAvatarClick} className="portkey-ui-account-left-element">
+          <CustomSvg className="portkey-ui-account-avatar" type={walletAvatar} />
+          <div className="portkey-ui-account-name">{nickName || '--'}</div>
+          <CustomSvg
+            className="portkey-ui-account-arrow"
+            fillColor="var(--sds-color-icon-default-default)"
+            type="KeyboardArrowDown"
+          />
+        </div>
       </div>
     );
-  }, [walletAvatar, onAvatarClick, nickName]);
+  }, [onBack, onAvatarClick, walletAvatar, nickName]);
 
   const rightElement = useMemo(() => {
     return (

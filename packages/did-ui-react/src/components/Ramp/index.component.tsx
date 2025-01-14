@@ -3,8 +3,6 @@ import { useTranslation } from 'react-i18next';
 import { Radio, RadioChangeEvent } from 'antd';
 import { useEffectOnce } from 'react-use';
 import clsx from 'clsx';
-import BuyForm from './components/BuyForm';
-import SellForm from './components/SellForm';
 import { BUY_SOON_TEXT, SELL_SOON_TEXT } from '../../constants/ramp';
 import BackHeaderForPage from '../BackHeaderForPage';
 import { handleErrorMessage, setLoading } from '../../utils';
@@ -14,20 +12,15 @@ import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
 import useHandleAchSell from './hooks/useHandleAchSell';
 import walletSecurityCheck from '../ModalMethod/WalletSecurityCheck';
 import singleMessage from '../CustomAnt/message';
-import { IRampCryptoItem, IRampFiatItem, RampType } from '@portkey/ramp';
+import { IRampCryptoItem, RampType } from '@portkey/ramp';
 import './index.less';
-import { TokenItemShowType } from '../types/assets';
-import { mixRampShow, transformAction } from './utils';
+import { mixRampShow } from './utils';
 import { openloginSignal } from '@portkey/socket';
 import { getCommunicationSocketUrl } from '../config-provider/utils';
 import CommonInput from '../CommonInput';
 import { getBuyCrypto, getSellCrypto } from './utils/api';
-import useGAReport from '../../hooks/useGAReport';
 import TokenImageDisplay from '../TokenImageDisplay';
-import CustomSvg from '../CustomSvg';
-import FiatInput from './components/FiatInput';
 import RampPreview from './components/RampPreview';
-import { useBuyCryptoList } from './hooks/hook';
 
 export const enum RampStep {
   HOME,

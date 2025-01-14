@@ -110,4 +110,5 @@ export interface IBaseGetGuardianProps {
   onLoginFinishWithoutPin?: LoginFinishWithoutPin; // Only for scan
   onChainIdChange?: (value?: ChainId) => void; // When defaultChainId changed
   onClose?: () => void;
+  onSignTypeChange?: (type: CreateWalletType) => void;
 }
