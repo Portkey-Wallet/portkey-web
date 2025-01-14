@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.18.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.0...v2.18.0-alpha.1) (2025-01-14)
+
+### Features
+
+- add currentThreshold ([403469a](https://github.com/Portkey-Wallet/portkey-web/commit/403469ae81e2f41ba63b2e3d853917f200429663))
+
+### Bug Fixes
+
+- email login router ([0490f76](https://github.com/Portkey-Wallet/portkey-web/commit/0490f76fa42f9f360c2e1df357fc1de4af3ee3af))
+- type error ([751ab9e](https://github.com/Portkey-Wallet/portkey-web/commit/751ab9e0943d7824e6da917cc1ca329e794bf2da))
+
 ## [2.18.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.13...v2.18.0-alpha.0) (2025-01-10)
 
 ### Features
