@@ -1,7 +1,8 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { did, ConfigProvider, IVerifier, useVerifyToken, ISocialLoginConfig } from '@portkey/did-ui-react';
-import { AccountType, OperationTypeEnum } from '@portkey/services';
+import { AccountType, OperationTypeEnum, VerifierItem } from '@portkey/services';
 import { ChainId } from '@portkey/provider-types';
+import { zkLoginVerifierItem } from '@portkey/did-ui-react/src/constants/guardian';
 
 interface IUseVerifier {
   getRecommendationVerifier: (chainId: ChainId) => Promise<IVerifier>;
@@ -25,9 +26,12 @@ interface IUseVerifier {
     nonce?: string;
     timestamp?: number;
   }) => any;
+  verifierList: VerifierItem[];
+  getVerifierList: (chainId: ChainId) => any;
 }
 const useVerifier: () => IUseVerifier = () => {
   const verifyToken = useVerifyToken();
+  const [verifierList, setVerifierList] = useState<VerifierItem[]>([]);
 
   const socialLogin = useMemo<ISocialLoginConfig | undefined>(() => ConfigProvider.getSocialLoginConfig(), []);
 
@@ -105,9 +109,15 @@ const useVerifier: () => IUseVerifier = () => {
     [socialLogin, verifyToken],
   );
 
+  const getVerifierList = useCallback(async (chainId: ChainId) => {
+    if (!did.getVerifierServers) return;
+    const result = await did.getVerifierServers(chainId);
+    setVerifierList([...result, zkLoginVerifierItem]);
+  }, []);
+
   return useMemo(
-    () => ({ getRecommendationVerifier, verifySocialToken }),
-    [getRecommendationVerifier, verifySocialToken],
+    () => ({ verifierList, getVerifierList, getRecommendationVerifier, verifySocialToken }),
+    [getRecommendationVerifier, getVerifierList, verifierList, verifySocialToken],
   );
 };
 

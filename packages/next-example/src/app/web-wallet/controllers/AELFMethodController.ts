@@ -83,11 +83,13 @@ export default class AELFMethodController {
     return !!rs?.data;
   };
 
-  protected handleApprove = async (sendResponse: SendResponseFun, request: IRequestParams) => {
-    const { payload, eventName } = request || {};
+  protected handleApprove = async (sendResponse: SendResponseFun, message: any) => {
+    const { payload, eventName } = message || {};
+
     const { params } = payload || {};
-    const chainId = request.payload?.chainId;
+    const chainId = message.payload?.chainId;
     const chainInfo = await this.dappManager.getChainInfo(chainId);
+    if (!chainInfo) return;
 
     const { symbol, amount, spender } = params?.paramsOption || {};
     // check approve input && check valid amount
@@ -96,9 +98,12 @@ export default class AELFMethodController {
       // return generateErrorResponse({ eventName, code: ResponseCode.ERROR_IN_PARAMS });
     }
 
-    const tokenContract = await this.getCaContract(payload.chainId);
+    console.log('tokenContract start');
 
+    const tokenContract = await this.getTokenContract(chainInfo);
     const tokenInfo = await tokenContract?.callViewMethod('GetTokenInfo', { symbol });
+
+    console.log('tokenContract end', tokenInfo);
 
     if (tokenInfo?.error || isNaN(tokenInfo?.data.decimals)) {
       return;
@@ -245,9 +250,9 @@ export default class AELFMethodController {
     }
   };
 
-  setWalletConfigOptions = (sendResponse: SendResponseFun, message: any) => {
+  setWalletConfigOptions = async (sendResponse: SendResponseFun, message: any) => {
     this.config = Object.assign(this.config, { [message.origin]: message.payload });
-    console.log('===this.config', this.config);
+
     sendResponse({ ...errorHandler(0), data: true });
   };
 
@@ -518,32 +523,43 @@ export default class AELFMethodController {
       const isOriginChainId = originChainId === payload.chainId;
 
       const isSafe = safeRes.isTransferSafe || (isOriginChainId && safeRes.isOriginChainSafe);
-      const showGuardian =
-        (isOriginChainId && !safeRes.isOriginChainSafe) ||
-        (!isOriginChainId && !safeRes.isSynchronizing) ||
-        (!isOriginChainId && safeRes.isSynchronizing && !safeRes.isOriginChainSafe);
-      const showSync = !isOriginChainId && safeRes.isSynchronizing && safeRes.isOriginChainSafe;
 
-      if (!isSafe && (showGuardian || showSync)) {
-        // Open Prompt to approve add guardian
-
-        let _txId;
-        if (Array.isArray(safeRes.accelerateGuardians)) {
-          const _accelerateGuardian = safeRes.accelerateGuardians.find(
-            item => item.transactionId && item.chainId === originChainId,
-          );
-          _txId = _accelerateGuardian?.transactionId;
-        }
-
-        await OpenPageService.openPage({
-          pageType: WalletPageType.AddGuardian,
+      if (!isSafe) {
+        return sendResponse({
+          ...errorHandler(410001),
           data: {
-            showGuardian,
-            accelerateChainId: payload.chainId,
-            accelerateGuardianTxId: _txId,
+            code: ResponseCode.USER_DENIED,
+            msg: 'The account is not safe, please add guardian',
           },
         });
       }
+
+      // const showGuardian =
+      //   (isOriginChainId && !safeRes.isOriginChainSafe) ||
+      //   (!isOriginChainId && !safeRes.isSynchronizing) ||
+      //   (!isOriginChainId && safeRes.isSynchronizing && !safeRes.isOriginChainSafe);
+      // const showSync = !isOriginChainId && safeRes.isSynchronizing && safeRes.isOriginChainSafe;
+
+      // if (!isSafe && (showGuardian || showSync)) {
+      //   // Open Prompt to approve add guardian
+
+      //   let _txId;
+      //   if (Array.isArray(safeRes.accelerateGuardians)) {
+      //     const _accelerateGuardian = safeRes.accelerateGuardians.find(
+      //       item => item.transactionId && item.chainId === originChainId,
+      //     );
+      //     _txId = _accelerateGuardian?.transactionId;
+      //   }
+
+      //   await OpenPageService.openPage({
+      //     pageType: WalletPageType.AddGuardian,
+      //     data: {
+      //       showGuardian,
+      //       accelerateChainId: payload.chainId,
+      //       accelerateGuardianTxId: _txId,
+      //     },
+      //   });
+      // }
 
       // is approve
       const isApprove = await this.dappManager.isApprove({
@@ -552,13 +568,15 @@ export default class AELFMethodController {
         chainId: payload.chainId,
       });
 
+      console.log('isApprove', isApprove);
+
       const key = randomId();
       if (isApprove) {
         if (payload?.params?.paramsOption.symbol == '*') {
           return sendResponse({ ...errorHandler(400001), data: { code: ResponseCode.ERROR_IN_PARAMS } });
         }
         const _config = this.config?.[origin];
-        this.handleApprove(sendResponse, payload);
+        return this.handleApprove(sendResponse, message);
       } else {
         const isForward = chainInfo?.caContractAddress !== payload.contractAddress;
         const method = isForward ? 'ManagerForwardCall' : payload?.method;
@@ -642,7 +660,6 @@ export default class AELFMethodController {
       //     this.approvalController.authorizedToGetSignature(params, autoSha256, isManagerSignature),
       // });
 
-      const pin = this.getPassword() || '';
       const manager = await getManager();
       const data = getSignature(manager, message.payload.data);
       console.log('==== signature', message, data);
