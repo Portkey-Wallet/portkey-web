@@ -27,7 +27,7 @@ export const useConnect = () => {
       });
 
       const walletInfo = await requestMethod({
-        method: MethodsWallet.WALLET_INFO,
+        method: MethodsBase.WALLET_INFO,
       });
 
       WalletInfoControl.setWalletInfo(walletInfo as TWalletInfo);
