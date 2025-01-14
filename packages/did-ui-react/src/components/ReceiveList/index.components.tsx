@@ -119,7 +119,7 @@ const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos }: IReceiv
               {currentTokenList.map((item: IUserTokenItemNew) => (
                 <div key={item.symbol} className="item" onClick={() => onItemClick(item)}>
                   <CoinImage symbol={item.symbol} src={item.imageUrl} width={42} />
-                  <span>{item.symbol}</span>
+                  <span>{item.label || item.symbol}</span>
                 </div>
               ))}
             </div>

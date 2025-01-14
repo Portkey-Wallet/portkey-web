@@ -296,7 +296,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                       <div className="receive-card-fee-item-container">
                         <span>Minimum deposit</span>
                         <div className="receive-card-fee-item-container-right">
-                          <span>{`${currentDepositInfo.minAmount} ${selectToken.symbol}`}</span>
+                          <span>{`${currentDepositInfo.minAmount} ${selectToken.label || selectToken.symbol}`}</span>
                           <span className="usd">{`$${currentDepositInfo.minAmountUsd}`}</span>
                         </div>
                       </div>
@@ -307,13 +307,22 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
                           <span>Service fee</span>
                           <CommonModalTip
                             title="Service fee"
-                            content="This is an estimated fee charged by Cobo to cover the costs of asset consolidation.
-  Deposit amount ≥ 2 USDT: No service fee
-  Deposit amount < USDT: Max service fee 0.5 USDT"
+                            content={
+                              <>
+                                This is an estimated fee charged by Cobo to cover the costs of asset consolidation.
+                                <br />
+                                Deposit amount ≥ {currentDepositInfo.currentThreshold}{' '}
+                                {selectToken.label || selectToken.symbol}: No service fee
+                                <br />
+                                Deposit amount &lt; {currentDepositInfo.currentThreshold}{' '}
+                                {selectToken.label || selectToken.symbol}: Max service fee{' '}
+                                {currentDepositInfo.serviceFee} {selectToken.label || selectToken.symbol}
+                              </>
+                            }
                           />
                         </div>
                         <div className="receive-card-fee-item-container-right">
-                          <span>{`0~${currentDepositInfo.serviceFee} ${selectToken.symbol}`}</span>
+                          <span>{`0~${currentDepositInfo.serviceFee} ${selectToken.label || selectToken.symbol}`}</span>
                           <span className="usd">{`0~$${currentDepositInfo.serviceFeeUsd}`}</span>
                         </div>
                       </div>
