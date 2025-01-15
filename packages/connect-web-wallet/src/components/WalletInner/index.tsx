@@ -75,7 +75,8 @@ export default function WalletInner() {
   return (
     <iframe
       ref={iframeRef}
-      src={`http://localhost:3000/web-wallet?${qs.stringify(walletOptions)}`}
+      // TODO change online url
+      src={`http://localhost:3000/?${qs.stringify(walletOptions)}`}
       style={{ width: '100%', height: '700px' }}
       onLoad={onLoad}
     />

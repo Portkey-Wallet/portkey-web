@@ -53,12 +53,22 @@ export const useConnect = () => {
     return result;
   }, [provider, requestMethod]);
 
+  const showAsset = useCallback(async () => {
+    const isConnected = provider?.isConnected();
+
+    if (!isConnected) throw 'Please connect wallet';
+    await requestMethod({
+      method: MethodsWallet.WALLET_SHOW_ASSETS,
+    });
+  }, [provider, requestMethod]);
+
   return useMemo(
     () => ({
       provider,
       connect,
       disconnect,
+      showAsset,
     }),
-    [connect, disconnect, provider],
+    [connect, disconnect, provider, showAsset],
   );
 };

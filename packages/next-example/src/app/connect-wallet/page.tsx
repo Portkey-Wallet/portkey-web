@@ -7,6 +7,7 @@ import detectProvider from '@portkey/detect-provider';
 import {
   Accounts,
   ChainIds,
+  ConnectInfo,
   IAElfChain,
   MethodsBase,
   MethodsWallet,
@@ -32,7 +33,7 @@ const TokenContractAddressMap = {
 };
 const ec = new elliptic.ec('secp256k1');
 export default function ConnectWallet() {
-  const { connect, disconnect, provider } = useConnect();
+  const { connect, disconnect, provider, showAsset } = useConnect();
   const [state, dispatch] = useExampleState();
 
   const onConnect = useCallback(async () => {
@@ -68,7 +69,8 @@ export default function ConnectWallet() {
     const _chain = await provider?.getChain('AELF');
     setChain(_chain);
   };
-  const connected = async (connectInfo: NetworkType) => {
+  const connected = async (connectInfo: ConnectInfo) => {
+    console.log(connectInfo, 'connected===');
     const result = await provider?.request({
       method: MethodsBase.ACCOUNTS,
     });
@@ -165,6 +167,13 @@ export default function ConnectWallet() {
       <Button onClick={disconnect}>disconnect</Button>
       <Button
         onClick={async () => {
+          showAsset();
+        }}>
+        showAsset
+      </Button>
+      <br />
+      <Button
+        onClick={async () => {
           try {
             const _chainId = 'tDVW';
             const _chain = await provider?.getChain(_chainId);
@@ -216,6 +225,7 @@ export default function ConnectWallet() {
         }}>
         GetBalance
       </Button>
+      <br />
       <Button
         onClick={async () => {
           try {
@@ -235,6 +245,7 @@ export default function ConnectWallet() {
         }}>
         Transfer
       </Button>
+      <br />
       <Button
         onClick={async () => {
           try {
@@ -327,6 +338,7 @@ ${Date.now()}`;
         }}>
         GET_WALLET_MANAGER_SIGNATURE
       </Button>
+      <br />
       <Button
         onClick={async () => {
           try {
@@ -401,6 +413,7 @@ ${Date.now()}`;
         }}>
         GET_WALLET_TRANSACTION_SIGNATURE Transfer
       </Button>
+      <br />
       <Button
         onClick={async () => {
           try {
