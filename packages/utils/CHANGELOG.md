@@ -3,6 +3,28 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0...v2.19.0-alpha.3) (2025-01-15)
+
+## [2.19.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.1...v2.19.0-alpha.2) (2025-01-15)
+
+## [2.19.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.1...v2.19.0-alpha.1) (2025-01-14)
+
+## [2.19.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.8...v2.19.0-alpha.0) (2025-01-14)
+
+## [2.17.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7...v2.17.8) (2025-01-13)
+
+## [2.17.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.0...v2.17.7) (2025-01-13)
+
+### Features
+
+- 🎸 change controll modal visible ([681f7ef](https://github.com/Portkey-Wallet/portkey-web/commit/681f7ef7d4807eeaa6fa1b61068c088b341f828f))
+- 🎸 change unlock ([d8f99b6](https://github.com/Portkey-Wallet/portkey-web/commit/d8f99b6659b8baa19531e887304aecebcb00fee4))
+- 🎸 connect web wallet ([cc52509](https://github.com/Portkey-Wallet/portkey-web/commit/cc52509fc33a6d61af805158ee67a3ff81783891))
+
+### Bug Fixes
+
+- 🐛 rm package ([79efc1c](https://github.com/Portkey-Wallet/portkey-web/commit/79efc1ca3f99ebc2dd1a78acfcec80989ce70de6))
+
 ## [2.19.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.1...v2.19.0-alpha.2) (2025-01-15)
 
 **Note:** Version bump only for package @portkey/utils
