@@ -1,3 +1,3 @@
 import { TWalletInfo, WalletInfoControl } from './localWalletInfo';
 
-export const getWalletInfo = (): TWalletInfo => WalletInfoControl.getWalletInfo();
+export const getCacheWalletInfo = (): TWalletInfo => WalletInfoControl.getWalletInfo();
