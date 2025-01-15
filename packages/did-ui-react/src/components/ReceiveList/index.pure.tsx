@@ -7,6 +7,7 @@ import CommonInput from '../CommonInput';
 import Loading from '../Loading';
 import './index.less';
 import { IUserTokenItemResponse } from '../types/assets';
+import { NetworkType } from '../../types';
 
 export interface IPureProps {
   onBack?: () => void;
@@ -14,9 +15,10 @@ export interface IPureProps {
   onItemClick: (item: IUserTokenItemResponse & { isNFT: boolean }) => void;
   isLoading?: boolean;
   currentTokenList: IUserTokenItemResponse[];
+  networkType?: NetworkType;
 }
 export default function ReceiveListPureComponent(props: IPureProps) {
-  const { onBack, onInputChange, onItemClick, isLoading, currentTokenList } = props;
+  const { onBack, onInputChange, onItemClick, isLoading, currentTokenList, networkType } = props;
   return (
     <PortkeyStyleProvider>
       <div className={clsx('portkey-ui-received-list-wrapper')}>
@@ -38,7 +40,7 @@ export default function ReceiveListPureComponent(props: IPureProps) {
             className="nft-wrapper"
             onClick={() => {
               onItemClick({
-                // chainId: 'tDVV',
+                // chainId: networkType === 'MAINNET' ? 'tDVV' : 'tDVW',
                 symbol: 'ELF',
                 decimals: 0,
                 // address: '',
