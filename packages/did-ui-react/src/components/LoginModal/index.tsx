@@ -5,23 +5,25 @@ import ThrottleButton from '../ThrottleButton';
 
 export default function LoginModal({
   open,
-  type = 'Login',
-  maskClosable = false,
+  // type = 'Login',
+  maskClosable = true,
   onCancel,
-  onConfirm,
-}: {
+}: // onConfirm,
+{
   open?: boolean;
   type?: CreateWalletType;
   maskClosable?: boolean;
   onCancel?: () => void;
   onConfirm?: () => void;
 }) {
-  const title = type !== 'Login' ? 'You already have an account' : 'You don’t have an account';
+  // const title = type !== 'Login' ? 'You already have an account' : 'You don’t have an account';
+  // const content =
+  //   type !== 'Login' ? 'Do you want to log in with this account instead?' : 'Would you like to create one account?';
+  // const btn = type !== 'Login' ? 'Log in' : 'Sign up';
+  const title = 'This email is not registered';
   const content =
-    type !== 'Login' ? 'Do you want to log in with this account instead?' : 'Would you like to create one account?';
-  // ? 'Do you want to log in with username@email.com instead?'
-  // : 'Would you like to create one with username@email.com ?';
-  const btn = type !== 'Login' ? 'Log in' : 'Sign up';
+    'Email sign-up is suspended. You can log in using your registered email or create a new account through alternative methods.';
+  const btn = 'OK';
   return (
     <CommonModal
       maskClosable={maskClosable}
@@ -29,7 +31,7 @@ export default function LoginModal({
       open={open}
       width={320}
       title={'Continue with this account?'}
-      type={'modal'}
+      // type={'modal'}
       className="portkey-ui-signup-confirm-modal"
       onClose={onCancel}>
       <div className="warning-modal-wrapper">
@@ -41,8 +43,8 @@ export default function LoginModal({
           {/*{type === 'SignUp' && 'This account already exists. Click "Confirm" to log in.'}*/}
         </p>
         <div className="btn-warning-wrapper">
-          <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton>
-          <ThrottleButton type="primary" onClick={onConfirm}>
+          {/* <ThrottleButton onClick={onCancel}>Cancel</ThrottleButton> */}
+          <ThrottleButton type="primary" onClick={onCancel}>
             {btn}
           </ThrottleButton>
         </div>

@@ -1,4 +1,4 @@
-import { memo, useMemo, useState, useCallback, useRef } from 'react';
+import { memo, useMemo, useState, useCallback, useRef, forwardRef, useImperativeHandle } from 'react';
 import { GuardianInputInfo, IBaseGetGuardianProps } from '../types';
 import { AccountType } from '@portkey/services';
 import Overview from './components/Overview';
@@ -20,135 +20,270 @@ type SocialDesignType = AccountType | 'Scan' | null;
 export interface SocialDesignProps extends IBaseGetGuardianProps {
   type?: SocialDesignType;
 }
-
-function SocialDesign({
-  style,
-  type = null,
-  defaultChainId = 'AELF',
-  className,
-  isErrorTip = true,
-  isShowScan: showScan = true,
-  phoneCountry,
-  extraElementList,
-  termsOfService,
-  privacyPolicy,
-  loginMethodsOrder,
-  onError,
-  onSuccess,
-  onClose,
-  validateEmail: defaultValidateEmail,
-  validatePhone: defaultValidatePhone,
-  onInputConfirmStart,
-  onSocialStart,
-  onChainIdChange,
-  onLoginFinishWithoutPin,
-  onSignTypeChange,
-}: SocialDesignProps) {
-  const [accountType, setAccountType] = useState<SocialDesignType>(type);
-  const validateEmailRef = useRef<SocialDesignProps['validateEmail']>(defaultValidateEmail);
-  const validatePhoneRef = useRef<SocialDesignProps['validatePhone']>(defaultValidatePhone);
-  const onChainIdChangeRef = useRef<SocialDesignProps['onChainIdChange']>(onChainIdChange);
-  const onErrorRef = useRef<SocialDesignProps['onError']>(onError);
-  const [{ networkType, chainType }] = usePortkey();
-
-  const socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
-
-  const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
-
-  const isMobile = useMobile();
-
-  const handlerParam = useMemo(
-    () => ({
-      defaultChainId,
-      onError: onErrorRef.current,
+const SocialDesign = forwardRef(
+  (
+    {
+      style,
+      type = null,
+      defaultChainId = 'AELF',
+      className,
+      isErrorTip = true,
+      isShowScan: showScan = true,
+      phoneCountry,
+      extraElementList,
+      termsOfService,
+      privacyPolicy,
+      loginMethodsOrder,
+      onError,
       onSuccess,
-      customValidateEmail: validateEmailRef.current,
-      customValidatePhone: validatePhoneRef.current,
-      onChainIdChange: onChainIdChangeRef.current,
-    }),
-    [defaultChainId, onSuccess],
-  );
-  const { isEmailLoading, validateEmail, validatePhone, onFinish, onSocialFinish } = useSignHandler(handlerParam);
+      onClose,
+      validateEmail: defaultValidateEmail,
+      validatePhone: defaultValidatePhone,
+      onInputConfirmStart,
+      onSocialStart,
+      onChainIdChange,
+      onLoginFinishWithoutPin,
+      onSignTypeChange,
+    }: SocialDesignProps,
+    ref,
+  ) => {
+    const [accountType, setAccountType] = useState<SocialDesignType>(type);
+    const validateEmailRef = useRef<SocialDesignProps['validateEmail']>(defaultValidateEmail);
+    const validatePhoneRef = useRef<SocialDesignProps['validatePhone']>(defaultValidatePhone);
+    const onChainIdChangeRef = useRef<SocialDesignProps['onChainIdChange']>(onChainIdChange);
+    const onErrorRef = useRef<SocialDesignProps['onError']>(onError);
+    const [{ networkType, chainType }] = usePortkey();
 
-  const onAccountTypeChange = useCallback(
-    async (type: TAllLoginKey) => {
-      try {
-        onSocialStart?.(type);
-        if (!SocialLoginList.includes(type)) return setAccountType(type);
-        setLoading(true);
-        const result = await socialLoginHandler(type as any);
+    const socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
 
-        // setLoading(false);
-        if (result) {
-          await onSocialFinish(result);
+    const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
+
+    const isMobile = useMobile();
+
+    const handlerParam = useMemo(
+      () => ({
+        defaultChainId,
+        onError: onErrorRef.current,
+        onSuccess,
+        customValidateEmail: validateEmailRef.current,
+        customValidatePhone: validatePhoneRef.current,
+        onChainIdChange: onChainIdChangeRef.current,
+      }),
+      [defaultChainId, onSuccess],
+    );
+    const { isEmailLoading, validateEmail, validatePhone, onFinish, onSocialFinish } = useSignHandler(handlerParam);
+
+    const onAccountTypeChange = useCallback(
+      async (type: TAllLoginKey) => {
+        try {
+          onSocialStart?.(type);
+          if (!SocialLoginList.includes(type)) return setAccountType(type);
+          setLoading(true);
+          const result = await socialLoginHandler(type as any);
+
+          // setLoading(false);
+          if (result) {
+            await onSocialFinish(result);
+          }
+        } catch (error) {
+          setLoading(false);
+          errorTip(
+            {
+              errorFields: 'onAccountTypeChange',
+              error: handleErrorMessage(error),
+            },
+            isErrorTip,
+            onErrorRef.current,
+          );
         }
-      } catch (error) {
-        setLoading(false);
-        errorTip(
-          {
-            errorFields: 'onAccountTypeChange',
-            error: handleErrorMessage(error),
-          },
-          isErrorTip,
-          onErrorRef.current,
-        );
-      }
-    },
-    [isErrorTip, onSocialFinish, onSocialStart, socialLoginHandler],
-  );
+      },
+      [isErrorTip, onSocialFinish, onSocialStart, socialLoginHandler],
+    );
 
-  const onInputFinish = useCallback(
-    (data: GuardianInputInfo) => {
-      onInputConfirmStart?.();
-      onFinish(data);
-    },
-    [onFinish, onInputConfirmStart],
-  );
+    const onInputFinish = useCallback(
+      (data: GuardianInputInfo) => {
+        onInputConfirmStart?.();
+        onFinish(data);
+      },
+      [onFinish, onInputConfirmStart],
+    );
+    useImperativeHandle(ref, () => ({
+      setAccountType,
+    }));
+    return (
+      <div className={clsx('portkey-ui-user-input-wrapper', className)} style={style}>
+        {accountType === 'Scan' && (
+          <ScanCard
+            isMobile={isMobile}
+            chainId={defaultChainId}
+            backIcon={<CustomSvg type="PC" />}
+            chainType={chainType}
+            networkType={networkType}
+            onBack={() => setAccountType(null)}
+            onFinish={onLoginFinishWithoutPin}
+            onShowQrCode={() => onSocialStart?.('Scan')}
+            isErrorTip={isErrorTip}
+            onError={onError}
+            onClose={onClose}
+          />
+        )}
+        {(accountType === 'Email' || accountType === 'Phone') && (
+          <InputLogin
+            className="user-input-login"
+            isLoading={isEmailLoading}
+            defaultAccountType={accountType}
+            phoneCountry={phoneCountry}
+            validateEmail={validateEmail}
+            validatePhone={validatePhone}
+            onFinish={onInputFinish}
+            onBack={() => setAccountType(null)}
+            onClose={onClose}
+            switchType={onSignTypeChange}
+          />
+        )}
 
-  return (
-    <div className={clsx('portkey-ui-user-input-wrapper', className)} style={style}>
-      {accountType === 'Scan' && (
-        <ScanCard
-          isMobile={isMobile}
-          chainId={defaultChainId}
-          backIcon={<CustomSvg type="PC" />}
-          chainType={chainType}
-          networkType={networkType}
-          onBack={() => setAccountType(null)}
-          onFinish={onLoginFinishWithoutPin}
-          onShowQrCode={() => onSocialStart?.('Scan')}
-          isErrorTip={isErrorTip}
-          onError={onError}
-          onClose={onClose}
-        />
-      )}
-      {(accountType === 'Email' || accountType === 'Phone') && (
-        <InputLogin
-          className="user-input-login"
-          isLoading={isEmailLoading}
-          defaultAccountType={accountType}
-          phoneCountry={phoneCountry}
-          validateEmail={validateEmail}
-          validatePhone={validatePhone}
-          onFinish={onInputFinish}
-          onBack={() => setAccountType(null)}
-          onClose={onClose}
-          switchType={onSignTypeChange}
-        />
-      )}
+        {!accountType && (
+          <Overview
+            isShowScan={showScan}
+            extraElementList={extraElementList}
+            onAccountTypeChange={onAccountTypeChange}
+            termsOfService={termsOfService}
+            privacyPolicy={privacyPolicy}
+            loginMethodsOrder={loginMethodsOrder}
+          />
+        )}
+      </div>
+    );
+  },
+);
+// function SocialDesign({
+//   style,
+//   type = null,
+//   defaultChainId = 'AELF',
+//   className,
+//   isErrorTip = true,
+//   isShowScan: showScan = true,
+//   phoneCountry,
+//   extraElementList,
+//   termsOfService,
+//   privacyPolicy,
+//   loginMethodsOrder,
+//   onError,
+//   onSuccess,
+//   onClose,
+//   validateEmail: defaultValidateEmail,
+//   validatePhone: defaultValidatePhone,
+//   onInputConfirmStart,
+//   onSocialStart,
+//   onChainIdChange,
+//   onLoginFinishWithoutPin,
+//   onSignTypeChange,
+// }: SocialDesignProps) {
+//   const [accountType, setAccountType] = useState<SocialDesignType>(type);
+//   const validateEmailRef = useRef<SocialDesignProps['validateEmail']>(defaultValidateEmail);
+//   const validatePhoneRef = useRef<SocialDesignProps['validatePhone']>(defaultValidatePhone);
+//   const onChainIdChangeRef = useRef<SocialDesignProps['onChainIdChange']>(onChainIdChange);
+//   const onErrorRef = useRef<SocialDesignProps['onError']>(onError);
+//   const [{ networkType, chainType }] = usePortkey();
 
-      {!accountType && (
-        <Overview
-          isShowScan={showScan}
-          extraElementList={extraElementList}
-          onAccountTypeChange={onAccountTypeChange}
-          termsOfService={termsOfService}
-          privacyPolicy={privacyPolicy}
-          loginMethodsOrder={loginMethodsOrder}
-        />
-      )}
-    </div>
-  );
-}
+//   const socialLogin = useMemo(() => ConfigProvider.getSocialLoginConfig(), []);
+
+//   const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
+
+//   const isMobile = useMobile();
+
+//   const handlerParam = useMemo(
+//     () => ({
+//       defaultChainId,
+//       onError: onErrorRef.current,
+//       onSuccess,
+//       customValidateEmail: validateEmailRef.current,
+//       customValidatePhone: validatePhoneRef.current,
+//       onChainIdChange: onChainIdChangeRef.current,
+//     }),
+//     [defaultChainId, onSuccess],
+//   );
+//   const { isEmailLoading, validateEmail, validatePhone, onFinish, onSocialFinish } = useSignHandler(handlerParam);
+
+//   const onAccountTypeChange = useCallback(
+//     async (type: TAllLoginKey) => {
+//       try {
+//         onSocialStart?.(type);
+//         if (!SocialLoginList.includes(type)) return setAccountType(type);
+//         setLoading(true);
+//         const result = await socialLoginHandler(type as any);
+
+//         // setLoading(false);
+//         if (result) {
+//           await onSocialFinish(result);
+//         }
+//       } catch (error) {
+//         setLoading(false);
+//         errorTip(
+//           {
+//             errorFields: 'onAccountTypeChange',
+//             error: handleErrorMessage(error),
+//           },
+//           isErrorTip,
+//           onErrorRef.current,
+//         );
+//       }
+//     },
+//     [isErrorTip, onSocialFinish, onSocialStart, socialLoginHandler],
+//   );
+
+//   const onInputFinish = useCallback(
+//     (data: GuardianInputInfo) => {
+//       onInputConfirmStart?.();
+//       onFinish(data);
+//     },
+//     [onFinish, onInputConfirmStart],
+//   );
+
+//   return (
+//     <div className={clsx('portkey-ui-user-input-wrapper', className)} style={style}>
+//       {accountType === 'Scan' && (
+//         <ScanCard
+//           isMobile={isMobile}
+//           chainId={defaultChainId}
+//           backIcon={<CustomSvg type="PC" />}
+//           chainType={chainType}
+//           networkType={networkType}
+//           onBack={() => setAccountType(null)}
+//           onFinish={onLoginFinishWithoutPin}
+//           onShowQrCode={() => onSocialStart?.('Scan')}
+//           isErrorTip={isErrorTip}
+//           onError={onError}
+//           onClose={onClose}
+//         />
+//       )}
+//       {(accountType === 'Email' || accountType === 'Phone') && (
+//         <InputLogin
+//           className="user-input-login"
+//           isLoading={isEmailLoading}
+//           defaultAccountType={accountType}
+//           phoneCountry={phoneCountry}
+//           validateEmail={validateEmail}
+//           validatePhone={validatePhone}
+//           onFinish={onInputFinish}
+//           onBack={() => setAccountType(null)}
+//           onClose={onClose}
+//           switchType={onSignTypeChange}
+//         />
+//       )}
+
+//       {!accountType && (
+//         <Overview
+//           isShowScan={showScan}
+//           extraElementList={extraElementList}
+//           onAccountTypeChange={onAccountTypeChange}
+//           termsOfService={termsOfService}
+//           privacyPolicy={privacyPolicy}
+//           loginMethodsOrder={loginMethodsOrder}
+//         />
+//       )}
+//     </div>
+//   );
+// }
 
 export default memo(SocialDesign);

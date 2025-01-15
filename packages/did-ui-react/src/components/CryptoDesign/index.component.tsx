@@ -30,6 +30,7 @@ export default function CryptoDesignBaseCom({
   privacyPolicy,
   loginMethodsOrder,
   recommendIndexes,
+  cryptoDesignRef,
   onClose,
   onError,
   onSuccess,
@@ -167,6 +168,7 @@ export default function CryptoDesignBaseCom({
           onSocialLoginFinish={onSocialFinish}
           onError={onError}
           onClose={onClose}
+          ref={cryptoDesignRef}
         />
       )}
     </div>

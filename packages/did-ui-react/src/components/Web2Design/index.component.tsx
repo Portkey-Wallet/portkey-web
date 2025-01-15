@@ -107,14 +107,14 @@ export default function Web2Design({
     onSocialFinish,
   } = useSignHandler(handlerParam);
 
-  const onSwitch = useCallback(() => {
-    setType((v) => {
-      const nextType = v === 'Login' ? 'Sign up' : 'Login';
-      onSignTypeChange?.(nextType === 'Sign up' ? 'SignUp' : 'Login');
+  // const onSwitch = useCallback(() => {
+  //   setType((v) => {
+  //     const nextType = v === 'Login' ? 'Sign up' : 'Login';
+  //     onSignTypeChange?.(nextType === 'Sign up' ? 'SignUp' : 'Login');
 
-      return nextType;
-    });
-  }, [onSignTypeChange]);
+  //     return nextType;
+  //   });
+  // }, [onSignTypeChange]);
 
   const socialLoginHandler = useSocialLogin({ socialLogin, network: networkType });
 
@@ -175,7 +175,7 @@ export default function Web2Design({
             onFinish={onInputFinish}
           />
 
-          <div
+          {/* <div
             className={clsx(
               'portkey-ui-web2design-switch-sign',
               type === 'Sign up' && 'portkey-ui-web2design-switch-sign-sign-up',
@@ -195,7 +195,7 @@ export default function Web2Design({
                 </span>
               </>
             )}
-          </div>
+          </div> */}
           <DividerCenter />
 
           <div className="portkey-ui-web2design-social-wrapper">
@@ -224,7 +224,6 @@ export default function Web2Design({
       loginMethodsOrderWithoutEmail,
       onInputFinish,
       onSocialChange,
-      onSwitch,
       phoneCountry,
       privacyPolicy,
       termsOfService,

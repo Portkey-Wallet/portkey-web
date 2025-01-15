@@ -14,6 +14,7 @@ import { useDebounce } from '../../hooks/debounce';
 import CommonInput from '../CommonInput';
 import { SelectTokenType } from '../Asset/index.component';
 import Loading from '../Loading';
+import { NetworkType } from '../../types';
 
 export interface IReceiveListProps {
   onBack?: () => void;
@@ -25,9 +26,10 @@ export interface IReceiveListProps {
         caAddress: string;
       }[]
     | undefined;
+  networkType: NetworkType;
 }
 
-const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos }: IReceiveListProps) => {
+const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos, networkType }: IReceiveListProps) => {
   const [currentTokenList, setCurrentTokenList] = useState(tokenList);
   const [isLoading, setIsLoading] = useState(true);
   const [searchVal, setSearchVal] = useState<string>('');
@@ -96,7 +98,7 @@ const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos }: IReceiv
             className="nft-wrapper"
             onClick={() => {
               onItemClick({
-                chainId: 'tDVV',
+                chainId: networkType === 'MAINNET' ? 'tDVV' : 'tDVW',
                 symbol: 'ELF',
                 decimals: 0,
                 address: '',
@@ -119,7 +121,7 @@ const ReceiveList = ({ onBack, onItemClick, tokenList, caAddressInfos }: IReceiv
               {currentTokenList.map((item: IUserTokenItemNew) => (
                 <div key={item.symbol} className="item" onClick={() => onItemClick(item)}>
                   <CoinImage symbol={item.symbol} src={item.imageUrl} width={42} />
-                  <span>{item.symbol}</span>
+                  <span>{item.label || item.symbol}</span>
                 </div>
               ))}
             </div>

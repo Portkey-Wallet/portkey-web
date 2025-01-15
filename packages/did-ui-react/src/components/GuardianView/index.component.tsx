@@ -382,7 +382,10 @@ function GuardianView({
 
   const [tipVisible, setTipVisible] = useState(false);
   const [tip1Visible, setTip1Visible] = useState(false);
-
+  const cantSwitch = useMemo(
+    () => !currentGuardian?.isLoginGuardian && currentGuardian.guardianType === 'Email',
+    [currentGuardian.guardianType, currentGuardian?.isLoginGuardian],
+  );
   return (
     <div className={clsx('portkey-ui-guardian-view', 'portkey-ui-flex-column', className)}>
       <>
@@ -395,6 +398,7 @@ function GuardianView({
               <div className="guardian-view-switch-status-wrap">
                 <Switch
                   loading={switchDisable}
+                  disabled={cantSwitch}
                   className="guardian-view-switch-login-switch"
                   checked={currentGuardian?.isLoginGuardian}
                   onChange={checkSwitch}
@@ -402,7 +406,11 @@ function GuardianView({
               </div>
             </div>
             <span className="guardian-view-login-content-value">
-              {t('The login account will be able to log in and control all your assets')}
+              {t(
+                cantSwitch
+                  ? 'Email can no longer be used as a login account.'
+                  : 'The login account will be able to log in and control all your assets',
+              )}
             </span>
           </div>
           <div className="guardian-view-input-content portkey-ui-flex-column">

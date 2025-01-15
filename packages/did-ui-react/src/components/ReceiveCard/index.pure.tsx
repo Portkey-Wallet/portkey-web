@@ -21,6 +21,7 @@ import CommonPromptCard, { PromptCardType } from '../CommonPromptCard';
 import { TokenItem } from './index.components';
 import { BaseToken, IUserTokenItemResponse } from '../types/assets';
 import './index.less';
+import CommonModalTip from '../CommonModalTip';
 
 export interface IPureProps {
   onBack?: () => void;
@@ -289,13 +290,43 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
               </div>
               {receiveType === ReceiveType.ETransfer &&
                 currentDepositInfo &&
-                Number(currentDepositInfo?.minAmount) > 0 && (
-                  <div className="minimum-deposit-container">
-                    <span>Minimum deposit</span>
-                    <div className="minimum-deposit">
-                      <span>{`${currentDepositInfo.minAmount} ${selectToken.symbol}`}</span>
-                      <span className="usd">{`$${currentDepositInfo.minAmountUsd}`}</span>
-                    </div>
+                (Number(currentDepositInfo?.minAmount) > 0 || Number(currentDepositInfo?.serviceFee) > 0) && (
+                  <div className="receive-card-fee-tips">
+                    {Number(currentDepositInfo?.minAmount) > 0 && (
+                      <div className="receive-card-fee-item-container">
+                        <span>Minimum deposit</span>
+                        <div className="receive-card-fee-item-container-right">
+                          <span>{`${currentDepositInfo.minAmount} ${selectToken.label || selectToken.symbol}`}</span>
+                          <span className="usd">{`$${currentDepositInfo.minAmountUsd}`}</span>
+                        </div>
+                      </div>
+                    )}
+                    {Number(currentDepositInfo?.serviceFee) > 0 && (
+                      <div className="receive-card-fee-item-container">
+                        <div className="receive-card-fee-item-left">
+                          <span>Service fee</span>
+                          <CommonModalTip
+                            title="Service fee"
+                            content={
+                              <>
+                                This is an estimated fee charged by Cobo to cover the costs of asset consolidation.
+                                <br />
+                                Deposit amount ≥ {currentDepositInfo.currentThreshold}{' '}
+                                {selectToken.label || selectToken.symbol}: No service fee
+                                <br />
+                                Deposit amount &lt; {currentDepositInfo.currentThreshold}{' '}
+                                {selectToken.label || selectToken.symbol}: Max service fee{' '}
+                                {currentDepositInfo.serviceFee} {selectToken.label || selectToken.symbol}
+                              </>
+                            }
+                          />
+                        </div>
+                        <div className="receive-card-fee-item-container-right">
+                          <span>{`0~${currentDepositInfo.serviceFee} ${selectToken.label || selectToken.symbol}`}</span>
+                          <span className="usd">{`0~$${currentDepositInfo.serviceFeeUsd}`}</span>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
 
