@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.18.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.1...v2.18.0) (2025-01-15)
+
+### Bug Fixes
+
+- receive card bug ([b84a60d](https://github.com/Portkey-Wallet/portkey-web/commit/b84a60db26d63febaa7426137315020f283ce953))
+
 ## [2.18.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.0...v2.18.0-alpha.1) (2025-01-14)
 
 ### Features
