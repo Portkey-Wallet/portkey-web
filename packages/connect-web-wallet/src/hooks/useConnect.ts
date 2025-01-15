@@ -70,13 +70,16 @@ export const useConnect = () => {
     });
   }, [provider, requestMethod]);
 
+  const getCachedWalletInfo = useCallback(() => WalletInfoControl.getWalletInfo(), []);
+
   return useMemo(
     () => ({
       provider,
       connect,
       disconnect,
       showAsset,
+      getCachedWalletInfo,
     }),
-    [connect, disconnect, provider, showAsset],
+    [connect, disconnect, getCachedWalletInfo, provider, showAsset],
   );
 };
