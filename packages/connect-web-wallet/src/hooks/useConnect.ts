@@ -4,6 +4,7 @@ import { IConnectParams } from '../context/types';
 import { MethodsBase, MethodsWallet } from '@portkey/provider-types';
 import { useRequestMethod } from './useRequestMethod';
 import { TWalletInfo, WalletInfoControl } from '../utils/localWalletInfo';
+import { sleep } from '@portkey/utils';
 
 export const useConnect = () => {
   const [{ provider }] = useWebWallet();
@@ -13,6 +14,18 @@ export const useConnect = () => {
   // disconnect: () => Promise<void>;
 
   const requestMethod = useRequestMethod();
+
+  const getAndSetLocalWalletInfo = useCallback(async () => {
+    const isConnected = provider?.isConnected();
+    if (!isConnected) throw 'Please connect wallet';
+    await sleep(1000);
+
+    const walletInfo = await requestMethod({
+      method: MethodsBase.WALLET_INFO,
+    });
+
+    WalletInfoControl.setWalletInfo(walletInfo as TWalletInfo);
+  }, [provider, requestMethod]);
 
   const connect = useCallback(
     async (options?: IConnectParams) => {
@@ -26,17 +39,12 @@ export const useConnect = () => {
         payload: options,
       });
 
-      const walletInfo = await requestMethod({
-        method: MethodsBase.WALLET_INFO,
-      });
-
-      WalletInfoControl.setWalletInfo(walletInfo as TWalletInfo);
-
+      getAndSetLocalWalletInfo();
       // dispatch(basicModalView.setWalletDialog.actions(false));
       console.log(result, 'result===useConnect==connect');
       return result;
     },
-    [provider, requestMethod],
+    [getAndSetLocalWalletInfo, provider, requestMethod],
   );
 
   const disconnect = useCallback(async () => {
