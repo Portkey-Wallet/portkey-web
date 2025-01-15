@@ -82,7 +82,10 @@ function Step1({
         if (createType !== 'SignUp') return setOpen(true);
       }
 
-      if (value.isLoginGuardian && createType !== 'Login') return setOpen(true);
+      if (value.isLoginGuardian && createType !== 'Login') {
+        setLoading(false);
+        return setOpen(true);
+      }
 
       onSignInFinished?.({
         isFinished: false,
