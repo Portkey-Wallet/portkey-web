@@ -1,4 +1,4 @@
-import { useCallback, useMemo } from 'react';
+import { useCallback, useLayoutEffect, useMemo, useState } from 'react';
 import { useWebWallet } from '../context/ConnectWebWalletProvider';
 import { IConnectParams } from '../context/types';
 import { MethodsBase, MethodsWallet } from '@portkey/provider-types';
@@ -8,6 +8,7 @@ import { sleep } from '@portkey/utils';
 
 export const useConnect = () => {
   const [{ provider }] = useWebWallet();
+  const [walletInfo, setWalletInfo] = useState<TWalletInfo | null>();
   // const dispatch = useModalDispatch();
   // const checkIdentifier = useCheckIdentifier();
   // connect: (options?: IConnectParams) => Promise<IUserInfo | undefined>;
@@ -25,6 +26,7 @@ export const useConnect = () => {
     });
 
     WalletInfoControl.setWalletInfo(walletInfo as TWalletInfo);
+    setWalletInfo(walletInfo);
   }, [provider, requestMethod]);
 
   const connect = useCallback(
@@ -40,6 +42,7 @@ export const useConnect = () => {
       });
 
       getAndSetLocalWalletInfo();
+
       // dispatch(basicModalView.setWalletDialog.actions(false));
       console.log(result, 'result===useConnect==connect');
       return result;
@@ -56,6 +59,7 @@ export const useConnect = () => {
     });
 
     WalletInfoControl.resetWalletInfo();
+    setWalletInfo(null);
 
     console.log(result, 'result==');
     return result;
@@ -70,7 +74,10 @@ export const useConnect = () => {
     });
   }, [provider, requestMethod]);
 
-  const getCachedWalletInfo = useCallback(() => WalletInfoControl.getWalletInfo(), []);
+  useLayoutEffect(() => {
+    const _info = WalletInfoControl.getWalletInfo();
+    setWalletInfo(_info);
+  }, []);
 
   return useMemo(
     () => ({
@@ -78,8 +85,8 @@ export const useConnect = () => {
       connect,
       disconnect,
       showAsset,
-      getCachedWalletInfo,
+      walletInfo,
     }),
-    [connect, disconnect, getCachedWalletInfo, provider, showAsset],
+    [connect, disconnect, provider, showAsset, walletInfo],
   );
 };

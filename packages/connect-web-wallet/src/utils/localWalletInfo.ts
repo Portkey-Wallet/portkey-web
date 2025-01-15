@@ -11,7 +11,7 @@ export type TWalletInfo = {
 export class WalletInfoControl {
   static getWalletInfo() {
     const info = localStorage.getItem(CWW_WALLET_INFO_KEY);
-    if (!info) throw 'no wallet info';
+    if (!info) return null;
     return JSON.parse(info);
   }
 
