@@ -1,8 +1,9 @@
 import type { ChainInfo } from '@portkey/services';
 import { ChainId } from '@portkey/types';
 import { did } from '../utils';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useEffectOnce } from 'react-use';
+import { useIsMainnet } from './common';
 
 type ChainMapType = { [key in ChainId]: ChainInfo };
 
@@ -41,4 +42,10 @@ export const useCurrentChainList = (): {
   });
 
   return { chainList, getChainList };
+};
+
+export const useDAppChainId = () => {
+  const isMainnet = useIsMainnet();
+
+  return useMemo<ChainId>(() => (isMainnet ? 'tDVV' : 'tDVW'), [isMainnet]);
 };

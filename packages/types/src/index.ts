@@ -10,3 +10,4 @@ export * from './activity';
 export * from './utils';
 export * from './common';
 export * from './telegram';
+export * from './awaken';

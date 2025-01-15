@@ -1,4 +1,4 @@
-import { ChainId, INftInfoType, ITokenInfoType, SeedTypeEnum } from '@portkey/types';
+import { ChainId, INftInfoType, ITokenInfoType, SeedTypeEnum, TCurrency } from '@portkey/types';
 
 export type ITokenItemResponse = {
   decimals: number;
@@ -213,6 +213,20 @@ export interface IAssetItemType {
   nftInfo?: INftInfoType;
 }
 
+export type TGetAwakenTokenListParams = {
+  skipCount: number;
+  maxResultCount: number;
+  page: number;
+  chainId: ChainId;
+  caAddress: string;
+};
+
+export type TGetAwakenTokenListResult = {
+  code: string;
+  data: TCurrency[];
+  message: string;
+};
+
 export interface IAssetsService {
   fetchAccountTokenList(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListResult>;
   fetchAccountTokenListV2(params: FetchAccountTokenListParams): Promise<FetchAccountTokenListV2Result>;
@@ -229,4 +243,5 @@ export interface IAssetsService {
   getUserTokenListNew(params: GetUserTokenListParams): Promise<GetUserTokenListResultNew>;
   getAccountAssetsByKeywords(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsResult>;
   getAccountAssetsByKeywordsV2(params: GetAccountAssetsByKeywordsParams): Promise<GetAccountAssetsByKeywordsV2Result>;
+  getAwakenTokenList(params: TGetAwakenTokenListParams): Promise<TGetAwakenTokenListResult>;
 }
