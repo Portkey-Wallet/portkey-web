@@ -407,7 +407,7 @@ export default function TransactionMain({
       <div className="transaction-detail-body">
         <div className="transaction-detail-header">
           <span className="title">{transactionDetail?.transactionName}</span>
-          <CustomSvg type="Close2" fillColor="var(--portkey-ui-text-primary)" onClick={onClose} />
+          <CustomSvg type="Close2" fillColor="var(--sds-color-text-default-default)" onClick={onClose} />
         </div>
         <div className="transaction-detail-content">
           {isNft ? nftHeaderUI : tokenHeaderUI}
