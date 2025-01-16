@@ -34,6 +34,7 @@ export interface TokenDetailProps {
   onSend?: (selectToken: TokenItemShowType, type: TokenType) => void;
   onDataInit?: () => void;
   onDataInitEnd?: () => void;
+  onSwap?: () => void;
 
   onViewActivityItem?: (item: ActivityItemType & { chainId: ChainId }) => void;
 }
@@ -55,6 +56,7 @@ function TokenDetailMain({
   onDataInit,
   onDataInitEnd,
   onViewActivityItem,
+  onSwap,
 }: TokenDetailProps) {
   const [, forceRerender] = useReducer((x) => x + 1, 0);
   const [{ networkType }] = usePortkey();
@@ -171,6 +173,7 @@ function TokenDetailMain({
               onSend={() => onSend?.(tokenInfo, 'TOKEN')}
               onReceive={() => onReceive?.(tokenInfo)}
               onFaucet={onFaucet}
+              onSwap={onSwap}
             />
           </div>
         </div>

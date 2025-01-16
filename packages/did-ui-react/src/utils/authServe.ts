@@ -5,6 +5,9 @@ import { fetchFormat, timeoutPromise } from '@portkey/request';
 import { ramp } from '@portkey/ramp';
 import { apiVersion } from '../components/config-provider/LocalConfig';
 import { getServiceUrl, getSocketUrl } from '../components/config-provider/utils';
+import { eventBus } from './lib';
+import { SERVICE_AUTH_CHANGE } from '../constants/events';
+
 const DEFAULT_FETCH_TIMEOUT = 8000;
 
 interface IAuthTokenServe {
@@ -60,6 +63,8 @@ export class AuthServeInit implements IAuthTokenServe {
           },
         },
       });
+      eventBus.emit(SERVICE_AUTH_CHANGE, token);
+
       return token;
     } catch (error) {
       return;

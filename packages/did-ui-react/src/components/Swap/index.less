@@ -1,0 +1,44 @@
+.swap-page {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .swap-page-header {
+    height: 56px;
+    align-items: center;
+
+    .swap-page-header-back-icon {
+      width: 20px;
+      height: 20px;
+    }
+    .title-center {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--sds-color-text-default-default);
+    }
+  }
+
+  .swap-page-body {
+    flex: 1;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .swap-form-hidden {
+    display: none;
+  }
+
+  .swap-common-padding {
+    padding: 0 24px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .swap-page {
+    .swap-common-padding {
+      padding: 0 16px;
+    }
+  }
+}

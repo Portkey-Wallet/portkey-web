@@ -92,7 +92,7 @@ export default function BalanceCard({
       {renderItem(ItemType.Send)}
       {renderItem(ItemType.Receive)}
       {renderItem(ItemType.Buy)}
-      {/* {renderItem(ItemType.Swap)} */}
+      {renderItem(ItemType.Swap)}
       {renderItem(ItemType.Faucet)}
     </div>
   );

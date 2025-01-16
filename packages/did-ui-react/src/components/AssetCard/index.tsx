@@ -28,6 +28,7 @@ interface AssetCardProps {
   onBack?: () => void;
   onFaucet?: () => void;
   onReceive?: () => void;
+  onSwap?: () => void;
 }
 
 export default function AssetCard({
@@ -44,6 +45,7 @@ export default function AssetCard({
   onReceive,
   onFaucet,
   onBack,
+  onSwap,
 }: AssetCardProps) {
   const addressCopyModalRef = useRef<IAddressCopyModalRef>(null);
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
@@ -118,6 +120,7 @@ export default function AssetCard({
           onSend={onSend}
           onReceive={onReceive}
           onFaucet={onFaucet}
+          onSwap={onSwap}
         />
       </div>
     </div>

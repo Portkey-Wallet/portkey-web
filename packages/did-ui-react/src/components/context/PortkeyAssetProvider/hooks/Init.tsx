@@ -7,6 +7,7 @@ import { usePortkeyAsset } from '..';
 import { useThrottleFirstEffect } from '../../../../hooks/throttle';
 import { useTxFeeInit } from './txFee';
 import singleMessage from '../../../CustomAnt/message';
+import { useInitAwaken } from '../../../../hooks/awaken';
 
 export const useStateInit = () => {
   const [{ sandboxId, chainType }] = usePortkey();
@@ -161,5 +162,6 @@ export function Updater() {
   useStateInit();
   // load tx fee
   useTxFeeInit();
+  useInitAwaken();
   return null;
 }

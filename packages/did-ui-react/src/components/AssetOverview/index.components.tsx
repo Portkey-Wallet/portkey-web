@@ -50,6 +50,7 @@ export interface AssetOverviewProps {
   onViewTokenItem?: (v: TokenItemShowType) => void;
   onNFTView?: (item: NFTItemBaseExpand, collectionItem?: NFTCollectionItemShowType) => void;
   onCollectionView?: (collectionItem?: NFTCollectionItemShowType) => void;
+  onSwap?: () => void;
 }
 
 export function AssetOverviewContent({
@@ -71,6 +72,7 @@ export function AssetOverviewContent({
   onDataInit,
   onDataInitEnd,
   onViewActivityItem,
+  onSwap,
 }: AssetOverviewProps) {
   const [{ networkType }] = usePortkey();
   const [{ accountInfo, tokenListInfo, tokenListInfoV2, caInfo, NFTCollection, activityMap }, { dispatch }] =
@@ -209,6 +211,7 @@ export function AssetOverviewContent({
   }, [allTokenList, tokenList]);
 
   const [isGetNFTCollectionPending, setIsGetNFTCollection] = useState<boolean>();
+
   return (
     <div className="portkey-ui-asset-overview" style={{ overflowY: 'auto', height: '100%' }}>
       <AssetCard
@@ -243,6 +246,7 @@ export function AssetOverviewContent({
         onReceive={onReceive}
         onFaucet={onFaucet}
         onBack={onBack}
+        onSwap={onSwap}
       />
       <AssetTabs
         networkType={networkType}
