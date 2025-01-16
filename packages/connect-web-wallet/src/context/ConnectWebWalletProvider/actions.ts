@@ -1,20 +1,23 @@
 import { IPortkeyProvider } from '@portkey/provider-types';
 import { NetworkType, ThemeType } from '../../types';
-
-import { ConnectionStatus } from '../types';
 import { basicActions } from '../utils';
 
 export const WebWalletActions = {
   setWalletProvider: 'SET_WALLET_PROVIDER',
-
   destroy: 'DESTROY',
 };
 
+export interface ILoginConfig {
+  loginMethodsOrder?: ('Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter')[];
+  recommendIndexes?: number[];
+}
+
 export interface IConnectState {
   options: {
-    theme?: ThemeType;
     networkType: NetworkType;
     appId: string;
+    theme?: ThemeType;
+    loginConfig?: ILoginConfig;
   };
 
   provider: IPortkeyProvider | null;

@@ -9,6 +9,10 @@ export default function WebWalletProvider({ children }: { children: React.ReactN
         networkType: 'TESTNET',
         theme: 'light',
         appId: 'wallet-appId',
+        loginConfig: {
+          loginMethodsOrder: ['Google', 'Telegram', 'Apple'],
+          recommendIndexes: [0, 2],
+        },
       }}>
       {children}
     </PortkeyWebWalletProvider>
