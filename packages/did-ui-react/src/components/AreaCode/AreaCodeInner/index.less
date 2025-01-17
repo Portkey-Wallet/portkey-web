@@ -1,6 +1,6 @@
 .area-code-inner-wrapper {
   width: 100%;
-  background: var(--portkey-ui-default-bg);
+  background: var(--sds-color-background-default-default);
   display: flex;
   flex-direction: column;
 
@@ -13,7 +13,7 @@
       border-radius: var(--portkey-ui-border-radius-1);
     }
     &::-webkit-scrollbar-thumb {
-      background-color: var(--portkey-ui-bg-8);
+      // background-color: var(--portkey-ui-bg-8);
       border-radius: var(--portkey-ui-border-radius-2);
     }
   }
@@ -22,19 +22,19 @@
     padding-right: 10px;
     cursor: pointer;
     & > span:first-child {
-      color: var(--portkey-ui-text-primary);
+      color: var(--sds-color-text-default-default);
       font-size: 16px;
       line-height: 22px;
     }
     & > span:last-child {
       font-size: 14px;
       line-height: 20px;
-      color: var(--portkey-ui-text-secondary);
+      color: var(--sds-color-text-default-secondary);
       text-align: right;
     }
     &:hover {
       & > span {
-        color: var(--portkey-ui-font-4);
+        color: var(--sds-color-text-brand-default);
       }
     }
   }
@@ -43,6 +43,6 @@
     margin-top: 72px;
     font-size: 14px;
     line-height: 20px;
-    color: var(--portkey-ui-text-tip);
+    color: var(--sds-color-text-default-tertiary);
   }
 }

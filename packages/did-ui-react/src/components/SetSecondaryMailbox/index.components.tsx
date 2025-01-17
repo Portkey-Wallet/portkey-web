@@ -97,7 +97,7 @@ export default function SetSecondaryMailboxMain({ onBack }: ISetSecondaryMailbox
                       }}
                       className="close-icon"
                       type="Close2"
-                      fillColor="var(--portkey-ui-text-primary)"
+                      fillColor="var(--sds-color-text-default-default)"
                     />
                   )}
                 </div>

@@ -55,14 +55,14 @@ export default function AssetCard({
       <div className="portkey-ui-account-left-element">
         {backIcon ? (
           backIcon
-        ) : (
+        ) : onBack ? (
           <CustomSvg
             fillColor="var(--sds-color-icon-default-default)"
             type={'BackLeft'}
             onClick={onBack}
             className="left-back"
           />
-        )}
+        ) : null}
         <div onClick={onAvatarClick} className="portkey-ui-account-left-element">
           <CustomSvg className="portkey-ui-account-avatar" type={walletAvatar} />
           <div className="portkey-ui-account-name">{nickName || '--'}</div>
