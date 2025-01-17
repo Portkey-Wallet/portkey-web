@@ -321,8 +321,24 @@ function AssetMain({
     //   address: v.address || v.tokenContractAddress,
     // });
     // await sleep(50);
+    // setSelectToken(item);
+    // setAssetStep(AssetStep.receiveDetail);
     setAssetStep(AssetStep.receive);
   }, [assetStep]);
+  const onReceiveDetail = useCallback(
+    async (item: TokenItemShowType) => {
+      preStepRef.current = assetStep;
+      // setSelectToken({
+      //   ...v,
+      //   address: v.address || v.tokenContractAddress,
+      // });
+      // await sleep(50);
+      setSelectToken(item);
+      setAssetStep(AssetStep.receiveDetail);
+      // setAssetStep(AssetStep.receive);
+    },
+    [assetStep],
+  );
 
   const onBuy = useCallback(
     async (v: any) => {
@@ -515,6 +531,7 @@ function AssetMain({
                 setSelectToken(item);
                 setAssetStep(AssetStep.receiveDetail);
               }}
+              networkType={networkType}
             />
           )}
           {assetStep === AssetStep.receiveDetail && caInfo && selectToken && (
@@ -614,7 +631,7 @@ function AssetMain({
               onBack={() => {
                 setAssetStep(AssetStep.overview);
               }}
-              onReceive={onReceive}
+              onReceive={onReceiveDetail}
               onBuy={onBuy}
               onSend={(token) => {
                 if (!isLoginOnChain) {

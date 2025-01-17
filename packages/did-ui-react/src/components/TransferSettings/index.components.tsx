@@ -361,7 +361,7 @@ export default function TransferSettingsMain({
           <span className="title">Edit transaction limits</span>
           <CustomSvg
             type="Close2"
-            fillColor="var(--portkey-ui-text-primary)"
+            fillColor="var(--sds-color-text-default-default)"
             onClick={() => {
               setIsEditLimitModalOpen(false);
               resetForm();
@@ -387,7 +387,7 @@ export default function TransferSettingsMain({
                     setTransactionLimit(undefined);
                     setTransactionLimitError(undefined);
                   }}>
-                  <CustomSvg className="close-icon" type="Close2" fillColor="var(--portkey-ui-text-primary)" />
+                  <CustomSvg className="close-icon" type="Close2" fillColor="var(--sds-color-text-default-default)" />
                 </div>
               )}
               <span className="symbol">{initData.symbol}</span>
@@ -408,7 +408,7 @@ export default function TransferSettingsMain({
                     setDailyLimit(undefined);
                     setDailyLimitError(undefined);
                   }}>
-                  <CustomSvg className="close-icon" type="Close2" fillColor="var(--portkey-ui-text-primary)" />
+                  <CustomSvg className="close-icon" type="Close2" fillColor="var(--sds-color-text-default-default)" />
                 </div>
               )}
               <span className="symbol">{initData.symbol}</span>

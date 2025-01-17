@@ -3,11 +3,63 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-## [2.18.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.13...v2.18.0-alpha.0) (2025-01-10)
+## [2.19.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.5...v2.19.0-alpha.6) (2025-01-17)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.19.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.4...v2.19.0-alpha.5) (2025-01-17)
 
 ### Features
 
-- 1. offline email 2.add etransfer service fee ([999b5a3](https://github.com/Portkey-Wallet/portkey-web/commit/999b5a3fdd024a8e78187c0a071b798cc5f3633d))
+- 🎸 hide backicon ([99b511a](https://github.com/Portkey-Wallet/portkey-web/commit/99b511a044a7c9bfb0b25d39c255089e4b309d60))
+
+## [2.19.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.3...v2.19.0-alpha.4) (2025-01-15)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.19.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0...v2.19.0-alpha.3) (2025-01-15)
+
+## [2.19.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.1...v2.19.0-alpha.2) (2025-01-15)
+
+### Bug Fixes
+
+- 🐛 dispatch event ([aca6c08](https://github.com/Portkey-Wallet/portkey-web/commit/aca6c08690564d04da828bee67553482ff50747b))
+
+## [2.19.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.1...v2.19.0-alpha.1) (2025-01-14)
+
+## [2.19.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.8...v2.19.0-alpha.0) (2025-01-14)
+
+## [2.17.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7...v2.17.8) (2025-01-13)
+
+## [2.17.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.0...v2.17.7) (2025-01-13)
+
+### Features
+
+- 🎸 connect web wallet ([cc52509](https://github.com/Portkey-Wallet/portkey-web/commit/cc52509fc33a6d61af805158ee67a3ff81783891))
+
+## [2.19.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.1...v2.19.0-alpha.2) (2025-01-15)
+
+### Bug Fixes
+
+- 🐛 dispatch event ([aca6c08](https://github.com/Portkey-Wallet/portkey-web/commit/aca6c08690564d04da828bee67553482ff50747b))
+
+## [2.19.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.0...v2.19.0-alpha.1) (2025-01-14)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.19.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.8...v2.19.0-alpha.0) (2025-01-14)
+
+### Features
+
+- 🎸 connect web wallet ([cc52509](https://github.com/Portkey-Wallet/portkey-web/commit/cc52509fc33a6d61af805158ee67a3ff81783891))
+
+## [2.17.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7...v2.17.8) (2025-01-13)
+
+**Note:** Version bump only for package @portkey/did-ui-react
+
+## [2.17.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.13...v2.17.7) (2025-01-13)
+
+**Note:** Version bump only for package @portkey/did-ui-react
 
 ## [2.17.7-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.12...v2.17.7-alpha.13) (2025-01-09)
 

@@ -251,7 +251,7 @@ export default function Sign() {
           const wallet = await did.load(PIN);
           console.log('wallet:', wallet);
           // Mock chainId: 'AELF'
-          const result = await did.logout({ chainId: CHAIN_ID });
+          const result = await did.logout({ chainId: wallet.didWallet.originChainId ?? CHAIN_ID });
           console.log(result, 'logout====');
         }}>
         logout

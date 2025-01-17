@@ -36,6 +36,7 @@ export default function AssetCard({
   nickName,
   accountBalanceUSD,
   isShowRamp,
+  backIcon,
   isShowFaucet,
   walletAvatar = 'master1',
   caAddressInfos,
@@ -54,12 +55,16 @@ export default function AssetCard({
   const leftElement = useMemo(() => {
     return (
       <div className="portkey-ui-account-left-element">
-        <CustomSvg
-          fillColor="var(--sds-color-icon-default-default)"
-          type={'BackLeft'}
-          onClick={onBack}
-          className="left-back"
-        />
+        {backIcon ? (
+          backIcon
+        ) : onBack ? (
+          <CustomSvg
+            fillColor="var(--sds-color-icon-default-default)"
+            type={'BackLeft'}
+            onClick={onBack}
+            className="left-back"
+          />
+        ) : null}
         <div onClick={onAvatarClick} className="portkey-ui-account-left-element">
           <CustomSvg className="portkey-ui-account-avatar" type={walletAvatar} />
           <div className="portkey-ui-account-name">{nickName || '--'}</div>
@@ -71,7 +76,7 @@ export default function AssetCard({
         </div>
       </div>
     );
-  }, [onBack, onAvatarClick, walletAvatar, nickName]);
+  }, [backIcon, onBack, onAvatarClick, walletAvatar, nickName]);
 
   const rightElement = useMemo(() => {
     return (

@@ -1,0 +1,6 @@
+{
+  "no-inline-html": {
+    "allowed_elements": ["details", "h1", "h2", "p", "a", "img", "div"]
+  },
+  "MD041": false
+}
