@@ -16,6 +16,7 @@ const permissionWhitelist = [
   MethodsBase.CHAIN_ID,
   MethodsBase.CHAIN_IDS,
   MethodsBase.CHAINS_INFO,
+  MethodsBase.WALLET_INFO,
 ];
 
 // This is the script that runs in the extension's serviceWorker ( singleton )
