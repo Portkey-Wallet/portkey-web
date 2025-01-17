@@ -13,6 +13,7 @@ export default function WebWalletProvider({ children }: { children: React.ReactN
           loginMethodsOrder: ['Google', 'Telegram', 'Apple'],
           recommendIndexes: [0, 2],
         },
+        design: 'CryptoDesign',
       }}>
       {children}
     </PortkeyWebWalletProvider>

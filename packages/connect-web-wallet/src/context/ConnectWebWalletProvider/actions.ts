@@ -1,16 +1,12 @@
 import { IPortkeyProvider } from '@portkey/provider-types';
 import { NetworkType, ThemeType } from '../../types';
 import { basicActions } from '../utils';
+import { ILoginConfig, TDesign } from '../../types/signIn';
 
 export const WebWalletActions = {
   setWalletProvider: 'SET_WALLET_PROVIDER',
   destroy: 'DESTROY',
 };
-
-export interface ILoginConfig {
-  loginMethodsOrder?: ('Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter')[];
-  recommendIndexes?: number[];
-}
 
 export interface IConnectState {
   options: {
@@ -18,6 +14,7 @@ export interface IConnectState {
     appId: string;
     theme?: ThemeType;
     loginConfig?: ILoginConfig;
+    design?: TDesign;
   };
 
   provider: IPortkeyProvider | null;

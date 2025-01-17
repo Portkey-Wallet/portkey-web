@@ -17,3 +17,15 @@ export enum SocialLoginType {
   GOOGLE = 'Google',
   TELEGRAM = 'Telegram',
 }
+
+export interface ILoginConfig {
+  loginMethodsOrder?: ('Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitter')[];
+  recommendIndexes?: number[];
+}
+
+export declare enum Design {
+  SocialDesign = 'SocialDesign',
+  CryptoDesign = 'CryptoDesign',
+  Web2Design = 'Web2Design',
+}
+export type TDesign = `${Design}`;
