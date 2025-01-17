@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.4...v2.19.0-alpha.5) (2025-01-17)
+
+### Features
+
+- 🎸 hide backicon ([99b511a](https://github.com/Portkey-Wallet/portkey-web/commit/99b511a044a7c9bfb0b25d39c255089e4b309d60))
+
 ## [2.19.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.3...v2.19.0-alpha.4) (2025-01-15)
 
 **Note:** Version bump only for package root
