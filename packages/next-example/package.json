@@ -1,6 +1,6 @@
 {
   "name": "@portkey/next-example",
-  "version": "2.19.0-alpha.6",
+  "version": "2.20.0-alpha.1",
   "private": true,
   "scripts": {
     "dev-https": "next dev --experimental-https",
@@ -10,11 +10,11 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@portkey/connect-web-wallet": "^2.19.0-alpha.6",
-    "@portkey/did": "^2.19.0-alpha.6",
-    "@portkey/did-ui-react": "^2.19.0-alpha.6",
+    "@portkey/connect-web-wallet": "^2.20.0-alpha.1",
+    "@portkey/did": "^2.20.0-alpha.1",
+    "@portkey/did-ui-react": "^2.20.0-alpha.1",
     "@portkey/iframe-provider": "^2.4.0-alpha.6",
-    "@portkey/onboarding": "^2.19.0-alpha.6",
+    "@portkey/onboarding": "^2.20.0-alpha.1",
     "aelf-sdk": "^3.4.7",
     "antd": "4.24.14",
     "next": "14.2.5",
