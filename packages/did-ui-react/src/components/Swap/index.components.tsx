@@ -53,7 +53,6 @@ export const Swap = ({ onBack }: TSwapProps) => {
       case SwapTypeEnum.SwapForm:
         return <SwapSettingButton key="swapSettingButton" />;
       case SwapTypeEnum.SwapPreview:
-        // TODO: swap svg
         return <CustomSvg fillColor="var(--sds-color-icon-default-default)" type="help" onClick={onHelpClick} />;
       default:
         return null;

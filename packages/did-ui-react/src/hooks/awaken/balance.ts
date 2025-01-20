@@ -32,9 +32,7 @@ export const useBalancesV2 = (
   const chainId = useDAppChainId();
   const getTokenViewContract = useGetTokenViewContract();
 
-  // TODO: swap caAddress
   const [{ caInfo }] = usePortkeyAsset();
-
   const onGetBalance = useCallback(async () => {
     const tokensList = Array.isArray(tokens) ? tokens : [tokens];
     const account = caInfo?.[chainId]?.caAddress;

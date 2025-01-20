@@ -239,7 +239,6 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
   const getTokenViewContract = useGetTokenViewContract();
   const getCAContract = useGetCAContract();
 
-  // TODO: swap caAddress
   const [{ caInfo, managementAccount, caHash }] = usePortkeyAsset();
   const { userExpiration } = useAwakenUserExpiration();
 
@@ -379,7 +378,6 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
               balance={swapInfo.valueIn}
               balanceInUsd={valueInUsd}
             />
-            {/* TODO: swap svg */}
             <CustomSvg className="swap-preview-token-card-icon" type="arrow down thin" />
             <CurrencyItem
               item={swapInfo.tokenOut}
@@ -393,7 +391,6 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
         <div>
           <CommonInfoRow
             label={{ text: 'Network' }}
-            // TODO: swap svg
             value={{ text: 'aelf dAppChain', leftSvgName: 'Chain=AELF Side' }}
           />
 
@@ -500,8 +497,11 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
         }}>
         <div className="swap-preview-price-tip-body">
           <div className="swap-preview-price-tip-content">
-            {/* TODO: swap svg origin error */}
-            <CustomSvg className="swap-preview-price-tip-icon" type="Error" />
+            <CustomSvg
+              fillColor="var(--sds-color-icon-default-default)"
+              className="swap-preview-price-tip-icon"
+              type="Error"
+            />
             <div className="swap-preview-price-tip-title">Price change alert</div>
             <div className="swap-preview-price-tip-sub-title">
               The swap price has changed. Please re-initiate the transaction to continue.

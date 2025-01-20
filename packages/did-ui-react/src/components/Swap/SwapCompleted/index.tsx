@@ -12,7 +12,6 @@ export const SwapCompleted = ({ onClose }: TSwapCompletedProps) => {
   return (
     <div className="swap-completed">
       <div className="swap-completed-body swap-common-padding">
-        {/* TODO: swap svg origin: activity-success */}
         <CustomSvg
           className="swap-completed-icon"
           type={theme === 'dark' ? 'Activity-status-success' : 'Activity-status-success-white'}
