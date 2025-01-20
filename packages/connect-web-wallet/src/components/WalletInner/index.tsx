@@ -64,19 +64,18 @@ export default function WalletInner() {
     };
   }, [dispatch, initListener, removeListener]);
 
-  const walletOptions = useMemo(
-    () => ({
+  const walletOptions = useMemo(() => {
+    return {
       ...options,
       isTelegram: TelegramPlatform.isTelegramPlatform(),
-    }),
-    [options],
-  );
+    };
+  }, [options]);
 
   return (
     <iframe
       ref={iframeRef}
       // TODO change online url
-      src={`http://localhost:3000/?${qs.stringify(walletOptions)}`}
+      src={`https://test-portkey-web-wallet.portkey.finance?${qs.stringify(walletOptions)}`}
       style={{ width: '100%', height: '700px' }}
       onLoad={onLoad}
     />
