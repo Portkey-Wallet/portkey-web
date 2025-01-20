@@ -1,28 +1,30 @@
 import './index.less';
-import { Button } from 'antd';
-
-import { useCallback } from 'react';
 import CustomSvg from '../../CustomSvg';
+import ThrottleButton from '../../ThrottleButton';
+import { usePortkey } from '../../context';
 
-export const SwapCompleted = () => {
-  const onClose = useCallback(() => {
-    // TODO: swap back
-    // navigate(-1);
-  }, []);
+export type TSwapCompletedProps = {
+  onClose?: () => void;
+};
+export const SwapCompleted = ({ onClose }: TSwapCompletedProps) => {
+  const [{ theme }] = usePortkey();
 
   return (
     <div className="swap-completed">
       <div className="swap-completed-body swap-common-padding">
         {/* TODO: swap svg origin: activity-success */}
-        <CustomSvg className="swap-completed-icon" type="Activity-status-success" />
+        <CustomSvg
+          className="swap-completed-icon"
+          type={theme === 'dark' ? 'Activity-status-success' : 'Activity-status-success-white'}
+        />
         <div className="swap-completed-title">Transaction completed</div>
         <div className="swap-completed-sub-title">{'View the transaction in “Activity” tab to check its status.'}</div>
       </div>
 
       <div className="swap-completed-footer swap-common-padding">
-        <Button type="primary" onClick={onClose}>
+        <ThrottleButton type="primary" onClick={onClose}>
           Close
-        </Button>
+        </ThrottleButton>
       </div>
     </div>
   );

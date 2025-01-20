@@ -10,7 +10,6 @@ import { SwapCompleted } from './SwapCompleted';
 import { AWAKEN_HELP_URL } from '../../constants/awaken';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
-import React from 'react';
 
 export enum SwapTypeEnum {
   'SwapForm' = 'SwapForm',
@@ -88,7 +87,7 @@ export const Swap = ({ onBack }: TSwapProps) => {
           <SwapPreview {...previewProps} onFinish={onPreviewFinish} />
         )}
 
-        {type === SwapTypeEnum.SwapCompleted && <SwapCompleted />}
+        {type === SwapTypeEnum.SwapCompleted && <SwapCompleted onClose={onBackClick} />}
       </div>
     </div>
   );

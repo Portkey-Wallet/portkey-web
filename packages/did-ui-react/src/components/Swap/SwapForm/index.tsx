@@ -46,24 +46,6 @@ export const SwapForm = ({ className, onFinish }: TSwapFormProps) => {
     isFocusValueIn: true,
   });
 
-  const isInitRef = useRef(false);
-  useEffect(() => {
-    if (isInitRef.current) {
-      return;
-    }
-    const defaultTokenIn = list.find((item) => item.symbol === 'ELF');
-    const defaultTokenOut = list.find((item) => item.symbol === 'USDT');
-    if (!defaultTokenIn || !defaultTokenOut) {
-      return;
-    }
-    isInitRef.current = true;
-    setSwapInfo((pre) => ({
-      ...pre,
-      tokenIn: defaultTokenIn,
-      tokenOut: defaultTokenOut,
-    }));
-  }, [list]);
-
   const swapInfoRef = useRef(swapInfo);
   swapInfoRef.current = swapInfo;
   const symbols = useMemo(
@@ -181,6 +163,28 @@ export const SwapForm = ({ className, onFinish }: TSwapFormProps) => {
 
   refreshTokenValueRef.current = refreshTokenValue;
   const refreshTokenValueDebounce = useDebounceCallback(refreshTokenValue, [refreshTokenValue]);
+  const refreshTokenValueDebounceRef = useRef(refreshTokenValueDebounce);
+  refreshTokenValueDebounceRef.current = refreshTokenValueDebounce;
+
+  const isInitRef = useRef(false);
+
+  useEffect(() => {
+    if (isInitRef.current) {
+      return;
+    }
+    const defaultTokenIn = list.find((item) => item.symbol === 'ELF');
+    const defaultTokenOut = list.find((item) => item.symbol === 'USDT');
+    if (!defaultTokenIn || !defaultTokenOut) {
+      return;
+    }
+    isInitRef.current = true;
+    setSwapInfo((pre) => ({
+      ...pre,
+      tokenIn: defaultTokenIn,
+      tokenOut: defaultTokenOut,
+    }));
+    refreshTokenValueDebounceRef.current();
+  }, [list]);
 
   const timerRef = useRef<NodeJS.Timeout>();
 
@@ -419,6 +423,7 @@ export const SwapForm = ({ className, onFinish }: TSwapFormProps) => {
     if (!_refreshTokenValue) {
       return;
     }
+    if (isSwapping) return;
     setIsSwapping(true);
     try {
       const result = await _refreshTokenValue(true);
@@ -451,7 +456,7 @@ export const SwapForm = ({ className, onFinish }: TSwapFormProps) => {
       console.log('onSwap finally');
       setIsSwapping(false);
     }
-  }, [onFinish, priceLabel, swapInfo]);
+  }, [isSwapping, onFinish, priceLabel, swapInfo]);
 
   const isPreviewShow = useMemo(() => {
     if (swapInfo.isFocusValueIn && (!swapInfo.valueIn || ZERO.gte(swapInfo.valueIn))) {
