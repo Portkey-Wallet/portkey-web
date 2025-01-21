@@ -1,3 +1,4 @@
+import { ChainId } from '@portkey/types';
 import { CWW_WALLET_INFO_KEY } from '../constants';
 
 export type TWalletInfo = {
@@ -6,6 +7,7 @@ export type TWalletInfo = {
   nickName?: string;
   managerAddress?: string;
   managerPubkey?: string;
+  originChainId?: ChainId;
 };
 
 export class WalletInfoControl {
