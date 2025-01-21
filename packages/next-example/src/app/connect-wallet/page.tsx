@@ -147,6 +147,12 @@ export default function ConnectWallet() {
     [connect],
   );
 
+  const loginInOtherMethod = async (type: 'Qrcode' | 'Email') => {
+    await connect({
+      otherLoginType: type,
+    });
+  };
+
   return (
     <div>
       {Object.entries(state).map(([key, value]) => {
@@ -159,6 +165,8 @@ export default function ConnectWallet() {
         );
       })}
       <Button onClick={() => loginInWeb(SocialLoginType.TELEGRAM)}>Custom Login with TG</Button>
+      <Button onClick={() => loginInOtherMethod('Qrcode')}>Custom Login with QRcode</Button>
+      <Button onClick={() => loginInOtherMethod('Email')}>Custom Login with Email</Button>
       <Button onClick={initProvider}>init provider</Button>
 
       <Button

@@ -4,9 +4,12 @@ export type ISocialLogin = 'Google' | 'Apple' | 'Telegram' | 'Facebook' | 'Twitt
 
 export type IWeb2Login = 'Email';
 
+export type IQrcode = 'Qrcode';
+
 export interface IConnectParams {
-  socialType: ISocialLogin;
-  socialData: TSocialResponseData;
+  otherLoginType?: IWeb2Login | IQrcode;
+  socialType?: ISocialLogin;
+  socialData?: TSocialResponseData;
 }
 
 export interface IUserInfo {
