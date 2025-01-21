@@ -3930,13 +3930,13 @@
   resolved "https://registry.yarnpkg.com/@polka/url/-/url-1.0.0-next.21.tgz#5de5a2385a35309427f6011992b544514d559aa1"
   integrity sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==
 
-"@portkey/chain@^2.4.0-alpha.6":
-  version "2.4.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@portkey/chain/-/chain-2.4.0-alpha.6.tgz#5ff08d1013d851095b4ef5330b7f134502160e9c"
-  integrity sha512-XN+MBm38OOfGToj1TX+MXZfVRb6JQRuJWTQa9WbndKyMxzemf3FNKmsEXMtrjHwUCPRykH9meEo6LSrk4JAxzA==
+"@portkey/chain@^2.4.0-alpha.8":
+  version "2.4.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@portkey/chain/-/chain-2.4.0-alpha.8.tgz#d1d2dd0ec31b45ceee94b0e54fe197d37d3025c0"
+  integrity sha512-4BSGxsNhwKbqYLONeyTOinz9YxRfpfcO7RjhGa1PspgmN2AcjVfhUZ928APDS7fT/Drzwy/Agi/yDAJUQN+EFA==
   dependencies:
     "@portkey/contracts" "^2.0.4"
-    "@portkey/provider-types" "^2.4.0-alpha.6"
+    "@portkey/provider-types" "^2.4.0-alpha.8"
     aelf-sdk "^3.2.45-beta.0"
 
 "@portkey/contracts@^2.0.4":
@@ -3955,13 +3955,13 @@
   dependencies:
     "@portkey/provider-types" "^2.0.0-alpha.2"
 
-"@portkey/iframe-provider@^2.4.0-alpha.6":
-  version "2.4.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@portkey/iframe-provider/-/iframe-provider-2.4.0-alpha.6.tgz#a4942e5488871ef2db7f34df1f836dcce0e6013f"
-  integrity sha512-5qvMsPsF6y+fUtBbIbJ1ZdUdWSyPsSawMRAUAQ1Xr92isfAsG1KVomGNd9Al367UOAizYqN+YaDCCBYoi8Egdg==
+"@portkey/iframe-provider@^2.4.0-alpha.8":
+  version "2.4.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@portkey/iframe-provider/-/iframe-provider-2.4.0-alpha.8.tgz#68c0b11059121e785ca5ddd452937c7a1ee18f2f"
+  integrity sha512-QAOJ0mHIGGnuVKUI7Q+OrR48ShXo0L7BfPNNaVu9ejiKtaeAEdXLS2tnYmzVNDOdHP3sNoZgTYZ4tB6ZSfXUbQ==
   dependencies:
-    "@portkey/provider-types" "^2.4.0-alpha.6"
-    "@portkey/providers" "^2.4.0-alpha.6"
+    "@portkey/provider-types" "^2.4.0-alpha.8"
+    "@portkey/providers" "^2.4.0-alpha.8"
     "@types/elliptic" "^6.4.14"
     readable-stream "^4.4.0"
 
@@ -3981,29 +3981,29 @@
     "@portkey/types" "^2.0.0-alpha.0"
     "@types/readable-stream" "^2.3.15"
 
-"@portkey/provider-types@^2.4.0-alpha.6":
-  version "2.4.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@portkey/provider-types/-/provider-types-2.4.0-alpha.6.tgz#7bb8e64cdb6a7171bc3b2d4d70dc5036dc4cc19e"
-  integrity sha512-a5rHs2Fiwl2t02MnDZW/njT2iT1m2yeQ8jBUiRWBYRBZXTDRzJu7rp4BOmAzOFLfbvqKBzitxCmVb6WSGc/SCA==
+"@portkey/provider-types@^2.4.0-alpha.8":
+  version "2.4.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@portkey/provider-types/-/provider-types-2.4.0-alpha.8.tgz#736fea781d1f242421acf3131baea506156dfa3e"
+  integrity sha512-CgH90TzEIdOj5inlYwMLIUCWoJE8MWMxW9thoC4abAFQPgLWC9VqN5fbLp1tnOqI/7Yast/MNUTEiRNMNrG6cg==
   dependencies:
     "@portkey/types" "^2.0.0-alpha.0"
     "@types/readable-stream" "^2.3.15"
 
-"@portkey/provider-utils@^2.4.0-alpha.6":
-  version "2.4.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@portkey/provider-utils/-/provider-utils-2.4.0-alpha.6.tgz#6053c31deb6643ce43f2668b99cf1ee936827c85"
-  integrity sha512-PyCjf4LmS3M9XKipW4zNTHzjskojYrPOBysEXA3k3vzofTJdM4V1FHS04b7UWBTEk+XM3vMlh2ovoDw42kLlvQ==
+"@portkey/provider-utils@^2.4.0-alpha.8":
+  version "2.4.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@portkey/provider-utils/-/provider-utils-2.4.0-alpha.8.tgz#6855884f26b0ae72565a72a3556ffec1a4f57b02"
+  integrity sha512-eJxUAigtc8F+ynkzR9NXz7IldA7Fqi0ULDC8/lAYfRS2WkB/ZgnfsUVi0l2UCL3NyY4bOD0MdJzIgy7+3IgEWw==
   dependencies:
-    "@portkey/provider-types" "^2.4.0-alpha.6"
+    "@portkey/provider-types" "^2.4.0-alpha.8"
 
-"@portkey/providers@^2.4.0-alpha.6":
-  version "2.4.0-alpha.6"
-  resolved "https://registry.yarnpkg.com/@portkey/providers/-/providers-2.4.0-alpha.6.tgz#5d2a2260aabd53a240a6cfc052a629ca237e908d"
-  integrity sha512-31m7u14C2V9MpVO07OfgRIh6LmcS0TdjQz3OQJkXv4eQ1grW/Z029wSYB0v4mhT3GfMmJiWUOL+cgKx4S35YnA==
+"@portkey/providers@^2.4.0-alpha.8":
+  version "2.4.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/@portkey/providers/-/providers-2.4.0-alpha.8.tgz#4bfc833dab86fbf7bd9536dfbe05ad38e7d49254"
+  integrity sha512-Vgx3sr+14RABMtY5kvRxuP62IiAGIvb0h6GqWZEe+2SyLKiNPqagpdeMTPPDjV5jUl7n4mA779uVyp0GuXBKAg==
   dependencies:
-    "@portkey/chain" "^2.4.0-alpha.6"
-    "@portkey/provider-types" "^2.4.0-alpha.6"
-    "@portkey/provider-utils" "^2.4.0-alpha.6"
+    "@portkey/chain" "^2.4.0-alpha.8"
+    "@portkey/provider-types" "^2.4.0-alpha.8"
+    "@portkey/provider-utils" "^2.4.0-alpha.8"
     "@types/readable-stream" "^2.3.15"
     lodash "^4.17.21"
     readable-stream "^4.4.0"

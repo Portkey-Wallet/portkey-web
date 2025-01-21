@@ -33,7 +33,7 @@ const TokenContractAddressMap = {
 };
 const ec = new elliptic.ec('secp256k1');
 export default function ConnectWallet() {
-  const { connect, disconnect, provider, showAsset } = useConnect();
+  const { connect, disconnect, provider, showAsset, walletInfo } = useConnect();
   const [state, dispatch] = useExampleState();
 
   const onConnect = useCallback(async () => {
@@ -44,6 +44,10 @@ export default function ConnectWallet() {
       console.log('onConnect error', error.message);
     }
   }, [connect]);
+
+  useEffect(() => {
+    console.log('walletInfo?.managerAddress', walletInfo?.managerAddress);
+  }, [walletInfo?.managerAddress]);
 
   const initProvider = useCallback(async () => {
     const provider = await detectProvider({ providerName: 'PortkeyWebWallet' as any });
@@ -159,12 +163,29 @@ export default function ConnectWallet() {
 
       <Button
         onClick={async () => {
-          alert(provider?.isConnected());
+          if (!provider) return;
+          const state = await provider.request({
+            method: MethodsWallet.GET_WALLET_STATE,
+          });
+
+          console.log('WalletState', state);
         }}>
-        isConnected
+        getWalletState
       </Button>
       <Button onClick={onConnect}>connect</Button>
       <Button onClick={disconnect}>disconnect</Button>
+      <Button
+        onClick={async () => {
+          if (!provider) return;
+          const result = await provider.request({
+            method: MethodsWallet.WALLET_LOCK,
+            payload: { data: Date.now().toString() },
+          });
+
+          console.log('lock result', result);
+        }}>
+        lock
+      </Button>
       <Button
         onClick={async () => {
           showAsset();

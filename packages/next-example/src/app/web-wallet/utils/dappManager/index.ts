@@ -24,6 +24,10 @@ export abstract class DappManager implements IDappManager {
   getDid() {
     return did;
   }
+
+  lockDid() {
+    return did.reset();
+  }
   isLocked(): boolean {
     console.log('=====isLocked', !did?.didWallet?.aaInfo?.accountInfo?.caHash);
     return Boolean(!did?.didWallet?.aaInfo?.accountInfo?.caHash);

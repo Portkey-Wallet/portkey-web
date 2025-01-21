@@ -32,9 +32,12 @@ export const useConnect = () => {
   const connect = useCallback(
     async (options?: IConnectParams) => {
       if (!provider) throw 'Please init wallet provider';
-      const isConnected = provider?.isConnected();
-      console.log(isConnected, 'isConnected==');
-      if (isConnected) return requestMethod({ method: MethodsBase.ACCOUNTS });
+
+      const walletState = await requestMethod({ method: MethodsWallet.GET_WALLET_STATE });
+
+      console.log('connect walletState', walletState);
+
+      if (walletState?.isConnected && walletState?.isLogged) return requestMethod({ method: MethodsBase.ACCOUNTS });
 
       const result = await requestMethod({
         method: MethodsBase.REQUEST_ACCOUNTS,
