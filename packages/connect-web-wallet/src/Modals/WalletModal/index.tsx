@@ -14,7 +14,7 @@ export default function WalletModal() {
 
   return isMobile ? (
     <Drawer
-      className="portkey-connect-wallet-modal"
+      className="portkey-connect-wallet-modal portkey-connect-wallet-drawer"
       placement="bottom"
       height={'70vh'}
       forceRender
