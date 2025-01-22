@@ -14,6 +14,7 @@ import { ZERO } from '../../../../constants/misc';
 import { useAwakenGasFee } from '../../../../hooks/awaken/state';
 import { divDecimals } from '../../../../utils/converter';
 import { formatNameWithNoUnderline } from '../../../../utils/format';
+import CommonButton from '../../../CommonButton';
 
 interface IAmountCardProps {
   className?: string;
@@ -115,9 +116,9 @@ export const AmountCard = ({
         {isInput && isMaxShow && (
           <div className="swap-amount-balance-wrap">
             <span className="swap-amount-balance-amount">{balanceStr}</span>
-            <Button className="swap-amount-balance-max-button" type="default" onClick={handleMaxPress}>
+            <CommonButton className="swap-amount-balance-max-button" type="default" onClick={handleMaxPress}>
               Max
-            </Button>
+            </CommonButton>
           </div>
         )}
       </div>

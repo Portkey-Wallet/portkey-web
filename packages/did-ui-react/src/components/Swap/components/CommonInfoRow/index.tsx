@@ -1,6 +1,6 @@
-import { CommonModalTip } from '@portkey/did-ui-react';
 import './index.less';
 import CustomSvg, { CustomSvgType } from '../../../CustomSvg';
+import CommonModalTip from '../../../CommonModalTip';
 
 interface ILabel {
   text: string;
@@ -29,7 +29,7 @@ export const CommonInfoRow = ({ label, value }: ICommonInfoRowProps) => {
       <div className="common-info-label-column-wrap">
         <div className="common-info-label-wrap">{label.text}</div>
 
-        {label.tooltipProps && <CommonModalTip {...label.tooltipProps} />}
+        {label.tooltipProps && <CommonModalTip modalClassName="common-info-row-tip-modal" {...label.tooltipProps} />}
       </div>
 
       <div className="common-info-value-column-wrap">
