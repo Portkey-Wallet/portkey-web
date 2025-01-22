@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.20.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0...v2.20.0-alpha.2) (2025-01-22)
+
+### Features
+
+- 🎸 add swap graphql ([f2465ce](https://github.com/Portkey-Wallet/portkey-web/commit/f2465ce64ee3a8b1cac0de5c181270b925e47615))
+- 🎸 add swap page ([329bc54](https://github.com/Portkey-Wallet/portkey-web/commit/329bc5447c6286e38d741301674a2f95a729d851))
+- 🎸 swap optimization ([e837ab2](https://github.com/Portkey-Wallet/portkey-web/commit/e837ab25bb0a77db78a802c6dbc54d6771c83c4e))
+- 🎸 swap styles optimization ([4126bf5](https://github.com/Portkey-Wallet/portkey-web/commit/4126bf5d82812d687d0020669c08c87f6a82a735))
+
 ## [2.18.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.1...v2.18.0) (2025-01-15)
 
 ### Bug Fixes
