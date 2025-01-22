@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.0-alpha.11](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.10...v2.19.0-alpha.11) (2025-01-22)
+
+### Bug Fixes
+
+- 🐛 hide email register ([7fa9c76](https://github.com/Portkey-Wallet/portkey-web/commit/7fa9c76ad23646470bddc91ee4b6ef3dd39c2b9b))
+
 ## [2.19.0-alpha.10](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.9...v2.19.0-alpha.10) (2025-01-22)
 
 **Note:** Version bump only for package root
