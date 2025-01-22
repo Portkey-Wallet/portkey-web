@@ -90,11 +90,21 @@ function Step1({
             return;
           }
           if (createType !== 'SignUp') {
-            return setOpen(true);
+            if (value.accountType === 'Email') {
+              return setOpen(true);
+            } else {
+              return onConfirm();
+            }
           }
         }
 
-        if (value.isLoginGuardian && createType !== 'Login') return setOpen(true);
+        if (value.isLoginGuardian && createType !== 'Login') {
+          if (value.accountType === 'Email') {
+            return setOpen(true);
+          } else {
+            return onConfirm();
+          }
+        }
 
         await onSignInFinished?.({
           isFinished: false,
