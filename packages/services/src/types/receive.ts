@@ -70,6 +70,7 @@ export type TDepositInfo = {
   extraInfo?: TDepositExtraInfo;
   serviceFee?: string;
   serviceFeeUsd?: string;
+  currentThreshold?: string;
 };
 
 export type TDepositExtraInfo = {

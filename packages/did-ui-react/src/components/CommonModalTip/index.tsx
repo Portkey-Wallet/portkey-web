@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ReactNode, useState } from 'react';
 import CustomSvg from '../CustomSvg';
 import CommonModal from '../CommonModal';
 import CommonButton from '../CommonButton';
@@ -6,7 +6,7 @@ import './index.less';
 
 export interface ICommonModalTip {
   title: string;
-  content: string;
+  content: ReactNode;
   className?: string;
 }
 

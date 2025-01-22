@@ -29,7 +29,7 @@ export interface TokenDetailProps {
   isShowFaucet?: boolean;
   faucet?: IFaucetConfig;
   onBack?: () => void;
-  onReceive?: (selectToken: BaseToken) => void;
+  onReceive?: (selectToken: TokenItemShowType) => void;
   onBuy?: (selectToken: BaseToken) => void;
   onSend?: (selectToken: TokenItemShowType, type: TokenType) => void;
   onDataInit?: () => void;
