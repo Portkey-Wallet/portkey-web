@@ -39,7 +39,6 @@ export const CommonInfoRow = ({ label, value }: ICommonInfoRowProps) => {
               {value.leftImageUrl ? (
                 <img className="common-info-value-image" src={value.leftImageUrl} />
               ) : (
-                // TODO: swap svg
                 value.leftSvgName && <CustomSvg className="common-info-value-image" type={value.leftSvgName} />
               )}
 

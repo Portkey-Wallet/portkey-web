@@ -46,10 +46,7 @@ function TagItem<T extends string>({
 
   return (
     <div className={clsx('common-tag-item', isSelected && 'common-tag-item-selected', className)} onClick={onClick}>
-      {isSelected && !item.hideCheckIcon && (
-        // TODO: swap svg origin:check
-        <CustomSvg className="common-tag-item-check-icon" type="Check" />
-      )}
+      {isSelected && !item.hideCheckIcon && <CustomSvg className="common-tag-item-check-icon" type="Check" />}
       {typeof item.label === 'string' ? <div className="common-tag-item-label">{item.label}</div> : item.label}
     </div>
   );

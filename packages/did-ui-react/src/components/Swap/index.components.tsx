@@ -10,7 +10,6 @@ import { SwapCompleted } from './SwapCompleted';
 import { AWAKEN_HELP_URL } from '../../constants/awaken';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
-import React from 'react';
 
 export enum SwapTypeEnum {
   'SwapForm' = 'SwapForm',
@@ -54,7 +53,6 @@ export const Swap = ({ onBack }: TSwapProps) => {
       case SwapTypeEnum.SwapForm:
         return <SwapSettingButton key="swapSettingButton" />;
       case SwapTypeEnum.SwapPreview:
-        // TODO: swap svg
         return <CustomSvg fillColor="var(--sds-color-icon-default-default)" type="help" onClick={onHelpClick} />;
       default:
         return null;
@@ -88,7 +86,7 @@ export const Swap = ({ onBack }: TSwapProps) => {
           <SwapPreview {...previewProps} onFinish={onPreviewFinish} />
         )}
 
-        {type === SwapTypeEnum.SwapCompleted && <SwapCompleted />}
+        {type === SwapTypeEnum.SwapCompleted && <SwapCompleted onClose={onBackClick} />}
       </div>
     </div>
   );

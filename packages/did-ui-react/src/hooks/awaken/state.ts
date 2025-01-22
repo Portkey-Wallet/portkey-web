@@ -153,8 +153,6 @@ export const useAwakenTokenPrices = ({ symbol, isInit = true }: TUseAwakenTokenP
 
 export const useAwakenTokenList = (isInit = false) => {
   const chainId = useDAppChainId();
-
-  // TODO: swap caAddress
   const [{ caInfo }] = usePortkeyAsset();
 
   const refresh = useCallback(async () => {

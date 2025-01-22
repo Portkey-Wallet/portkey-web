@@ -4,6 +4,7 @@ import { getChain } from './useChainInfo';
 import { ChainId } from '@portkey/types';
 import { CommonContractBasic } from '../utils/sandboxUtil/CommonContractBasic';
 import { usePortkey } from '../components/context';
+import { usePortkeyAsset } from '../components';
 
 const Wallet = AElf.wallet;
 
@@ -25,5 +26,25 @@ export const useGetTokenViewContract = () => {
       return contract;
     },
     [sandboxId],
+  );
+};
+
+export const useGetCAContract = () => {
+  const [{ sandboxId }] = usePortkey();
+  const [{ managementAccount }] = usePortkeyAsset();
+
+  return useCallback(
+    async (chainId: ChainId) => {
+      const chainInfo = await getChain(chainId);
+
+      const contract = new CommonContractBasic({
+        rpcUrl: chainInfo.endPoint,
+        contractAddress: chainInfo.caContractAddress,
+        privateKey: managementAccount?.privateKey,
+        sandboxId: sandboxId,
+      });
+      return contract;
+    },
+    [managementAccount?.privateKey, sandboxId],
   );
 };

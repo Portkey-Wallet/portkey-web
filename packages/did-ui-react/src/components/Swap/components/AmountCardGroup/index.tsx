@@ -95,7 +95,6 @@ const AmountCardGroup = ({
       />
       <div className="swap-amount-group-switch-wrap" onClick={switchToken}>
         <div className="swap-amount-group-switch-button">
-          {/* TODO: swap svg */}
           <CustomSvg type="swap_vert thin" className="swap-amount-group-switch-icon" />
         </div>
       </div>

@@ -46,12 +46,10 @@ export const SelectTokenButton = ({ className, modalTitle, token, onTokenChange 
   const inputSuffix = useMemo(() => {
     if (keyword) {
       return (
-        // TODO: swap svg origin: close-circle
         <CustomSvg className="swap-select-token-modal-input-close-icon" type="Close3" onClick={() => setKeyword('')} />
       );
     }
 
-    // TODO: swap svg
     return <CustomSvg className="swap-select-token-modal-input-search-icon" type="Search2" />;
   }, [keyword]);
 
@@ -70,8 +68,12 @@ export const SelectTokenButton = ({ className, modalTitle, token, onTokenChange 
         <div className="swap-select-token-button-symbol">
           {truncateString(formatNameWithNoUnderline(token?.label || token?.symbol))}
         </div>
-        {/* TODO: swap svg origin:chevron_down */}
-        <CustomSvg className="swap-select-token-button-icon" type="ChevronDown2" />
+
+        <CustomSvg
+          fillColor="var(--sds-color-icon-default-default)"
+          className="swap-select-token-button-icon"
+          type="ChevronDown2"
+        />
       </div>
 
       <CommonModal

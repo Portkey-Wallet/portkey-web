@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState, useRef } from 'react';
 import { CommonModal, CommonModalTip } from '@portkey/did-ui-react';
-import { Button, Input, InputRef } from 'antd';
-
+import { Input, InputRef } from 'antd';
 import './index.less';
 import clsx from 'clsx';
 import { useAwakenUserExpiration, useAwakenUserSlippageTolerance } from '../../../../hooks/awaken/state';
@@ -10,6 +9,7 @@ import { ZERO } from '../../../../constants/misc';
 import { isStrictInteger, isValidNumberV2 } from '../../../../utils/reg';
 import CustomSvg from '../../../CustomSvg';
 import { CommonTagToggleGroup } from '../CommonTagToggleGroup';
+import ThrottleButton from '../../../ThrottleButton';
 
 interface ISwapSettingButtonProps {
   className?: string;
@@ -147,7 +147,6 @@ export const SwapSettingButton = ({ className }: ISwapSettingButtonProps) => {
 
   return (
     <div className={clsx('swap-setting-button-wrap', className)}>
-      {/* TODO: swap svg origin:gear */}
       <CustomSvg
         fillColor="var(--sds-color-icon-default-default)"
         className="swap-setting-button"
@@ -200,9 +199,9 @@ export const SwapSettingButton = ({ className }: ISwapSettingButtonProps) => {
             </div>
           </div>
 
-          <Button className="swap-setting-modal-save-button" type="primary" onClick={saveSetting}>
+          <ThrottleButton className="swap-setting-modal-save-button" type="primary" onClick={saveSetting}>
             Done
-          </Button>
+          </ThrottleButton>
         </div>
       </CommonModal>
     </div>

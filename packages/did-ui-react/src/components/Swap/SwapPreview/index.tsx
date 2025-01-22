@@ -3,7 +3,6 @@ import './index.less';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import BigNumber from 'bignumber.js';
 import { CurrencyItem } from '../components/CurrencyItem';
-import { Button } from 'antd';
 import { CommonModal, singleMessage } from '@portkey/did-ui-react';
 import { TContractSwapToken, TSwapRoute } from '@portkey/types';
 import { useIsMainnet } from '../../../hooks/common';
@@ -19,11 +18,10 @@ import { formatNameWithNoUnderline, formatPriceUsd } from '../../../utils/format
 import { divDecimals, timesDecimals } from '../../../utils/converter';
 import { getContractTotalAmountOut, getPriceImpactWithBuy, sendSwap } from '../../../utils/awaken/swap';
 import { SWAP_LABS_FEE_RATE, SWAP_RECEIVE_RATE, SWAP_TIME_INTERVAL } from '../../../constants/awaken/swap';
-
 import { useReturnLastCallback } from '../../../hooks/throttle';
 import { useGetSwapHookViewContract } from '../../../hooks/awaken/contract';
 import { useSwapHookContractAddress } from '../../../hooks/awaken';
-import { useGetTokenViewContract } from '../../../hooks/contract';
+import { useGetCAContract, useGetTokenViewContract } from '../../../hooks/contract';
 import { useDAppChainId } from '../../../hooks/useChainInfo';
 import { usePortkeyAsset } from '../../context/PortkeyAssetProvider';
 import { getAllowance } from '../../../utils/balance';
@@ -32,6 +30,7 @@ import CustomSvg from '../../CustomSvg';
 import { CommonInfoRow } from '../components/CommonInfoRow';
 import { useDefaultToken } from '../../../hooks/assets';
 import { useTokenPrice } from '../../context/PortkeyAssetProvider/hooks';
+import ThrottleButton from '../../ThrottleButton';
 
 export type TSwapPreviewProps = {
   swapInfo: TSwapInfo;
@@ -238,11 +237,8 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
   const swapHookContractAddress = useSwapHookContractAddress();
 
   const getTokenViewContract = useGetTokenViewContract();
-  // TODO: swap getCAContract
-  const getCAContract = useGetTokenViewContract();
-  // const getCAContract = useGetCAContract();
+  const getCAContract = useGetCAContract();
 
-  // TODO: swap caAddress
   const [{ caInfo, managementAccount, caHash }] = usePortkeyAsset();
   const { userExpiration } = useAwakenUserExpiration();
 
@@ -259,6 +255,7 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
     const caAddress = caInfo?.[dAppChainId]?.caAddress || '';
     const managerAddress = managementAccount?.address || '';
 
+    if (isSwapping) return;
     setIsSwapping(true);
     try {
       const tokenViewContract = await getTokenViewContract(dAppChainId);
@@ -351,6 +348,7 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
     dAppChainId,
     getCAContract,
     getTokenViewContract,
+    isSwapping,
     managementAccount?.address,
     onFinish,
     swapHookContractAddress,
@@ -380,7 +378,6 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
               balance={swapInfo.valueIn}
               balanceInUsd={valueInUsd}
             />
-            {/* TODO: swap svg */}
             <CustomSvg className="swap-preview-token-card-icon" type="arrow down thin" />
             <CurrencyItem
               item={swapInfo.tokenOut}
@@ -394,7 +391,6 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
         <div>
           <CommonInfoRow
             label={{ text: 'Network' }}
-            // TODO: swap svg
             value={{ text: 'aelf dAppChain', leftSvgName: 'Chain=AELF Side' }}
           />
 
@@ -481,15 +477,16 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
           />
         </div>
 
-        <div className="swap-preview-image-wrap">
-          <img src="assets/images/powered_by_awaken.png" className="swap-preview-image" />
+        <div className="swap-preview-powered-wrap">
+          <div className="swap-preview-powered-title">Powered by</div>
+          <CustomSvg type="Awaken" />
         </div>
       </div>
 
       <div className="swap-preview-footer swap-common-padding">
-        <Button loading={isSwapping} type="primary" onClick={handlePress}>
+        <ThrottleButton loading={isSwapping} type="primary" onClick={handlePress}>
           Swap
-        </Button>
+        </ThrottleButton>
       </div>
 
       <CommonModal
@@ -500,17 +497,23 @@ export const SwapPreview = ({ swapInfo: swapInfoProp, swapRoute, priceLabel, onF
         }}>
         <div className="swap-preview-price-tip-body">
           <div className="swap-preview-price-tip-content">
-            {/* TODO: swap svg origin error */}
-            <CustomSvg className="swap-preview-price-tip-icon" type="Error" />
+            <CustomSvg
+              fillColor="var(--sds-color-icon-default-default)"
+              className="swap-preview-price-tip-icon"
+              type="Error"
+            />
             <div className="swap-preview-price-tip-title">Price change alert</div>
             <div className="swap-preview-price-tip-sub-title">
               The swap price has changed. Please re-initiate the transaction to continue.
             </div>
           </div>
 
-          <Button type="primary" className="swap-preview-price-tip-button" onClick={() => setIsPriceTipShow(false)}>
+          <ThrottleButton
+            type="primary"
+            className="swap-preview-price-tip-button"
+            onClick={() => setIsPriceTipShow(false)}>
             OK
-          </Button>
+          </ThrottleButton>
         </div>
       </CommonModal>
     </div>
