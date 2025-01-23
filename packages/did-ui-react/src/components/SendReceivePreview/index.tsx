@@ -127,7 +127,7 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
         <div className="portkey-ui-flex-column-center">
           <CustomSvg type="SendActivity" />
           <div className="amount-show">{`${formatAmountShow(sendAmount, tokenInfo?.decimals)} ${
-            tokenInfo?.symbol
+            tokenInfo?.label || tokenInfo?.symbol
           }`}</div>
           <div className="usd-show">{`${formatAmountUSDShow(ZERO.plus(sendAmount).div?.(price))}`}</div>
         </div>
