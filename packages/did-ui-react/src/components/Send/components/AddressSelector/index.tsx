@@ -10,10 +10,14 @@ export default function AddressSelector({
   onClick,
   chainId,
   networkType,
+  tokenId,
+  isFt,
 }: {
   onClick: (account: IClickAddressProps) => void;
   chainId: ChainId;
   networkType: NetworkType;
+  tokenId: string;
+  isFt: boolean;
 }) {
   return (
     <Tabs
@@ -22,7 +26,9 @@ export default function AddressSelector({
         {
           label: 'Recents',
           key: 'recents',
-          children: <Recents networkType={networkType} onChange={onClick} chainId={chainId} />,
+          children: (
+            <Recents networkType={networkType} onChange={onClick} chainId={chainId} tokenId={tokenId} isFt={isFt} />
+          ),
         },
         {
           label: 'My address',

@@ -9,4 +9,11 @@ export class Send<T extends IBaseRequest = IBaseRequest> extends BaseService<T> 
       params,
     });
   }
+
+  getSupportedTransferConfig(): Promise<any> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/transfer/support',
+    });
+  }
 }

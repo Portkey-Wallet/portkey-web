@@ -7,7 +7,7 @@ import { usePortkeySend } from '../../../context/PortkeySendProvider';
 import RecentItem from './RecentItem';
 import { MAINNET } from '../../../../constants/network';
 import { NetworkType, PaginationPage } from '../../../../types';
-import { getTransformedRecentList, IRecentItem } from '../../../../utils/recent';
+import { getFilteredRecentList, IRecentItem } from '../../../../utils/recent';
 import { getAelfAddress } from '../../../../utils';
 import MyAddress from './MyAddress';
 
@@ -15,19 +15,32 @@ export default function Recents({
   networkType,
   onChange,
   chainId,
+  tokenId,
+  isFt,
 }: {
   networkType: NetworkType;
   onChange: (account: IClickAddressProps) => void;
   chainId: ChainId;
+  tokenId: string;
+  isFt: boolean;
 }) {
   const [{ caAddressInfos }] = usePortkeyAsset();
-
   const [currentRecentList, setCurrentRecentList] = useState<IRecentItem[]>([]);
 
-  useEffect(() => {
-    const _recentList = getTransformedRecentList(networkType);
+  const initList = useCallback(async () => {
+    const _recentList = await getFilteredRecentList({
+      network: networkType,
+      fromChainId: chainId,
+      tokenId,
+      isFt,
+      myAddress: caAddressInfos?.[0]?.caAddress || '',
+    });
     setCurrentRecentList(_recentList);
-  }, [networkType]);
+  }, [caAddressInfos, chainId, isFt, networkType, tokenId]);
+
+  useEffect(() => {
+    initList();
+  }, [caAddressInfos, chainId, initList, isFt, networkType, tokenId]);
 
   const recentTxDomList = useMemo(() => {
     return currentRecentList

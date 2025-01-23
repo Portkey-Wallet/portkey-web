@@ -1,5 +1,8 @@
 import { ChainId } from '@portkey/types';
 import { NetworkType } from '../types';
+import { getAelfAddress } from './aelf';
+import { did } from '../..';
+import { TSupportConfigMap } from '@portkey/services';
 
 export interface IRecentItem {
   address: string;
@@ -64,7 +67,61 @@ export const getRecentListMap = (
   }
 };
 
-export const getTransformedRecentList = (network: NetworkType): IRecentItem[] => {
+export const getFilteredRecentList = async ({
+  network,
+  fromChainId,
+  isFt,
+  tokenId,
+  myAddress,
+}: {
+  network: NetworkType;
+  fromChainId: ChainId;
+  tokenId: string;
+  isFt: boolean;
+  myAddress: string;
+}): Promise<IRecentItem[]> => {
   const { targetRecentList } = getRecentListMap(network);
-  return targetRecentList || [];
+
+  const supportedNetworkConfig = await getSupportedConfig();
+  if (!supportedNetworkConfig) return [];
+
+  // aelf is OK, others need check
+  const result = targetRecentList.filter((ele) => {
+    // itself
+    if (ele.network === 'aelf' && fromChainId === ele.chainId && getAelfAddress(ele.address) === myAddress) {
+      return false;
+    }
+
+    if (ele.network === 'aelf') return true;
+    // nft just for aelf chain
+    if (!isFt) return ele.network === 'aelf' && !!ele.chainId;
+
+    return checkIsSupportTargetChain({ supportedNetworkConfig, fromChainId, symbol: tokenId, network: ele.network });
+  });
+
+  return result || [];
+};
+
+export const getSupportedConfig = async () => {
+  try {
+    const { data } = await did.services.send.getSupportedTransferConfig();
+    console.log('getSupportedConfig result', data);
+    return data;
+  } catch (error) {
+    console.log('err', error);
+  }
+};
+
+const checkIsSupportTargetChain = ({
+  supportedNetworkConfig,
+  fromChainId,
+  symbol,
+  network,
+}: {
+  supportedNetworkConfig: TSupportConfigMap;
+  fromChainId: ChainId;
+  symbol: string;
+  network: string;
+}) => {
+  return supportedNetworkConfig?.[fromChainId]?.[symbol]?.find((ele) => ele.network === network);
 };

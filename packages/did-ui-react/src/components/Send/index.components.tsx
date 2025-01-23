@@ -73,7 +73,7 @@ import SendReceivePreview from '../SendReceivePreview';
 import crossChainTransfer from '../../utils/sandboxUtil/crossChainTransfer';
 import { CROSS_CHAIN_ETRANSFER_SUPPORT_SYMBOL } from '../../constants';
 import { getBalanceByContract } from '../../utils/sandboxUtil/getBalance';
-import { addRecentItem } from '../../utils/recent';
+import { addRecentItem, getSupportedConfig } from '../../utils/recent';
 
 export const AdsCheckWarningTip = {
   [WarningKey.INVALID_ADDRESS]: {
@@ -1131,6 +1131,8 @@ function SendContent({
           </div>
         ) : (
           <AddressSelector
+            tokenId={tokenInfo.symbol || tokenInfo.tokenId || ''}
+            isFt={!isNft}
             networkType={networkType}
             onClick={(account: IClickAddressProps) => {
               // from RecentList: Not recent contacts, not clickable
@@ -1272,6 +1274,10 @@ function SendContent({
 
     return `Send ${!isNft ? tokenInfo?.label || tokenInfo.symbol : ''}`;
   }, [isNft, stage, tokenInfo?.label, tokenInfo.symbol]);
+
+  useEffectOnce(() => {
+    getSupportedConfig();
+  });
 
   return (
     <div style={wrapperStyle} className={clsx('portkey-ui-send-wrapper', className)}>
