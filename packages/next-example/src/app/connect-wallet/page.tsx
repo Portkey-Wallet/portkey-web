@@ -597,6 +597,21 @@ ${Date.now()}`;
           try {
             if (!provider) return;
 
+            const walletAvatar = await provider.request({
+              method: MethodsWallet.GET_WALLET_AVATAR,
+            });
+            setState({ walletAvatar });
+          } catch (error: any) {
+            alert(error.message);
+          }
+        }}>
+        GET_WALLET_NAME
+      </Button>
+      <Button
+        onClick={async () => {
+          try {
+            if (!provider) return;
+
             const managerAddress = await provider.request({
               method: MethodsWallet.GET_WALLET_CURRENT_MANAGER_ADDRESS,
             });

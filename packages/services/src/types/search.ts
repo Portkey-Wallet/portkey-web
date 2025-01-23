@@ -54,4 +54,5 @@ export type CAHolderInfo = {
   caHash: string;
   id: string;
   nickName: string;
+  avatar: string;
 };

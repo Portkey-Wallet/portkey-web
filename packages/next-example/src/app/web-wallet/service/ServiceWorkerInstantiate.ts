@@ -10,13 +10,14 @@ import { getWebWalletStorageKey } from '../utils/wallet';
 import SWEventController from '../controllers/EventController/SWEventController';
 
 const permissionWhitelist = [
-  MethodsWallet.GET_WALLET_STATE,
   // The method that requires the dapp not to trigger the lock call
   MethodsBase.ACCOUNTS,
   MethodsBase.CHAIN_ID,
   MethodsBase.CHAIN_IDS,
   MethodsBase.CHAINS_INFO,
   MethodsBase.WALLET_INFO,
+  MethodsBase.NETWORK,
+  MethodsWallet.GET_WALLET_STATE,
 ];
 
 // This is the script that runs in the extension's serviceWorker ( singleton )

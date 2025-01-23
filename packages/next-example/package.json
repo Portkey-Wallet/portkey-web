@@ -13,7 +13,7 @@
     "@portkey/connect-web-wallet": "^2.19.0-alpha.11",
     "@portkey/did": "^2.19.0-alpha.11",
     "@portkey/did-ui-react": "^2.19.0-alpha.11",
-    "@portkey/iframe-provider": "^2.4.0-alpha.8",
+    "@portkey/iframe-provider": "^2.4.0-alpha.9",
     "@portkey/onboarding": "^2.19.0-alpha.11",
     "aelf-sdk": "^3.4.7",
     "antd": "4.24.14",

@@ -8,6 +8,7 @@ export enum Actions {
 
 export type State = {
   walletName?: WalletName;
+  walletAvatar?: string;
   chainIds?: ChainIds;
   accounts?: Accounts;
   chainsInfo?: ChainsInfo;
