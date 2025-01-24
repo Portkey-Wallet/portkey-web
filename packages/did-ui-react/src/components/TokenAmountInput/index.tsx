@@ -16,6 +16,7 @@ export interface ITokenAmountInput {
   decimals: string | number;
   warningTip?: string;
   disabledEdit?: boolean;
+  disabledRevert?: boolean;
   showErrorInput?: boolean;
   setValue: (v: string) => void;
   setUsdValue: (v: string) => void;
@@ -30,6 +31,7 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
     decimals,
     warningTip = '',
     disabledEdit = false,
+    disabledRevert = false,
     showErrorInput = false,
     type,
     setValue,
@@ -82,7 +84,7 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
     <div className="portkey-sdk-token-amount-input-wrap">
       <div className="top-section">
         <>
-          {isRevert ? (
+          {isRevert && !disabledRevert ? (
             <>
               <div className="symbol">{'$ '}</div>
               <div className="amount-input-wrap">
@@ -113,7 +115,7 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
           )}
         </>
       </div>
-      {!existTokenPrice && type === 'token' && (
+      {!existTokenPrice && !disabledRevert && type === 'token' && (
         <div className="bottom-section" onClick={onPressRevert}>
           {isRevert ? <div>{`${value || 0} ${label || symbol}`}</div> : <div>{`$${usdValue || 0}`}</div>}
           <CustomSvg type={'Switch'} className="switch" />

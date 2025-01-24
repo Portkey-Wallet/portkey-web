@@ -1,3 +1,4 @@
+import { usePortkey } from '../../../context';
 import TokenAmountInput from '../../../TokenAmountInput';
 import { AssetTokenExpand } from '../../../types/assets';
 import TokenAmountShow from './TokenAmountShow';
@@ -31,6 +32,8 @@ export default function AmountInput({
   setUsdValue: (v: string) => void;
   onPressMax: () => void;
 }) {
+  const [{ networkType }] = usePortkey();
+
   return (
     <>
       <TokenAmountShow
@@ -62,6 +65,7 @@ export default function AmountInput({
         decimals={token.decimals}
         setValue={setValue}
         setUsdValue={setUsdValue}
+        disabledRevert={networkType === 'TESTNET'}
       />
     </>
   );
