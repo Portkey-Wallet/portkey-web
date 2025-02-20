@@ -74,7 +74,6 @@ export default function WalletInner() {
   return (
     <iframe
       ref={iframeRef}
-      // TODO change online url
       src={`https://portkey-web-wallet.portkey.finance?${qs.stringify(walletOptions)}`}
       style={{ width: '100%', height: '700px' }}
       onLoad={onLoad}
