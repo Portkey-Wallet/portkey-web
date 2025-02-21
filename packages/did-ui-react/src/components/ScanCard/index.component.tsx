@@ -22,6 +22,7 @@ export interface ScanCardProps {
   isErrorTip?: boolean;
   wrapperClassName?: string;
   gridType?: GridType;
+  showOnBack?: boolean;
   onError?: OnErrorFunc;
   onClose?: () => void;
   onBack?: () => void;
@@ -44,6 +45,7 @@ export default function ScanCard({
   onClose,
   onFinish,
   onShowQrCode,
+  showOnBack,
 }: ScanCardProps) {
   const [managementAccount, setManagementAccount] = useState<portkey.WalletAccount>();
   const deviceInfo = useMemo(() => getDeviceInfo(DEVICE_TYPE), []);
@@ -142,6 +144,7 @@ export default function ScanCard({
         onBack={onBack}
         onClose={onClose}
         qrData={qrData}
+        showOnBack={showOnBack}
       />
     </div>
   );

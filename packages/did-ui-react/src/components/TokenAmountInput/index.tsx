@@ -6,6 +6,8 @@ import './index.less';
 import { useTokenPrice } from '../context/PortkeyAssetProvider/hooks';
 import CustomSvg from '../CustomSvg';
 import clsx from 'clsx';
+import { usePortkey } from '../context';
+import { MAINNET } from '../../constants/network';
 
 export interface ITokenAmountInput {
   value?: string;
@@ -39,7 +41,8 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
   } = props;
 
   const price = useTokenPrice(symbol);
-
+  const [{ networkType }] = usePortkey();
+  const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   const [isRevert, setIsRevert] = useState(false);
   const [tokenPriceObject, getTokenPrice] = [
     {},
@@ -115,7 +118,7 @@ export const TokenAmountInput: React.FC<ITokenAmountInput> = (props) => {
           )}
         </>
       </div>
-      {!existTokenPrice && !disabledRevert && type === 'token' && (
+      {isMainnet && !existTokenPrice && !disabledRevert && type === 'token' && (
         <div className="bottom-section" onClick={onPressRevert}>
           {isRevert ? <div>{`${value || 0} ${label || symbol}`}</div> : <div>{`$${usdValue || 0}`}</div>}
           <CustomSvg type={'Switch'} className="switch" />

@@ -19,6 +19,7 @@ import { TAllLoginKey } from '../../utils/googleAnalytics';
 type SocialDesignType = AccountType | 'Scan' | null;
 export interface SocialDesignProps extends IBaseGetGuardianProps {
   type?: SocialDesignType;
+  showScanBackup?: boolean;
 }
 const SocialDesign = forwardRef(
   (
@@ -34,6 +35,7 @@ const SocialDesign = forwardRef(
       termsOfService,
       privacyPolicy,
       loginMethodsOrder,
+      showScanBackup,
       onError,
       onSuccess,
       onClose,
@@ -125,6 +127,7 @@ const SocialDesign = forwardRef(
             isErrorTip={isErrorTip}
             onError={onError}
             onClose={onClose}
+            showOnBack={showScanBackup}
           />
         )}
         {(accountType === 'Email' || accountType === 'Phone') && (

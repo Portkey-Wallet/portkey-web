@@ -168,7 +168,7 @@ function TokenDetailMain({
               isMainnet={isMainnet}
               isShowFaucet={chainId === 'AELF'}
               onBuy={() => onBuy?.(tokenInfo)}
-              onSend={() => onSend?.(tokenInfo, 'TOKEN')}
+              onSend={() => onSend?.({ ...tokenInfo, chainId }, 'TOKEN')}
               onReceive={() => onReceive?.(tokenInfo)}
               onFaucet={onFaucet}
             />

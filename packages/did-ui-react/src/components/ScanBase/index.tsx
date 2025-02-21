@@ -15,12 +15,14 @@ interface ScanCardProps {
   backIcon?: React.ReactNode;
   rightElement?: React.ReactNode;
   wrapperClassName?: string;
+  showOnBack?: boolean;
   onBack?: () => void;
   onClose?: () => void;
 }
 export default function ScanBase({
   qrData,
   backIcon,
+  showOnBack = true,
   rightElement,
   isMobile,
   isWaitingAuth = false,
@@ -40,7 +42,7 @@ export default function ScanBase({
       <div className={clsx('scan-text-inner')}>
         <BackHeader
           leftElement={undefined}
-          onBack={onBack}
+          onBack={showOnBack ? onBack : undefined}
           rightElement={
             rightElement ? (
               rightElement

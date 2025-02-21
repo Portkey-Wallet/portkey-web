@@ -14,6 +14,7 @@ import './index.less';
 
 export interface CryptoDesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
+  showScanBackup?: boolean;
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
@@ -31,6 +32,7 @@ export default function CryptoDesignBaseCom({
   loginMethodsOrder,
   recommendIndexes,
   cryptoDesignRef,
+  showScanBackup,
   onClose,
   onError,
   onSuccess,
@@ -142,6 +144,7 @@ export default function CryptoDesignBaseCom({
           isErrorTip={isErrorTip}
           onError={onError}
           onClose={onClose}
+          showOnBack={showScanBackup}
         />
       )}
       {_type === 'Login' && (

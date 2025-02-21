@@ -8,13 +8,16 @@ import { IRecentItem } from '../../../../utils/recent';
 export default function RecentItem({
   item,
   isMainnet,
+  onClick,
 }: {
   item: IRecentItem;
   isMainnet: boolean;
   onClick: (account: IClickAddressProps) => void;
 }) {
   return (
-    <div className={clsx(['portkey-ui-flex-between-center', 'recent-item'])}>
+    <div
+      className={clsx(['portkey-ui-flex-between-center', 'recent-item'])}
+      onClick={() => onClick(item as IClickAddressProps)}>
       <div className="left-section">
         <ImgWithCornerMark mainImgTitle={item.address} cornerImgSrc={item.networkIcon || ''} />
       </div>

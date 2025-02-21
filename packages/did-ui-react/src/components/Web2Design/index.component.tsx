@@ -24,6 +24,7 @@ export interface Web2DesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
   size?: TSize;
   loginMethodsOrder?: TotalAccountType[];
+  showScanBackup?: boolean;
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
@@ -40,6 +41,7 @@ export default function Web2Design({
   termsOfService,
   privacyPolicy,
   loginMethodsOrder = [],
+  showScanBackup,
   onError,
   onClose,
   onSuccess,
@@ -246,6 +248,7 @@ export default function Web2Design({
               setType('Login');
               setShowQRCode(false);
             }}
+            showOnBack={showScanBackup}
             onFinish={onLoginFinishWithoutPin}
             isErrorTip={isErrorTip}
             onError={onError}
@@ -257,6 +260,7 @@ export default function Web2Design({
     [
       chainType,
       defaultChainId,
+      showScanBackup,
       isErrorTip,
       isMobile,
       networkType,

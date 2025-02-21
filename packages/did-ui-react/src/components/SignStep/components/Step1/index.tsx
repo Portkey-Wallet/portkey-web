@@ -34,6 +34,7 @@ function Step1({
   onStepChange,
   onSignInFinished,
   onSignUpHandler,
+  showScanBackup,
   type,
   phoneCountry,
   loginMethodsOrder,
@@ -162,6 +163,7 @@ function Step1({
           onSuccess={onSuccess}
           onSignTypeChange={setCreateType}
           ref={socialDesignRef}
+          showScanBackup={showScanBackup}
         />
       )}
 
@@ -176,6 +178,7 @@ function Step1({
           onError={onError}
           onSignTypeChange={setCreateType}
           onSuccess={onSuccess}
+          showScanBackup={showScanBackup}
         />
       )}
 
@@ -190,6 +193,7 @@ function Step1({
           onSignTypeChange={setCreateType}
           onSuccess={onSuccess}
           cryptoDesignRef={cryptoDesignRef}
+          showScanBackup={showScanBackup}
         />
       )}
 

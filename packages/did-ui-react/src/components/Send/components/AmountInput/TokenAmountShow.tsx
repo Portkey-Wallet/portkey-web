@@ -157,7 +157,7 @@ export default function TokenAmountShow({
         )}
       </div>
       <div className="center">
-        {type === 'token' ? (
+        {type === 'token' || token?.label === 'SGR' ? (
           <p className="symbol">{token?.label || token?.symbol}</p>
         ) : (
           <p className="symbol">{`${token.alias} #${token.tokenId}`}</p>

@@ -364,8 +364,12 @@ function AssetMain({
 
   const onBack = useCallback(() => {
     console.log('wfs====onBack', preStepRef);
+    if (preStepRef.current === assetStep) {
+      setAssetStep(AssetStep.overview);
+      return;
+    }
     setAssetStep(preStepRef.current);
-  }, []);
+  }, [assetStep]);
 
   const myMenuList = useMyMenuList({
     onClickGuardians: () => {
@@ -595,6 +599,7 @@ function AssetMain({
                 const params = `Your request to send to ${address} has been successfully submitted.`;
                 dispatch(basicAssetView.setCompletedDesc.actions(params));
                 setAssetStep(AssetStep.transferFinish);
+                getAssetInfo();
               }}
               onModifyLimit={async (data) => {
                 const res = await getLimitFromContract(data);
@@ -654,7 +659,6 @@ function AssetMain({
                 }
                 preStepRef.current = AssetStep.NFTDetail;
                 setPreStep(AssetStep.NFTDetail);
-                // TODO-SA
                 onSend(nft as any);
               }}
             />

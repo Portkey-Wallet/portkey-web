@@ -82,7 +82,7 @@ export const AdsCheckWarningTip = {
   },
   [WarningKey.CROSS_CHAIN]: {
     type: PromptCardType.WARNING,
-    desc: `You have not used this address recently. Ensure it is the correct address before proceeding.`,
+    desc: `This is a cross-chain transfer. Sending will incur transfer fees.`,
   },
   [WarningKey.SAME_ADDRESS]: {
     type: PromptCardType.ERROR,

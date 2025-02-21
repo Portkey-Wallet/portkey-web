@@ -86,6 +86,7 @@ export interface SignInProps {
 
   defaultLifeCycle?: Partial<TStep1LifeCycle | TStep2SignUpLifeCycle | TStep2SignInLifeCycle | TStep3LifeCycle>;
   isErrorTip?: boolean;
+  showScanBackup?: boolean;
 
   // Login
   isShowScan?: boolean;

@@ -26,7 +26,9 @@ export default function BackHeader({
       title={title}
       leftCallBack={onBack}
       rightElement={rightElement}
-      leftElement={typeof leftElement === 'undefined' ? defaultLeftEle : leftElement}
+      leftElement={
+        typeof leftElement === 'undefined' ? typeof onBack === 'undefined' ? <></> : defaultLeftEle : leftElement
+      }
       {...props}
     />
   );
