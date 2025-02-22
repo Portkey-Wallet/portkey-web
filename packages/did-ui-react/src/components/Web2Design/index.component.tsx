@@ -25,6 +25,7 @@ export interface Web2DesignProps extends IBaseGetGuardianProps {
   size?: TSize;
   loginMethodsOrder?: TotalAccountType[];
   showScanBackup?: boolean;
+  showSocialEntry?: boolean;
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 
@@ -42,6 +43,7 @@ export default function Web2Design({
   privacyPolicy,
   loginMethodsOrder = [],
   showScanBackup,
+  showSocialEntry = true,
   onError,
   onClose,
   onSuccess,
@@ -198,16 +200,20 @@ export default function Web2Design({
               </>
             )}
           </div> */}
-          <DividerCenter />
+          {showSocialEntry && (
+            <>
+              <DividerCenter />
 
-          <div className="portkey-ui-web2design-social-wrapper">
-            {/*<SocialLoginGroup supportAccounts={loginMethodsOrderWithoutEmail} onAccountTypeChange={onSocialChange} />*/}
-            <SocialLoginGroup
-              // supportAccounts={['Telegram', 'Google', 'Apple', 'Scan']}
-              supportAccounts={loginMethodsOrderWithoutEmail}
-              onAccountTypeChange={onSocialChange}
-            />
-          </div>
+              <div className="portkey-ui-web2design-social-wrapper">
+                {/*<SocialLoginGroup supportAccounts={loginMethodsOrderWithoutEmail} onAccountTypeChange={onSocialChange} />*/}
+                <SocialLoginGroup
+                  // supportAccounts={['Telegram', 'Google', 'Apple', 'Scan']}
+                  supportAccounts={loginMethodsOrderWithoutEmail}
+                  onAccountTypeChange={onSocialChange}
+                />
+              </div>
+            </>
+          )}
 
           {(extraElement as ReactElement)?.props?.children && (
             <>
@@ -222,6 +228,7 @@ export default function Web2Design({
     [
       _validateEmail,
       _validatePhone,
+      showSocialEntry,
       extraElement,
       loginMethodsOrderWithoutEmail,
       onInputFinish,

@@ -15,6 +15,7 @@ import './index.less';
 export interface CryptoDesignProps extends IBaseGetGuardianProps {
   type?: CreateWalletType;
   showScanBackup?: boolean;
+  showSocialEntry?: boolean;
   onSignTypeChange?: (type: CreateWalletType) => void;
 }
 

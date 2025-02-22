@@ -203,7 +203,7 @@ const useSignInHandler = ({ isErrorTip = true, onError, beforeLastGuardianApprov
       } else {
         if (!guardian.verifier) throw 'guardian verifier is missing';
         // Send verify code
-        setLoading(false);
+        setLoading(true);
 
         const verifyCodeInfo = await sendCodeConfirm({
           verifier: guardian.verifier,
@@ -211,6 +211,7 @@ const useSignInHandler = ({ isErrorTip = true, onError, beforeLastGuardianApprov
           identifierInfo: guardianIdentifierInfo,
           operationType: OperationTypeEnum.communityRecovery,
         });
+        setLoading(false);
         if (!verifyCodeInfo) return;
 
         return toGuardianApprove(guardianIdentifierInfo, [

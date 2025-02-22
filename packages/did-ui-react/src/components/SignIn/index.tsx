@@ -73,6 +73,7 @@ const SignIn = forwardRef(
       className,
       getContainer,
       showScanBackup,
+      showSocialEntry,
       onLifeCycleChange,
       onChainIdChange,
       onCreatePending,
@@ -632,6 +633,7 @@ const SignIn = forwardRef(
             recommendIndexes={recommendIndexes}
             onClose={onModalCancel}
             showScanBackup={showScanBackup}
+            showSocialEntry={showSocialEntry}
           />
         );
       if (LifeCycleMap['Step2OfSignUp'].includes(lifeCycle)) {

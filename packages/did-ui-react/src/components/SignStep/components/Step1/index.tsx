@@ -35,6 +35,7 @@ function Step1({
   onSignInFinished,
   onSignUpHandler,
   showScanBackup,
+  showSocialEntry,
   type,
   phoneCountry,
   loginMethodsOrder,
@@ -179,6 +180,7 @@ function Step1({
           onSignTypeChange={setCreateType}
           onSuccess={onSuccess}
           showScanBackup={showScanBackup}
+          showSocialEntry={showSocialEntry}
         />
       )}
 

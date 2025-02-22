@@ -14,6 +14,7 @@ import { formatTimeDifference } from '../../utils/time';
 
 import './index.less';
 import CoinImage from '../CoinImage';
+import { formatApproveSymbolShow } from '../../utils/token';
 
 export type ITokenAllowanceDetailProps = AllowanceItem & {
   onBack?: () => void;
@@ -96,11 +97,14 @@ export default function TokenAllowanceDetailMain({
             {approvedList.map((item) => (
               <div key={item.symbol} className="approve-item">
                 <div className="token-detail">
-                  <ChainTokenIcon
-                    symbol={item.symbol}
-                    imageUrl={item.imageUrl || ''}
-                    chainImageUrl={chainImageUrl || ''}
-                  />
+                  <div className="token-image-item">
+                    <ChainTokenIcon
+                      symbol={item.symbol}
+                      imageUrl={item.imageUrl || ''}
+                      chainImageUrl={chainImageUrl || ''}
+                    />
+                    <div>{formatApproveSymbolShow(item.symbol)}</div>
+                  </div>
                   <div className="action" onClick={() => onRevokeClick(item)}>
                     <CustomSvg type="Delete" fillColor="var(--sds-color-text-danger-tertiary)" />
                     <span>Revoke</span>
