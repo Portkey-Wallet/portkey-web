@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.19.0-alpha.14](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.13...v2.19.0-alpha.14) (2025-02-22)
+
+### Bug Fixes
+
+- 🐛 revamp ([3eebadb](https://github.com/Portkey-Wallet/portkey-web/commit/3eebadb2e3bfbef17617c19b79e4479a68c4a7fe))
+- 🐛 revamp ([82343c0](https://github.com/Portkey-Wallet/portkey-web/commit/82343c0590df74018da6de279feed1070e6ac308))
+
 ## [2.19.0-alpha.13](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.12...v2.19.0-alpha.13) (2025-02-20)
 
 **Note:** Version bump only for package root
