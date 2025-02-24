@@ -31,7 +31,7 @@ export default function LoginModal({
       open={open}
       width={320}
       title={'Continue with this account?'}
-      // type={'modal'}
+      type={'modal'}
       className="portkey-ui-signup-confirm-modal"
       onClose={onCancel}>
       <div className="warning-modal-wrapper">
