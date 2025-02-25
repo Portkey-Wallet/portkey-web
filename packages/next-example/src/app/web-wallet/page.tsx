@@ -32,6 +32,7 @@ import { clearManagerReadOnly } from './utils/clearManagerReadOnly';
 import useVerifier from './hooks/useVerifier';
 import useGuardianList from './hooks/guardian';
 import { addGuardian } from './utils/guardian';
+import { CWW_WALLET_INFO_KEY } from '@portkey/connect-web-wallet';
 
 function WebPageInner() {
   const [{ pageState, pin, options }] = useWebWallet();
@@ -51,6 +52,7 @@ function WebPageInner() {
 
   const onDisconnect = useCallback(() => {
     localStorage.removeItem(getWebWalletStorageKey(options?.appId));
+    localStorage.removeItem(CWW_WALLET_INFO_KEY);
     localStorage.removeItem('guardianListForLogin');
     localStorage.removeItem('guardianListForAddGuardian');
 
