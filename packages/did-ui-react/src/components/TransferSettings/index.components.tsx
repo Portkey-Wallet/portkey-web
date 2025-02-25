@@ -346,6 +346,7 @@ export default function TransferSettingsMain({
             singleLimit: limitCalFunc().transSingleLimit,
             dailyLimit: limitCalFunc().transDailyLimit,
           })}
+          officialWebsiteShow={{ symbol: initData.symbol }}
         />
       </CommonBaseModal>
       <CommonBaseModal
