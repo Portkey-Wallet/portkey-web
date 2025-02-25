@@ -179,28 +179,15 @@ export const useReceiveByETransfer = ({
     const pubkey = keyPair.getPublic('hex');
 
     const params = {
-      pubkey: pubkey,
-      signature: signature,
-      plain_text: plainTextHex,
+      pubkey: pubkey || '',
+      signature: signature || '',
+      plain_text: plainTextHex || '',
       ca_hash: caHash ?? '',
       chain_id: originChainId ?? 'AELF',
-      managerAddress: address,
+      managerAddress: address || '',
     };
 
-    const serializedParams = new URLSearchParams();
-    for (const [key, value] of Object.entries(params)) {
-      serializedParams.append(key, value);
-    }
-
-    const customFetch = new FetchRequest({
-      url: '/api/app/transfer/connect/token',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      method: 'POST',
-    });
-
-    const { access_token, token_type } = await customFetch.send({
-      body: serializedParams.toString(),
-    });
+    const { access_token, token_type } = await did.services.receive.fetchTransferToken(params);
 
     return `${token_type} ${access_token}`;
   }, [managementAccount?.wallet.keyPair, caHash, originChainId, address]);

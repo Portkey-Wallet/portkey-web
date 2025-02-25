@@ -57,8 +57,25 @@ export type TReceiveDepositInfoResponse = {
   };
 };
 
+export interface FetchTransferTokenParams {
+  pubkey: string;
+  signature: string;
+  plain_text: string;
+  ca_hash: string;
+  chain_id: string;
+  managerAddress: string;
+}
+
+export interface FetchTransferTokenResponse {
+  access_token: string;
+  token_type: string;
+}
+
 export type IReceiveService = {
   getReceiveNetworkList(params: GetReceiveNetworkListParams): Promise<TReceiveNetworkListResponse>;
+
+  fetchTransferToken(params: FetchTransferTokenParams): Promise<FetchTransferTokenResponse>;
+
   getDepositInfo(params: GetDepositInfoParams, headers: Record<string, string>): Promise<TReceiveDepositInfoResponse>;
 };
 
