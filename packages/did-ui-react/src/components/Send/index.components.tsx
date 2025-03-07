@@ -3,7 +3,13 @@ import { IAssetToken, OperationTypeEnum } from '@portkey/services';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import { getAddressChainId, getChainIdByAddress, getEntireDIDAelfAddress, isDIDAelfAddress } from '../../utils/aelf';
+import {
+  getAddressChainId,
+  getChainIdByAddress,
+  getEntireDIDAelfAddress,
+  isDIDAelfAddress,
+  isCrossChain,
+} from '../../utils/aelf';
 import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { GuardianApprovedItem } from '../../types';
 import { ChainId, INftInfoType } from '@portkey/types';
