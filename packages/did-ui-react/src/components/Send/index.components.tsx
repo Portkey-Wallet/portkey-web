@@ -3,13 +3,7 @@ import { IAssetToken, OperationTypeEnum } from '@portkey/services';
 import CustomSvg from '../CustomSvg';
 import TitleWrapper from '../TitleWrapper';
 import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
-import {
-  getAddressChainId,
-  getChainIdByAddress,
-  getEntireDIDAelfAddress,
-  isCrossChain,
-  isDIDAelfAddress,
-} from '../../utils/aelf';
+import { getAddressChainId, getChainIdByAddress, getEntireDIDAelfAddress, isDIDAelfAddress } from '../../utils/aelf';
 import { ReactElement, useCallback, useMemo, useRef, useState } from 'react';
 import { GuardianApprovedItem } from '../../types';
 import { ChainId, INftInfoType } from '@portkey/types';
@@ -30,12 +24,11 @@ import './index.less';
 import { useDefaultToken } from '../../hooks/assets';
 import { usePortkey } from '../context';
 import { DEFAULT_DECIMAL } from '../../constants/assets';
-import crossChainTransferV2 from '../../utils/sandboxUtil/crossChainTransferV2';
 import { useFeeByChainId } from '../context/PortkeyAssetProvider/hooks/txFee';
 import sameChainTransfer from '../../utils/sandboxUtil/sameChainTransfer';
 import getTransferFee from './utils/getTransferFee';
 import { useCheckManagerSyncState } from '../../hooks/wallet';
-import { MAINNET, MAIN_CHAIN_ID } from '../../constants/network';
+import { MAIN_CHAIN_ID } from '../../constants/network';
 import { PortkeySendProvider } from '../context/PortkeySendProvider';
 import clsx from 'clsx';
 import transferLimitCheck from '../ModalMethod/TransferLimitCheck';
@@ -508,18 +501,8 @@ function SendContent({
 
     const sendTransfer = async () => {
       try {
-        let isV2CrossChainTransfer = true;
         if (!managementAccount?.privateKey || !caHash) return;
         const _transferType = transferType || TransferTypeEnum.GENERAL_SAME_CHAIN;
-
-        setLoading(true);
-        try {
-          const { isOpen } = await getCrossChainTransferVersion();
-          isV2CrossChainTransfer = isOpen;
-        } catch (error) {
-          return;
-        }
-
         setLoading(true);
 
         const chainId = tokenInfo.chainId;
@@ -567,32 +550,18 @@ function SendContent({
             toChainId: getChainIdByAddress(toAccount.address) as ChainId,
           });
 
-          isV2CrossChainTransfer
-            ? await crossChainTransferV2({
-                tokenContract,
-                sandboxId,
-                chainId: tokenInfo.chainId,
-                chainType,
-                privateKey: managementAccount?.privateKey,
-                tokenInfo,
-                caHash: caHash || '',
-                amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
-                toAddress: toAccount.address,
-                toChainId: 'AELF',
-                guardiansApproved: oneTimeApprovalList.current,
-              })
-            : await crossChainTransfer({
-                sandboxId,
-                chainType,
-                privateKey: managementAccount?.privateKey,
-                managerAddress: managementAccount?.address,
-                tokenInfo,
-                caHash: caHash || '',
-                amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
-                toAddress: toAccount.address,
-                crossChainFee: defaultFee.crossChain,
-                guardiansApproved: oneTimeApprovalList.current,
-              });
+          await crossChainTransfer({
+            sandboxId,
+            chainType,
+            privateKey: managementAccount?.privateKey,
+            managerAddress: managementAccount?.address,
+            tokenInfo,
+            caHash: caHash || '',
+            amount: timesDecimals(amount, tokenInfo.decimals).toNumber(),
+            toAddress: toAccount.address,
+            crossChainFee: defaultFee.crossChain,
+            guardiansApproved: oneTimeApprovalList.current,
+          });
         } else if (_transferType === TransferTypeEnum.E_TRANSFER) {
           // TODO: change it
           let network = '';
@@ -846,8 +815,6 @@ function SendContent({
         if (ZERO.plus(amount).isGreaterThan(balance)) {
           return { checkResult: TransactionError.NFT_NOT_ENOUGH };
         }
-      } else {
-        return { checkResult: 'input error' };
       }
 
       // CHECK 4: transfer limit  (just for aelf transfer)
