@@ -129,7 +129,9 @@ export default function SendReceivePreview(props: ISendReceivePreviewProps) {
           <div className="amount-show">{`${formatAmountShow(sendAmount, tokenInfo?.decimals)} ${
             tokenInfo?.label || tokenInfo?.symbol
           }`}</div>
-          <div className="usd-show">{`${formatAmountUSDShow(ZERO.plus(sendAmount).div?.(price))}`}</div>
+          {networkType === 'MAINNET' && (
+            <div className="usd-show">{`${formatAmountUSDShow(ZERO.plus(sendAmount).div?.(price))}`}</div>
+          )}
         </div>
         <div className="portkey-ui-flex-between-center content-row-info">
           <div>{`To`}</div>

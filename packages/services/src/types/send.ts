@@ -35,5 +35,5 @@ export type SupportedNetworkConfigResponseType = {
 
 export type ISendService = {
   getSendNetworkList(params: GetSendNetworkListParamsType): Promise<SendNetworkListResponseType>;
-  getSupportedTransferConfig(): Promise<SupportedNetworkConfigResponseType>;
+  getSupportedTransferConfig(): Promise<{ supportedNetworks: TSupportConfigMap }>;
 };

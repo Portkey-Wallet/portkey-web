@@ -10,6 +10,7 @@ export default function SettingHeader({ title, leftCallBack, rightElement, leftE
       leftCallBack={leftCallBack}
       rightElement={rightElement}
       leftElement={leftElement}
+      onBack={leftCallBack}
       {...props}
     />
   );

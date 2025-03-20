@@ -104,9 +104,9 @@ export const getFilteredRecentList = async ({
 
 export const getSupportedConfig = async () => {
   try {
-    const { data } = await did.services.send.getSupportedTransferConfig();
+    const data = await did.services.send.getSupportedTransferConfig();
     console.log('getSupportedConfig result', data);
-    return data;
+    return data.supportedNetworks;
   } catch (error) {
     console.log('err', error);
   }
