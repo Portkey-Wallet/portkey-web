@@ -1,14 +1,12 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { ChainId } from '@portkey/types';
 import { IClickAddressProps } from '../../../types/assets';
 import { usePortkeyAsset } from '../../../context/PortkeyAssetProvider';
-import { usePortkeySendDispatch } from '../../../context/PortkeySendProvider/hooks';
-import { usePortkeySend } from '../../../context/PortkeySendProvider';
 import RecentItem from './RecentItem';
 import { MAINNET } from '../../../../constants/network';
-import { NetworkType, PaginationPage } from '../../../../types';
+import { NetworkType } from '../../../../types';
 import { getFilteredRecentList, IRecentItem } from '../../../../utils/recent';
-import { getAelfAddress } from '../../../../utils';
+import { getAelfAddress, getChainIdByAddress } from '../../../../utils';
 import MyAddress from './MyAddress';
 
 export default function Recents({
@@ -46,7 +44,10 @@ export default function Recents({
     return currentRecentList
       ?.filter((item) => !!item)
       .map((item, index) => {
-        if (getAelfAddress(item.address) === caAddressInfos?.[0]?.caAddress) {
+        if (
+          getAelfAddress(item.address) === caAddressInfos?.[0]?.caAddress &&
+          getChainIdByAddress(item.address) === caAddressInfos?.[0].chainId
+        ) {
           return (
             <MyAddress key={index} chainId={item.chainId || 'AELF'} networkType={networkType} onClick={onChange} />
           );

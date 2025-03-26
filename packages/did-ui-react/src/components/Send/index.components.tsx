@@ -1112,7 +1112,9 @@ function SendContent({
               if (account.isDisable) return;
               const value = {
                 name: account?.name,
-                address: `ELF_${account.address}_${account?.addressChainId || account?.chainId}`,
+                address: isDIDAelfAddress(account.address)
+                  ? `ELF_${account.address}_${account?.addressChainId || account?.chainId}`
+                  : account.address,
               };
               setToAccount(value);
             }}

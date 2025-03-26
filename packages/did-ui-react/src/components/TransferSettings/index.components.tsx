@@ -158,7 +158,7 @@ export default function TransferSettingsMain({
   const approvalSuccess = useCallback(
     async (approvalInfo: GuardiansApproved[]) => {
       try {
-        setLoading(true);
+        // setLoading(true);
         const guardiansApproved = formatGuardianValue(approvalInfo);
         const { transDailyLimit, transSingleLimit } = limitCalFunc() || {};
 
@@ -204,7 +204,7 @@ export default function TransferSettingsMain({
           true,
         );
       } finally {
-        setLoading(false);
+        // setLoading(false);
         setIsGuardianModalOpen(false);
       }
     },
