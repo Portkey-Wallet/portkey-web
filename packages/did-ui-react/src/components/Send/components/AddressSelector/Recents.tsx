@@ -46,7 +46,7 @@ export default function Recents({
       .map((item, index) => {
         if (
           getAelfAddress(item.address) === caAddressInfos?.[0]?.caAddress &&
-          getChainIdByAddress(item.address) === caAddressInfos?.[0].chainId
+          getChainIdByAddress(item.address) === chainId
         ) {
           return (
             <MyAddress key={index} chainId={item.chainId || 'AELF'} networkType={networkType} onClick={onChange} />
@@ -62,7 +62,7 @@ export default function Recents({
           );
         }
       });
-  }, [caAddressInfos, currentRecentList, networkType, onChange]);
+  }, [caAddressInfos, chainId, currentRecentList, networkType, onChange]);
 
   return (
     <div className="portkey-ui-send-recents">
