@@ -13,7 +13,7 @@ export default function AddressSelector({
   tokenId,
   isFt,
 }: {
-  onClick: (account: IClickAddressProps) => void;
+  onClick: (account: IClickAddressProps, isMyWallet: boolean) => void;
   chainId: ChainId;
   networkType: NetworkType;
   tokenId: string;
@@ -27,13 +27,29 @@ export default function AddressSelector({
           label: 'Recents',
           key: 'recents',
           children: (
-            <Recents networkType={networkType} onChange={onClick} chainId={chainId} tokenId={tokenId} isFt={isFt} />
+            <Recents
+              networkType={networkType}
+              onChange={(account: IClickAddressProps) => {
+                onClick?.(account, false);
+              }}
+              chainId={chainId}
+              tokenId={tokenId}
+              isFt={isFt}
+            />
           ),
         },
         {
           label: 'My address',
           key: 'myAddress',
-          children: <MyAddress networkType={networkType} onClick={onClick} chainId={chainId} />,
+          children: (
+            <MyAddress
+              networkType={networkType}
+              onClick={(account: IClickAddressProps) => {
+                onClick?.(account, true);
+              }}
+              chainId={chainId}
+            />
+          ),
         },
       ]}
     />

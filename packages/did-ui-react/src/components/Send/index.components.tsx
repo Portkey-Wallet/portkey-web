@@ -1107,12 +1107,14 @@ function SendContent({
             tokenId={tokenInfo.symbol || tokenInfo.tokenId || ''}
             isFt={!isNft}
             networkType={networkType}
-            onClick={(account: IClickAddressProps) => {
+            onClick={(account: IClickAddressProps, isMyWallet: boolean) => {
               // from RecentList: Not recent contacts, not clickable
               if (account.isDisable) return;
               const value = {
                 name: account?.name,
-                address: account.address,
+                address: isMyWallet
+                  ? `ELF_${account.address}_${account?.addressChainId || account?.chainId}`
+                  : account.address,
               };
               setToAccount(value);
             }}
