@@ -21,6 +21,8 @@ import {
   IAssetsService,
   TFetchAccountNftItemParams,
   TFetchAccountNftItemResult,
+  TGetAwakenTokenListParams,
+  TGetAwakenTokenListResult,
 } from '../types/assets';
 
 export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T> implements IAssetsService {
@@ -125,6 +127,14 @@ export class Assets<T extends IBaseRequest = IBaseRequest> extends BaseService<T
     return this._request.send({
       method: 'POST',
       url: '/api/app/v2/user/assets/searchUserAssets',
+      params,
+    });
+  }
+
+  getAwakenTokenList(params: TGetAwakenTokenListParams): Promise<TGetAwakenTokenListResult> {
+    return this._request.send({
+      method: 'GET',
+      url: '/api/app/user/assets/awaken/token',
       params,
     });
   }

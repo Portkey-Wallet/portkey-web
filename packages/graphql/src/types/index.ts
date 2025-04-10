@@ -10,4 +10,6 @@ export abstract class BaseGraphQL<T extends IGraphQLClient = IGraphQLClient> {
   }
 }
 
+export type TGraphQLParamsType<T> = T extends (...arg: infer P) => any ? P[1] : T;
+
 export * from './did';

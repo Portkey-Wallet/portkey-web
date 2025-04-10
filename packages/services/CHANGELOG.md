@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.20.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0...v2.20.0-alpha.2) (2025-01-22)
+
+### Features
+
+- 🎸 add swap graphql ([f2465ce](https://github.com/Portkey-Wallet/portkey-web/commit/f2465ce64ee3a8b1cac0de5c181270b925e47615))
+
 ## [2.19.0-alpha.24](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.23...v2.19.0-alpha.24) (2025-03-27)
 
 **Note:** Version bump only for package @portkey/services
@@ -114,6 +120,22 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 ## [2.19.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.8...v2.19.0-alpha.0) (2025-01-14)
 
 **Note:** Version bump only for package @portkey/services
+
+## [2.18.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.1...v2.18.0) (2025-01-15)
+
+**Note:** Version bump only for package @portkey/services
+
+## [2.18.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.0...v2.18.0-alpha.1) (2025-01-14)
+
+### Bug Fixes
+
+- type error ([751ab9e](https://github.com/Portkey-Wallet/portkey-web/commit/751ab9e0943d7824e6da917cc1ca329e794bf2da))
+
+## [2.18.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.13...v2.18.0-alpha.0) (2025-01-10)
+
+### Features
+
+- 1. offline email 2.add etransfer service fee ([999b5a3](https://github.com/Portkey-Wallet/portkey-web/commit/999b5a3fdd024a8e78187c0a071b798cc5f3633d))
 
 ## [2.17.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7...v2.17.8) (2025-01-13)
 

@@ -38,7 +38,6 @@ import singleMessage from '../CustomAnt/message';
 import CustomSvg from '../CustomSvg';
 import './index.less';
 import { mixRampShow } from '../Ramp/utils';
-import { Button } from 'antd';
 import DeleteAccount from '../DeleteAccount/index.component';
 import { useIsShowDeletion } from '../../hooks/wallet';
 import TokenAllowance from '../TokenAllowance';
@@ -54,6 +53,7 @@ import { ITransferLimitItemWithRoute } from '../../types/transfer';
 import { SendAssetListPage } from '../SendAssetList';
 import ReceiveList from '../ReceiveList/index.components';
 import Completed from '../Completed';
+import SwapMain from '../Swap/index.components';
 
 export interface AssetMainProps
   extends Omit<AssetOverviewProps, 'onReceive' | 'onBuy' | 'onBack' | 'allToken' | 'onViewTokenItem'> {
@@ -506,6 +506,10 @@ function AssetMain({
                 setAssetStep(AssetStep.collectionDetail);
                 setCollectionItem(collectionItem);
               }}
+              onSwap={() => {
+                preStepRef.current = AssetStep.overview;
+                setAssetStep(AssetStep.swap);
+              }}
             />
           )}
           {assetStep === AssetStep.sendAssetList && (
@@ -643,6 +647,10 @@ function AssetMain({
                 // TODO-SA
                 onSend(token as any);
               }}
+              onSwap={() => {
+                preStepRef.current = AssetStep.tokenDetail;
+                setAssetStep(AssetStep.swap);
+              }}
             />
           )}
           {assetStep === AssetStep.NFTDetail && NFTDetail && (
@@ -775,6 +783,7 @@ function AssetMain({
               initData={viewPaymentSecurity}
             />
           )}
+          {assetStep === AssetStep.swap && <SwapMain onBack={onBack} />}
         </div>
       </div>
     </div>

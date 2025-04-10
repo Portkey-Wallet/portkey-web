@@ -1,0 +1,46 @@
+.common-tag-toggle-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.common-tag-item {
+  flex: 1;
+  flex-shrink: 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background-color: var(--sds-color-background-neutral-secondary);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+  height: 32px;
+  cursor: pointer;
+
+  .common-tag-item-check-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  .common-tag-item-label {
+    font-size: 16px;
+    line-height: 16px;
+    color: var(--sds-color-text-neutral-on-neutral-tertiary);
+  }
+
+  &.common-tag-item-selected {
+    background-color: var(--sds-color-background-brand-default);
+
+    .common-tag-item-check-icon {
+      svg {
+        path {
+          fill: var(--sds-color-icon-brand-on-brand);
+        }
+      }
+    }
+
+    .common-tag-item-label {
+      color: var(--sds-color-text-brand-on-brand);
+    }
+  }
+}

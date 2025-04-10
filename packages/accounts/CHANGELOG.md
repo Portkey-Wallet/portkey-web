@@ -3,6 +3,10 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.20.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0...v2.20.0-alpha.2) (2025-01-22)
+
+**Note:** Version bump only for package @portkey/accounts
+
 ## [2.19.0-alpha.24](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.23...v2.19.0-alpha.24) (2025-03-27)
 
 **Note:** Version bump only for package @portkey/accounts
@@ -110,6 +114,18 @@ See [Conventional Commits](https://conventionalcommits.org) for commit guideline
 **Note:** Version bump only for package @portkey/accounts
 
 ## [2.19.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.8...v2.19.0-alpha.0) (2025-01-14)
+
+**Note:** Version bump only for package @portkey/accounts
+
+## [2.18.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.1...v2.18.0) (2025-01-15)
+
+**Note:** Version bump only for package @portkey/accounts
+
+## [2.18.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0-alpha.0...v2.18.0-alpha.1) (2025-01-14)
+
+**Note:** Version bump only for package @portkey/accounts
+
+## [2.18.0-alpha.0](https://github.com/Portkey-Wallet/portkey-web/compare/v2.17.7-alpha.13...v2.18.0-alpha.0) (2025-01-10)
 
 **Note:** Version bump only for package @portkey/accounts
 
