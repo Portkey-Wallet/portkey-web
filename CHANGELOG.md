@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.20.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.24...v2.20.0-alpha.3) (2025-04-25)
+
+### Features
+
+- 🎸 hide email login onClose icon ([f87e4c6](https://github.com/Portkey-Wallet/portkey-web/commit/f87e4c61425760bb6495e4f404534d7868e35148))
+- 🎸 update version ([80d70e7](https://github.com/Portkey-Wallet/portkey-web/commit/80d70e73c62a64ffd3b825ab82e17e411181b033))
+
+## [2.20.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.19.0-alpha.10...v2.20.0-alpha.2) (2025-01-22)
+
+### Features
+
+- 🎸 add swap graphql ([f2465ce](https://github.com/Portkey-Wallet/portkey-web/commit/f2465ce64ee3a8b1cac0de5c181270b925e47615))
+- 🎸 add swap page ([329bc54](https://github.com/Portkey-Wallet/portkey-web/commit/329bc5447c6286e38d741301674a2f95a729d851))
+- 🎸 swap optimization ([e837ab2](https://github.com/Portkey-Wallet/portkey-web/commit/e837ab25bb0a77db78a802c6dbc54d6771c83c4e))
+- 🎸 swap styles optimization ([4126bf5](https://github.com/Portkey-Wallet/portkey-web/commit/4126bf5d82812d687d0020669c08c87f6a82a735))
+
 ## [2.20.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.18.0...v2.20.0-alpha.2) (2025-01-22)
 
 ### Features
