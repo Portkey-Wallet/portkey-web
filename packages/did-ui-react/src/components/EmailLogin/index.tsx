@@ -68,15 +68,16 @@ const EmailLogin = forwardRef(
             rightElement ? (
               rightElement
             ) : (
-              <CustomSvg
-                type="X"
-                onClick={onClose}
-                style={{
-                  width: 20,
-                  height: 20,
-                  cursor: 'pointer',
-                }}
-              />
+              <></>
+              // <CustomSvg
+              //   type="X"
+              //   onClick={onClose}
+              //   style={{
+              //     width: 20,
+              //     height: 20,
+              //     cursor: 'pointer',
+              //   }}
+              // />
             )
           }
         />
