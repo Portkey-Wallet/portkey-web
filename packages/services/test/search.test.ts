@@ -16,7 +16,6 @@ describe('search describe', () => {
     expect(result[0]).toHaveProperty('explorerUrl');
     expect(result[0]).toHaveProperty('caContractAddress');
     expect(result[0]).toHaveProperty('lastModifyTime');
-    expect(result[0]).toHaveProperty('id');
     expect(result[0]).toHaveProperty('defaultToken');
     expect(result[0].defaultToken).toHaveProperty('name');
     expect(result[0].defaultToken).toHaveProperty('address');

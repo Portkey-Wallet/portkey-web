@@ -22,17 +22,19 @@ class FetchRequestMock {
             {
               chainId: 'AELF',
               chainName: 'chainName_mock',
+              chainImageUrl: 'chainImageUrl_mock',
+              displayChainName: 'displayChainName_mock',
               endPoint: 'endPoint_mock',
               explorerUrl: 'explorerUrl_mock',
               caContractAddress: 'caContractAddress_mock',
               lastModifyTime: 'lastModifyTime_mock',
-              id: 'id_mock',
               defaultToken: {
                 name: 'name_mock',
                 address: 'address_mock',
                 imageUrl: 'imageUrl_mock',
                 symbol: 'symbol_mock',
                 decimals: 'decimals_mock',
+                issueChainId: 1,
               },
             },
           ] as ChainInfo[],
@@ -150,6 +152,17 @@ class FetchRequestMock {
           id: 'id_mock',
           name: 'name_mock',
           imageUrl: 'imageUrl_mock',
+        };
+        break;
+      case '/api/app/account/verifierServers':
+        result = {
+          guardianVerifierServers: [
+            {
+              id: 'id_mock',
+              name: 'name_mock',
+              imageUrl: 'imageUrl_mock',
+            },
+          ],
         };
         break;
 

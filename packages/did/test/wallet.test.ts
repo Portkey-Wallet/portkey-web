@@ -716,7 +716,16 @@ describe('DIDWallet error describe', () => {
         }),
       } as any);
     const result = await wallet.getVerifierServers('AELF');
-    expect(result).toBeUndefined();
+    // expect(result).toBeUndefined();
+    expect(result).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: expect.anything(),
+          imageUrl: expect.anything(),
+          name: expect.anything(),
+        }),
+      ]),
+    );
 
     wallet.getContractByChainInfo = () =>
       ({
