@@ -1,6 +1,6 @@
 {
   "name": "@portkey/accounts",
-  "version": "2.21.0-alpha.1",
+  "version": "2.21.0-alpha.2",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -41,12 +41,12 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.4.20"
+    "aelf-sdk": "^3.4.21"
   },
   "dependencies": {
-    "@portkey/types": "^2.21.0-alpha.1",
-    "@portkey/utils": "^2.21.0-alpha.1",
-    "@portkey/validator": "^2.21.0-alpha.1"
+    "@portkey/types": "^2.21.0-alpha.2",
+    "@portkey/utils": "^2.21.0-alpha.2",
+    "@portkey/validator": "^2.21.0-alpha.2"
   },
   "gitHead": "5987857c1fc0e12775425f3d876188be78421ca7"
 }
