@@ -20,7 +20,7 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/connect-web-wallet"
   },
-  "version": "2.20.0-alpha.4",
+  "version": "2.21.0-alpha.1",
   "main": "dist/index.js",
   "types": "dist/_types/index.d.ts",
   "type": "module",
@@ -41,7 +41,7 @@
   "dependencies": {
     "@portkey/iframe-provider": "^2.4.0-alpha.9",
     "@portkey/provider-types": "^2.4.0-alpha.9",
-    "@portkey/utils": "^2.20.0-alpha.4",
+    "@portkey/utils": "^2.21.0-alpha.1",
     "antd": "5.22.7",
     "bignumber.js": "^9.1.0",
     "clsx": "^1.2.1",
@@ -58,7 +58,7 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.4.7",
+    "aelf-sdk": "^3.4.20",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
