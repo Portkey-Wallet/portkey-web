@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.22.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.21.0-alpha.2...v2.22.0-alpha.1) (2025-08-04)
+
+### Features
+
+- 🎸 rm lottie-web, use css implementation; ([ff1c6fd](https://github.com/Portkey-Wallet/portkey-web/commit/ff1c6fdefe5f481c2981d8fdc8fe94024689013e))
+
 ## [2.21.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.21.0-alpha.1...v2.21.0-alpha.2) (2025-07-31)
 
 **Note:** Version bump only for package root
