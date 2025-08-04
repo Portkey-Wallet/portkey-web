@@ -19,6 +19,9 @@ export default function Home() {
         <a href="utils-test">
           <Button>Go to utils-test</Button>
         </a>
+        <a href="ui-component">
+          <Button>Go to ui-component</Button>
+        </a>
       </div>
     </main>
   );

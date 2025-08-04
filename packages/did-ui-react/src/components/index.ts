@@ -51,6 +51,7 @@ export { default as EmailLogin } from './EmailLogin';
 export { default as InputLogin } from './InputLogin';
 // export { default as PhoneTab } from './PhoneTab';
 export { default as Loading } from './Loading';
+export { default as CircleLoading } from './CircleLoading';
 export { default as PureLoadingIndicator } from './Loading/index.pure';
 export { default as SocialLogin } from './SocialLogin';
 export { default as WakeUpPortkey } from './WakeUpPortkey';

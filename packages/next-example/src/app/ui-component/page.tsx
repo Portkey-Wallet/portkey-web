@@ -7,6 +7,10 @@ import {
   modalMethod,
   PortkeyModal,
   ThrottleButton,
+  Loading,
+  PortkeyLoading,
+  PureLoadingIndicator,
+  CircleLoading,
 } from '@portkey/did-ui-react';
 import { message, ConfigProvider, Modal, notification } from 'antd';
 import { useState } from 'react';
@@ -19,9 +23,27 @@ ConfigProvider.config({
 export default function UI() {
   const [openModal, setOpenModal] = useState<boolean>();
   const [antModal, setAntModal] = useState<boolean>();
+  const [portkeyLoading, setPortkeyLoading] = useState(false);
   console.log(openModal, 'openModal===');
   return (
     <div>
+      <div>---loading---</div>
+      Loading
+      <Loading />
+      CircleLoading
+      <CircleLoading loading={true} />
+      PureLoadingIndicator
+      <PureLoadingIndicator />
+      <Button
+        style={{
+          zIndex: 100022,
+        }}
+        onClick={() => {
+          setPortkeyLoading(!portkeyLoading);
+        }}>
+        portkeyLoading - toggle
+      </Button>
+      <PortkeyLoading loading={portkeyLoading} />
       <div>-----</div>
       <Button
         onClick={async () => {

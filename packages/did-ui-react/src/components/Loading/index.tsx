@@ -1,8 +1,6 @@
-import { useRef, useEffect, useMemo } from 'react';
-import lottie, { AnimationItem } from 'lottie-web';
-import animationDarkData from './spinnerDark';
-import animationWhiteData from './spinnerWhite';
+import { useMemo } from 'react';
 import ConfigProvider from '../config-provider';
+import './index.less';
 
 export enum LoadingColor {
   WHITE = 'white',
@@ -18,36 +16,18 @@ export type LoadingType = {
 
 const LoadingIndicator = (props: LoadingType) => {
   const { width = 16, height = 16, color, isDarkThemeWhiteLoading = false } = props;
-  const containerRef = useRef<HTMLDivElement>(null);
-  const animation = useRef<AnimationItem | null>(null);
   const theme = useMemo(() => ConfigProvider?.getGlobalConfig()?.theme, []);
-  const animationData = useMemo(() => {
-    if (color === LoadingColor.WHITE) return animationWhiteData;
-    if (color === LoadingColor.DARK) return animationDarkData;
+
+  const loadingClass = useMemo(() => {
+    if (color === LoadingColor.WHITE) return 'loading-spinner-white';
+    if (color === LoadingColor.DARK) return 'loading-spinner-dark';
     if (isDarkThemeWhiteLoading) {
-      return theme !== 'dark' ? animationDarkData : animationWhiteData;
+      return theme !== 'dark' ? 'loading-spinner-dark' : 'loading-spinner-white';
     }
-    return theme !== 'dark' ? animationDarkData : animationWhiteData;
+    return theme !== 'dark' ? 'loading-spinner-dark' : 'loading-spinner-white';
   }, [color, isDarkThemeWhiteLoading, theme]);
 
-  useEffect(() => {
-    if (!animation.current) {
-      animation.current = lottie.loadAnimation({
-        container: containerRef.current!,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        animationData,
-      });
-    }
-    return () => {
-      animation.current?.stop();
-      animation.current?.destroy();
-      animation.current = null;
-    };
-  }, [animationData, theme]);
-
-  return <div className="loading" style={{ width, height }} ref={containerRef}></div>;
+  return <div className={loadingClass + ' loading'} style={{ width, height }}></div>;
 };
 
 export default LoadingIndicator;
