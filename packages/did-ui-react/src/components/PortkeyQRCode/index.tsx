@@ -9,13 +9,13 @@ export default function PortkeyQRCode({ value, size = 400, ...props }: IProps) {
       value={value}
       size={size}
       quietZone={0}
-      logoImage={PortkeyQR}
       logoWidth={64}
       logoHeight={64}
       qrStyle="dots"
       eyeRadius={{ outer: 27, inner: 14 }}
       ecLevel="L"
       {...props}
+      logoImage={props.logoImage ? props.logoImage : PortkeyQR}
     />
   );
 }

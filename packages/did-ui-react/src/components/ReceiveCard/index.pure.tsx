@@ -22,6 +22,7 @@ import { TokenItem } from './index.components';
 import { BaseToken, IUserTokenItemResponse } from '../types/assets';
 import './index.less';
 import CommonModalTip from '../CommonModalTip';
+import { IProps } from 'react-qrcode-logo';
 
 export interface IPureProps {
   onBack?: () => void;
@@ -59,6 +60,8 @@ export interface IPureProps {
   renderSelected: (item: TokenItem | NetworkItem) => JSX.Element | null;
   isReceivedExchangeModalOpen: boolean;
   setIsReceivedExchangeModalOpen: Dispatch<SetStateAction<boolean>>;
+  logoImage: IProps['logoImage'];
+  helpLink?: string;
 }
 enum SELECTION_TYPE {
   SOURCE = 'Source',
@@ -104,6 +107,8 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
     renderSelected,
     isReceivedExchangeModalOpen,
     setIsReceivedExchangeModalOpen,
+    logoImage,
+    helpLink,
   } = props;
   const [, setCopied] = useCopyToClipboard();
   const handleSelectionModalClose = useCallback(() => {
@@ -124,7 +129,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
           </div>
           <div
             className="right-icon"
-            onClick={() => window.open('https://doc.portkey.finance/docs/How-to-send-and-receive-assets')}>
+            onClick={() => window.open(helpLink || 'https://doc.portkey.finance/docs/How-to-send-and-receive-assets')}>
             <CustomSvg type="Tooltip" className="icon" fillColor="var(--sds-color-icon-default-default)" />
           </div>
         </div>
@@ -271,7 +276,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
               )}
 
               <div className={clsx('portkey-qrcode-container', isMainChainToMainChain && 'mainchain')}>
-                <PortkeyQRCode value={generateAddress()?.value} ecLevel="H" />
+                <PortkeyQRCode logoImage={logoImage} value={generateAddress()?.value} ecLevel="H" />
                 <div className="address-container">
                   {caInfo?.[destinationChain?.chainId as ChainId]?.caAddress && (
                     <>
