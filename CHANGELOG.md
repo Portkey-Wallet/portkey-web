@@ -3,6 +3,35 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.22.0-alpha.4](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.1...v2.22.0-alpha.4) (2025-08-13)
+
+### Features
+
+- 🎸 add helpLink ([3b9a0d8](https://github.com/Portkey-Wallet/portkey-web/commit/3b9a0d8456628142f09195af8eb735275081a5f7))
+- 🎸 add qr code logo props ([45d92d4](https://github.com/Portkey-Wallet/portkey-web/commit/45d92d4afeb7fafedc2107ade29c6709fbe7966d))
+
+### Bug Fixes
+
+- 🐛 logoImage type ([bcba0e6](https://github.com/Portkey-Wallet/portkey-web/commit/bcba0e6511983a1a86530fab449657aaeb198a39))
+
+## [2.22.0-alpha.3](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.1...v2.22.0-alpha.3) (2025-08-13)
+
+### Features
+
+- 🎸 add helpLink ([3b9a0d8](https://github.com/Portkey-Wallet/portkey-web/commit/3b9a0d8456628142f09195af8eb735275081a5f7))
+- 🎸 add qr code logo props ([45d92d4](https://github.com/Portkey-Wallet/portkey-web/commit/45d92d4afeb7fafedc2107ade29c6709fbe7966d))
+
+### Bug Fixes
+
+- 🐛 logoImage type ([bcba0e6](https://github.com/Portkey-Wallet/portkey-web/commit/bcba0e6511983a1a86530fab449657aaeb198a39))
+
+## [2.22.0-alpha.2](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.1...v2.22.0-alpha.2) (2025-08-13)
+
+### Features
+
+- 🎸 add helpLink ([3b9a0d8](https://github.com/Portkey-Wallet/portkey-web/commit/3b9a0d8456628142f09195af8eb735275081a5f7))
+- 🎸 add qr code logo props ([45d92d4](https://github.com/Portkey-Wallet/portkey-web/commit/45d92d4afeb7fafedc2107ade29c6709fbe7966d))
+
 ## [2.22.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.21.0-alpha.2...v2.22.0-alpha.1) (2025-08-04)
 
 ### Features
