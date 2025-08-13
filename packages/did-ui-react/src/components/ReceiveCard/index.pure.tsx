@@ -61,6 +61,7 @@ export interface IPureProps {
   isReceivedExchangeModalOpen: boolean;
   setIsReceivedExchangeModalOpen: Dispatch<SetStateAction<boolean>>;
   logoImage: IProps['logoImage'];
+  helpLink?: string;
 }
 enum SELECTION_TYPE {
   SOURCE = 'Source',
@@ -107,6 +108,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
     isReceivedExchangeModalOpen,
     setIsReceivedExchangeModalOpen,
     logoImage,
+    helpLink,
   } = props;
   const [, setCopied] = useCopyToClipboard();
   const handleSelectionModalClose = useCallback(() => {
@@ -127,7 +129,7 @@ export default function ReceiveCardPureComponent(props: IPureProps) {
           </div>
           <div
             className="right-icon"
-            onClick={() => window.open('https://doc.portkey.finance/docs/How-to-send-and-receive-assets')}>
+            onClick={() => window.open(helpLink || 'https://doc.portkey.finance/docs/How-to-send-and-receive-assets')}>
             <CustomSvg type="Tooltip" className="icon" fillColor="var(--sds-color-icon-default-default)" />
           </div>
         </div>
