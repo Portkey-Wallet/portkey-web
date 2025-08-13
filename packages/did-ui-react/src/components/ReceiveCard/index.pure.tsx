@@ -22,7 +22,6 @@ import { TokenItem } from './index.components';
 import { BaseToken, IUserTokenItemResponse } from '../types/assets';
 import './index.less';
 import CommonModalTip from '../CommonModalTip';
-import { IProps } from 'react-qrcode-logo';
 
 export interface IPureProps {
   onBack?: () => void;
@@ -60,7 +59,7 @@ export interface IPureProps {
   renderSelected: (item: TokenItem | NetworkItem) => JSX.Element | null;
   isReceivedExchangeModalOpen: boolean;
   setIsReceivedExchangeModalOpen: Dispatch<SetStateAction<boolean>>;
-  logoImage: IProps['logoImage'];
+  logoImage?: string;
   helpLink?: string;
 }
 enum SELECTION_TYPE {
