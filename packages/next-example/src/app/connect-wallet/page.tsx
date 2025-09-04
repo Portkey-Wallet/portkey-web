@@ -31,6 +31,13 @@ const TokenContractAddressMap = {
   tDVV: '7RzVGiuVWkvL4VfVHdZfQF2Tri3sgLe9U991bohHFfSRZXuGX',
   tDVW: 'ASh2Wt7nSEmYqnGxPPzp4pnVDU4uhj1XW9Se5VeZcX2UDdyjx',
 };
+
+const TokenConvertContractAddressMap = {
+  AELF: 'SietKh9cArYub9ox6E4rU94LrzPad6TB72rCwe3X1jQ5m1C34',
+  // tDVV: '7RzVGiuVWkvL4VfVHdZfQF2Tri3sgLe9U991bohHFfSRZXuGX',
+  // tDVW: 'SietKh9cArYub9ox6E4rU94LrzPad6TB72rCwe3X1jQ5m1C34',
+};
+
 const ec = new elliptic.ec('secp256k1');
 export default function ConnectWallet() {
   const { connect, disconnect, provider, showAsset, walletInfo } = useConnect();
@@ -67,6 +74,7 @@ export default function ConnectWallet() {
 
   const [chain, setChain] = useState<IAElfChain>();
   const [tokenContract, setTokenContract] = useState<IContract>();
+  const [tokenConvertContract, setTokenConvertContract] = useState<IContract>();
 
   const networkChanged = async (networkType: NetworkType) => {
     setState({ network: networkType });
@@ -168,7 +176,6 @@ export default function ConnectWallet() {
       <Button onClick={() => loginInOtherMethod('Qrcode')}>Custom Login with QRcode</Button>
       <Button onClick={() => loginInOtherMethod('Email')}>Custom Login with Email</Button>
       <Button onClick={initProvider}>init provider</Button>
-
       <Button
         onClick={async () => {
           if (!provider) return;
@@ -204,11 +211,13 @@ export default function ConnectWallet() {
       <Button
         onClick={async () => {
           try {
-            const _chainId = 'tDVW';
+            // const _chainId = 'tDVW';
+            const _chainId = 'AELF';
             const _chain = await provider?.getChain(_chainId);
             if (!_chain) return;
             setChain(_chain);
             setTokenContract(_chain.getContract(TokenContractAddressMap[_chainId]));
+            setTokenConvertContract(_chain.getContract(TokenConvertContractAddressMap['AELF']));
           } catch (error) {
             console.log(error, '=====getChain');
           }
@@ -274,6 +283,49 @@ export default function ConnectWallet() {
         }}>
         Transfer
       </Button>
+      &nbsp;
+      <Button
+        onClick={async () => {
+          try {
+            console.log('====tokenConvertContract', tokenConvertContract);
+            if (!tokenConvertContract) return;
+
+            const result = await tokenConvertContract.callSendMethod('Buy', '', {
+              symbol: 'WRITE',
+              to: 'LSWoBaeoXRp9QW75mCVJgNP4YurGi2oEJDYu3iAxtDH8R6UGy',
+              amount: 1 * Math.pow(10, 8),
+            });
+            console.log(result, '=====tokenConvertContract Buy result');
+          } catch (error: any) {
+            alert(error.message);
+          }
+        }}>
+        Buy 1 WRITE in AELF
+      </Button>
+      &nbsp;
+      <Button
+        onClick={async () => {
+          try {
+            console.log('====tokenContract', tokenContract);
+            if (!tokenContract) return;
+
+            const approveReq = await tokenContract.callSendMethod(
+              'Approve',
+              '',
+              {
+                symbol: 'ELF',
+                spender: 'LSWoBaeoXRp9QW75mCVJgNP4YurGi2oEJDYu3iAxtDH8R6UGy',
+                amount: 1 * 10 ** 8,
+              },
+              { onMethod: 'receipt' },
+            );
+            console.log(approveReq, '=======approveReq');
+          } catch (error: any) {
+            alert(error.message);
+          }
+        }}>
+        Approve 1 ELF in AELF
+      </Button>
       <br />
       <Button
         onClick={async () => {
@@ -329,7 +381,6 @@ ${Date.now()}`;
         }}>
         GET_WALLET_TRANSACTION_SIGNATURE
       </Button>
-
       <Button
         onClick={async () => {
           const data = `Welcome to provider example!
@@ -622,7 +673,6 @@ ${Date.now()}`;
         }}>
         GET_WALLET_CURRENT_MANAGER_ADDRESS
       </Button>
-
       <form
         onSubmit={async e => {
           // console.log(e.target[0].value, 'onSubmit==');
@@ -646,7 +696,6 @@ ${Date.now()}`;
         </label>
         <button type="submit">GET_WALLET_MANAGER_SYNC_STATUS</button>
       </form>
-
       <Button onClick={removeListener}>removeListener</Button>
       <Button
         onClick={async () => {

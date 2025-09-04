@@ -9,7 +9,10 @@ export default function Home() {
         </a>
         <div></div>
         <a href="sign">
-          <Button>Go to sign</Button>
+          <Button>Go to sign in/out</Button>
+        </a>
+        <a href="connect-wallet">
+          <Button>connect-web-wallet</Button>
         </a>
         <div></div>
         <a href="assets">
