@@ -9,7 +9,7 @@
   "dependencies": {
     "@portkey/did-ui-react": "^2.22.0-alpha.5",
     "@types/react-dom": "^18.0.0",
-    "aelf-sdk": "^3.4.21",
+    "aelf-sdk": "^3.5.1-beta.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.4.0",
     "react-scripts": "^5.0.1"

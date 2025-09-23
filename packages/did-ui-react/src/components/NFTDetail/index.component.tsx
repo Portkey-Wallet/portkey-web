@@ -32,7 +32,7 @@ export default function NFTDetailMain({ NFTDetail, onSend, onBack, onCollectionD
   const [{ networkType, chainType }] = usePortkey();
   const isMainnet = useMemo(() => networkType === MAINNET, [networkType]);
   const [{ caInfo, initialized }] = usePortkeyAsset();
-  const updateTimerRef = useRef<NodeJS.Timer | number>();
+  const updateTimerRef = useRef<ReturnType<typeof setInterval>>();
   const lastKnownScrollPosition = useRef(0);
   const ticking = useRef(false);
 

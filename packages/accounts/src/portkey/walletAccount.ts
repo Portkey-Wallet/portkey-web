@@ -1,4 +1,6 @@
 import AElf from 'aelf-sdk';
+import Wallet from 'aelf-sdk/src/wallet';
+import KeyStore from 'aelf-sdk/src/util/keyStore';
 import { IBaseWalletAccount, IBlockchainWallet, IKeyStore, ISignature } from '@portkey/types';
 
 export class WalletAccount implements IBaseWalletAccount {
@@ -17,16 +19,16 @@ export class WalletAccount implements IBaseWalletAccount {
    * @returns hex string
    */
   public sign(hexString: string): Buffer {
-    return AElf.wallet.sign(hexString, this.wallet.keyPair);
+    return Wallet.sign(hexString, this.wallet.keyPair);
   }
 
   public async encrypt(password: string, options?: Record<string, unknown>): Promise<IKeyStore> {
-    return AElf.wallet.keyStore.getKeystore(this.wallet, password, options);
+    return KeyStore.getKeystore(this.wallet, password, options);
   }
 
   public async signTransaction<T extends Record<string, unknown>>(
     tx: Record<string, unknown>,
   ): Promise<T & ISignature> {
-    return AElf.wallet.signTransaction(tx, this.wallet.keyPair);
+    return AElf.utils.transaction.signTransaction(tx as any, this.wallet.keyPair) as unknown as Promise<T & ISignature>;
   }
 }

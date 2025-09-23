@@ -1,4 +1,8 @@
-import AElf from 'aelf-sdk';
+// import AElf from 'aelf-sdk';
+import Wallet from 'aelf-sdk/src/wallet';
+import KeyStore from 'aelf-sdk/src/util/keyStore';
+// import Wallet from 'aelf-sdk/wallet';
+// import KeyStore from 'aelf-sdk/keyStore';
 import { IAccountProvider, IBlockchainWallet, IKeyStore } from '@portkey/types';
 import { wallet } from '@portkey/utils';
 import { WalletAccount } from './walletAccount';
@@ -22,21 +26,24 @@ export class AccountProvider implements IAccountProvider<WalletAccount> {
     }
     let baseWallet: IBlockchainWallet;
     if (this._mnemonic) {
-      baseWallet = AElf.wallet.getWalletByMnemonic(this._mnemonic, BIP44Path, this.seedWithBuffer);
+      // baseWallet = Wallet.getWalletByMnemonic(this._mnemonic, BIP44Path, this.seedWithBuffer);
+      baseWallet = Wallet.getWalletByMnemonic(this._mnemonic, BIP44Path);
     } else {
-      baseWallet = AElf.wallet.createNewWallet(BIP44Path, this.seedWithBuffer);
+      // baseWallet = Wallet.createNewWallet(BIP44Path, this.seedWithBuffer);
+      baseWallet = Wallet.createNewWallet(BIP44Path);
       this._mnemonic = baseWallet.mnemonic;
     }
     return new WalletAccount(baseWallet);
   }
 
   public privateKeyToAccount(privateKey: string) {
-    const baseWallet: IBlockchainWallet = AElf.wallet.getWalletByPrivateKey(privateKey);
+    const baseWallet: IBlockchainWallet = Wallet.getWalletByPrivateKey(privateKey);
     return new WalletAccount(baseWallet);
   }
 
   public async decrypt(keystore: IKeyStore, password: string, _options?: Record<string, unknown>) {
-    const { privateKey } = AElf.wallet.keyStore.unlockKeystore(keystore, password);
+    // TODO: wait aelf-sdk update.
+    const { privateKey } = KeyStore.unlockKeystore(keystore as any, password);
     return this.privateKeyToAccount(privateKey);
   }
 }

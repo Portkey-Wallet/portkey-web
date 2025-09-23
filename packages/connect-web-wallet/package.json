@@ -39,8 +39,8 @@
     "pub": "npm publish"
   },
   "dependencies": {
-    "@portkey/iframe-provider": "^2.4.0-alpha.9",
-    "@portkey/provider-types": "^2.4.0-alpha.9",
+    "@portkey/iframe-provider": "^2.5.0-alpha.1",
+    "@portkey/provider-types": "^2.5.0-alpha.1",
     "@portkey/utils": "^2.22.0-alpha.5",
     "antd": "5.22.7",
     "bignumber.js": "^9.1.0",
@@ -57,7 +57,7 @@
     "rollup-plugin-terser": "^7.0.2"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.4.20",
+    "aelf-sdk": "^3.5.1-beta.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

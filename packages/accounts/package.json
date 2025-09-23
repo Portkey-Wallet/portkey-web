@@ -41,7 +41,7 @@
     "test": "jest"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.4.21"
+    "aelf-sdk": "^3.5.1-beta.0"
   },
   "dependencies": {
     "@portkey/types": "^2.22.0-alpha.5",

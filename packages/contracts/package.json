@@ -45,7 +45,7 @@
     "@portkey/utils": "^2.22.0-alpha.5"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.4.21"
+    "aelf-sdk": "^3.5.1-beta.0"
   },
   "gitHead": "5987857c1fc0e12775425f3d876188be78421ca7"
 }

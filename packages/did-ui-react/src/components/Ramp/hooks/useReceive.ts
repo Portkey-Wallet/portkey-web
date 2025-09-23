@@ -45,7 +45,7 @@ export const useReceive = ({
   const rateRefreshTimeRef = useRef(MAX_REFRESH_TIME);
   const [rateRefreshTime, setRateRefreshTime] = useState<number>(MAX_REFRESH_TIME);
   const refreshReceiveRef = useRef<() => void>();
-  const refreshReceiveTimerRef = useRef<NodeJS.Timer>();
+  const refreshReceiveTimerRef = useRef<ReturnType<typeof setInterval>>();
   const isFocusedRef = useRef(false);
 
   const [providerPriceList, setProviderPriceList] = useState<IBuyProviderPrice[] | ISellProviderPrice[]>([]);
