@@ -1,6 +1,6 @@
 import AElf from 'aelf-sdk';
-import Wallet from 'aelf-sdk/src/wallet';
-import KeyStore from 'aelf-sdk/src/util/keyStore';
+// import Wallet from 'aelf-sdk/src/wallet';
+// import KeyStore from 'aelf-sdk/src/util/keyStore';
 // import Wallet from 'aelf-sdk/wallet';
 // import KeyStore from 'aelf-sdk/keyStore';
 import { IBaseWalletAccount, IBlockchainWallet, IKeyStore, ISignature } from '@portkey/types';
@@ -21,12 +21,12 @@ export class WalletAccount implements IBaseWalletAccount {
    * @returns hex string
    */
   public sign(hexString: string): Buffer {
-    // return AElf.wallet.sign(hexString, this.wallet.keyPair);
-    return Wallet.sign(hexString, this.wallet.keyPair);
+    return AElf.wallet.sign(hexString, this.wallet.keyPair);
+    // return Wallet.sign(hexString, this.wallet.keyPair);
   }
 
   public async encrypt(password: string, options?: Record<string, unknown>): Promise<IKeyStore> {
-    return KeyStore.keyStore.getKeystore(this.wallet, password, options);
+    return AElf.utils.keyStore.getKeystore(this.wallet, password, options as any) as unknown as Promise<IKeyStore>;
   }
 
   public async signTransaction<T extends Record<string, unknown>>(

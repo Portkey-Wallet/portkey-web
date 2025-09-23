@@ -38,7 +38,7 @@
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
     "start": "tsc --watch",
-    "test": "jest"
+    "test": "vitest"
   },
   "peerDependencies": {
     "aelf-sdk": "^3.5.1-beta.0"

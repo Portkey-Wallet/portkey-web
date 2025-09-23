@@ -38,7 +38,7 @@ export class AccountProvider implements IAccountProvider<WalletAccount> {
   }
 
   public async decrypt(keystore: IKeyStore, password: string, _options?: Record<string, unknown>) {
-    const { privateKey } = AElf.wallet.keyStore.unlockKeystore(keystore as any, password);
+    const { privateKey } = AElf.utils.keyStore.unlockKeystore(keystore as any, password);
     return this.privateKeyToAccount(privateKey);
   }
 }

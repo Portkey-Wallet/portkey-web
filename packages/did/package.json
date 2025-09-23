@@ -38,7 +38,7 @@
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
     "start": "tsc --watch",
-    "test": "jest"
+    "test": "vitest"
   },
   "dependencies": {
     "@portkey/accounts": "^2.22.0-alpha.5",

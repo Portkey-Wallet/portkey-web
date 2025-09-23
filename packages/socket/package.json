@@ -38,7 +38,7 @@
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
     "start": "tsc --watch",
-    "test": "jest"
+    "test": "vitest"
   },
   "dependencies": {
     "@abp/signalr": "^7.0.0",

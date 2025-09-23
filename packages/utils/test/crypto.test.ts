@@ -1,5 +1,5 @@
-import { test } from '@jest/globals';
-import { expect } from '@jest/globals';
+import { test } from 'vitest';
+import { expect } from 'vitest';
 import { describe } from 'node:test';
 import { webcrypto } from 'crypto';
 import { WebCryptoManager } from '../src/crypto/web';

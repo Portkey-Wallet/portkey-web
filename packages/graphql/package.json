@@ -34,7 +34,8 @@
     "build:types": "tsc --build tsconfig.types.json",
     "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
     "start": "tsc --watch",
-    "generate": "rm -rf ./**/*/__generated__ && node gqlg.js && graphql-codegen --config codegen.config.ts && eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+    "generate": "rm -rf ./**/*/__generated__ && node gqlg.js && graphql-codegen --config codegen.config.ts && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "test": "vitest"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",

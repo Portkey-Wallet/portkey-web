@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import { AlchemyPayRampService, ITransDirectEnum, RampService } from '../../src';
 import RampFetchRequestMock from '../__mocks__/rampRequest';
 import {
