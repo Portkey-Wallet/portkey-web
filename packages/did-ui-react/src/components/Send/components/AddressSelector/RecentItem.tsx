@@ -27,6 +27,8 @@ export default function RecentItem({
           {transNetworkTextV2({
             chainId: item.chainId,
             isMainnet,
+            chainType: item.network,
+            networkName: item.network,
           })}
         </div>
       </div>
