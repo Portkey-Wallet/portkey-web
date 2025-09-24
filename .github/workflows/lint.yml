@@ -1,5 +1,5 @@
 name: Next Lint Check
-# 
+#
 
 on: [push, pull_request]
 
@@ -12,7 +12,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v1
         with:
-          node-version: '20'  # Your node version, default 20 in 2024
+          node-version: '22'  # Your node version, default 22 in 2025
 
       - name: Cache node modules
         uses: actions/cache@v2
