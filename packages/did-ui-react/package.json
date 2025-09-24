@@ -20,7 +20,7 @@
     "url": "https://github.com/Portkey-Wallet/portkey-web.git",
     "directory": "packages/did-ui-react"
   },
-  "version": "2.22.0-alpha.5",
+  "version": "2.22.0-alpha.6",
   "main": "dist/index.js",
   "types": "dist/_types/index.d.ts",
   "type": "module",
