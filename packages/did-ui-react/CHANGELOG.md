@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.22.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.7...v2.22.0-alpha.8) (2025-09-24)
+
+### Bug Fixes
+
+- 🐛 styles ([e150020](https://github.com/Portkey-Wallet/portkey-web/commit/e150020e334a1b12808066927e3c7c549426de1a))
+
 ## [2.22.0-alpha.7](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.6...v2.22.0-alpha.7) (2025-09-24)
 
 **Note:** Version bump only for package @portkey/did-ui-react
