@@ -1,8 +1,8 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import FetchRequestMock from './__mocks__/request';
 import { Verification } from '../src/service/verification';
 
-// jest.mock('./request');
+// vi.mock('./request');
 
 const request = new FetchRequestMock({});
 const verification = new Verification(request);

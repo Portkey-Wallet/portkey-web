@@ -42,7 +42,7 @@ const CodeVerifyUI = forwardRef(
     ref,
   ) => {
     const [timer, setTimer] = useState<number>(0);
-    const timerRef = useRef<NodeJS.Timer>();
+    const timerRef = useRef<ReturnType<typeof setInterval>>();
 
     useImperativeHandle(ref, () => ({ setTimer }));
 

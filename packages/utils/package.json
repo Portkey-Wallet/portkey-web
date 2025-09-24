@@ -1,6 +1,6 @@
 {
   "name": "@portkey/utils",
-  "version": "2.22.0-alpha.5",
+  "version": "2.23.0-alpha.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -37,7 +37,8 @@
     "lint": "eslint --ext .js,.ts .",
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
-    "start": "tsc --watch"
+    "start": "tsc --watch",
+    "test": "vitest"
   },
   "dependencies": {
     "is-url": "^1.2.4",
@@ -45,7 +46,7 @@
   },
   "peerDependencies": {
     "@portkey/request": "^2.6.6",
-    "aelf-sdk": "^3.4.21",
+    "aelf-sdk": "^3.5.1-beta.0",
     "query-string": "^7.1.1"
   },
   "devDependencies": {

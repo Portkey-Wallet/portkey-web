@@ -1,6 +1,6 @@
 {
   "name": "@portkey/graphql",
-  "version": "2.22.0-alpha.5",
+  "version": "2.23.0-alpha.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -34,11 +34,12 @@
     "build:types": "tsc --build tsconfig.types.json",
     "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
     "start": "tsc --watch",
-    "generate": "rm -rf ./**/*/__generated__ && node gqlg.js && graphql-codegen --config codegen.config.ts && eslint '*/**/*.{js,ts,tsx}' --quiet --fix"
+    "generate": "rm -rf ./**/*/__generated__ && node gqlg.js && graphql-codegen --config codegen.config.ts && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "test": "vitest"
   },
   "dependencies": {
     "@apollo/client": "^3.7.3",
-    "@portkey/types": "^2.22.0-alpha.5",
+    "@portkey/types": "^2.23.0-alpha.1",
     "graphql": "^16.6.0",
     "subscriptions-transport-ws": "^0.11.0"
   },

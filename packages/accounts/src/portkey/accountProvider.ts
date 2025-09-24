@@ -22,9 +22,11 @@ export class AccountProvider implements IAccountProvider<WalletAccount> {
     }
     let baseWallet: IBlockchainWallet;
     if (this._mnemonic) {
-      baseWallet = AElf.wallet.getWalletByMnemonic(this._mnemonic, BIP44Path, this.seedWithBuffer);
+      // baseWallet = AElf.wallet.getWalletByMnemonic(this._mnemonic, BIP44Path, this.seedWithBuffer);
+      baseWallet = AElf.wallet.getWalletByMnemonic(this._mnemonic, BIP44Path);
     } else {
-      baseWallet = AElf.wallet.createNewWallet(BIP44Path, this.seedWithBuffer);
+      // baseWallet = AElf.wallet.createNewWallet(BIP44Path, this.seedWithBuffer);
+      baseWallet = AElf.wallet.createNewWallet(BIP44Path);
       this._mnemonic = baseWallet.mnemonic;
     }
     return new WalletAccount(baseWallet);
@@ -36,7 +38,7 @@ export class AccountProvider implements IAccountProvider<WalletAccount> {
   }
 
   public async decrypt(keystore: IKeyStore, password: string, _options?: Record<string, unknown>) {
-    const { privateKey } = AElf.wallet.keyStore.unlockKeystore(keystore, password);
+    const { privateKey } = AElf.utils.keyStore.unlockKeystore(keystore as any, password);
     return this.privateKeyToAccount(privateKey);
   }
 }

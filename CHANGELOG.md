@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.23.0-alpha.1](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.5...v2.23.0-alpha.1) (2025-09-24)
+
+### Features
+
+- 🎸 add demo, token approve ([e7a8c33](https://github.com/Portkey-Wallet/portkey-web/commit/e7a8c330e85f2693e67a2fd9aaa2e4bc9eff4091))
+- 🎸 update aelf-sdk & [@portkey](https://github.com/portkey) providers's sdks ([f6882cc](https://github.com/Portkey-Wallet/portkey-web/commit/f6882cc11f34a8052702311b5021cfb535d3e671))
+
 ## [2.22.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.4...v2.22.0-alpha.5) (2025-09-02)
 
 **Note:** Version bump only for package root

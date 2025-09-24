@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import AElf from 'aelf-sdk';
 import { WalletAccount } from '../../src/portkey/walletAccount';
 
@@ -17,7 +17,7 @@ describe('walletAccount describe', () => {
 
   test('test encrypt', async () => {
     const result = await walletAccount.encrypt(defaultPassword);
-    const { privateKey } = AElf.wallet.keyStore.unlockKeystore(result, defaultPassword);
+    const { privateKey } = AElf.utils.keyStore.unlockKeystore(result as any, defaultPassword);
     expect(privateKey).toEqual(walletAccount.privateKey);
   });
 

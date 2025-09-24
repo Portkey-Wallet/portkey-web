@@ -1,8 +1,8 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import FetchRequestMock from './__mocks__/request';
 import { Transaction } from '../src/service/transaction';
 
-// jest.mock('./request');
+// vi.mock('./request');
 
 const request = new FetchRequestMock({});
 const transactionService = new Transaction(request);

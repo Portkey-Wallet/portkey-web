@@ -1,6 +1,6 @@
 {
   "name": "@portkey/accounts",
-  "version": "2.22.0-alpha.5",
+  "version": "2.23.0-alpha.1",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -38,15 +38,15 @@
     "lint:fix": "eslint --fix --ext .js,.ts .",
     "format": "prettier --write '**/*'",
     "start": "tsc --watch",
-    "test": "jest"
+    "test": "vitest"
   },
   "peerDependencies": {
-    "aelf-sdk": "^3.4.21"
+    "aelf-sdk": "^3.5.1-beta.0"
   },
   "dependencies": {
-    "@portkey/types": "^2.22.0-alpha.5",
-    "@portkey/utils": "^2.22.0-alpha.5",
-    "@portkey/validator": "^2.22.0-alpha.5"
+    "@portkey/types": "^2.23.0-alpha.1",
+    "@portkey/utils": "^2.23.0-alpha.1",
+    "@portkey/validator": "^2.23.0-alpha.1"
   },
   "gitHead": "5987857c1fc0e12775425f3d876188be78421ca7"
 }

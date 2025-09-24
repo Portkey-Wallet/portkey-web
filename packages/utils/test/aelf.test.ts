@@ -1,4 +1,4 @@
-import { describe, expect, test } from '@jest/globals';
+import { describe, expect, test } from 'vitest';
 import { getAelfInstance, getWallet, getELFContract, encodedTx } from '../src/aelf';
 
 const stageEndpoint = 'https://tdvw-test-node.aelf.io';
