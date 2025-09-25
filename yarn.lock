@@ -3776,13 +3776,13 @@
   resolved "https://registry.npmjs.org/@polka/url/-/url-1.0.0-next.29.tgz#5a40109a1ab5f84d6fd8fc928b19f367cbe7e7b1"
   integrity sha512-wwQAWhWSuHaag8c4q/KN/vCoeOJYshAIvMQwD4GpSb3OiZklFfvAgmj0VCBBImRpuF/aFgIRzllXlVX93Jevww==
 
-"@portkey/chain@^2.5.0-alpha.2":
-  version "2.5.0-alpha.2"
-  resolved "https://registry.npmjs.org/@portkey/chain/-/chain-2.5.0-alpha.2.tgz#fc94e810701dd8d0c9ceb209a2be88da2b69c887"
-  integrity sha512-YJr+60QVvR01wb6j4ymvO8N27v36pVETX98J5wpnAlBOTRBguQzkmxWOMMt/+F26X3tOtx6vMyNh6lsMLHy3VQ==
+"@portkey/chain@^2.5.0-alpha.3":
+  version "2.5.0-alpha.3"
+  resolved "https://registry.npmjs.org/@portkey/chain/-/chain-2.5.0-alpha.3.tgz#2ba2e1feb998e88192297a6c8a7d57f47d79f6dd"
+  integrity sha512-VpXQzPkQyPWw79gSmUU9OpgtZcUtCoC6pnNb/pVFBN8DgF7GPKKkyV4TKs/61nCzQglufgn/+lD6v99nc1bxsA==
   dependencies:
     "@portkey/contracts" "^2.23.0-alpha.1"
-    "@portkey/provider-types" "^2.5.0-alpha.2"
+    "@portkey/provider-types" "^2.5.0-alpha.3"
     aelf-sdk "^3.5.1-beta.0"
 
 "@portkey/detect-provider@^2.5.0-alpha.2":
@@ -3792,13 +3792,13 @@
   dependencies:
     "@portkey/provider-types" "^2.5.0-alpha.2"
 
-"@portkey/iframe-provider@^2.5.0-alpha.2":
-  version "2.5.0-alpha.2"
-  resolved "https://registry.npmjs.org/@portkey/iframe-provider/-/iframe-provider-2.5.0-alpha.2.tgz#cdb7ad7e7bd0076d583d64c8a55912182f79b0ff"
-  integrity sha512-cYV2PsUKu/xDfmUyzyYGeuhsangeQwYBloCnDLy976G/o9enkX/AZv7/WyB5s9WrkB/4YeW/sQoBKxfUUcYVCA==
+"@portkey/iframe-provider@^2.5.0-alpha.3":
+  version "2.5.0-alpha.3"
+  resolved "https://registry.npmjs.org/@portkey/iframe-provider/-/iframe-provider-2.5.0-alpha.3.tgz#50048e48b55b2dce558f1b1e84aea38e9bb8d9c5"
+  integrity sha512-UVG+gbySCNlStoEFE7EmQ5Cit8f+6BZFbQ/X2MmFeitcHeMzcet6ep0KbRcJWfnKUcbEvb7jSRidcaw3sA4TPw==
   dependencies:
-    "@portkey/provider-types" "^2.5.0-alpha.2"
-    "@portkey/providers" "^2.5.0-alpha.2"
+    "@portkey/provider-types" "^2.5.0-alpha.3"
+    "@portkey/providers" "^2.5.0-alpha.3"
     "@types/elliptic" "^6.4.14"
     readable-stream "^4.4.0"
 
@@ -3810,21 +3810,29 @@
     "@portkey/types" "^2.23.0-alpha.1"
     "@types/readable-stream" "^2.3.15"
 
-"@portkey/provider-utils@^2.5.0-alpha.2":
-  version "2.5.0-alpha.2"
-  resolved "https://registry.npmjs.org/@portkey/provider-utils/-/provider-utils-2.5.0-alpha.2.tgz#0200b72dc049585bf48fd7560b770f660fe52153"
-  integrity sha512-KKRkU+CEhxC4FbVIXfXHxiBClPl1ysJ1ytJ+bKy3LH3jXycn2O5chlWQivP3taX5O/o8yec6w6zu42zXxPDf+g==
+"@portkey/provider-types@^2.5.0-alpha.3":
+  version "2.5.0-alpha.3"
+  resolved "https://registry.npmjs.org/@portkey/provider-types/-/provider-types-2.5.0-alpha.3.tgz#38a6e484e505916e82460418c82ceb890480e330"
+  integrity sha512-Z8FsfpwZRx42S6SWapD698Db39H9YPIsjJMh1LaBEp6r2vW3hlMIe5JoxXga7Ar8t5ola7efJ7P3XNGjK654Tg==
   dependencies:
-    "@portkey/provider-types" "^2.5.0-alpha.2"
+    "@portkey/types" "^2.23.0-alpha.1"
+    "@types/readable-stream" "^2.3.15"
 
-"@portkey/providers@^2.5.0-alpha.2":
-  version "2.5.0-alpha.2"
-  resolved "https://registry.npmjs.org/@portkey/providers/-/providers-2.5.0-alpha.2.tgz#badfbccb1e9a88037ca92ec6686e1de34020daf2"
-  integrity sha512-qqEatY/7NnDOcFBOsgN/hpPDxxIGo50ZVmKLbQiMvRER7RymtxkjJgA9puJxKDA0nIKh6KOHaG3SJR43qlWT9w==
+"@portkey/provider-utils@^2.5.0-alpha.3":
+  version "2.5.0-alpha.3"
+  resolved "https://registry.npmjs.org/@portkey/provider-utils/-/provider-utils-2.5.0-alpha.3.tgz#fe89823307a5a6d19c71c740ca3afce7cba13ba9"
+  integrity sha512-iwDuPWmTOWJ/MWmr3hSuVwiItPUoNu3s11lkzFam1PJc4KXO/CHcGEEzxi9WPw804N0I9uGroDqfF4Gsjhq0Ug==
   dependencies:
-    "@portkey/chain" "^2.5.0-alpha.2"
-    "@portkey/provider-types" "^2.5.0-alpha.2"
-    "@portkey/provider-utils" "^2.5.0-alpha.2"
+    "@portkey/provider-types" "^2.5.0-alpha.3"
+
+"@portkey/providers@^2.5.0-alpha.3":
+  version "2.5.0-alpha.3"
+  resolved "https://registry.npmjs.org/@portkey/providers/-/providers-2.5.0-alpha.3.tgz#689b9a3d9fc84d8c2c98e851d063eb2d078370b5"
+  integrity sha512-9XCzIDzWMbKDLj3FFs9i4Uxz3i/wu2CO6ezZ7hvKIdLPmnHuAZ4GmSC+rTUwTHjNKspjkkE3NUKpj4OksKAOJg==
+  dependencies:
+    "@portkey/chain" "^2.5.0-alpha.3"
+    "@portkey/provider-types" "^2.5.0-alpha.3"
+    "@portkey/provider-utils" "^2.5.0-alpha.3"
     "@types/readable-stream" "^2.3.15"
     lodash "^4.17.21"
     readable-stream "^4.4.0"
