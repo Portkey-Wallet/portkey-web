@@ -1,6 +1,6 @@
 {
   "name": "@portkey/accounts",
-  "version": "2.23.0-alpha.6",
+  "version": "2.23.0-alpha.7",
   "description": "",
   "main": "./dist/commonjs/index.js",
   "module": "./dist/esm/index.js",
@@ -44,9 +44,9 @@
     "aelf-sdk": "^3.5.1-beta.0"
   },
   "dependencies": {
-    "@portkey/types": "^2.23.0-alpha.6",
-    "@portkey/utils": "^2.23.0-alpha.6",
-    "@portkey/validator": "^2.23.0-alpha.6"
+    "@portkey/types": "^2.23.0-alpha.7",
+    "@portkey/utils": "^2.23.0-alpha.7",
+    "@portkey/validator": "^2.23.0-alpha.7"
   },
   "gitHead": "5987857c1fc0e12775425f3d876188be78421ca7"
 }
