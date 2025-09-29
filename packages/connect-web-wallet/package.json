@@ -39,8 +39,8 @@
     "pub": "npm publish"
   },
   "dependencies": {
-    "@portkey/iframe-provider": "^2.5.0-alpha.3",
-    "@portkey/provider-types": "^2.5.0-alpha.3",
+    "@portkey/iframe-provider": "^2.5.0-alpha.4",
+    "@portkey/provider-types": "^2.5.0-alpha.4",
     "@portkey/utils": "^2.23.0-alpha.6",
     "antd": "5.22.7",
     "bignumber.js": "^9.1.0",
