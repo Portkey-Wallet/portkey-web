@@ -3,6 +3,16 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.23.0-alpha.6](https://github.com/Portkey-Wallet/portkey-web/compare/v2.23.0-alpha.5...v2.23.0-alpha.6) (2025-09-29)
+
+### Features
+
+- 🎸 utils： rm node:crypto ([3a1e124](https://github.com/Portkey-Wallet/portkey-web/commit/3a1e124e47f7fda43f53936ee3aa7e31b4e14d9e))
+
+### Bug Fixes
+
+- 🐛 lint-disabled of rsa.ts deprecated function ([55c3735](https://github.com/Portkey-Wallet/portkey-web/commit/55c373518a569953627a63f7f659a2fc7cee3edc))
+
 ## [2.23.0-alpha.5](https://github.com/Portkey-Wallet/portkey-web/compare/v2.23.0-alpha.4...v2.23.0-alpha.5) (2025-09-25)
 
 **Note:** Version bump only for package root
