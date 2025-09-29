@@ -14,6 +14,8 @@
  *
  * @see RSA_ALTERNATIVES.md for migration guide
  */
+// eslint-disable-next-line no-unused-vars
+// @ts-ignore
 export function rsaEncrypt(message: string, publicKey: string) {
   throw new Error(`
 🚨 DEPRECATED: rsaEncrypt() is no longer supported!
@@ -47,6 +49,8 @@ Please use one of these alternatives:
  *
  * @see RSA_ALTERNATIVES.md for migration guide
  */
+// eslint-disable-next-line no-unused-vars
+// @ts-ignore
 export function rsaDecrypt(base64Message: string, privateKey: string) {
   throw new Error(`
 🚨 DEPRECATED: rsaDecrypt() is no longer supported!
