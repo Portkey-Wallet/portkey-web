@@ -1,30 +1,102 @@
-import crypto from 'crypto';
+// import crypto from 'crypto';
 
+/**
+ * @deprecated This function is deprecated and will be removed in a future version.
+ * Use Web Crypto API or Node-forge alternatives instead.
+ *
+ * For browser environments, use:
+ * - generateWebRSAKeyPair() from './rsa-web'
+ * - webRSAEncrypt() from './rsa-web'
+ * - webRSADecrypt() from './rsa-web'
+ *
+ * For Node.js environments with better compatibility, use:
+ * - ForgeCryptoManager from './crypto/forge'
+ *
+ * @see RSA_ALTERNATIVES.md for migration guide
+ */
 export function rsaEncrypt(message: string, publicKey: string) {
-  const buffer = Buffer.from(message, 'utf8');
-  const encrypted = crypto.publicEncrypt({ key: publicKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING }, buffer);
-  return encrypted.toString('base64');
+  throw new Error(`
+🚨 DEPRECATED: rsaEncrypt() is no longer supported!
+
+Please use one of these alternatives:
+
+🌐 For Browser Environment:
+  import { webRSAEncrypt } from './rsa-web';
+  const encrypted = await webRSAEncrypt(message, publicKey);
+
+🔧 For Node.js with Better Compatibility:
+  import { ForgeCryptoManager } from './crypto/forge';
+  const forgeManager = new ForgeCryptoManager();
+  const encrypted = await forgeManager.encrypt(publicKey, message);
+
+📚 See RSA_ALTERNATIVES.md for complete migration guide.
+  `);
 }
+
+/**
+ * @deprecated This function is deprecated and will be removed in a future version.
+ * Use Web Crypto API or Node-forge alternatives instead.
+ *
+ * For browser environments, use:
+ * - generateWebRSAKeyPair() from './rsa-web'
+ * - webRSAEncrypt() from './rsa-web'
+ * - webRSADecrypt() from './rsa-web'
+ *
+ * For Node.js environments with better compatibility, use:
+ * - ForgeCryptoManager from './crypto/forge'
+ *
+ * @see RSA_ALTERNATIVES.md for migration guide
+ */
 export function rsaDecrypt(base64Message: string, privateKey: string) {
-  const buffer = Buffer.from(base64Message, 'base64');
-  const decrypted = crypto.privateDecrypt(
-    { key: privateKey, padding: crypto.constants.RSA_PKCS1_OAEP_PADDING },
-    buffer,
-  );
-  return decrypted.toString('utf8');
+  throw new Error(`
+🚨 DEPRECATED: rsaDecrypt() is no longer supported!
+
+Please use one of these alternatives:
+
+🌐 For Browser Environment:
+  import { webRSADecrypt } from './rsa-web';
+  const decrypted = await webRSADecrypt(base64Message, privateKey);
+
+🔧 For Node.js with Better Compatibility:
+  import { ForgeCryptoManager } from './crypto/forge';
+  const forgeManager = new ForgeCryptoManager();
+  const decrypted = await forgeManager.decrypt(privateKey, base64Message);
+
+📚 See RSA_ALTERNATIVES.md for complete migration guide.
+  `);
 }
+
+/**
+ * @deprecated This function is deprecated and will be removed in a future version.
+ * Use Web Crypto API or Node-forge alternatives instead.
+ *
+ * For browser environments, use:
+ * - generateWebRSAKeyPair() from './rsa-web'
+ * - webRSAEncrypt() from './rsa-web'
+ * - webRSADecrypt() from './rsa-web'
+ *
+ * For Node.js environments with better compatibility, use:
+ * - ForgeCryptoManager from './crypto/forge'
+ *
+ * @see RSA_ALTERNATIVES.md for migration guide
+ */
 export function generateKeyPairSync(modulusLength = 1024) {
-  return crypto.generateKeyPairSync('rsa', {
-    modulusLength,
-    publicKeyEncoding: {
-      type: 'pkcs1',
-      format: 'pem',
-    },
-    privateKeyEncoding: {
-      type: 'pkcs1',
-      format: 'pem',
-    },
-  });
+  throw new Error(`
+🚨 DEPRECATED: generateKeyPairSync() is no longer supported!
+
+Please use one of these alternatives:
+
+🌐 For Browser Environment:
+  import { generateWebRSAKeyPair } from './rsa-web';
+  const keyPair = await generateWebRSAKeyPair({ modulusLength: ${modulusLength} });
+
+🔧 For Node.js with Better Compatibility:
+  import { ForgeCryptoManager } from './crypto/forge';
+  const forgeManager = new ForgeCryptoManager();
+  const keyPair = await forgeManager.generateKeyPair();
+
+📚 See RSA_ALTERNATIVES.md for complete migration guide.
+  `);
 }
 
 // (async () => {
