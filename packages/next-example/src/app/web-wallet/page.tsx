@@ -50,23 +50,31 @@ function WebPageInner() {
     });
   }, [currentGuardianList, verifierList]);
 
-  const onDisconnect = useCallback(() => {
-    localStorage.removeItem(getWebWalletStorageKey(options?.appId));
-    localStorage.removeItem(CWW_WALLET_INFO_KEY);
-    localStorage.removeItem('guardianListForLogin');
-    localStorage.removeItem('guardianListForAddGuardian');
+  const onDisconnect = useCallback(
+    (isForgetPin?: boolean) => {
+      localStorage.removeItem(getWebWalletStorageKey(options?.appId));
+      localStorage.removeItem(CWW_WALLET_INFO_KEY);
+      localStorage.removeItem('guardianListForLogin');
+      localStorage.removeItem('guardianListForAddGuardian');
 
-    did.reset();
-    SWEventController.dispatchEvent({
-      eventName: 'disconnected',
-      data: { message: 'user logout' },
-    });
-    pageState &&
-      OpenPageService.closePage(
-        pageState.eventName,
-        errorHandler(200004, new ProviderError(ResponseMessagePreset['USER_DENIED'], ResponseCode.USER_DENIED)),
-      );
-  }, [options?.appId, pageState]);
+      did.reset();
+      SWEventController.dispatchEvent({
+        eventName: 'disconnected',
+        data: { message: 'user logout' },
+      });
+      pageState &&
+        OpenPageService.closePage(
+          pageState.eventName,
+          errorHandler(
+            200004,
+            isForgetPin
+              ? new ProviderError('Don’t worry, you can still access your account by logging in.', 10001)
+              : new ProviderError(ResponseMessagePreset['USER_DENIED'], ResponseCode.USER_DENIED),
+          ),
+        );
+    },
+    [options?.appId, pageState],
+  );
 
   const onTGSignInApprovalSuccess = useCallback(
     async (guardiansApproved: GuardiansApproved[]) => {
@@ -232,7 +240,7 @@ function WebPageInner() {
           </>
         )}
         {pageState?.pageType === WalletPageType.UnLock && (
-          <UnlockInner onUnlock={onUnlock} onForgetPin={onDisconnect} />
+          <UnlockInner onUnlock={onUnlock} onForgetPin={() => onDisconnect(true)} />
         )}
       </div>
     </PortkeyAssetProvider>
