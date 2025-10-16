@@ -3,6 +3,12 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [2.22.0-alpha.9](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.8...v2.22.0-alpha.9) (2025-10-16)
+
+### Features
+
+- 🎸 show unlock footer ([c6249b2](https://github.com/Portkey-Wallet/portkey-web/commit/c6249b2d7b9690e6f9fff2e68347f5db9f6c5b6b))
+
 ## [2.22.0-alpha.8](https://github.com/Portkey-Wallet/portkey-web/compare/v2.22.0-alpha.7...v2.22.0-alpha.8) (2025-09-24)
 
 ### Bug Fixes
