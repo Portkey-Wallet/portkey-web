@@ -38,7 +38,7 @@ export default function PortkeyPasswordInput({
       </div>
       <div className="passcode-error-tip">{error}</div>
       <PortkeyBaseNumberKeyboard
-        // header={footer && <div className="footer-wrapper">{footer}</div>}
+        header={footer && <div className="footer-wrapper">{footer}</div>}
         onInput={(v) => {
           if (value.length === length) return;
           if (value.length < length) {
