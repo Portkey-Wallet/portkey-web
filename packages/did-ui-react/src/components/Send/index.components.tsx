@@ -493,7 +493,20 @@ function SendContent({
         if (Array.isArray(approveList) && approveList.length > 0) {
           setApprovalVisible(false);
           if (stage === Stage.Amount) {
-            setStage(Stage.Preview);
+            const res = await handleCheckPreview(true);
+            if (res?.checkResult === CheckPass) {
+              res?.networkFee && setNetworkFee(res?.networkFee);
+              res?.networkFeeUnit && setNetworkFeeUnit(res?.networkFeeUnit);
+              res?.receiveAmount && setReceiveAmount(res?.receiveAmount);
+              res?.receiveAmountUsd && setReceiveAmountUsd(res?.receiveAmountUsd);
+              res?.transactionFee && setTransactionFee(res?.transactionFee);
+              res?.transactionUnit && setTransactionUnit(res?.transactionUnit);
+              res?.transferType && setTransferType(res?.transferType);
+              setErrorMessage('');
+              setStage(Stage.Preview);
+            } else {
+              throw Error(res?.checkResult);
+            }
           } else if (stage === Stage.Preview) {
             await sendTransfer();
           }
@@ -782,187 +795,83 @@ function SendContent({
   }, [caHash, handleCheckTransferLimit, managementAccount?.privateKey, sendTransfer, tokenInfo]);
 
   // const checkManagerSyncState = useCheckManagerSyncState();
-  const handleCheckPreview = useCallback(async (): Promise<any> => {
-    try {
-      setLoading(true);
-      if (!ZERO.plus(amount).toNumber()) return 'Please input amount';
-      if (!caHash || !managementAccount?.address) return 'Please Login';
-
-      // CHECK 1: manager sync
-      const _isManagerSynced = await checkManagerSyncState(tokenInfo.chainId, caHash, managementAccount?.address);
-      if (!_isManagerSynced) {
-        return {
-          checkResult: 'Synchronizing on-chain account information...',
-        };
-      }
-
-      // CHECK 2: wallet security
-      const res = await walletSecurityCheck({
-        originChainId: originChainId,
-        targetChainId: tokenInfo.chainId,
-        caHash: caHash || '',
-        onOk: onModifyGuardians,
-      });
-      if (!res) return { checkResult: WalletIsNotSecure };
-
-      // CHECK 3: insufficient balance
-      if (!isNft) {
-        if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
-          setErrorMessage(TransactionError.TOKEN_NOT_ENOUGH);
-          return { checkResult: TransactionError.TOKEN_NOT_ENOUGH };
-        }
-        if (isCrossChain(toAccount.address, tokenInfo.chainId) && tokenInfo.symbol === defaultToken.symbol) {
-          if (ZERO.plus(defaultFee.crossChain).isGreaterThanOrEqualTo(amount)) {
-            setErrorMessage(TransactionError.CROSS_NOT_ENOUGH);
-            return { checkResult: TransactionError.CROSS_NOT_ENOUGH };
-          }
-        }
-      } else if (isNft) {
-        if (ZERO.plus(amount).isGreaterThan(balance)) {
-          return { checkResult: TransactionError.NFT_NOT_ENOUGH };
-        }
-      }
-
-      // CHECK 4: transfer limit  (just for aelf transfer)
-      const limitRes = await handleCheckTransferLimit();
-      if (!limitRes) return { checkResult: ExceedLimit };
-
-      // CHECK 5: check transfer type
-      let _transferType = TransferTypeEnum.GENERAL_SAME_CHAIN;
-      let _networkFee: string | undefined;
-      let _networkFeeUnit: string | undefined;
-      let _transactionFee: string | undefined;
-      let _transactionUnit: string | undefined;
-      let _receiveAmount: string | undefined;
-      let _receiveAmountUsd: string | undefined;
-
-      const sendBigNumber = timesDecimals(amount, tokenInfo.decimals || '0');
-
-      // if isRecommendEtransfer(to evm) fee check
-      if (recommendETransfer) {
-        try {
-          const { withdrawInfo } = await crossTransferByEtransfer.withdrawPreview({
-            symbol: tokenInfo.symbol,
-            address: tokenInfo.address,
-            chainId: tokenInfo.chainId,
-            amount: amount,
-            network: targetNetwork?.network || '',
-          });
-          console.log('withdrawInfo result', withdrawInfo);
-          _networkFee = withdrawInfo?.aelfTransactionFee;
-          const maxAmount = Number(withdrawInfo?.maxAmount);
-          const minAmount = Number(withdrawInfo?.minAmount);
-          _transactionFee = withdrawInfo.transactionFee;
-          _transactionUnit = withdrawInfo.transactionUnit;
-          const isEtransferCrossInLimit = Number(amount) >= minAmount && Number(amount) <= maxAmount;
-          // TODO: change it
-
-          if (isEtransferCrossInLimit) {
-            _receiveAmount = withdrawInfo?.receiveAmount;
-            _receiveAmountUsd = withdrawInfo?.receiveAmountUsd;
-            _transferType = TransferTypeEnum.E_TRANSFER;
-
-            return {
-              checkResult: CheckPass,
-              networkFee: _networkFee,
-              networkFeeUnit: _networkFeeUnit,
-              receiveAmount: _receiveAmount,
-              receiveAmountUsd: _receiveAmountUsd,
-              transactionFee: _transactionFee,
-              transactionUnit: _transactionUnit,
-              transferType: _transferType,
-            };
-          } else {
-            return {
-              checkResult: getLimitTips(tokenInfo.label || tokenInfo.symbol, minAmount, maxAmount),
-            };
-          }
-        } catch (error) {
-          console.log('eTransfer err', error);
-          return { checkResult: 'Please Try again later' };
-        }
-      }
-
-      // if isRecommendEBridge(to evm) fee check
-      if (recommendEBridge) {
-        try {
-          const fromChainInfo = getAELFChainInfoConfig(tokenInfo.chainId);
-          const toChainInfo = getEVMChainInfoConfig(targetNetwork?.network || '');
-          const tokenConfig = getTokenConfig(tokenInfo.symbol);
-          const bridge = new EBridge({
-            fromChainInfo,
-            toChainInfo,
-            tokenInfo: tokenConfig,
-          });
-
-          _receiveAmount = amount;
-          _receiveAmountUsd = ZERO.plus(amount).times(price).toString();
-
-          // fee
-          const f = await bridge.getELFFee();
-
-          // limit
-          const limit = await bridge.getLimit();
-          console.log('limitlimit', limit, limit.isEnable);
-          const targetLimit = getSmallerValue(limit.remain, limit.currentCapacity);
-          if (limit.isEnable && sendBigNumber.isGreaterThan(targetLimit)) {
-            console.log('checkCanPreview 16');
-            return setErrorMessage(getLimitTips(tokenInfo.symbol, '0', formatAmountShow(targetLimit)));
-          }
-          _transactionFee = divDecimals(f, defaultToken.decimals).toString();
-          _transactionUnit = 'ELF';
-          _transferType = TransferTypeEnum.E_BRIDGE;
-          // TODO: change it
-          if (ZERO.plus(1000).lt(amount)) {
-            // TODO: change it
-          }
-
-          console.log('checkCanPreview 17');
-
-          return {
-            checkResult: CheckPass,
-            networkFee: _networkFee,
-            networkFeeUnit: _networkFeeUnit,
-            transactionFee: _transactionFee,
-            transactionUnit: _transactionUnit,
-            receiveAmount: _receiveAmount,
-            receiveAmountUsd: _receiveAmountUsd,
-            transferType: _transferType,
-          };
-        } catch (error) {
-          console.log('err', error);
-          console.log('checkCanPreview 18');
-          return { checkResult: 'eBridge false' };
-        }
-      }
-
-      const isAELFCross =
-        isDIDAelfAddress(toAccount.address) && getAddressChainId(toAccount.address, 'AELF') !== tokenInfo.chainId;
-
-      console.log('isAELFCross', isAELFCross);
-
-      // SameChain or CrossChain in aelf
-      // TODO: change it
+  const handleCheckPreview = useCallback(
+    async (isApproved?: boolean): Promise<any> => {
       try {
-        if (isAELFCross && isSupportEtransferCross) {
-          let isEtransferCrossInLimit = false;
+        setLoading(true);
+        if (!ZERO.plus(amount).toNumber()) return 'Please input amount';
+        if (!caHash || !managementAccount?.address) return 'Please Login';
+
+        // CHECK 1: manager sync
+        const _isManagerSynced = await checkManagerSyncState(tokenInfo.chainId, caHash, managementAccount?.address);
+        if (!_isManagerSynced) {
+          return {
+            checkResult: 'Synchronizing on-chain account information...',
+          };
+        }
+
+        // CHECK 2: wallet security
+        const res = await walletSecurityCheck({
+          originChainId: originChainId,
+          targetChainId: tokenInfo.chainId,
+          caHash: caHash || '',
+          onOk: onModifyGuardians,
+        });
+        if (!res) return { checkResult: WalletIsNotSecure };
+
+        // CHECK 3: insufficient balance
+        if (!isNft) {
+          if (timesDecimals(amount, tokenInfo.decimals).isGreaterThan(balance)) {
+            setErrorMessage(TransactionError.TOKEN_NOT_ENOUGH);
+            return { checkResult: TransactionError.TOKEN_NOT_ENOUGH };
+          }
+          if (isCrossChain(toAccount.address, tokenInfo.chainId) && tokenInfo.symbol === defaultToken.symbol) {
+            if (ZERO.plus(defaultFee.crossChain).isGreaterThanOrEqualTo(amount)) {
+              setErrorMessage(TransactionError.CROSS_NOT_ENOUGH);
+              return { checkResult: TransactionError.CROSS_NOT_ENOUGH };
+            }
+          }
+        } else if (isNft) {
+          if (ZERO.plus(amount).isGreaterThan(balance)) {
+            return { checkResult: TransactionError.NFT_NOT_ENOUGH };
+          }
+        }
+        if (!isApproved) {
+          // CHECK 4: transfer limit  (just for aelf transfer)
+          const limitRes = await handleCheckTransferLimit();
+          if (!limitRes) return { checkResult: ExceedLimit };
+        }
+
+        // CHECK 5: check transfer type
+        let _transferType = TransferTypeEnum.GENERAL_SAME_CHAIN;
+        let _networkFee: string | undefined;
+        let _networkFeeUnit: string | undefined;
+        let _transactionFee: string | undefined;
+        let _transactionUnit: string | undefined;
+        let _receiveAmount: string | undefined;
+        let _receiveAmountUsd: string | undefined;
+
+        const sendBigNumber = timesDecimals(amount, tokenInfo.decimals || '0');
+
+        // if isRecommendEtransfer(to evm) fee check
+        if (recommendETransfer) {
           try {
             const { withdrawInfo } = await crossTransferByEtransfer.withdrawPreview({
               symbol: tokenInfo.symbol,
-              address: toAccount.address,
+              address: tokenInfo.address,
               chainId: tokenInfo.chainId,
               amount: amount,
-              network: getAddressChainId(toAccount.address, 'AELF'),
+              network: targetNetwork?.network || '',
             });
-
-            _transactionFee = withdrawInfo?.aelfTransactionFee;
+            console.log('withdrawInfo result', withdrawInfo);
+            _networkFee = withdrawInfo?.aelfTransactionFee;
             const maxAmount = Number(withdrawInfo?.maxAmount);
             const minAmount = Number(withdrawInfo?.minAmount);
             _transactionFee = withdrawInfo.transactionFee;
             _transactionUnit = withdrawInfo.transactionUnit;
-            isEtransferCrossInLimit = Number(amount) >= minAmount && Number(amount) <= maxAmount;
+            const isEtransferCrossInLimit = Number(amount) >= minAmount && Number(amount) <= maxAmount;
+            // TODO: change it
 
-            // eTransfer
             if (isEtransferCrossInLimit) {
               _receiveAmount = withdrawInfo?.receiveAmount;
               _receiveAmountUsd = withdrawInfo?.receiveAmountUsd;
@@ -978,91 +887,199 @@ function SendContent({
                 transactionUnit: _transactionUnit,
                 transferType: _transferType,
               };
+            } else {
+              return {
+                checkResult: getLimitTips(tokenInfo.label || tokenInfo.symbol, minAmount, maxAmount),
+              };
+            }
+          } catch (error) {
+            console.log('eTransfer err', error);
+            return { checkResult: 'Please Try again later' };
+          }
+        }
+
+        // if isRecommendEBridge(to evm) fee check
+        if (recommendEBridge) {
+          try {
+            const fromChainInfo = getAELFChainInfoConfig(tokenInfo.chainId);
+            const toChainInfo = getEVMChainInfoConfig(targetNetwork?.network || '');
+            const tokenConfig = getTokenConfig(tokenInfo.symbol);
+            const bridge = new EBridge({
+              fromChainInfo,
+              toChainInfo,
+              tokenInfo: tokenConfig,
+            });
+
+            _receiveAmount = amount;
+            _receiveAmountUsd = ZERO.plus(amount).times(price).toString();
+
+            // fee
+            const f = await bridge.getELFFee();
+
+            // limit
+            const limit = await bridge.getLimit();
+            console.log('limitlimit', limit, limit.isEnable);
+            const targetLimit = getSmallerValue(limit.remain, limit.currentCapacity);
+            if (limit.isEnable && sendBigNumber.isGreaterThan(targetLimit)) {
+              console.log('checkCanPreview 16');
+              return setErrorMessage(getLimitTips(tokenInfo.symbol, '0', formatAmountShow(targetLimit)));
+            }
+            _transactionFee = divDecimals(f, defaultToken.decimals).toString();
+            _transactionUnit = 'ELF';
+            _transferType = TransferTypeEnum.E_BRIDGE;
+            // TODO: change it
+            if (ZERO.plus(1000).lt(amount)) {
+              // TODO: change it
             }
 
-            console.log('isEtransferCrossInLimit', isAELFCross);
+            console.log('checkCanPreview 17');
+
+            return {
+              checkResult: CheckPass,
+              networkFee: _networkFee,
+              networkFeeUnit: _networkFeeUnit,
+              transactionFee: _transactionFee,
+              transactionUnit: _transactionUnit,
+              receiveAmount: _receiveAmount,
+              receiveAmountUsd: _receiveAmountUsd,
+              transferType: _transferType,
+            };
           } catch (error) {
-            console.log('isEtransferCrossInLimit', error);
-            isEtransferCrossInLimit = false;
+            console.log('err', error);
+            console.log('checkCanPreview 18');
+            return { checkResult: 'eBridge false' };
           }
-          // GENERAL_CROSS_CHAIN
-          if (!isEtransferCrossInLimit) {
-            _transferType = TransferTypeEnum.GENERAL_CROSS_CHAIN;
-            //       TODO: change it
-            // _networkFee = await getTransactionFee(isAELFCross, amount);
-
-            _networkFeeUnit = 'ELF';
-          }
-        } else {
-          // TODO: change it
-          _networkFee = isAELFCross ? await getCrossChainTransferFeeV2() : (await getTranslationInfo()) || '';
-          console.log('_networkFee', _networkFee);
-          _networkFeeUnit = 'ELF';
-          _transferType = isAELFCross ? TransferTypeEnum.GENERAL_CROSS_CHAIN : TransferTypeEnum.GENERAL_SAME_CHAIN;
         }
-      } catch (error) {
+
+        const isAELFCross =
+          isDIDAelfAddress(toAccount.address) && getAddressChainId(toAccount.address, 'AELF') !== tokenInfo.chainId;
+
+        console.log('isAELFCross', isAELFCross);
+
+        // SameChain or CrossChain in aelf
+        // TODO: change it
+        try {
+          if (isAELFCross && isSupportEtransferCross) {
+            let isEtransferCrossInLimit = false;
+            try {
+              const { withdrawInfo } = await crossTransferByEtransfer.withdrawPreview({
+                symbol: tokenInfo.symbol,
+                address: toAccount.address,
+                chainId: tokenInfo.chainId,
+                amount: amount,
+                network: getAddressChainId(toAccount.address, 'AELF'),
+              });
+
+              _transactionFee = withdrawInfo?.aelfTransactionFee;
+              const maxAmount = Number(withdrawInfo?.maxAmount);
+              const minAmount = Number(withdrawInfo?.minAmount);
+              _transactionFee = withdrawInfo.transactionFee;
+              _transactionUnit = withdrawInfo.transactionUnit;
+              isEtransferCrossInLimit = Number(amount) >= minAmount && Number(amount) <= maxAmount;
+
+              // eTransfer
+              if (isEtransferCrossInLimit) {
+                _receiveAmount = withdrawInfo?.receiveAmount;
+                _receiveAmountUsd = withdrawInfo?.receiveAmountUsd;
+                _transferType = TransferTypeEnum.E_TRANSFER;
+
+                return {
+                  checkResult: CheckPass,
+                  networkFee: _networkFee,
+                  networkFeeUnit: _networkFeeUnit,
+                  receiveAmount: _receiveAmount,
+                  receiveAmountUsd: _receiveAmountUsd,
+                  transactionFee: _transactionFee,
+                  transactionUnit: _transactionUnit,
+                  transferType: _transferType,
+                };
+              }
+
+              console.log('isEtransferCrossInLimit', isAELFCross);
+            } catch (error) {
+              console.log('isEtransferCrossInLimit', error);
+              isEtransferCrossInLimit = false;
+            }
+            // GENERAL_CROSS_CHAIN
+            if (!isEtransferCrossInLimit) {
+              _transferType = TransferTypeEnum.GENERAL_CROSS_CHAIN;
+              //       TODO: change it
+              // _networkFee = await getTransactionFee(isAELFCross, amount);
+
+              _networkFeeUnit = 'ELF';
+            }
+          } else {
+            // TODO: change it
+            _networkFee = isAELFCross ? await getCrossChainTransferFeeV2() : (await getTranslationInfo()) || '';
+            console.log('_networkFee', _networkFee);
+            _networkFeeUnit = 'ELF';
+            _transferType = isAELFCross ? TransferTypeEnum.GENERAL_CROSS_CHAIN : TransferTypeEnum.GENERAL_SAME_CHAIN;
+          }
+        } catch (error) {
+          return {
+            checkResult: TransactionError.FEE_NOT_ENOUGH,
+          };
+        }
+
         return {
-          checkResult: TransactionError.FEE_NOT_ENOUGH,
+          checkResult: CheckPass,
+          networkFee: _networkFee,
+          networkFeeUnit: _networkFeeUnit,
+          receiveAmount: _receiveAmount,
+          receiveAmountUsd: _receiveAmountUsd,
+          transactionFee: _transactionFee,
+          transactionUnit: _transactionUnit,
+          transferType: _transferType,
         };
+
+        // CHECK 6: tx fee
+        // const fee = await getTranslationInfo();
+        // console.log(fee, 'fee===getTranslationInfo');
+        // if (fee) {
+        //   setTxFee(fee);
+        // } else {
+        //   return TransactionError.FEE_NOT_ENOUGH;
+        // }
+        // return '';
+      } catch (error: any) {
+        console.log('checkTransactionValue===', error);
+        return TransactionError.FEE_NOT_ENOUGH;
+      } finally {
+        setLoading(false);
       }
-
-      return {
-        checkResult: CheckPass,
-        networkFee: _networkFee,
-        networkFeeUnit: _networkFeeUnit,
-        receiveAmount: _receiveAmount,
-        receiveAmountUsd: _receiveAmountUsd,
-        transactionFee: _transactionFee,
-        transactionUnit: _transactionUnit,
-        transferType: _transferType,
-      };
-
-      // CHECK 6: tx fee
-      // const fee = await getTranslationInfo();
-      // console.log(fee, 'fee===getTranslationInfo');
-      // if (fee) {
-      //   setTxFee(fee);
-      // } else {
-      //   return TransactionError.FEE_NOT_ENOUGH;
-      // }
-      // return '';
-    } catch (error: any) {
-      console.log('checkTransactionValue===', error);
-      return TransactionError.FEE_NOT_ENOUGH;
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    amount,
-    balance,
-    caHash,
-    checkManagerSyncState,
-    crossTransferByEtransfer,
-    defaultFee.crossChain,
-    defaultToken.decimals,
-    defaultToken.symbol,
-    getAELFChainInfoConfig,
-    getCrossChainTransferFeeV2,
-    getEVMChainInfoConfig,
-    getTokenConfig,
-    getTranslationInfo,
-    handleCheckTransferLimit,
-    isNft,
-    isSupportEtransferCross,
-    managementAccount?.address,
-    onModifyGuardians,
-    originChainId,
-    price,
-    recommendEBridge,
-    recommendETransfer,
-    targetNetwork?.network,
-    toAccount.address,
-    tokenInfo.address,
-    tokenInfo.chainId,
-    tokenInfo.decimals,
-    tokenInfo.label,
-    tokenInfo.symbol,
-  ]);
+    },
+    [
+      amount,
+      balance,
+      caHash,
+      checkManagerSyncState,
+      crossTransferByEtransfer,
+      defaultFee.crossChain,
+      defaultToken.decimals,
+      defaultToken.symbol,
+      getAELFChainInfoConfig,
+      getCrossChainTransferFeeV2,
+      getEVMChainInfoConfig,
+      getTokenConfig,
+      getTranslationInfo,
+      handleCheckTransferLimit,
+      isNft,
+      isSupportEtransferCross,
+      managementAccount?.address,
+      onModifyGuardians,
+      originChainId,
+      price,
+      recommendEBridge,
+      recommendETransfer,
+      targetNetwork?.network,
+      toAccount.address,
+      tokenInfo.address,
+      tokenInfo.chainId,
+      tokenInfo.decimals,
+      tokenInfo.label,
+      tokenInfo.symbol,
+    ],
+  );
 
   const adsCheckWarningRender = useMemo(() => {
     if (!warning) return null;
@@ -1129,7 +1146,7 @@ function SendContent({
           console.log('handleCheckPreview res', res);
 
           if (res?.checkResult === CheckPass) {
-            console.log('res checkResult', res);
+            console.log('res checkResult-sendTransfer', res);
 
             res?.networkFee && setNetworkFee(res?.networkFee);
             res?.networkFeeUnit && setNetworkFeeUnit(res?.networkFeeUnit);
