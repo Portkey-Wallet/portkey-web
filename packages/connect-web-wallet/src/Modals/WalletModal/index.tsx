@@ -16,7 +16,7 @@ export default function WalletModal() {
     <Drawer
       className="portkey-connect-wallet-modal portkey-connect-wallet-drawer"
       placement="bottom"
-      height={'95vh'}
+      height={'calc(90vh - env(safe-area-inset-top) - env(safe-area-inset-bottom))'}
       forceRender
       open={dialogVisible}>
       {inner}
