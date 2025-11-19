@@ -9,6 +9,11 @@ import { IPortkeyProvider, NotificationEvents } from '@portkey/provider-types';
 import { useModalDispatch } from '../../context/useModal/hooks';
 import { basicModalView } from '../../context/useModal/actions';
 
+const WEB_WALLET_URL = {
+  MAINNET: 'https://portkey-web-wallet.portkey.finance',
+  TESTNET: 'https://test-portkey-web-wallet.portkey.finance/',
+};
+
 export default function WalletInner() {
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const dispatch = useWalletDispatch();
@@ -71,11 +76,16 @@ export default function WalletInner() {
     };
   }, [options]);
 
+  const webWalletUrl = useMemo(() => {
+    if (WEB_WALLET_URL[options.networkType]) return WEB_WALLET_URL[options.networkType];
+    return WEB_WALLET_URL['MAINNET'];
+  }, [options.networkType]);
+
   return (
     <iframe
       ref={iframeRef}
       // src={`http://localhost:5173/?${qs.stringify(walletOptions)}`}
-      src={`https://portkey-web-wallet.portkey.finance?${qs.stringify(walletOptions)}`}
+      src={`${webWalletUrl}?${qs.stringify(walletOptions)}`}
       style={{ width: '100%', height: '700px' }}
       onLoad={onLoad}
     />
