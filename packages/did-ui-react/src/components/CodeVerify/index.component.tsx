@@ -1,0 +1,191 @@
+import { useCallback, useState, useRef, useEffect } from 'react';
+import { errorTip, verifyErrorHandler, handleErrorMessage, verification } from '../../utils';
+import type { ChainId, TStringJSON } from '@portkey/types';
+import { OperationTypeEnum } from '@portkey/services';
+import { TVerifyCodeInfo } from '../SignStep/types';
+import useReCaptchaModal from '../../hooks/useReCaptchaModal';
+import CodeVerifyUI, { ICodeVerifyUIInterface } from '../CodeVerifyUI';
+import { BaseCodeVerifyProps } from '../types';
+
+const MAX_TIMER = 60;
+
+export interface CodeVerifyProps extends BaseCodeVerifyProps {
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
+  verifierSessionId: string;
+  isErrorTip?: boolean;
+  operationType: OperationTypeEnum;
+  operationDetails: TStringJSON;
+  caHash?: string;
+  onSuccess?: (res: { verificationDoc?: string; signature?: string; verifierId: string }) => void;
+  onReSend?: (result: TVerifyCodeInfo) => void;
+}
+
+export default function CodeVerify({
+  originChainId = 'AELF',
+  targetChainId,
+  verifier,
+  className,
+  isErrorTip = true,
+  operationType,
+  operationDetails,
+  isCountdownNow,
+  guardianIdentifier,
+  accountType = 'Email',
+  verifierSessionId: defaultVerifierSessionId,
+  caHash,
+  onError,
+  onReSend,
+  onSuccess,
+}: CodeVerifyProps) {
+  const [pinVal, setPinVal] = useState<string>();
+  const [verifierSessionId, setVerifierSessionId] = useState<string>(defaultVerifierSessionId);
+  const uiRef = useRef<ICodeVerifyUIInterface>();
+  const [codeError, setCodeError] = useState<boolean>();
+  const [codeVerifyLoading, setCodeVerifyLoading] = useState<boolean>(false);
+
+  const setInputError = useCallback(async (isError?: boolean) => {
+    if (!isError) return setCodeError(isError);
+    setCodeError(true);
+    // await sleep(2000);
+    // setCodeError(false);
+  }, []);
+
+  const onFinish = useCallback(
+    async (code: string) => {
+      try {
+        if (code && code.length === 6) {
+          if (!verifierSessionId) throw Error(`VerifierSessionId(${verifierSessionId}) is invalid`);
+          setCodeVerifyLoading(true);
+
+          const result = await verification.checkVerificationCode({
+            verifierSessionId,
+            verificationCode: code,
+            guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
+            verifierId: verifier?.id || '',
+            chainId: originChainId,
+            targetChainId,
+            operationType,
+            caHash,
+            operationDetails,
+          });
+          setCodeVerifyLoading(false);
+          console.log(result, 'verifyErrorHandler==');
+
+          if (result.signature) {
+            if (typeof document !== undefined) document.body.focus();
+            return onSuccess?.({ ...result, verifierId: verifier?.id || '' });
+          }
+          setPinVal('');
+        } else {
+          throw Error('Please check if the PIN code is entered correctly');
+        }
+      } catch (error: any) {
+        setCodeVerifyLoading(false);
+        setPinVal('');
+        const _error = verifyErrorHandler(error);
+        console.log(error, _error, 'error==verifyErrorHandler=');
+        if (_error.includes('Invalid code')) return setInputError(true);
+        errorTip(
+          {
+            errorFields: 'CodeVerify',
+            error: _error,
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+    },
+
+    [
+      verifierSessionId,
+      guardianIdentifier,
+      verifier?.id,
+      originChainId,
+      targetChainId,
+      operationType,
+      caHash,
+      operationDetails,
+      onSuccess,
+      setInputError,
+      isErrorTip,
+      onError,
+    ],
+  );
+
+  const reCaptchaHandler = useReCaptchaModal();
+
+  const resendCode = useCallback(async () => {
+    try {
+      if (!guardianIdentifier) throw Error('Missing loginGuardianType');
+      const result = await verification.sendVerificationCode(
+        {
+          params: {
+            type: accountType,
+            guardianIdentifier: guardianIdentifier.replaceAll(/\s+/g, ''),
+            verifierId: verifier?.id || '',
+            chainId: originChainId,
+            targetChainId,
+            operationType,
+            operationDetails,
+          },
+        },
+        reCaptchaHandler,
+      );
+      if (!verifier || !result || !result.verifierSessionId)
+        return console.warn('The request was rejected, please check whether the parameters are correct');
+      uiRef.current?.setTimer(MAX_TIMER);
+      onReSend?.({ verifier, ...result });
+      setVerifierSessionId(result.verifierSessionId);
+    } catch (error: any) {
+      const msg = handleErrorMessage(error);
+      errorTip(
+        {
+          errorFields: 'CodeVerify',
+          error: msg,
+        },
+        isErrorTip,
+        onError,
+      );
+    }
+  }, [
+    guardianIdentifier,
+    accountType,
+    verifier,
+    originChainId,
+    targetChainId,
+    operationType,
+    operationDetails,
+    reCaptchaHandler,
+    onReSend,
+    isErrorTip,
+    onError,
+  ]);
+
+  useEffect(() => {
+    return () => {
+      setPinVal('');
+    };
+  }, []);
+
+  const onCodeChange = useCallback((pin: string) => {
+    setPinVal(pin);
+    setCodeError(false);
+  }, []);
+
+  return (
+    <CodeVerifyUI
+      ref={uiRef}
+      code={pinVal}
+      error={codeError}
+      verifier={verifier}
+      className={className}
+      isCountdownNow={isCountdownNow}
+      guardianIdentifier={guardianIdentifier}
+      isLoading={codeVerifyLoading}
+      onCodeChange={onCodeChange}
+      onReSend={resendCode}
+      onCodeFinish={onFinish}
+    />
+  );
+}

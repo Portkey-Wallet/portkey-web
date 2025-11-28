@@ -1,0 +1,66 @@
+.portkey-ui-common-prompt-card {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px;
+  border-radius: 16px;
+  border: 1px solid var(--sds-color-background-default-tertiary);
+  background-color: var(--sds-color-background-default-default);
+
+  .portkey-ui-common-prompt-card-icon {
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+  }
+
+  .portkey-ui-common-prompt-card-content {
+    flex-shrink: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .portkey-ui-common-prompt-card-title {
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 600;
+    color: var(--sds-color-text-default-default);
+  }
+
+  .portkey-ui-common-prompt-card-description {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--sds-color-text-default-secondary);
+  }
+}
+
+.portkey-ui-common-prompt-card {
+  &-error {
+    border-color: var(--sds-color-border-danger-tertiary);
+    background-color: var(--sds-color-background-danger-tertiary);
+    .portkey-ui-common-prompt-card-title,
+    .portkey-ui-common-prompt-card-description {
+      color: var(--sds-color-text-danger-on-danger-tertiary);
+    }
+  }
+
+  &-success {
+    border-color: var(--sds-color-border-positive-tertiary);
+    background-color: var(--sds-color-background-positive-tertiary);
+    .portkey-ui-common-prompt-card-title,
+    .portkey-ui-common-prompt-card-description {
+      color: var(--sds-color-text-positive-on-positive-tertiary);
+    }
+  }
+
+  &-warning {
+    border-color: var(--sds-color-border-warning-tertiary);
+    background-color: var(--sds-color-background-warning-tertiary);
+    .portkey-ui-common-prompt-card-title,
+    .portkey-ui-common-prompt-card-description {
+      color: var(--sds-color-text-warning-on-warning-tertiary);
+    }
+  }
+}
+

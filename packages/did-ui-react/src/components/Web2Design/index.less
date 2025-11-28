@@ -1,0 +1,141 @@
+@import '../../assets/theme/constants.less';
+
+.portkey-ui-web2design-wrapper {
+  height: 100%;
+  position: relative;
+  overflow-y: auto;
+  .web2design-qrcode-icon {
+    position: absolute;
+    width: 64px;
+    height: 64px;
+    top: 8px;
+    right: 8px;
+  }
+  .portkey-ui-web2design-social-wrapper{
+    align-items: center;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+  }
+
+  .portkey-ui-segmented-input {
+
+    .portkey-ui-segmented-phone {
+      .phone-number-input-wrapper {
+        border-radius: var(--portkey-ui-border-radius-4);
+        background: var(--portkey-ui-segmented-bg);
+
+        .phone-number-input-content {
+          border-color: var(--portkey-ui-segmented-bg);
+          .addon-content {
+            background: transparent;
+            &::after {
+              border-color: var(--sds-color-border-default-default);
+            }
+          }
+          .portkey-ant-input {
+            background: transparent;
+          }
+        }
+      }
+
+      & > .login-btn {
+        border-radius: var(--portkey-ui-border-radius-4);
+      }
+    }
+  }
+
+  .portkey-ui-web2design-login-wrapper {
+    height: 100%;
+    &:not(.portkey-ui-web2design-login) {
+      width: 100%;
+    }
+  }
+}
+
+.portkey-ui-web2design-login-wrapper {
+  border-radius: var(--portkey-ui-border-radius-2);
+  &:not(.portkey-ui-web2design-login) {
+    width: 548px;
+    margin: auto;
+  }
+  .right-wrapper {
+    width: 412px;
+    background-color: var(--portkey-ui-scan-bg);
+  }
+  .left-wrapper {
+    padding: 64px 64px 0;
+  }
+  .scan-base-wrapper {
+    height: 100%;
+  }
+
+  .web2design-title {
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 40px;
+    color: var(--sds-color-text-default-default);
+    display: flex;
+  }
+  .web2-design-upgraded-portkey {
+    height: 24px;
+    padding: 3px 10px;
+    border-radius: 12px;
+    margin-left: 8px;
+  }
+}
+
+// .portkey-ui-web2design-social-login {
+//   .portkey-ant-btn-default.social-login-btn {
+//     border-color: var(--portkey-ui-btn-bg);
+//     box-shadow: none;
+//     font-size: 16px;
+//     font-weight: 500;
+//     color: var(--portkey-ui-text-primary);
+//     background-color: var(--portkey-ui-btn-bg);
+//   }
+// }
+.empty-element {
+  height: 12px;
+}
+.portkey-ui-web2design-switch-sign {
+  padding-top: 32px;
+  padding-bottom: 16px;
+  color: var(--sds-color-text-default-secondary);
+  text-align: center;
+  font-size: 16px;
+  line-height: 16px;
+  .btn-text {
+    color: var(--sds-color-text-brand-default);
+    font-weight: 600;
+    cursor: pointer;
+  }
+  &.portkey-ui-web2design-switch-sign-sign-up {
+    margin-top: 32px;
+  }
+}
+
+.portkey-ui-web2design-login-little-screen {
+  .left-wrapper {
+    padding: 16px 16px 32px 16px;
+  }
+  .right-wrapper {
+    width: 100%;
+    background-color: transparent;
+  }
+  // .scan-card-wrapper {
+    // .scan-card-content {
+    //   padding: 0;
+    // }
+    // .description {
+    //   margin-bottom: 0;
+    // }
+  // }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .portkey-ui-web2design-login-wrapper .web2design-title {
+    font-size: 24px;
+    line-height: 32px;
+  }
+}

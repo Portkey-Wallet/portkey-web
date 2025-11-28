@@ -1,0 +1,298 @@
+.portkey-ui-nft-detail {
+  .picture {
+    // width: 264px;
+    // height: 264px;
+    // padding: 0 16px;
+    width: 100%;
+    height: 100%;
+    background: var(--sds-color-background-utilities-blanket);
+    // height: auto;
+    // aspect-ratio: 1/1;
+  }
+}
+
+.portkey-ui-nft-detail {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  background: var(--sds-color-background-default-default);
+  overflow-y: auto;
+
+  .nft-detail-body {
+    background: var(--sds-color-background-default-default);
+    // width: calc(100%-32px);
+    padding-left: 16px;
+    padding-right: 16px;
+    position: relative;
+    .balance {
+      margin: 0 auto 12px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      align-self: center;
+      text-align: center;
+      color: var(--sds-color-text-default-secondary);
+    }
+    // .portkey-btn-primaryOutline {
+    //   margin: 0 16px 0 16px;
+    // }
+    .send-button {
+      width: 100%;
+    }
+    .divider {
+      margin: 8px 0px;
+      padding: 4px 0px;
+    }
+  }
+
+  .setting-header-wrapper {
+    border: none;
+    height: 64px;
+    padding: 0 16px;
+  }
+  .collection-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 16px;
+    .collection {
+      margin: 0 0px 12px;
+      width: fit-content;
+      cursor: pointer;
+      .img {
+        width: 24px;
+        height: 24px;
+        flex-shrink: 0;
+        img,
+        .img-text {
+          width: 100%;
+          height: 100%;
+          border-radius: 8px;
+        }
+        .img-text {
+          background-color: var(--sds-color-background-default-default);
+          font-size: 12px;
+          line-height: 14px;
+          color: var(--sds-color-text-default-tertiary);
+        }
+      }
+      .name {
+        margin-left: 6.8px;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 400;
+        color: var(--sds-color-text-default-secondary);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+      .vector-icon {
+        margin-left: 8px;
+        width: 6.55px;
+        height: 11.15px;
+        svg {
+          width: 6.55px;
+          height: 11.15px;
+          path {
+            fill: var(--sds-color-icon-default-secondary);
+          }
+        }
+      }
+    }
+    .description {
+      color: var(--sds-color-text-default-secondary);
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 140%; /* 22.4px */
+    }
+  }
+  .token-id {
+    margin: 24px 0px 12px;
+    font-size: 20px;
+    line-height: 24px;
+    font-weight: 700;
+    word-break: break-word;
+    font-family: 'Bricolage Grotesque';
+    color: var(--sds-color-text-default-default);
+  }
+  .picture {
+    margin: 8px auto 24px;
+    width: 320px;
+    height: 320px;
+    font-size: 40px;
+
+    .portkey-ui-seed-badge {
+      right: 20px;
+      width: 48px;
+      height: 24px;
+      .portkey-ui-custom-svg {
+        width: 48px;
+        height: 24px;
+        svg {
+          width: 48px;
+          height: 24px;
+        }
+      }
+    }
+  }
+
+  .info {
+    padding: 0 0px 0px;
+    .title {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 600;
+      color: var(--sds-color-text-default-tertiary);
+      overflow: hidden;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 1;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-family: 'Schibsted Grotesk';
+      font-style: normal;
+    }
+    .info-content {
+      margin-top: 8px;
+      &.gride-content {
+        padding: 16px 0px;
+        display: grid;
+        gap: 16px;
+        // grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    .info-item {
+      font-size: 16px;
+      line-height: 22px;
+      font-weight: 400;
+      padding: 16px 0;
+      color: var(--sds-color-text-default-default);
+      .label {
+        color: var(--sds-color-text-default-default);
+
+        /* Body Base */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 400;
+        line-height: 140%;
+        .below-label-value {
+          color: var(--sds-color-text-default-default);
+          font-weight: 500;
+          margin-top: 4px;
+        }
+      }
+      .value {
+        color: var(--sds-color-text-default-default);
+        text-align: right;
+        /* Body Strong */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 140%; /* 22.4px */
+      }
+      .chain-image {
+        width: 16px;
+        height: 16px;
+        margin-right: 4px;
+      }
+    }
+    .contract {
+      .contract-title {
+        gap: 8px;
+        .portkey-ui-copy-wrapper {
+          .portkey-ui-custom-svg {
+            svg path {
+              fill: var(--sds-color-text-brand-default);
+            }
+          }
+        }
+        svg {
+          path {
+            fill: var(--sds-color-icon-default-secondary);
+          }
+        }
+      }
+    }
+    .symbol,
+    .inscription-name {
+      gap: 24px;
+      .symbol-value,
+      .inscription-name-value {
+        text-align: end;
+        flex: 1;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+    &:last-child {
+      padding-bottom: 40px;
+    }
+  }
+  .btn-wrap {
+    background: var(--sds-color-background-default-default);
+    width: 100%;
+    border-top: 1px solid var(--sds-color-border-default-default);
+    padding: 0 16px 16px;
+    .balance {
+      margin: 10px auto 16px;
+      font-size: 14px;
+      line-height: 20px;
+      font-weight: 500;
+      align-self: center;
+      text-align: center;
+      color: var(--sds-color-text-default-default);
+    }
+    button {
+      height: 48px;
+      border-radius: 22px;
+      line-height: 22px;
+      font-size: 16px;
+    }
+  }
+}
+
+.portkey-prompt {
+  padding-bottom: none !important;
+}
+@media (max-width: 600px) {
+  .portkey-ui-nft-detail {
+    .picture {
+      width: 361px;
+      height: 361px;
+    }
+  }
+  .gride-content {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 601px ) and (max-width: 896px){
+  .portkey-ui-nft-detail {
+    .picture {
+      width: 400px;
+      height: 400px;
+    }
+  }
+  .gride-content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 897px) {
+  .portkey-ui-nft-detail {
+    .picture {
+      width: 400px;
+      height: 400px;
+    }
+  }
+  .info-content {
+    &.gride-content {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+}

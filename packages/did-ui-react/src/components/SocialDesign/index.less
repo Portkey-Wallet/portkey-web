@@ -1,0 +1,19 @@
+@import '../../assets/theme/constants.less';
+
+.portkey-ui-user-input-wrapper {
+  height: 100%;
+  .pc-icon {
+    border-radius: var(--portkey-ui-icon-b-r-1);
+    height: 80px;
+    width: 80px;
+  }
+  .user-input-login {
+    padding: 0 32px 20px;
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .user-input-login {
+    padding: 0 16px 16px;
+  }
+}

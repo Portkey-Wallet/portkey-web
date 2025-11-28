@@ -1,0 +1,18 @@
+import { describe, expect, test } from 'vitest';
+import FetchRequestMock from './__mocks__/request';
+import { Services } from '../src/service';
+
+// vi.mock('./request');
+
+const request = new FetchRequestMock({});
+
+describe('Services describe', () => {
+  test('test fetchTconstructorxFee', async () => {
+    const services = new Services(request, {} as any, {} as any, {} as any);
+
+    expect(services).toHaveProperty('communityRecovery');
+    expect(services).toHaveProperty('ramp');
+    expect(services).toHaveProperty('assets');
+    expect(services).toHaveProperty('token');
+  });
+});

@@ -1,0 +1,184 @@
+.portkey-ui-delete-account {
+  height: calc(100vh - 28px);
+  display: flex;
+  flex-direction: column;
+  .portkey-ui-delete-account-body {
+    padding: 24px 24px 0;
+    .warning-icon {
+      width: 64px;
+      height: 64px;
+      svg {
+        width: 64px;
+        height: 64px;
+        path {
+          fill: var(--sds-color-icon-danger-default);
+        }
+      }
+    }
+    .warning-tip {
+      color: var(--sds-color-text-default-secondary);
+      text-align: left;
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      line-height: 140%; /* 22.4px */
+      margin-top: 16px;
+      margin-bottom: 24px;
+    }
+    .conditions {
+      width: 100%;
+      border-radius: 8px;
+      padding: 24px 16px;
+      background: var(--sds-color-background-default-secondary);
+
+      .conditions-summary {
+        color: var(--sds-color-text-default-secondary);
+        /* Body Base */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        line-height: 140%; /* 22.4px */
+      }
+      .conditions-item {
+        margin-top: 24px;
+        padding: 0px 16px;
+      }
+      .conditions-item-label {
+        color: var(--sds-color-text-default-default);
+        /* Heading */
+        font-family: 'Bricolage Grotesque';
+        font-size: 20px;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 120%; /* 24px */
+        letter-spacing: -0.4px;
+      }
+      .conditions-item-value {
+        color: var(--sds-color-text-default-secondary);
+        /* Body Base */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        line-height: 140%; /* 22.4px */
+        margin-top: 8px;
+      }
+    }
+  }
+  .portkey-ui-delete-account-footer {
+    width: 100%;
+    height: 80px;
+    padding: 16px;
+    margin-top: 24px;
+    // border-top: 1px solid var(--sds-color-border-default-default);
+
+    .portkey-ant-btn {
+      height: 48px;
+      border-radius: 22px;
+      font-size: 16px;
+      line-height: 22px;
+    }
+  }
+}
+
+.portkey-ui-account-cancellation-modal {
+  gap: 8px;
+  .portkey-ant-modal-confirm-content {
+    margin-top: 0;
+  }
+  .account-cancellation-modal-title {
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--sds-color-text-default-default);
+    margin-bottom: 8px;
+  }
+}
+
+@media screen and (min-width: 769px) {
+  .portkey-ui-delete-account {
+    height: calc(100vh - 116px);
+  }
+}
+.deletion-warning-modal {
+  .deletion-warning-modal-container {
+    padding: 16px;
+    .deletion-warning-modal-error {
+      width: 32px;
+      height: 32px;
+      svg {
+        width: 32px;
+        height: 32px;
+        path {
+          fill: var(--sds-color-icon-default-default);
+        }
+      }
+    }
+    .account-cancellation-modal-title {
+      color: var(--sds-color-text-default-default);
+  
+      /* Heading */
+      font-family: 'Bricolage Grotesque';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 120%; /* 24px */
+      letter-spacing: -0.4px;
+      margin: 12px 0px;
+    }
+    .account-cancellation-modal-content {
+      color: var(--sds-color-text-default-default);
+  
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      line-height: 140%; /* 22.4px */
+    }
+    .deletion-warning-modal-bottom-wrapper {
+      gap: 16px;
+      margin-top: 24px;
+    }
+  }
+}
+.unable-delete-modal {
+  .unable-delete-modal-container {
+    padding: 16px;
+    .unable-delete-modal-error {
+      width: 32px;
+      height: 32px;
+      svg {
+        width: 32px;
+        height: 32px;
+        path {
+          fill: var(--sds-color-icon-default-default);
+        }
+      }
+    }
+    .unable-delete-modal-title {
+      color: var(--sds-color-text-default-default);
+  
+      /* Heading */
+      font-family: 'Bricolage Grotesque';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 120%; /* 24px */
+      letter-spacing: -0.4px;
+      margin: 12px 0px;
+    }
+    .unable-delete-modal-content {
+      color: var(--sds-color-text-default-default);
+  
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      line-height: 140%; /* 22.4px */
+    }
+    .unable-delete-modal-bottom-wrapper {
+      gap: 16px;
+      margin-top: 24px;
+    }
+  }
+}

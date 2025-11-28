@@ -1,0 +1,177 @@
+@import '../../assets/theme/constants.less';
+
+.portkey-ui-guardian-edit {
+  position: relative;
+  height: 100%;
+  .guardian-edit-body {
+    padding: 0 16px;
+    font-size: 14px;
+    line-height: 20px;
+    gap: 24px;
+    .guardian-edit-input-item-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--sds-color-text-default-default);
+      margin-bottom: 8px;
+    }
+    .guardian-edit-input-item-value {
+      left: 40px;
+      width: 100%;
+      align-items: center;
+      padding: 16px;
+      color: var(--sds-color-text-default-default);
+      border-radius: 8px;
+      background-color: var(--sds-color-background-default-secondary);
+
+      .portkey-ui-custom-svg {
+        width: 32px;
+        height: 32px;
+        flex-shrink: 0;
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+      .base-verifier-icon {
+        margin-right: 12px;
+        flex-shrink: 0;
+      }
+    }
+    .social-guardian-account {
+      text-align: left;
+      margin-left: 12px;
+      color: var(--sds-color-text-default-default);
+    }
+    .social-input {
+      padding: 14px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--sds-color-border-default-default);
+      .social-name {
+        color: var(--sds-color-text-default-default);
+      }
+      .social-email {
+        font-size: 12px;
+        line-height: 16px;
+        color: var(--sds-color-text-default-secondary);
+      }
+    }
+    @media screen and (max-width: 768px) {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .portkey-ant-select-selector {
+      background-color: transparent!important;
+      border-radius: 8px!important;
+      border: 1px solid var(--sds-color-border-default-default)!important;
+    }
+
+    .verifier-select.verifier-select-disabled {
+      pointer-events: none;
+      .portkey-ant-select-selector {
+        background-color: var(--sds-color-background-default-default);
+        border: 1px solid var(--sds-color-border-default-default);
+      }
+    }
+  }
+  .guardian-edit-footer {
+    margin-top: 16px;
+    padding: 16px;
+    .guardian-btn {
+      width: 100%;
+      padding: 0 16px;
+      line-height: var(--portkey-ui-default-btn-h);
+      border-radius: var(--portkey-ui-primary-border-radius);
+    }
+    .guardian-add-btn-wrap {
+      gap: 16px;
+     
+    }
+  }
+  .guardian-edit-error-tip {
+    margin-top: 4px;
+    line-height: 16px;
+    color: var(--sds-color-text-danger-default);
+    font-size: 12px;
+  }
+   .guardian-btn-remove {
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: var(--sds-color-text-danger-default);
+      border-color: var(--sds-color-border-default-default);
+    }
+}
+.portkey-ui-remove-guardian-modal {
+  gap: 8px;
+  .remove-guardian-title-box {
+    display: flex;
+    align-items: start;
+    justify-content: space-between;
+  }
+  .remove-guardian-title {
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--sds-color-text-default-default);
+  }
+  
+}
+.remove-sure {
+  .portkey-ant-modal-confirm-btns {
+    border: none!important;
+    .portkey-ant-btn-default{
+      margin-left: 20px;
+      margin-right: 6px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      border-radius: 24px; 
+      width: 100%; 
+      height: 48px!important; 
+      line-height:normal!important;
+      background-color: transparent!important;
+      color: var(--sds-color-text-default-default);
+      border: 1px solid var(--sds-color-border-neutral-secondary)!important;
+      margin: 0;
+    }
+    .portkey-ant-btn-primary{
+      margin-left: 6px;
+      margin-right: 20px;
+      margin-bottom: 20px;
+      margin-top: 20px;
+      border-radius: 24px; 
+      width: 100%; 
+      height: 48px!important; 
+      line-height:normal!important; 
+      background-color: var(--sds-color-background-brand-default)!important;
+      margin: 0;
+      border: none;
+      color: var(--sds-color-text-brand-on-brand);
+    }
+  }
+}
+.portkey-ui-remove-guardian-modal {
+  padding: 16px;
+  .remove-guardian-desc {
+    font-size: 14px;
+    color: var(--sds-color-text-default-default);
+  }
+  .btn-box{
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    .portkey-btn-default {
+      background-color: transparent!important;
+      color: var(--sds-color-text-default-default);
+    }
+    button {
+      width: 100%;
+    }
+  }
+
+}

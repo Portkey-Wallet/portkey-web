@@ -1,0 +1,60 @@
+{
+  "name": "@portkey/did",
+  "version": "2.23.0-alpha.13",
+  "description": "",
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "homepage": "https://portkey.finance/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Portkey-Wallet/portkey-web.git",
+    "directory": "packages/did"
+  },
+  "scripts": {
+    "clean": "rm -rf dist",
+    "prebuild": "yarn clean",
+    "build": "yarn build:cjs & yarn build:esm & yarn build:types",
+    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && yarn esm:fix",
+    "build:types": "tsc --build tsconfig.types.json",
+    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
+    "lint": "eslint --ext .js,.ts .",
+    "lint:fix": "eslint --fix --ext .js,.ts .",
+    "format": "prettier --write '**/*'",
+    "start": "tsc --watch",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@portkey/accounts": "^2.23.0-alpha.13",
+    "@portkey/contracts": "^2.23.0-alpha.13",
+    "@portkey/graphql": "^2.23.0-alpha.13",
+    "@portkey/request": "^2.23.0-alpha.13",
+    "@portkey/services": "^2.23.0-alpha.13",
+    "@portkey/types": "^2.23.0-alpha.13",
+    "@portkey/utils": "^2.23.0-alpha.13"
+  },
+  "peerDependencies": {
+    "aelf-sdk": "^3.5.1-beta.0",
+    "react": "^18.2.0"
+  },
+  "devDependencies": {
+    "imap": "^0.8.19"
+  },
+  "gitHead": "5987857c1fc0e12775425f3d876188be78421ca7"
+}

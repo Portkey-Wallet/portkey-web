@@ -1,0 +1,284 @@
+.portkey-ui-address-selector {
+  background: var(--sds-color-background-default-default);
+
+  .no-data {
+    padding-top: 32px;
+    padding-bottom: 16px;
+    width: 100%;
+    line-height: 20px;
+    color: var(--sds-color-text-default-tertiary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  &.portkey-ant-tabs {
+    overflow: auto;
+    flex: 1;
+
+    .portkey-ant-tabs-nav {
+      height: 64px;
+      margin: 0;
+      box-shadow: none;
+      z-index: 10;
+      position: sticky;
+      background: var(--sds-color-background-default-default);
+
+      .portkey-ant-tabs-nav-wrap {
+        min-width: 100%;
+        max-width: 100%;
+
+        .portkey-ant-tabs-nav-list {
+          padding: 0 24px;
+          .portkey-ant-tabs-tab {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 13px 0;
+            margin: 0 8px 0 0;
+
+            .portkey-ant-tabs-tab-btn {
+              font-weight: 400;
+              font-size: 16px;
+              line-height: 16px;
+              height: 32px;
+              padding: 8px;
+              text-align: center;
+              text-shadow: unset;
+              color: var(--sds-color-text-default-tertiary);
+            }
+          }
+
+          .portkey-ant-tabs-tab-active {
+            .portkey-ant-tabs-tab-btn {
+              border-radius: 8px;
+              color: var(--sds-color-text-default-default);
+              background-color: var(--sds-color-background-default-tertiary) !important;
+            }
+          }
+
+          .portkey-ant-tabs-ink-bar {
+            display: none;
+          }
+        }
+      }
+    }
+    .portkey-ant-tabs-content {
+      overflow: auto;
+      height: 100%;
+    }
+  }
+
+  // common address-item style, for Recents and My address
+  .address-item {
+    display: flex;
+    flex-direction: column;
+    font-size: 12px;
+    gap: 4px;
+    line-height: 16px;
+    .address {
+      display: flex;
+      font-size: 16px;
+      color: var(--sds-color-text-default-secondary);
+    }
+    .network {
+      color: var(--sds-color-text-default-tertiary);
+    }
+  }
+  // common go-detail style, for Recents and Contacts
+  .go-detail-common {
+    align-self: stretch;
+
+    cursor: pointer;
+    .go-detail-icon {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  // ================ Recent component style ================
+  .recent-item {
+    border-top: none !important;
+    padding: 8px 16px;
+    cursor: pointer;
+
+    .left-section {
+      font-size: 16px;
+    }
+    .center-section {
+      font-size: 16px;
+      margin-left: 12px;
+      height: 46px;
+      flex: 1;
+      overflow: hidden;
+      .address {
+        font-weight: 600;
+        color: var(--sds-color-text-default-secondary);
+      }
+      .chain-info {
+        color: var(--sds-color-text-default-tertiary);
+      }
+    }
+    .go-detail {
+      margin-left: 12px;
+      .go-detail-common();
+    }
+  }
+  .portkey-ui-contact-card-in-recent {
+    border-bottom: 1px solid var(--sds-color-border-default-default);
+  }
+
+  // ================ Contacts component style ================
+  .contacts {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    .contacts-body {
+      flex: 1;
+      overflow-y: hidden;
+
+      .contact-empty {
+        display: none;
+      }
+
+      &.index-bar-hidden {
+        .adm-index-bar-sidebar {
+          display: none;
+        }
+      }
+    }
+    .adm-index-bar-anchor-title {
+      padding: 8px 24px;
+      line-height: 16px;
+      color: var(--sds-color-text-default-secondary);
+      font-size: 12px;
+      height: 32px;
+    }
+    .adm-list-item {
+      padding: 0;
+      .adm-list-item-content {
+        padding: 0;
+        .adm-list-item-content-main {
+          padding: 0;
+          width: 100%;
+        }
+      }
+    }
+    .user {
+      .portkey-ant-collapse-header {
+        padding: 4px 6px 4px 18px !important;
+      }
+      .portkey-ant-collapse-item {
+        border: none;
+      }
+    }
+  }
+
+  // ================ ContactCard component style ================
+  .portkey-ui-contact-card {
+    border-top: 0;
+    border-left: 0;
+    border-right: 0;
+    background: var(--sds-color-background-default-default);
+    .portkey-ant-collapse-item {
+      border-bottom: none;
+    }
+    .portkey-ant-collapse-item-active {
+      .portkey-ant-collapse-arrow {
+        margin-right: 8px !important;
+        svg {
+          transform: rotate(-90deg) !important;
+        }
+      }
+    }
+    .portkey-ant-collapse-header {
+      flex-direction: row-reverse;
+      align-items: center !important;
+      padding: 16px 18px !important;
+      .portkey-ant-collapse-arrow {
+        margin-right: 8px !important;
+        svg {
+          transform: rotate(90deg);
+        }
+      }
+    }
+    .portkey-ant-collapse-content {
+      border-top: 0;
+    }
+    .portkey-ant-collapse-content-box {
+      padding: 0 16px 20px 24px;
+    }
+    .header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      line-height: 20px;
+      font-size: 14px;
+      color: var(--sds-color-text-default-default);
+      .icon {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        border: 1px solid var(--portkey-ui-border-1);
+        background: var(--sds-color-background-default-default);
+      }
+    }
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      overflow: hidden;
+      .content-item {
+        .main-info {
+          cursor: pointer;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          line-height: 16px;
+          font-size: 16px;
+          color: var(--sds-color-text-default-default);
+          padding-left: 34px;
+          margin-right: 24px;
+
+          &.disabled {
+            cursor: not-allowed;
+            color: var(--sds-color-text-disable-default);
+          }
+        }
+        .network {
+          color: var(--sds-color-text-default-secondary);
+          &.disabled {
+            cursor: not-allowed;
+            color: var(--sds-color-text-disable-default);
+          }
+        }
+        .go-detail {
+          .go-detail-common();
+        }
+      }
+      .not-recent-address {
+        color: var(--sds-color-text-default-tertiary);
+      }
+    }
+  }
+
+  // ================ My address component style ================
+  .portkey-ui-send-my-address {
+    .my-address-item {
+      border-top: none !important;
+      border-bottom: 1px solid var(--sds-color-border-default-default);
+      padding: 13px 24px 11px;
+      .address-item();
+    }
+    .loading {
+      margin-top: 14px;
+    }
+  }
+}

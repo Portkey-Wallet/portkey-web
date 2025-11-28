@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "target": "ES2020",
+    "lib": ["DOM", "DOM.Iterable", "ES2021"],
+    "module": "ES2020",
+    "allowJs": false,
+    "skipLibCheck": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "moduleResolution": "Node",
+    "noImplicitReturns": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
+    "allowSyntheticDefaultImports": true,
+    "noFallthroughCasesInSwitch": true,
+    "isolatedModules": true,
+    "allowUnreachableCode": false,
+    "experimentalDecorators": true,
+
+    "outDir": "./dist/_types",
+    "declaration": true
+  },
+  "include": ["global.d.ts", "src", "index.ts"],
+  "exclude": ["./dist", "node_modules"]
+}

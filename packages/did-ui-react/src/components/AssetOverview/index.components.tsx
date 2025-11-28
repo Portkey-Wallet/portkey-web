@@ -1,0 +1,320 @@
+import AssetCard from '../AssetCard';
+import { usePortkey } from '../context';
+import { usePortkeyAsset } from '../context/PortkeyAssetProvider';
+import AssetTabs, { AssetTabsProps } from '../AssetTabs';
+import { ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { MAINNET } from '../../constants/network';
+import { basicAssetViewAsync } from '../context/PortkeyAssetProvider/actions';
+import { ZERO } from '../../constants/misc';
+import {
+  BalanceTab,
+  BaseToken,
+  IFaucetConfig,
+  NFTItemBaseExpand,
+  ITokenSectionResponse,
+  NFTCollectionItemShowType,
+  TokenItemShowType,
+  TokenType,
+} from '../types/assets';
+import { formatAmountShow } from '../../utils/converter';
+import CustomTokenModal from '../CustomTokenModal';
+import { ActivityItemType, ChainId, INftInfoType } from '@portkey/types';
+import { IAssetToken, IUserTokenItemNew } from '@portkey/services';
+import { ELF_SYMBOL } from '../../constants/assets';
+import useNFTMaxCount from '../../hooks/useNFTMaxCount';
+import { PortkeyOverviewProvider } from '../context/PortkeyOverviewProvider';
+import { useFaucet } from '../../hooks/useFaucet';
+import singleMessage from '../CustomAnt/message';
+import { PAGESIZE_10, loginOptTip } from '../../constants';
+import { loadingTip } from '../../utils/loadingTip';
+import { getCurrentActivityMapKey } from '../Activity/utils';
+import useMobile from '../../hooks/useMobile';
+import { SendAssetListModal } from '../SendAssetList';
+
+export interface AssetOverviewProps {
+  allToken?: IUserTokenItemNew[];
+  isShowRamp?: boolean;
+  backIcon?: ReactNode;
+  faucet?: IFaucetConfig;
+  isLoginOnChain?: boolean;
+  defaultActiveKey?: string;
+  setActiveKey?: (activeKey: string) => void;
+  onAvatarClick?: () => void;
+  onReceive?: () => void;
+  onBuy?: (selectToken: BaseToken) => void;
+  onBack?: () => void;
+  onDataInit?: () => void;
+  onDataInitEnd?: () => void;
+  onSend?: (selectToken?: IAssetToken & INftInfoType & TokenItemShowType & NFTItemBaseExpand, type?: TokenType) => void;
+  onViewActivityItem?: (item: ActivityItemType) => void;
+  onViewTokenItem?: (v: TokenItemShowType) => void;
+  onNFTView?: (item: NFTItemBaseExpand, collectionItem?: NFTCollectionItemShowType) => void;
+  onCollectionView?: (collectionItem?: NFTCollectionItemShowType) => void;
+  onSwap?: () => void;
+}
+
+export function AssetOverviewContent({
+  allToken,
+  isShowRamp = true,
+  faucet,
+  backIcon = <></>,
+  isLoginOnChain = true,
+  defaultActiveKey,
+  setActiveKey,
+  onAvatarClick,
+  onBuy,
+  onSend,
+  onBack,
+  onNFTView,
+  onCollectionView,
+  onReceive,
+  onViewTokenItem,
+  onDataInit,
+  onDataInitEnd,
+  onViewActivityItem,
+  onSwap,
+}: AssetOverviewProps) {
+  const [{ networkType }] = usePortkey();
+  const [{ accountInfo, tokenListInfo, tokenListInfoV2, caInfo, NFTCollection, activityMap }, { dispatch }] =
+    usePortkeyAsset();
+
+  const isMobile = useMobile();
+  const [accountBalanceUSD, setAccountBalanceUSD] = useState<string>();
+  const [tokenList, setTokenList] = useState<TokenItemShowType[]>();
+  const [tokenListV2, setTokenListV2] = useState<ITokenSectionResponse[]>();
+  const [tokenOpen, setTokenOpen] = useState(false);
+  const [assetOpen, setAssetOpen] = useState(false);
+
+  const maxNftNum = useNFTMaxCount();
+
+  const caAddressInfos = useMemo(() => {
+    if (!caInfo) return;
+    return Object.entries(caInfo ?? {}).map(([chainId, info]) => ({
+      chainId: chainId as ChainId,
+      caAddress: info.caAddress,
+    }));
+  }, [caInfo]);
+
+  const onFaucet = useFaucet(faucet);
+
+  const loadMoreNFT: Required<AssetTabsProps>['loadMoreNFT'] = useCallback(
+    async ({ symbol, chainId, pageNum }) => {
+      const targetNFTCollection = NFTCollection?.list.find(
+        (item) => item.symbol === symbol && item.chainId === chainId,
+      );
+      console.log('wfs=== loadMoreNFT', targetNFTCollection);
+      if (!targetNFTCollection) return;
+
+      const { skipCount, maxResultCount, totalRecordCount, children } = targetNFTCollection;
+      // has cache data
+      if ((pageNum + 1) * maxResultCount <= children.length) return;
+
+      const caAddressInfos = Object.entries(caInfo ?? {})
+        .map(([chainId, info]) => ({
+          chainId: chainId as ChainId,
+          caAddress: info.caAddress,
+        }))
+        .filter((info) => info.chainId === chainId);
+      if (totalRecordCount === 0 || Number(totalRecordCount) >= children.length) {
+        // setLoading(true);
+        basicAssetViewAsync
+          .setNFTItemList({
+            chainId,
+            symbol,
+            caAddressInfos,
+            skipCount,
+            maxResultCount,
+          })
+          .then(dispatch);
+        // .finally(() => setLoading(false));
+      }
+    },
+    [NFTCollection?.list, caInfo, dispatch],
+  );
+  // get Token price
+  // useEffect(() => {
+  //   const symbols = tokenListInfo?.list.map((tokenInfo) => tokenInfo.symbol);
+  //   if (!symbols) return;
+  //   basicAssetViewAsync.setTokenPrices({ symbols }).then(dispatch);
+  // }, [tokenListInfo, dispatch]);
+
+  // Calculate the user's total balance
+  useEffect(() => {
+    if (networkType !== MAINNET) return;
+    // if (!tokenPrices?.tokenPriceObject) return;
+    if (!tokenListInfo?.list) return;
+    // const tokenList = tokenListInfo?.list.map((token) => ({
+    //   ...token,
+    //   balanceInUsd: ZERO.plus(divDecimals(token.balance ?? 0, token.decimals))
+    //     .times(tokenPrices.tokenPriceObject[token.symbol])
+    //     .toString(),
+    // }));
+    setTokenList(tokenListInfo.list);
+
+    // const totalBalanceInUSD = tokenListInfo.list.reduce((pre, cur) => {
+    //   // Dealing with the problem of balanceInUsd === ''
+    //   return pre.plus(cur.balanceInUsd ? cur.balanceInUsd : ZERO);
+    // }, ZERO);
+
+    // setAccountBalanceUSD(formatAmountShow(totalBalanceInUSD, 2));
+  }, [networkType, tokenListInfo?.list]);
+
+  useEffect(() => {
+    if (tokenListInfoV2) {
+      setTokenListV2(tokenListInfoV2.list);
+      if (tokenListInfoV2.totalBalanceInUsd) {
+        setAccountBalanceUSD(formatAmountShow(tokenListInfoV2.totalBalanceInUsd, 2));
+      }
+    }
+  }, [tokenListInfoV2]);
+
+  const initActivityRef = useRef(false);
+
+  const initActivity = useCallback(
+    (forceInit?: boolean) => {
+      if (!forceInit && activityMap?.[getCurrentActivityMapKey(undefined, undefined)]?.list.length) {
+        return;
+      }
+
+      if (!caAddressInfos) return;
+      if (initActivityRef.current) return;
+
+      onDataInit?.();
+      initActivityRef.current = true;
+
+      basicAssetViewAsync
+        .setActivityList({
+          maxResultCount: PAGESIZE_10,
+          caAddressInfos,
+          skipCount: 0,
+        })
+        .then(dispatch)
+        .finally(() => {
+          initActivityRef.current = false;
+        });
+      onDataInitEnd?.();
+    },
+    [activityMap, caAddressInfos, dispatch, onDataInit, onDataInitEnd],
+  );
+
+  useEffect(() => {
+    initActivity();
+  }, [initActivity]);
+
+  const allTokenList = useMemo(() => allToken?.map((tokenItem) => tokenItem), [allToken]);
+
+  const supportToken = useMemo(() => {
+    if (Array.isArray(allTokenList) && allTokenList?.length > 0) {
+      return allTokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL);
+    }
+    return tokenList?.filter((token) => token.chainId === 'AELF' && token.symbol === ELF_SYMBOL);
+  }, [allTokenList, tokenList]);
+
+  const [isGetNFTCollectionPending, setIsGetNFTCollection] = useState<boolean>();
+
+  return (
+    <div className="portkey-ui-asset-overview" style={{ overflowY: 'auto', height: '100%' }}>
+      <AssetCard
+        isShowRamp={isShowRamp}
+        isShowFaucet={Boolean(faucet?.faucetUrl || faucet?.faucetContractAddress)}
+        networkType={networkType}
+        backIcon={backIcon}
+        nickName={accountInfo?.nickName}
+        walletAvatar={'master1'}
+        onAvatarClick={onAvatarClick}
+        accountBalanceUSD={accountBalanceUSD}
+        caAddressInfos={caAddressInfos}
+        onBuy={() => {
+          if (!isLoginOnChain) {
+            return loadingTip({ msg: loginOptTip });
+          }
+          // TODO select Token
+          if (!supportToken?.[0]) return singleMessage.error('There is no token that meets the requirements');
+
+          onBuy?.(supportToken[0]);
+        }}
+        onSend={async () => {
+          if (!isLoginOnChain) {
+            return loadingTip({ msg: loginOptTip });
+          }
+          if (isMobile) {
+            onSend?.();
+          } else {
+            setAssetOpen(true);
+          }
+        }}
+        onReceive={onReceive}
+        onFaucet={onFaucet}
+        onBack={onBack}
+        onSwap={onSwap}
+      />
+      <AssetTabs
+        networkType={networkType}
+        defaultActiveKey={defaultActiveKey}
+        setActiveKey={setActiveKey}
+        accountNFTList={NFTCollection?.list}
+        tokenListV2={tokenListV2}
+        loadMoreNFT={loadMoreNFT}
+        isGetNFTCollectionPending={isGetNFTCollectionPending}
+        onChange={(v) => {
+          if (!caAddressInfos) return;
+          if (v === BalanceTab.TOKEN) {
+            basicAssetViewAsync
+              .setTokenList({
+                caAddressInfos,
+              })
+              .then(dispatch);
+          } else if (v === BalanceTab.NFT) {
+            setIsGetNFTCollection(true);
+            basicAssetViewAsync
+              .setNFTCollections({
+                caAddressInfos,
+                maxNFTCount: maxNftNum,
+              })
+              .then(dispatch)
+              .finally(() => setIsGetNFTCollection(false));
+          } else if (v === BalanceTab.ACTIVITY) {
+            console.log('!!!!!ACTIVITY');
+            initActivity(true);
+          }
+        }}
+        onDataInit={onDataInit}
+        onDataInitEnd={onDataInitEnd}
+        onViewTokenItem={onViewTokenItem}
+        onViewActivityItem={onViewActivityItem}
+        onNFTView={onNFTView}
+        onCollectionView={onCollectionView}
+      />
+      <CustomTokenModal
+        networkType={networkType}
+        open={tokenOpen}
+        tokenList={allTokenList || tokenList || tokenListInfo?.list}
+        title={'Select Token'}
+        searchPlaceHolder={'Search Token'}
+        onClose={() => setTokenOpen(false)}
+        onChange={(v) => {
+          setTokenOpen(false);
+          // onReceive?.(v);
+        }}
+      />
+      <SendAssetListModal
+        networkType={networkType}
+        caAddressInfos={caAddressInfos}
+        onSelect={(v) => {
+          onSend?.(v as any);
+          setAssetOpen(false);
+        }}
+        open={assetOpen}
+        onCancel={() => setAssetOpen(false)}
+      />
+    </div>
+  );
+}
+
+export default function AssetOverviewMain(props: AssetOverviewProps) {
+  return (
+    <PortkeyOverviewProvider>
+      <AssetOverviewContent {...props} />
+    </PortkeyOverviewProvider>
+  );
+}

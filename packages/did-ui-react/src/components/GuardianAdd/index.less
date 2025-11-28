@@ -1,0 +1,153 @@
+@import '../../assets/theme/constants.less';
+
+
+.portkey-ui-guardian-add {
+  height: 100%;
+  .guardian-add-body {
+    padding: 0 24px;
+    font-size: 14px;
+    line-height: 20px;
+    gap: 24px;
+    .guardian-add-input-item-label {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      color: var(--sds-color-text-default-default);
+      margin-bottom: 8px;
+    }
+    .social-input {
+      min-height: 46px;
+      padding: 6px 16px;
+      border-radius: 6px;
+      border: 1px solid var(--sds-color-border-default-default);
+      .social-input-info {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        height: 100%;
+        .social-name {
+          font-size: 14px;
+          color: var(--sds-color-text-default-default);
+        }
+        .social-email {
+          font-size: 12px;
+          line-height: 24px;
+          color: var(--sds-color-text-default-default);
+        }
+      }
+     
+      .social-click-text {
+        line-height: 32px;
+        font-weight: 500;
+        color: var(--sds-color-text-brand-default);
+        cursor: pointer;
+      }
+      &.detail {
+        position: relative;
+        height: 56px;
+        .close2-icon {
+          position: absolute;
+          right: 16px;
+          top: 20px;
+          cursor: pointer;
+          path {
+            fill: var(--sds-color-icon-default-default);
+          }
+        }
+      }
+    }
+
+    .portkey-ant-select-selector {
+      background-color: transparent!important;
+      border: 1px solid var(--sds-color-border-default-default)!important;
+      border-radius: 8px!important;
+    }
+
+    .verifier-select.verifier-select-disabled {
+      pointer-events: none;
+      .portkey-ant-select-selector {
+        background-color: var(--sds-color-background-default-secondary);
+      }
+    }
+  }
+  .guardian-add-footer {
+    width: 100%;
+    margin-top: 16px;
+    padding: 16px;
+    .guardian-btn {
+      width: 100%;
+      padding: 0 16px;
+      line-height: var(--portkey-ui-default-btn-h);
+      border-radius: var(--portkey-ui-primary-border-radius);
+    }
+    .guardian-add-btn-wrap {
+      gap: 16px;
+      .guardian-btn-remove {
+        color: var(--sds-color-text-danger-default);
+        border-color: var(--sds-color-border-default-default);
+      }
+    }
+  }
+  .guardian-error-tip {
+    margin-top: 4px;
+    line-height: 16px;
+    color: var(--sds-color-text-danger-default);
+    font-size: 12px;
+  }
+  .base-guardian-type-icon {
+    width: 16px!important;
+    height: 16px!important;
+    .portkey-ui-custom-svg svg{
+      width: 8px!important;
+      height: 8px!important;
+    }
+  }
+}
+.portkey-ui-remove-guardian-modal {
+  gap: 8px;
+  .remove-guardian-title {
+    font-size: 18px;
+    line-height: 22px;
+    font-weight: 500;
+    color: var(--sds-color-text-default-default);
+  }
+}
+.waring-modal {
+  color: var(--sds-color-text-default-default);
+  font-size: 16px;
+  padding: 20px 16px;
+  .portkey-ant-drawer-content-wrapper {
+    background-color: var(--sds-color-background-default-default)!important;
+    z-index: 1111111!important;
+  }
+  .portkey-ant-modal-title {
+    color: var(--sds-color-text-default-default);
+    font-weight: bold;
+    font-size: 20px;
+    padding: 0;
+  }
+  .portkey-ant-modal-header {
+    padding: 0;
+  }
+  .portkey-ant-drawer-title {
+    color: var(--sds-color-text-default-default);
+    font-weight: bold;
+    font-size: 20px;
+  }
+  .portkey-ant-drawer-header{
+    padding: 20px 16px 0px;
+  }
+  .portkey-ant-drawer-body {
+    padding: 0 16px 16px;
+   
+  }
+  .tip {
+    padding: 18px 0 24px;
+    line-height: 24px;
+  }
+  .guardian-btn {
+    width: 100%;
+    margin-bottom: 16px;
+  }
+ 
+}

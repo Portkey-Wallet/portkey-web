@@ -1,0 +1,49 @@
+.phone-number-input-wrapper {
+  position: relative;
+  .phone-number-input-content {
+    border: 1px solid var(--sds-color-border-default-default);
+    border-radius: var(--portkey-ui-border-radius-1);
+
+    .portkey-ant-input {
+      border: none;
+      flex: 1;
+      font-size: 14px;
+      color: var(--sds-color-text-default-default);
+      &:focus {
+        box-shadow: none;
+      }
+    }
+    .addon-content {
+      padding: 8px 0 8px 16px;
+      min-width: 90px;
+      display: flex;
+      background-color: var(--portkey-ui-input-bg);
+      border-top-left-radius: var(--portkey-ui-border-radius-1);
+      border-bottom-left-radius: var(--portkey-ui-border-radius-1);
+      &::after {
+        content: '';
+        border-right: 0.5px solid var(--portkey-ui-border-1);
+      }
+    }
+    .phone-number-input {
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    .input-addon {
+      font-size: 14px;
+      line-height: 20px;
+      height: 100%;
+      flex: 1;
+      padding-right: 10px;
+      color: var(--sds-color-text-default-default);
+      cursor: pointer;
+    }
+
+    .input-arrow {
+      display: inline-block;
+    }
+    .open-input-arrow {
+      transform: rotate(180deg);
+    }
+  }
+}

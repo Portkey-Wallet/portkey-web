@@ -1,0 +1,43 @@
+.portkey-ui-loading-wrapper {
+  // background-color: rgb(00 00 00 / 50%);
+  z-index: var(--portkey-ui-loading-zIndex);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .loading-indicator {
+    width: 250px;
+    padding: 16px;
+    // background-color: var(--sds-color-background-default-default);
+    border-radius: var(--portkey-ui-border-radius-1);
+    min-height: 120px;
+    text-align: center;
+    .loading {
+      width: 32px!important;
+      height: 32px!important;
+      svg {
+        width: 32px;
+        height: 32px;
+      }
+    }
+  }
+
+  .loading-text {
+    margin-top: 8px;
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--sds-color-text-default-default);
+  }
+  .display-none {
+    display: none;
+  }
+  .close-icon {
+    position: absolute;
+    top: 76px;
+    right: 24px;
+    cursor: pointer;
+    width: 24px;
+    height: 24px;
+  }
+}

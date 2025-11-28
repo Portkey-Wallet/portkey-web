@@ -1,0 +1,85 @@
+@import '../../assets/theme/constants.less';
+
+@header-logo-height: 56px;
+
+.portkey-ui-asset-wrapper {
+  overflow: auto;
+  width: 100%;
+  background-color: var(--sds-color-background-default-secondary);
+
+  .portkey-ui-logo {
+    width: 100%;
+    height: @header-logo-height;
+    .portkeylogo-icon {
+      width: 87px;
+      height: 20px;
+      path {
+        fill: var(--sds-color-icon-neutral-default);
+      }
+    }
+  }
+  .portkey-ui-asset-container {
+    width: 100%;
+    flex: 1;
+    &.small-screen {
+      // width: 440px;
+      // min-width: 440px;
+      // max-width: 440px;
+      width: 100%;
+      min-width: 393px;
+      max-width: 897px;
+    }
+    .portkey-ui-asset-container-body {
+      flex: 1;
+      flex-basis: calc(100% - 28px - 24px); // 100% - height(powered) - border
+      background-color: var(--sds-color-background-default-default);
+      border-top-left-radius: 12px;
+      border-top-right-radius: 12px;
+      overflow: hidden;
+    }
+    .delete-account-button {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      padding: 16px;
+      color: var(--sds-color-text-default-tertiary);
+      font-size: 14px;
+      margin: 0 auto;
+      width: fit-content;
+    }
+  }
+}
+
+@media screen and (min-width: 897px) {
+  .portkey-ui-asset-wrapper {
+    .portkey-ui-logo,
+    .portkey-ui-asset-container {
+      width: 90%;
+      max-width: 896px;
+    }
+  }
+}
+
+@media screen and (min-width: 601px) and (max-width: 896px) {
+  .portkey-ui-asset-wrapper {
+    .portkey-ui-logo {
+      padding: 0 24px;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .portkey-ui-asset-wrapper {
+    min-width: 360px;
+    .portkey-ui-logo {
+      display: none;
+    }
+    .portkey-ui-asset-container {
+      .portkey-ui-asset-container-body {
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
+      }
+    }
+  }
+}

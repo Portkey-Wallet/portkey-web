@@ -1,0 +1,92 @@
+.swap-amount-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border: 1px solid var(--sds-color-border-default-default);
+  border-radius: 16px;
+  padding: 16px;
+  background-color: var(--sds-color-background-default-secondary);
+
+  .swap-amount-title {
+    font-size: 14px;
+    line-height: 14px;
+    color: var(--sds-color-text-default-tertiary);
+    font-weight: 600;
+  }
+
+  .swap-amount-wrap {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: center;
+  }
+  .swap-amount-input {
+    flex: 1;
+    border: none !important;
+    background-color: transparent !important;
+    font-size: 32px;
+    line-height: 38px;
+    height: 38px;
+    padding: 0;
+    text-overflow: ellipsis;
+    font-weight: 700;
+    font-family: Bricolage Grotesque Bold;
+
+    &::placeholder {
+      font-size: 32px;
+      line-height: 38px;
+    }
+    &[disabled] {
+      cursor: auto;
+    }
+    &.swap-amount-input-error {
+      color: var(--sds-color-text-danger-default) !important;
+    }
+  }
+
+  .swap-amount-info {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+
+    .swap-amount-usd-amount-wrap {
+      overflow: hidden;
+      display: flex;
+
+      .swap-amount-usd-amount {
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-size: 14px;
+        line-height: 26px;
+        color: var(--sds-color-text-default-secondary);
+      }
+    }
+    .swap-amount-balance-wrap {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      align-items: center;
+
+      .swap-amount-balance-amount {
+        white-space: nowrap;
+        font-size: 14px;
+        line-height: 14px;
+        color: var(--sds-color-text-default-secondary);
+      }
+      .swap-amount-balance-max-button {
+        font-size: 14px;
+        line-height: 14px;
+        color: var(--sds-color-text-default-secondary);
+        padding: 5px 8px;
+        border-radius: 13px;
+        height: 26px;
+        background-color: transparent;
+        border-width: 1px !important;
+      }
+    }
+  }
+}

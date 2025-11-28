@@ -1,0 +1,42 @@
+{
+  "name": "@portkey/next-example",
+  "version": "2.23.0-alpha.13",
+  "private": true,
+  "scripts": {
+    "dev-https": "next dev --experimental-https",
+    "build-now": "next build",
+    "dev": "next dev",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@portkey/connect-web-wallet": "^2.23.0-alpha.13",
+    "@portkey/did": "^2.23.0-alpha.13",
+    "@portkey/did-ui-react": "^2.23.0-alpha.13",
+    "@portkey/iframe-provider": "^2.5.0-alpha.4",
+    "@portkey/onboarding": "^2.23.0-alpha.13",
+    "aelf-sdk": "^3.5.1-beta.0",
+    "antd": "4.24.14",
+    "next": "14.2.5",
+    "node-telegram-bot-api": "^0.65.1",
+    "query-string": "^7.1.1",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-use": "^17.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/node-telegram-bot-api": "^0.64.3",
+    "autoprefixer": "^10.0.1",
+    "eslint": "^8",
+    "eslint-config-next": "14.2.5",
+    "postcss": "^8",
+    "tailwindcss": "^3.3.0",
+    "typescript": "^5",
+    "vconsole": "3.15.1"
+  },
+  "resolutions": {
+    "@types/react": "18.2.25",
+    "@types/react-dom": "18"
+  }
+}

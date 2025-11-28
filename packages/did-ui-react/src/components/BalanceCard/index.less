@@ -1,0 +1,35 @@
+.portkey-ui-balance-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  .item-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+
+    .item-button {
+      width: 100%;
+      height: 58px;
+      border-radius: 29px;
+    }
+
+    .item-icon {
+      width: 24px;
+      height: 24px;
+    }
+
+    .item-name {
+      color: var(--sds-color-text-default-default);
+    }
+
+    &.item-wrapper-buy {
+      .item-icon {
+        width: 28px;
+        height: 28px;
+      }
+    }
+  }
+}

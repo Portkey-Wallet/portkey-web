@@ -1,0 +1,11 @@
+button {
+  padding: 10px 20px;
+  background: #0182f0;
+  border-width: 0;
+  border-radius: 10px;
+  color: white;
+  margin: 10px;
+}
+h3 {
+  color: #0182f0;
+}

@@ -1,0 +1,174 @@
+import VerifierPair from '../../../VerifierPair';
+import { useCallback, memo, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
+import { setLoading, verification, errorTip, handleErrorMessage } from '../../../../utils';
+import clsx from 'clsx';
+import { ChainId, TStringJSON } from '@portkey/types';
+import { UserGuardianItem, UserGuardianStatus, VerifyStatus, OnErrorFunc } from '../../../../types';
+import useReCaptchaModal from '../../../../hooks/useReCaptchaModal';
+import { OperationTypeEnum } from '@portkey/services';
+import { AllSocialLoginList } from '../../../../constants/guardian';
+import ThrottleButton from '../../../ThrottleButton';
+
+interface GuardianItemProps {
+  originChainId?: ChainId;
+  targetChainId?: ChainId;
+  disabled?: boolean;
+  isExpired?: boolean;
+  item: UserGuardianStatus;
+  isErrorTip?: boolean;
+  operationType?: OperationTypeEnum;
+  operationDetails?: TStringJSON;
+  onError?: OnErrorFunc;
+  onSend?: (item: UserGuardianItem) => void;
+  onVerifying?: (item: UserGuardianItem) => void;
+  onAsyncVerifying?: (item: UserGuardianItem) => void;
+}
+
+function GuardianItems({
+  originChainId = 'AELF',
+  targetChainId,
+  disabled,
+  item,
+  isExpired,
+  isErrorTip = true,
+  operationType = OperationTypeEnum.communityRecovery,
+  operationDetails,
+  onError,
+  onSend,
+  onVerifying,
+  onAsyncVerifying,
+}: GuardianItemProps) {
+  const { t } = useTranslation();
+  const isSocialLogin = useMemo(() => AllSocialLoginList.includes(item.guardianType), [item.guardianType]);
+
+  const accountShow = useCallback((guardian: UserGuardianItem) => {
+    switch (guardian.guardianType) {
+      case 'Email':
+        return <div className="account-text account-text-one-row">{guardian.identifier}</div>;
+      case 'Google':
+        return guardian.firstName ? (
+          <div className="account-text account-text-two-row">
+            <div className="name">{guardian.firstName}</div>
+            <div className="detail">{guardian.thirdPartyEmail}</div>
+          </div>
+        ) : (
+          <div className="account-text account-text-one-row">{guardian.thirdPartyEmail}</div>
+        );
+      case 'Apple':
+      case 'Telegram':
+      case 'Twitter':
+      case 'Facebook':
+        return guardian.firstName ? (
+          <div className="account-text account-text-two-row">
+            <div className="name">{guardian.firstName}</div>
+            <div className="detail">{guardian.isPrivate ? '******' : guardian.thirdPartyEmail || '******'}</div>
+          </div>
+        ) : (
+          <div className="account-text account-text-one-row">
+            {guardian.isPrivate ? '******' : guardian.thirdPartyEmail || '******'}
+          </div>
+        );
+    }
+  }, []);
+
+  const reCaptchaHandler = useReCaptchaModal();
+
+  const SendCode = useCallback(
+    async (item: UserGuardianItem) => {
+      try {
+        const result = await verification.sendVerificationCode(
+          {
+            params: {
+              type: item.guardianType,
+              guardianIdentifier: (item.identifier || item.identifierHash || '').replaceAll(/\s/g, ''),
+              verifierId: item.verifier?.id || '',
+              chainId: originChainId,
+              targetChainId,
+              operationType,
+              operationDetails,
+            },
+          },
+          reCaptchaHandler,
+        );
+
+        if (result.verifierSessionId) {
+          onSend?.({
+            ...item,
+            verifierInfo: {
+              sessionId: result.verifierSessionId,
+            },
+          });
+        }
+      } catch (error: any) {
+        console.error(error, 'SendCode error:');
+        setLoading(false);
+        return errorTip(
+          {
+            errorFields: 'GuardianItems',
+            error: handleErrorMessage(error),
+          },
+          isErrorTip,
+          onError,
+        );
+      }
+    },
+    [originChainId, targetChainId, operationType, operationDetails, reCaptchaHandler, onSend, isErrorTip, onError],
+  );
+
+  const verifyingHandler = useCallback(
+    async (item: UserGuardianItem) => {
+      onVerifying?.(item);
+    },
+    [onVerifying],
+  );
+
+  const asyncVerifyingHandler = useCallback(
+    async (item: UserGuardianItem) => {
+      onAsyncVerifying?.(item);
+    },
+    [onAsyncVerifying],
+  );
+
+  return (
+    <li className={clsx('portkey-ui-flex-between-center verifier-item', disabled && 'verifier-item-disabled')}>
+      <div className="portkey-ui-w-100 portkey-ui-flex-between-center">
+        <VerifierPair
+          guardian={item}
+          guardianType={item.guardianType}
+          verifierSrc={item.verifier?.imageUrl}
+          verifierName={item.verifier?.name}
+        />
+        {accountShow(item)}
+      </div>
+      {isExpired && item.status !== VerifyStatus.Verified ? (
+        <div className="verified-text">{t('Expired')}</div>
+      ) : (
+        <>
+          {(!item.status || item.status === VerifyStatus.NotVerified) && !isSocialLogin && (
+            <ThrottleButton className="not-verified" type="primary" onClick={() => SendCode(item)}>
+              {t('Send')}
+            </ThrottleButton>
+          )}
+          {((item.status === VerifyStatus.Verifying && !item.asyncVerifyInfoParams) ||
+            (!item.status && isSocialLogin)) && (
+            <ThrottleButton type="primary" className="verifying" onClick={() => verifyingHandler(item)}>
+              {t('Verify')}
+            </ThrottleButton>
+          )}
+          {item.status === VerifyStatus.Verifying &&
+            isSocialLogin &&
+            item.asyncVerifyInfoParams &&
+            asyncVerifyingHandler && (
+              <ThrottleButton type="primary" loading className="verifying" onClick={() => asyncVerifyingHandler(item)}>
+                {t('Verifying')}
+              </ThrottleButton>
+            )}
+          {item.status === VerifyStatus.Verified && <div className="verified-text">{t('Approved')}</div>}
+        </>
+      )}
+    </li>
+  );
+}
+
+export default memo(GuardianItems);

@@ -1,0 +1,87 @@
+.portkey-ui-transaction-limits-wrapper {
+  height: 100%;
+  .transaction-limits-nav {
+    position: relative;
+    align-items: center;
+    display: flex;
+    background-color: var(--sds-color-background-default-default);
+    .left-icon {
+      position: absolute;
+      left: 16px;
+    }
+
+    .transaction-limits-header {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      height: 56px;
+
+      .symbol {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 22.4px;
+        text-align: center;
+        color: var(--sds-color-text-default-default);
+      }
+    }
+  }
+
+  .loading-container {
+    width: 100%;
+    height: 50vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .portkey-ui-transaction-limits-list {
+    height: 100%;
+    overflow: scroll;
+    max-height: calc(100% - 56px);
+    .adm-list-body {
+      border: 0;
+    }
+    .portkey-ui-transaction-limits-item-wrap {
+      background-color: var(--sds-color-background-default-default);
+
+      .adm-list-item-content {
+        border-top: 0;
+      }
+      .portkey-ui-transaction-limits-item {
+        padding: 0;
+        border: 0;
+        gap: 8px;
+        display: flex;
+      }
+
+      .portkey-ui-transaction-limits-item-icon {
+        margin: 0;
+      }
+      .token-info {
+        .token-symbol {
+          font-weight: 400;
+          line-height: 22.4px;
+          font-size: 16px;
+          color: var(--sds-color-text-default-default);
+        }
+        .token-network {
+          font-size: 14px;
+          color: var(--sds-color-icon-default-secondary);
+          line-height: 20px;
+        }
+      }
+    }
+  }
+
+  .no-data-text {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
+    font-weight: 400;
+    line-height: 22.4px;
+    font-size: 16px;
+  }
+}

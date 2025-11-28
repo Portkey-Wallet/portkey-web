@@ -1,0 +1,60 @@
+.portkey-ui-password-input-wrapper {
+  display: flex;
+  flex-direction: column;
+  .portkey-ui-passcode-cell-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 16px;
+    margin: auto;
+  }
+  .portkey-ui-passcode-cell {
+    margin: 0 12px;
+    &:first-child {
+      margin-left: 0;
+    }
+    &:last-child {
+      margin-right: 0;
+    }
+  }
+  .portkey-ui-passcode-cell::before {
+    content: '';
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 100%;
+
+    background: var(--sds-color-background-neutral-tertiary);
+    // background-color: var(--sds-color-text-default-default);
+  }
+  .portkey-ui-passcode-cell.portkey-ui-passcode-cell-dot::before {
+    content: '';
+    height: 14px;
+    border-radius: 100%;
+    background: var(--sds-color-background-brand-default);
+  }
+
+  .passcode-error-tip {
+    color: var(--sds-color-text-danger-on-danger-tertiary);
+    font-size: 12px;
+    margin-top: 16px;
+    height: 16px;
+    line-height: 16px;
+    text-align: center;
+  }
+  .footer-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 8px;
+  }
+}
+
+#portkey-ui-password-input {
+  flex: 1;
+  .adm-popup,
+  .adm-popup-body {
+    position: relative;
+    z-index: inherit;
+  }
+}

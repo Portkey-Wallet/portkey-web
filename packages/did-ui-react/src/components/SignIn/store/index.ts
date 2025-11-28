@@ -1,0 +1,1 @@
+export { globalState } from './global';

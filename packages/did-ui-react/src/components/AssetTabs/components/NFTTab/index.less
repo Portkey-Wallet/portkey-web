@@ -1,0 +1,298 @@
+@import '../../../../assets/theme/constants.less';
+
+.portkey-ui-nft-tab {
+  // background: var(--sds-color-background-default-default);
+  .empty-text {
+    padding: 32px 0 40px;
+    line-height: 20px;
+    color: var(--sds-color-text-default-default);
+    font-size: 14px;
+    margin: 0 auto;
+    text-align: center;
+  }
+  .portkey-ui-nft-list {
+    .adm-list-body {
+      border-bottom: none;
+      .adm-list-item {
+        padding: 0;
+        .adm-list-item-content {
+          padding: 0;
+          .adm-list-item-content-main {
+            padding: 0 0 12px;
+          }
+        }
+      }
+    }
+  }
+  .portkey-ant-collapse {
+    background: var(--sds-color-background-default-default);
+    border: none;
+    .portkey-ant-collapse-item {
+      border: none;
+      border-bottom: 1px solid var(--sds-color-border-default-default);
+      .portkey-ant-collapse-header {
+        display: flex;
+        align-items: center;
+        padding: 25px 16px;
+        .portkey-ant-collapse-arrow {
+          margin-top: 6px;
+          margin-right: 8px;
+          margin-left: 4px;
+        }
+        svg {
+          width: 16px;
+          height: 16px;
+        }
+      }
+      .portkey-ant-collapse-content {
+        border: none;
+        .portkey-ant-collapse-content-box {
+          padding: 0;
+        }
+      }
+      .portkey-ant-collapse-header-text {
+        flex: 1;
+      }
+    }
+    .protocol {
+      display: flex;
+      align-items: center;
+      .avatar {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 24px;
+        height: 24px;
+        border-radius: 8px;
+        background-color: var(--sds-color-background-default-default);
+        font-size: 20px;
+        color: var(--sds-color-text-neutral-on-neutral);
+        margin-right: 12px;
+        position: relative;
+        img {
+          width: 100%;
+          height: 100%;
+          border-radius: 8px;
+          object-fit: cover;
+        }
+        .chain-image {
+          position: absolute;
+          width: 16px;
+          height: 16px;
+          right: -4px;
+          bottom: -2px;
+          overflow: visible;
+        }
+      }
+      .info {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 4px;
+        .alias {
+          line-height: 22px;
+          font-size: 16px;
+          color: var(--sds-color-text-default-default);
+          overflow: hidden;
+          -webkit-box-orient: vertical;
+          -webkit-line-clamp: 1;
+          text-overflow: ellipsis;
+          max-width: 217px;
+        }
+        .network {
+          line-height: 20px;
+          font-size: 14px;
+          color: var(--sds-color-text-default-secondary);
+        }
+      }
+      .amount {
+        align-self: flex-start;
+        max-width: 80px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: var(--sds-color-text-default-secondary);
+        line-height: 22px;
+        font-size: 16px;
+      }
+      .rotate {
+        transition: transform 0.3s ease;
+        width: 24px;
+        height: 24px;
+        svg {
+          width: 24px;
+          height: 24px;
+          path {
+            fill: var(--sds-color-icon-default-default);
+          }
+        }
+      }
+      
+      .rotate-180 {
+        transform: rotate(180deg);
+      }
+    }
+    .list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 0 0 24px 40px;
+      &.empty-list {
+        padding-bottom: 0;
+      }
+      .item {
+        position: relative;
+        width: 96px;
+        height: 96px;
+        justify-content: start;
+        background-color: var(--sds-color-background-default-default);
+        .portkey-ui-seed-badge {
+          right: 6px;
+        }
+        .mask {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          padding: 9px 8px 12px;
+          height: 100%;
+          .alias {
+            height: 40px;
+            line-height: 20px;
+            font-size: 14px;
+            color: var(--sds-color-text-default-default);
+            word-break: break-all;
+            .text-overflow(2);
+          }
+          .token-id {
+            font-size: 14px;
+            color: var(--sds-color-text-default-default);
+            word-break: break-all;
+            .text-overflow(1);
+          }
+        }
+      }
+      .item.item-img {
+        .mask {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 50%;
+          border-radius: 0px 0px 8px 8px;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.6) 100%);
+          justify-content: flex-end;
+          padding: 9px 8px 4px;
+          color: var(--sds-color-text-neutral-on-neutral);
+          .alias {
+            font-size: 12px;
+            height: 16px;
+            line-height: 16px;
+            color: var(--sds-color-text-default-default);
+            .text-overflow(1);
+          }
+          .token-id {
+            opacity: 0.8;
+            height: 16px;
+            line-height: 16px;
+            font-size: 12px;
+            color: var(--sds-color-text-neutral-on-neutral);
+          }
+        }
+      }
+      .load-more {
+        cursor: pointer;
+        width: calc(100% + 40px);
+        display: flex;
+        gap: 6px;
+        justify-content: center;
+        align-items: center;
+        color: var(--sds-color-text-brand-default);
+        margin-left: -40px;
+        padding-top: 7px;
+        svg {
+          path {
+            fill: var(--sds-color-text-brand-default);
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (min-width: 768px) {
+    .portkey-ui-nft-list {
+      padding-bottom: 18px;
+    }
+    .portkey-ant-collapse {
+      .portkey-ant-collapse-item {
+        .portkey-ant-collapse-header {
+          padding: 24px;
+        }
+      }
+
+      .list {
+        gap: 18px;
+        padding: 0 24px 24px 48px;
+        &.empty-list {
+          padding-bottom: 0;
+        }
+        .item {
+          width: 120px;
+          height: 120px;
+          .portkey-ui-seed-badge {
+            right: 12px;
+          }
+        }
+        .item.item-img {
+          .mask {
+            padding: 18px 8px 8px;
+          }
+        }
+      }
+    }
+  }
+  
+
+
+
+
+  .grid-container {
+    display: grid;
+    gap: 16px;
+    padding: 16px;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .grid-item {
+    // background-color: #ececec;
+    text-align: center;
+    min-width: 110px;
+  }
+  
+  @media (max-width: 600px) {
+    .grid-item:nth-child(n+9) {
+      display: none;
+    }
+    .grid-container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  @media (min-width: 601px ) and (max-width: 896px){
+    .grid-item:nth-child(n+12) {
+      display: none;
+    }
+    .grid-item {
+      display: block;
+    }
+    .grid-container {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+  
+  @media (min-width: 897px) {
+    .grid-item:nth-child(n+15) {
+      display: none;
+    }
+    .grid-container {
+      grid-template-columns: repeat(5, 1fr);
+    }
+  }
+}

@@ -1,0 +1,233 @@
+.portkey-ui-flex-row-center {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.portkey-card-height {
+  height: @card-height;
+}
+
+.portkey-ui-flex-column {
+  display: flex;
+  flex-direction: column;
+}
+
+.portkey-ui-flex-column-reverse {
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.portkey-ui-justify-end {
+  justify-content: flex-end;
+}
+
+.portkey-ui-justify-start {
+  justify-content: flex-start;
+}
+
+.portkey-ui-justify-center {
+  justify-content: center;
+}
+
+.portkey-ui-flex {
+  display: flex;
+}
+.portkey-ui-flex-1 {
+  flex: 1;
+}
+.portkey-ui-w-100 {
+  width: 100%;
+}
+.portkey-ui-flex-between-center {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.portkey-ui-flex-between {
+  display: flex;
+  justify-content: space-between;
+}
+.portkey-ui-flex-column-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.portkey-ui-flex-column-between {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.portkey-ui-cursor-pointer {
+  cursor: pointer;
+}
+.portkey-ui-margin-auto {
+  margin: auto;
+}
+.portkey-ui-flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.portkey-ui-flex-start-center {
+  display: flex;
+  align-items: center;
+}
+.portkey-ui-text-center {
+  text-align: center;
+}
+.portkey-ui-text-right {
+  text-align: right;
+}
+.portkey-ui-relative{
+  position: relative;
+}
+
+/* set list-style */
+ul,
+ol {
+  list-style: none;
+}
+
+/* set text-decoration */
+a,
+a:hover {
+  text-decoration: none;
+}
+
+/* clear margin & padding */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+p,
+blockquote,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+pre,
+fieldset,
+button,
+input,
+textarea,
+th,
+td {
+  /* table elements */
+  margin: 0;
+  padding: 0;
+  line-height: unset;
+}
+
+.portkey-ui-fix-max-content {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  overflow-y: auto;
+}
+
+.portkey-ui-custom-svg {
+  width: 16px;
+  height: 16px;
+}
+/** font weight */
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.portkey-ui-h-566 {
+  height: 566px;
+}
+.portkey-ui-h-335 {
+  height: 335px;
+}
+.portkey-ui-h-644 {
+  height: 644px;
+}
+
+.portkey-ui-customer-form-content {
+  .portkey-ant-form-item-label > label {
+    color: var(--sds-color-text-default-secondary);
+    font-size: 14px;
+    line-height: 20px;
+  }
+  .portkey-ant-input:placeholder-shown {
+    color: var(--sds-color-text-default-tertiary);
+    line-height: 20px;
+  }
+  .portkey-ant-input-affix-wrapper {
+    height: 48px;
+    border-radius: 6px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+  .portkey-ant-input[disabled] {
+    background-color: var(--sds-color-background-default-default);
+    border: 1px solid var(--portkey-ui-border-1);
+    color: var(--sds-color-text-default-secondary);
+  }
+}
+
+.portkey-ui-footer-btn-wrap {
+  width: 100%;
+  padding: 16px;
+  border-top: 1px solid var(--sds-color-border-default-default);
+  margin-bottom: 0 !important;
+
+  .portkey-ui-footer-btn {
+    color: var(--sds-color-text-neutral-on-neutral);
+    font-size: 16px;
+    line-height: 22px;
+    height: 48px;
+    border-radius: 22px;
+    background-color: var(--sds-color-background-brand-secondary);
+  }
+}
+
+.portkey-ui-common-modals-only-content {
+  color: #515a62;
+  text-align: center;
+  font-size: 14px;
+  font-weight: normal;
+  margin: 24px;
+}
+
+.portkey-ui-open-link-confirm-modal {
+  .portkey-ant-modal-body {
+    padding: 24px 20px 0;
+  }
+  .portkey-ant-modal-confirm-btns .portkey-ant-btn:first-child {
+    display: none;
+  }
+  .portkey-ui-open-link-confirm-modal-content {
+    color: var(--sds-color-text-default-secondary);
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 22px;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+}
+
+html,
+body {
+  background-color: var(--sds-color-background-default-secondary);
+}

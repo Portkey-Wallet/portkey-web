@@ -1,0 +1,54 @@
+@import '../../assets/theme/constants.less';
+
+.set-pin-wrapper {
+  height: 100%;
+  flex: 1;
+  .set-pin-title {
+    font-size: 24px;
+    text-align: center;
+    font-weight: 400;
+    color: var(--sds-color-text-default-default);
+    margin-bottom: 40px;
+  }
+
+  .set-pin-content {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    > .title {
+      margin-bottom: 40px;
+    }
+    .set-pin-form {
+      padding-bottom: 48px;
+    }
+    .portkey-ant-form-vertical {
+      flex: 1;
+      position: relative;
+      .portkey-ant-form-item-row {
+        flex: 1;
+      }
+      .submit-btn-form-item {
+        margin: 0;
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+      }
+    }
+
+    .portkey-form-item-label {
+      padding-bottom: 4px;
+    }
+    .submit-btn {
+      border-radius: var(--portkey-ui-primary-border-radius);
+    }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .set-pin-wrapper .set-pin-title {
+    font-size: 20px;
+    line-height: 28px;
+    font-weight: 500;
+  }
+}

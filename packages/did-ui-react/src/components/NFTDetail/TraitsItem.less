@@ -1,0 +1,69 @@
+@container-width: 173px;
+@container-height: 116px;
+@padding-size: 16px;
+@border-radius: 16px;
+
+
+.traits-item-container {
+  background: var(--sds-color-background-default-secondary);
+  border: 1px solid var(--sds-color-border-default-default);
+  padding: @padding-size;
+  width: 100%;
+  height: @container-height;
+  display: flex;
+  flex-direction: column;
+  // justify-content: space-between;
+  align-items: flex-start;
+  border-radius: @border-radius;
+  .portkey-ant-card-body {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    .traitType {
+      overflow: hidden;
+      color: var(--sds-color-text-default-secondary);
+      text-overflow: ellipsis;
+    
+      /* Single Line/Body XS */
+      font-family: 'Schibsted Grotesk';
+      font-size: 12px;
+      font-style: normal;
+      line-height: 100%; /* 12px */
+      display: block !important;
+    }
+    
+    .value {
+      overflow: hidden;
+      color: var(--sds-color-text-default-default);
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    
+      /* Body Small Strong */
+      font-family: 'Schibsted Grotesk';
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 600;
+      line-height: 140%; /* 19.6px */
+      display: block !important;
+      margin-top: 4px;
+    }
+    
+    .percent {
+      overflow: hidden;
+      color: var(--sds-color-text-default-default);
+      text-overflow: ellipsis;
+    
+      /* Single Line/Body XS */
+      font-family: 'Schibsted Grotesk';
+      font-size: 12px;
+      font-style: normal;
+      line-height: 100%; /* 12px */
+      display: block !important;
+    }
+    
+    .flexSpacer {
+      flex: 1;
+    }
+  }
+}

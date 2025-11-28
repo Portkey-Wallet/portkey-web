@@ -1,0 +1,123 @@
+.swap-preview {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-top: 8px;
+  padding-bottom: 16px;
+
+  .swap-preview-body {
+    flex: 1;
+    overflow: auto;
+    padding-bottom: 16px;
+  }
+
+  .swap-preview-token-card {
+    border-radius: 16px;
+    background-color: var(--sds-color-background-default-secondary);
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 8px;
+
+    .swap-preview-token-card-icon {
+      margin-left: 26px;
+      width: 22px;
+      height: 22px;
+
+      svg {
+        cursor: auto;
+
+        path {
+          fill: var(--sds-color-icon-default-tertiary);
+        }
+      }
+    }
+  }
+
+  .swap-preview-powered-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 16px;
+    gap: 4px;
+
+    .swap-preview-powered-title {
+      font-size: 12px;
+      line-height: 12px;
+      color: var(--sds-color-text-default-tertiary);
+    }
+    .portkey-ui-custom-svg {
+      height: 12px;
+      width: 45px;
+
+      svg {
+        cursor: auto;
+      }
+    }
+  }
+
+  .swap-preview-footer {
+    flex-shrink: 0;
+    padding-top: 16px;
+    width: 100%;
+    overflow: hidden;
+
+    .portkey-ant-btn {
+      width: 100%;
+      height: 48px;
+      font-size: 16px;
+      border-radius: 24px;
+      font-weight: 600;
+    }
+  }
+}
+
+.swap-preview-tip-link {
+  color: var(--sds-color-text-brand-default);
+}
+
+.swap-preview-price-tip-modal {
+  .close-icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .swap-preview-price-tip-body {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding: 16px;
+  }
+
+  .swap-preview-price-tip-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .swap-preview-price-tip-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .swap-preview-price-tip-title {
+    font-size: 20px;
+    line-height: 24px;
+    color: var(--sds-color-text-default-default);
+    font-weight: 700;
+  }
+
+  .swap-preview-price-tip-sub-title {
+    font-size: 16px;
+    line-height: 22px;
+    color: var(--sds-color-text-default-default);
+  }
+
+  .swap-preview-price-tip-button {
+    width: 100%;
+    height: 48px;
+    font-size: 16px;
+    border-radius: 24px;
+    font-weight: 600;
+  }
+}

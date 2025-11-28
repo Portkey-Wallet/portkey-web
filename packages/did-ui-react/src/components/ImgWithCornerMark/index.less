@@ -1,0 +1,48 @@
+.img-with-mask-wrap {
+  width: 42px;
+  height: 42px;
+  position: relative;
+
+  .main-icon-wrap {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+
+    .inner-dom {
+      width: 42px;
+      height: 42px;
+      background-color: var(--sds-color-background-brand-default);
+      font-size: 16px;
+      text-align: center;
+      line-height: 42px;
+      border-radius: 999px;
+      color: var(--sds-color-text-brand-on-brand);
+    }
+  }
+
+  .corner-icon-wrap {
+    position: absolute;
+    z-index: 10;
+    right: -2px;
+    bottom: -2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 10px;
+    border: 1px solid var(--sds-color-border-default-default);
+
+    img {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      width: 18px;
+      height: 18px;
+    }
+
+    .custom-svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}

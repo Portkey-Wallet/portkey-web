@@ -1,0 +1,152 @@
+.portkey-ui-custom-token-list {
+  .custom-token-header {
+    padding: 25px 24px 16px;
+    .title-center {
+      color: var(--sds-color-text-default-default);
+      text-align: center;
+      font-size: 18px;
+      line-height: 22px;
+      font-size: 20px;
+    }
+    .portkey-ui-custom-svg {
+      height: 24px;
+      width: 24px;
+    }
+  }
+  .dropdown-search-wrapper {
+    background-color: var(--sds-color-background-default-default);
+    padding: 4px 16px 8px;
+    margin-bottom: 0;
+  }
+  .list {
+    .protocol {
+      display: flex;
+      align-items: center;
+      .avatar {
+        width: 36px;
+        height: 36px;
+        font-size: 20px;
+        margin-right: 12px;
+        
+        .portkey-ui-seed-badge {
+          right: 2px;
+          width: 24px;
+          height: 12px;
+          .portkey-ui-custom-svg {
+            width: 24px;
+            height: 12px;
+            svg {
+              width: 24px;
+              height: 12px;
+            }
+          }
+        }
+      }
+      .info {
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        gap: 4px;
+        overflow: hidden;
+        .alias {
+          line-height: 22px;
+          font-size: 16px;
+          color: var(--sds-color-text-default-default);
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .network {
+          line-height: 20px;
+          font-size: 14px;
+          color: var(--sds-color-text-default-tertiary);
+        }
+      }
+      .amount {
+        align-self: flex-start;
+        .balance {
+          line-height: 22px;
+          font-size: 18px;
+          color: var(--sds-color-text-default-default);
+          width: 80px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+    .item {
+      display: flex;
+      align-items: center;
+      height: 72px;
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--sds-color-border-default-default);
+      .icon {
+        width: 32px;
+        height: 32px;
+        margin-right: 16px;
+        .portkey-ui-custom-svg,
+        div {
+          width: 32px;
+          height: 32px;
+        }
+      }
+      .info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        .symbol {
+          font-size: 18px;
+          line-height: 22px;
+          color: var(--sds-color-text-default-default);
+        }
+        .network {
+          color: var(--sds-color-text-default-secondary);
+          line-height: 20px;
+          font-size: 14px;
+        }
+      }
+      .amount {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        text-align: right;
+        justify-content: flex-start;
+        .quantity {
+          line-height: 22px;
+          font-size: 18px;
+          color: var(--sds-color-text-default-default);
+        }
+        .convert {
+          line-height: 20px;
+          font-size: 14px;
+          color: var(--sds-color-text-default-secondary);
+        }
+      }
+    }
+    .empty-content {
+      padding-top: 154px;
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      .empty-text {
+        line-height: 20px;
+        color: var(--sds-color-text-default-tertiary);
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .portkey-ui-custom-token-list {
+    .custom-token-header {
+      padding: 25px 24px 16px;
+      .title-center {
+        font-size: 20px;
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+input:-webkit-autofill {
+  box-shadow: 0 0 0px 1000px var(--sds-color-background-default-default) inset;
+  -webkit-text-fill-color: var(--sds-color-icon-default-default);
+  transition: background-color 5000s ease-in-out 0s;
+}
+.portkey-ui-wrapper .portkey-ant-form .confirm-password {
+  .portkey-ant-form-item-explain-validating,
+  .portkey-ant-form-item-explain-success {
+    font-size: 12px;
+  }
+
+  .portkey-ant-form-item-control-input,
+  .portkey-ant-col {
+    min-height: auto;
+    svg {
+      path {
+        fill: var(--sds-color-icon-default-default);
+      }
+    }
+  }
+
+  .portkey-ant-form-item {
+    display: flex;
+  }
+  > .portkey-ant-form-item-has-error {
+    padding-bottom: 0;
+  }
+  .label-tip {
+    color: var(--sds-color-text-default-default);
+    font-size: 16px;
+    font-weight: 400;
+  }
+  .portkey-ant-input {
+    text-indent: 2px;
+    margin-left: -2px;
+  }
+  input[type="password"] {
+    font-family: 'password';
+  }
+}

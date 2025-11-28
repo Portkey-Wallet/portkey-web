@@ -1,0 +1,117 @@
+.ui-guardian-approval-wrapper {
+  height: 100%;
+}
+.warning-modal-wrapper{
+  padding: 24px 20px 16px;
+  .portkey-ant-modal {
+    width: 100%!important;
+  }
+  .waring-icon {
+    width: 32px;
+    height: 32px;
+  }
+  .portkey-ant-btn-default{
+    margin-left: 20px;
+    margin-right: 6px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-radius: 24px; 
+    width: 100%; 
+    height: 48px!important; 
+    line-height:normal!important;
+    background-color: transparent!important;
+    color: var(--sds-color-text-default-default);
+    border: 1px solid var(--sds-color-border-neutral-secondary)!important;
+    margin: 0;
+    font-family: var(--portkey-font-schibsted-regular);
+  }
+  .portkey-ant-btn-primary{
+    margin-left: 6px;
+    margin-right: 20px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    border-radius: 24px; 
+    width: 100%; 
+    height: 48px!important; 
+    line-height:normal!important; 
+    background-color: var(--sds-color-background-brand-default)!important;
+    margin: 0;
+    border: none;
+    color: var(--sds-color-text-brand-on-brand);
+  }
+  .portkey-ant-modal-confirm-btns {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border: none!important;
+    padding-top: 24px!important;
+  }
+}
+.portkey-ant-modal-content {
+  background-color: var(--sds-color-background-default-default)!important;
+
+}
+.warning-info {
+  width: 32px!important;
+  height: 32px!important;
+  margin: 16px!important;
+  svg {
+    path {
+      fill: var(--sds-color-icon-default-default);
+    }
+  }
+}
+.security-notice {
+  text-align: left;
+  padding: 0 16px 16px;
+  color: var(--sds-color-text-default-default);
+  /* Heading */
+  font-family: var(--portkey-font-bricolage-bold);
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: 120%; /* 24px */
+  letter-spacing: -0.4px;
+}
+
+
+.modal-content-v2 {
+  color: var(--sds-color-text-default-default);
+
+  /* Body Base */
+  font-family: var(--portkey-font-schibsted-regular);
+  font-size: 16px;
+  font-style: normal;
+  line-height: 140%; /* 22.4px */
+  padding: 0 20px;
+}
+
+.official-website {
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 23px;
+  text-align: center;
+  color: var(--sds-color-text-warning-default);
+}
+
+.go-to-verify {
+  margin-left: 20px;
+  margin-right: 20px;
+  margin-bottom: 20px;
+  margin-top: 20px;
+  border-radius: 24px; 
+  width: 100%; 
+  height: 48px; 
+}
+.btn-warning-wrapper{
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+@media (min-width: 600px){
+  .warning-modal-wrapper{
+    .portkey-ant-modal {
+      width: 400px!important;
+    }
+  }
+}

@@ -1,0 +1,272 @@
+.portkey-ui-transaction-detail-modal-shade {
+  background-color: black;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  position: fixed;
+  opacity: 0.8;
+  height: 100%;
+  z-index: 12;
+}
+
+.portkey-ui-transaction-detail {
+  width: 100%;
+  color: var(--sds-color-text-default-default);
+  z-index: 13;
+  padding: 0 16px;
+
+  &.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .transaction-detail-body {
+    border-radius: 8px;
+
+    .transaction-detail-header {
+      padding-top: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      position: sticky;
+      background-color: var(--sds-color-background-default-default);
+      top: 0;
+      z-index: 1;
+
+      .title {
+        font-weight: 700;
+        font-size: 20px;
+        line-height: 24px;
+        letter-spacing: -0.02em;
+        font-family: var(--portkey-font-bricolage-bold);
+      }
+    }
+
+    .transaction-detail-content {
+      display: flex;
+      flex-direction: column;
+
+      .token-header-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        padding: 16px 0;
+
+        .token-icon-container {
+          position: relative;
+
+          .list-icon {
+            height: 60px;
+            width: 60px;
+            border-radius: 9999px;
+          }
+
+          .multi-token-container {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+
+            .token-wrapper {
+              width: 60px;
+              height: 60px;
+              position: relative;
+              .icon {
+                width: 42px;
+                height: 42px;
+                border-radius: 9999px;
+
+                &.bottom {
+                  position: absolute;
+                  bottom: 0;
+                  right: 0;
+                }
+              }
+            }
+
+            .token-direction-wrapper {
+              display: flex;
+              gap: 4px;
+              color: var(--sds-color-text-default-default);
+              font-family: var(--portkey-font-bricolage-bold);
+              align-items: center;
+              font-size: 20px;
+              font-weight: 700;
+              line-height: 24px;
+              letter-spacing: -0.02em;
+
+              .arrowright-icon {
+                display: flex;
+                align-items: center;
+              }
+            }
+          }
+
+          .default-token-container {
+            .token-wrapper {
+              width: 60px;
+              height: 60px;
+              position: relative;
+              .icon {
+                width: 24px;
+                height: 24px;
+                border-radius: 9999px;
+
+                &.bottom {
+                  position: absolute;
+                  bottom: 0;
+                  right: 0;
+                }
+              }
+            }
+          }
+
+          .status-icon {
+            height: 24px;
+            width: 24px;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+          }
+
+          .status-container {
+            background-color: var(--sds-color-background-brand-tertiary-hover);
+            display: flex;
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 24px;
+            height: 24px;
+            justify-content: center;
+            align-items: center;
+            border-radius: 9999px;
+            border: 1px solid var(--sds-color-border-default-default);
+          }
+        }
+
+        .amount {
+          font-size: 20px;
+          line-height: 24px;
+          letter-spacing: -0.02em;
+          font-weight: 700;
+          display: flex;
+          flex-direction: column;
+          text-align: center;
+          font-family: var(--portkey-font-bricolage-bold);
+
+          &.positive {
+            color: var(--sds-color-icon-positive-tertiary);
+          }
+
+          .usd {
+            font-size: 14px;
+            line-height: 19.6px;
+            font-weight: 400;
+            color: var(--sds-color-text-default-secondary);
+          }
+        }
+      }
+
+      .dappTxDetail-container,
+      .from-to-container,
+      .transaction-container,
+      .account-container,
+      .status-container {
+        display: flex;
+        flex-direction: column;
+
+        .success {
+          color: var(--sds-color-text-positive-default);
+        }
+        .failed {
+          color: var(--sds-color-text-danger-default);
+        }
+
+        .row {
+          justify-content: space-between;
+          align-items: center;
+          display: flex;
+          font-size: 16px;
+          line-height: 22.4px;
+          font-weight: 400;
+          padding: 16px 0;
+
+          .right-item {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            font-family: var(--portkey-font-schibsted-bold);
+            font-weight: 600;
+            line-height: 22.4px;
+            font-size: 16px;
+
+            .right-usd {
+              font-size: 14px;
+              font-weight: 400;
+              line-height: 19.6px;
+              color: var(--sds-color-text-default-secondary);
+            }
+          }
+
+          .value {
+            font-weight: 600;
+            line-height: 22.4px;
+            font-family: var(--portkey-font-schibsted-bold);
+            font-size: 16px;
+          }
+
+          .chain {
+            align-items: center;
+            display: flex;
+            gap: 4px;
+            font-weight: 600;
+            line-height: 22.4px;
+            font-family: var(--portkey-font-schibsted-bold);
+
+            .chain-icon {
+              width: 18px;
+              height: 18px;
+            }
+          }
+
+          .txn-display {
+            display: flex;
+            gap: 4px;
+            font-family: var(--portkey-font-schibsted-bold);
+            font-weight: 600;
+            line-height: 22.4px;
+            font-size: 16px;
+          }
+        }
+      }
+
+      .dappTxDetail-container {
+        border-top: 1px solid var(--sds-color-border-default-default);
+        .row {
+          .value {
+            font-weight: 600;
+            line-height: 22.4px;
+            font-family: var(--portkey-font-schibsted-bold);
+            font-size: 16px;
+
+            &.success {
+              color: var(--sds-color-text-positive-default);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .transaction-detail-footer {
+    padding-top: 12px;
+    padding-bottom: 16px;
+    .item-button {
+      width: 100%;
+    }
+  }
+}

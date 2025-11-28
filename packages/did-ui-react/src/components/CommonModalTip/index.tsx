@@ -1,0 +1,37 @@
+import { ReactNode, useState } from 'react';
+import CustomSvg from '../CustomSvg';
+import CommonModal from '../CommonModal';
+import CommonButton from '../CommonButton';
+import './index.less';
+import clsx from 'clsx';
+
+export interface ICommonModalTip {
+  title: string;
+  content: ReactNode;
+  className?: string;
+  modalClassName?: string;
+}
+
+export default function CommonModalTip({ title, content, className, modalClassName }: ICommonModalTip) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <CustomSvg
+        type="help"
+        onClick={() => setOpen(true)}
+        className={className}
+        fillColor="var(--sds-color-icon-default-secondary)"
+      />
+      <CommonModal open={open} type="modal" className={clsx('portkey-ui-common-modal-tip', modalClassName)}>
+        <div className="common-modal-tip">
+          <div className="portkey-ui-flex-between-center">
+            <div className="common-modal-tip-title">{title}</div>
+            <CustomSvg type="Close" onClick={() => setOpen(false)} />
+          </div>
+          <div className="common-modal-tip-content">{content}</div>
+          <CommonButton block type="primary" onClick={() => setOpen(false)}>{`OK`}</CommonButton>
+        </div>
+      </CommonModal>
+    </>
+  );
+}

@@ -1,0 +1,64 @@
+.portkey-ui-common-button {
+  &.portkey-ant-btn {
+    height: 48px;
+    border-radius: 24px;
+    font-size: 16px;
+    font-weight: 600;
+    font-family: var(--portkey-font-schibsted-bold)
+  }
+  &.portkey-ant-btn-primary {
+    color: var(--sds-color-text-brand-on-brand);
+    background: var(--sds-color-background-brand-default);
+    border: none;
+    &:hover {
+      color: var(--sds-color-text-brand-on-brand);
+      background: var(--sds-color-background-brand-hover);
+    }
+    &:disabled,
+    &:disabled:hover {
+      color: var(--sds-color-text-disabled-on-disabled);
+      background-color: var(--sds-color-background-disabled-default);
+      border-color: transparent;
+      opacity: 1;
+    }
+  }
+  &.portkey-btn-outline {
+    color: var(--sds-color-text-default-default);
+    background: var(--sds-color-background-default-default);
+    border: 1.5px solid var(--sds-color-border-neutral-secondary);
+    &:hover {
+      background: var(--sds-color-background-default-default-hover);
+      border-color: var(--sds-color-border-neutral-tertiary);
+    }
+    &:disabled,
+    &:disabled:hover {
+      color: var(--sds-color-text-disabled-on-disabled);
+      background-color: var(--sds-color-background-disabled-default);
+      border-color: transparent;
+    }
+  }
+  &.portkey-btn-primaryOutline {
+    color: var(--sds-color-text-neutral-on-neutral);
+    box-shadow: 0px 0px 0px 5px var(--Border-Brand-Button-Default-Inner) inset;
+    border-radius: 9999px;
+    background: var(--sds-color-background-brand-default);
+    &:hover,
+    &:active {
+      background: var(--sds-color-background-brand-hover);
+      border-color: var(--sds-color-background-brand-hover);
+    }
+  }
+  &.portkey-btn-danger {
+    color: var(--sds-color-text-danger-on-danger);
+    border-radius: 9999px;
+    background: var(--sds-color-background-danger-default);
+    border-width: 0;
+    &:hover,
+    &:active {
+      background: var(--sds-color-background-danger-hover);
+    }
+  }
+  .loading {
+    display: flex;
+  }
+}

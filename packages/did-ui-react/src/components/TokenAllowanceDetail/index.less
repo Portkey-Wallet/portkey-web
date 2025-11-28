@@ -1,0 +1,242 @@
+.portkey-ui-token-allowance-detail-wrapper {
+  .payment-security-detail-nav {
+    position: relative;
+    align-items: center;
+    display: flex;
+    background-color: var(--sds-color-background-default-default);
+    .left-icon {
+      position: absolute;
+      left: 16px;
+    }
+
+    .payment-security-detail-header {
+      width: 100%;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      height: 56px;
+
+      .symbol {
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 22.4px;
+        text-align: center;
+        color: var(--sds-color-text-default-default);
+      }
+    }
+  }
+
+  .token-info-header-wrapper {
+    margin-bottom: 24px;
+    .token-image {
+      width: 64px;
+      height: 64px;
+      border-radius: 32px;
+    }
+    .portkey-ui-show-image {
+      width: 80px;
+      height: 80px;
+    }
+    .token-name {
+      margin-top: 8px;
+      color: var(--sds-color-text-default-default);
+      font-size: 16px;
+      line-height: 22px;
+    }
+    .token-url-wrapper {
+      line-height: 20px;
+      color: var(--sds-color-text-default-secondary);
+    }
+  }
+
+  .contract-address-wrapper {
+    display: flex;
+    justify-content: space-between;
+    padding: 16px;
+    color: var(--sds-color-text-default-default);
+
+    .label {
+      font-weight: 400;
+      line-height: 22.4px;
+      font-size: 16px;
+    }
+
+    .address {
+      font-weight: 600;
+      line-height: 22.4px;
+      font-size: 16px;
+      display: flex;
+      flex-direction: row;
+      gap: 5px;
+    }
+  }
+
+  .approval-token-wrapper {
+    padding: 0 16px;
+
+    .title {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+      letter-spacing: -0.02em;
+      color: var(--sds-color-text-default-default);
+      font-family: var(--portkey-font-bricolage-bold);
+
+      &:not(:first-child) {
+        margin-top: 32px;
+      }
+    }
+
+    .subtitle {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 19.6px;
+      color: var(--sds-color-text-default-tertiary);
+      margin-top: 4px;
+      margin-bottom: 12px;
+    }
+
+    .approve-item {
+      display: flex;
+      flex-direction: column;
+      background-color: var(--sds-color-background-default-secondary);
+      border-radius: 8px;
+      padding: 0 16px;
+      margin-top: 8px;
+
+      .token-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 0;
+        border-bottom: 0.5px solid var(--sds-color-border-default-default);
+
+        .token-image-item {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+        }
+        .action {
+          display: flex;
+          gap: 6px;
+          align-items: center;
+          color: var(--sds-color-text-danger-tertiary);
+          font-weight: 600;
+          line-height: 22.4px;
+          font-size: 16px;
+        }
+      }
+
+      .approve-amount {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 0;
+        color: var(--sds-color-text-default-secondary);
+      }
+    }
+
+    .revoked-item {
+      background-color: var(--sds-color-background-default-secondary);
+      border-radius: 8px;
+      padding: 0 16px;
+      margin-bottom: 20px;
+
+      &:not(:first-child) {
+        margin-top: 12px;
+      }
+
+      .token-detail {
+        display: flex;
+        justify-content: space-between;
+        padding: 16px 0;
+
+        .date-difference {
+          display: flex;
+          align-items: center;
+          font-weight: 400;
+          line-height: 19.6px;
+          color: var(--sds-color-text-default-secondary);
+        }
+      }
+    }
+  }
+
+  // .contract-address-wrapper {
+  //   margin-top: 32px;
+  //   margin-left: 24px;
+  //   margin-right: 24px;
+  //   .contract-address-label {
+  //     color: var(--portkey-ui-font-1);
+  //     font-size: 14px;
+  //     line-height: 20px;
+  //   }
+  //   .contract-address {
+  //     margin-top: 8px;
+  //     border: 1px solid var(--portkey-ui-border-1);
+  //     border-radius: 6px;
+  //     width: 100%;
+  //     height: 48px;
+  //     .contract-address-text {
+  //       margin-left: 16px;
+  //       color: var(--sds-color-text-default-default);
+  //       font-size: 14px;
+  //       line-height: 20px;
+  //       text-overflow: ellipsis;
+  //       overflow: hidden;
+  //     }
+  //     .contract-copy-icon {
+  //       margin-left: 16px;
+  //       margin-right: 16px;
+  //       color: var(--portkey-ui-primary-bg);
+  //       path {
+  //         fill: var(--portkey-ui-primary-bg);
+  //       }
+  //     }
+  //   }
+  // }
+  .token-info-divide {
+    width: 100%;
+    height: 1px;
+    background-color: var(--sds-color-border-default-default);
+    margin-top: 24px;
+  }
+  .approve-token-wrapper {
+    padding: 24px;
+    border-bottom: 1px solid var(--portkey-ui-border-1);
+
+    .approve-token-title {
+      color: var(--sds-color-text-default-default);
+      font-size: 18px;
+      line-height: 22px;
+    }
+    .approve-token-desc {
+      margin-top: 8px;
+      color: var(--sds-color-text-default-secondary);
+      font-size: 14px;
+      line-height: 20px;
+    }
+    .switch-component {
+      margin-top: 24px;
+    }
+    .approve-amount-wrapper {
+      margin-top: 16px;
+      .approve-amount-title {
+        color: var(--sds-color-text-default-default);
+        font-size: 14px;
+        line-height: 20px;
+      }
+      .approve-amount-text-wrapper {
+        margin-top: 8px;
+        border: 1px solid var(--portkey-ui-border-1);
+        border-radius: 6px;
+        width: 100%;
+        height: 48px;
+      }
+      .approve-amount-text {
+        margin-left: 16px;
+        color: var(--sds-color-text-default-default);
+        font-size: 14px;
+        line-height: 20px;
+      }
+    }
+  }
+}

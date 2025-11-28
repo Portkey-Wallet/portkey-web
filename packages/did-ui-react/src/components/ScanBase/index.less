@@ -1,0 +1,113 @@
+@import '../../assets/theme/constants.less';
+
+.scan-card-wrapper {
+  text-align: center;
+  height: 100%;
+  .scan-title {
+    text-align: left;
+    padding: 0 16px 0px;
+    margin-bottom: 16px;
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    color: var(--sds-color-text-default-default);
+    position: relative;
+    font-family: 'Bricolage Grotesque';
+
+    .back-icon-wrapper {
+      top: 4px;
+      right: 4px;
+      position: absolute;
+      display: inline-block;
+      cursor: pointer;
+    }
+  }
+  .scan-text-inner-reverse {
+    max-width: 232px;
+    margin: auto;
+    .scan-title {
+      // padding-top: 24px;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 24px;
+      color: var(--sds-color-text-default-default);
+    }
+  }
+  .scan-card-content {
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+  }
+
+  .scan-content {
+    // width: 100%;
+    width: 320px;
+    height: 320px;
+    canvas {
+      margin: auto;
+      border: var(--portkey-ui-scan-border);
+    }
+    #portkey-qr-code {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: 320px;
+    }
+  }
+  .description {
+    line-height: 20px;
+    color: var(--sds-color-text-default-secondary);
+    font-size: 14px;
+    font-weight: 400;
+    margin-bottom: 32px;
+    z-index: 10;
+    position: relative;
+    padding: 0 16px;
+    text-align: left;
+  }
+  .waiting-wrapper {
+    margin-top: 24px;
+  }
+  .waiting-text {
+    color: var(--sds-color-text-default-secondary);
+    font-size: 14px;
+    line-height: 20px;
+    margin-left: 8px;
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .scan-card-wrapper {
+    .scan-card-content {
+      padding: 0 16px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    .description {
+      margin-bottom: 32px;
+    }
+  }
+}
+
+/* mobile */
+
+.scan-card-mobile-wrapper {
+  .portkey-icon {
+    margin: 0 auto 12px;
+  }
+  // .scan-title {
+    // padding-top: 64px;
+  // }
+  // .description {
+  //   margin-bottom: 80px;
+  // }
+}
+.scan-card-wrapper.scan-card-mobile-wrapper {
+  .pc-icon {
+    width: 64px;
+    height: 64px;
+  }
+}

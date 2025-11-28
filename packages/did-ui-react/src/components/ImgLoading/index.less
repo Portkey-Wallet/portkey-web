@@ -1,0 +1,27 @@
+.img-loading-wrapper {
+  overflow: hidden;
+  border-radius: var(--portkey-ui-border-radius-3);
+  position: relative;
+
+  .show-image {
+    float: left;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 1;
+  }
+
+  .broken {
+    object-fit: none !important;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1;
+  }
+
+  .loading-image-default-wrapper {
+    background: var(--sds-color-background-default-default);
+    position: absolute;
+    z-index: 100;
+    width: 100%;
+    height: 100%;
+  }
+}

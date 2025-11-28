@@ -1,0 +1,97 @@
+@import '../../assets/theme/constants.less';
+
+.verifier-account-wrapper {
+  height: 100%;
+  .verifier-account-title {
+    color: var(--sds-color-text-default-default);
+    font-size: 20px;
+    font-weight: 700;
+    line-height: 24px;
+    margin-bottom: 16px;
+    font-family: 'Bricolage Grotesque';
+  }
+  .verifier-account-desc {
+    font-size: 14px;
+    line-height: 20px;
+    color: var(--sds-color-text-default-secondary);
+    margin-bottom: 8px;
+    .verifier-account-desc-account {
+      color: var(--sds-color-text-brand-default);
+    }
+  }
+}
+
+.portkey-ui-code-verify-passcode {
+  padding-top: 24px;
+
+  /** code input */
+  .adm-passcode-input,
+  .adm-passcode-input-cell-container {
+    width: 100%;
+  }
+  .adm-passcode-input-cell-container {
+    justify-content: space-between;
+    gap: 8;
+  }
+
+  .adm-passcode-input-cell {
+    flex: 1;
+    margin: 0;
+    font-size: 16px;
+    line-height: 16px;
+    height: 40px;
+    color: var(--sds-color-text-default-default);
+  }
+  .adm-passcode-input.adm-passcode-input-seperated {
+    .adm-passcode-input-cell {
+      border: 1px solid var(--sds-color-border-default-default);
+      border-radius: 8px;
+    }
+    .adm-passcode-input-cell-focused {
+      box-shadow: none;
+    }
+  }
+
+  &.portkey-ui-code-verify-passcode-error {
+    .adm-passcode-input .adm-passcode-input-cell {
+      border-color: var(--sds-color-border-danger-default) !important;
+    }
+  }
+
+  .portkey-ui-code-verify-passcode-error-message {
+    font-size: 16px;
+    line-height: 22px;
+    margin-top: 8px;
+    color: var(--sds-color-border-danger-default);
+  }
+
+  .email-sign-loading {
+    margin-top: 24px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /** btn */
+  .portkey-ant-btn.resend-btn {
+    width: auto;
+    margin: auto;
+    display: block;
+    margin-top: 24px;
+    color: var(--sds-color-text-brand-default);
+    background-color: transparent;
+    &:hover {
+      background-color: transparent;
+    }
+    span {
+      line-height: 16px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+  .portkey-ant-btn.resend-after-btn {
+    color: var(--sds-color-text-disabled-default) !important;
+    font-weight: 400 !important;
+  }
+}

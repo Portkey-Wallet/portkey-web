@@ -1,0 +1,177 @@
+.portkey-ui-ramp-preview-frame {
+  height: 100%;
+
+  .portkey-ui-ramp-preview-content {
+    padding: 0 24px;
+    flex: 1;
+
+    .transaction {
+      margin: 48px auto;
+      .send {
+        font-weight: 500;
+        color: var(--sds-color-text-default-default);
+        .amount {
+          color: var(--sds-color-text-default-default);
+          font-family: 'Bricolage Grotesque';
+          font-size: 32px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 120%; /* 38.4px */
+          letter-spacing: -0.64px;
+        }
+        .currency {
+          margin-left: 6px;
+          color: var(--sds-color-text-default-default);
+          /* Title Page */
+          font-family: 'Bricolage Grotesque';
+          font-size: 32px;
+          font-style: normal;
+          font-weight: 700;
+          line-height: 120%; /* 38.4px */
+          letter-spacing: -0.64px;
+        }
+      }
+      .receive {
+        margin-top: 8px;
+        color: var(--sds-color-text-default-secondary);
+        /* Body Base */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        line-height: 140%; /* 22.4px */
+      }
+    }
+
+    .portkey-ui-ramp-provider-card {
+      width: 100%;
+      color: var(--sds-color-text-default-secondary);
+      .portkey-ui-ramp-provider-label {
+        margin: 0 0 16px 0px;
+        overflow: hidden;
+        color: var(--sds-color-text-default-secondary);
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        /* Body Strong */
+        font-family: 'Schibsted Grotesk';
+        font-size: 16px;
+        font-style: normal;
+        font-weight: 600;
+        line-height: 140%; /* 22.4px */
+      }
+      .portkey-ui-ramp-provider-card-item {
+        padding: 16px;
+        border: 1px solid var(--Border-Default-Subtle);
+        border-radius: 15px;
+        margin-bottom: 16px;
+        position: relative;
+        overflow: hidden;
+        .portkey-ui-ramp-provider {
+          height: 24px;
+          .portkey-ui-ramp-provider-logo {
+            height: 24px;
+            margin-right: 16px;
+          }
+        }
+        .portkey-ui-ramp-provider-pay {
+          margin: 12px 0;
+          .portkey-ui-ramp-provider-pay-item {
+            border-radius: 2px;
+            border: 0.5px solid var(--sds-color-border-default-default);
+            background: white;
+            min-width: 20px;
+            height: 20px;
+            margin-right: 6px;
+          }
+        }
+        &:nth-last-child(1) {
+          margin-bottom: 24px;
+        }
+        .rate {
+          // padding: 2px 0;
+
+          color: var(--sds-color-text-default-secondary);
+
+          /* Body Base */
+          font-family: 'Schibsted Grotesk';
+          font-size: 16px;
+          font-style: normal;
+          line-height: 140%; /* 22.4px */
+        }
+      }
+
+      .portkey-ui-ramp-provider-card-item-selected {
+        // border: 1px solid var(--sds-color-border-default-secondary);
+        border-radius: 15px;
+        border: 1px solid var(--sds-color-border-brand-default);
+        background: var(--sds-color-background-default-secondary);
+        .card-selected-icon {
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          width: 24px;
+          height: 24px;
+          svg {
+            width: 24px;
+            height: 24px;
+            path {
+              fill: var(--sds-color-icon-brand-secondary);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .portkey-ui-ramp-preview-footer {
+    width: 100%;
+    // height: 128px;
+    padding: 16px;
+    // border-top: 1px solid var(--sds-color-border-default-default);
+    // background-color: var(--portkey-ui-bg-5);
+
+    .portkey-ui-ramp-preview-disclaimer {
+      margin-bottom: 48px;
+      .highlight {
+        color: var(--sds-color-text-brand-default);
+        cursor: pointer;
+      }
+    }
+
+    .portkey-ant-btn {
+      height: 48px;
+      border-radius: 22px;
+      font-size: 16px;
+      line-height: 22px;
+    }
+  }
+}
+.disclaimer-tip-modal {
+  .disclaimer-tip-wrapper {
+    display: flex;
+    flex-direction: column;
+    padding: 16px 16px;
+    .disclaimer-tip-title {
+      color: var(--sds-color-text-default-default);
+
+      /* Heading */
+      font-family: 'Bricolage Grotesque';
+      font-size: 20px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 120%; /* 24px */
+      letter-spacing: -0.4px;
+
+      margin: 0px 0px 12px;
+    }
+    .disclaimer-tip-content {
+      color: var(--sds-color-text-default-default);
+
+      /* Body Base */
+      font-family: 'Schibsted Grotesk';
+      font-size: 16px;
+      font-style: normal;
+      line-height: 140%; /* 22.4px */
+      margin: 0px 0px 24px;
+    }
+  }
+}

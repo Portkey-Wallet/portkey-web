@@ -1,0 +1,57 @@
+{
+  "name": "@portkey/graphql",
+  "version": "2.23.0-alpha.13",
+  "description": "",
+  "main": "./dist/commonjs/index.js",
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/commonjs/index.js"
+    }
+  },
+  "author": "",
+  "license": "ISC",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org"
+  },
+  "files": [
+    "dist/*"
+  ],
+  "homepage": "https://portkey.finance/",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Portkey-Wallet/portkey-web.git",
+    "directory": "packages/graphql"
+  },
+  "scripts": {
+    "prebuild": "rm -rf dist",
+    "build": "yarn build:cjs & yarn build:esm & yarn build:types",
+    "build:cjs": "tsc && echo '{\"type\": \"commonjs\"}' > ./dist/commonjs/package.json",
+    "build:esm": "tsc --build tsconfig.esm.json && echo '{\"type\": \"module\"}' > ./dist/esm/package.json && yarn esm:fix",
+    "build:types": "tsc --build tsconfig.types.json",
+    "esm:fix": "node ../../scripts/fix-esm.js dist/esm",
+    "start": "tsc --watch",
+    "generate": "rm -rf ./**/*/__generated__ && node gqlg.js && graphql-codegen --config codegen.config.ts && eslint '*/**/*.{js,ts,tsx}' --quiet --fix",
+    "test": "vitest"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.7.3",
+    "@portkey/types": "^2.23.0-alpha.13",
+    "graphql": "^16.6.0",
+    "subscriptions-transport-ws": "^0.11.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^2.16.2",
+    "@graphql-codegen/near-operation-file-preset": "^2.5.0",
+    "@graphql-codegen/typescript": "^2.8.6",
+    "@graphql-codegen/typescript-operations": "^2.5.12",
+    "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "gql-generator": "^1.0.19",
+    "ts-node": "^10.9.1",
+    "typescript": "^4.9.4"
+  },
+  "gitHead": "5987857c1fc0e12775425f3d876188be78421ca7"
+}

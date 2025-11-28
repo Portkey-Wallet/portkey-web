@@ -1,0 +1,33 @@
+@import '../../assets/theme/constants.less';
+
+.back-header {
+  line-height: 20px;
+  color: var(--sds-color-text-default-default);
+  font-size: 14px;
+  padding: 16px 16px;
+  svg {
+    path {
+      fill: var(--sds-color-icon-default-default);
+    }
+  }
+  .default-left-ele {
+    cursor: pointer;
+    .left-arrow {
+      width: 20px !important;
+      height: 20px !important;
+      font-size: 12px;
+      line-height: 1;
+      margin-right: 4px;
+      svg {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+}
+
+@media screen and (max-width: @screen-max-w-768) {
+  .back-header {
+    padding: 16px 16px;
+  }
+}

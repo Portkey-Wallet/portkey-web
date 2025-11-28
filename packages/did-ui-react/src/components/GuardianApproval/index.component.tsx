@@ -1,0 +1,554 @@
+import {
+  useState,
+  useCallback,
+  ReactNode,
+  useRef,
+  useEffect,
+  memo,
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+} from 'react';
+import type { SetStateAction, Dispatch } from 'react';
+import clsx from 'clsx';
+import GuardianList from '../GuardianList/index.component';
+import VerifierPage from './components/VerifierPage';
+import {
+  errorTip,
+  getAlreadyApprovalLength,
+  getApprovalCount,
+  handleErrorMessage,
+  handleVerificationDoc,
+  modalMethod,
+  setLoading,
+} from '../../utils';
+import type { ChainId, TStringJSON } from '@portkey/types';
+import { HOUR, MINUTE } from '../../constants';
+import {
+  BaseGuardianItem,
+  UserGuardianStatus,
+  VerifyStatus,
+  OnErrorFunc,
+  IVerificationInfo,
+  NetworkType,
+  ISocialLogin,
+  ITelegramInfo,
+  IApproveDetail,
+} from '../../types';
+import { OperationTypeEnum, GuardiansApproved } from '@portkey/services';
+import { TVerifyCodeInfo } from '../SignStep/types';
+import { useVerifyToken } from '../../hooks/authentication';
+import { useUpdateEffect } from 'react-use';
+import { TVerifierItem } from '../types';
+import { KEY_SHOW_WARNING, SHOW_WARNING_DIALOG, AllSocialLoginList, zkGuardianType } from '../../constants/guardian';
+import { getSocialConfig } from '../utils/social.utils';
+import './index.less';
+import { Open_Login_Bridge } from '../../constants/telegram';
+import { getCustomNetworkType, getStorageInstance } from '../config-provider/utils';
+import { useAsyncVerifyToken, VerifySocialLoginParams } from '../../hooks/authenticationAsync';
+import CustomSvg from '../CustomSvg';
+
+const getExpiredTime = () => Date.now() + HOUR - 2 * MINUTE;
+
+export interface GuardianApprovalProps {
+  header?: ReactNode;
+  originChainId: ChainId;
+  targetChainId?: ChainId;
+  className?: string;
+  guardianList?: UserGuardianStatus[];
+  isErrorTip?: boolean;
+  wrapperStyle?: React.CSSProperties;
+  operationType: OperationTypeEnum;
+  operationDetails?: TStringJSON;
+  isAsyncVerify?: boolean;
+  officialWebsiteShow?: {
+    amount?: string;
+    symbol?: string;
+  };
+  networkType: NetworkType;
+  // guardianIdentifier?: string; // for show (email)
+  // firstName?: string; // for show (social)
+  telegramInfo?: ITelegramInfo;
+  caHash?: string;
+  onError?: OnErrorFunc;
+  onConfirm?: (
+    guardianList: (GuardiansApproved & { asyncVerifyInfoParams?: VerifySocialLoginParams })[],
+  ) => Promise<void>;
+  onGuardianListChange?: (guardianList: UserGuardianStatus[]) => void;
+  onExpiredCancel?: () => void;
+}
+
+export interface IGuardianApprovalInstance {
+  setVerifyAccountKey: Dispatch<SetStateAction<string | undefined>>;
+}
+
+const GuardianApprovalMain = forwardRef(
+  (
+    {
+      header,
+      originChainId,
+      targetChainId,
+      className,
+      guardianList: defaultGuardianList,
+      networkType,
+      isErrorTip = true,
+      wrapperStyle,
+      operationType,
+      operationDetails = '{}',
+      officialWebsiteShow,
+      // guardianIdentifier,
+      // firstName,
+      telegramInfo,
+      caHash,
+      onError,
+      onConfirm,
+      isAsyncVerify = false,
+      onGuardianListChange,
+      onExpiredCancel,
+    }: GuardianApprovalProps,
+    ref,
+  ) => {
+    const [guardianList, setGuardianList] = useState<UserGuardianStatus[]>([]);
+    const [expiredTime, setExpiredTime] = useState<number>();
+    const onErrorRef = useRef<GuardianApprovalProps['onError']>(onError);
+    const onConfirmRef = useRef<GuardianApprovalProps['onConfirm']>(onConfirm);
+    console.log(originChainId, targetChainId, defaultGuardianList, 'defaultGuardianList===');
+    const [verifyAccountKey, setVerifyAccountKey] = useState<string | undefined>();
+    const curVerifyingGuardian: UserGuardianStatus | undefined = useMemo(() => {
+      if (verifyAccountKey) return guardianList.find((item) => item.key === verifyAccountKey);
+      return undefined;
+    }, [guardianList, verifyAccountKey]);
+
+    useEffect(() => {
+      onErrorRef.current = onError;
+      onConfirmRef.current = onConfirm;
+    });
+
+    useImperativeHandle(ref, () => ({ setVerifyAccountKey }));
+
+    useUpdateEffect(() => {
+      onGuardianListChange?.(guardianList);
+    }, [guardianList]);
+
+    useEffect(() => {
+      defaultGuardianList?.length && setGuardianList(defaultGuardianList);
+    }, [defaultGuardianList]);
+
+    const onSendCodeHandler = useCallback(
+      async (_guardian: UserGuardianStatus, key: string) => {
+        try {
+          if (!expiredTime) setExpiredTime(getExpiredTime());
+          setGuardianList((v) => {
+            return v.map((item) => {
+              if (item.key === key) {
+                return {
+                  ..._guardian,
+                  status: VerifyStatus.Verifying,
+                  isInitStatus: true,
+                };
+              }
+              return item;
+            });
+          });
+          setVerifyAccountKey(key);
+        } catch (error: any) {
+          console.error(error, 'error===');
+          return errorTip(
+            {
+              errorFields: 'GuardianApproval',
+              error: handleErrorMessage(error),
+            },
+            isErrorTip,
+            onErrorRef?.current,
+          );
+        }
+      },
+      [expiredTime, isErrorTip],
+    );
+
+    const verifyToken = useVerifyToken();
+    const asyncVerifyToken = useAsyncVerifyToken();
+
+    const socialVerifyHandler = useCallback(
+      async (item: UserGuardianStatus, key: string) => {
+        try {
+          const accountType = item.guardianType as ISocialLogin;
+          const accessToken =
+            accountType === 'Telegram' && telegramInfo?.userId === item.guardianIdentifier && telegramInfo?.accessToken
+              ? telegramInfo.accessToken
+              : item.accessToken;
+          const { clientId, redirectURI, customLoginHandler } = getSocialConfig(accountType);
+          if (!item.verifier?.id) throw 'verifier id is not exist';
+          const id = item.identifier || item.identifierHash;
+          if (!id) throw 'identifier is not exist';
+          const isFirstShowWarning = await getStorageInstance().getItem(KEY_SHOW_WARNING);
+          const zkInfo = zkGuardianType.includes(item.guardianType)
+            ? {
+                idToken: item.zkLoginInfo?.jwt,
+                nonce: item.zkLoginInfo?.nonce,
+                timestamp: item.zkLoginInfo?.timestamp,
+              }
+            : {};
+          if (isFirstShowWarning !== SHOW_WARNING_DIALOG && !accessToken) {
+            const isConfirm = await modalMethod({
+              title: (
+                <div>
+                  <CustomSvg className="warning-info" type="WaringInfo" />
+                  <div className="security-notice">Security Notice</div>
+                </div>
+              ),
+              closable: false,
+              wrapClassName: 'warning-modal-wrapper',
+              className: `portkey-ui-common-modals ` + 'confirm-return-modal',
+              content: (
+                <p className="modal-content-v2">
+                  You&rsquo;ll be directed to{' '}
+                  <span className="official-website">{Open_Login_Bridge[getCustomNetworkType()][networkType]}</span> for
+                  verification. If the site you land on doesn&rsquo;t match this link,please exercise caution and
+                  refrain from taking any actions.
+                </p>
+              ),
+            });
+            if (!isConfirm) return;
+            getStorageInstance().setItem(KEY_SHOW_WARNING, SHOW_WARNING_DIALOG);
+          }
+
+          const approveDetail: IApproveDetail = {
+            guardian: {
+              guardianType: item.guardianType,
+              identifier: item.identifier,
+              thirdPartyEmail: item.thirdPartyEmail,
+            },
+            originChainId,
+            targetChainId,
+            symbol: officialWebsiteShow?.symbol,
+            amount: officialWebsiteShow?.amount,
+            operationType,
+          };
+
+          const verifyParams = {
+            accessToken,
+            ...zkInfo,
+            id,
+            verifierId: item.verifier?.id,
+            chainId: originChainId,
+            targetChainId,
+            clientId,
+            redirectURI,
+            operationType,
+            networkType,
+            operationDetails,
+            customLoginHandler,
+            approveDetail: approveDetail,
+            caHash,
+          };
+          setLoading(true);
+          if (isAsyncVerify) {
+            const rst = await asyncVerifyToken(accountType, { ...verifyParams, customLoginHandler });
+
+            setGuardianList((v) => {
+              return v.map((item) => {
+                if (item.key === key) {
+                  return {
+                    ...item,
+                    status: VerifyStatus.Verifying,
+                    asyncVerifyInfoParams: rst,
+                  };
+                }
+                return item;
+              });
+            });
+            setVerifyAccountKey(undefined);
+            return;
+          }
+          const rst = await verifyToken(accountType, { ...verifyParams, customLoginHandler });
+
+          if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return;
+
+          const verifierInfo: IVerificationInfo = { ...rst, verifierId: item?.verifier?.id };
+
+          const guardianIdentifier = rst.zkLoginInfo
+            ? rst.zkLoginInfo.identifierHash
+            : handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
+
+          setGuardianList((v) => {
+            return v.map((item) => {
+              if (item.key === key) {
+                return {
+                  ...item,
+                  status: VerifyStatus.Verified,
+                  verificationDoc: verifierInfo.verificationDoc,
+                  signature: verifierInfo.signature,
+                  identifierHash: guardianIdentifier,
+                  zkLoginInfo: rst.zkLoginInfo,
+                };
+              }
+              return item;
+            });
+          });
+          setVerifyAccountKey(undefined);
+        } catch (error) {
+          return errorTip(
+            {
+              errorFields: 'GuardianApproval',
+              error: handleErrorMessage(error),
+            },
+            isErrorTip,
+            onError,
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [
+        telegramInfo?.userId,
+        telegramInfo?.accessToken,
+        originChainId,
+        targetChainId,
+        officialWebsiteShow?.symbol,
+        officialWebsiteShow?.amount,
+        operationType,
+        networkType,
+        operationDetails,
+        caHash,
+        isAsyncVerify,
+        verifyToken,
+        asyncVerifyToken,
+        isErrorTip,
+        onError,
+      ],
+    );
+
+    const onVerifyingHandler = useCallback(
+      async (_item: UserGuardianStatus, key: string) => {
+        const isSocialLogin = AllSocialLoginList.includes(_item.guardianType);
+        if (isSocialLogin) return socialVerifyHandler(_item, key);
+
+        try {
+          setVerifyAccountKey(key);
+          setGuardianList((v) => {
+            return v.map((item) => {
+              if (item.key === key) {
+                return {
+                  ...item,
+                  isInitStatus: false,
+                };
+              }
+              return item;
+            });
+          });
+        } catch (error: any) {
+          return errorTip(
+            {
+              errorFields: 'GuardianApproval',
+              error: handleErrorMessage(error, 'Something error'),
+            },
+            isErrorTip,
+            onError,
+          );
+        }
+      },
+      [socialVerifyHandler, isErrorTip, onError],
+    );
+
+    const onAsyncVerifying = useCallback(
+      async (_item: UserGuardianStatus, key: string) => {
+        try {
+          setLoading(true);
+
+          const accountType = _item.guardianType as ISocialLogin;
+          if (!_item?.asyncVerifyInfoParams) throw new Error('asyncVerifyInfoParams is required');
+          const { customLoginHandler } = getSocialConfig(accountType);
+          const rst = await verifyToken(accountType, { ..._item?.asyncVerifyInfoParams, customLoginHandler });
+
+          if (!rst || !(rst.verificationDoc || rst.zkLoginInfo)) return;
+
+          const verifierInfo: IVerificationInfo = { ...rst, verifierId: _item?.verifier?.id };
+
+          const guardianIdentifier = rst.zkLoginInfo
+            ? rst.zkLoginInfo.identifierHash
+            : handleVerificationDoc(verifierInfo.verificationDoc as string).guardianIdentifier;
+
+          setGuardianList((v) => {
+            return v.map((item) => {
+              if (item.key === key) {
+                return {
+                  ...item,
+                  status: VerifyStatus.Verified,
+                  verificationDoc: verifierInfo.verificationDoc,
+                  signature: verifierInfo.signature,
+                  identifierHash: guardianIdentifier,
+                  zkLoginInfo: rst.zkLoginInfo,
+                };
+              }
+              return item;
+            });
+          });
+          setLoading(false);
+
+          setVerifyAccountKey(undefined);
+        } catch (error) {
+          setLoading(false);
+          return errorTip(
+            {
+              errorFields: 'GuardianApproval',
+              error: handleErrorMessage(error),
+            },
+            isErrorTip,
+            onError,
+          );
+        } finally {
+          setLoading(false);
+        }
+      },
+      [isErrorTip, onError, verifyToken],
+    );
+
+    const onCodeVerifyHandler = useCallback(
+      (res: { verificationDoc?: string; signature?: string; verifierId: string }, key: string) => {
+        setGuardianList((v) => {
+          return v.map((item) => {
+            if (item.key === key) {
+              return {
+                ...item,
+                status: VerifyStatus.Verified,
+                verificationDoc: res.verificationDoc,
+                signature: res.signature,
+              };
+            }
+            return item;
+          });
+        });
+        setVerifyAccountKey(undefined);
+      },
+      [],
+    );
+
+    const onConfirmHandler = useCallback(async () => {
+      setFetching(true);
+      try {
+        if (isAsyncVerify) {
+          const verificationList = guardianList
+            .filter((item) =>
+              Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo || item.asyncVerifyInfoParams),
+            )
+            .map((item) => ({
+              type: item.guardianType,
+              identifier: item.identifier || item.identifierHash || '',
+              verifierId: item.verifier?.id || '',
+              verificationDoc: item.verificationDoc || '',
+              signature: item.signature || '',
+              identifierHash: item.identifierHash || '',
+              zkLoginInfo: item?.zkLoginInfo,
+              asyncVerifyInfoParams: item?.asyncVerifyInfoParams,
+            }));
+          await onConfirmRef.current?.(verificationList);
+        } else {
+          const verificationList = guardianList
+            .filter((item) => Boolean((item.signature && item.verificationDoc) || item.zkLoginInfo))
+            .map((item) => ({
+              type: item.guardianType,
+              identifier: item.identifier || item.identifierHash || '',
+              verifierId: item.verifier?.id || '',
+              verificationDoc: item.verificationDoc || '',
+              signature: item.signature || '',
+              identifierHash: item.identifierHash || '',
+              zkLoginInfo: item.zkLoginInfo,
+            }));
+          await onConfirmRef.current?.(verificationList);
+        }
+
+        setFetching(false);
+      } catch (error) {
+        console.error(handleErrorMessage(error));
+        setFetching(false);
+      }
+
+      setFetching(false);
+    }, [guardianList, isAsyncVerify]);
+
+    const onReSendVerifyHandler = useCallback(({ verifierSessionId }: TVerifyCodeInfo, verifyAccountKey: string) => {
+      setGuardianList((v) => {
+        const list = v.map((item) => {
+          if (item.key === verifyAccountKey) {
+            return {
+              ...item,
+              verifierInfo: { sessionId: verifierSessionId },
+            };
+          }
+          return item;
+        });
+        return list;
+      });
+    }, []);
+
+    const approvalLength = useMemo(() => getApprovalCount(guardianList.length), [guardianList.length]);
+
+    const alreadyApprovalLength = useMemo(() => getAlreadyApprovalLength(guardianList), [guardianList]);
+
+    const [isFetching, setFetching] = useState<boolean>(false);
+
+    useUpdateEffect(() => {
+      const disabled = alreadyApprovalLength <= 0 || alreadyApprovalLength !== approvalLength;
+      if (!disabled) {
+        onConfirmHandler();
+      }
+    }, [approvalLength, alreadyApprovalLength]);
+
+    const onResetGuardianList = useCallback(() => {
+      defaultGuardianList?.length && setGuardianList(defaultGuardianList);
+      setExpiredTime(getExpiredTime());
+    }, [defaultGuardianList]);
+
+    return (
+      <div style={wrapperStyle} className={clsx('ui-guardian-approval-wrapper', className)}>
+        {typeof verifyAccountKey === 'string' ? (
+          <VerifierPage
+            targetChainId={targetChainId}
+            originChainId={originChainId}
+            operationType={operationType}
+            operationDetails={operationDetails}
+            onBack={() => setVerifyAccountKey(undefined)}
+            guardianIdentifier={curVerifyingGuardian?.identifier || ''}
+            verifierSessionId={curVerifyingGuardian?.verifierInfo?.sessionId || ''}
+            isLoginGuardian={curVerifyingGuardian?.isLoginGuardian}
+            isCountdownNow={curVerifyingGuardian?.isInitStatus}
+            accountType={curVerifyingGuardian?.guardianType}
+            isErrorTip={isErrorTip}
+            verifier={curVerifyingGuardian?.verifier as TVerifierItem}
+            caHash={caHash}
+            onSuccess={(res) => onCodeVerifyHandler(res, verifyAccountKey)}
+            onError={onError}
+            onReSend={(result) => onReSendVerifyHandler(result, verifyAccountKey)}
+          />
+        ) : (
+          <>
+            {header}
+            <GuardianList
+              originChainId={originChainId}
+              targetChainId={targetChainId}
+              expiredTime={expiredTime}
+              operationType={operationType}
+              isFetching={isFetching}
+              approvalLength={approvalLength}
+              alreadyApprovalLength={alreadyApprovalLength}
+              guardianList={guardianList}
+              isErrorTip={isErrorTip}
+              operationDetails={operationDetails}
+              onSend={onSendCodeHandler}
+              onVerifying={onVerifyingHandler}
+              onAsyncVerifying={onAsyncVerifying}
+              onConfirm={onConfirmHandler}
+              onError={onError}
+              onExpiredRetry={onResetGuardianList}
+              onExpiredCancel={onExpiredCancel}
+              header={!!header}
+            />
+          </>
+        )}
+      </div>
+    );
+  },
+);
+
+export default memo(GuardianApprovalMain);
